@@ -40,7 +40,7 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<CreateEstadoAlertaCommand, EstadoAlerta>();
             CreateMap<UpdateEstadoAlertaCommand, EstadoAlerta>();
 
-            CreateMap<Alerta, AlertasVm>();
+            CreateMap<Alerta, AlertaVm>();
             CreateMap<EstadoAlerta, EstadosAlertasVm>();
         }
     }

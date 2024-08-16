@@ -6,7 +6,7 @@ using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.DeleteAlertas;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Domain.Modelos;
+
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +28,8 @@ namespace DGPCE.Sigemad.API.Controllers
 
 
         [HttpGet("pagination", Name = "ListadoAlertas")]
-        [ProducesResponseType(typeof(PaginationVm<AlertasVm>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PaginationVm<AlertasVm>>> GetListadoAlertas(
+        [ProducesResponseType(typeof(PaginationVm<AlertaVm>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<PaginationVm<AlertaVm>>> GetListadoAlertas(
                 [FromQuery] GetAlertasListQuery paginationAlertasParams
             )
         {
@@ -38,8 +38,8 @@ namespace DGPCE.Sigemad.API.Controllers
         }
 
         [HttpGet("ObtenerAlerta", Name = "ObtenerAlerta")]
-        [ProducesResponseType(typeof(Alerta), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<PaginationVm<AlertasVm>>> GetAlertaById(string id ) 
+        [ProducesResponseType(typeof(AlertaVm), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<AlertaVm>> GetAlertaById(string id ) 
         {
             var query = new GetAlertaByIdQuery(id);
             var alerta = await _mediator.Send(query);

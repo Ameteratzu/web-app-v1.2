@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById
 {
-    public class GetAlertaByIdQueryHandler : IRequestHandler<GetAlertaByIdQuery, Alerta>
+    public class GetAlertaByIdQueryHandler : IRequestHandler<GetAlertaByIdQuery, AlertaVm>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById
             _mapper = mapper;
         }
 
-        public async Task<Alerta> Handle(GetAlertaByIdQuery request, CancellationToken cancellationToken)
+        public async Task<AlertaVm> Handle(GetAlertaByIdQuery request, CancellationToken cancellationToken)
         {
 
             var includes = new List<Expression<Func<Alerta, object>>>();
@@ -41,7 +41,9 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById
                 true
                 );
 
-            return alerta.FirstOrDefault();
+            var data = _mapper.Map<IReadOnlyList<Alerta>, IReadOnlyList<AlertaVm>>(alerta);
+
+            return data.FirstOrDefault();
 
          }
     }

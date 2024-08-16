@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado
 {
-    public class GetAlertaByIdQueryHandler : IRequestHandler<GetAlertasListQuery, PaginationVm<AlertasVm>>
+    public class GetAlertaByIdQueryHandler : IRequestHandler<GetAlertasListQuery, PaginationVm<AlertaVm>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEst
             _mapper = mapper;
         }
 
-        public async Task<PaginationVm<AlertasVm>> Handle(GetAlertasListQuery request, CancellationToken cancellationToken)
+        public async Task<PaginationVm<AlertaVm>> Handle(GetAlertasListQuery request, CancellationToken cancellationToken)
         {
             var alertasSpecificationParams = new AlertasSpecificationParams
             {                
@@ -46,9 +46,9 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEst
             var rounded = Math.Ceiling(Convert.ToDecimal(totalAlertas) / Convert.ToDecimal(request.PageSize));
             var totalPages = Convert.ToInt32(rounded);
 
-            var data = _mapper.Map<IReadOnlyList<Alerta>, IReadOnlyList<AlertasVm>>(alertas);
+            var data = _mapper.Map<IReadOnlyList<Alerta>, IReadOnlyList<AlertaVm>>(alertas);
 
-            var pagination = new PaginationVm<AlertasVm>
+            var pagination = new PaginationVm<AlertaVm>
             {
                 Count = totalAlertas,
                 Data = data,

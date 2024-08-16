@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado
 {
-    public class GetAlertasListQuery : PaginationBaseQuery, IRequest<PaginationVm<AlertasVm>>
+    public class GetAlertasListQuery : PaginationBaseQuery, IRequest<PaginationVm<AlertaVm>>
     {
         public Guid? idEstado { get; set; }
         public DateTime? fechaAlerta { get; set; }
