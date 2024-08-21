@@ -4,14 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { Alerta } from '../models/alerta';
 import { map, delay } from 'rxjs/operators'
 import { AlertasResponse } from './Alertasresponse';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertasService {
 
-  private url: string = 'http://localhost:5246/api/v1/alerta/pagination?PageSize=11'
-  private urlById: string = 'http://localhost:5246/api/v1/Alerta/ObtenerAlerta?id='
+  private url: string = environment.urlAlertas + 'pagination?PageSize=11'
+  private urlById: string = environment.urlAlertas + 'ObtenerAlerta?id='
 
   constructor( private _http: HttpClient ) { }
 

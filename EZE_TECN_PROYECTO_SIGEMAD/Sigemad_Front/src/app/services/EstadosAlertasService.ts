@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 
 import { map, delay } from 'rxjs/operators'
@@ -11,7 +12,7 @@ import { EstadosAlertasResponse } from './EstadosAlertasResponse';
 })
 export class EstadosAlertasService {
 
-  private url: string = 'http://localhost:5246/api/v1/EstadoAlerta/pagination?PageSize=10'
+  private url: string = environment.urlEstadosAlertas + 'pagination?PageSize=10'
 
 
   constructor( private _http: HttpClient ) { }
