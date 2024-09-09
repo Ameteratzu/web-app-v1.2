@@ -44,7 +44,7 @@ namespace DGPCE.Sigemad.Infrastructure.Repositories
             _context.Dispose();
         }
 
-        public IAsyncRepository<TEntity> Repository<TEntity>() where TEntity : BaseDomainModel
+        public IAsyncRepository<TEntity> Repository<TEntity>() where TEntity : class
         {
             if (_repositories == null)
             {

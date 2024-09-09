@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace DGPCE.Sigemad.Infrastructure.Repositories
 {
-    public class RepositoryBase<T> : IAsyncRepository<T> where T : BaseDomainModel
+    public class RepositoryBase<T> : IAsyncRepository<T> where T : class
     {
         protected readonly SigemadDbContext _context;
 
