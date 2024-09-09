@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
@@ -42,6 +43,7 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Alerta, AlertaVm>();
             CreateMap<EstadoAlerta, EstadosAlertasVm>();
+            CreateMap<ComunidadAutonoma, ComunidadesAutonomasVm>();
         }
     }
 }
