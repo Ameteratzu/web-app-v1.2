@@ -1,19 +1,18 @@
-﻿using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
+﻿using DGPCE.Sigemad.Application.Features.TipoSucesos.Queries.GetTipoSucesosList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System.Net;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class TerritoriosController : ControllerBase
+    public class TipoSucesosController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public TerritoriosController(IMediator mediator)
+        public TipoSucesosController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -21,13 +20,12 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene todos los tipos de territorios")]
-        public async Task<IActionResult> GetTerritorio()
+        [SwaggerOperation(Summary = "Obtiene todos los tipos de sucesos")]
+        public async Task<IActionResult> GetAll() 
         {
-            var query = new GetTerritoriosListQuery();
+            var query = new GetTipoSucesosListQuery();
             var listado = await _mediator.Send(query);
             return Ok(listado);
         }
-
     }
 }
