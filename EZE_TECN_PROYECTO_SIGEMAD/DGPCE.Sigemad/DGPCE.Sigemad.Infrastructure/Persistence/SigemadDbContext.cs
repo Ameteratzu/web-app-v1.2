@@ -76,6 +76,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<EstadoAlerta>? EstadosAlertas { get; set; }
         public DbSet<Territorio>? Territorio { get; set; }
         public DbSet<TipoSuceso> TipoSuceso { get; set; }
+        public DbSet<Menu> Menu { get; set; }
 
     }
 }

@@ -5,14 +5,8 @@ using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Mappings
 {
@@ -42,6 +36,8 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Alerta, AlertaVm>();
             CreateMap<EstadoAlerta, EstadosAlertasVm>();
+
+            CreateMap<Menu, MenuItemVm>();
         }
     }
 }
