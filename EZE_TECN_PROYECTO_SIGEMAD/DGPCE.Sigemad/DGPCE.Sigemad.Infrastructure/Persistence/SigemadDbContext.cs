@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Infrastructure.Persistence
 {
@@ -69,12 +70,21 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             //);
 
             //modelBuilder.Entity<VideoActor>().Ignore(va => va.Id);
+
+            modelBuilder.Entity<Ccaa>()
+            .HasMany(c => c.Provincia)
+            .WithOne(p => p.IdCcaaNavigation)
+            .HasForeignKey(p => p.IdCcaa);
+
+            modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
+            modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
+            base.OnModelCreating(modelBuilder);
         }
 
 
         public DbSet<Alerta>? Alertas { get; set; }
         public DbSet<EstadoAlerta>? EstadosAlertas { get; set; }
-        public DbSet<ComunidadAutonoma>? CCAA { get; set; }
+        public DbSet<Ccaa>? CCAA { get; set; }
         public DbSet<Territorio>? Territorio { get; set; }
 
     }

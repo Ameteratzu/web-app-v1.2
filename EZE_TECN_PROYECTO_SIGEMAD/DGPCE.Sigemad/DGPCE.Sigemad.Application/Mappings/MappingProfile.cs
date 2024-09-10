@@ -43,7 +43,6 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Alerta, AlertaVm>();
             CreateMap<EstadoAlerta, EstadosAlertasVm>();
-            CreateMap<ComunidadAutonoma, ComunidadesAutonomasVm>();
         }
     }
 }

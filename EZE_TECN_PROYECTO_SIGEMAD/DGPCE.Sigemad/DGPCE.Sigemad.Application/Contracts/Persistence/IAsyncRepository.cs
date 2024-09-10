@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Specifications;
+using DGPCE.Sigemad.Domain.Modelos;
 using System.Linq.Expressions;
 
 namespace DGPCE.Sigemad.Application.Contracts.Persistence
@@ -40,5 +41,6 @@ namespace DGPCE.Sigemad.Application.Contracts.Persistence
         Task<IReadOnlyList<T>> GetAllWithSpec(ISpecification<T> spec);
 
         Task<int> CountAsync(ISpecification<T> spec);
+     
     }
 }
