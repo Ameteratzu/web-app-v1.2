@@ -1,9 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using System.Net;
-using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DGPCE.Sigemad.API.Controllers
 {
