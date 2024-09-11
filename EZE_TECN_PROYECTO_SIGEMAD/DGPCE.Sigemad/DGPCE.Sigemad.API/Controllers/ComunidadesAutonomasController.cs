@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers
@@ -20,6 +21,9 @@ namespace DGPCE.Sigemad.API.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [SwaggerOperation(Summary = "Obtiene el listado de las comunidades autonomas y sus provincias")]
         public async Task<IActionResult> GetComunidadesAutonomas()
         {
             var query = new GetComunidadesAutonomasListQuery();
