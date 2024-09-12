@@ -45,6 +45,7 @@ namespace DGPCE.Sigemad.Application.Mappings
                     .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Provincia.ToList()));
 
             CreateMap<Provincia, ProvinciaSinMunicipiosVm>();
+            CreateMap<Provincia, ProvinciaSinMunicipiosConIdComunidadVm>();
         }
     }
 }

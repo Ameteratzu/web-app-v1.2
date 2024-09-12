@@ -88,6 +88,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Menu> Menu { get; set; }
         public DbSet<Ccaa>? CCAA { get; set; }
         public DbSet<Territorio>? Territorio { get; set; }
+        public DbSet<Provincia>? Provincia { get; set; }
 
     }
 }
