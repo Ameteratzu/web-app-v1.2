@@ -25,7 +25,18 @@ namespace DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonoma
             var includes = new List<Expression<Func<Ccaa, object>>>();
             includes.Add(c => c.Provincia);
             
-            var ComunidadesAutonomas = await _unitOfWork.Repository<Ccaa>().GetAsync(null,null,includes);
+            var ComunidadesAutonomas = (await _unitOfWork.Repository<Ccaa>().GetAsync(null, null, includes))
+                .OrderBy(c => c.Descripcion)
+                .Select(c =>  new Ccaa { 
+                
+                Id = c.Id,
+                Descripcion = c.Descripcion,
+                Provincia = c.Provincia.OrderBy(p => p.Descripcion).ToList()
+                }          
+               )
+           
+                .ToList()
+                .AsReadOnly();
 
             var comunidadesAutonomasVm = _mapper.Map<IReadOnlyList<Ccaa>, IReadOnlyList<ComunidadesAutonomasVm>>(ComunidadesAutonomas);
             return comunidadesAutonomasVm;

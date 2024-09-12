@@ -72,9 +72,14 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             //modelBuilder.Entity<VideoActor>().Ignore(va => va.Id);
 
             modelBuilder.Entity<Ccaa>()
-            .HasMany(c => c.Provincia)
-            .WithOne(p => p.IdCcaaNavigation)
-            .HasForeignKey(p => p.IdCcaa);
+                .HasMany(c => c.Provincia)
+                .WithOne(p => p.IdCcaaNavigation)
+                .HasForeignKey(p => p.IdCcaa);
+
+            modelBuilder.Entity<Municipio>()
+              .HasOne(m => m.IdProvinciaNavigation)
+              .WithMany(p => p.Municipios)
+              .HasForeignKey(m => m.IdProvincia);
 
             modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
             modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
@@ -89,6 +94,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Ccaa>? CCAA { get; set; }
         public DbSet<Territorio>? Territorio { get; set; }
         public DbSet<Provincia>? Provincia { get; set; }
+        public DbSet<Municipio>? Municipio { get; set; }
 
     }
 }
