@@ -20,6 +20,7 @@ namespace DGPCE.Sigemad.API.Controllers
 
 
         [HttpGet]
+        [Route("{idProvincia}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [SwaggerOperation(Summary = "Obtiene el listado de los municipios para una determinada provincia")]

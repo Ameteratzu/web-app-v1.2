@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasByIdCCAAList;
 using DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,23 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene el listado de las provincias)]")]
+        [SwaggerOperation(Summary = "Obtiene el listado de las provincias")]
         public async Task<IActionResult> GetProvincias()
         {
             var query = new GetProvinciasListQuery();
+            var listado = await _mediator.Send(query);
+            return Ok(listado);
+        }
+
+
+        [HttpGet]
+        [Route("{idCcaa}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [SwaggerOperation(Summary = "Obtiene el listado de las provincias para una determinada comunidad autonoma")]
+        public async Task<IActionResult> GetProvinciasByIdCcaa(int idCcaa)
+        {
+            var query = new GetProvinciasByIdCCAAListQuery(idCcaa);
             var listado = await _mediator.Send(query);
             return Ok(listado);
         }

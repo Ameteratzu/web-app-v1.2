@@ -7,7 +7,8 @@ using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList
 {
-    public class GetComunidadesAutonomasListQuery :IRequest<IReadOnlyList<ComunidadesAutonomasVm>>
+    public class GetComunidadesAutonomasListQuery : IRequest<IReadOnlyList<ComunidadesAutonomasVm>>
     {
+
     }
 }
