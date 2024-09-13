@@ -34,12 +34,17 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [Route("{idCcaa}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [SwaggerOperation(Summary = "Obtiene el listado de las provincias para una determinada comunidad autonoma")]
         public async Task<IActionResult> GetProvinciasByIdCcaa(int idCcaa)
         {
             var query = new GetProvinciasByIdCCAAListQuery(idCcaa);
             var listado = await _mediator.Send(query);
+
+            if (listado.Count == 0)
+                return NotFound();
+
             return Ok(listado);
         }
 

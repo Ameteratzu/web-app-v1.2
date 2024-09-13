@@ -22,12 +22,17 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [Route("{idProvincia}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [SwaggerOperation(Summary = "Obtiene el listado de los municipios para una determinada provincia")]
         public async Task<IActionResult> GetMunicipiosByIdProvincia(int idProvincia)
         {
             var query = new GetMunicipioByIdProvinciaQuery(idProvincia);
             var listado = await _mediator.Send(query);
+
+            if (listado.Count == 0)
+                return NotFound();
+
             return Ok(listado);
         }
     }
