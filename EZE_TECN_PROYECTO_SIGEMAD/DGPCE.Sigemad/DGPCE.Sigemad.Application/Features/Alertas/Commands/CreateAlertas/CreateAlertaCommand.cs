@@ -2,7 +2,7 @@
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas
 {
-    public class CreateAlertaCommand : IRequest<Guid>
+    public class CreateAlertaCommand : IRequest<int>
     {
         public string? Descripcion { get; set; } = string.Empty;
 

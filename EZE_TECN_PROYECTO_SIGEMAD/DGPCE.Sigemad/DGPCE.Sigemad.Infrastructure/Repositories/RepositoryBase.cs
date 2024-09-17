@@ -1,6 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Specifications;
-using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Infrastructure.Persistence;
 using DGPCE.Sigemad.Infrastructure.Specification;
 using Microsoft.EntityFrameworkCore;
@@ -126,6 +125,11 @@ namespace DGPCE.Sigemad.Infrastructure.Repositories
         public IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), spec);
+        }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
         }
     }
 }

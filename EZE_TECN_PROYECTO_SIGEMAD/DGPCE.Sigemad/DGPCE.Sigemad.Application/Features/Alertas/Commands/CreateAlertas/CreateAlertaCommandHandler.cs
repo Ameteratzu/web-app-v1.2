@@ -3,11 +3,10 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas
 {
-    public class CreateAlertaCommandHandler : IRequestHandler<CreateAlertaCommand, Guid>
+    public class CreateAlertaCommandHandler : IRequestHandler<CreateAlertaCommand, int>
     {
         //private readonly IStreamerRepository _streamerRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +21,7 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas
             _logger = logger;
         }
 
-        public async Task<Guid> Handle(CreateAlertaCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateAlertaCommand request, CancellationToken cancellationToken)
         {
             var alertaEntity = _mapper.Map<Alerta>(request);
             //var newStreamer = await _streamerRepository.AddAsync(streamerEntity);
