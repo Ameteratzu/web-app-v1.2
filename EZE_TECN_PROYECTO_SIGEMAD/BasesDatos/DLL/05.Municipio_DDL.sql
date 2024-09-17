@@ -2,7 +2,11 @@
 
 -- Drop table
 
--- DROP TABLE dbo.Municipio;
+IF OBJECT_ID('dbo.Municipio', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.Municipio;
+END
+GO
 
 CREATE TABLE dbo.Municipio (
 	Id int NOT NULL,

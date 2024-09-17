@@ -12,5 +12,5 @@ CREATE TABLE dbo.Menu (
 	NumOrden int NOT NULL,
 	Icono varchar(100) NULL,
 	ColorRgb varchar(6) NULL,
-	CONSTRAINT PK_menu PRIMARY KEY (id)
+	CONSTRAINT PK_menu PRIMARY KEY (Id)
 );
