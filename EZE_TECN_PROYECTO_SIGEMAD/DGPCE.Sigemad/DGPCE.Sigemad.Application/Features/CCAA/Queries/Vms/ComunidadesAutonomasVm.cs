@@ -4,9 +4,9 @@ using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms
+namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms
 {
-    public class ComunidadesAutonomasVm 
+    public class ComunidadesAutonomasVm
     {
         public int Id { get; set; }
         public string Descripcion { get; set; } = null!;

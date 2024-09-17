@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasByIdCCAAList
+namespace DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList
 {
     public class GetProvinciasByIdCCAAListQuery : IRequest<IReadOnlyList<ProvinciaSinMunicipiosVm>>
     {

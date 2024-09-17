@@ -1,8 +1,8 @@
-﻿using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
+﻿using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasList
+namespace DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList
 {
     public class GetProvinciasListQuery : IRequest<IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm>>
     {

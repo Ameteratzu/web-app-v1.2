@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
@@ -10,7 +10,7 @@ using MediatR;
 using System.Text.RegularExpressions;
 using System;
 
-namespace DGPCE.Sigemad.Application.Features.Municipios.Quereis.GetMunicipioByIdProvincia
+namespace DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia
 {
     public class GetMunicipioByIdProvinciaQueryHandler : IRequestHandler<GetMunicipioByIdProvinciaQuery, IReadOnlyList<MunicipioSinIdProvinciaVm>>
     {
@@ -33,7 +33,7 @@ namespace DGPCE.Sigemad.Application.Features.Municipios.Quereis.GetMunicipioById
              .ToList()
              .AsReadOnly();
 
-            var municipiosSinIdProvincia =  _mapper.Map<IReadOnlyList<Municipio>, IReadOnlyList<MunicipioSinIdProvinciaVm>>(municipiosListado);
+            var municipiosSinIdProvincia = _mapper.Map<IReadOnlyList<Municipio>, IReadOnlyList<MunicipioSinIdProvinciaVm>>(municipiosListado);
 
             return municipiosSinIdProvincia;
 

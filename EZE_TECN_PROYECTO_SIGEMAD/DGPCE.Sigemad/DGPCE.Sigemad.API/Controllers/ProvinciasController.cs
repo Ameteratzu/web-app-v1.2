@@ -1,6 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasByIdCCAAList;
-using DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasList;
+﻿using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList;
+using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

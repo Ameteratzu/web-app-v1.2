@@ -1,5 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.Municipios.Quereis.GetMunicipioByIdProvincia;
-using DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasList;
+﻿using DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia;
+using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

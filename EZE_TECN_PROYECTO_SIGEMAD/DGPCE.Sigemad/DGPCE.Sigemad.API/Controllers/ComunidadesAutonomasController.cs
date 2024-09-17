@@ -1,5 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
+﻿using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using MediatR;

@@ -1,14 +1,13 @@
-﻿
-using DGPCE.Sigemad.Application.Features.Municipios.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using MediatR;
 
 
-namespace DGPCE.Sigemad.Application.Features.Municipios.Quereis.GetMunicipioByIdProvincia
+namespace DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia
 {
     public class GetMunicipioByIdProvinciaQuery : IRequest<IReadOnlyList<MunicipioSinIdProvinciaVm>>
     {
 
-       public int IdProvincia { get; set; }
+        public int IdProvincia { get; set; }
 
 
         public GetMunicipioByIdProvinciaQuery(int id)
@@ -18,5 +17,5 @@ namespace DGPCE.Sigemad.Application.Features.Municipios.Quereis.GetMunicipioById
 
     }
 
-    
+
 }

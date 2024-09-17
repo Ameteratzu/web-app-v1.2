@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasList
+namespace DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList
 {
     public class GetProvinciasListQueryHandler : IRequestHandler<GetProvinciasListQuery, IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm>>
     {
@@ -36,7 +36,7 @@ namespace DGPCE.Sigemad.Application.Features.Provincias.Quereis.GetProvinciasLis
 
             var provinciasSinMunicipios = _mapper.Map<IReadOnlyList<Provincia>, IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm>>(provincias);
             return provinciasSinMunicipios;
-     
+
         }
     }
 }

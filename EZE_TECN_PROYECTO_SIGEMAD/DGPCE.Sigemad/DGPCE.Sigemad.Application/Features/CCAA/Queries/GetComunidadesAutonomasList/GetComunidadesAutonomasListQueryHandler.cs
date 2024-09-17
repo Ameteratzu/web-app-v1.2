@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
-using DGPCE.Sigemad.Application.Features.CCAA.Quereis.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using System.Linq.Expressions;
 
-namespace DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonomasList
+namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList
 {
     public class GetComunidadesAutonomasListQueryHandler : IRequestHandler<GetComunidadesAutonomasListQuery, IReadOnlyList<ComunidadesAutonomasVm>>
     {
@@ -24,17 +24,18 @@ namespace DGPCE.Sigemad.Application.Features.CCAA.Quereis.GetComunidadesAutonoma
         {
             var includes = new List<Expression<Func<Ccaa, object>>>();
             includes.Add(c => c.Provincia);
-            
+
             var ComunidadesAutonomas = (await _unitOfWork.Repository<Ccaa>().GetAsync(null, null, includes))
                 .OrderBy(c => c.Descripcion)
-                .Select(c =>  new Ccaa { 
-                
-                Id = c.Id,
-                Descripcion = c.Descripcion,
-                Provincia = c.Provincia.OrderBy(p => p.Descripcion).ToList()
-                }          
+                .Select(c => new Ccaa
+                {
+
+                    Id = c.Id,
+                    Descripcion = c.Descripcion,
+                    Provincia = c.Provincia.OrderBy(p => p.Descripcion).ToList()
+                }
                )
-           
+
                 .ToList()
                 .AsReadOnly();
 
