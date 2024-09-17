@@ -84,6 +84,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
             modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
         }
 
 
@@ -95,6 +97,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Territorio>? Territorio { get; set; }
         public DbSet<Provincia>? Provincia { get; set; }
         public DbSet<Municipio>? Municipio { get; set; }
+        public DbSet<NivelGravedad> NivelesGravedad { get; set; }
 
     }
 }
