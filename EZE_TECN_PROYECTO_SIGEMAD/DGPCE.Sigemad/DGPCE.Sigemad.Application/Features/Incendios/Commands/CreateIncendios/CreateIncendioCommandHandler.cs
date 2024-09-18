@@ -106,8 +106,8 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             Comentarios = request.Comentarios,
             FechaInicio = request.FechaInicio,
             GeoPosicion = request.GeoPosicion,
-            UtmX = utmX,
-            UtmY = utmY,
+            UtmX = (decimal?)utmX,
+            UtmY = (decimal?)utmY,
             Huso = huso
         };
 

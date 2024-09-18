@@ -2,7 +2,6 @@
 using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using NetTopologySuite.Geometries;
 using System.Reflection;
 
 namespace DGPCE.Sigemad.Infrastructure.Persistence
@@ -84,25 +83,31 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
               .WithMany(p => p.Municipios)
               .HasForeignKey(m => m.IdProvincia);
 
-            //modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
-            //modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Alerta>().ToTable("Alerta");
+            modelBuilder.Entity<EstadoAlerta>().ToTable("EstadoAlerta");
+            modelBuilder.Entity<TipoSuceso>().ToTable("TipoSuceso");
+            modelBuilder.Entity<Menu>().ToTable("Menu");
+            modelBuilder.Entity<Ccaa>().ToTable("CCAA");
+            modelBuilder.Entity<Territorio>().ToTable("Territorio");
+            modelBuilder.Entity<Provincia>().ToTable("Provincia");
+            modelBuilder.Entity<Municipio>().ToTable("Municipio");
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
         }
 
 
         public DbSet<Alerta>? Alertas { get; set; }
         public DbSet<EstadoAlerta>? EstadosAlertas { get; set; }
-        public DbSet<TipoSuceso> TipoSuceso { get; set; }
-        public DbSet<Menu> Menu { get; set; }
+        public DbSet<TipoSuceso> TiposSuceso { get; set; }
+        public DbSet<Menu> Menus { get; set; }
         public DbSet<Ccaa>? CCAA { get; set; }
-        public DbSet<Territorio>? Territorio { get; set; }
-        public DbSet<Provincia>? Provincia { get; set; }
-        public DbSet<Municipio>? Municipio { get; set; }
+        public DbSet<Territorio>? Territorios { get; set; }
+        public DbSet<Provincia>? Provincias { get; set; }
+        public DbSet<Municipio>? Municipios { get; set; }
 
-        public DbSet<Suceso> Suceso { get; set; }
-        public DbSet<Incendio> Incendio { get; set; }
+        public DbSet<Suceso> Sucesos { get; set; }
+        public DbSet<Incendio> Incendios { get; set; }
         public DbSet<NivelGravedad> NivelesGravedad { get; set; }
 
     }

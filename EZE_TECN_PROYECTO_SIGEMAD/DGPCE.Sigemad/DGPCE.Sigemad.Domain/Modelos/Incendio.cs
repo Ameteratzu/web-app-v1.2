@@ -16,9 +16,9 @@ public class Incendio: BaseDomainModel
 
     public string Denominacion { get; set; } = null!;
 
-    public double? UtmX { get; set; }
+    public decimal? UtmX { get; set; }
 
-    public double? UtmY { get; set; }
+    public decimal? UtmY { get; set; }
 
     public int? Huso { get; set; }
 
