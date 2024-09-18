@@ -1,10 +1,14 @@
 ﻿namespace DGPCE.Sigemad.Domain.Modelos;
 
-public class Territorio
+public class Suceso
 {
-    public Territorio() { }
     public int Id { get; set; }
 
-    public string Descripcion { get; set; } = null!;
+    public int IdTipo { get; set; }
+
+    public int? IdSigeMigracion { get; set; }
+
+    public virtual TipoSuceso TipoSuceso { get; set; } = null!;
+
     public virtual ICollection<Incendio> Incendios { get; set; } = new List<Incendio>();
 }

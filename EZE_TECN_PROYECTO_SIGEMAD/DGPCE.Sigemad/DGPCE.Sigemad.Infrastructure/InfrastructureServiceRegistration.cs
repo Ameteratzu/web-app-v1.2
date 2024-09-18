@@ -1,11 +1,12 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Infrastructure.Persistence;
 using DGPCE.Sigemad.Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using DGPCE.Sigemad.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Infrastructure
 {
@@ -15,11 +16,16 @@ namespace DGPCE.Sigemad.Infrastructure
         {
 
             services.AddDbContext<SigemadDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("ConnectionString"))
+                options.UseSqlServer(configuration.GetConnectionString("ConnectionString"),
+                options => options.UseNetTopologySuite())
             );
+
+            services.AddSingleton<GeometryFactory>(NetTopologySuite.Geometries.GeometryFactory.Default);
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
+            services.AddScoped<IGeometryValidator, GeometryValidator>();
+            services.AddScoped<ICoordinateTransformationService, CoordinateTransformationService>();
 
             return services;
         }

@@ -22,4 +22,5 @@ public class Provincia
     public virtual Ccaa IdCcaaNavigation { get; set; } = null!;
 
     public virtual ICollection<Municipio> Municipios { get; set; } = new List<Municipio>();
+    public virtual ICollection<Incendio> Incendios { get; set; } = new List<Incendio>();
 }

@@ -3,15 +3,20 @@ using DGPCE.Sigemad.Application;
 using DGPCE.Sigemad.Infrastructure;
 using DGPCE.Sigemad.Identity;
 using DGPCE.Sigemad.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using NetTopologySuite.IO.Converters;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-});
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.Converters.Add(new GeometryConverter());
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

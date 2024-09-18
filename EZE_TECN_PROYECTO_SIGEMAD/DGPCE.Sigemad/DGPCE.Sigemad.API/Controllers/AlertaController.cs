@@ -39,7 +39,7 @@ namespace DGPCE.Sigemad.API.Controllers
 
         [HttpGet("ObtenerAlerta", Name = "ObtenerAlerta")]
         [ProducesResponseType(typeof(AlertaVm), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<AlertaVm>> GetAlertaById(string id ) 
+        public async Task<ActionResult<AlertaVm>> GetAlertaById(int id ) 
         {
             var query = new GetAlertaByIdQuery(id);
             var alerta = await _mediator.Send(query);
@@ -49,7 +49,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpPost(Name = "CreateAlerta")]
         //[Authorize(Roles = "Administrator")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Guid>> CreateAlerta([FromBody] CreateAlertaCommand command)
+        public async Task<ActionResult<int>> CreateAlerta([FromBody] CreateAlertaCommand command)
         {
             return await _mediator.Send(command);
         }

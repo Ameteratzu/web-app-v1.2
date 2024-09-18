@@ -6,7 +6,7 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEst
 {
     public class GetAlertasListQuery : PaginationBaseQuery, IRequest<PaginationVm<AlertaVm>>
     {
-        public Guid? idEstado { get; set; }
+        public int? idEstado { get; set; }
         public DateTime? fechaAlerta { get; set; }
     }
 }

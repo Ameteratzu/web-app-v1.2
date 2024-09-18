@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NetTopologySuite.Geometries;
+using System.Reflection;
 
 namespace DGPCE.Sigemad.Infrastructure.Persistence
 {
@@ -71,6 +72,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
             //modelBuilder.Entity<VideoActor>().Ignore(va => va.Id);
 
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             modelBuilder.Entity<Ccaa>()
                 .HasMany(c => c.Provincia)
                 .WithOne(p => p.IdCcaaNavigation)
@@ -81,8 +84,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
               .WithMany(p => p.Municipios)
               .HasForeignKey(m => m.IdProvincia);
 
-            modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
-            modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
+            //modelBuilder.Ignore<NetTopologySuite.Geometries.Coordinate>();
+            //modelBuilder.Ignore<NetTopologySuite.Geometries.Geometry>();
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
@@ -97,6 +100,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Territorio>? Territorio { get; set; }
         public DbSet<Provincia>? Provincia { get; set; }
         public DbSet<Municipio>? Municipio { get; set; }
+
+        public DbSet<Suceso> Suceso { get; set; }
+        public DbSet<Incendio> Incendio { get; set; }
         public DbSet<NivelGravedad> NivelesGravedad { get; set; }
 
     }

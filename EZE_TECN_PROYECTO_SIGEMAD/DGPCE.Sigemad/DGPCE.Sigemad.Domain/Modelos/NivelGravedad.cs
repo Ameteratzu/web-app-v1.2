@@ -17,4 +17,5 @@ public class NivelGravedad
     public int? OrdenAemet { get; set; }
 
     public int? OrdenParte { get; set; }
+    public virtual ICollection<Incendio> Incendios { get; set; } = new List<Incendio>();
 }

@@ -6,4 +6,5 @@ public class TipoSuceso
     public int Id { get; set; }
 
     public string Descripcion { get; set; } = null!;
+    public virtual ICollection<Suceso> Sucesos { get; set; } = new List<Suceso>();
 }

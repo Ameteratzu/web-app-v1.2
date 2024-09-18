@@ -27,7 +27,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpPost(Name = "CreateEstadoAlerta")]
         //[Authorize(Roles = "Administrator")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Guid>> CreateEstadoAlerta([FromBody] CreateEstadoAlertaCommand command)
+        public async Task<ActionResult<int>> CreateEstadoAlerta([FromBody] CreateEstadoAlertaCommand command)
         {
             return await _mediator.Send(command);
         }
