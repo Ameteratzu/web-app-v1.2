@@ -73,25 +73,14 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<Ccaa>()
-                .HasMany(c => c.Provincia)
-                .WithOne(p => p.IdCcaaNavigation)
-                .HasForeignKey(p => p.IdCcaa);
-
-            modelBuilder.Entity<Municipio>()
-              .HasOne(m => m.IdProvinciaNavigation)
-              .WithMany(p => p.Municipios)
-              .HasForeignKey(m => m.IdProvincia);
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Alerta>().ToTable("Alerta");
             modelBuilder.Entity<EstadoAlerta>().ToTable("EstadoAlerta");
             modelBuilder.Entity<TipoSuceso>().ToTable("TipoSuceso");
+            modelBuilder.Entity<ClaseSuceso>().ToTable("ClaseSuceso");
             modelBuilder.Entity<Menu>().ToTable("Menu");
-            modelBuilder.Entity<Ccaa>().ToTable("CCAA");
             modelBuilder.Entity<Territorio>().ToTable("Territorio");
-            modelBuilder.Entity<Provincia>().ToTable("Provincia");
             modelBuilder.Entity<Municipio>().ToTable("Municipio");
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
         }
@@ -107,6 +96,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Municipio>? Municipios { get; set; }
 
         public DbSet<Suceso> Sucesos { get; set; }
+
+        public DbSet<ClaseSuceso> ClasesSucesos { get; set; }
         public DbSet<Incendio> Incendios { get; set; }
         public DbSet<NivelGravedad> NivelesGravedad { get; set; }
 

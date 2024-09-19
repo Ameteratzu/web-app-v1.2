@@ -1,5 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries;
+using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
+using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -33,6 +34,22 @@ namespace DGPCE.Sigemad.API.Controllers
         {
             var pagination = await _mediator.Send(query);
             return Ok(pagination);
+        }
+
+        [HttpGet]
+        [Route("busquedaIncendioNacional")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<ActionResult<PaginationVm<Incendio>>> GetIncendioNacional(
+       [FromQuery] GetIncendiosNacionalesByIdQuery query)
+        {
+            var incendio = await _mediator.Send(query);
+
+            if (incendio == null)
+                return NotFound();
+
+            return Ok(incendio);
         }
     }
 }
