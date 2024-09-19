@@ -1,20 +1,12 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetEstadosAlertasList;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Alertas;
 using DGPCE.Sigemad.Application.Specifications.EstadosAlertas;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.GetEstadosAlertasList
 {
@@ -32,8 +24,8 @@ namespace DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.GetEstadosAl
         public async Task<PaginationVm<EstadosAlertasVm>> Handle(GetEstadosAlertasListQuery request, CancellationToken cancellationToken)
         {
             var alertasSpecificationParams = new EstadosAlertasSpecificationParams
-            {                
-                PageIndex = request.PageIndex,
+            {
+                Page = request.PageIndex,
                 PageSize = request.PageSize,
                 Search = request.Search,
                 Sort = request.Sort,
@@ -55,7 +47,7 @@ namespace DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.GetEstadosAl
                 Count = totalAlertas,
                 Data = data,
                 PageCount = totalPages,
-                PageIndex = request.PageIndex,
+                Page = request.PageIndex,
                 PageSize = request.PageSize
             };
 

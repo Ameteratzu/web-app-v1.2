@@ -13,6 +13,7 @@ public class CreateIncendioCommand : IRequest<int>
     public int IdTipoSuceso { get; set; }
     public int IdClaseSuceso { get; set; }
     public int IdPeligroInicial { get; set; }
+    public int IdEstado { get; set; }
     public string Comentarios { get; set; }
     public Geometry GeoPosicion { get; set; }
     //public string WktUbicacion { get; set; }  // Se recibirá en formato WKT

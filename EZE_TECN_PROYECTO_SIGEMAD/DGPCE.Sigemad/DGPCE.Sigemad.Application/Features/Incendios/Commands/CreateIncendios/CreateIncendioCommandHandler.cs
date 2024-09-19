@@ -73,6 +73,12 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             throw new NotFoundException(nameof(NivelGravedad), request.IdPeligroInicial);
         }
 
+        var estado = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstado);
+        if (estado is null)
+        {
+            _logger.LogWarning($"request.IdEstado: {request.IdEstado}, no encontrado");
+            throw new NotFoundException(nameof(EstadoIncendio), request.IdEstado);
+        }
 
         //if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.WktUbicacion))
         if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))
@@ -96,12 +102,13 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
 
         var incendio = new Incendio
         {
-            IdSucesoNavigation = suceso,
+            Suceso = suceso,
             IdTerritorio = request.IdTerritorio,
             IdProvincia = request.IdProvincia,
             IdMunicipio = request.IdMunicipio,
             IdPrevisionPeligroGravedad = request.IdPeligroInicial,
             IdClaseSuceso = request.IdClaseSuceso,
+            IdEstado = request.IdEstado,
             Denominacion = request.Denominacion,
             Comentarios = request.Comentarios,
             FechaInicio = request.FechaInicio,

@@ -40,34 +40,34 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
         builder.Property(e => e.UtmX).HasColumnName("UTM_X");
         builder.Property(e => e.UtmY).HasColumnName("UTM_Y");
 
-        builder.HasOne(d => d.IdClaseSucesoNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.ClaseSuceso).WithMany()
             .HasForeignKey(d => d.IdClaseSuceso)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("ClaseSucesoIncendio");
 
-        builder.HasOne(d => d.IdMunicipioNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.Municipio).WithMany()
             .HasForeignKey(d => d.IdMunicipio)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("MunicipioIncendio");
 
-        builder.HasOne(d => d.IdPrevisionPeligroGravedadNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.NivelGravedad).WithMany()
             .HasForeignKey(d => d.IdPrevisionPeligroGravedad)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Incendio_NivelGravedad");
 
-        builder.HasOne(d => d.IdProvinciaNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.Provincia).WithMany()
             .HasForeignKey(d => d.IdProvincia)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("ProvinciaIncendio");
 
-        builder.HasOne(d => d.IdSucesoNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.Suceso).WithMany()
             .HasForeignKey(d => d.IdSuceso)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("SucesoIncendio");
 
-        builder.HasOne(d => d.IdTerritorioNavigation).WithMany(p => p.Incendios)
+        builder.HasOne(d => d.Territorio).WithMany()
             .HasForeignKey(d => d.IdTerritorio)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("SucesoTerritorio");
     }
 }

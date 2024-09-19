@@ -1,9 +1,7 @@
 using DGPCE.Sigemad.API.Middleware;
 using DGPCE.Sigemad.Application;
-using DGPCE.Sigemad.Infrastructure;
 using DGPCE.Sigemad.Identity;
-using DGPCE.Sigemad.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using DGPCE.Sigemad.Infrastructure;
 using NetTopologySuite.IO.Converters;
 
 

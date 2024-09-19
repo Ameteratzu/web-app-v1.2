@@ -9,6 +9,4 @@ public class Suceso
     public int? IdSigeMigracion { get; set; }
 
     public virtual TipoSuceso TipoSuceso { get; set; } = null!;
-
-    public virtual ICollection<Incendio> Incendios { get; set; } = new List<Incendio>();
 }

@@ -14,9 +14,9 @@ public class SucesoConfiguration : IEntityTypeConfiguration<Suceso>
 
         builder.Property(e => e.IdTipo).HasDefaultValue(1);
 
-        builder.HasOne(d => d.TipoSuceso).WithMany(p => p.Sucesos)
+        builder.HasOne(d => d.TipoSuceso).WithMany()
             .HasForeignKey(d => d.IdTipo)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("TipoSucesoSuceso");
     }
 }

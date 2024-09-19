@@ -20,6 +20,5 @@ public class Municipio
 
     public Geometry? GeoPosicion { get; set; }
 
-    public virtual Provincia IdProvinciaNavigation { get; set; } = null!;
-    public virtual ICollection<Incendio> Incendios { get; set; } = new List<Incendio>();
+    public virtual Provincia Provincia { get; set; } = null!;
 }

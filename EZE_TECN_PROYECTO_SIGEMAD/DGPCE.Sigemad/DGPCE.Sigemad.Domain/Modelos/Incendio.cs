@@ -11,8 +11,8 @@ public class Incendio: BaseDomainModel
     public int IdSuceso { get; set; }
     public int IdTerritorio { get; set; }
     public int IdProvincia { get; set; }
-
     public int IdMunicipio { get; set; }
+    public int IdEstado { get; set; }
 
     public string Denominacion { get; set; } = null!;
 
@@ -32,16 +32,19 @@ public class Incendio: BaseDomainModel
 
     public int IdPrevisionPeligroGravedad { get; set; }
     public DateTime FechaInicio { get; set; }
-    public bool? Borrado { get; set; }
+    public bool? Borrado { get; set; }    
 
-    public virtual ClaseSuceso IdClaseSucesoNavigation { get; set; } = null!;
+    public virtual ClaseSuceso ClaseSuceso { get; set; } = null!;
 
-    public virtual Municipio IdMunicipioNavigation { get; set; } = null!;
+    public virtual Municipio Municipio { get; set; } = null!;
 
-    public virtual NivelGravedad IdPrevisionPeligroGravedadNavigation { get; set; } = null!;
+    public virtual NivelGravedad NivelGravedad { get; set; } = null!;
 
-    public virtual Provincia IdProvinciaNavigation { get; set; } = null!;
+    public virtual Provincia Provincia{ get; set; } = null!;
 
-    public virtual Suceso IdSucesoNavigation { get; set; } = null!;
-    public virtual Territorio IdTerritorioNavigation { get; set; } = null!;
+    public virtual Suceso Suceso { get; set; } = null!;
+    public virtual Territorio Territorio { get; set; } = null!;
+
+    //public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
+
 }
