@@ -24,7 +24,7 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacio
             var incendioParams = new IncendiosSpecificationParams
             {
                Id = request.Id,
-               IdTerritorio = request.Idterritorio != null ? request.Idterritorio : 1,
+               IdTerritorio =  1,
             };
 
             var spec = new IncendiosSpecification(incendioParams);

@@ -9,8 +9,5 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacio
     {
         public int Id { get; set; }
 
-        public int? Idterritorio { get; set; }
-
-
     }
 }
