@@ -45,6 +45,6 @@ public class Incendio: BaseDomainModel
     public virtual Suceso Suceso { get; set; } = null!;
     public virtual Territorio Territorio { get; set; } = null!;
 
-    //public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
+    public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
 
 }

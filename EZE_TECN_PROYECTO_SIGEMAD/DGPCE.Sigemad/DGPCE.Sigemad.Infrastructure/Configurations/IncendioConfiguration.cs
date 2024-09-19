@@ -69,5 +69,10 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .HasForeignKey(d => d.IdTerritorio)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("SucesoTerritorio");
+
+        builder.HasOne(d => d.EstadoIncendio).WithMany()
+            .HasForeignKey(d => d.IdEstado)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("FK_Incendio_EstadoIncendio");
     }
 }
