@@ -94,6 +94,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Provincia>().ToTable("Provincia");
             modelBuilder.Entity<Municipio>().ToTable("Municipio");
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
+            modelBuilder.Entity<EstadoIncendio>().ToTable("EstadoIncendio");
         }
 
 
@@ -105,10 +106,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Territorio>? Territorios { get; set; }
         public DbSet<Provincia>? Provincias { get; set; }
         public DbSet<Municipio>? Municipios { get; set; }
-
         public DbSet<Suceso> Sucesos { get; set; }
         public DbSet<Incendio> Incendios { get; set; }
         public DbSet<NivelGravedad> NivelesGravedad { get; set; }
-
+        public DbSet<EstadoIncendio> EstadosIncendio { get; set; }
     }
 }

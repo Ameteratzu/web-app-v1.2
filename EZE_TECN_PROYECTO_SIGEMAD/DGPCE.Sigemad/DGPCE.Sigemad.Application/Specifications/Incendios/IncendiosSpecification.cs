@@ -11,7 +11,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         (!incendioParams.IdCcaa.HasValue || incendio.Provincia.IdCcaa == incendioParams.IdCcaa) &&
         (!incendioParams.IdProvincia.HasValue || incendio.IdProvincia == incendioParams.IdProvincia) &&
         (!incendioParams.IdMunicipio.HasValue || incendio.IdMunicipio == incendioParams.IdMunicipio) &&
-        //(!incendioParams.IdEstado.HasValue || incendio. == incendioParams.IdEstado) &&
+        (!incendioParams.IdEstado.HasValue || incendio.IdEstado == incendioParams.IdEstado) &&
         //(!incendioParams.IdEpisodio.HasValue || incendio.IdTerritorio == incendioParams.IdTerritorio) &&
         (!incendioParams.IdNivelGravedad.HasValue || incendio.IdPrevisionPeligroGravedad == incendioParams.IdNivelGravedad) &&
         //(!incendioParams.IdSuperficieAfectada.HasValue || incendio.id == incendioParams.IdTerritorio) &&
@@ -25,6 +25,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         AddInclude(i => i.Provincia);
         AddInclude(i => i.ClaseSuceso);
         AddInclude(i => i.NivelGravedad);
+        AddInclude(i => i.EstadoIncendio);
 
         ApplyPaging(incendioParams);
 
@@ -50,6 +51,12 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                     break;
                 case "nivelgravedaddesc":
                     AddOrderByDescending(i => i.IdPrevisionPeligroGravedad);
+                    break;
+                case "estadodasc":
+                    AddOrderBy(i => i.IdEstado);
+                    break;
+                case "estadodesc":
+                    AddOrderByDescending(i => i.IdEstado);
                     break;
                 default:
                     AddOrderBy(i => i.FechaInicio); // Orden por defecto
