@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
 using DGPCE.Sigemad.Application.Features.Shared;
+using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -43,9 +44,10 @@ namespace DGPCE.Sigemad.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [SwaggerOperation(Summary = "Busqueda de incendios en territorio nacional")]
-        public async Task<ActionResult<PaginationVm<Incendio>>> GetIncendioNacional(int id)
+        public async Task<ActionResult<Incendio>> GetIncendioNacional(int id)
         {
-            var incendio = await _mediator.Send(id);
+            var query = new GetIncendiosNacionalesByIdQuery(id);
+            var incendio = await _mediator.Send(query);
 
             if (incendio == null)
                 return NotFound();
