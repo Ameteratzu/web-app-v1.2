@@ -79,7 +79,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                 .HasForeignKey(p => p.IdCcaa);
 
             modelBuilder.Entity<Municipio>()
-              .HasOne(m => m.IdProvinciaNavigation)
+              .HasOne(m => m.Provincia)
               .WithMany(p => p.Municipios)
               .HasForeignKey(m => m.IdProvincia);
 

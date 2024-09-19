@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Specifications.EstadosAlertas
                  )
         {
 
-            ApplyPaging(estadosAlertasParams.PageSize * (estadosAlertasParams.PageIndex - 1), estadosAlertasParams.PageSize);
+            ApplyPaging(estadosAlertasParams.PageSize * (estadosAlertasParams.Page - 1), estadosAlertasParams.PageSize);
 
             if (!string.IsNullOrEmpty(estadosAlertasParams.Sort))
             {

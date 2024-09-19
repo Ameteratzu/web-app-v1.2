@@ -44,6 +44,11 @@ namespace DGPCE.Sigemad.Application.Specifications
             IsPagingEnable = true;
         }
 
+        protected void ApplyPaging(SpecificationParams specParams)
+        {
+            ApplyPaging((specParams.Page - 1) * specParams.PageSize, specParams.PageSize);
+        }
+
         public bool IsPagingEnable { get; private set; }
 
         protected void AddInclude(Expression<Func<T, object>> includeExpression)

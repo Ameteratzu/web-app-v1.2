@@ -96,7 +96,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
 
         var incendio = new Incendio
         {
-            IdSucesoNavigation = suceso,
+            Suceso = suceso,
             IdTerritorio = request.IdTerritorio,
             IdProvincia = request.IdProvincia,
             IdMunicipio = request.IdMunicipio,

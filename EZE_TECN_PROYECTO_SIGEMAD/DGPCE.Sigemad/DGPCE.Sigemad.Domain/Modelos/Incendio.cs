@@ -34,14 +34,14 @@ public class Incendio: BaseDomainModel
     public DateTime FechaInicio { get; set; }
     public bool? Borrado { get; set; }
 
-    public virtual ClaseSuceso IdClaseSucesoNavigation { get; set; } = null!;
+    public virtual ClaseSuceso ClaseSuceso { get; set; } = null!;
 
-    public virtual Municipio IdMunicipioNavigation { get; set; } = null!;
+    public virtual Municipio Municipio { get; set; } = null!;
 
-    public virtual NivelGravedad IdPrevisionPeligroGravedadNavigation { get; set; } = null!;
+    public virtual NivelGravedad NivelGravedad { get; set; } = null!;
 
-    public virtual Provincia IdProvinciaNavigation { get; set; } = null!;
+    public virtual Provincia Provincia{ get; set; } = null!;
 
-    public virtual Suceso IdSucesoNavigation { get; set; } = null!;
-    public virtual Territorio IdTerritorioNavigation { get; set; } = null!;
+    public virtual Suceso Suceso { get; set; } = null!;
+    public virtual Territorio Territorio { get; set; } = null!;
 }

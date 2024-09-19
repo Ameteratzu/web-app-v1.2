@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DGPCE.Sigemad.Application.Specifications
+﻿namespace DGPCE.Sigemad.Application.Specifications
 {
     public abstract class SpecificationParams
     {
         public string? Sort { get; set; }
 
-        public int PageIndex { get; set; } = 1;
+        private int _page = 1;
+        public int Page
+        {
+            get => _page;
+            set => _page = (value < 1) ? 1 : value;
+        }
 
         private const int MaxPageSize = 50;
         private int _pageSize = 3;

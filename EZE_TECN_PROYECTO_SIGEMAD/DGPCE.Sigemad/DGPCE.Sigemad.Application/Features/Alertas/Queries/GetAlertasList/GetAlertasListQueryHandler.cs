@@ -5,12 +5,6 @@ using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Alertas;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado
 {
@@ -28,10 +22,10 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEst
         public async Task<PaginationVm<AlertaVm>> Handle(GetAlertasListQuery request, CancellationToken cancellationToken)
         {
             var alertasSpecificationParams = new AlertasSpecificationParams
-            {                
+            {
                 IdEstado = request.idEstado,
                 FechaAlerta = request.fechaAlerta,
-                PageIndex = request.PageIndex,
+                Page = request.PageIndex,
                 PageSize = request.PageSize,
                 Search = request.Search,
                 Sort = request.Sort,
@@ -53,7 +47,7 @@ namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEst
                 Count = totalAlertas,
                 Data = data,
                 PageCount = totalPages,
-                PageIndex = request.PageIndex,
+                Page = request.PageIndex,
                 PageSize = request.PageSize
             };
 

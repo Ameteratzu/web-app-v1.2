@@ -1,5 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Shared;
+using DGPCE.Sigemad.Application.Specifications.Alertas;
+using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -24,15 +26,23 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
     {
         _logger.LogInformation($"{nameof(GetIncendiosListQueryHandler)} - BEGIN");
 
-        var incendios = await _unitOfWork.Repository<Incendio>().GetAllAsync();
+        var spec = new IncendiosSpecification(request);
+        var incendios = await _unitOfWork.Repository<Incendio>()
+        .GetAllWithSpec(spec);
+
+        var specCount = new IncendiosForCountingSpecification(request);
+        var totalIncendios = await _unitOfWork.Repository<Incendio>().CountAsync(specCount);
+
+        var rounded = Math.Ceiling(Convert.ToDecimal(totalIncendios) / Convert.ToDecimal(request.PageSize));
+        var totalPages = Convert.ToInt32(rounded);
 
         var pagination = new PaginationVm<Incendio>
         {
-            Count = incendios.Count,
+            Count = totalIncendios,
             Data = incendios,
-            PageCount = incendios.Count,
-            PageIndex = 0,
-            PageSize = 0
+            PageCount = totalPages,
+            Page = request.Page,
+            PageSize = request.PageSize
         };
 
         _logger.LogInformation($"{nameof(GetIncendiosListQueryHandler)} - END");

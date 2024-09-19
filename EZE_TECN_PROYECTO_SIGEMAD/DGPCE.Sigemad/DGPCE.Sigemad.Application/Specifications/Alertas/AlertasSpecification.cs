@@ -14,7 +14,7 @@ namespace DGPCE.Sigemad.Application.Specifications.Alertas
         {
             AddInclude(p => p.EstadoAlerta!);
 
-            ApplyPaging(alertasParams.PageSize * (alertasParams.PageIndex - 1), alertasParams.PageSize);
+            ApplyPaging(alertasParams.PageSize * (alertasParams.Page - 1), alertasParams.PageSize);
 
             if (!string.IsNullOrEmpty(alertasParams.Sort))
             {
