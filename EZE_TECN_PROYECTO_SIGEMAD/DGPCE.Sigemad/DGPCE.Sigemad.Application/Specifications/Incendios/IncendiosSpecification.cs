@@ -26,7 +26,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         AddInclude(i => i.Provincia);
         AddInclude(i => i.ClaseSuceso);
         AddInclude(i => i.NivelGravedad);
-        //AddInclude(i => i.EstadoIncendio);
+        AddInclude(i => i.EstadoIncendio);
 
         ApplyPaging(incendioParams);
 
@@ -53,12 +53,12 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case "nivelgravedaddesc":
                     AddOrderByDescending(i => i.IdPrevisionPeligroGravedad);
                     break;
-                //case "estadodasc":
-                //    AddOrderBy(i => i.IdEstado);
-                //    break;
-                //case "estadodesc":
-                //    AddOrderByDescending(i => i.IdEstado);
-                //    break;
+                case "estadodasc":
+                    AddOrderBy(i => i.IdEstado);
+                    break;
+                case "estadodesc":
+                    AddOrderByDescending(i => i.IdEstado);
+                    break;
                 default:
                     AddOrderBy(i => i.FechaInicio); // Orden por defecto
                     break;
