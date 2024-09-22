@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application;
 using DGPCE.Sigemad.Identity;
 using DGPCE.Sigemad.Infrastructure;
 using NetTopologySuite.IO.Converters;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddCors(options =>
     );
 });
 
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +53,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 
