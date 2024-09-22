@@ -1,11 +1,15 @@
 ﻿using FluentValidation;
 
-namespace DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
+namespace DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 
-public class CreateIncendioCommandValidator: AbstractValidator<CreateIncendioCommand>
+public class UpdateIncendioCommandValidator : AbstractValidator<UpdateIncendioCommand>
 {
-    public CreateIncendioCommandValidator()
+    public UpdateIncendioCommandValidator()
     {
+        RuleFor(p => p.Id)
+            .NotEmpty().WithMessage("Id no puede estar en blanco")
+            .NotNull().WithMessage("IdT es obligatorio");
+
         RuleFor(p => p.IdTerritorio)
             .NotEmpty().WithMessage("IdTerritorio no puede estar en blanco")
             .NotNull().WithMessage("IdTerritorio es obligatorio");

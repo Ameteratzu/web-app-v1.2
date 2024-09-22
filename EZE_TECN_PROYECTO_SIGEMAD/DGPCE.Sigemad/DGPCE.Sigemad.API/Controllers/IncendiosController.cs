@@ -1,8 +1,9 @@
 ﻿using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
+using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
+using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -54,5 +55,28 @@ namespace DGPCE.Sigemad.API.Controllers
 
             return Ok(incendio);
         }
+
+        [HttpPut(Name = "UpdateIncendio")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Update([FromBody] UpdateIncendioCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}", Name = "DeleteIncendio")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var command = new DeleteIncendioCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
     }
 }
