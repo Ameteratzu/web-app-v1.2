@@ -26,7 +26,8 @@ namespace DGPCE.Sigemad.Application.Behaviours
             catch (Exception ex)
             {
                 var requestName = typeof(TRequest).Name;
-                _logger.LogError(ex, "Application Request: Sucedio una excepcion para el request {Name} {@Request}", requestName, request);
+                var loggableRequest = new LoggableRequest<TRequest>(request);
+                _logger.LogError(ex, "Application Request: Sucedio una excepcion para el request {Name} {@Request}", requestName, loggableRequest.ToString());
                 throw;
             }
         }
