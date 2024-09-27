@@ -95,10 +95,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             IdTipo = request.IdTipoSuceso
         };
 
-        //Geometry requestGeometry = _geometryValidator.ConvertFromWkt(request.WktUbicacion);
-        //var (utmX, utmY, huso) = _coordinateTransformationService.ConvertToUTM(requestGeometry.Coordinate.Y, requestGeometry.Coordinate.X);
-
-        var (utmX, utmY, huso) = _coordinateTransformationService.ConvertToUTM(request.GeoPosicion.Coordinate.Y, request.GeoPosicion.Coordinate.X);
+        var (utmX, utmY, huso) = _coordinateTransformationService.ConvertToUTM(request.GeoPosicion);
 
         var incendio = new Incendio
         {

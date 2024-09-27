@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using DGPCE.Sigemad.Application.Helpers;
+using FluentValidation;
 
 namespace DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 
@@ -48,6 +49,7 @@ public class CreateIncendioCommandValidator: AbstractValidator<CreateIncendioCom
 
         RuleFor(p => p.GeoPosicion)
             .NotEmpty().WithMessage("GeoPosicion no puede estar en blanco")
-            .NotNull().WithMessage("GeoPosicion es obligatorio");
+            .NotNull().WithMessage("GeoPosicion es obligatorio")
+            .Must(GeoJsonValidatorUtil.IsGeometryInWgs84).WithMessage("La geometría no es válida, sistema de referencia no es Wgs84");
     }
 }
