@@ -1,0 +1,237 @@
+* {
+	font-family: 'Calibri' !important;
+}
+
+.border {
+	border: 1px solid #C0C0C0;
+}
+
+.text-info {
+	color: #156082;
+}
+
+.font-weight-bold {
+	font-weight: bold;
+}
+
+.font-size-48 {
+	font-size: 48px;
+}
+
+.font-size-16 {
+	font-size: 16px;
+}
+
+.text-decoration-none {
+	text-decoration: none;
+}
+
+.text-dark {
+	color: black;
+}
+
+.p-10 {
+	padding: 10px;
+}
+
+.border-radius-8 {
+	border-radius: 8px;
+}
+
+.font-size-20 {
+	font-size: 20px;
+}
+
+.calibri {
+	font-family: 'Calibri';
+}
+
+.d-flex {
+	display: flex;
+}
+
+.text-blue {
+	color: #3399FF;
+}
+
+.text-green {
+	color: #009900;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.w-50 {
+	width: 49%;
+}
+
+.mt-20 {
+	margin-top: 50px;
+}
+
+.border-bottom {
+	border-bottom: 0.50px solid #C0C0C0;
+}
+
+.w-30 {
+	width: 30px;
+}
+
+.h-30 {
+	height: 30px;
+}
+
+.mt-5 {
+	margin-top: 5px;
+}
+
+.me-20 {
+	margin-right: 20px;
+}
+
+.pt-12 {
+	padding-top: 12px;
+}
+
+.gap-50 {
+	gap: 130px;
+}
+
+.ms-10 {
+	margin-left: 100px;
+}
+
+.pt-15 {
+	padding-top: 15px;
+}
+
+.pe-15 {
+	margin-right: 15px;
+}
+
+.ms-30 {
+	margin-left: 30px;
+}
+
+.form-control {
+	color: black;
+	border-radius: 8px;
+	padding: 12px;
+	width: 100%;
+	border-color: #C0C0C0;
+	font-size: 16px;
+}
+
+label {
+	padding: 12px;
+	margin: 12px;
+}
+
+.w-16 {
+	width: 15%;
+	margin: 1% 1%;
+}
+
+.w-10 {
+	width: 9.9%;
+	margin: 1% 1%;
+}
+
+.w-100 {
+	width: 100%;
+}
+
+th,
+td {
+	font-size: 16px;
+}
+
+th {
+	text-align: left;
+}
+
+th,
+td {
+	padding: 12px;
+}
+
+.text-silver {
+	color: #888888;
+}
+
+.m--1 {
+	margin-top: -1%;
+}
+
+.mr-50 {
+	margin-right: 50px;
+}
+
+.ms-10 {
+	margin-left: 10px;
+}
+
+.btn-blue {
+	background-color: #30A0FF;
+	border-color: #30A0FF;
+	border-radius: 8px;
+	box-shadow: none;
+	margin: 3px;
+}
+
+.btn-white {
+	background-color: white;
+	border-color: #C0C0C0;
+	border-radius: 8px;
+	box-shadow: none;
+	margin: 3px;
+}
+
+.btn-green {
+	background-color: #157347;
+	border-color: #157347;
+	border-radius: 8px;
+	box-shadow: none;
+	margin: 3px;
+}
+
+.pb-15 {
+	padding-bottom: 15px;
+}
+
+.w-4699 {
+	width: 46.99px;
+}
+
+.ms-50 {
+	margin-left: 50px;
+}
+
+.mt-15 {
+	margin-top: 15px;
+}
+
+.mt-10 {
+	margin-top: 10px;
+}
+
+.mt-12 {
+	margin-top: 12px;
+}
+
+.p-20 {
+	padding: 20px;
+}
+
+.ms-100 {
+	margin-left: 100px;
+}
+
+.ms-50 {
+	margin-left: 50px;
+}
+
+.me-30 {
+	margin-right: 30px;
+}
