@@ -84,6 +84,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Municipio>().ToTable("Municipio");
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
             modelBuilder.Entity<EstadoIncendio>().ToTable("EstadoIncendio");
+            modelBuilder.Entity<TipoMovimiento>().ToTable("TipoMovimiento");
         }
 
 
@@ -101,5 +102,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Incendio> Incendios { get; set; }
         public DbSet<NivelGravedad> NivelesGravedad { get; set; }
         public DbSet<EstadoIncendio> EstadosIncendio { get; set; }
+
+        public DbSet<TipoMovimiento> TipoMovimientos { get; set; }
     }
 }
