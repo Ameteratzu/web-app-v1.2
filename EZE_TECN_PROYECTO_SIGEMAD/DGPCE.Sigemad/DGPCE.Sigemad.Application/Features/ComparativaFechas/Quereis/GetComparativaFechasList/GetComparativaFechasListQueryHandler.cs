@@ -5,7 +5,6 @@ using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.ComparativaFechas.Quereis.GetComparativaFechasList
 {
-
         public class GetComparativaFechasListQueryHandler : IRequestHandler<GetComparativaFechasListQuery, IReadOnlyList<ComparativaFecha>>
         {
             private readonly IUnitOfWork _unitOfWork;

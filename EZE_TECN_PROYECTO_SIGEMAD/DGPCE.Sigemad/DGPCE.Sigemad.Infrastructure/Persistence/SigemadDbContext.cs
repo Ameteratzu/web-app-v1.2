@@ -86,6 +86,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<EstadoIncendio>().ToTable("EstadoIncendio");
             modelBuilder.Entity<TipoMovimiento>().ToTable("TipoMovimiento");
             modelBuilder.Entity<ComparativaFecha>().ToTable("ComparativaFecha");
+            modelBuilder.Entity<Medio>().ToTable("Medio");
         }
 
 
@@ -105,5 +106,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<EstadoIncendio> EstadosIncendio { get; set; }
         public DbSet<TipoMovimiento> TipoMovimientos { get; set; }
         public DbSet<ComparativaFecha> ComparativaFechas { get; set; }
+        public DbSet<Medio> Medios { get; set; }
+
     }
 }
