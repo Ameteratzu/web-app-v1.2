@@ -2,6 +2,30 @@
 	font-family: 'Calibri' !important;
 }
 
+.font-size-16 {
+	font-size: 16px;
+}
+
+.w-70 {
+	width: 50%;
+}
+
+.border {
+	border: 1px solid #C0C0C0;
+}
+
+.p-5 {
+	padding: 5px;
+}
+
+.mr-13 {
+	margin-right: 13px;
+}
+
+.mt-24 {
+	margin-top: 24px;
+}
+
 .text-info {
 	color: #156082;
 }

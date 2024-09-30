@@ -49,8 +49,14 @@ export class FireNationalCreateComponent {
 
   public error:boolean = false;
 
+  public length:number;
+  public latitude:number;
+
+  public municipalityName:string = '';
+
   async ngOnInit() {
     localStorage.removeItem('coordinates');
+    localStorage.removeItem('polygon');
     
     this.formData = new FormGroup({
       territory: new FormControl(),
@@ -105,15 +111,50 @@ export class FireNationalCreateComponent {
     this.municipalities.set(municipalities);
   }
 
+  async setMunicipalityId(event: any) {
+    const municipality_id = event.target.value;
+    localStorage.setItem('municipality', municipality_id);
+
+    for (let municipality of this.municipalities()) {
+      if (municipality.id == Number(localStorage.getItem('municipality'))) {
+        this.latitude = Number(municipality.geoPosicion.coordinates[0]);
+        this.length = Number(municipality.geoPosicion.coordinates[1]);
+
+        const coordinates = [this.length, this.latitude];
+
+        localStorage.setItem('latitude', municipality.geoPosicion.coordinates[0]);
+        localStorage.setItem('length', municipality.geoPosicion.coordinates[1]);
+        localStorage.setItem('coordinates', JSON.stringify(coordinates));
+
+        this.municipalityName = municipality.descripcion;
+
+        this.formData.patchValue({
+          name: municipality.descripcion
+        });
+      }
+    }
+  }
+
   async onSubmit() {
 
     this.error = false;
 
     const data = this.formData.value;
-    data.coordinates = JSON.parse(localStorage.getItem('coordinates') || '{}');
-    data.coordinates.push(data.coordinates[0]);
+    data.coordinates = JSON.parse(localStorage.getItem('coordinates') ?? '{}');
 
-    console.log(data.coordinates);
+    if (localStorage.getItem('polygon')) {
+      data.geoposition = {
+        'type': 'Polygon',
+        'coordinates': [data.coordinates]
+      };
+
+    } else {
+      data.geoposition = {
+        'type': 'Point',
+        'coordinates': data.coordinates
+      };      
+    }
+
 
     await this.fireService
       .post(data)

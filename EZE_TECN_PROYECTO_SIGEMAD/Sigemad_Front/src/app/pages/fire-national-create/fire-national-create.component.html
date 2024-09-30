@@ -37,7 +37,7 @@
 			</div>
 
 			<div>
-				<select class="form-control" formControlName="municipality">
+				<select class="form-control" formControlName="municipality" (change)="setMunicipalityId($event)">
 					<option value=""></option>
 					<option value="{{ municipality.id }}" *ngFor="let municipality of municipalities()">
 						{{ municipality.descripcion }}
@@ -45,7 +45,7 @@
 				</select>
 			</div>
 
-			<img (click)="openModalMapCreate()" style="cursor: pointer; margin-left: 10px" src="/img/location-btn.svg" alt="location-btn">
+			<img (click)="openModalMapCreate()" style="cursor: pointer; margin-left: 10px" src="/assets/img/location-btn.svg" alt="location-btn">
 		</div>
 
 		<div class="d-flex mt-15">
@@ -54,7 +54,7 @@
 			</div>
 
 			<div class="w-300">
-				<input class="form-control" formControlName="name" placeholder="Santa María de Guía de Gran Canaria">
+				<input class="form-control" formControlName="name" value="{{ municipalityName }}" placeholder="Santa María de Guía de Gran Canaria">
 			</div>
 
 			<div class="inter p-12 font-weight-bold font-size-16 ms-30 w-120">
@@ -103,11 +103,11 @@
 
 		<div class="mt-30 mb-30 text-right" style="margin-right: 50px">
 			<button type="submit" class="btn-blue">
-				<img src="/img/check.svg" alt="check">
+				<img src="/assets/img/check.svg" alt="check">
 			</button>
 
 			<button type="button" (click)="closeModal()" class="btn-white">
-				<img src="/img/close.svg" alt="close">
+				<img src="/assets/img/close.svg" alt="close">
 			</button>
 		</div>
 	</form>

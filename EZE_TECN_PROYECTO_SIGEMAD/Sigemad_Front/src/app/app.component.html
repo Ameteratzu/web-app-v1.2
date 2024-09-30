@@ -9,11 +9,11 @@
 	<div class="d-flex">
 		<div class="sidebar">
 			<div>
-				<img src="/img/burger.svg" alt="burger">
+				<img src="/assets/img/burger.svg" alt="burger">
 			</div>
 
 			<div class="mt-32 mb-34">
-				<img src="/img/logo.svg" class="w-213" alt="burger">
+				<img src="/assets/img/logo.svg" class="w-213" alt="burger">
 			</div>
 
 			<div *ngFor="let item of menu" (click)="redirectTo(item.path)" class="calibri cursor-pointer menu-item p-7 rounded mt-0" [style]="active == item.path ? 'border: 1px solid rgb(' + item.color + '); background-color: rgb(' + item.color + ', 0.50)' : ''">
@@ -63,7 +63,7 @@
 			<div class="mt-55vh">
 				<div class="d-flex gap-5">
 					<div>
-						<img src="/img/user.svg" alt="">
+						<img src="/assets/img/user.svg" alt="">
 					</div>
 
 					<div>

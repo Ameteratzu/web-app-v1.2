@@ -22,40 +22,40 @@ export class AppComponent {
   public active:string;
 
   public menu = [
-    { name: 'Panel inicial', path: '/dashboard', icon: '/img/dashboard.svg', color: '204, 204, 0' },
-    { name: 'Buscador', path: '/search', icon: '/img/search.svg', color: '51, 153, 255' },
-    { name: 'Episodios', path: '/episodes', icon: '/img/episodes.svg', color: '102, 204, 0' },
+    { name: 'Panel inicial', path: '/dashboard', icon: '/assets/img/dashboard.svg', color: '204, 204, 0' },
+    { name: 'Buscador', path: '/search', icon: '/assets/img/search.svg', color: '51, 153, 255' },
+    { name: 'Episodios', path: '/episodes', icon: '/assets/img/episodes.svg', color: '102, 204, 0' },
   ];
 
   public naturals = [
-    { name: 'Incendios forestales', path: '/fire', icon: '/img/fire.svg', color: '187, 0, 0' },
-    { name: 'Terremotos', path: '/earthquakes', icon: '/img/earthquakes.svg', color: '144, 73, 0' },
-    { name: 'Meteorología adversa', path: '/adverse-weather', icon: '/img/adverse-weather.svg', color: '0, 0, 255' },
-    { name: 'Fenómenos volcánicos', path: '/volcanic-phenomena', icon: '/img/volcanic-phenomena.svg', color: '255, 128, 0' },
-    { name: 'Inundaciones', path: '/floods', icon: '/img/floods.svg', color: '0, 153, 153' },
+    { name: 'Incendios forestales', path: '/fire', icon: '/assets/img/fire.svg', color: '187, 0, 0' },
+    { name: 'Terremotos', path: '/earthquakes', icon: '/assets/img/earthquakes.svg', color: '144, 73, 0' },
+    { name: 'Meteorología adversa', path: '/adverse-weather', icon: '/assets/img/adverse-weather.svg', color: '0, 0, 255' },
+    { name: 'Fenómenos volcánicos', path: '/volcanic-phenomena', icon: '/assets/img/volcanic-phenomena.svg', color: '255, 128, 0' },
+    { name: 'Inundaciones', path: '/floods', icon: '/assets/img/floods.svg', color: '0, 153, 153' },
   ];
 
   public technologicals = [
-    { name: 'Riesgo químico', path: '/chemical-risk', icon: '/img/chemical-risk.svg', color: '156, 161, 35' },
-    { name: 'Mercancías peligrosas', path: '/dangerous-goods', icon: '/img/dangerous-goods.svg', color: '249, 215, 5' },
-    { name: 'Riesgo nuclear/radiológico', path: '/nuclear-radiological-risk', icon: '/img/nuclear-radiological-risk.svg', color: '204, 153, 255' },
+    { name: 'Riesgo químico', path: '/chemical-risk', icon: '/assets/img/chemical-risk.svg', color: '156, 161, 35' },
+    { name: 'Mercancías peligrosas', path: '/dangerous-goods', icon: '/assets/img/dangerous-goods.svg', color: '249, 215, 5' },
+    { name: 'Riesgo nuclear/radiológico', path: '/nuclear-radiological-risk', icon: '/assets/img/nuclear-radiological-risk.svg', color: '204, 153, 255' },
   ];
 
   public others = [
-    { name: 'Otros riesgos', path: '/other-risks', icon: '/img/other-risks.svg', color: '0, 134, 187' },
-    { name: 'OPE', path: '/ope', icon: '/img/ope.svg', color: '86, 130, 171' },
+    { name: 'Otros riesgos', path: '/other-risks', icon: '/assets/img/other-risks.svg', color: '0, 134, 187' },
+    { name: 'OPE', path: '/ope', icon: '/assets/img/ope.svg', color: '86, 130, 171' },
   ];
 
   public utilities = [
-    { name: 'Cuadro de mando', path: '/dashboard', icon: '/img/dashboard.svg', color: '102, 0, 102' },
-    { name: 'Documentación', path: '/documentation', icon: '/img/documentation.svg', color: '0, 153, 0' },
-    { name: 'Incidencias', path: '/incidents', icon: '/img/incidents.svg', color: '153, 0, 76' },
+    { name: 'Cuadro de mando', path: '/dashboard', icon: '/assets/img/dashboard.svg', color: '102, 0, 102' },
+    { name: 'Documentación', path: '/documentation', icon: '/assets/img/documentation.svg', color: '0, 153, 0' },
+    { name: 'Incidencias', path: '/incidents', icon: '/assets/img/incidents.svg', color: '153, 0, 76' },
   ];
 
   public admins = [
-    { name: 'Configuración', path: '/config', icon: '/img/config.svg', color: '169, 169, 169' },
-    { name: 'Usuarios', path: '/users', icon: '/img/users.svg', color: '102, 51, 0' },
-    { name: 'Catálogos', path: '/catalogs', icon: '/img/catalogs.svg', color: '55, 3, 159' },
+    { name: 'Configuración', path: '/config', icon: '/assets/img/config.svg', color: '169, 169, 169' },
+    { name: 'Usuarios', path: '/users', icon: '/assets/img/users.svg', color: '102, 51, 0' },
+    { name: 'Catálogos', path: '/catalogs', icon: '/assets/img/catalogs.svg', color: '55, 3, 159' },
   ];
 
   public user = {

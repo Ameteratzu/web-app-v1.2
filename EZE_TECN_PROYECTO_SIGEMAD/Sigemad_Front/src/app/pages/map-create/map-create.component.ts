@@ -1,13 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
-import { get } from 'ol/proj';
+import { get, transform } from 'ol/proj';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { Draw, Modify, Snap } from 'ol/interaction';
 import { DrawEvent }  from 'ol/interaction/Draw';
+import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
+
+import { MunicipalityService } from '../../services/municipality.service';
+
+import { Municipality } from '../../types/municipality.type';
 
 @Component({
   selector: 'app-map-create',
@@ -29,14 +35,17 @@ export class MapCreateComponent {
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
 
-  ngOnInit() {
+  public municipalityService = inject(MunicipalityService);
+
+  public municipalities = signal<Municipality[]>([]);
+
+  public length:number;
+  public latitude:number;
+
+  async ngOnInit() {
     // Map
-    const raster = new TileLayer({
-      source: new XYZ({
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        maxZoom: 19
-      })
-    });
+    this.length = Number(localStorage.getItem('length'));
+    this.latitude = Number(localStorage.getItem('latitude'));
 
     this.source = new VectorSource();
     this.vector = new VectorLayer({
@@ -48,20 +57,34 @@ export class MapCreateComponent {
       },
     });
 
-    const extent = get('EPSG:3857')!.getExtent().slice();
-
-    extent[0] += extent[0];
-    extent[2] += extent[2];
-
     this.map = new Map({
-      layers: [raster, this.vector],
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        }),
+        this.vector
+      ],
       target: 'map',
       view: new View({
-        center: [-400000, 4900000],
-        zoom: 6.2,
-        extent,
+        center: transform([-3, 40], 'EPSG:4326', 'EPSG:4326'),
+        zoom: 6.4,
+        projection: 'EPSG:4326'
       }),
     });
+
+    const point = new Point([this.length, this.latitude]);
+
+    const feature = new Feature({
+      geometry: point
+    });
+
+    const vectorLayer = new VectorLayer({
+      source: new VectorSource({
+        features: [feature]
+      })
+    });
+
+    this.map.addLayer(vectorLayer);
 
     this.addInteractions();
   }
@@ -83,8 +106,10 @@ export class MapCreateComponent {
       const coords = [];
 
       for (let coord of drawEvent.target.sketchCoords_[0]) {
-        coords.push(this.coord3857To4326(coord));
+        coords.push(coord);
       }
+
+      coords.push(coords[0]);
 
       this.coords = JSON.stringify(coords);
     });
@@ -97,6 +122,7 @@ export class MapCreateComponent {
   savePolygon() {
     if (this.coords) {
       localStorage.setItem('coordinates', this.coords);
+      localStorage.setItem('polygon', '1');
       this.closeModal();
     }
   }
@@ -104,24 +130,4 @@ export class MapCreateComponent {
   closeModal() {
     this.matDialogRef.close();
   }
-
-  coord3857To4326(coord:any) {    
-    const e_value = 2.7182818284;
-    const X = 20037508.34;
-    
-    const lat3857 = coord[0];
-    const long3857 = coord[1];
-    
-    const long4326 = (long3857 * 180) / X;
-    
-    let lat4326 = lat3857/(X / 180);
-    const exponent = (Math.PI / 180) * lat4326;
-    
-    lat4326 = Math.atan(Math.pow(e_value, exponent));
-    lat4326 = lat4326 / (Math.PI / 360);
-    lat4326 = lat4326 - 90;
-
-    return [lat4326, long4326];  
-  }
-
 }

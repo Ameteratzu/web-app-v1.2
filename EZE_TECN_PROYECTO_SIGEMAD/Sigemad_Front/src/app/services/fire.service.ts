@@ -50,10 +50,7 @@ export class FireService {
       IdEstado: 1,
       IdPeligroInicial: 1,
       comentarios: data.generalNote,
-      GeoPosicion: {
-        'type': 'Polygon',
-        'coordinates': data.coordinates
-      }
+      GeoPosicion: data.geoposition,
     }
 
     return firstValueFrom(
