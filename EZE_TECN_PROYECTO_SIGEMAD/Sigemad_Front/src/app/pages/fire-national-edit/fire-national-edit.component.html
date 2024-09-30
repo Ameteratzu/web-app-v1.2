@@ -1,0 +1,197 @@
+<div class="d-flex border-bottom">
+	<div class="w-50">
+		<h1 class="text-info font-weight-bold font-size-48 calibri">
+			Sistema de gestión de emergencia <br>
+			y apoyo a la decisión
+		</h1>
+	</div>
+
+	<div class="w-50 text-right">
+		<h1 class="text-blue font-weight-bold inter mt-20">Incendios forestales</h1>
+
+		<h2 class="text-green font-weight-bold inter">Búsqueda de sucesos</h2>
+	</div>
+</div>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formData">
+	<input type="hidden" formControlName="id" value="{{ fire.id }}">
+	<input type="hidden" formControlName="territory" value="{{ fire.idTerritorio }}">
+
+	<div class="d-flex pt-15 gap-50">
+		<div class="d-flex">
+			<div class="pt-12 pe-15 inter font-weight-bold font-size-16">
+				Denominación
+			</div>
+
+			<div>
+				<input formControlName="name" value="{{ fire.denominacion }}" class="form-control" type="text" placeholder="Santa María de Guía de Gran Canaría">
+			</div>
+		</div>
+
+		<div class="d-flex">
+			<div class="pt-12 pe-15 inter font-weight-bold font-size-16">
+				Provincia
+			</div>
+
+			<div>
+				<select formControlName="province" class="form-control" (change)="loadMunicipalities($event)">
+					<option value=""></option>
+					<option [selected]="province.id == fire.idProvincia" value="{{ province.id }}" *ngFor="let province of provinces()">
+						{{ province.descripcion }}
+					</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="d-flex">
+			<div class="pt-12 font-size-16 pe-15 inter font-weight-bold">
+				Municipio
+			</div>
+
+			<div>
+				<select formControlName="municipality" class="form-control">
+					<option value=""></option>
+					<option [selected]="municipality.id == fire.idMunicipio" value="{{ municipality.id }}" *ngFor="let municipality of municipalities()">
+						{{ municipality.descripcion }}
+					</option>
+				</select>
+			</div>
+
+			<div class="ms-10">
+				<img (click)="openModalMapEdit()" style="cursor: pointer;" src="/img/location-btn.svg" alt="location-btn">
+			</div>
+		</div>
+
+		<div class="d-flex">
+			<div class="pt-12 font-size-16 pe-15 inter font-weight-bold">
+				Inicio
+			</div>
+
+			<div>
+				<input class="form-control" formControlName="start" type="datetime-local" value="{{ fire.fechaInicio }}">
+			</div>		
+		</div>
+	</div>
+
+	<div class="d-flex pt-15 gap-50">
+		<div class="d-flex">
+			<div class="pt-12 font-size-16 pe-15 inter font-weight-bold">
+				Tipo de suceso
+			</div>
+
+			<div>
+				<select formControlName="event" class="form-control">
+					<option value=""></option>
+					<option [selected]="event.id == fire.idSuceso" value="{{ event.id }}" *ngFor="let event of events()">
+						{{ event.descripcion }}
+					</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="d-flex">
+			<div class="pt-12 font-size-16 pe-15 inter font-weight-bold">
+				Nota general
+			</div>
+
+			<div class="d-flex">
+				<textarea formControlName="note" class="form-control" rows="1" cols="134">{{ fire.comentarios }}</textarea>
+
+				<button class="btn-white">
+					<img src="/img/arrow-expand.svg" alt="arrow-expand">
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="border-bottom text-right me-20 pt-15 pb-15">
+		<button type="submit" class="btn-blue">
+			<img class="w-30 h-30" src="/img/check.svg" alt="check">
+		</button>
+
+		<button type="button" class="btn-white">
+			<img class="w-30 h-30" src="/img/list-btn.svg" alt="list-btn">
+		</button>
+
+		<button (click)="confirmDelete()" type="button" class="btn-white">
+			<img class="w-30 h-30" src="/img/close.svg" alt="close">
+		</button>
+
+		<button type="button" class="btn-white">
+			<img class="w-30 h-30" src="/img/refresh.svg" alt="refresh">
+		</button>
+
+		<button type="button" class="btn-white">
+			<img class="w-30 h-30" src="/img/back.svg" alt="back">
+		</button>
+	</div>
+</form>
+
+<div class="me-20 mt-5">
+	<img class="w-100" src="/img/graph.svg" alt="graph">
+</div>
+
+<hr class="me-20">
+
+<div class="d-flex mt-15 me-20">
+	<div class="w-50 inter font-size-20 text-blue font-weight-bold">
+		Registros
+	</div>
+
+	<div class="w-50 ms-50 text-right">
+		<span class="inter font-size-16 me-30">Registro 1 de 15</span>
+
+		<button class="btn-white">
+			<img src="/img/left-all.svg" alt="left-all">
+		</button>
+
+		<button class="btn-white">
+			<img src="/img/left.svg" alt="left">
+		</button>
+
+		<button class="btn-white">
+			<img src="/img/right.svg" alt="right">
+		</button>
+
+		<button class="btn-white">
+			<img src="/img/right-all.svg" alt="right-all">
+		</button>
+	</div>
+</div>
+
+<div>
+	<table class="w-100">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Fecha y hora</th>
+				<th>Tipo inform.</th>
+				<th>Proc. / Dest.</th>
+				<th>ENT. / SAL.</th>
+				<th>Medio</th>
+				<th>Número</th>
+				<th>Técnico</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr *ngFor="let item of items">
+				<td>
+					<img class="w-30" src="/img/arrow-down.svg" alt="arrow-down">
+				</td>
+
+				<td>{{ item.datetime }}</td>
+				<td>{{ item.info }}</td>
+				<td>{{ item.proc_dest }}</td>
+				<td>{{ item.ent_sal }}</td>
+				<td>{{ item.medium }}</td>
+				<td>{{ item.number }}</td>
+				<td>{{ item.technical }}</td>
+
+				<td>
+					<img src="/img/close.svg" alt="close">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

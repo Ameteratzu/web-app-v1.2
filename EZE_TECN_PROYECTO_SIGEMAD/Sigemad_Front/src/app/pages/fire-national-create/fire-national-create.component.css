@@ -1,0 +1,116 @@
+* {
+	font-family: 'Calibri' !important;
+}
+
+.alert-danger {
+	background-color: red;
+	color: white;
+	margin-top: 10px;
+	font-size: 16px;
+	padding: 20px;
+	margin-right: 30px;
+}
+
+.text-green {
+	color: #009900;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.mt-20 {
+	margin-top: 20px;
+}
+
+.font-size-24 {
+	font-size: 24px;
+}
+
+.font-size-16 {
+	font-size: 16px;
+}
+
+.font-weight-bold {
+	font-weight: bold;
+}
+
+.d-flex {
+	display: flex;
+}
+
+.ms-30 {
+	margin-left: 30px;
+}
+
+.w-120 {
+	width: 120px;
+}
+
+.w-200 {
+	width: 400px;
+}
+
+.p-12 {
+	padding: 12px;
+}
+
+.mt-15 {
+	margin-top: 15px;
+}
+
+.me-30 {
+	margin-right: 30px;
+}
+
+.mt-30 {
+	margin-top: 30px;
+}
+
+textarea {
+	width: 100%;
+}
+
+.w-300 {
+	width: 300px;
+}
+
+input {
+	width: 270px;
+}
+
+select {
+	width: 300px;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.mb-30 {
+	margin-bottom: 30px;
+}
+
+.btn-blue {
+	background-color: #30A0FF;
+	border-color: #30A0FF;
+	border-radius: 8px;
+	box-shadow: none;
+	margin: 3px;
+}
+
+.btn-white {
+	background-color: white;
+	border-color: #C0C0C0;
+	border-radius: 8px;
+	box-shadow: none;
+	margin: 3px;
+}
+
+.form-control {
+	color: #C0C0C0;
+	border-radius: 8px;
+	padding: 12px;
+	border-color: #C0C0C0;
+	font-size: 16px;
+}
