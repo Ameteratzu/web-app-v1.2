@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.EstadosIncendio.Queries.GetEstadosIncendioList;
-using DGPCE.Sigemad.Application.Features.TipoMovimientos.Quereis.GetTipoMovimientosList;
+﻿using DGPCE.Sigemad.Application.Features.TipoMovimientos.Quereis.GetTipoMovimientosList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
