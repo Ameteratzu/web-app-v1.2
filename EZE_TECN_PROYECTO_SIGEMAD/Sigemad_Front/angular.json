@@ -22,7 +22,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/assets/"
               }
             ],
             "styles": [
@@ -30,7 +31,9 @@
               "src/styles.css",
               "node_modules/ol/ol.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "baseHref": "/",
+            "deployUrl": "/"
           },
           "configurations": {
             "production": {
