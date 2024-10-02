@@ -7,7 +7,7 @@ using System.Net;
     namespace DGPCE.Sigemad.API.Controllers
     {
         [ApiController]
-        [Route("api/v1/[controller]")]
+        [Route("api/v1/tipos-movimientos")]
         public class TipoMovimientosController : ControllerBase
         {
             private readonly IMediator _mediator;

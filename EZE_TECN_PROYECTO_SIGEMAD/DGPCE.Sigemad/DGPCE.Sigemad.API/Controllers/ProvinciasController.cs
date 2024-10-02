@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList;
+﻿using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList;
 using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

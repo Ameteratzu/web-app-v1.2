@@ -1,6 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetEstadosAlertasList;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetEstadosAlertasList;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.DeleteAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;

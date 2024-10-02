@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.ComparativaFechas.Quereis.GetComparativaFechasList;
-using DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList;
+﻿using DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -8,7 +7,7 @@ using System.Net;
 namespace DGPCE.Sigemad.API.Controllers
 {
         [ApiController]
-        [Route("api/v1/[controller]")]
+        [Route("api/v1/medios")]
         public class MediosController : ControllerBase
         {
             private readonly IMediator _mediator;

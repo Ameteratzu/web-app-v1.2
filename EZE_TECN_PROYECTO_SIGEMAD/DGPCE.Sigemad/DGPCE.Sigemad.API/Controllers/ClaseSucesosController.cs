@@ -6,7 +6,7 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers
 {
-        [Route("api/v1/[controller]")]
+        [Route("api/v1/clase-suceso")]
         [ApiController]
         public class ClaseSucesosController : ControllerBase
         {

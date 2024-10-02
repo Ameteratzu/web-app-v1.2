@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.DeleteAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado;
@@ -8,9 +7,7 @@ using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.DeleteAlertas;
 using DGPCE.Sigemad.Application.Features.Shared;
 
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers

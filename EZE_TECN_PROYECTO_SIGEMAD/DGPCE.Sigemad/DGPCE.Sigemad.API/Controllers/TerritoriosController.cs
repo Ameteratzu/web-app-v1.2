@@ -1,6 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
