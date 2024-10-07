@@ -1,548 +1,727 @@
-SET IDENTITY_INSERT dbo.TipoImpacto ON;
+SET IDENTITY_INSERT dbo.ImpactoClasificado ON;
+
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (1, 'Consecuencia', 'Personas', 'Personas', 'Fallecidos', 'Fallecidos', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (2, 'Consecuencia', 'Personas', 'Personas', 'Desaparecidos', 'Desaparecidos', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (3, 'Consecuencia', 'Personas', 'Personas', 'Personas sin hogar', 'Personas sin hogar', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (4, 'Consecuencia', 'Personas', 'Personas', 'Personas aisladas', 'Personas aisladas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (5, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Heridos', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (6, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Quemados', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (7, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Intoxicados', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (8, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Contagiados', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (9, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Contaminados', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (10, 'Consecuencia', 'Personas', 'Personas', 'Heridos', 'Irradiados', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (11, 'Actuación', 'Personas', 'Personas', 'Rescate de personas', 'Rescate de personas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (12, 'Actuación', 'Personas', 'Personas', 'Evacuación', 'Evacuación', 1);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (13, 'Actuación', 'Personas', 'Personas', 'Albergue', 'Albergue', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (14, 'Actuación', 'Personas', 'Personas', 'Confinamiento', 'Confinamiento', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (15, 'Actuación', 'Personas', 'Personas', 'Realojo', 'Realojo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (16, 'Actuación', 'Personas', 'Personas', 'Asistencia psicosocial', 'Asistencia psicosocial', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (17, 'Actuación', 'Personas', 'Personas', 'Búsqueda de personas', 'Búsqueda de personas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (18, 'Actuación', 'Personas', 'Personas', 'Identificación de cadáveres', 'Identificación de cadáveres', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (19, 'Actuación', 'Personas', 'Personas', 'Asistencia sanitaria', 'Asistencia sanitaria', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (20, 'Actuación', 'Personas', 'Personas', 'Asistencia sanitaria', 'Hospitalización', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (21, 'Actuación', 'Personas', 'Personas', 'Asistencia sanitaria', 'Traslado de pacientes a otros hospitales', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (22, 'Actuación', 'Personas', 'Personas', 'Profilaxis radiológica', 'Profilaxis radiológica', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (23, 'Actuación', 'Personas', 'Personas', 'Medidas de protección personal', 'Medidas de protección personal', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (24, 'Actuación', 'Personas', 'Personas', 'Activación de ECD/ABRS', 'Activación de ECD', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (25, 'Actuación', 'Personas', 'Personas', 'Activación de ECD/ABRS', 'Activación de ABRS', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (26, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en el suministro de agua', 'Anomalias en el suministro de agua', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (27, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en el suministro de electricidad', 'Anomalias en el suministro de electricidad', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (28, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en el suministro de gas', 'Anomalias en el suministro de gas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (29, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en la red de alcantarillado', 'Anomalias en la red de alcantarillado', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (30, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en la red de saneamiento', 'Anomalias en la red de saneamiento', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (31, 'Actuación', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Interrupción de servicios educativos', 'Interrupción de servicios educativos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (32, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Interrupción de servicios sanitarios', 'Interrupción de servicios sanitarios', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (33, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en comunicaciones telefónicas y telemáticas', 'Anomalias en la telefonía fija', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (34, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en comunicaciones telefónicas y telemáticas', 'Anomalias en la telefonía móvil', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (35, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en comunicaciones telefónicas y telemáticas', 'Cortes de conexión a internet', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (36, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en el tráfico ferroviario', 'Anomalias en el tráfico ferroviario de la red convencional', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (37, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en el tráfico ferroviario', 'Anomalias en el tráfico ferroviario de alta velocidad', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (38, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en tráfico aéreo', 'Anomalias en tráfico aéreo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (39, 'Consecuencia', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Interrupción de tráfico marítimo', 'Interrupción de tráfico marítimo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (40, 'Actuación', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Anomalias en tráfico aéreo', 'Seguridad en la navegación aérea', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (41, 'Actuación', 'Servicios básicos', 'Anomalias en los servicios básicos', 'Restablecimiento de servicios básicos', 'Restablecimiento de servicios básicos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (42, 'Consecuencia', 'Servicios básicos', 'Vialidad en carreteras', 'Corte de carreteras', 'Circulación nivel negro en vías de alta capacidad', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (43, 'Consecuencia', 'Servicios básicos', 'Vialidad en carreteras', 'Corte de carreteras', 'Circulación nivel negro en carreteras ------', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (44, 'Consecuencia', 'Servicios básicos', 'Vialidad en carreteras', 'Incidencia en carreteras', 'Circulación nivel rojo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (45, 'Consecuencia', 'Servicios básicos', 'Vialidad en carreteras', 'Incidencia en carreteras', 'Circulación nivel amarillo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (46, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en edificaciones en zonas urbanas', 'Daños en viviendas unifamiliares', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (47, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en edificaciones en zonas urbanas', 'Daños en edificios de viviendas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (48, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en bienes agropecuarios', 'Daños en viviendas en medio rural o forestal', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (49, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en bienes agropecuarios', 'Daños en instalaciones agropecuarias', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (50, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en edificaciones en zonas urbanas', 'Daños en garajes', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (51, 'Consecuencia', 'Daños', 'Daños en edificaciones', 'Daños en edificaciones en zonas urbanas', 'Daños en oficinas, comercios y almacenes', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (52, 'Actuación', 'Daños', 'Daños en edificaciones', 'Inspección de edificios', 'Inspección de edificios', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (53, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en la red de suministro de agua', 'Daños en la red de suministro de agua', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (54, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en la red de distribución eléctrica', 'Daños en la red de distribución energía eléctrica', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (55, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en la red de distribución de gas', 'Daños en la red de distribución de gas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (56, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en la red de saneamiento', 'Daños en la red de saneamiento', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (57, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en vías urbanas', 'Daños en vías urbanas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (58, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en carreteras', 'Daños en carreteras', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (59, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en la red de ferrocarril', 'Daños en la red de ferrocarril', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (60, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en las telecomunicaciones', 'Daños en las telecomunicaciones', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (61, 'Consecuencia', 'Daños', 'Daños en redes de distribución', 'Daños en oleoductos', 'Daños en oleoducto', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (62, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en puertos marítimos', 'Daños en puertos marítimos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (63, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en aeropuertos', 'Daños en aeropuertos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (64, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en bienes industriales', 'Daños en bienes industriales', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (65, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en presas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (66, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en centros operativos FAS y C Seguridad', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (67, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en centros sanitarios', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (68, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en centros educativos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (69, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en parques de bomberos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (70, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en edificios de uso público', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (71, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en edificios histórico-artísticos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (72, 'Consecuencia', 'Daños', 'Daños en construcciones de especial importancia', 'Daños en construcciones de especial importancia', 'Daños en otras construcciones', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (73, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Daños en bienes agropecuarios', 'Daños en agricultura', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (74, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Daños en bienes agropecuarios', 'Daños a animales', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (75, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Efectos geomorfológicos', 'Efectos geomorfológicos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (76, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Efectos hidrológicos', 'Efectos hidrológicos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (77, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Contaminación', 'Contaminación hídrica', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (78, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Contaminación', 'Nube tóxica', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (79, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Contaminación', 'Contaminación del suelo', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (80, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Contaminación', 'Contaminación marina', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (81, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Efectos hidrológicos', 'Desbordamiento de ríos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (82, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Vertido de sustancias químicas', 'Vertido de sustancias químicas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (83, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Contaminación', 'Contaminación radiológica', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (84, 'Actuación', 'Medio natural y otros', 'Medio natural', 'Control de accesos', 'Control de accesos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (85, 'Actuación', 'Medio natural y otros', 'Medio natural', 'Control de agua y alimentos', 'Control de agua y alimentos', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (86, 'Actuación', 'Medio natural y otros', 'Medio natural', 'Estabulación de animales', 'Estabulación de animales', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (87, 'Consecuencia', 'Medio natural y otros', 'Medio natural', 'Otros', 'Otros efectos en el medio natural', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (88, 'Consecuencia', 'Medio natural y otros', 'Otros', 'Daños en áreas urbanas', 'Caída de árboles', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (89, 'Consecuencia', 'Medio natural y otros', 'Otros', 'Daños en áreas urbanas', 'Daños en vehículos automoviles', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (90, 'Consecuencia', 'Medio natural y otros', 'Otros', 'Daños en áreas urbanas', 'Daños en mobiliario urbano', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (91, 'Consecuencia', 'Medio natural y otros', 'Otros', 'Otros', 'Impacto económico', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (92, 'Consecuencia', 'Medio natural y otros', 'Otros', 'Otros', 'Otras consecuencias', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (93, 'Actuación', 'Medio natural y otros', 'Otros', 'Medidas administrativas públicas', 'Medidas administrativas públicas', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (94, 'Actuación', 'Medio natural y otros', 'Otros', 'Monitorización y evaluación', 'Monitorización y evaluación', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (95, 'Actuación', 'Medio natural y otros', 'Otros', 'Medidas de reconstrucción', 'Medidas de reconstrucción', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (96, 'Actuación', 'Medio natural y otros', 'Otros', 'Medidas administrativas públicas', 'Concesión de subvenciones', 0);
+INSERT INTO ImpactoClasificado (Id, TipoImpacto, GrupoImpacto, SubgrupoImpacto, ClaseImpacto, Descripcion, RelevanciaGeneral) VALUES (97, 'Actuación', 'Medio natural y otros', 'Otros', 'Otros', 'Otras actuaciones', 0);
+
+
+SET IDENTITY_INSERT dbo.ImpactoClasificado OFF;
+
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (1, 'Causa', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (2, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (3, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (4, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (5, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (6, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (7, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (8, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (9, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (10, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'NumeroGraves', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (11, 'NumeroIntervinientes', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (12, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (13, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (14, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (15, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (16, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (16, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (16, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (16, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (16, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (17, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (18, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (18, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (18, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (18, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (18, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (19, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (19, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (19, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (19, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (19, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (20, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (20, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (20, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (20, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (20, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (21, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (21, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (21, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (21, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (21, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (22, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (23, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (24, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (25, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (26, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (27, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (28, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (29, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (30, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (31, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (32, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (33, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (34, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (35, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (36, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (37, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (38, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'AlteracionInterrupcion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (39, 'NumeroLocalidades', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (40, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (41, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (42, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (43, 'NumeroUsuarios', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (44, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (45, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (46, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (47, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (48, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (49, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (50, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (51, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (52, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (53, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (54, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (55, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (56, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (57, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (58, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (59, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (60, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (61, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (62, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (63, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (64, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (65, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (66, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (67, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (68, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (69, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (70, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (71, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (72, 'TipoDanio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (73, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (73, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (73, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (73, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (73, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (74, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (74, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (74, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (74, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (74, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (75, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (75, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (75, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (75, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (75, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (76, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (77, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (78, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (79, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (80, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (81, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (81, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (81, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (81, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (81, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (82, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (83, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (83, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (83, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (83, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (83, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (84, 'ZonaPlanificacion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (85, 'ZonaPlanificacion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'FechaHoraFin', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (86, 'ZonaPlanificacion', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (87, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (87, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (87, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (87, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (87, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (88, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (88, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (88, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (88, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (88, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (89, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (89, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (89, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (89, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (89, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (90, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (90, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (90, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (90, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (90, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (91, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (91, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (91, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (91, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (91, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (92, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (92, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (92, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (92, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (92, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (93, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (93, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (93, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (93, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (93, 'Fecha', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (94, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (94, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (94, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (94, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (94, 'FechaHora', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (95, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (95, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (95, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (95, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (95, 'Fecha', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (96, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (96, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (96, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (96, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (96, 'Fecha', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'Nuclear', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'ValorAD', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'Numero', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'Observaciones', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'FechaHoraInicio', 1);
+INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, EsObligatorio) VALUES (97, 'FechaHoraFin', 1);
 
-INSERT INTO dbo.TipoImpacto (Id,Descripcion) VALUES
-	 (1,N'Consecuencia'),
-	 (2,N'Actuación');
 
-SET IDENTITY_INSERT dbo.TipoImpacto OFF;
 
--- ==================================================================
 
-SET IDENTITY_INSERT dbo.GrupoImpacto ON;
 
-INSERT INTO GrupoImpacto (Id, Descripcion) VALUES (1, 'Personas');
-INSERT INTO GrupoImpacto (Id, Descripcion) VALUES (2, 'Servicios básicos');
-INSERT INTO GrupoImpacto (Id, Descripcion) VALUES (3, 'Daños');
-INSERT INTO GrupoImpacto (Id, Descripcion) VALUES (4, 'Medio natural y otros');
 
 
-SET IDENTITY_INSERT dbo.GrupoImpacto OFF;
 
--- ==================================================================
 
-SET IDENTITY_INSERT dbo.SubgrupoImpacto ON;
 
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (1, 1, 'Personas');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (2, 2, 'Anomalias en los servicios básicos');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (3, 2, 'Vialidad en carreteras');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (4, 3, 'Daños en edificaciones');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (5, 3, 'Daños en redes de distribución');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (6, 3, 'Daños en construcciones de especial importancia');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (7, 4, 'Medio natural');
-
-INSERT INTO SubgrupoImpacto (Id, IdGrupoImpacto, Descripcion) 
-VALUES (8, 4, 'Otros');
-
-SET IDENTITY_INSERT dbo.SubgrupoImpacto OFF;
-
--- ==================================================================
-
-SET IDENTITY_INSERT dbo.ClaseImpacto ON;
-
--- SUBGRUPO: PERSONAS
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (1, 1, 'Fallecidos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (2, 1, 'Desaparecidos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (3, 1, 'Personas sin hogar');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (4, 1, 'Personas aisladas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (5, 1, 'Heridos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (6, 1, 'Rescate de personas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (7, 1, 'Evacuación');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (8, 1, 'Albergue');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (9, 1, 'Confinamiento');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (10, 1, 'Realojo');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (11, 1, 'Asistencia psicosocial');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (12, 1, 'Búsqueda de personas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (13, 1, 'Identificación de cadáveres');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (14, 1, 'Asistencia sanitaria');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (15, 1, 'Profilaxis radiológica');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (16, 1, 'Medidas de protección personal');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (17, 1, 'Activación de ECD/ABRS');
-
--- SUBGRUPO: Anomalias en los servicios básicos
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (18, 2, 'Anomalias en el suministro de agua');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (19, 2, 'Anomalias en el suministro de electricidad');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (20, 2, 'Anomalias en el suministro de gas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (21, 2, 'Anomalias en la red de alcantarillado');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (22, 2, 'Anomalias en la red de saneamiento');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (23, 2, 'Interrupción de servicios educativos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (24, 2, 'Interrupción de servicios sanitarios');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (25, 2, 'Anomalias en comunicaciones telefónicas y telemáticas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (26, 2, 'Anomalias en el tráfico ferroviario');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (27, 2, 'Anomalias en tráfico aéreo');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (28, 2, 'Interrupción de tráfico marítimo');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (29, 2, 'Anomalias en tráfico aéreo');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (30, 2, 'Restablecimiento de servicios básicos');
-
--- SUBGRUPO: Vialidad en carreteras
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (31, 3, 'Corte de carreteras');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (32, 3, 'Incidencia en carreteras');
-
--- SUBGRUPO: Daños en edificaciones
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (33, 4, 'Daños en edificaciones en zonas urbanas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (34, 4, 'Daños en bienes agropecuarios');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (35, 4, 'Inspección de edificios');
-
--- SUBGRUPO: Daños en redes de distribución
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (36, 5, 'Daños en la red de suministro de agua');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (37, 5, 'Daños en la red de distribución eléctrica');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (38, 5, 'Daños en la red de distribución de gas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (39, 5, 'Daños en la red de saneamiento');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (40, 5, 'Daños en vías urbanas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (41, 5, 'Daños en carreteras');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (42, 5, 'Daños en la red de ferrocarril');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (43, 5, 'Daños en las telecomunicaciones');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (44, 5, 'Daños en oleoductos');
-
--- SUBGRUPO: Daños en construcciones de especial importancia
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (45, 6, 'Daños en puertos marítimos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (46, 6, 'Daños en aeropuertos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (47, 6, 'Daños en bienes industriales');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (48, 6, 'Daños en construcciones de especial importancia');
-
--- SUBGRUPO: Medio natural
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (49, 7, 'Daños en bienes agropecuarios');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (50, 7, 'Efectos geomorfológicos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (51, 7, 'Efectos hidrológicos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (52, 7, 'Contaminación');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (53, 7, 'Vertido de sustancias químicas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (54, 7, 'Control de accesos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (55, 7, 'Control de agua y alimentos');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (56, 7, 'Estabulación de animales');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (57, 7, 'Otros');
-
--- SUBGRUPO: Otros
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (58, 8, 'Daños en áreas urbanas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (59, 8, 'Medidas administrativas públicas');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (60, 8, 'Monitorización y evaluación');
-
-INSERT INTO ClaseImpacto (Id, IdSubgrupoImpacto, Descripcion) 
-VALUES (61, 8, 'Medidas de reconstrucción');
-
-
-
-
-SET IDENTITY_INSERT dbo.ClaseImpacto OFF;
-
--- ==================================================================
-
-SET IDENTITY_INSERT dbo.Impacto ON;
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (1, 1, 1, 'Fallecidos', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (2, 1, 2, 'Desaparecidos', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (3, 1, 3, 'Personas sin hogar', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (4, 1, 4, 'Personas aisladas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (5, 1, 5, 'Heridos', 1);
-
--- Add more as necessary based on your data
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (6, 1, 5, 'Quemados', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (7, 1, 5, 'Intoxicados', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (8, 1, 5, 'Contagiados', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (9, 1, 5, 'Contaminados', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (10, 1, 5, 'Irradiados', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (11, 2, 6, 'Rescate de personas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (12, 2, 7, 'Evacuación', 1);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (13, 2, 8, 'Albergue', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (14, 2, 9, 'Confinamiento', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (15, 2, 10, 'Realojo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (16, 2, 11, 'Asistencia psicosocial', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (17, 2, 12, 'Búsqueda de personas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (18, 2, 13, 'Identificación de cadáveres', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (19, 2, 14, 'Asistencia sanitaria', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (20, 2, 14, 'Hospitalización', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (21, 2, 14, 'Traslado de pacientes a otros hospitales', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (22, 2, 15, 'Profilaxis radiológica', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (23, 2, 16, 'Medidas de protección personal ', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (24, 2, 17, 'Activación de ECD', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (25, 2, 17, 'Activación de ABRS', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (26, 1, 18, 'Anomalias en el suministro de agua', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (27, 1, 19, 'Anomalias en el suministro de electricidad', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (28, 1, 20, 'Anomalias en el suministro de gas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (29, 1, 21, 'Anomalias en la red de alcantarillado', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (30, 1, 22, 'Anomalias en la red de saneamiento', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (31, 2, 23, 'Interrupción de servicios educativos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (32, 1, 24, 'Interrupción de servicios sanitarios', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (33, 1, 25, 'Anomalias en la telefonía fija', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (34, 1, 25, 'Anomalias en la telefonía móvil', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (35, 1, 25, 'Cortes de conexión a internet', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (36, 1, 26, 'Anomalias en el tráfico ferroviario de la red convencional', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (37, 1, 26, 'Anomalias en el tráfico ferroviario de alta velocidad', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (38, 1, 27, 'Anomalias en tráfico aéreo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (39, 1, 28, 'Interrupción de tráfico marítimo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (40, 2, 29, 'Seguridad en la navegación aérea', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (41, 2, 30, 'Restablecimiento de servicios básicos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (42, 1, 31, 'Circulación nivel negro en vías de alta capacidad', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (43, 1, 31, 'Circulación nivel negro en carreteras ------', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (44, 1, 32, 'Circulación nivel rojo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (45, 1, 32, 'Circulación nivel amarillo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (46, 1, 33, 'Daños en viviendas unifamiliares', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (47, 1, 33, 'Daños en edificios de viviendas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (48, 1, 34, 'Daños en viviendas en medio rural o forestal', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (49, 1, 34, 'Daños en instalaciones agropecuarias', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (50, 1, 33, 'Daños en garajes', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (51, 1, 33, 'Daños en oficinas, comercios y almacenes', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (52, 2, 35, 'Inspección de edificios', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (53, 1, 36, 'Daños en la red de suministro de agua', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (54, 1, 37, 'Daños en la red de distribución energía eléctrica', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (55, 1, 38, 'Daños en la red de distribución de gas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (56, 1, 39, 'Daños en la red de saneamiento', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (57, 1, 40, 'Daños en vías urbanas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (58, 1, 41, 'Daños en carreteras', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (59, 1, 42, 'Daños en la red de ferrocarril', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (60, 1, 43, 'Daños en las telecomunicaciones', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (61, 1, 44, 'Daños en oleoducto', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (62, 1, 45, 'Daños en puertos marítimos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (63, 1, 46, 'Daños en aeropuertos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (64, 1, 47, 'Daños en bienes industriales', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (65, 1, 48, 'Daños en presas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (66, 1, 48, 'Daños en centros operativos FAS y C Seguridad', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (67, 1, 48, 'Daños en centros sanitarios', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (68, 1, 48, 'Daños en centros educativos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (69, 1, 48, 'Daños en parques de bomberos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (70, 1, 48, 'Daños en edificios de uso público', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (71, 1, 48, 'Daños en edificios histórico-artísticos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (72, 1, 48, 'Daños en otras construcciones', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (73, 1, 49, 'Daños en agricultura', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (74, 1, 49, 'Daños a animales', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (75, 1, 50, 'Efectos geomorfológicos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (76, 1, 51, 'Efectos hidrológicos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (77, 1, 52, 'Contaminación hídrica', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (78, 1, 52, 'Nube tóxica', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (79, 1, 52, 'Contaminación del suelo', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (80, 1, 52, 'Contaminación marina', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (81, 1, 51, 'Desbordamiento de ríos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (82, 1, 53, 'Vertido de sustancias químicas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (83, 1, 52, 'Contaminación radiológica', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (84, 2, 54, 'Control de accesos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (85, 2, 55, 'Control de agua y alimentos', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (86, 2, 56, 'Estabulación de animales', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (87, 1, 57, 'Otros efectos en el medio natural', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (88, 1, 58, 'Caída de árboles', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (89, 1, 58, 'Daños en vehículos automoviles', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (90, 1, 58, 'Daños en mobiliario urbano', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (91, 1, 57, 'Impacto económico', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (92, 1, 57, 'Otras consecuencias', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (93, 2, 59, 'Medidas administrativas públicas', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (94, 2, 60, 'Monitorización y evaluación', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (95, 2, 61, 'Medidas de reconstrucción', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (96, 2, 59, 'Concesión de subvenciones', 0);
-
-INSERT INTO Impacto (Id, IdTipoImpacto, IdClaseImpacto, Descripcion, RelevanciaGeneral) 
-VALUES (97, 2, 57, 'Otras actuaciones', 0);
-
-SET IDENTITY_INSERT dbo.Impacto OFF;

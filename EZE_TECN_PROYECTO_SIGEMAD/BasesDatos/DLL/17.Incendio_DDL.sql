@@ -13,12 +13,14 @@ CREATE TABLE dbo.Incendio (
 	IdProvincia int NOT NULL,
 	IdMunicipio int NOT NULL,
 	IdTerritorio int NOT NULL,
+	IdPais int NOT NULL,
 	IdEstado int NOT NULL,
 	Denominacion varchar(255) NOT NULL,
 	UTM_X decimal(18,9) NULL,
 	UTM_Y decimal(18,9) NULL,
 	Huso int NULL,
 	GeoPosicion GEOMETRY,
+	Contenido text NULL,
 	Comentarios text NULL,
 	IdClaseSuceso int NOT NULL,
 	CoordenadasReales bit NOT NULL,
@@ -29,15 +31,15 @@ CREATE TABLE dbo.Incendio (
 	CreadoPor varchar(500),
 	FechaModificacion datetime,
 	ModificadoPor varchar(500),
-	[EstadoAlertaId] [uniqueidentifier] NULL,
 	CONSTRAINT Sucesos_PK PRIMARY KEY (Id),
-	CONSTRAINT ClaseSucesoIncendio FOREIGN KEY (IdClaseSuceso) REFERENCES dbo.ClaseSuceso(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT FK_Incendio_NivelGravedad FOREIGN KEY (IdPrevisionPeligroGravedad) REFERENCES dbo.NivelGravedad(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT MunicipioIncendio FOREIGN KEY (IdMunicipio) REFERENCES dbo.Municipio(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT ProvinciaIncendio FOREIGN KEY (IdProvincia) REFERENCES dbo.Provincia(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT SucesoIncendio FOREIGN KEY (IdSuceso) REFERENCES dbo.Suceso(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT SucesoTerritorio FOREIGN KEY (IdTerritorio) REFERENCES dbo.Territorio(Id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-	CONSTRAINT FK_Incendio_EstadoIncendio FOREIGN KEY (IdEstado) REFERENCES dbo.EstadoIncendio(Id) ON DELETE NO ACTION ON UPDATE NO ACTION
+	CONSTRAINT ClaseSucesoIncendio FOREIGN KEY (IdClaseSuceso) REFERENCES dbo.ClaseSuceso(Id),
+	CONSTRAINT FK_Incendio_NivelGravedad FOREIGN KEY (IdPrevisionPeligroGravedad) REFERENCES dbo.NivelGravedad(Id),
+	CONSTRAINT MunicipioIncendio FOREIGN KEY (IdMunicipio) REFERENCES dbo.Municipio(Id),
+	CONSTRAINT ProvinciaIncendio FOREIGN KEY (IdProvincia) REFERENCES dbo.Provincia(Id),
+	CONSTRAINT SucesoIncendio FOREIGN KEY (IdSuceso) REFERENCES dbo.Suceso(Id),
+	CONSTRAINT SucesoTerritorio FOREIGN KEY (IdTerritorio) REFERENCES dbo.Territorio(Id),
+	CONSTRAINT FK_Incendio_EstadoIncendio FOREIGN KEY (IdEstado) REFERENCES dbo.EstadoIncendio(Id),
+	CONSTRAINT FK_Incendio_Pais FOREIGN KEY (IdPais) REFERENCES dbo.Pais(Id)
 );
 
 
