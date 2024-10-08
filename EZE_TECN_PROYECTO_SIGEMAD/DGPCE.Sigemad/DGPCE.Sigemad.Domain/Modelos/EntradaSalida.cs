@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class Medio
+    public class EntradaSalida
     {
-        public Medio() { }
+        public EntradaSalida() { }
         public int Id { get; set; }
 
-        public string? Descripcion { get; set; }
+        public string Descripcion { get; set; } = null!;
     }
 }

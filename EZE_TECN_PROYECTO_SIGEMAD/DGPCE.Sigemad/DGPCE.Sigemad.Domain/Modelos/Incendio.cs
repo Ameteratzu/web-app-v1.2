@@ -7,7 +7,6 @@ public class Incendio: BaseDomainModel
 {
     public Incendio() { }
 
-
     public int IdSuceso { get; set; }
     public int IdTerritorio { get; set; }
     public int IdProvincia { get; set; }
