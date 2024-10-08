@@ -89,6 +89,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Medio>().ToTable("Medio");
             modelBuilder.Entity<Pais>().ToTable("Pais");
             modelBuilder.Entity<ProcedenciaDestino>().ToTable("ProcedenciaDestino");
+            modelBuilder.Entity<EstadoEvolucion>().ToTable("EstadoEvolucion");
         }
 
 
@@ -110,7 +111,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ComparativaFecha> ComparativaFechas { get; set; }
         public DbSet<Medio> Medios { get; set; }
         public DbSet<Pais> Paises { get; set; }
-        public DbSet<ProcedenciaDestino> procedenciaDestinos { get; set; }
+        public DbSet<ProcedenciaDestino> ProcedenciaDestinos { get; set; }
+        public DbSet<EstadoEvolucion> EstadosEvolucion { get; set; }
 
     }
 }
