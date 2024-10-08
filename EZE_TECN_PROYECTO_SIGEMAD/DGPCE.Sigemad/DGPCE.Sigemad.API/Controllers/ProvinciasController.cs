@@ -1,5 +1,7 @@
-﻿using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasByIdCCAAList;
 using DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -21,8 +23,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene el listado de las provincias")]
-        public async Task<IActionResult> GetProvincias()
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de las provincias")]
+        public async Task<ActionResult<Provincia>> GetProvincias()
         {
             var query = new GetProvinciasListQuery();
             var listado = await _mediator.Send(query);
@@ -35,8 +37,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene el listado de las provincias para una determinada comunidad autonoma")]
-        public async Task<IActionResult> GetProvinciasByIdCcaa(int idCcaa)
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de las provincias para una determinada comunidad autonoma")]
+        public async Task<ActionResult<IReadOnlyList<Provincia>>> GetProvinciasByIdCcaa(int idCcaa)
         {
             var query = new GetProvinciasByIdCCAAListQuery(idCcaa);
             var listado = await _mediator.Send(query);

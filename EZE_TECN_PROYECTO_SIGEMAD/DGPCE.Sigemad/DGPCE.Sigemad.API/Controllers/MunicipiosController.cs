@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,8 +25,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene el listado de los municipios para una determinada provincia")]
-        public async Task<IActionResult> GetMunicipiosByIdProvincia(int idProvincia)
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de los municipios para una determinada provincia")]
+        public async Task<ActionResult<IReadOnlyList<Municipio>>> GetMunicipiosByIdProvincia(int idProvincia)
         {
             var query = new GetMunicipioByIdProvinciaQuery(idProvincia);
             var listado = await _mediator.Send(query);

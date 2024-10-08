@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,8 +22,10 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene el listado de las comunidades autonomas y sus provincias")]
-        public async Task<IActionResult> GetComunidadesAutonomas()
+        [SwaggerOperation(
+            Tags = new[] { SwaggerTags.Maestros },
+            Summary = "Obtiene el listado de las comunidades autonomas y sus provincias")]
+        public async Task<ActionResult<IReadOnlyList<ComunidadesAutonomasVm>>> GetComunidadesAutonomas()
         {
             var query = new GetComunidadesAutonomasListQuery();
             var listado = await _mediator.Send(query);

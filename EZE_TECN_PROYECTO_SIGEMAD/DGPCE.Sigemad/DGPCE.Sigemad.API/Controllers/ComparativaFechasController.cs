@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.ComparativaFechas.Quereis.GetComparativaFechasList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.ComparativaFechas.Quereis.GetComparativaFechasList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,8 +22,8 @@ namespace DGPCE.Sigemad.API.Controllers
             [HttpGet]
             [ProducesResponseType((int)HttpStatusCode.OK)]
             [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-            [SwaggerOperation(Summary = "Obtiene todos las opciones de comparación entre fechas")]
-            public async Task<IActionResult> GetAll()
+            [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos las opciones de comparación entre fechas")]
+            public async Task<ActionResult<IReadOnlyList<ComparativaFecha>>> GetAll()
             {
                 var query = new GetComparativaFechasListQuery();
                 var listado = await _mediator.Send(query);

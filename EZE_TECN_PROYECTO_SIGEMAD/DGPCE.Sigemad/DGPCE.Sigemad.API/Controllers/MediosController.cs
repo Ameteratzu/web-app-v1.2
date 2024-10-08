@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,8 +22,8 @@ namespace DGPCE.Sigemad.API.Controllers
             [HttpGet]
             [ProducesResponseType((int)HttpStatusCode.OK)]
             [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-            [SwaggerOperation(Summary = "Obtiene el listado de medios completo")]
-            public async Task<IActionResult> GetAll()
+            [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de medios completo")]
+            public async Task<ActionResult<IReadOnlyList<Medio>>> GetAll()
             {
                 var query = new GetMediosListQuery();
                 var listado = await _mediator.Send(query);
