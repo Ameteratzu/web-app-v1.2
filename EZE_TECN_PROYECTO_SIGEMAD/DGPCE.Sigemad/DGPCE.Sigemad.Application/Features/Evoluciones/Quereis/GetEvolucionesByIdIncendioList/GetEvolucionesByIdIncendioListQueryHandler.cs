@@ -33,17 +33,14 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesB
             includes.Add(e => e.EntradaSalida);
             includes.Add(e => e.Tecnico);
             includes.Add(e => e.Incendio);
-            ;
+            includes.Add(e => e.EstadoEvolucion);
 
-   
-
+ 
             IReadOnlyList<Evolucion> evoluciones = (await _unitOfWork.Repository<Evolucion>().GetAsync(e => e.IdIncendio == request.IdIncendio, null, includes))
                     .OrderByDescending(e => e.FechaHoraEvolucion)          
                     .ToList()
                     .AsReadOnly();
-            
-
-
+          
             var evolucionesVm = _mapper.Map<IReadOnlyList<Evolucion>, IReadOnlyList<EvolucionVm>>(evoluciones);
 
             return evolucionesVm;

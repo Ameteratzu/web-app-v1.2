@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public bool Resumen { get; set; }
         public string? Observaciones { get; set; }
         public string? Prevision { get; set; }
-        public string Estado { get; set; }
+        public int IdEstadoEvolucion { get; set; }
         public decimal? SuperficieAfectadaHectarea { get; set; }
         public DateTime? FechaFinal { get; set; }
         public int IdProvinciaAfectada { get; set; }
@@ -38,5 +38,6 @@ namespace DGPCE.Sigemad.Domain.Modelos
 
         public virtual Incendio Incendio { get; set; } = null!;
 
+        public virtual EstadoEvolucion EstadoEvolucion { get; set; } = null!;
     }
 }

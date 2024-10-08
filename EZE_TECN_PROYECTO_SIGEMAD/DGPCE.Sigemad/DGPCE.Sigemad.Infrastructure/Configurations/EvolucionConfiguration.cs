@@ -29,9 +29,6 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
         builder.Property(e => e.Resumen)
             .IsRequired();
 
-        builder.Property(e => e.Estado)
-            .HasMaxLength(100)
-            .IsRequired();
 
         builder.Property(e => e.SuperficieAfectadaHectarea)
             .HasColumnType("decimal(10, 2)");
@@ -86,11 +83,18 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_Municipio");
 
-            builder.HasOne(d => d.Incendio)
+        builder.HasOne(d => d.Incendio)
            .WithMany()
            .HasForeignKey(d => d.IdIncendio)
            .OnDelete(DeleteBehavior.Restrict)
            .HasConstraintName("FK_Evolucion_Incendio");
+
+
+        builder.HasOne(d => d.EstadoEvolucion)
+            .WithMany()
+            .HasForeignKey(d => d.IdEstadoEvolucion)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("FK_Evolucion_EstadoEvolucion");
         }
         }
     }

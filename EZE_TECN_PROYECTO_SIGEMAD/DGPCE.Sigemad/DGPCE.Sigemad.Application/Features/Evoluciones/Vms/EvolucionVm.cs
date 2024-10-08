@@ -15,7 +15,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
         public bool Resumen { get; set; }
         public string? Observaciones { get; set; }
         public string? Prevision { get; set; }
-        public string Estado { get; set; }
         public decimal? SuperficieAfectadaHectarea { get; set; }
         public DateTime? FechaFinal { get; set; }
         public Geometry? GeoPosicionAreaAfectada { get; set; }
@@ -31,5 +30,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
         public virtual EntradaSalida EntradaSalida { get; set; } = null!;
 
         public virtual ApplicationUserVm Tecnico { get; set; } = null!;
+
+        public virtual EstadoEvolucion EstadoEvolucion { get; set; } = null!;
     }
 }

@@ -11,7 +11,7 @@ CREATE TABLE dbo.Evolucion (
     Resumen bit NOT NULL,
     Observaciones TEXT NULL,
     Prevision TEXT NULL,
-    Estado VARCHAR(100) NOT NULL,
+    IdEstadoEvolucion int NOT NULL,
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     FechaFinal DATETIME NULL,
     IdProvinciaAfectada int NOT NULL,
@@ -26,5 +26,6 @@ CREATE TABLE dbo.Evolucion (
     CONSTRAINT FK_Evolucion_ProcedenciaDestino FOREIGN KEY (IdProcedenciaDestino) REFERENCES dbo.ProcedenciaDestino(Id),
     CONSTRAINT FK_Evolucion_ApplicationUsers FOREIGN KEY (IdTecnico) REFERENCES dbo.ApplicationUsers(Id),
     CONSTRAINT FK_Evolucion_Provincia FOREIGN KEY (IdProvinciaAfectada) REFERENCES dbo.Provincia(Id),
-    CONSTRAINT FK_Evolucion_Municipio FOREIGN KEY (IdMunicipioAfectado) REFERENCES dbo.Municipio(Id)
+    CONSTRAINT FK_Evolucion_Municipio FOREIGN KEY (IdMunicipioAfectado) REFERENCES dbo.Municipio(Id),
+    CONSTRAINT FK_Evolucion_EstadoEvolucion FOREIGN KEY (IdEstadoEvolucion) REFERENCES dbo.estadoEvolucion(id);
 );
