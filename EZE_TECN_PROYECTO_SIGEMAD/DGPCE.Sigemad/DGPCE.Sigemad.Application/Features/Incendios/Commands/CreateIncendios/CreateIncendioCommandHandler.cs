@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 
-public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioCommand, int>
+public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioCommand, CreateIncendioResponse>
 {
     private readonly ILogger<CreateIncendioCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +27,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         _coordinateTransformationService = coordinateTransformationService;
     }
 
-    public async Task<int> Handle(CreateIncendioCommand request, CancellationToken cancellationToken)
+    public async Task<CreateIncendioResponse> Handle(CreateIncendioCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation(nameof(CreateIncendioCommandHandler) + " - BEGIN");
 
@@ -36,6 +36,13 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         {
             _logger.LogWarning($"request.IdTerritorio: {request.IdTerritorio}, no encontrado");
             throw new NotFoundException(nameof(Territorio), request.IdTerritorio);
+        }
+
+        var pais = await _unitOfWork.Repository<Pais>().GetByIdAsync(request.IdPais);
+        if (pais is null)
+        {
+            _logger.LogWarning($"request.IdPais: {request.IdPais}, no encontrado");
+            throw new NotFoundException(nameof(Territorio), request.IdPais);
         }
 
         var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia);
@@ -80,7 +87,6 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             throw new NotFoundException(nameof(EstadoIncendio), request.IdEstado);
         }
 
-        //if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.WktUbicacion))
         if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))
         {
             ValidationFailure validationFailure = new ValidationFailure();
@@ -101,6 +107,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         {
             Suceso = suceso,
             IdTerritorio = request.IdTerritorio,
+            IdPais = request.IdPais,
             IdProvincia = request.IdProvincia,
             IdMunicipio = request.IdMunicipio,
             IdPrevisionPeligroGravedad = request.IdPeligroInicial,
@@ -126,6 +133,6 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         _logger.LogInformation($"El incendio {incendio.Id} fue creado correctamente");
 
         _logger.LogInformation(nameof(CreateIncendioCommandHandler) + " - END");
-        return incendio.Id;
+        return new CreateIncendioResponse { Id = incendio.Id } ;
     }
 }

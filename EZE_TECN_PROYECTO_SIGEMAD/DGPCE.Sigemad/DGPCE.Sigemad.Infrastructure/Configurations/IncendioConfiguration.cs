@@ -65,10 +65,15 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("SucesoIncendio");
 
+        builder.HasOne(d => d.Pais).WithMany()
+            .HasForeignKey(d => d.IdPais)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("IncendioPais");
+
         builder.HasOne(d => d.Territorio).WithMany()
             .HasForeignKey(d => d.IdTerritorio)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("SucesoTerritorio");
+            .HasConstraintName("IncendioTerritorio");
 
         builder.HasOne(d => d.EstadoIncendio).WithMany()
             .HasForeignKey(d => d.IdEstado)

@@ -24,10 +24,12 @@ namespace DGPCE.Sigemad.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<ActionResult<int>> Create([FromBody] CreateIncendioCommand command)
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CreateIncendioResponse>> Create([FromBody] CreateIncendioCommand command)
         {
-            return await _mediator.Send(command);
+            var response = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id = response.Id}, response);
         }
 
         [HttpGet]
@@ -39,13 +41,12 @@ namespace DGPCE.Sigemad.API.Controllers
             return Ok(pagination);
         }
 
-        [HttpGet]
-        [Route("busquedaIncendioNacional/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Busqueda de incendios en territorio nacional")]
-        public async Task<ActionResult<Incendio>> GetIncendioNacional(int id)
+        [SwaggerOperation(Summary = "Busqueda de incendio por id")]
+        public async Task<ActionResult<Incendio>> GetById(int id)
         {
             var query = new GetIncendiosNacionalesByIdQuery(id);
             var incendio = await _mediator.Send(query);

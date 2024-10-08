@@ -10,6 +10,7 @@ public class Incendio: BaseDomainModel
 
     public int IdSuceso { get; set; }
     public int IdTerritorio { get; set; }
+    public int IdPais { get; set; }
     public int IdProvincia { get; set; }
     public int IdMunicipio { get; set; }
     public int IdEstado { get; set; }
@@ -23,6 +24,7 @@ public class Incendio: BaseDomainModel
     public int? Huso { get; set; }
 
     public Geometry? GeoPosicion { get; set; }
+    public string? Contenido { get; set; }
 
     public string? Comentarios { get; set; }
 
@@ -46,5 +48,6 @@ public class Incendio: BaseDomainModel
     public virtual Territorio Territorio { get; set; } = null!;
 
     public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
+    public virtual Pais Pais { get; set; } = null!;
 
 }

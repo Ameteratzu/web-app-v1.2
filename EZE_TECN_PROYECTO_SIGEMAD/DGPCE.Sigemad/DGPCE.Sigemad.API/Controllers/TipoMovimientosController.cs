@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.TipoMovimientos.Quereis.GetTipoMovimientosList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.TipoMovimientos.Quereis.GetTipoMovimientosList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,8 +22,8 @@ using System.Net;
             [HttpGet]
             [ProducesResponseType((int)HttpStatusCode.OK)]
             [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-            [SwaggerOperation(Summary = "Obtiene todos los tipos de movimientos")]
-            public async Task<IActionResult> GetAll()
+            [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los tipos de movimientos")]
+            public async Task<ActionResult<IReadOnlyList<TipoMovimiento>>> GetAll()
             {
                 var query = new GetTipoMovimientosLisQuery();
                 var listado = await _mediator.Send(query);

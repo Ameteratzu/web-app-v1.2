@@ -11,6 +11,10 @@ public class CreateIncendioCommandValidator: AbstractValidator<CreateIncendioCom
             .NotEmpty().WithMessage("IdTerritorio no puede estar en blanco")
             .NotNull().WithMessage("IdTerritorio es obligatorio");
 
+        RuleFor(p => p.IdPais)
+            .NotEmpty().WithMessage("IdPais no puede estar en blanco")
+            .NotNull().WithMessage("IdPais es obligatorio");
+
         RuleFor(p => p.IdProvincia)
             .NotEmpty().WithMessage("IdProvincia no puede estar en blanco")
             .NotNull().WithMessage("IdProvincia es obligatorio");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DGPCE.Sigemad.Application.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,7 +15,7 @@ namespace DGPCE.Sigemad.Application.Specifications
         {
             Criteria = criteria;
         }
-        public Expression<Func<T, bool>> Criteria { get; }
+        public Expression<Func<T, bool>> Criteria { get; private set; }
 
         public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
 
@@ -55,6 +56,19 @@ namespace DGPCE.Sigemad.Application.Specifications
         {
             Includes.Add(includeExpression);
         }
+
+        protected void AddCriteria(Expression<Func<T, bool>> criteria)
+        {
+            if (Criteria == null)
+            {
+                Criteria = criteria;
+            }
+            else
+            {
+                Criteria = Criteria.AndAlso(criteria); // Combina el criterio existente con el nuevo
+            }
+        }
+
 
     }
 }

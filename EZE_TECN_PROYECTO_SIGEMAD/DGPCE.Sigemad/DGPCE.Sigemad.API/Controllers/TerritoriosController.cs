@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,8 +22,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene todos los tipos de territorios")]
-        public async Task<IActionResult> GetTerritorio()
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los tipos de territorios")]
+        public async Task<ActionResult<IReadOnlyList<Territorio>>> GetTerritorio()
         {
             var query = new GetTerritoriosListQuery();
             var listado = await _mediator.Send(query);

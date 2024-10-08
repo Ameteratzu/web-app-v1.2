@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Features.TipoSucesos.Queries.GetTipoSucesosList;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.TipoSucesos.Queries.GetTipoSucesosList;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -6,7 +8,7 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/tipo-sucesos")]
     [ApiController]
     public class TipoSucesosController : ControllerBase
     {
@@ -20,8 +22,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Summary = "Obtiene todos los tipos de sucesos")]
-        public async Task<IActionResult> GetAll() 
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los tipos de sucesos")]
+        public async Task<ActionResult<IReadOnlyList<TipoSuceso>>> GetAll() 
         {
             var query = new GetTipoSucesosListQuery();
             var listado = await _mediator.Send(query);
