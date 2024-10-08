@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS dbo.Evolucion;
 GO
 CREATE TABLE dbo.Evolucion (
     Id INT PRIMARY KEY IDENTITY(1,1),
+    IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
     FechaHoraEvolucion DATETIME NOT NULL,
     IdEntradaSalida int NOT NULL,
     IdMedio int NOT NULL,
@@ -26,5 +27,4 @@ CREATE TABLE dbo.Evolucion (
     CONSTRAINT FK_Evolucion_ApplicationUsers FOREIGN KEY (IdTecnico) REFERENCES dbo.ApplicationUsers(Id),
     CONSTRAINT FK_Evolucion_Provincia FOREIGN KEY (IdProvinciaAfectada) REFERENCES dbo.Provincia(Id),
     CONSTRAINT FK_Evolucion_Municipio FOREIGN KEY (IdMunicipioAfectado) REFERENCES dbo.Municipio(Id)
-	
 );

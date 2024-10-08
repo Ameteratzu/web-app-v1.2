@@ -2,11 +2,14 @@
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
@@ -50,7 +53,11 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Provincia, ProvinciaSinMunicipiosConIdComunidadVm>();
             CreateMap<Municipio, MunicipioSinIdProvinciaVm>();
 
+
             CreateMap<UpdateIncendioCommand, Incendio>();
+            CreateMap<Incendio, IncendioVm>();
+            CreateMap<Evolucion, EvolucionVm>();
+            CreateMap<ApplicationUser, ApplicationUserVm>();
         }
     }
 }

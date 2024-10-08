@@ -1,4 +1,5 @@
-﻿namespace DGPCE.Sigemad.Domain.Modelos
+﻿
+namespace DGPCE.Sigemad.Domain.Modelos
 {
     public class ProcedenciaDestino
     {
