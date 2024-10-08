@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.ProcedenciasDestinos.GetProcedenciasDestinosList;
+using DGPCE.Sigemad.Application.Features.ProcedenciasDestinos.Queries.GetProcedenciasDestinosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
