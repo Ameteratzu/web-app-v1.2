@@ -1,10 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Specifications
 {
@@ -17,11 +12,24 @@ namespace DGPCE.Sigemad.Application.Specifications
         }
         public Expression<Func<T, bool>> Criteria { get; private set; }
 
-        public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
+        public List<Expression<Func<T, object>>> Includes { get; private set; } = new List<Expression<Func<T, object>>>();
 
         public Expression<Func<T, object>> OrderBy { get; private set; }
 
         public Expression<Func<T, object>> OrderByDescending { get; private set; }
+
+        public BaseSpecification<T> AddCriteria(Expression<Func<T, bool>> additionalCriteria) 
+        {
+            if(Criteria == null)
+            {
+                Criteria = additionalCriteria;
+            }
+            else
+            {
+                Criteria = Criteria.AndAlso(additionalCriteria);
+            }
+            return this;
+        }
 
         protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
@@ -34,9 +42,9 @@ namespace DGPCE.Sigemad.Application.Specifications
         }
 
 
-        public int Take { get; private set; }
+        public int? Take { get; private set; }
 
-        public int Skip { get; private set; }
+        public int? Skip { get; private set; }
 
         protected void ApplyPaging(int skip, int take)
         {
@@ -52,23 +60,46 @@ namespace DGPCE.Sigemad.Application.Specifications
 
         public bool IsPagingEnable { get; private set; }
 
+
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
         }
 
-        protected void AddCriteria(Expression<Func<T, bool>> criteria)
+        public ISpecification<T> And(ISpecification<T> other)
         {
-            if (Criteria == null)
+            return new BaseSpecification<T>(this.Criteria.AndAlso(other.Criteria))
             {
-                Criteria = criteria;
-            }
-            else
-            {
-                Criteria = Criteria.AndAlso(criteria); // Combina el criterio existente con el nuevo
-            }
+                OrderBy = this.OrderBy ?? other.OrderBy,
+                OrderByDescending = this.OrderByDescending ?? other.OrderByDescending,
+                Includes = this.Includes.Concat(other.Includes).ToList(),
+                Skip = Skip ?? other.Skip,
+                Take = Take ?? other.Take
+            };
         }
 
+        public ISpecification<T> Or(ISpecification<T> other)
+        {
+            return new BaseSpecification<T>(this.Criteria.OrElse(other.Criteria))
+            {
+                OrderBy = this.OrderBy ?? other.OrderBy,
+                OrderByDescending = this.OrderByDescending ?? other.OrderByDescending,
+                Includes = this.Includes.Concat(other.Includes).ToList(),
+                Skip = Skip ?? other.Skip,
+                Take = Take ?? other.Take
+            };
+        }
 
+        public ISpecification<T> Not()
+        {
+            return new BaseSpecification<T>(Expression.Lambda<Func<T, bool>>(Expression.Not(Criteria.Body), Criteria.Parameters))
+            {
+                OrderBy = OrderBy,
+                OrderByDescending = OrderByDescending,
+                Includes = Includes,
+                Skip = Skip,
+                Take = Take
+            };
+        }
     }
 }

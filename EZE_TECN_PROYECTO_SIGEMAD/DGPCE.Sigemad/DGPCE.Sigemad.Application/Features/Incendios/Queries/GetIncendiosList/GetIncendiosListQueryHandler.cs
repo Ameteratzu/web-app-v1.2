@@ -1,7 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Specifications.Alertas;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;

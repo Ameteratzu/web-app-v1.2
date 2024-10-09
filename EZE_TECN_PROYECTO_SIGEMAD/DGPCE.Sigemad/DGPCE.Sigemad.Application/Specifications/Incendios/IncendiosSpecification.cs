@@ -1,177 +1,134 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
-using System.Linq.Expressions;
+﻿using DGPCE.Sigemad.Application.Constants;
+using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Specifications.Incendios;
 
 public class IncendiosSpecification : BaseSpecification<Incendio>
 {
-    public IncendiosSpecification(IncendiosSpecificationParams incendioParams)
+    public IncendiosSpecification(IncendiosSpecificationParams request)
         : base(incendio =>
-        (string.IsNullOrEmpty(incendioParams.Search) || incendio.Denominacion.Contains(incendioParams.Search)) &&
-        (!incendioParams.Id.HasValue || incendio.Id == incendioParams.Id) &&
-        (!incendioParams.IdTerritorio.HasValue || incendio.IdTerritorio == incendioParams.IdTerritorio) &&
-        (!incendioParams.IdCcaa.HasValue || incendio.Provincia.IdCcaa == incendioParams.IdCcaa) &&
-        (!incendioParams.IdProvincia.HasValue || incendio.IdProvincia == incendioParams.IdProvincia) &&
-        (!incendioParams.IdMunicipio.HasValue || incendio.IdMunicipio == incendioParams.IdMunicipio) &&
-        //(!incendioParams.IdEstado.HasValue || incendio.IdEstado == incendioParams.IdEstado) &&
-        //(!incendioParams.IdEpisodio.HasValue || incendio.IdTerritorio == incendioParams.IdTerritorio) &&
-        (!incendioParams.IdNivelGravedad.HasValue || incendio.IdPrevisionPeligroGravedad == incendioParams.IdNivelGravedad) &&
-        //(!incendioParams.IdSuperficieAfectada.HasValue || incendio.id == incendioParams.IdTerritorio) &&
-        (!incendioParams.FechaInicio.HasValue || incendio.FechaInicio >= incendioParams.FechaInicio) &&
-        (incendio. Borrado != true)
-        //(!incendioParams.FechaFin.HasValue || incendio. >= incendioParams.FechaInicio) && Inicio) &&
+        (string.IsNullOrEmpty(request.Search) || incendio.Denominacion.Contains(request.Search)) &&
+        (!request.Id.HasValue || incendio.Id == request.Id) &&
+        (!request.IdTerritorio.HasValue || incendio.IdTerritorio == request.IdTerritorio) &&
+        (!request.IdPais.HasValue || incendio.IdPais == request.IdPais) &&
+        (!request.IdCcaa.HasValue || incendio.Provincia.IdCcaa == request.IdCcaa) &&
+        (!request.IdProvincia.HasValue || incendio.IdProvincia == request.IdProvincia) &&
+        (!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
+        (!request.IdNivelGravedad.HasValue || incendio.IdPrevisionPeligroGravedad == request.IdNivelGravedad) &&
+        (!request.IdEstadoIncendio.HasValue || incendio.IdEstado == request.IdEstadoIncendio) &&
+        (incendio.Borrado != true)
         )
     {
 
-        /*
-        // Filtro dinámico de fechas
-        Func<Incendio, DateTime?> fechaFiltro = null;
-
-        switch (incendioParams.IdMovimiento)
+        if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)
         {
-            case 1: // Registro
-                fechaFiltro = i => i.FechaCreacion;
-                break;
-            case 2: // Inicio Suceso
-                fechaFiltro = i => i.FechaInicio;
-                break;
-            case 3: // Modificación
-                fechaFiltro = i => i.FechaModificacion;
-                break;
-            case 4: // Cualquiera (aplicar a todas las fechas)
-                AddCriteria(i =>
-                    (i.FechaCreacion >= incendioParams.FechaInicio && i.FechaCreacion <= incendioParams.FechaFin) ||
-                    (i.FechaInicio >= incendioParams.FechaInicio && i.FechaInicio <= incendioParams.FechaFin) ||
-                    (i.FechaModificacion >= incendioParams.FechaInicio && i.FechaModificacion <= incendioParams.FechaFin)
-                );
-                return; // No continuamos si es "Cualquiera"
-        }
-
-        if (fechaFiltro != null)
-        {
-            // Aplicar comparativos
-            switch (incendioParams.IdComparativoFecha)
+            switch (request.IdComparativoFecha.Value)
             {
-                case 1: // Entre
-                    if (incendioParams.FechaInicio.HasValue && incendioParams.FechaFin.HasValue)
+                case ComparacionTipos.IgualA:
+                    AddCriteria(incendio => incendio.FechaCreacion == request.FechaInicio);
+                    break;
+                case ComparacionTipos.MayorQue:
+                    AddCriteria(incendio => incendio.FechaCreacion > request.FechaInicio);
+                    break;
+                case ComparacionTipos.MenorQue:
+                    AddCriteria(incendio => incendio.FechaCreacion < request.FechaInicio);
+                    break;
+                case ComparacionTipos.Entre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(i =>
-                            fechaFiltro(i) >= incendioParams.FechaInicio &&
-                            fechaFiltro(i) <= incendioParams.FechaFin
-                        );
+                        AddCriteria(incendio => incendio.FechaCreacion >= request.FechaInicio && incendio.FechaCreacion <= request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'Entre'");
                     }
                     break;
-
-                case 2: // Igual a
-                    if (incendioParams.FechaInicio.HasValue)
+                case ComparacionTipos.NoEntre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(i =>
-                            fechaFiltro(i) == incendioParams.FechaInicio
-                        );
+                        AddCriteria(incendio => incendio.FechaCreacion < request.FechaInicio || incendio.FechaCreacion > request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'No Entre'");
                     }
                     break;
-
-                case 3: // Mayor que
-                    if (incendioParams.FechaInicio.HasValue)
-                    {
-                        AddCriteria(i =>
-                            fechaFiltro(i) > incendioParams.FechaInicio
-                        );
-                    }
-                    break;
-
-                case 4: // Menor que
-                    if (incendioParams.FechaInicio.HasValue)
-                    {
-                        AddCriteria(i =>
-                            fechaFiltro(i) < incendioParams.FechaInicio
-                        );
-                    }
-                    break;
-
-                case 5: // No entre
-                    if (incendioParams.FechaInicio.HasValue && incendioParams.FechaFin.HasValue)
-                    {
-                        AddCriteria(i =>
-                            fechaFiltro(i) < incendioParams.FechaInicio ||
-                            fechaFiltro(i) > incendioParams.FechaFin
-                        );
-                    }
-                    break;
+                default:
+                    throw new ArgumentException("Operador de comparar fechas no válido");
             }
         }
-        */
-
-        // Filtro dinámico de fechas
-        if (incendioParams.IdMovimiento.HasValue && incendioParams.IdComparativoFecha.HasValue)
+        else if (request.IdMovimiento == MovimientoTipos.InicioSuceso && request.IdComparativoFecha.HasValue)
         {
-            Func<Incendio, DateTime?> fechaFiltro = null;
-
-            switch (incendioParams.IdMovimiento)
+            switch (request.IdComparativoFecha.Value)
             {
-                case 1: // Registro
-                    fechaFiltro = i => i.FechaCreacion;
+                case ComparacionTipos.IgualA:
+                    AddCriteria(incendio => incendio.FechaInicio == request.FechaInicio);
                     break;
-                case 2: // Inicio Suceso
-                    fechaFiltro = i => i.FechaInicio;
+                case ComparacionTipos.MayorQue:
+                    AddCriteria(incendio => incendio.FechaInicio > request.FechaInicio);
                     break;
-                case 3: // Modificación
-                    fechaFiltro = i => i.FechaModificacion;
+                case ComparacionTipos.MenorQue:
+                    AddCriteria(incendio => incendio.FechaInicio < request.FechaInicio);
                     break;
+                case ComparacionTipos.Entre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
+                    {
+                        AddCriteria(incendio => incendio.FechaInicio >= request.FechaInicio && incendio.FechaInicio <= request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'Entre'");
+                    }
+                    break;
+                case ComparacionTipos.NoEntre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
+                    {
+                        AddCriteria(incendio => incendio.FechaInicio < request.FechaInicio || incendio.FechaInicio > request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'No Entre'");
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Operador de comparar fechas no válido");
             }
-
-            if (fechaFiltro != null)
+        }
+        else if (request.IdMovimiento == MovimientoTipos.Modificacion && request.IdComparativoFecha.HasValue)
+        {
+            switch (request.IdComparativoFecha.Value)
             {
-                // Aplicar comparativos
-                switch (incendioParams.IdComparativoFecha)
-                {
-                    case 1: // Entre
-                        if (incendioParams.FechaInicio.HasValue && incendioParams.FechaFin.HasValue)
-                        {
-                            AddCriteria(i =>
-                                fechaFiltro(i) >= incendioParams.FechaInicio &&
-                                fechaFiltro(i) <= incendioParams.FechaFin
-                            );
-                        }
-                        break;
-
-                    case 2: // Igual a
-                        if (incendioParams.FechaInicio.HasValue)
-                        {
-                            AddCriteria(i =>
-                                fechaFiltro(i) == incendioParams.FechaInicio
-                            );
-                        }
-                        break;
-
-                    case 3: // Mayor que
-                        if (incendioParams.FechaInicio.HasValue)
-                        {
-                            AddCriteria(i =>
-                                fechaFiltro(i) > incendioParams.FechaInicio
-                            );
-                        }
-                        break;
-
-                    case 4: // Menor que
-                        if (incendioParams.FechaInicio.HasValue)
-                        {
-                            AddCriteria(i =>
-                                fechaFiltro(i) < incendioParams.FechaInicio
-                            );
-                        }
-                        break;
-
-                    case 5: // No entre
-                        if (incendioParams.FechaInicio.HasValue && incendioParams.FechaFin.HasValue)
-                        {
-                            AddCriteria(i =>
-                                fechaFiltro(i) < incendioParams.FechaInicio ||
-                                fechaFiltro(i) > incendioParams.FechaFin
-                            );
-                        }
-                        break;
-                }
+                case ComparacionTipos.IgualA:
+                    AddCriteria(incendio => incendio.FechaModificacion == request.FechaInicio);
+                    break;
+                case ComparacionTipos.MayorQue:
+                    AddCriteria(incendio => incendio.FechaModificacion > request.FechaInicio);
+                    break;
+                case ComparacionTipos.MenorQue:
+                    AddCriteria(incendio => incendio.FechaModificacion < request.FechaInicio);
+                    break;
+                case ComparacionTipos.Entre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
+                    {
+                        AddCriteria(incendio => incendio.FechaModificacion >= request.FechaInicio && incendio.FechaModificacion <= request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'Entre'");
+                    }
+                    break;
+                case ComparacionTipos.NoEntre:
+                    if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
+                    {
+                        AddCriteria(incendio => incendio.FechaModificacion < request.FechaInicio || incendio.FechaModificacion > request.FechaFin);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'No Entre'");
+                    }
+                    break;
+                default:
+                    throw new ArgumentException("Operador de comparar fechas no válido");
             }
         }
 
@@ -184,12 +141,12 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         AddInclude(i => i.NivelGravedad);
         AddInclude(i => i.EstadoIncendio);
 
-        ApplyPaging(incendioParams);
+        ApplyPaging(request);
 
         // Aplicar la ordenación
-        if (!string.IsNullOrEmpty(incendioParams.Sort?.ToLower()))
+        if (!string.IsNullOrEmpty(request.Sort?.ToLower()))
         {
-            switch (incendioParams.Sort)
+            switch (request.Sort)
             {
                 case "fechainicioasc":
                     AddOrderBy(i => i.FechaInicio);
@@ -220,9 +177,5 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                     break;
             }
         }
-
-
     }
-
-
 }

@@ -25,7 +25,7 @@ namespace DGPCE.Sigemad.Infrastructure.Specification
 
             if (spec.IsPagingEnable)
             {
-                inputQuery = inputQuery.Skip(spec.Skip).Take(spec.Take);
+                inputQuery = inputQuery.Skip(spec.Skip.Value).Take(spec.Take.Value);
             }
 
             inputQuery = spec.Includes.Aggregate(inputQuery, (current, include) => current.Include(include));
