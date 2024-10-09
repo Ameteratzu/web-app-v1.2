@@ -16,6 +16,7 @@ CREATE TABLE dbo.Evolucion (
     FechaFinal DATETIME NULL,
     IdProvinciaAfectada int NOT NULL,
     IdMunicipioAfectado int NOT NULL,
+    IdEntidadMenor int NOT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
     GeoPosicionAreaAfectada GEOMETRY,
     FechaCreacion datetime,
 	CreadoPor varchar(500),

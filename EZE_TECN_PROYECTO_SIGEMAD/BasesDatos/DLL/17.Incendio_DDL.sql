@@ -26,6 +26,7 @@ CREATE TABLE dbo.Incendio (
 	CoordenadasReales bit NOT NULL,
 	IdPrevisionPeligroGravedad int NOT NULL,
 	FechaInicio datetime NOT NULL,
+	UrlMapaRiesgo NVARCHAR(MAX),
 	Borrado bit NULL,
 	FechaCreacion datetime,
 	CreadoPor varchar(500),
