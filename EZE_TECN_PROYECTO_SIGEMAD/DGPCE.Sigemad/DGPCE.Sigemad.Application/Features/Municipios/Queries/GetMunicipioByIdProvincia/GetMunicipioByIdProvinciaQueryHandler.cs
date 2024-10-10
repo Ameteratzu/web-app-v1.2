@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
-using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
-using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
-using System.Text.RegularExpressions;
-using System;
 
 namespace DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia
 {

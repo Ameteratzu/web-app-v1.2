@@ -32,5 +32,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
         public virtual ApplicationUserVm Tecnico { get; set; } = null!;
 
         public virtual EstadoEvolucion EstadoEvolucion { get; set; } = null!;
+        public virtual EntidadMenor EntidadMenor { get; set; } = null!;
     }
 }

@@ -26,7 +26,22 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
         builder.Property(e => e.IdTecnico)
             .IsRequired();
 
-        builder.Property(e => e.Resumen)
+        builder.Property(e => e.IdEstadoEvolucion)
+            .IsRequired();
+
+        builder.Property(e => e.IdProvinciaAfectada)
+           .IsRequired();
+
+        builder.Property(e => e.IdEntidadMenor)
+            .IsRequired();
+
+            builder.Property(e => e.IdMunicipioAfectado)
+           .IsRequired();
+
+        builder.Property(e => e.IdIncendio)
+            .IsRequired();
+
+            builder.Property(e => e.Resumen)
             .IsRequired();
 
 
@@ -95,6 +110,13 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .HasForeignKey(d => d.IdEstadoEvolucion)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_EstadoEvolucion");
+
+
+            builder.HasOne(d => d.EntidadMenor)
+                .WithMany()
+                .HasForeignKey(d => d.IdEntidadMenor)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Evolucion_EntidadMenor");
         }
         }
     }
