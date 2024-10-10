@@ -7,6 +7,7 @@ using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
@@ -57,6 +58,7 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateIncendioCommand, Incendio>();
             CreateMap<Incendio, IncendioVm>();
             CreateMap<Evolucion, EvolucionVm>();
+            CreateMap<UpdateEvolucionCommand, Evolucion>();
             CreateMap<ApplicationUser, ApplicationUserVm>();
         }
     }

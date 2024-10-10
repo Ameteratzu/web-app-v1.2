@@ -26,14 +26,15 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             var incendioActualizar = await _unitOfWork.Repository<Incendio>().GetByIdAsync(IdIncendio);
             bool actualizarIncendio = false;
 
-            if ((EstadoEvolucionEnumeration)estadoEvolucion == EstadoEvolucionEnumeration.Extinguido &&
+            if (incendioActualizar !=null &&
+                (EstadoEvolucionEnumeration)estadoEvolucion == EstadoEvolucionEnumeration.Extinguido &&
                 (EstadoIncendioEnumeration)incendioActualizar.IdEstado !=  EstadoIncendioEnumeration.Cerrado)
             {
                 incendioActualizar.IdEstado = (int)EstadoIncendioEnumeration.Cerrado;
                 actualizarIncendio = true;
             }
 
-            if (actualizarIncendio)
+            if (actualizarIncendio && incendioActualizar !=null)
             {
                 _unitOfWork.Repository<Incendio>().UpdateEntity(incendioActualizar);
                 await _unitOfWork.Complete();
@@ -46,6 +47,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
         }
 
-     
+  
     }
 }

@@ -1,6 +1,4 @@
-﻿
-
-namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion
+﻿namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
 {
     public class CreateEvolucionResponse
     {

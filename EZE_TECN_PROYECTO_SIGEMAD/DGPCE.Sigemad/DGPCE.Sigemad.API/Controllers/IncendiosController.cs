@@ -23,7 +23,7 @@ namespace DGPCE.Sigemad.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateIncendio")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CreateIncendioResponse>> Create([FromBody] CreateIncendioCommand command)

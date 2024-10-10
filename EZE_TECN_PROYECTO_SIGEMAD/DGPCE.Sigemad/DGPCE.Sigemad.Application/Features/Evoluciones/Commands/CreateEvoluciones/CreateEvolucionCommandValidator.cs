@@ -1,8 +1,7 @@
-﻿using DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion;
-using DGPCE.Sigemad.Application.Helpers;
+﻿using DGPCE.Sigemad.Application.Helpers;
 using FluentValidation;
 
-namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
+namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
 {
     public class CreateEvolucionCommandValidator : AbstractValidator<CreateEvolucionCommand>
     {

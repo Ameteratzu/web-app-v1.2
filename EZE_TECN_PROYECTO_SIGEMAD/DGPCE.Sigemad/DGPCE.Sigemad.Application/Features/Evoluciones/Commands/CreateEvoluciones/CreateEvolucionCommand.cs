@@ -1,11 +1,10 @@
-﻿
-using MediatR;
+﻿using MediatR;
 using NetTopologySuite.Geometries;
 
 
-namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion
+namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
 {
-        public class CreateEvolucionCommand : IRequest<CreateEvolucionResponse>
+    public class CreateEvolucionCommand : IRequest<CreateEvolucionResponse>
     {
         public int IdIncendio { get; set; }
         public DateTime FechaHoraEvolucion { get; set; }

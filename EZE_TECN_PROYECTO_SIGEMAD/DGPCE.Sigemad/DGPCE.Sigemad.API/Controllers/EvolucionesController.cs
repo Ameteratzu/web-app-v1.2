@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion;
+﻿using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesById;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesByIdIncendioList;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
@@ -22,13 +23,22 @@ namespace DGPCE.Sigemad.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost(Name = "CreateEvolucion")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CreateEvolucionResponse>> Create([FromBody] CreateEvolucionCommand command)
         {
             var response = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+        }
+
+        [HttpPut(Name = "UpdateEvolucion")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Update([FromBody] UpdateEvolucionCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
         }
 
 
@@ -66,6 +76,8 @@ namespace DGPCE.Sigemad.API.Controllers
 
             return Ok(EvolucionVm);
         }
+
+
 
     }
 }
