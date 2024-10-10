@@ -1,4 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Behaviours;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Helpers;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,8 @@ namespace DGPCE.Sigemad.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient<IEvolucionService, EvolucionService>();
+
 
             return services;
         }

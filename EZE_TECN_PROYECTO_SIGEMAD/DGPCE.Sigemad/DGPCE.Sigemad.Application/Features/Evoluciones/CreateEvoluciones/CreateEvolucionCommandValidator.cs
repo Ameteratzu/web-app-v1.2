@@ -22,14 +22,14 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
                 .NotEmpty().WithMessage("IdMedio no puede estar en blanco")
                 .NotNull().WithMessage("IdMedio es obligatorio");
 
-            RuleFor(p => p.IdProcedenciaDestino)
-                .NotEmpty().WithMessage("IdProcedenciaDestino no puede estar en blanco")
-                .NotNull().WithMessage("IdProcedenciaDestino es obligatorio");
-
             RuleFor(p => p.IdTecnico)
                 .NotEmpty().WithMessage("IdTecnico no puede estar en blanco")
                 .NotNull().WithMessage("IdTecnico es obligatorio");
-    
+
+            RuleFor(p => p.IdEntidadMenor)
+                     .NotEmpty().WithMessage("IdEntidadMenor no puede estar en blanco")
+                     .NotNull().WithMessage("IdEntidadMenor es obligatorio");
+
             RuleFor(p => p.IdEstadoEvolucion)
                 .NotEmpty().WithMessage("IdEstadoEvolucion no puede estar en blanco")
                 .NotNull().WithMessage("IdEstadoEvolucion es obligatorio");

@@ -1,8 +1,8 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.EstadosEvolucion.Enumerations;
 using DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Helpers;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation.Results;
@@ -20,18 +20,21 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGeometryValidator _geometryValidator;
         private readonly ICoordinateTransformationService _coordinateTransformationService;
+        private readonly IEvolucionService _evolucionService;
 
 
         public CreateEvolucionCommandHandler(
             ILogger<CreateEvolucionCommandHandler> logger,
             IUnitOfWork unitOfWork,
             IGeometryValidator geometryValidator,
-            ICoordinateTransformationService coordinateTransformationService)
+            ICoordinateTransformationService coordinateTransformationService,
+            IEvolucionService evolucionService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _geometryValidator = geometryValidator;
             _coordinateTransformationService = coordinateTransformationService;
+            _evolucionService = evolucionService;
         }
 
         public async Task<CreateEvolucionResponse> Handle(CreateEvolucionCommand request, CancellationToken cancellationToken)
@@ -59,13 +62,16 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
                 throw new NotFoundException(nameof(Medio), request.IdMedio);
             }
 
-            var procedenciaDestino = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync(request.IdProcedenciaDestino);
-            if (procedenciaDestino is null)
+            if (request.IdProcedenciaDestino != null)
             {
-                _logger.LogWarning($"request.IdProcedenciaDestino: {request.IdProcedenciaDestino}, no encontrado");
-                throw new NotFoundException(nameof(ProcedenciaDestino), request.IdProcedenciaDestino);
+                var procedenciaDestino = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync((int)request!.IdProcedenciaDestino);
+                if (procedenciaDestino is null)
+                {
+                    _logger.LogWarning($"request.IdProcedenciaDestino: {request.IdProcedenciaDestino}, no encontrado");
+                    throw new NotFoundException(nameof(ProcedenciaDestino), request.IdProcedenciaDestino);
+                }
             }
-
+          
             var estadoEvolucion = await _unitOfWork.Repository<EstadoEvolucion>().GetByIdAsync(request.IdEstadoEvolucion);
             if (estadoEvolucion is null)
             {
@@ -94,6 +100,13 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
                 throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
             }
 
+            var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor);
+            if (entidadMenor is null)
+            {
+                _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
+                throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
+            }
+
             if (request.GeoPosicionAreaAfectada != null && !_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicionAreaAfectada))
             {
                 ValidationFailure validationFailure = new ValidationFailure();
@@ -112,6 +125,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
              IdMedio =  request.IdMedio,
              IdProcedenciaDestino =request.IdProcedenciaDestino,
              IdTecnico =request.IdTecnico,
+             IdEntidadMenor = request.IdEntidadMenor,
              Resumen =request.Resumen,
              Observaciones =request.Observaciones,
              Prevision =request.Prevision,
@@ -131,7 +145,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvoluciones
                 throw new Exception("No se pudo insertar nueva evolución");
             }
 
-            EvolucionUtils.cambiarEstadoIncendioPorEstadoEvolucion(evolucion.IdEstadoEvolucion,evolucion.IdIncendio,_logger,_unitOfWork);
+           await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucion.IdEstadoEvolucion,evolucion.IdIncendio);
 
             _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
 

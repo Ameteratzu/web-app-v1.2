@@ -11,9 +11,10 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.CreateEvolucion
         public DateTime FechaHoraEvolucion { get; set; }
         public int IdEntradaSalida { get; set; }
         public int IdMedio { get; set; }
-        public int IdProcedenciaDestino { get; set; }
+        public int? IdProcedenciaDestino { get; set; }
 
         public Guid IdTecnico { get; set; }
+        public int IdEntidadMenor { get; set; }
         public bool Resumen { get; set; }
         public string? Observaciones { get; set; }
         public string? Prevision { get; set; }

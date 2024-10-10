@@ -10,8 +10,10 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public DateTime FechaHoraEvolucion { get; set; }
         public int IdEntradaSalida { get; set; }
         public int IdMedio { get; set; }
-        public int IdProcedenciaDestino { get; set; }
-       
+        public int? IdProcedenciaDestino { get; set; }
+
+        public int IdEntidadMenor { get; set; }
+
         public Guid  IdTecnico { get; set; }
         public bool Resumen { get; set; }
         public string? Observaciones { get; set; }
@@ -39,5 +41,7 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public virtual Incendio Incendio { get; set; } = null!;
 
         public virtual EstadoEvolucion EstadoEvolucion { get; set; } = null!;
+
+        public virtual EntidadMenor EntidadMenor { get; set; } = null!;
     }
 }
