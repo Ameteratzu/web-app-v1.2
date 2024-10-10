@@ -26,7 +26,23 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
         builder.Property(e => e.IdTecnico)
             .IsRequired();
 
-        builder.Property(e => e.Resumen)
+        builder.Property(e => e.IdEstadoEvolucion)
+            .IsRequired();
+
+        builder.Property(e => e.IdProcedenciaDestino)
+           .IsRequired();
+
+
+        builder.Property(e => e.IdProvinciaAfectada)
+           .IsRequired();
+
+        builder.Property(e => e.IdMunicipioAfectado)
+           .IsRequired();
+
+        builder.Property(e => e.IdIncendio)
+            .IsRequired();
+
+            builder.Property(e => e.Resumen)
             .IsRequired();
 
 
