@@ -20,12 +20,12 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                 {
                     case EntityState.Added:
                         entry.Entity.FechaCreacion = DateTime.Now;
-                        entry.Entity.CreadoPor = "system";
+                        //entry.Entity.CreadoPor = "system";
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.FechaModificacion = DateTime.Now;
-                        entry.Entity.ModificadoPor = "system";
+                        //entry.Entity.ModificadoPor = "system";
                         break;
                 }
             }
