@@ -17,6 +17,10 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvolucio
                 .NotEmpty().WithMessage("IdEntradaSalida no puede estar en blanco")
                 .NotNull().WithMessage("IdEntradaSalida es obligatorio");
 
+            RuleFor(p => p.IdTipoRegistro)
+            .NotEmpty().WithMessage("IdTipoRegistro no puede estar en blanco")
+            .NotNull().WithMessage("IdTipoRegistro es obligatorio");
+
             RuleFor(p => p.IdMedio)
                 .NotEmpty().WithMessage("IdMedio no puede estar en blanco")
                 .NotNull().WithMessage("IdMedio es obligatorio");
@@ -29,9 +33,9 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvolucio
                      .NotEmpty().WithMessage("IdEntidadMenor no puede estar en blanco")
                      .NotNull().WithMessage("IdEntidadMenor es obligatorio");
 
-            RuleFor(p => p.IdEstadoEvolucion)
-                .NotEmpty().WithMessage("IdEstadoEvolucion no puede estar en blanco")
-                .NotNull().WithMessage("IdEstadoEvolucion es obligatorio");
+            RuleFor(p => p.IdEstadoIncendio)
+                .NotEmpty().WithMessage("IdEstadoIncendio no puede estar en blanco")
+                .NotNull().WithMessage("IdEstadoIncendio es obligatorio");
 
             RuleFor(p => p.IdMunicipioAfectado)
                 .NotEmpty().WithMessage("IdMunicipioAfectado no puede estar en blanco")

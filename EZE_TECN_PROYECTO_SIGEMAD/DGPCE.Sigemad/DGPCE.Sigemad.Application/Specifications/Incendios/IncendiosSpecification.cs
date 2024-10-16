@@ -14,8 +14,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         (!request.IdCcaa.HasValue || incendio.Provincia.IdCcaa == request.IdCcaa) &&
         (!request.IdProvincia.HasValue || incendio.IdProvincia == request.IdProvincia) &&
         (!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
-        (!request.IdNivelGravedad.HasValue || incendio.IdPrevisionPeligroGravedad == request.IdNivelGravedad) &&
-        (!request.IdEstadoIncendio.HasValue || incendio.IdEstado == request.IdEstadoIncendio) &&
+        (!request.IdEstadoSuceso.HasValue || incendio.IdEstadoSuceso == request.IdEstadoSuceso) &&
         (incendio.Borrado != true)
         )
     {
@@ -138,8 +137,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         AddInclude(i => i.Municipio);
         AddInclude(i => i.Provincia);
         AddInclude(i => i.ClaseSuceso);
-        AddInclude(i => i.NivelGravedad);
-        AddInclude(i => i.EstadoIncendio);
+        AddInclude(i => i.EstadoSuceso);
 
         ApplyPaging(request);
 
@@ -160,17 +158,11 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case "denominaciondesc":
                     AddOrderByDescending(i => i.Denominacion);
                     break;
-                case "nivelgravedadasc":
-                    AddOrderBy(i => i.IdPrevisionPeligroGravedad);
+                case "estadosucesoasc":
+                    AddOrderBy(i => i.IdEstadoSuceso);
                     break;
-                case "nivelgravedaddesc":
-                    AddOrderByDescending(i => i.IdPrevisionPeligroGravedad);
-                    break;
-                case "estadodasc":
-                    AddOrderBy(i => i.IdEstado);
-                    break;
-                case "estadodesc":
-                    AddOrderByDescending(i => i.IdEstado);
+                case "estadosucesodesc":
+                    AddOrderByDescending(i => i.IdEstadoSuceso);
                     break;
                 default:
                     AddOrderBy(i => i.FechaInicio); // Orden por defecto

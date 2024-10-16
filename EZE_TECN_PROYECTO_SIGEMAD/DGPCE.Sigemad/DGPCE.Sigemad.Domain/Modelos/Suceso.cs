@@ -6,7 +6,5 @@ public class Suceso
 
     public int IdTipo { get; set; }
 
-    public int? IdSigeMigracion { get; set; }
-
     public virtual TipoSuceso TipoSuceso { get; set; } = null!;
 }

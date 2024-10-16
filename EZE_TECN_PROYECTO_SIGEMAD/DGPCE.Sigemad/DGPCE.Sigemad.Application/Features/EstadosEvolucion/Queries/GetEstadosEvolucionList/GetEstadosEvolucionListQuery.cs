@@ -3,7 +3,7 @@ using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.EstadosEvolucion.Queries.GetEstadosEvolucionList
 {
-    public class GetEstadosEvolucionListQuery : IRequest<IReadOnlyList<EstadoEvolucion>>
+    public class GetEstadosEvolucionListQuery : IRequest<IReadOnlyList<EstadoSuceso>>
     {
     }
 }

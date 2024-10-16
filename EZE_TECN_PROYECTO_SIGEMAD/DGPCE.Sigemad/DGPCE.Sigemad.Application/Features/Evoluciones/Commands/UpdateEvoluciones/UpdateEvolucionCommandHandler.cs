@@ -44,7 +44,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvolucio
 
             _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucionToUpdate);
             await _unitOfWork.Complete();
-            await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucionToUpdate.IdEstadoEvolucion, evolucionToUpdate.IdIncendio);
+            //await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucionToUpdate.IdEstadoEvolucion, evolucionToUpdate.IdIncendio);
 
             _logger.LogInformation($"Se actualizo correctamente la evolución con id: {request.Id}");
 

@@ -70,11 +70,11 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 }
             }
 
-            var estadoEvolucion = await _unitOfWork.Repository<EstadoEvolucion>().GetByIdAsync(request.IdEstadoEvolucion);
-            if (estadoEvolucion is null)
+            var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
+            if (estadoIncendio is null)
             {
-                _logger.LogWarning($"request.IdEstadoEvolucion: {request.IdEstadoEvolucion}, no encontrado");
-                throw new NotFoundException(nameof(EstadoEvolucion), request.IdEstadoEvolucion);
+                _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
+                throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
             }
 
             var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvinciaAfectada);
@@ -105,6 +105,13 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
             }
 
+            var tipoRegistro = await _unitOfWork.Repository<TipoRegistro>().GetByIdAsync(request.IdTipoRegistro);
+            if (tipoRegistro is null)
+            {
+                _logger.LogWarning($"request.IdTipoRegistro: {request.IdTipoRegistro}, no encontrado");
+                throw new NotFoundException(nameof(TipoRegistro), request.IdTipoRegistro);
+            }
+
             if (request.GeoPosicionAreaAfectada != null && !_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicionAreaAfectada))
             {
                 ValidationFailure validationFailure = new ValidationFailure();
@@ -118,21 +125,21 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             var evolucion = new Evolucion
             {
                 IdIncendio = request.IdIncendio,
+                IdEstadoIncendio = request.IdEstadoIncendio,
                 FechaHoraEvolucion = request.FechaHoraEvolucion,
                 IdEntradaSalida = request.IdEntradaSalida,
                 IdMedio = request.IdMedio,
-                IdProcedenciaDestino = request.IdProcedenciaDestino,
                 IdTecnico = request.IdTecnico,
                 IdEntidadMenor = request.IdEntidadMenor,
                 Resumen = request.Resumen,
                 Observaciones = request.Observaciones,
                 Prevision = request.Prevision,
-                IdEstadoEvolucion = request.IdEstadoEvolucion,
                 SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
                 FechaFinal = request.FechaFinal,
                 IdProvinciaAfectada = request.IdProvinciaAfectada,
                 IdMunicipioAfectado = request.IdMunicipioAfectado,
-                GeoPosicionAreaAfectada = request.GeoPosicionAreaAfectada
+                GeoPosicionAreaAfectada = request.GeoPosicionAreaAfectada,
+                IdTipoRegistro = request.IdTipoRegistro
             };
 
             _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
@@ -143,7 +150,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new Exception("No se pudo insertar nueva evolución");
             }
 
-            await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucion.IdEstadoEvolucion, evolucion.IdIncendio);
+            //await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucion.IdEstadoEvolucion, evolucion.IdIncendio);
 
             _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
 

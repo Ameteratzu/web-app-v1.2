@@ -33,7 +33,8 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
         builder.Property(e => e.FechaInicio).HasColumnType("datetime");
         builder.Property(e => e.FechaModificacion).HasColumnType("datetime");
         builder.Property(e => e.GeoPosicion).HasColumnType("geometry");
-        
+        builder.Property(e => e.RutaMapaRiesgo).HasColumnType("text");
+
         builder.Property(e => e.ModificadoPor)
             .HasMaxLength(500)
             .IsUnicode(false);
@@ -49,11 +50,6 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .HasForeignKey(d => d.IdMunicipio)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("MunicipioIncendio");
-
-        builder.HasOne(d => d.NivelGravedad).WithMany()
-            .HasForeignKey(d => d.IdPrevisionPeligroGravedad)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Incendio_NivelGravedad");
 
         builder.HasOne(d => d.Provincia).WithMany()
             .HasForeignKey(d => d.IdProvincia)
@@ -75,9 +71,9 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("IncendioTerritorio");
 
-        builder.HasOne(d => d.EstadoIncendio).WithMany()
-            .HasForeignKey(d => d.IdEstado)
+        builder.HasOne(d => d.EstadoSuceso).WithMany()
+            .HasForeignKey(d => d.IdEstadoSuceso)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Incendio_EstadoIncendio");
+            .HasConstraintName("FK_Incendio_EstadoSuceso");
     }
 }

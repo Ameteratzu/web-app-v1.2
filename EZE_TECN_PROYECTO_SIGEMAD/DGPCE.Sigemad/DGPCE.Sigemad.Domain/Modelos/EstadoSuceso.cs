@@ -1,6 +1,6 @@
 ﻿namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class EstadoEvolucion
+    public class EstadoSuceso
     {
         public int Id { get; set; }
 

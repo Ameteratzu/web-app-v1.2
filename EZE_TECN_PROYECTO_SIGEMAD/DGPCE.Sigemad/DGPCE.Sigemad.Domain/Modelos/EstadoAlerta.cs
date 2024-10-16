@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class EstadoAlerta : BaseDomainModel
+    public class EstadoAlerta : BaseDomainModel<int>
     {
 
         public EstadoAlerta() { }

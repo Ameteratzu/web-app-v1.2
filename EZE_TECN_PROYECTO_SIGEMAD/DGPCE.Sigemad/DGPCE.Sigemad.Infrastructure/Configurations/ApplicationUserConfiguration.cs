@@ -23,19 +23,6 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
 
             builder.Property(e => e.Telefono)
                 .IsRequired();
-
-            builder.Property(e => e.FechaCreacion)
-                .HasColumnName("CreatedDate");
-
-            builder.Property(e => e.CreadoPor)
-             .HasColumnName("CreatedBy");
-
-            builder.Property(e => e.FechaModificacion)
-             .HasColumnName("LastModifiedDate");
-
-            builder.Property(e => e.ModificadoPor)
-             .HasColumnName("LastModifiedBy");
-
         }
     }
 }

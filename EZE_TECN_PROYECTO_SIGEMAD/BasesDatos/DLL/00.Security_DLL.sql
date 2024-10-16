@@ -22,10 +22,13 @@ BEGIN
         [Apellidos] nvarchar(max) NOT NULL,
         [Email] nvarchar(max) NOT NULL,
         [Telefono] nvarchar(max) NOT NULL,
-        [CreatedDate] datetime2 NULL,
-        [CreatedBy] nvarchar(max) NULL,
-        [LastModifiedDate] datetime2 NULL,
-        [LastModifiedBy] nvarchar(max) NULL,
+        [FechaCreacion] datetime,
+        [CreadoPor] UNIQUEIDENTIFIER NULL,
+        [FechaModificacion] datetime,
+        [ModificadoPor] UNIQUEIDENTIFIER NULL,
+        [FechaBorrado] datetime,
+        [BorradoPor] UNIQUEIDENTIFIER NULL,
+        [Borrado] bit NULL,
         CONSTRAINT [PK_ApplicationUsers] PRIMARY KEY ([Id])
     );
 END;

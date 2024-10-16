@@ -39,13 +39,9 @@ public class UpdateIncendioCommandValidator : AbstractValidator<UpdateIncendioCo
             .NotEmpty().WithMessage("IdClaseSuceso no puede estar en blanco")
             .NotNull().WithMessage("IdClaseSuceso es obligatorio");
 
-        RuleFor(p => p.IdEstado)
-            .NotEmpty().WithMessage("IdEstado no puede estar en blanco")
-            .NotNull().WithMessage("IdEstado es obligatorio");
-
-        RuleFor(p => p.IdPeligroInicial)
-            .NotEmpty().WithMessage("IdPeligroInicial no puede estar en blanco")
-            .NotNull().WithMessage("IdPeligroInicial es obligatorio");
+        RuleFor(p => p.IdEstadoSuceso)
+            .NotEmpty().WithMessage("IdEstadoSuceso no puede estar en blanco")
+            .NotNull().WithMessage("IdEstadoSuceso es obligatorio");
 
         RuleFor(p => p.Comentarios)
             .NotEmpty().WithMessage("Comentarios no puede estar en blanco");

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.EstadosEvolucion.Queries.GetEstadosEvolucionList
 {
-    public class GetEstadosEvolucionListQueryHandler : IRequestHandler<GetEstadosEvolucionListQuery, IReadOnlyList<EstadoEvolucion>>
+    public class GetEstadosEvolucionListQueryHandler : IRequestHandler<GetEstadosEvolucionListQuery, IReadOnlyList<EstadoSuceso>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -13,9 +13,9 @@ namespace DGPCE.Sigemad.Application.Features.EstadosEvolucion.Queries.GetEstados
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IReadOnlyList<EstadoEvolucion>> Handle(GetEstadosEvolucionListQuery request, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<EstadoSuceso>> Handle(GetEstadosEvolucionListQuery request, CancellationToken cancellationToken)
         {
-            var estadosEvolucion = await _unitOfWork.Repository<EstadoEvolucion>().GetAllAsync();
+            var estadosEvolucion = await _unitOfWork.Repository<EstadoSuceso>().GetAllAsync();
             return estadosEvolucion;
         }
     }

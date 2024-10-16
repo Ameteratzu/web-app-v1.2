@@ -14,7 +14,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            foreach (var entry in ChangeTracker.Entries<BaseDomainModel>())
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
             {
                 switch (entry.State)
                 {
@@ -90,7 +90,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<EntradaSalida>().ToTable("EntradaSalida");
             modelBuilder.Entity<ProcedenciaDestino>().ToTable("ProcedenciaDestino");
             modelBuilder.Entity<Pais>().ToTable("Pais");
-            modelBuilder.Entity<EstadoEvolucion>().ToTable("EstadoEvolucion");
+            modelBuilder.Entity<EstadoSuceso>().ToTable("EstadoSuceso");
+            modelBuilder.Entity<TipoRegistro>().ToTable("TipoRegistro");
         }
 
 
@@ -113,9 +114,13 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Medio> Medios { get; set; }
         public DbSet<Pais> Paises { get; set; }
         public DbSet<ProcedenciaDestino> ProcedenciaDestinos { get; set; }
-        public DbSet<EstadoEvolucion> EstadosEvolucion { get; set; }
+        public DbSet<EstadoSuceso> EstadosSucesos { get; set; }
 
         public DbSet<EntradaSalida> EntradasSalidas { get; set; }
+        public DbSet<ImpactoClasificado> ImpactosClasificados { get; set; }
+        public DbSet<ImpactoEvolucion> ImpactosEvoluciones {  get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<TipoRegistro> TiposRegistros { get; set; }
 
 
     }

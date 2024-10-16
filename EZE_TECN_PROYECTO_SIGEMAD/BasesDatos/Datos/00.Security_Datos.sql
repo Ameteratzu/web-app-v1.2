@@ -39,16 +39,16 @@ VALUES ('FB161AB0-96C6-4549-9395-2C1EC5FD9B46', 'externo@example.com', 'EXTERNO@
 -- ============================
 
 -- Insertar un usuario administrador en la tabla ApplicationUsers
-INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, CreatedDate, CreatedBy, LastModifiedDate, LastModifiedBy)
-VALUES ('AC41965C-7F9E-48C0-BBC1-C4A0487DFB2D', 'B3C14CF0-58C8-4781-94D0-F9EAB4296C7A', 'Admin', 'Administrador', 'admin@example.com', '555-1234', GETDATE(), 'System', NULL, NULL);
+INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, FechaCreacion, CreadoPor, FechaModificacion, ModificadoPor, Borrado)
+VALUES ('AC41965C-7F9E-48C0-BBC1-C4A0487DFB2D', 'B3C14CF0-58C8-4781-94D0-F9EAB4296C7A', 'Admin', 'Administrador', 'admin@example.com', '555-1234', GETDATE(), NULL, NULL, NULL, 0);
 
 -- Insertar un usuario interno en la tabla ApplicationUsers
-INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, CreatedDate, CreatedBy, LastModifiedDate, LastModifiedBy)
-VALUES ('550E683E-0458-43E8-A6E6-20887DC2BDDD', 'C596AD0C-17D1-48D0-B08B-F635B83D14C2', 'Interno', 'Empleado', 'interno@example.com', '555-5678', GETDATE(), 'System', NULL, NULL);
+INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, FechaCreacion, CreadoPor, FechaModificacion, ModificadoPor)
+VALUES ('550E683E-0458-43E8-A6E6-20887DC2BDDD', 'C596AD0C-17D1-48D0-B08B-F635B83D14C2', 'Interno', 'Empleado', 'interno@example.com', '555-5678', GETDATE(), NULL, NULL, NULL, 0);
 
 -- Insertar un usuario externo en la tabla ApplicationUsers
-INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, CreatedDate, CreatedBy, LastModifiedDate, LastModifiedBy)
-VALUES ('D3813C04-4EEE-4D37-84B7-49EC293F92D2', 'FB161AB0-96C6-4549-9395-2C1EC5FD9B46', 'Externo', 'Proveedor', 'externo@example.com', '555-9876', GETDATE(), 'System', NULL, NULL);
+INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, FechaCreacion, CreadoPor, FechaModificacion, ModificadoPor)
+VALUES ('D3813C04-4EEE-4D37-84B7-49EC293F92D2', 'FB161AB0-96C6-4549-9395-2C1EC5FD9B46', 'Externo', 'Proveedor', 'externo@example.com', '555-9876', GETDATE(), NULL, NULL, NULL, 0);
 
 
 -- ====================================================================

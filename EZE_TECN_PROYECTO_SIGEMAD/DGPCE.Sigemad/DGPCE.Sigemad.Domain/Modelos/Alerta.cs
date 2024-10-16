@@ -2,7 +2,7 @@
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class Alerta : BaseDomainModel
+    public class Alerta : BaseDomainModel<int>
     {
         public Alerta()
         {

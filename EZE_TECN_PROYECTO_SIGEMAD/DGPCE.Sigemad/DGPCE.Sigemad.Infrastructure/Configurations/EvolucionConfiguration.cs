@@ -2,15 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DGPCE.Sigemad.Infrastructure.Configurations
-{
-    public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
-    {
-        public void Configure(EntityTypeBuilder<Evolucion> builder)
-        {
-            builder.HasKey(e => e.Id).HasName("PK__Evolucio__3214EC074C47BA56");
+namespace DGPCE.Sigemad.Infrastructure.Configurations;
 
-            builder.ToTable("Evolucion");
+public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
+{
+    public void Configure(EntityTypeBuilder<Evolucion> builder)
+    {
+        builder.HasKey(e => e.Id).HasName("PK__Evolucio__3214EC074C47BA56");
+
+        builder.ToTable("Evolucion");
 
         builder.HasKey(e => e.Id);
 
@@ -26,7 +26,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
         builder.Property(e => e.IdTecnico)
             .IsRequired();
 
-        builder.Property(e => e.IdEstadoEvolucion)
+        builder.Property(e => e.IdTipoRegistro)
             .IsRequired();
 
         builder.Property(e => e.IdProvinciaAfectada)
@@ -35,14 +35,14 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
         builder.Property(e => e.IdEntidadMenor)
             .IsRequired();
 
-            builder.Property(e => e.IdMunicipioAfectado)
-           .IsRequired();
+        builder.Property(e => e.IdMunicipioAfectado)
+       .IsRequired();
 
         builder.Property(e => e.IdIncendio)
             .IsRequired();
 
-            builder.Property(e => e.Resumen)
-            .IsRequired();
+        builder.Property(e => e.Resumen)
+        .IsRequired();
 
 
         builder.Property(e => e.SuperficieAfectadaHectarea)
@@ -75,22 +75,17 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_Medio");
 
-        builder.HasOne(d => d.ProcedenciaDestino)
+        builder.HasOne(d => d.Tecnico)
             .WithMany()
-            .HasForeignKey(d => d.IdProcedenciaDestino)
-            .HasConstraintName("FK_Evolucion_ProcedenciaDestino");
-
-            builder.HasOne(d => d.Tecnico)
-                .WithMany()
-                .HasForeignKey(d => d.IdTecnico)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_Evolucion_ApplicationUsers");
-
-            builder.HasOne(d => d.Provincia)
-            .WithMany()
-            .HasForeignKey(d => d.IdProvinciaAfectada)
+            .HasForeignKey(d => d.IdTecnico)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Evolucion_Provincia");
+            .HasConstraintName("FK_Evolucion_ApplicationUsers");
+
+        builder.HasOne(d => d.Provincia)
+        .WithMany()
+        .HasForeignKey(d => d.IdProvinciaAfectada)
+        .OnDelete(DeleteBehavior.Restrict)
+        .HasConstraintName("FK_Evolucion_Provincia");
 
         builder.HasOne(d => d.Municipio)
             .WithMany()
@@ -105,19 +100,24 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
            .HasConstraintName("FK_Evolucion_Incendio");
 
 
-        builder.HasOne(d => d.EstadoEvolucion)
+        builder.HasOne(d => d.EstadoIncendio)
             .WithMany()
-            .HasForeignKey(d => d.IdEstadoEvolucion)
+            .HasForeignKey(d => d.IdEstadoIncendio)
             .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Evolucion_EstadoEvolucion");
+            .HasConstraintName("FK_Evolucion_EstadoIncendio");
 
 
-            builder.HasOne(d => d.EntidadMenor)
-                .WithMany()
-                .HasForeignKey(d => d.IdEntidadMenor)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_Evolucion_EntidadMenor");
-        }
-        }
+        builder.HasOne(d => d.EntidadMenor)
+            .WithMany()
+            .HasForeignKey(d => d.IdEntidadMenor)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("FK_Evolucion_EntidadMenor");
+
+        builder.HasOne(d => d.TipoRegistro)
+            .WithMany()
+            .HasForeignKey(d => d.IdTipoRegistro)
+            .OnDelete(DeleteBehavior.Restrict);
     }
+}
+
 

@@ -73,18 +73,11 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             throw new NotFoundException(nameof(ClaseSuceso), request.IdClaseSuceso);
         }
 
-        var peligroInicial = await _unitOfWork.Repository<NivelGravedad>().GetByIdAsync(request.IdPeligroInicial);
-        if (peligroInicial is null)
-        {
-            _logger.LogWarning($"request.IdPeligroInicial: {request.IdPeligroInicial}, no encontrado");
-            throw new NotFoundException(nameof(NivelGravedad), request.IdPeligroInicial);
-        }
-
-        var estado = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstado);
+        var estado = await _unitOfWork.Repository<EstadoSuceso>().GetByIdAsync(request.IdEstadoSuceso);
         if (estado is null)
         {
-            _logger.LogWarning($"request.IdEstado: {request.IdEstado}, no encontrado");
-            throw new NotFoundException(nameof(EstadoIncendio), request.IdEstado);
+            _logger.LogWarning($"request.IdEstado: {request.IdEstadoSuceso}, no encontrado");
+            throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoSuceso);
         }
 
         if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))
@@ -110,12 +103,12 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             IdPais = request.IdPais,
             IdProvincia = request.IdProvincia,
             IdMunicipio = request.IdMunicipio,
-            IdPrevisionPeligroGravedad = request.IdPeligroInicial,
             IdClaseSuceso = request.IdClaseSuceso,
-            IdEstado = request.IdEstado,
+            IdEstadoSuceso = request.IdEstadoSuceso,
             Denominacion = request.Denominacion,
             Comentarios = request.Comentarios,
             FechaInicio = request.FechaInicio,
+            RutaMapaRiesgo = request.RutaMapaRiesgo,
             GeoPosicion = request.GeoPosicion,
             UtmX = (decimal?)utmX,
             UtmY = (decimal?)utmY,

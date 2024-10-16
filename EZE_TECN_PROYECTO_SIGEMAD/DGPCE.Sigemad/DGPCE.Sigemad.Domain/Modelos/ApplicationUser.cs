@@ -2,10 +2,8 @@
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class ApplicationUser : BaseDomainModel
+    public class ApplicationUser : BaseDomainModel<Guid>
     {
-        public new Guid Id { get; set; }
-
         public Guid IdentityId { get; set; }
 
         public string Nombre { get; set; }

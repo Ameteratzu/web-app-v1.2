@@ -13,8 +13,8 @@ public class UpdateIncendioCommand: IRequest
     public DateTime FechaInicio { get; set; }
     public int IdTipoSuceso { get; set; }
     public int IdClaseSuceso { get; set; }
-    public int IdPeligroInicial { get; set; }
-    public int IdEstado { get; set; }
+    public int IdEstadoSuceso { get; set; }
     public string Comentarios { get; set; }
+    public string? RutaMapaRiesgo { get; set; }
     public Geometry GeoPosicion { get; set; }
 }

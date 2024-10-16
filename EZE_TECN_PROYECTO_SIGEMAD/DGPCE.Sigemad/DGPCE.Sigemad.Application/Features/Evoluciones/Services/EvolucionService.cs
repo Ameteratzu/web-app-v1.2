@@ -28,9 +28,9 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
             if (incendioActualizar !=null &&
                 (EstadoEvolucionEnumeration)estadoEvolucion == EstadoEvolucionEnumeration.Extinguido &&
-                (EstadoIncendioEnumeration)incendioActualizar.IdEstado !=  EstadoIncendioEnumeration.Cerrado)
+                (EstadoIncendioEnumeration)incendioActualizar.IdEstadoSuceso !=  EstadoIncendioEnumeration.Cerrado)
             {
-                incendioActualizar.IdEstado = (int)EstadoIncendioEnumeration.Cerrado;
+                incendioActualizar.IdEstadoSuceso = (int)EstadoIncendioEnumeration.Cerrado;
                 actualizarIncendio = true;
             }
 
@@ -38,7 +38,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             {
                 _unitOfWork.Repository<Incendio>().UpdateEntity(incendioActualizar);
                 await _unitOfWork.Complete();
-                _logger.LogInformation($"Se actualizo correctamente el estado del incendio: {IdIncendio} a {(EstadoIncendioEnumeration)incendioActualizar.IdEstado}");
+                _logger.LogInformation($"Se actualizo correctamente el estado del incendio: {IdIncendio} a {(EstadoIncendioEnumeration)incendioActualizar.IdEstadoSuceso}");
             }
             else
             {
