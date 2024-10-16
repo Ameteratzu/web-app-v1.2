@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.EstadosEvolucion.Queries.GetEstadosEvolucionList;
+using DGPCE.Sigemad.Application.Features.EstadosSucesos.Queries.GetEstadosSucesosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los estados de sucesos")]
         public async Task<ActionResult<IReadOnlyList<EstadoSuceso>>> GetAll()
         {
-            var query = new GetEstadosEvolucionListQuery();
+            var query = new GetEstadosSucesosListQuery();
             var listado = await _mediator.Send(query);
             return Ok(listado);
         }
