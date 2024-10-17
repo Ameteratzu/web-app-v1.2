@@ -92,6 +92,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Pais>().ToTable("Pais");
             modelBuilder.Entity<EstadoSuceso>().ToTable("EstadoSuceso");
             modelBuilder.Entity<TipoRegistro>().ToTable("TipoRegistro");
+            modelBuilder.Entity<ImpactoClasificado>().ToTable("ImpactoClasificado");
         }
 
 
