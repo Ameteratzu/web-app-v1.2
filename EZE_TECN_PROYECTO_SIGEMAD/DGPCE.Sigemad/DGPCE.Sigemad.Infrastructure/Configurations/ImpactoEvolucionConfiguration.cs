@@ -8,6 +8,7 @@ public class ImpactoEvolucionConfiguration : IEntityTypeConfiguration<ImpactoEvo
     public void Configure(EntityTypeBuilder<ImpactoEvolucion> builder)
     {
         builder.HasKey(e => e.Id);
+        builder.ToTable("ImpactoEvolucion");
 
         builder.Property(e => e.ZonaPlanificacion).HasColumnType("geometry");
 

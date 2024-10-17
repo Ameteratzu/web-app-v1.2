@@ -42,7 +42,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         if (pais is null)
         {
             _logger.LogWarning($"request.IdPais: {request.IdPais}, no encontrado");
-            throw new NotFoundException(nameof(Territorio), request.IdPais);
+            throw new NotFoundException(nameof(Pais), request.IdPais);
         }
 
         var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia);
@@ -77,7 +77,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         if (estado is null)
         {
             _logger.LogWarning($"request.IdEstado: {request.IdEstadoSuceso}, no encontrado");
-            throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoSuceso);
+            throw new NotFoundException(nameof(EstadoSuceso), request.IdEstadoSuceso);
         }
 
         if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))

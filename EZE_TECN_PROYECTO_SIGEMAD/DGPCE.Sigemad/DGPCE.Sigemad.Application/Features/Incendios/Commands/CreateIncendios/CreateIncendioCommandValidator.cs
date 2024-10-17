@@ -8,20 +8,16 @@ public class CreateIncendioCommandValidator: AbstractValidator<CreateIncendioCom
     public CreateIncendioCommandValidator()
     {
         RuleFor(p => p.IdTerritorio)
-            .NotEmpty().WithMessage("IdTerritorio no puede estar en blanco")
-            .NotNull().WithMessage("IdTerritorio es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdPais)
-            .NotEmpty().WithMessage("IdPais no puede estar en blanco")
-            .NotNull().WithMessage("IdPais es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdProvincia)
-            .NotEmpty().WithMessage("IdProvincia no puede estar en blanco")
-            .NotNull().WithMessage("IdProvincia es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdMunicipio)
-            .NotEmpty().WithMessage("IdMunicipio no puede estar en blanco")
-            .NotNull().WithMessage("IdMunicipio es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.Denominacion)
             .NotEmpty().WithMessage("Denominacion no puede estar en blanco")
@@ -29,26 +25,21 @@ public class CreateIncendioCommandValidator: AbstractValidator<CreateIncendioCom
             .MaximumLength(255).WithMessage("Denominacion no puede exceder los 255 caracteres");
 
         RuleFor(p => p.FechaInicio)
-            .NotEmpty().WithMessage("FechaInicio no puede estar en blanco")
-            .NotNull().WithMessage("FechaInicio es obligatorio");
+            .NotEmpty().WithMessage("FechaInicio es obligatoria");
 
         RuleFor(p => p.IdTipoSuceso)
-            .NotEmpty().WithMessage("IdTipoSuceso no puede estar en blanco")
-            .NotNull().WithMessage("IdTipoSuceso es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdClaseSuceso)
-            .NotEmpty().WithMessage("IdClaseSuceso no puede estar en blanco")
-            .NotNull().WithMessage("IdClaseSuceso es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdEstadoSuceso)
-            .NotEmpty().WithMessage("IdEstadoSuceso no puede estar en blanco")
-            .NotNull().WithMessage("IdEstadoSuceso es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.Comentarios)
             .NotEmpty().WithMessage("Comentarios no puede estar en blanco");
 
         RuleFor(p => p.GeoPosicion)
-            .NotEmpty().WithMessage("GeoPosicion no puede estar en blanco")
             .NotNull().WithMessage("GeoPosicion es obligatorio")
             .Must(GeoJsonValidatorUtil.IsGeometryInWgs84).WithMessage("La geometría no es válida, sistema de referencia no es Wgs84");
     }
