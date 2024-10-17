@@ -1,8 +1,10 @@
 ﻿using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
+using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendioDetalles;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -79,5 +81,13 @@ namespace DGPCE.Sigemad.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("{IdIncendio}/detalles")]
+        [ProducesResponseType(typeof(IReadOnlyList<IncendioDetalleVm>), (int)HttpStatusCode.OK)]
+        public async Task<IReadOnlyList<IncendioDetalleVm>> GetIncendioDetalles(int idIncendio)
+        {
+            var query = new GetIncendioDetallesListQuery(idIncendio);
+            var result = await _mediator.Send(query);
+            return result;
+        }
     }
 }
