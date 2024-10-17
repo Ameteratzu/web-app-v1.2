@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Incendios\Specifications\" />
-    <Folder Include="Features\Incendios\Queries\" />
   </ItemGroup>
 
 </Project>
