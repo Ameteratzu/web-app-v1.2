@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿
+using MediatR;
 using NetTopologySuite.Geometries;
 
 
@@ -10,7 +11,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
         public DateTime FechaHoraEvolucion { get; set; }
         public int IdEntradaSalida { get; set; }
         public int IdMedio { get; set; }
-        public int? IdProcedenciaDestino { get; set; }
         public int IdTipoRegistro { get; set; }
 
         public Guid IdTecnico { get; set; }
@@ -24,6 +24,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
         public int IdProvinciaAfectada { get; set; }
         public int IdMunicipioAfectado { get; set; }
         public Geometry? GeoPosicionAreaAfectada { get; set; }
-
+        public ICollection<int>? EvolucionProcedenciaDestinos { get; set; }
     }
 }

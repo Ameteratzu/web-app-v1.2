@@ -122,6 +122,11 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
 
+        public DbSet<Evolucion> Evoluciones { get; set; }
+
+        public DbSet<EvolucionProcedenciaDestino> EvolucionesProcedenciaDestinos { get; set; }
+
+
 
     }
 }

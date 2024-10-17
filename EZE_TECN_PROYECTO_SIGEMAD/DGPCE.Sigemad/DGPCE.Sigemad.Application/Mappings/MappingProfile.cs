@@ -58,7 +58,9 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<UpdateIncendioCommand, Incendio>();
             CreateMap<Incendio, IncendioVm>();
-            CreateMap<Evolucion, EvolucionVm>();
+            CreateMap<Evolucion, EvolucionVm>()
+              .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.EvolucionProcedenciaDestinos != null ? src.EvolucionProcedenciaDestinos.Select(epd => epd.ProcedenciaDestino).ToList() : new List<ProcedenciaDestino>()));
+
             CreateMap<UpdateEvolucionCommand, Evolucion>();
             CreateMap<ApplicationUser, ApplicationUserVm>();
 

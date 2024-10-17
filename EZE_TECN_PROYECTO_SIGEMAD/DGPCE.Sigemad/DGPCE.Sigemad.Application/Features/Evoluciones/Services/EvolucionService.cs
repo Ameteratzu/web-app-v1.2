@@ -1,8 +1,11 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.EstadosIncendio.Enumerations;
 using DGPCE.Sigemad.Application.Features.EstadosSucesos.Enumerations;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Modelos;
+
 using Microsoft.Extensions.Logging;
 
 namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
@@ -19,7 +22,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CambiarEstadoIncendioDesdeEstadoEvolucion(int estadoIncendio, int IdIncendio)
+        public async Task CambiarEstadoSucesoIncendioEvolucion(int estadoIncendio, int IdIncendio)
         {
 
             _logger.LogInformation($"Comprobando estado del incendio: {IdIncendio}");
@@ -47,6 +50,84 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
         }
 
-  
+        public async Task<bool> ComprobacionEvolucionProcedenciaDestinos(ICollection<int>? evolucionProcedenciasDestinos)
+        {
+
+            if (evolucionProcedenciasDestinos != null)
+            {           
+                foreach (var procedenciaDestino in evolucionProcedenciasDestinos)
+                {
+                    var procedencia = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync(procedenciaDestino);
+                    if (procedencia == null)
+                    {
+                        _logger.LogWarning($"evolucionProcedenciaDestino {procedenciaDestino}, no encontrado");
+                        throw new NotFoundException(nameof(ProcedenciaDestino), procedenciaDestino);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+
+        public async Task<Evolucion>  CrearNuevaEvolucion(CreateEvolucionCommand request)
+        {
+            var evolucion = new Evolucion
+            {
+                IdIncendio = request.IdIncendio,
+                IdEstadoIncendio = request.IdEstadoIncendio,
+                FechaHoraEvolucion = request.FechaHoraEvolucion,
+                IdEntradaSalida = request.IdEntradaSalida,
+                IdMedio = request.IdMedio,
+                IdTecnico = request.IdTecnico,
+                IdEntidadMenor = request.IdEntidadMenor,
+                Resumen = request.Resumen,
+                Observaciones = request.Observaciones,
+                Prevision = request.Prevision,
+                SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
+                FechaFinal = request.FechaFinal,
+                IdProvinciaAfectada = request.IdProvinciaAfectada,
+                IdMunicipioAfectado = request.IdMunicipioAfectado,
+                GeoPosicionAreaAfectada = request.GeoPosicionAreaAfectada,
+                IdTipoRegistro = request.IdTipoRegistro
+            };
+
+            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
+
+            var result = await _unitOfWork.Complete();
+            if (result <= 0)
+            {
+                throw new Exception("No se pudo insertar nueva evolución");
+            }
+
+            _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
+
+            return evolucion;
+
+        }
+
+        public async Task CrearEvolucioneProcedenciaDestinos(int idEvolucion, ICollection<int> listadoProcedencias)
+        {
+            _logger.LogInformation($"Creando evolucionProcedenciasDestinos para la evolución {idEvolucion}");
+            foreach (var procedenciaDestino in listadoProcedencias)
+            {
+                var evolucionProcedenciaDestino = new EvolucionProcedenciaDestino
+                {
+                    IdEvolucion = idEvolucion,
+                    IdProcedenciaDestino = procedenciaDestino
+                };
+
+                await _unitOfWork.Repository<EvolucionProcedenciaDestino>().AddAsync(evolucionProcedenciaDestino);
+
+            }
+
+          await _unitOfWork.Complete();
+          
+         _logger.LogInformation($"evolucionProcedenciasDestinos creadas correctamente para la evolución {idEvolucion}");
+        }
+
+
+
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
-using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -33,5 +32,9 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
 
         public virtual EstadoSuceso EstadoSuceso { get; set; } = null!;
         public virtual EntidadMenor EntidadMenor { get; set; } = null!;
+        public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
+        public virtual TipoRegistro TipoRegistro { get; set; } = null!;
+
+        public ICollection<ProcedenciaDestino>? ProcedenciaDestinos { get; set; }
     }
 }

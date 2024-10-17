@@ -42,5 +42,8 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public virtual EntidadMenor EntidadMenor { get; set; } = null!;
         public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
         public virtual TipoRegistro TipoRegistro { get; set; } = null!;
+
+        public ICollection<EvolucionProcedenciaDestino>? EvolucionProcedenciaDestinos { get; set; } = null;
+
     }
 }

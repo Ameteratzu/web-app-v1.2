@@ -60,15 +60,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new NotFoundException(nameof(Medio), request.IdMedio);
             }
 
-            if (request.IdProcedenciaDestino != null)
-            {
-                var procedenciaDestino = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync((int)request!.IdProcedenciaDestino);
-                if (procedenciaDestino is null)
-                {
-                    _logger.LogWarning($"request.IdProcedenciaDestino: {request.IdProcedenciaDestino}, no encontrado");
-                    throw new NotFoundException(nameof(ProcedenciaDestino), request.IdProcedenciaDestino);
-                }
-            }
 
             var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
             if (estadoIncendio is null)
@@ -91,12 +82,12 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new NotFoundException(nameof(NivelGravedad), request.IdMunicipioAfectado);
             }
 
-            var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
-            if (tecnico is null)
-            {
-                _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
-                throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
-            }
+            // var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
+            //if (tecnico is null)
+            //{
+            //    _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
+            //    throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
+            //}
 
             var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor);
             if (entidadMenor is null)
@@ -121,38 +112,16 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new ValidationException(new List<ValidationFailure> { validationFailure });
             }
 
+            
+            await _evolucionService.ComprobacionEvolucionProcedenciaDestinos(request.EvolucionProcedenciaDestinos);
+            var evolucion = await _evolucionService.CrearNuevaEvolucion(request);
 
-            var evolucion = new Evolucion
+            if (request.EvolucionProcedenciaDestinos != null)
             {
-                IdIncendio = request.IdIncendio,
-                IdEstadoIncendio = request.IdEstadoIncendio,
-                FechaHoraEvolucion = request.FechaHoraEvolucion,
-                IdEntradaSalida = request.IdEntradaSalida,
-                IdMedio = request.IdMedio,
-                IdTecnico = request.IdTecnico,
-                IdEntidadMenor = request.IdEntidadMenor,
-                Resumen = request.Resumen,
-                Observaciones = request.Observaciones,
-                Prevision = request.Prevision,
-                SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
-                FechaFinal = request.FechaFinal,
-                IdProvinciaAfectada = request.IdProvinciaAfectada,
-                IdMunicipioAfectado = request.IdMunicipioAfectado,
-                GeoPosicionAreaAfectada = request.GeoPosicionAreaAfectada,
-                IdTipoRegistro = request.IdTipoRegistro
-            };
-
-            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
-
-            var result = await _unitOfWork.Complete();
-            if (result <= 0)
-            {
-                throw new Exception("No se pudo insertar nueva evolución");
+               await _evolucionService.CrearEvolucioneProcedenciaDestinos(evolucion.Id, request.EvolucionProcedenciaDestinos);
             }
-
-            //await _evolucionService.CambiarEstadoIncendioDesdeEstadoEvolucion(evolucion.IdEstadoEvolucion, evolucion.IdIncendio);
-
-            _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
+            
+            await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio, evolucion.IdIncendio);
 
             _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
             return new CreateEvolucionResponse { Id = evolucion.Id };

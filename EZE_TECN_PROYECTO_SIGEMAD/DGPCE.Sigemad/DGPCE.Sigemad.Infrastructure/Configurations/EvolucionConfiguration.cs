@@ -54,6 +54,11 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         builder.Property(e => e.FechaModificacion)
             .HasColumnType("datetime");
 
+        builder.Property(e => e.CreadoPor)
+          .HasMaxLength(500)
+          .IsUnicode(false);
+
+
         builder.Property(e => e.Observaciones)
             .HasColumnType("text");
 
@@ -117,6 +122,12 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .WithMany()
             .HasForeignKey(d => d.IdTipoRegistro)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        builder.HasMany(e => e.EvolucionProcedenciaDestinos)
+             .WithOne(epd => epd.Evolucion)
+             .HasForeignKey(epd => epd.IdEvolucion)
+             .OnDelete(DeleteBehavior.Cascade);
     }
 }
 
