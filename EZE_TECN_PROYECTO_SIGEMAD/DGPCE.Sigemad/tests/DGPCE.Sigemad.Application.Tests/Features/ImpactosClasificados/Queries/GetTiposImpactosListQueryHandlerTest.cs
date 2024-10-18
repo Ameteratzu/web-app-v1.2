@@ -19,8 +19,7 @@ public class GetTiposImpactosListQueryHandlerTest
     public async Task Handle_ValidQuery_ReturnsListOfTiposImpactos()
     {
         // Arrange
-        var request = new GetTiposImpactosListQuery();
-        //var tiposImpactos = new List<string> { "Consecuencia", "Actuación" };
+        var request = new GetTiposImpactosListQuery();        
 
         var impactoClasificadoList = new List<ImpactoClasificado>
         {
@@ -67,7 +66,7 @@ public class GetTiposImpactosListQueryHandlerTest
         {
             new ImpactoClasificado { TipoImpacto = "Consecuencia" },
             new ImpactoClasificado { TipoImpacto = "Actuación" },
-            new ImpactoClasificado { TipoImpacto = "Consecuencia" }, // Duplicado            
+            new ImpactoClasificado { TipoImpacto = "Consecuencia" } // Duplicado            
         };
 
         var expectedTiposImpactos = new List<string> { "Consecuencia", "Actuación" };

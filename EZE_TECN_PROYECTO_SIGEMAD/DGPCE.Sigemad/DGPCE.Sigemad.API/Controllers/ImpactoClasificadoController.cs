@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetGruposImpactosList;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetTiposImpactosList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,17 @@ public class ImpactoClasificadoController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<string>>> GetTiposImpactos()
     {
         var query = new GetTiposImpactosListQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("grupos-impactos")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene los grupos de impactos clasificados")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetGruposImpactos()
+    {
+        var query = new GetGruposImpactosListQuery();
         var result = await _mediator.Send(query);
         return Ok(result);
     }
