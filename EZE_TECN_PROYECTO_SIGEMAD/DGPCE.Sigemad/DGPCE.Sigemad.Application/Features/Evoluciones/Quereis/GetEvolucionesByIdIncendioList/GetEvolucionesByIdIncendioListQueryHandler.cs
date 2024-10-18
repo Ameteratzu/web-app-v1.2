@@ -24,25 +24,37 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesB
         }
         public async Task<IReadOnlyList<EvolucionVm>> Handle(GetEvolucionesByIdIncendioListQuery request, CancellationToken cancellationToken)
         {
+              var includes = new List<Expression<Func<Evolucion, object>>>
+                {
+                    e => e.Municipio,
+                    e => e.Provincia,
+                    e => e.Medio,
+                    e => e.EntradaSalida,
+                    e => e.Tecnico,
+                    e => e.Incendio,
+                    e => e.EntidadMenor.Distrito.Pais,
+                    e => e.TipoRegistro,
+                    e => e.EstadoIncendio,
+                    e => e.EvolucionProcedenciaDestinos
+                };
 
-            var includes = new List<Expression<Func<Evolucion, object>>>();
-            includes.Add(e => e.Municipio);
-            includes.Add(e => e.Provincia);
-            includes.Add(e => e.Medio);
-            includes.Add(e => e.EntradaSalida);
-            includes.Add(e => e.Tecnico);
-            includes.Add(e => e.Incendio);
-            includes.Add(e => e.EntidadMenor.Distrito.Pais);
-            includes.Add(e => e.TipoRegistro);
-            includes.Add(e => e.EstadoIncendio);
+            IReadOnlyList<Evolucion> evoluciones = (await _unitOfWork.Repository<Evolucion>().GetAsync(
+                e => e.IdIncendio == request.IdIncendio,
+                null,
+                includes))
+                .OrderByDescending(e => e.FechaHoraEvolucion)
+                .ToList()
+                .AsReadOnly();
 
-            IReadOnlyList<Evolucion> evoluciones = (await _unitOfWork.Repository<Evolucion>().GetAsync(e => e.IdIncendio == request.IdIncendio, null, includes))
-                    .OrderByDescending(e => e.FechaHoraEvolucion)          
-                    .ToList()
-                    .AsReadOnly();
-          
+            foreach (var evolucion in evoluciones)
+            {
+                foreach (var epd in evolucion.EvolucionProcedenciaDestinos)
+                {
+                    epd.ProcedenciaDestino = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync(epd.IdProcedenciaDestino);
+                }
+            }
+
             var evolucionesVm = _mapper.Map<IReadOnlyList<Evolucion>, IReadOnlyList<EvolucionVm>>(evoluciones);
-
             return evolucionesVm;
 
         }

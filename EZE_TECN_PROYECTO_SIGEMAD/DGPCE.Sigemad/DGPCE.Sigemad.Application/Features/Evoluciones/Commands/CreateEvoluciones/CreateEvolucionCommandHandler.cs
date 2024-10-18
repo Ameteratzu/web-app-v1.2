@@ -17,7 +17,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
         private readonly ILogger<CreateEvolucionCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGeometryValidator _geometryValidator;
-        private readonly ICoordinateTransformationService _coordinateTransformationService;
         private readonly IEvolucionService _evolucionService;
 
 
@@ -25,13 +24,11 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             ILogger<CreateEvolucionCommandHandler> logger,
             IUnitOfWork unitOfWork,
             IGeometryValidator geometryValidator,
-            ICoordinateTransformationService coordinateTransformationService,
             IEvolucionService evolucionService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _geometryValidator = geometryValidator;
-            _coordinateTransformationService = coordinateTransformationService;
             _evolucionService = evolucionService;
         }
 
@@ -79,15 +76,15 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             if (municipio is null)
             {
                 _logger.LogWarning($"request.IdMunicipioAfectado: {request.IdMunicipioAfectado}, no encontrado");
-                throw new NotFoundException(nameof(NivelGravedad), request.IdMunicipioAfectado);
+                throw new NotFoundException(nameof(Municipio), request.IdMunicipioAfectado);
             }
 
-            // var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
-            //if (tecnico is null)
-            //{
-            //    _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
-            //    throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
-            //}
+            var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
+            if (tecnico is null)
+            {
+                _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
+                throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
+            }
 
             var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor);
             if (entidadMenor is null)

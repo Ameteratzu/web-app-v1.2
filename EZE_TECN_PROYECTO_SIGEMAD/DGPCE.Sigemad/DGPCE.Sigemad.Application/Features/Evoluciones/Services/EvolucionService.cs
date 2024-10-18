@@ -27,14 +27,20 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
             _logger.LogInformation($"Comprobando estado del incendio: {IdIncendio}");
             var incendioActualizar = await _unitOfWork.Repository<Incendio>().GetByIdAsync(IdIncendio);
+          
             bool actualizarIncendio = false;
 
-            if (incendioActualizar !=null &&
-                (EstadoIncendioEnumeration)estadoIncendio == EstadoIncendioEnumeration.Extinguido &&
-                (EstadoSucesoEnumeration)incendioActualizar.IdEstadoSuceso !=  EstadoSucesoEnumeration.Cerrado)
+            if (incendioActualizar !=null )
             {
-                incendioActualizar.IdEstadoSuceso = (int)EstadoSucesoEnumeration.Cerrado;
-                actualizarIncendio = true;
+                var estadoIncendiobsoleto = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync((int)EstadoIncendioEnumeration.Extinguido);
+                
+                if (estadoIncendiobsoleto != null && !estadoIncendiobsoleto.Obsoleto &&
+                (EstadoIncendioEnumeration)estadoIncendio == EstadoIncendioEnumeration.Extinguido &&
+                (EstadoSucesoEnumeration)incendioActualizar.IdEstadoSuceso != EstadoSucesoEnumeration.Cerrado)
+                {
+                    incendioActualizar.IdEstadoSuceso = (int)EstadoSucesoEnumeration.Cerrado;
+                    actualizarIncendio = true;
+                }         
             }
 
             if (actualizarIncendio && incendioActualizar !=null)

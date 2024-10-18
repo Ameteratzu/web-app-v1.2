@@ -24,13 +24,10 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
 
         public virtual Medio Medio { get; set; } = null!;
 
-        public virtual ProcedenciaDestino ProcedenciaDestino { get; set; } = null!;
-
         public virtual EntradaSalida EntradaSalida { get; set; } = null!;
 
         public virtual ApplicationUserVm Tecnico { get; set; } = null!;
 
-        public virtual EstadoSuceso EstadoSuceso { get; set; } = null!;
         public virtual EntidadMenor EntidadMenor { get; set; } = null!;
         public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
         public virtual TipoRegistro TipoRegistro { get; set; } = null!;
