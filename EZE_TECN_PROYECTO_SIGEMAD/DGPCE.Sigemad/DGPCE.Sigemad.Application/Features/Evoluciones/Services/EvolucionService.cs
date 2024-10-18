@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.EstadosIncendio.Enumerations;
 using DGPCE.Sigemad.Application.Features.EstadosSucesos.Enumerations;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -132,8 +133,23 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
          _logger.LogInformation($"evolucionProcedenciasDestinos creadas correctamente para la evolución {idEvolucion}");
         }
 
+        public async Task EliminarEvolucion(DeleteEvolucionesCommand request)
+        {
+            var evolucionToDelete = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.Id);
+            if (evolucionToDelete is null)
+            {
+                _logger.LogWarning($"La evolución con id:{request.Id}, no existe en la base de datos");
+                throw new NotFoundException(nameof(Evolucion), request.Id);
+            }
 
-
-
+            if (!(bool)evolucionToDelete.Borrado)
+            {
+                evolucionToDelete.Borrado = true;
+                evolucionToDelete.FechaBorrado = DateTime.Now;
+                _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucionToDelete);
+                await _unitOfWork.Complete();
+                _logger.LogInformation($"La evolución con id: {request.Id}, se actualizo estado de borrado con éxito");
+            }              
+        }
     }
 }

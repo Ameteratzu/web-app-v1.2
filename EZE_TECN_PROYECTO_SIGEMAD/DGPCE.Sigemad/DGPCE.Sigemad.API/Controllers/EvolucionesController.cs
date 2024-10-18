@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesById;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesByIdIncendioList;
@@ -41,6 +42,16 @@ namespace DGPCE.Sigemad.API.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id:int}", Name = "DeleteEvolucion")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var command = new DeleteEvolucionesCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
+        }
 
         [HttpGet]
         [Route("{idIncendio}")]
