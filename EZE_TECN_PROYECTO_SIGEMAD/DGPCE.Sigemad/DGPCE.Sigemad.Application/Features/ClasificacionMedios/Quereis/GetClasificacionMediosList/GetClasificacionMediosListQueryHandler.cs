@@ -3,7 +3,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
 
-namespace DGPCE.Sigemad.Application.Features.ClasificacionMedios.Quereis;
+namespace DGPCE.Sigemad.Application.Features.ClasificacionMedios.Quereis.GetClasificacionMediosList;
 public class GetClasificacionMediosListQueryHandler : IRequestHandler<GetClasificacionMediosListQuery, IReadOnlyList<ClasificacionMedio>>
 {
 

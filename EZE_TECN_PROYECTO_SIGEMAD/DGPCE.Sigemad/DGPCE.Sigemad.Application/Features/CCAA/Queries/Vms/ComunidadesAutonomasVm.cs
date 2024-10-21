@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
-using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;

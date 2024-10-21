@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis;
+using DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis.GetCaracterMediosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

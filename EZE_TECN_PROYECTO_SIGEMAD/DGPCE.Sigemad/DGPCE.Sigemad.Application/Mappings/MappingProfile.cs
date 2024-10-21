@@ -17,6 +17,7 @@ using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings
@@ -50,12 +51,14 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Menu, MenuItemVm>();
 
+            CreateMap<Ccaa, ComunidadesAutonomasSinProvinciasVm>();
             CreateMap<Ccaa, ComunidadesAutonomasVm>()
                     .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Provincia.ToList()));
 
             CreateMap<Provincia, ProvinciaSinMunicipiosVm>();
             CreateMap<Provincia, ProvinciaSinMunicipiosConIdComunidadVm>();
             CreateMap<Municipio, MunicipioSinIdProvinciaVm>();
+            CreateMap<Municipio, MunicipioConIdProvincia>();
 
 
             CreateMap<UpdateIncendioCommand, Incendio>();
@@ -70,6 +73,8 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
 
             CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();
+
+            CreateMap<TipoIntervencionMedio, TipoIntervencionMedioVm>();
         }
     }
 }

@@ -96,6 +96,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<CaracterMedio>().ToTable("CaracterMedio");
             modelBuilder.Entity<ClasificacionMedio>().ToTable("ClasificacionMedio");
             modelBuilder.Entity<TitularidadMedio>().ToTable("TitularidadMedio");
+            modelBuilder.Entity<TipoEntidadTitularidadMedio>().ToTable("TipoEntidadTitularidadMedio");
         }
 
 
@@ -125,16 +126,14 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ImpactoEvolucion> ImpactosEvoluciones {  get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
-
         public DbSet<Evolucion> Evoluciones { get; set; }
-
         public DbSet<EvolucionProcedenciaDestino> EvolucionesProcedenciaDestinos { get; set; }
-
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
-
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
-
         public DbSet<TitularidadMedio> TitularidadMedios { get; set; }
+        public DbSet<TipoEntidadTitularidadMedio> tipoEntidadTitularidadMedios { get; set; }
+        public DbSet<TipoIntervencionMedio> TipoIntervencionMedios { get; set; }
+
 
     }
 }

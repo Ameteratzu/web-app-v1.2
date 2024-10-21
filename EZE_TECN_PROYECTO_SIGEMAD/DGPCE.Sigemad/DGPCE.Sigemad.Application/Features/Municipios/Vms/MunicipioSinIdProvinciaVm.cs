@@ -1,10 +1,5 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
-using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetTopologySuite.Geometries;
+
 
 namespace DGPCE.Sigemad.Application.Features.Municipios.Vms
 {

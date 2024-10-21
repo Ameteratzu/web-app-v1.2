@@ -3,7 +3,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
 
-namespace DGPCE.Sigemad.Application.Features.TitularidadMedios.Quereis;
+namespace DGPCE.Sigemad.Application.Features.TitularidadMedios.Quereis.GetTitularidadMediosList;
 internal class GetTitularidadMediosListQueryHandler : IRequestHandler<GetTitularidadMediosListQuery, IReadOnlyList<TitularidadMedio>>
 {
 

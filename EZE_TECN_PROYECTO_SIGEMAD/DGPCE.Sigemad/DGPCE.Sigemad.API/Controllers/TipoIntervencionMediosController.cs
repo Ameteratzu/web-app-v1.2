@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.TitularidadMedios.Quereis.GetTitularidadMediosList;
+using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.GetTipoIntervencionMediosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +8,13 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-[Route("api/v1/titular-medios")]
+[Route("api/v1/tipo-intervencion-medios")]
 [ApiController]
-public class TitularidadMediosController : ControllerBase
+public class TipoIntervencionMediosController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public TitularidadMediosController(IMediator mediator)
+    public TipoIntervencionMediosController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -22,10 +22,10 @@ public class TitularidadMediosController : ControllerBase
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene la lista general de titular de medios")]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene la lista general de tipos de impactos")]
     public async Task<ActionResult<IReadOnlyList<CaracterMedio>>> GetAll()
     {
-        var query = new GetTitularidadMediosListQuery();
+        var query = new GetTipoIntervencionMediosListQuery();
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }

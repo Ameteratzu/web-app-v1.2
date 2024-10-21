@@ -2,7 +2,7 @@
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis;
+namespace DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis.GetCaracterMediosList;
 public class GetCaracterMediosListQueryHandler : IRequestHandler<GetCaracterMediosListQuery, IReadOnlyList<CaracterMedio>>
 {
     private readonly IUnitOfWork _unitOfWork;
