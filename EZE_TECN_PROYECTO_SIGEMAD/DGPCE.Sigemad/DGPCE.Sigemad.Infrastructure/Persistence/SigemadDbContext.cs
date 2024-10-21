@@ -93,6 +93,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<EstadoSuceso>().ToTable("EstadoSuceso");
             modelBuilder.Entity<TipoRegistro>().ToTable("TipoRegistro");
             modelBuilder.Entity<ImpactoClasificado>().ToTable("ImpactoClasificado");
+            modelBuilder.Entity<CaracterMedio>().ToTable("CaracterMedio");
         }
 
 
@@ -126,6 +127,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Evolucion> Evoluciones { get; set; }
 
         public DbSet<EvolucionProcedenciaDestino> EvolucionesProcedenciaDestinos { get; set; }
+
+        public DbSet<CaracterMedio> CaracterMedios { get; set; }
 
 
 
