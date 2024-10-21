@@ -3,12 +3,14 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
+using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Mappings;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Application.Tests.Features.Evoluciones;
 public class CreateEvolucionCommandHandlerTests
@@ -19,6 +21,7 @@ public class CreateEvolucionCommandHandlerTests
     private readonly IMapper _mapper;
     private readonly Mock<IGeometryValidator> _geometryValidatorMock;
     private readonly Mock<IEvolucionService> _evolucionServiceMock;
+    private readonly Mock<ICoordinateTransformationService> _coordinateTransformationServiceMock;
 
     public CreateEvolucionCommandHandlerTests()
     {
@@ -26,6 +29,7 @@ public class CreateEvolucionCommandHandlerTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _geometryValidatorMock = new Mock<IGeometryValidator>();
         _evolucionServiceMock = new Mock<IEvolucionService>();
+        _coordinateTransformationServiceMock = new Mock<ICoordinateTransformationService>();
 
         var mapperConfig = new MapperConfiguration(cfg =>
         {
@@ -82,10 +86,10 @@ public class CreateEvolucionCommandHandlerTests
             var tipoRegistro = new TipoRegistro { Id = 1 };
             var entidadMenor = new EntidadMenor { Id = 208 };
 
-        _unitOfWorkMock.Setup(u => u.Repository<Incendio>().GetByIdAsync(command.IdIncendio))
-                .ReturnsAsync(incendio);
-        _unitOfWorkMock.Setup(u => u.Repository<Municipio>().GetByIdAsync(command.IdMunicipioAfectado))
-                .ReturnsAsync(municipio);
+            _unitOfWorkMock.Setup(u => u.Repository<Incendio>().GetByIdAsync(command.IdIncendio))
+                    .ReturnsAsync(incendio);
+            _unitOfWorkMock.Setup(u => u.Repository<Municipio>().GetByIdAsync(command.IdMunicipioAfectado))
+                    .ReturnsAsync(municipio);
             _unitOfWorkMock.Setup(u => u.Repository<Provincia>().GetByIdAsync(command.IdProvinciaAfectada))
                 .ReturnsAsync(provincia);
             _unitOfWorkMock.Setup(u => u.Repository<Medio>().GetByIdAsync(command.IdMedio))
@@ -102,29 +106,31 @@ public class CreateEvolucionCommandHandlerTests
             _unitOfWorkMock.Setup(u => u.Repository<EntidadMenor>().GetByIdAsync(command.IdEntidadMenor))
                 .ReturnsAsync(entidadMenor);
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().AddEntity(It.IsAny<Evolucion>()))
-                .Callback<Evolucion>(evolucion =>
-                {
-                    evolucion.Id = 1;
-                });
+            _geometryValidatorMock.Setup(g => g.IsGeometryValidAndInEPSG4326(It.IsAny<Geometry>()))
+                .Returns(true);
 
-            _unitOfWorkMock.Setup(u => u.Complete()).ReturnsAsync(1);
+            _coordinateTransformationServiceMock.Setup(u => u.ConvertToUTM(It.IsAny<Geometry>()))
+                .Returns((Geometry geometry) => (500000.0, 4649776.22482, 30));
 
-            var handler = new CreateEvolucionCommandHandler(
-            _loggerMock.Object,
-            _unitOfWorkMock.Object,
-            _geometryValidatorMock.Object,
-            _evolucionServiceMock.Object
-            );
+            _evolucionServiceMock.Setup(e => e.CrearNuevaEvolucion(It.IsAny<CreateEvolucionCommand>()))
+                .ReturnsAsync(new Evolucion { Id = 1 });
+   
+        var handler = new CreateEvolucionCommandHandler(
+                _loggerMock.Object,
+                _unitOfWorkMock.Object,
+                _geometryValidatorMock.Object,
+                _evolucionServiceMock.Object
+                );
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            result.Should().Be(1);
-            _unitOfWorkMock.Verify(u => u.Repository<Evolucion>().AddEntity(It.IsAny<Evolucion>()), Times.Once);
-            _unitOfWorkMock.Verify(u => u.Complete(), Times.Once);
-        }
+            result.Should().NotBeNull();
+            result.Should().BeOfType<CreateEvolucionResponse>();
+            result.Id.Should().Be(1);
+
+    }
 
 
 

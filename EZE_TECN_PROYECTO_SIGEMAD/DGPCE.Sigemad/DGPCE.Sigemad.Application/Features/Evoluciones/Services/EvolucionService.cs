@@ -142,7 +142,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
                 throw new NotFoundException(nameof(Evolucion), request.Id);
             }
 
-            if (!(bool)evolucionToDelete.Borrado)
+            if (evolucionToDelete.Borrado != null && !(bool)evolucionToDelete.Borrado)
             {
                 evolucionToDelete.Borrado = true;
                 evolucionToDelete.FechaBorrado = DateTime.Now;

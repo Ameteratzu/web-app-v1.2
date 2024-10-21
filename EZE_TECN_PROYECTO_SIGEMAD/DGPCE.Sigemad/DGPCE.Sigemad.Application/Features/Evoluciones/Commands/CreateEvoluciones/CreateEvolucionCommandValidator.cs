@@ -10,44 +10,35 @@ public class CreateEvolucionCommandValidator : AbstractValidator<CreateEvolucion
     {
 
         RuleFor(p => p.IdIncendio)
-            .NotEmpty().WithMessage("IdIncendio no puede estar en blanco")
-            .NotNull().WithMessage("IdIncendio es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdEntradaSalida)
-            .NotEmpty().WithMessage("IdEntradaSalida no puede estar en blanco")
-            .NotNull().WithMessage("IdEntradaSalida es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdTipoRegistro)
-            .NotEmpty().WithMessage("IdTipoRegistro no puede estar en blanco")
-            .NotNull().WithMessage("IdTipoRegistro es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdMedio)
-            .NotEmpty().WithMessage("IdMedio no puede estar en blanco")
-            .NotNull().WithMessage("IdMedio es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdTecnico)
             .NotEmpty().WithMessage("IdTecnico no puede estar en blanco")
             .NotNull().WithMessage("IdTecnico es obligatorio");
 
         RuleFor(p => p.IdEntidadMenor)
-                 .NotEmpty().WithMessage("IdEntidadMenor no puede estar en blanco")
-                 .NotNull().WithMessage("IdEntidadMenor es obligatorio");
+                .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdEstadoIncendio)
-            .NotEmpty().WithMessage("IdEstadoIncendio no puede estar en blanco")
-            .NotNull().WithMessage("IdEstadoIncendio es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdMunicipioAfectado)
-            .NotEmpty().WithMessage("IdMunicipioAfectado no puede estar en blanco")
-            .NotNull().WithMessage("IdMunicipioAfectado es obligatorio");
+             .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.IdProvinciaAfectada)
-            .NotEmpty().WithMessage("IdProvinciaAfectada no puede estar en blanco")
-            .NotNull().WithMessage("IdProvinciaAfectada es obligatorio");
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
 
         RuleFor(p => p.FechaHoraEvolucion)
-            .NotEmpty().WithMessage("FechaHoraEvolucion no puede estar en blanco")
-            .NotNull().WithMessage("FechaHoraEvolucion es obligatorio");
+          .NotEmpty().WithMessage("FechaHoraEvolucion es obligatoria");
 
         RuleFor(p => p.GeoPosicionAreaAfectada)
             .NotEmpty().WithMessage("GeoPosicionAreaAfectada no puede estar en blanco")

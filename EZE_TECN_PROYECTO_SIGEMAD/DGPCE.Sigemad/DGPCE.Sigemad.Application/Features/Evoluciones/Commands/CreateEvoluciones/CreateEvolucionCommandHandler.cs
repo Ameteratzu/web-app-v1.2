@@ -43,28 +43,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new NotFoundException(nameof(Incendio), request.IdIncendio);
             }
 
-            var entradaSalida = await _unitOfWork.Repository<EntradaSalida>().GetByIdAsync(request.IdEntradaSalida);
-            if (entradaSalida is null)
-            {
-                _logger.LogWarning($"request.IdEntradaSalida: {request.IdEntradaSalida}, no encontrado");
-                throw new NotFoundException(nameof(EntradaSalida), request.IdEntradaSalida);
-            }
-
-            var medio = await _unitOfWork.Repository<Medio>().GetByIdAsync(request.IdMedio);
-            if (medio is null)
-            {
-                _logger.LogWarning($"request.IdMedio: {request.IdMedio}, no encontrado");
-                throw new NotFoundException(nameof(Medio), request.IdMedio);
-            }
-
-
-            var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
-            if (estadoIncendio is null)
-            {
-                _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
-                throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
-            }
-
             var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvinciaAfectada);
             if (provincia is null)
             {
@@ -79,18 +57,11 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new NotFoundException(nameof(Municipio), request.IdMunicipioAfectado);
             }
 
-            var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
-            if (tecnico is null)
+            var entradaSalida = await _unitOfWork.Repository<EntradaSalida>().GetByIdAsync(request.IdEntradaSalida);
+            if (entradaSalida is null)
             {
-                _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
-                throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
-            }
-
-            var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor);
-            if (entidadMenor is null)
-            {
-                _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
-                throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
+                _logger.LogWarning($"request.IdEntradaSalida: {request.IdEntradaSalida}, no encontrado");
+                throw new NotFoundException(nameof(EntradaSalida), request.IdEntradaSalida);
             }
 
             var tipoRegistro = await _unitOfWork.Repository<TipoRegistro>().GetByIdAsync(request.IdTipoRegistro);
@@ -98,6 +69,34 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             {
                 _logger.LogWarning($"request.IdTipoRegistro: {request.IdTipoRegistro}, no encontrado");
                 throw new NotFoundException(nameof(TipoRegistro), request.IdTipoRegistro);
+            }
+
+            var medio = await _unitOfWork.Repository<Medio>().GetByIdAsync(request.IdMedio);
+            if (medio is null)
+            {
+                _logger.LogWarning($"request.IdMedio: {request.IdMedio}, no encontrado");
+                throw new NotFoundException(nameof(Medio), request.IdMedio);
+            }
+
+            var tecnico = await _unitOfWork.Repository<ApplicationUser>().GetByIdAsync(request.IdTecnico);
+            if (tecnico is null)
+            {
+                _logger.LogWarning($"request.IdTecnico: {request.IdTecnico}, no encontrado");
+                throw new NotFoundException(nameof(ApplicationUser), request.IdTecnico);
+            }
+           
+            var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor);
+            if (entidadMenor is null)
+            {
+                _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
+                throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
+            }
+
+            var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
+            if (estadoIncendio is null)
+            {
+                _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
+                throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
             }
 
             if (request.GeoPosicionAreaAfectada != null && !_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicionAreaAfectada))
