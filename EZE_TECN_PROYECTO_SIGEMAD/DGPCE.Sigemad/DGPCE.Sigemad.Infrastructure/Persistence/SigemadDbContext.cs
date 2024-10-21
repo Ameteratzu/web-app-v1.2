@@ -95,6 +95,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<ImpactoClasificado>().ToTable("ImpactoClasificado");
             modelBuilder.Entity<CaracterMedio>().ToTable("CaracterMedio");
             modelBuilder.Entity<ClasificacionMedio>().ToTable("ClasificacionMedio");
+            modelBuilder.Entity<TitularidadMedio>().ToTable("TitularidadMedio");
         }
 
 
@@ -132,6 +133,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
 
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
+
+        public DbSet<TitularidadMedio> TitularidadMedios { get; set; }
 
     }
 }
