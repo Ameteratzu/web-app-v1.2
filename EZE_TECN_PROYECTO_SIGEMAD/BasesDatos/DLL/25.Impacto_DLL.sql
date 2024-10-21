@@ -46,5 +46,14 @@ CREATE TABLE dbo.ImpactoEvolucion (
     NumeroUsuarios INT NULL,
     NumeroIntervinientes INT NULL,
     NumeroServicios INT NULL,
-    NumeroLocalidades INT NULL
+    NumeroLocalidades INT NULL,
+
+    ---
+    FechaCreacion datetime,
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion datetime,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaBorrado datetime,
+	BorradoPor UNIQUEIDENTIFIER NULL,
+	Borrado bit NULL,
 );

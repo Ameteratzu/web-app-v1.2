@@ -4,28 +4,34 @@ using FluentValidation;
 using System.Reflection;
 using System.Text;
 
-namespace DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
-public class CreateImpactoEvolucionCommandValidator : AbstractValidator<CreateImpactoEvolucionCommand>
+namespace DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
+public class UpdateImpactoEvolucionCommandValidator : AbstractValidator<UpdateImpactoEvolucionCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateImpactoEvolucionCommandValidator(IUnitOfWork unitOfWork)
+    public UpdateImpactoEvolucionCommandValidator(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
 
+        RuleFor(p => p.Id)
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
+
+        RuleFor(p => p.IdEvolucion)
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0");
+
         RuleFor(command => command.IdImpactoClasificado)
-            .NotEmpty().WithMessage("El IdImpactoClasificado es obligatorio.")
+            .GreaterThan(0).WithMessage("Es obligatorio y debe ser mayor a 0")
             .MustAsync((command, id, cancellation) => ValidarCamposObligatorios(command))
             .WithMessage(command => GenerarMensajeCamposFaltantes(command).Result);
     }
 
-    private async Task<bool> ValidarCamposObligatorios(CreateImpactoEvolucionCommand command)
+    private async Task<bool> ValidarCamposObligatorios(UpdateImpactoEvolucionCommand command)
     {
         var camposFaltantes = await ObtenerCamposFaltantes(command);
         return !camposFaltantes.Any(); // Si no hay campos faltantes, la validación pasa
     }
 
-    private async Task<string> GenerarMensajeCamposFaltantes(CreateImpactoEvolucionCommand command)
+    private async Task<string> GenerarMensajeCamposFaltantes(UpdateImpactoEvolucionCommand command)
     {
         var camposFaltantes = await ObtenerCamposFaltantes(command);
         if (!camposFaltantes.Any())
@@ -37,7 +43,7 @@ public class CreateImpactoEvolucionCommandValidator : AbstractValidator<CreateIm
         return mensaje.ToString();
     }
 
-    private async Task<List<string>> ObtenerCamposFaltantes(CreateImpactoEvolucionCommand command)
+    private async Task<List<string>> ObtenerCamposFaltantes(UpdateImpactoEvolucionCommand command)
     {
         // Obtener los campos obligatorios desde la base de datos
         IReadOnlyList<ValidacionImpactoClasificado> listaCampos = await _unitOfWork.Repository<ValidacionImpactoClasificado>()

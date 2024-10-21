@@ -11,6 +11,7 @@ using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
+using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
@@ -66,6 +67,7 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<ApplicationUser, ApplicationUserVm>();
 
             CreateMap<CreateImpactoEvolucionCommand, ImpactoEvolucion>();
+            CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
 
             CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();
         }

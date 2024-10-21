@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,8 @@ public class CreateImpactoEvolucionCommandHandler : IRequestHandler<CreateImpact
     {
         _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - BEGIN");
 
-        var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion);
+        var evolucionSpec = new EvolucionActiveByIdSpecification(request.IdEvolucion);
+        var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(evolucionSpec);
         if (evolucion is null)
         {
             _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");

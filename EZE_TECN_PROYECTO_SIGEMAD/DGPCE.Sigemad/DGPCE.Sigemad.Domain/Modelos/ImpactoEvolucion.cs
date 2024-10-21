@@ -1,12 +1,12 @@
-﻿using NetTopologySuite.Geometries;
+﻿using DGPCE.Sigemad.Domain.Common;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class ImpactoEvolucion
+    public class ImpactoEvolucion: BaseDomainModel<int>
     {
         public ImpactoEvolucion() {}
 
-        public int Id { get; set; }
         public int IdEvolucion { get; set; }
         public int IdImpactoClasificado { get; set; }
 
