@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.Menus.Queries.GetMenusList

@@ -2,7 +2,7 @@
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertasListByEstado;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.DeleteAlertas;
 using DGPCE.Sigemad.Application.Features.Shared;
 

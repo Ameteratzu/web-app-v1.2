@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Alertas.Queries.GetEstadosAlertasList;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Alertas;
 using DGPCE.Sigemad.Application.Specifications.EstadosAlertas;

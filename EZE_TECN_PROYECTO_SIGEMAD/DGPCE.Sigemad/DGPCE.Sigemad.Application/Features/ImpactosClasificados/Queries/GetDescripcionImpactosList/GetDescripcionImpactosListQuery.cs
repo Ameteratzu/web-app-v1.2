@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.Vms;
+﻿using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetDescripcionImpactosList;

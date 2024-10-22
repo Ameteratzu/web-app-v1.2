@@ -1,25 +1,27 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.Distritos.Vms;
+using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
-using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.CreateIntervencionMedios;
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateIntervencionMedios;
-using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
-using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.Vms;
+using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings
@@ -80,6 +82,9 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<CreateIntervencionMedioCommand, IntervencionMedio>();
             CreateMap<UpdateIntervencionMedioCommand, IntervencionMedio>();
+
+            CreateMap<Distrito, DistritoVm>();
+            CreateMap<EntidadMenor, EntidadMenorVm>();
         }
     }
 }

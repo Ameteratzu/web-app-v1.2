@@ -30,5 +30,5 @@ namespace DGPCE.Sigemad.API.Controllers
                 return Ok(listado);
             }
         }
-    }
+   }
 

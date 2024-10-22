@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DGPCE.Sigemad.Domain\DGPCE.Sigemad.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Distritos\Quereis\" />
+  </ItemGroup>
+
 </Project>

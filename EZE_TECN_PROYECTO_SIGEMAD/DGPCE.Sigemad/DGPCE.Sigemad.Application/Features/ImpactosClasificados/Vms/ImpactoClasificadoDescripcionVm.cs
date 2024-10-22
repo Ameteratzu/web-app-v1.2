@@ -1,4 +1,4 @@
-﻿namespace DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.Vms;
+﻿namespace DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 public class ImpactoClasificadoDescripcionVm
 {
     public int Id { get; set; }

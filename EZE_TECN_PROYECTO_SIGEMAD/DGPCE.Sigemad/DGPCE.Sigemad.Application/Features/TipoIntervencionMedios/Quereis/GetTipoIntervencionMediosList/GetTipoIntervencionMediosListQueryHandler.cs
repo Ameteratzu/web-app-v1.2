@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
-using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.Vms;
+using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using System.Linq.Expressions;

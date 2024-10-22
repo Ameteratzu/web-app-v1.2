@@ -1,5 +1,4 @@
-﻿
-namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
+﻿namespace DGPCE.Sigemad.Application.Features.CCAA.Vms;
 public class ComunidadesAutonomasSinProvinciasVm
 {
     public int Id { get; set; }

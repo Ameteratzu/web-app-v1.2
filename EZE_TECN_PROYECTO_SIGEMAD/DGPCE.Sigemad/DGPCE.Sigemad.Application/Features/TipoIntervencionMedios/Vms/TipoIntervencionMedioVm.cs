@@ -1,11 +1,9 @@
-﻿
-
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
+﻿using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 
-namespace DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.Vms;
+namespace DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 public class TipoIntervencionMedioVm
 {
     public int Id { get; set; }

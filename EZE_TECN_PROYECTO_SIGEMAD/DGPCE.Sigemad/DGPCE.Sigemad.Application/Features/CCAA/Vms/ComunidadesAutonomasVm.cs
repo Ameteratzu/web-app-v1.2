@@ -3,7 +3,7 @@ using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms
+namespace DGPCE.Sigemad.Application.Features.CCAA.Vms
 {
     public class ComunidadesAutonomasVm
     {

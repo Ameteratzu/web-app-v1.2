@@ -2,7 +2,7 @@
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetDescripcionImpactosList;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetGruposImpactosList;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetTiposImpactosList;
-using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

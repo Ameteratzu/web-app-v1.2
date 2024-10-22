@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.Alertas.Queries.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.Alertas.Queries.GetAlertaById

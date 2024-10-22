@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 

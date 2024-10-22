@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Quereis.Vms;
+﻿using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using MediatR;
 
 

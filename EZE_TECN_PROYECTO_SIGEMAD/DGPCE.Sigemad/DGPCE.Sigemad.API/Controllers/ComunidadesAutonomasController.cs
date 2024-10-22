@@ -1,6 +1,6 @@
 ﻿using DGPCE.Sigemad.API.Constants;
 using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
-using DGPCE.Sigemad.Application.Features.CCAA.Queries.Vms;
+using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

@@ -1,4 +1,4 @@
-﻿namespace DGPCE.Sigemad.Application.Features.Menus.Queries.Vms;
+﻿namespace DGPCE.Sigemad.Application.Features.Menus.Vms;
 
 public class MenuItemVm
 {
