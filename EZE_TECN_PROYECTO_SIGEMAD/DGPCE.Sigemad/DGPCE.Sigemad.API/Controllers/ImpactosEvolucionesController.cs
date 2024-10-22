@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.DeleteAlertas;
-using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
+﻿using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.DeleteImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Queries.GetImpactoEvolucionById;
@@ -26,7 +25,7 @@ public class ImpactosEvolucionesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Crear impacto de una evolucion (Consecuencia/Actuacion)")]
-    public async Task<ActionResult<CreateImpactoEvolucionCommand>> Create([FromBody] CreateImpactoEvolucionCommand command)
+    public async Task<ActionResult<CreateImpactoEvolucionResponse>> Create([FromBody] CreateImpactoEvolucionCommand command)
     {
         var response = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetImpactoById), new { id = response.Id }, response);

@@ -32,7 +32,7 @@ public class GetIncendioDetallesListQueryHandler : IRequestHandler<GetIncendioDe
         var detallesAll = detallesEvolucion
             .Select(d => new IncendioDetalleVm
             {
-                FechaRegistro = d.FechaCreacion ?? DateTime.MinValue,
+                FechaRegistro = d.FechaCreacion,
                 Registro = d.EntradaSalida.Descripcion,
                 Origen = "",
                 TipoRegistro = "Datos de evolución",

@@ -6,5 +6,6 @@ public class ImpactoActiveByIdEvolucionSpecification : BaseSpecification<Impacto
     public ImpactoActiveByIdEvolucionSpecification(int idEvolucion)
         : base(i => i.IdEvolucion == idEvolucion && i.Borrado == false)
     {
+        AddInclude(i => i.ImpactoClasificado);
     }
 }

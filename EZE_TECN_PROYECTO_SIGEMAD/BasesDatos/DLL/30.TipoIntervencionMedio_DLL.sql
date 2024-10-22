@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS dbo.TipoIntervencionMedio;
 GO
 
 CREATE TABLE dbo.TipoIntervencionMedio (
-	Id int PRIMARY KEY IDENTITY(1,1),
+	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	Descripcion varchar(255) NOT NULL,
 	IdClasificacion int NULL,
 	IdTitularidad int NULL,

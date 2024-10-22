@@ -17,6 +17,6 @@ CREATE TABLE dbo.Municipio (
 	Huso varchar(3) NULL,
 	GeoPosicion GEOMETRY,
 	CONSTRAINT Municipios_PK PRIMARY KEY (Id),
-	CONSTRAINT ProvinciaMunicipio FOREIGN KEY (IdProvincia) REFERENCES Provincia(Id) ON DELETE NO ACTION ON UPDATE NO ACTION
+	CONSTRAINT ProvinciaMunicipio FOREIGN KEY (IdProvincia) REFERENCES Provincia(Id)
 );
 CREATE INDEX IX_Municipio ON dbo.Municipio (IdProvincia);

@@ -33,7 +33,7 @@ public class DeleteImpactoEvolucionCommandHandler : IRequestHandler<DeleteImpact
         }
 
         impactoEvolucionToUpdate.Borrado = true;
-        impactoEvolucionToUpdate.FechaBorrado = DateTime.Now;
+        impactoEvolucionToUpdate.FechaEliminacion = DateTime.Now;
 
         _unitOfWork.Repository<ImpactoEvolucion>().UpdateEntity(impactoEvolucionToUpdate);
         await _unitOfWork.Complete();

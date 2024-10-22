@@ -30,8 +30,8 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public int? NumeroLocalidades { get; set; }
 
         
-        public Evolucion? Evolucion { get; set; }
-        public ImpactoClasificado? ImpactoClasificado { get; set; }
+        public virtual Evolucion Evolucion { get; set; }
+        public virtual ImpactoClasificado ImpactoClasificado { get; set; }
 
     }
 }

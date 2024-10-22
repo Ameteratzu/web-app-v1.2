@@ -145,7 +145,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             if (evolucionToDelete.Borrado != null && !(bool)evolucionToDelete.Borrado)
             {
                 evolucionToDelete.Borrado = true;
-                evolucionToDelete.FechaBorrado = DateTime.Now;
+                evolucionToDelete.FechaEliminacion = DateTime.Now;
                 _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucionToDelete);
                 await _unitOfWork.Complete();
                 _logger.LogInformation($"La evolución con id: {request.Id}, se actualizo estado de borrado con éxito");

@@ -2,22 +2,24 @@ DROP TABLE IF EXISTS dbo.IntervencionMedio;
 GO
 
 CREATE TABLE dbo.IntervencionMedio (
-	Id int NOT NULL IDENTITY(1,1),
-	IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
-	IdTipoIntervencionMedio int NOT NULL FOREIGN KEY REFERENCES TipoIntervencionMedio(Id),
-	IdCaracterMedio int NOT NULL FOREIGN KEY REFERENCES CaracterMedio(Id),
-	IdMunicipio int NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
-	Cantidad decimal(18,2) NULL,
-	Unidad varchar(100) NULL,
-	Titular varchar(1000) NULL,
+	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	IdEvolucion int NOT NULL FOREIGN KEY REFERENCES dbo.Evolucion(Id),
+	IdTipoIntervencionMedio int NOT NULL FOREIGN KEY REFERENCES dbo.TipoIntervencionMedio(Id),
+	IdCaracterMedio int NOT NULL FOREIGN KEY REFERENCES dbo.CaracterMedio(Id),
+	IdClasificacionMedio int NOT NULL FOREIGN KEY REFERENCES dbo.ClasificacionMedio(Id),
+	IdTitularidadMedio int NOT NULL FOREIGN KEY REFERENCES dbo.TitularidadMedio(Id),
+	IdMunicipio int NOT NULL FOREIGN KEY REFERENCES dbo.Municipio(Id),
+	Cantidad int NOT NULL,
+	Unidad varchar(100) NOT NULL,
+	Titular varchar(255) NOT NULL,
 	GeoPosicion GEOMETRY,
 	Observaciones text NULL,
 	---
-    FechaCreacion datetime,
+    FechaCreacion DATETIME2(7) NOT NULL,
 	CreadoPor UNIQUEIDENTIFIER NULL,
-	FechaModificacion datetime,
+	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
-	FechaBorrado datetime,
-	BorradoPor UNIQUEIDENTIFIER NULL,
-	Borrado bit NULL
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );
