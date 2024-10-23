@@ -2,7 +2,7 @@
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis;
+namespace DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis.GetTipoDireccionEmergenciasList;
 
 public class GetTipoDireccionEmergenciasListQueryHandler : IRequestHandler<GetTipoDireccionEmergenciasListQuery, IReadOnlyList<TipoDireccionEmergencia>>
 {

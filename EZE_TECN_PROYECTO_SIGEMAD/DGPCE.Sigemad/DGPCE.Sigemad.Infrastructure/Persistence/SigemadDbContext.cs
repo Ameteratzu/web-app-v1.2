@@ -98,6 +98,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TitularidadMedio>().ToTable("TitularidadMedio");
             modelBuilder.Entity<TipoEntidadTitularidadMedio>().ToTable("TipoEntidadTitularidadMedio");
             modelBuilder.Entity<TipoDireccionEmergencia>().ToTable("TipoDireccionEmergencia");
+            modelBuilder.Entity<TipoPlan>().ToTable("TipoPlan");
         }
 
 
@@ -134,7 +135,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<TitularidadMedio> TitularidadMedios { get; set; }
         public DbSet<TipoEntidadTitularidadMedio> tipoEntidadTitularidadMedios { get; set; }
         public DbSet<TipoIntervencionMedio> TipoIntervencionMedios { get; set; }
-        public DbSet<TipoDireccionEmergencia> TipoDireccionEmergencia { get; set; }
+        public DbSet<TipoDireccionEmergencia> TipoDireccionEmergencias { get; set; }
+
+        public DbSet<TipoPlan> TipoPlanes { get; set; }
 
     }
 }

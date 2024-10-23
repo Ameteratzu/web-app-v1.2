@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis;
+using DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis.GetTipoDireccionEmergenciasList;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Moq;

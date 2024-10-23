@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis;
+using DGPCE.Sigemad.Application.Features.TipoDireccionEmergencias.Quereis.GetTipoDireccionEmergenciasList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +23,8 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todas la ista general de TipoDireccionEmergencia")]
-        public async Task<ActionResult<IReadOnlyList<ClaseSuceso>>> GetAll()
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todas la lista general de TipoDireccionEmergencia")]
+        public async Task<ActionResult<IReadOnlyList<TipoDireccionEmergencia>>> GetAll()
         {
             var query = new GetTipoDireccionEmergenciasListQuery();
             var listado = await _mediator.Send(query);
