@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
@@ -85,6 +87,8 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Distrito, DistritoVm>();
             CreateMap<EntidadMenor, EntidadMenorVm>();
+            CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
+            CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
         }
     }
 }

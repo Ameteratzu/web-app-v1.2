@@ -138,6 +138,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<TipoDireccionEmergencia> TipoDireccionEmergencias { get; set; }
 
         public DbSet<TipoPlan> TipoPlanes { get; set; }
+        public DbSet<ActivacionPlanEmergencia> ActivacionPlanesEmergencias { get; set; }
+        public DbSet<DireccionCoordinacionEmergencia>  DireccionCoordinacionEmergencias { get; set; }
 
     }
 }
