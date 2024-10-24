@@ -59,7 +59,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [SwaggerOperation(Summary = "Obtiene el listado de las evoluciones para un determinado incendio")]
-        public async Task<IActionResult> GetEvolucionesByIdIncendio(int idIncendio)
+        public async Task<ActionResult<IReadOnlyList<EvolucionVm>>> GetEvolucionesByIdIncendio(int idIncendio)
         {
             var query = new GetEvolucionesByIdIncendioListQuery(idIncendio);
             var listado = await _mediator.Send(query);
