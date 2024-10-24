@@ -1,20 +1,24 @@
-import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 
+import { FireEvolutionCreateComponent } from '../fire-evolution-create/fire-evolution-create.component';
 import { MapCreateComponent } from '../map-create/map-create.component';
 
-import { MenuItemActiveService } from '../../services/menu-item-active.service';
-import { FireService } from '../../services/fire.service';
-import { ProvinceService } from '../../services/province.service';
-import { MunicipalityService } from '../../services/municipality.service';
 import { EventService } from '../../services/event.service';
+import { FireStatusService } from '../../services/fire-status.service';
+import { FireService } from '../../services/fire.service';
+import { MenuItemActiveService } from '../../services/menu-item-active.service';
+import { MunicipalityService } from '../../services/municipality.service';
+import { ProvinceService } from '../../services/province.service';
 
-import { Fire } from '../../types/fire.type';
-import { Province } from '../../types/province.type';
-import { Municipality } from '../../types/municipality.type';
 import { Event } from '../../types/event.type';
+import { FireDetail } from '../../types/fire-detail.type';
+import { FireStatus } from '../../types/fire-status.type';
+import { Fire } from '../../types/fire.type';
+import { Municipality } from '../../types/municipality.type';
+import { Province } from '../../types/province.type';
 
 import {
   FormControl,
@@ -26,11 +30,9 @@ import {
 @Component({
   selector: 'app-fire-national-edit',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, FormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './fire-national-edit.component.html',
-  styleUrl: './fire-national-edit.component.css'
+  styleUrl: './fire-national-edit.component.css',
 })
 export class FireNationalEditComponent {
   public route = inject(ActivatedRoute);
@@ -42,106 +44,74 @@ export class FireNationalEditComponent {
   public provinceService = inject(ProvinceService);
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
+  public fireStatusService = inject(FireStatusService);
 
-  public fire = <Fire>({});
+  public fire = <Fire>{};
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public events = signal<Event[]>([]);
+  public fireStatus = signal<FireStatus[]>([]);
+  public logs = signal<FireDetail[]>([]);
 
   public formData: FormGroup;
 
-  public error:boolean = false;
+  public error: boolean = false;
 
-  public items = [
+  public showUpdateLog: boolean = true;
+  public showDetailsUpdate: boolean = false;
+
+  public details = [
     {
-      id: 1,
-      datetime: '12/08/2024 00:00',
-      record: 'Entrada',
-      origin: 'MITECO',
-      record_type: 'Datos de evolución',
-      technical: 'sacop1'
+      reg: '10',
+      datetime: '19/08/2024 19:45',
+      scope: 'Personas',
+      type: 'Evacuados',
+      implication: 'Santa María (134)',
     },
     {
-      id: 2,
-      datetime: '12/08/2024 00:00',
-      record: 'Salida',
-      origin: 'DOPCE',
-      record_type: 'Datos de evolución',
-      technical: 'sacop1'
+      reg: '10',
+      datetime: '19/08/2024 19:25',
+      scope: 'Viabilidad',
+      type: 'Meteorológica',
+      implication: 'CN-21 (Corte PK 2,300-3,100)',
     },
     {
-      id: 3,
-      datetime: '12/08/2024 00:00',
-      record: 'Salida',
-      origin: 'DOPCE',
-      record_type: 'Otra infromación',
-      technical: 'sacop1'
+      reg: '9',
+      datetime: '19/08/2024 19:15',
+      scope: 'Medios estatales',
+      type: 'Extraordinario',
+      implication: 'UME (Aprobación - Salida)',
     },
     {
-      id: 4,
-      datetime: '12/08/2024 00:00',
-      record: 'Interna',
-      origin: 'DGPCyE',
-      record_type: 'Dirección y coordinación',
-      technical: 'sacop1'
+      reg: '8',
+      datetime: '19/08/2024 19:12',
+      scope: 'Medios estatales',
+      type: 'Extraordinario',
+      implication: 'UME (Aprobación - Entrada)',
     },
     {
-      id: 5,
-      datetime: '12/08/2024 00:00',
-      record: 'Entrada',
-      origin: 'MITECO',
-      record_type: 'Datos de evolución',
-      technical: 'sacop1'
+      reg: '7',
+      datetime: '19/08/2024 18:15',
+      scope: 'Dirección',
+      type: 'Entrada',
+      implication: 'COCOPI (Inicio)',
     },
     {
-      id: 6,
-      datetime: '12/08/2024 00:00',
-      record: 'Interna',
-      origin: 'DGPCyE',
-      record_type: 'Actuaciones relevantes',
-      technical: 'sacop1'
-    },
-    {
-      id: 7,
-      datetime: '12/08/2024 00:00',
-      record: 'Entrada',
-      origin: 'DOPCE',
-      record_type: 'Documentación',
-      technical: 'sacop1'
-    },
-    {
-      id: 8,
-      datetime: '12/08/2024 00:00',
-      record: 'Salida',
-      origin: 'MITECO',
-      record_type: 'Otra información',
-      technical: 'sacop1'
-    },
-    {
-      id: 9,
-      datetime: '12/08/2024 00:00',
-      record: 'Entrada',
-      origin: 'DOPCE',
-      record_type: 'Documentación',
-      technical: 'sacop1'
-    },
-    {
-      id: 10,
-      datetime: '12/08/2024 00:00',
-      record: 'Salida',
-      origin: 'MITECO',
-      record_type: 'Otra información',
-      technical: 'sacop1'
+      reg: '6',
+      datetime: '19/08/2024 18:10',
+      scope: 'Medios estatales',
+      type: 'Extraordinario',
+      implication: 'UME (Solicitud - Salida)',
     },
   ];
 
   async ngOnInit() {
     localStorage.removeItem('coordinates');
-    
+
     this.menuItemActiveService.set.emit('/fire');
 
     this.formData = new FormGroup({
-      id: new FormControl(),
+      Id: new FormControl(),
       name: new FormControl(),
       territory: new FormControl(),
       province: new FormControl(),
@@ -164,11 +134,19 @@ export class FireNationalEditComponent {
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
-    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    const municipalities = await this.municipalityService.get(
+      this.fire.idProvincia
+    );
     this.municipalities.set(municipalities);
 
     const events = await this.eventService.get();
     this.events.set(events);
+
+    const fireStatus = await this.fireStatusService.get();
+    this.fireStatus.set(fireStatus);
+
+    const details = await this.fireService.details(Number(fire_id));
+    this.logs.set(details);
 
     this.formData.patchValue({
       id: this.fire.id,
@@ -216,5 +194,30 @@ export class FireNationalEditComponent {
       width: '1000px',
       maxWidth: '1000px',
     });
+  }
+
+  openModalEvolution() {
+    let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
+      width: '1500px',
+      maxWidth: '1500px',
+      disableClose: true,
+    });
+
+    evolutionModalRef.componentInstance.fire_id = Number(
+      this.route.snapshot.paramMap.get('id')
+    );
+  }
+
+  showTable(table: string) {
+    this.showUpdateLog = false;
+    this.showDetailsUpdate = false;
+
+    if (table == 'showUpdateLog') {
+      this.showUpdateLog = true;
+    }
+
+    if (table == 'showDetailsUpdate') {
+      this.showDetailsUpdate = true;
+    }
   }
 }

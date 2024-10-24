@@ -65,7 +65,6 @@ export class FireNationalCreateComponent {
       name: new FormControl(),
       start: new FormControl(),
       event: new FormControl(),
-      initialDanger: new FormControl(),
       generalNote: new FormControl(),
     });
 

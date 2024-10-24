@@ -4,9 +4,10 @@ export type Fire = {
   id: number;
   denominacion: string;
   fechaInicio: string;
-  estadoIncendio: FireStatus;
+  estadoSuceso: FireStatus;
   comentarios: string;
   idSuceso: number;
+  idEstado: number;
   idProvincia: number;
   idTerritorio: number;
   idMunicipio: number;

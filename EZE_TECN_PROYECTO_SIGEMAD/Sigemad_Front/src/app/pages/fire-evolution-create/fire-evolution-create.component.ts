@@ -1,0 +1,578 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
+
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FireStatusService } from '../../services/fire-status.service';
+
+import { EvolutionService } from '../../services/evolution.service';
+import { ImpactEvolutionService } from '../../services/impact-evolution.service';
+import { ImpactGroupService } from '../../services/impact-group.service';
+import { ImpactTypeService } from '../../services/impact-type.service';
+import { ImpactService } from '../../services/impact.service';
+import { InputOutputService } from '../../services/input-output.service';
+import { InterveningMediaService } from '../../services/intervening-media.service';
+import { MediaClassificationService } from '../../services/media-classification.service';
+import { MediaOwnershipService } from '../../services/media-ownership.service';
+import { MediaTypeService } from '../../services/media-type.service';
+import { MediaService } from '../../services/media.service';
+import { MinorEntityService } from '../../services/minor-entity.service';
+import { MunicipalityService } from '../../services/municipality.service';
+import { OriginDestinationService } from '../../services/origin-destination.service';
+import { ProvinceService } from '../../services/province.service';
+import { RecordTypeService } from '../../services/record-type.service';
+
+import { FireStatus } from '../../types/fire-status.type';
+import { Impact } from '../../types/impact.type';
+import { InputOutput } from '../../types/input-output.type';
+import { MediaClassification } from '../../types/media-classification.type';
+import { MediaOwnership } from '../../types/media-ownership.type';
+import { MediaType } from '../../types/media-type.type';
+import { Media } from '../../types/media.type';
+import { MinorEntity } from '../../types/minor-entity.type';
+import { Municipality } from '../../types/municipality.type';
+import { OriginDestination } from '../../types/origin-destination.type';
+import { Province } from '../../types/province.type';
+import { RecordType } from '../../types/record-type.type';
+
+import { MapCreateComponent } from '../map-create/map-create.component';
+
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+
+@Component({
+  selector: 'app-fire-evolution-create',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  templateUrl: './fire-evolution-create.component.html',
+  styleUrl: './fire-evolution-create.component.css',
+})
+export class FireEvolutionCreateComponent {
+  public activeTab: string = 'Registro';
+
+  public matDialogRef = inject(MatDialogRef);
+  public matDialog = inject(MatDialog);
+  public mediaService = inject(MediaService);
+  public originDestinationService = inject(OriginDestinationService);
+  public fireStatusService = inject(FireStatusService);
+  public provinceService = inject(ProvinceService);
+  public municipalityService = inject(MunicipalityService);
+  public impactTypeService = inject(ImpactTypeService);
+  public impactGroupService = inject(ImpactGroupService);
+  public impactService = inject(ImpactService);
+  public impactEvolutionService = inject(ImpactEvolutionService);
+  public mediaClassificationService = inject(MediaClassificationService);
+  public mediaOwnershipService = inject(MediaOwnershipService);
+  public inputOutputService = inject(InputOutputService);
+  public mediaTypeService = inject(MediaTypeService);
+  public recordTypeService = inject(RecordTypeService);
+  public minorEntityService = inject(MinorEntityService);
+  public evolutionService = inject(EvolutionService);
+  public interveningMediaService = inject(InterveningMediaService);
+
+  public medias = signal<Media[]>([]);
+  public originDestinations = signal<OriginDestination[]>([]);
+  public status = signal<FireStatus[]>([]);
+  public provinces = signal<Province[]>([]);
+  public municipalities = signal<Municipality[]>([]);
+  public municipalities2 = signal<Municipality[]>([]);
+  public impacts = signal<Impact[]>([]);
+  public mediaClassifications = signal<MediaClassification[]>([]);
+  public mediaOwnerships = signal<MediaOwnership[]>([]);
+  public inputOutputs = signal<InputOutput[]>([]);
+  public mediaTypes = signal<MediaType[]>([]);
+  public recordTypes = signal<RecordType[]>([]);
+  public minorEntities = signal<MinorEntity[]>([]);
+
+  public impactTypes: any;
+  public impactGroups: any;
+
+  public consequencesActions = [] as any;
+  public interveningMedias = [] as any;
+  public denominations = [] as any;
+
+  public formGroup: FormGroup;
+
+  public fire_id: number;
+  public evolution_id: any;
+  public errors: any;
+
+  public consequenceActionError: boolean = false;
+  public interveningMediaError: boolean = false;
+  public errorAreaAfectada: boolean = false;
+
+  public type: string = '';
+  public group: string = '';
+
+  async ngOnInit() {
+    this.formGroup = new FormGroup({
+      datetime: new FormControl(),
+      type: new FormControl(),
+      media: new FormControl(),
+      originDestination: new FormControl(),
+      datetimeUpdate: new FormControl(),
+      recordType: new FormControl(),
+      observations_1: new FormControl(),
+      forecast: new FormControl(),
+      status: new FormControl(),
+      affectedSurface: new FormControl(),
+      end_date: new FormControl(),
+      emergencyPlanActivated: new FormControl(),
+      province_1: new FormControl(),
+      municipality_1: new FormControl(),
+      minorEntity: new FormControl(),
+      georeferencedFile: new FormControl(),
+
+      consequenceActionUpdate: new FormControl(),
+      consequenceActionIndex: new FormControl(),
+      impactType: new FormControl(),
+      impactGroup: new FormControl(),
+      name: new FormControl(),
+      number: new FormControl(),
+      observations_2: new FormControl(),
+      end: new FormControl(),
+      start: new FormControl(),
+      injureds: new FormControl(),
+      participants: new FormControl(),
+
+      interveningMediaIndex: new FormControl(),
+      interveningMediaUpdate: new FormControl(),
+      mediaType: new FormControl(),
+      quantity: new FormControl(),
+      unit: new FormControl(),
+      classification: new FormControl(),
+      ownership_1: new FormControl(),
+      ownership_2: new FormControl(),
+      province_2: new FormControl(),
+      municipality_2: new FormControl(),
+      observations_3: new FormControl(),
+    });
+
+    localStorage.clear();
+
+    const medias = await this.mediaService.get();
+    this.medias.set(medias);
+
+    const originDestinations = await this.originDestinationService.get();
+    this.originDestinations.set(originDestinations);
+
+    const status = await this.fireStatusService.get();
+    this.status.set(status);
+
+    const provinces = await this.provinceService.get();
+    this.provinces.set(provinces);
+
+    const impactTypes = await this.impactTypeService.get();
+    this.impactTypes = impactTypes;
+
+    const impactGroups = await this.impactGroupService.get();
+    this.impactGroups = impactGroups;
+
+    const impacts = await this.impactService.get();
+    this.impacts.set(impacts);
+
+    const mediaClassifications = await this.mediaClassificationService.get();
+    this.mediaClassifications.set(mediaClassifications);
+
+    const mediaOwnerships = await this.mediaOwnershipService.get();
+    this.mediaOwnerships.set(mediaOwnerships);
+
+    const inputOutputs = await this.inputOutputService.get();
+    this.inputOutputs.set(inputOutputs);
+
+    const mediaTypes = await this.mediaTypeService.get();
+    this.mediaTypes.set(mediaTypes);
+
+    const recordTypes = await this.recordTypeService.get();
+    this.recordTypes.set(mediaTypes);
+
+    const minorEntities = await this.minorEntityService.get();
+    this.minorEntities.set(minorEntities);
+  }
+
+  public changeTab(tab: string) {
+    this.activeTab = tab;
+  }
+
+  public closeModal() {
+    this.matDialogRef.close();
+  }
+
+  public async loadMunicipalities(event: any, input: string) {
+    const province_id = event.target.value;
+    const municipalities = await this.municipalityService.get(province_id);
+
+    if (input == '1') {
+      this.municipalities.set(municipalities);
+    }
+
+    if (input == '2') {
+      this.municipalities2.set(municipalities);
+    }
+  }
+
+  public openModalMapCreate(section: string = '') {
+    let mapModalRef = this.matDialog.open(MapCreateComponent, {
+      width: '1000px',
+      maxWidth: '1000px',
+    });
+
+    mapModalRef.componentInstance.section = section;
+  }
+
+  public saveConsequenceAction() {
+    const data = this.formGroup.value;
+
+    this.consequenceActionError = false;
+
+    if (
+      !data.impactType ||
+      !data.impactGroup ||
+      !data.name ||
+      !data.number ||
+      !data.observations_2 ||
+      !data.start ||
+      !data.end ||
+      !data.injureds ||
+      !data.participants
+    ) {
+      this.consequenceActionError = true;
+      return;
+    }
+
+    if (data.consequenceActionUpdate == '1') {
+      const replace = {
+        impactType: data.impactType,
+        impactGroup: data.impactGroup,
+        name: data.name,
+        number: data.number,
+        observations_2: data.observations_2,
+        start: data.start,
+        end: data.end,
+        injureds: data.injureds,
+        participants: data.participants,
+      };
+
+      this.consequencesActions.splice(data.consequenceActionIndex, 1, replace);
+    } else {
+      this.consequencesActions.push({
+        impactType: data.impactType,
+        impactGroup: data.impactGroup,
+        name: data.name,
+        number: data.number,
+        observations_2: data.observations_2,
+        start: data.start,
+        end: data.end,
+        injureds: data.injureds,
+        participants: data.participants,
+      });
+    }
+
+    this.formGroup.patchValue({
+      consequenceActionIndex: '',
+      consequenceActionUpdate: '',
+      impactType: '',
+      impactGroup: '',
+      name: '',
+      number: '',
+      observations_2: '',
+      start: '',
+      end: '',
+      injureds: '',
+      participants: '',
+    });
+  }
+
+  public showConsequenceDataInForm(index: number) {
+    const item = this.consequencesActions[index];
+
+    this.formGroup.patchValue({
+      consequenceActionIndex: index,
+      consequenceActionUpdate: '1',
+      impactType: item.impactType,
+      impactGroup: item.impactGroup,
+      name: item.name,
+      number: item.number,
+      observations_2: item.observations_2,
+      start: item.start,
+      end: item.end,
+      injureds: item.injureds,
+      participants: item.participants,
+    });
+  }
+
+  public showInterveningMediaDataInForm(index: number) {
+    const item = this.interveningMedias[index];
+
+    this.formGroup.patchValue({
+      interveningMediaIndex: index,
+      interveningMediaUpdate: 1,
+      mediaType: item.mediaType,
+      quantity: item.quantity,
+      unit: item.unit,
+      classification: item.classification,
+      ownership_1: item.ownership_1,
+      ownership_2: item.ownership_2,
+      province_2: item.province_2,
+      municipality_2: item.municipality_2,
+      observations_3: item.observations_3,
+    });
+  }
+
+  public deleteConsequence(index: number) {
+    if (confirm('Está seguro que desea eliminar?')) {
+      this.consequencesActions.splice(index, 1);
+    }
+  }
+
+  public deleteInterveningMedia(index: number) {
+    if (confirm('Está seguro que desea eliminar?')) {
+      this.interveningMedias.splice(index, 1);
+    }
+  }
+
+  public saveInterveningMedia() {
+    this.interveningMediaError = false;
+    const data = this.formGroup.value;
+
+    if (
+      !data.mediaType ||
+      !data.quantity ||
+      !data.unit ||
+      !data.classification ||
+      !data.ownership_1 ||
+      !data.ownership_2 ||
+      !data.province_2 ||
+      !data.municipality_2 ||
+      !data.observations_3
+    ) {
+      this.interveningMediaError = true;
+      return;
+    }
+
+    if (data.interveningMediaUpdate == '1') {
+      const replace = {
+        mediaType: data.mediaType,
+        quantity: data.quantity,
+        unit: data.unit,
+        classification: data.classification,
+        ownership_1: data.ownership_1,
+        ownership_2: data.ownership_2,
+        province_2: data.province_2,
+        municipality_2: data.municipality_2,
+        observations_3: data.observations_3,
+      };
+
+      this.interveningMedias.splice(data.interveningMediaIndex, 1, replace);
+    } else {
+      this.interveningMedias.push({
+        mediaType: data.mediaType,
+        quantity: data.quantity,
+        unit: data.unit,
+        classification: data.classification,
+        ownership_1: data.ownership_1,
+        ownership_2: data.ownership_2,
+        province_2: data.province_2,
+        municipality_2: data.municipality_2,
+        observations_3: data.observations_3,
+      });
+    }
+
+    this.formGroup.patchValue({
+      interveningMediaIndex: '',
+      interveningMediaUpdate: '',
+      mediaType: '',
+      quantity: '',
+      unit: '',
+      classification: '',
+      ownership_1: '',
+      ownership_2: '',
+      province_2: '',
+      municipality_2: '',
+      observations_3: '',
+    });
+  }
+
+  public async submit() {
+    const data = this.formGroup.value;
+    data.fire_id = this.fire_id;
+
+    this.errorAreaAfectada = false;
+    this.errors = false;
+
+    if (!localStorage.getItem('coordinatesAreaAfectada')) {
+      this.errorAreaAfectada = true;
+      return;
+    }
+
+    data.coordinatesAreaAfectada = JSON.parse(
+      localStorage.getItem('coordinatesAreaAfectada') ?? '{}'
+    );
+
+    if (localStorage.getItem('polygonAreaAfectada')) {
+      data.geoPosicionAreaAfectada = {
+        type: 'Polygon',
+        coordinates: [data.coordinatesAreaAfectada],
+      };
+    } else {
+      data.geoPosicionAreaAfectada = {
+        type: 'Point',
+        coordinates: data.coordinatesAreaAfectada,
+      };
+    }
+
+    data.coordinatesIntervencionMedios = JSON.parse(
+      localStorage.getItem('coordinatesIntervencionMedios') ?? '{}'
+    );
+
+    if (localStorage.getItem('polygonIntervencionMedios')) {
+      data.geoPosicion = {
+        type: 'Polygon',
+        coordinates: [data.coordinatesIntervencionMedios],
+      };
+    } else {
+      data.geoPosicion = {
+        type: 'Point',
+        coordinates: data.coordinatesIntervencionMedios,
+      };
+    }
+
+    await this.evolutionService
+      .post(data)
+      .then((response) => {
+        this.evolution_id = response;
+        this.evolution_id = this.evolution_id.id;
+      })
+      .catch((error) => {
+        this.errors = error.errors;
+        const element = document.getElementById('validation-evolution-error');
+        setTimeout(() => {
+          element?.scrollIntoView();
+        }, 1000);
+      });
+
+    if (this.errors) {
+      return;
+    }
+
+    for (let consequence of this.consequencesActions) {
+      const consequenceAction = {
+        numero: consequence.number,
+        observaciones: consequence.observations_2,
+        fechaHoraInicio: consequence.start,
+        fechaHora: consequence.start,
+        fechaHoraFin: consequence.end,
+        numeroGraves: consequence.injureds,
+        numeroIntervinientes: consequence.participants,
+        IdImpactoClasificado: 1,
+        nuclear: true,
+        causa: 'string',
+        valorAd: 0,
+        idEvolucion: this.evolution_id,
+      };
+
+      await this.impactEvolutionService.post(consequenceAction);
+    }
+
+    for (let intervening of this.interveningMedias) {
+      const interveningMedia = {
+        idEvolucion: this.evolution_id,
+        idCaracterMedio: 1,
+        idTipoIntervencionMedio: intervening.mediaType,
+        idClasificacionMedio: intervening.classification,
+        idTitularidadMedio: intervening.ownership_1,
+        idMunicipio: intervening.municipality_2,
+        cantidad: intervening.quantity,
+        unidad: intervening.unit,
+        titular: intervening.ownership_2,
+        observaciones: intervening.observations_3,
+        geoPosicion: data.geoPosicion,
+      };
+
+      await this.interveningMediaService.post(interveningMedia);
+    }
+
+    window.location.href = '/fire-national-edit/' + this.fire_id;
+  }
+
+  public getDescriptionName(id: number) {
+    return 'Consecuencias';
+    return this.impacts().filter((item) => item.id == id)[0].descripcion;
+  }
+
+  public getMediaTypeDescription(id: number) {
+    return this.mediaTypes().filter((item) => item.id == id)[0].descripcion;
+  }
+
+  public getClassificationDescription(id: number) {
+    return this.mediaClassifications().filter((item) => item.id == id)[0]
+      .descripcion;
+  }
+
+  public getOwnershipDescription(id: number) {
+    return this.mediaOwnerships().filter((item) => item.id == id)[0]
+      .descripcion;
+  }
+
+  public setType(event: any) {
+    this.type = event.target.value;
+    this.getDenominations();
+  }
+
+  public setGroup(event: any) {
+    this.group = event.target.value;
+    this.getDenominations();
+  }
+
+  public getDenominations() {
+    this.denominations = [];
+
+    if (this.type && this.group) {
+      const type = this.impacts().filter(
+        (item) => item.descripcion == this.type
+      );
+
+      const subgrupos = type[0].grupos.filter(
+        (item: any) => item.descripcion == this.group
+      )[0].subgrupos;
+
+      for (let subgrupo of subgrupos) {
+        for (let clase of subgrupo.clases) {
+          for (let impacto of clase.impactos) {
+            this.denominations.push({
+              id: impacto.id,
+              descripcion: impacto.descripcion,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  public getDenominationName(
+    type: number,
+    group: number,
+    denomination: number
+  ) {
+    const typeArr = this.impacts().filter(
+      (item) => item.descripcion == this.type
+    );
+
+    const subgrupos = typeArr[0].grupos.filter(
+      (item: any) => item.descripcion == this.group
+    )[0].subgrupos;
+
+    for (let subgrupo of subgrupos) {
+      for (let clase of subgrupo.clases) {
+        for (let impacto of clase.impactos) {
+          if (denomination == impacto.id) {
+            return impacto.descripcion;
+          }
+        }
+      }
+    }
+  }
+}

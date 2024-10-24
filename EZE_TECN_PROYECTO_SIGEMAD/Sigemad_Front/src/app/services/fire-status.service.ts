@@ -1,6 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 import { FireStatus } from '../types/fire-status.type';
 
@@ -9,10 +9,10 @@ export class FireStatusService {
   private http = inject(HttpClient);
 
   get() {
-    const endpoint = '/EstadoIncendio';
+    const endpoint = '/estados-incendios';
 
     return firstValueFrom(
-      this.http.get<FireStatus[]>(endpoint).pipe((response) => response),
+      this.http.get<FireStatus[]>(endpoint).pipe((response) => response)
     );
   }
 }

@@ -1,0 +1,835 @@
+<div>
+  <div class="header font-size-24 p-11">
+    <div></div>
+
+    <div class="text-center text-green">Datos evolución</div>
+
+    <div class="text-red text-right">Nuevo / Edición</div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Registro
+      </div>
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Datos principales
+      </div>
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Parámetros
+      </div>
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Área afectada
+      </div>
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Consecuencias/Actuac.
+      </div>
+      <div
+        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
+      >
+        Intervención de medios
+      </div>
+    </div>
+
+    <div>
+      <form (submit)="submit()" [formGroup]="formGroup">
+        <div
+          class="content border-silver border-radius-8 p-20"
+          style="width: 1200px; height: 600px; overflow-y: scroll"
+        >
+          <div>
+            <div id="validation-evolution-error"></div>
+
+            <div *ngIf="errors" class="bg-red">
+              Los campos con * son obligatorios
+            </div>
+
+            <div *ngIf="errorAreaAfectada" class="bg-red">
+              Debe seleccionar datos en el mapa de área afectada
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Alta:</b> sguijarro (SACOP) - 24/08/2024 17:24
+              </div>
+
+              <div class="font-size-16">
+                <b>Ult. modificación:</b> sguijarro (SACOP) - 24/08/2024 17:24
+              </div>
+            </div>
+
+            <div class="mt-14">
+              <div class="font-size-20 font-weight-bold text-orange">
+                REGISTRO
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Fecha y hora</b>
+
+                <input
+                  class="font-size-16"
+                  formControlName="datetime"
+                  type="datetime-local"
+                />
+
+                <span *ngIf="errors?.fechaHoraEvolucion" class="text-red">
+                  *
+                </span>
+              </div>
+
+              <div class="font-size-16">
+                <b>Entrada / Salida</b>
+
+                <select formControlName="type" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let inputOutput of inputOutputs()"
+                    value="{{ inputOutput.id }}"
+                  >
+                    {{ inputOutput.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idEntradaSalida" class="text-red">
+                  *
+                </span>
+              </div>
+
+              <div class="font-size-16">
+                <b>Medio</b>
+
+                <select formControlName="media" class="font-size-16">
+                  <option value=""></option>
+                  <option *ngFor="let media of medias()" value="{{ media.id }}">
+                    {{ media.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idMedio" class="text-red"> * </span>
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Procedencia / Destino</b>
+
+                <select
+                  formControlName="originDestination"
+                  class="font-size-16"
+                >
+                  <option value=""></option>
+                  <option
+                    *ngFor="let originDestination of originDestinations()"
+                    value="{{ originDestination.id }}"
+                  >
+                    {{ originDestination.descripcion }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-30">
+              <div class="font-size-20 font-weight-bold text-orange">
+                DATOS PERSONALES
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Fecha y hora de actualización</b>
+                <input
+                  class="font-size-16"
+                  formControlName="datetimeUpdate"
+                  type="datetime-local"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>Tipo de registro</b>
+
+                <select formControlName="recordType" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let recordType of recordTypes()"
+                    value="{{ recordType.id }}"
+                  >
+                    {{ recordType.descripcion }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Observaciones</b>
+
+                <input
+                  formControlName="observations_1"
+                  class="font-size-16"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Previsión</b>
+
+                <input
+                  formControlName="forecast"
+                  class="font-size-16"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div class="mt-30">
+              <div class="font-size-20 font-weight-bold text-orange">
+                PARAMETROS
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Estado</b>
+
+                <select formControlName="status" class="font-size-16">
+                  <option value=""></option>
+                  <option *ngFor="let item of status()" value="{{ item.id }}">
+                    {{ item.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idEstadoIncendio" class="text-red">
+                  *
+                </span>
+              </div>
+
+              <div class="font-size-16">
+                <b>Superficie afectada (Ha)</b>
+                <input
+                  formControlName="affectedSurface"
+                  class="font-size-16"
+                  type="number"
+                  value="86"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>Fecha final</b>
+                <input
+                  formControlName="end_date"
+                  class="font-size-16"
+                  type="date"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Plan de emergencia activado</b>
+                <input
+                  formControlName="emergencyPlanActivated"
+                  class="font-size-16"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div class="mt-30">
+              <div class="font-size-20 font-weight-bold text-orange">
+                AREA AFECTADA
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Provincia</b>
+
+                <select
+                  class="font-size-16"
+                  formControlName="province_1"
+                  (change)="loadMunicipalities($event, '1')"
+                >
+                  <option value=""></option>
+                  <option
+                    value="{{ province.id }}"
+                    *ngFor="let province of provinces()"
+                  >
+                    {{ province.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
+                  *
+                </span>
+              </div>
+
+              <div class="font-size-16">
+                <b>Municipio</b>
+
+                <select class="font-size-16" formControlName="municipality_1">
+                  <option value=""></option>
+                  <option
+                    value="{{ municipality.id }}"
+                    *ngFor="let municipality of municipalities()"
+                  >
+                    {{ municipality.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idMunicipioAfectado" class="text-red">
+                  *
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Entidad menor</b>
+
+                <select formControlName="minorEntity" class="font-size-16">
+                  <option value=""></option>
+
+                  <option
+                    value="{{ minorEntity.id }}"
+                    *ngFor="let minorEntity of minorEntities()"
+                  >
+                    {{ minorEntity.descripcion }}
+                  </option>
+                </select>
+
+                <span *ngIf="errors?.idEntidadMenor" class="text-red"> * </span>
+              </div>
+
+              <div class="font-size-16">
+                <b class="text-red">Fichero georeferenciado</b>
+
+                <select
+                  formControlName="georeferencedFile"
+                  class="font-size-16"
+                >
+                  <option value=""></option>
+                </select>
+
+                <img
+                  src="/assets/img/location-btn.svg"
+                  height="20px"
+                  alt="location"
+                  class="cursor-pointer"
+                  (click)="openModalMapCreate('AreaAfectada')"
+                />
+              </div>
+            </div>
+
+            <div class="mt-14">
+              <div class="font-size-20 font-weight-bold text-orange">
+                CONSECUENCIAS / ACTUACIONES
+              </div>
+            </div>
+
+            <div *ngIf="consequenceActionError" class="bg-red">
+              Todos los campos son obligatorios
+            </div>
+
+            <input type="hidden" formControlName="consequenceActionIndex" />
+            <input type="hidden" formControlName="consequenceActionUpdate" />
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Tipo</b>
+
+                <select
+                  class="font-size-16"
+                  (change)="setType($event)"
+                  formControlName="impactType"
+                >
+                  <option value=""></option>
+
+                  <option
+                    value="{{ impactType }}"
+                    *ngFor="let impactType of impactTypes"
+                  >
+                    {{ impactType }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Grupo</b>
+
+                <select
+                  (change)="setGroup($event)"
+                  class="font-size-16"
+                  formControlName="impactGroup"
+                >
+                  <option value=""></option>
+
+                  <option
+                    value="{{ impactGroup }}"
+                    *ngFor="let impactGroup of impactGroups"
+                  >
+                    {{ impactGroup }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Denominación</b>
+
+                <select class="font-size-16" formControlName="name">
+                  <option value=""></option>
+
+                  <option
+                    value="{{ denomination.id }}"
+                    *ngFor="let denomination of denominations"
+                  >
+                    {{ denomination.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Número</b>
+
+                <input
+                  formControlName="number"
+                  class="font-size-16"
+                  type="number"
+                  value="1"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>Localización</b>
+                <img
+                  src="/assets/img/location-btn.svg"
+                  height="20px"
+                  alt="location"
+                  class="cursor-pointer"
+                  (click)="openModalMapCreate('ConsecuenciasActuaciones')"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Observaciones</b>
+
+                <input
+                  class="font-size-16"
+                  formControlName="observations_2"
+                  type="text"
+                />
+              </div>
+            </div>
+
+            <div class="mt-30">
+              <div class="font-size-16 font-weight-bold">
+                DATOS COMPLEMENTARIOS
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Fecha y hora inicio</b>
+                <input
+                  class="font-size-16"
+                  formControlName="start"
+                  type="datetime-local"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>Fecha y hora fin</b>
+                <input
+                  class="font-size-16"
+                  formControlName="end"
+                  type="datetime-local"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>No. graves</b>
+                <input
+                  class="font-size-16"
+                  value="22"
+                  formControlName="injureds"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>No. intervinientes</b>
+                <input
+                  class="font-size-16"
+                  value="15"
+                  formControlName="participants"
+                />
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  class="btn-blue"
+                  (click)="saveConsequenceAction()"
+                >
+                  <img
+                    class="w-30 h-30"
+                    src="/assets/img/plus.svg"
+                    alt="check"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-10">
+              <table class="border-radius-8 border-silver w-100">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Grupo</th>
+                    <th>Descripción</th>
+                    <th>Número</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let consequenceAction of consequencesActions;
+                      let i = index
+                    "
+                  >
+                    <td>{{ consequenceAction.impactType }}</td>
+                    <td>{{ consequenceAction.impactGroup }}</td>
+                    <td>
+                      {{
+                        getDenominationName(
+                          consequenceAction.impactType,
+                          consequenceAction.impactGroup,
+                          consequenceAction.name
+                        )
+                      }}
+                    </td>
+                    <td>{{ consequenceAction.number }}</td>
+
+                    <td>
+                      <button
+                        type="button"
+                        (click)="showConsequenceDataInForm(i)"
+                        class="btn-white"
+                      >
+                        <img
+                          class="w-20 h-20"
+                          src="/assets/img/edit-btn.svg"
+                          alt="edit-btn"
+                        />
+                      </button>
+
+                      <button
+                        type="button"
+                        (click)="deleteConsequence(i)"
+                        class="btn-white"
+                      >
+                        <img
+                          class="w-20 h-20"
+                          src="/assets/img/close.svg"
+                          alt="close"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-30">
+              <div class="font-size-20 font-weight-bold text-orange">
+                INTERVENCIÓN DE MEDIOS
+              </div>
+            </div>
+
+            <div *ngIf="interveningMediaError" class="bg-red">
+              Todos los campos son obligatorios
+            </div>
+
+            <input type="hidden" formControlName="interveningMediaIndex" />
+            <input type="hidden" formControlName="interveningMediaUpdate" />
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Tipo de medio</b>
+
+                <select formControlName="mediaType" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let mediaType of mediaTypes()"
+                    value="{{ mediaType.id }}"
+                  >
+                    {{ mediaType.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Cantidad</b>
+                <input
+                  class="font-size-16"
+                  formControlName="quantity"
+                  type="number"
+                />
+              </div>
+
+              <div class="font-size-16">
+                <b>Unidad</b>
+                <input
+                  class="font-size-16"
+                  formControlName="unit"
+                  value="BRIF"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Clasificación</b>
+
+                <select formControlName="classification" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let mediaClassification of mediaClassifications()"
+                    value="{{ mediaClassification.id }}"
+                  >
+                    {{ mediaClassification.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Titularidad</b>
+
+                <select formControlName="ownership_1" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    *ngFor="let mediaOwnership of mediaOwnerships()"
+                    value="{{ mediaOwnership.id }}"
+                  >
+                    {{ mediaOwnership.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Titularidad</b>
+                <input
+                  formControlName="ownership_2"
+                  class="font-size-16"
+                  value="Comunidad Farol de Navarra"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Provincia</b>
+
+                <select
+                  formControlName="province_2"
+                  (change)="loadMunicipalities($event, '2')"
+                  class="font-size-16"
+                >
+                  <option value=""></option>
+                  <option value=""></option>
+                  <option
+                    value="{{ province.id }}"
+                    *ngFor="let province of provinces()"
+                  >
+                    {{ province.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Municipio</b>
+
+                <select formControlName="municipality_2" class="font-size-16">
+                  <option value=""></option>
+                  <option
+                    value="{{ municipality.id }}"
+                    *ngFor="let municipality of municipalities2()"
+                  >
+                    {{ municipality.descripcion }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="font-size-16">
+                <b>Localización</b>
+                <img
+                  src="/assets/img/location-btn.svg"
+                  height="20px"
+                  alt="location"
+                  class="cursor-pointer"
+                  (click)="openModalMapCreate('IntervencionMedios')"
+                />
+              </div>
+            </div>
+
+            <div class="mt-10 d-flex justify-content-between">
+              <div class="font-size-16">
+                <b>Observaciones</b>
+
+                <input
+                  class="font-size-16"
+                  type="text"
+                  formControlName="observations_3"
+                />
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  class="btn-blue"
+                  (click)="saveInterveningMedia()"
+                >
+                  <img
+                    class="w-30 h-30"
+                    src="/assets/img/plus.svg"
+                    alt="check"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-10">
+              <table class="border-radius-8 border-silver w-100">
+                <thead>
+                  <tr>
+                    <th>Medio</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Clasificación</th>
+                    <th>Titularidad</th>
+                    <th></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let interveningMedia of interveningMedias;
+                      let i = index
+                    "
+                  >
+                    <td>
+                      {{ getMediaTypeDescription(interveningMedia.mediaType) }}
+                    </td>
+                    <td>{{ interveningMedia.quantity }}</td>
+                    <td>{{ interveningMedia.unit }}</td>
+                    <td>
+                      {{
+                        getClassificationDescription(
+                          interveningMedia.classification
+                        )
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        getOwnershipDescription(interveningMedia.ownership_1)
+                      }}
+                    </td>
+
+                    <td>
+                      <button
+                        type="button"
+                        (click)="showInterveningMediaDataInForm(i)"
+                        class="btn-white"
+                      >
+                        <img
+                          class="w-20 h-20"
+                          src="/assets/img/edit-btn.svg"
+                          alt="edit-btn"
+                        />
+                      </button>
+
+                      <button
+                        type="button"
+                        (click)="deleteInterveningMedia(i)"
+                        class="btn-white"
+                      >
+                        <img
+                          class="w-20 h-20"
+                          src="/assets/img/close.svg"
+                          alt="close"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-20">
+          <div>
+            <button type="button" class="btn-white">
+              <img
+                class="w-30 h-30"
+                src="/assets/img/left-all.svg"
+                alt="left-all"
+              />
+            </button>
+
+            <button type="button" class="btn-white">
+              <img class="w-30 h-30" src="/assets/img/left.svg" alt="left" />
+            </button>
+
+            <button type="button" class="btn-white">
+              <img class="w-30 h-30" src="/assets/img/right.svg" alt="right" />
+            </button>
+
+            <button type="button" class="btn-white">
+              <img
+                class="w-30 h-30"
+                src="/assets/img/right-all.svg"
+                alt="right-all"
+              />
+            </button>
+          </div>
+
+          <div>
+            <button type="submit" class="btn-blue">
+              <img class="w-30 h-30" src="/assets/img/check.svg" alt="check" />
+            </button>
+
+            <button (click)="closeModal()" type="button" class="btn-white">
+              <img class="w-30 h-30" src="/assets/img/close.svg" alt="close" />
+            </button>
+
+            <button (click)="closeModal()" type="button" class="btn-white">
+              <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

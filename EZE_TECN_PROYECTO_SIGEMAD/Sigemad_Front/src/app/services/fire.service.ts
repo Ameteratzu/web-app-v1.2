@@ -1,10 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { tap, firstValueFrom, catchError, map, throwError } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
 import { ApiResponse } from '../types/api-response.type';
 import { Fire } from '../types/fire.type';
+import { FireDetail } from '../types/fire-detail.type';
 
 @Injectable({ providedIn: 'root' })
 export class FireService {
@@ -31,9 +32,15 @@ export class FireService {
     }
 
     return firstValueFrom(
-      this.http
-        .get<ApiResponse<Fire[]>>(endpoint)
-        .pipe((response) => response)
+      this.http.get<ApiResponse<Fire[]>>(endpoint).pipe((response) => response)
+    );
+  }
+
+  details(fire_id:number) {
+    const endpoint = `/Incendios/${fire_id}/detalles`;
+
+    return firstValueFrom(
+      this.http.get<FireDetail[]>(endpoint).pipe((response) => response)
     );
   }
 
@@ -51,7 +58,9 @@ export class FireService {
       IdPeligroInicial: 1,
       comentarios: data.generalNote,
       GeoPosicion: data.geoposition,
-    }
+      idPais: 60,
+      IdEstadoSuceso: 1,
+    };
 
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -80,10 +89,10 @@ export class FireService {
       IdPeligroInicial: 1,
       comentarios: data.note,
       GeoPosicion: {
-        'type': 'Polygon',
-        'coordinates': data.coordinates
-      }
-    }
+        type: 'Polygon',
+        coordinates: data.coordinates,
+      },
+    };
 
     return firstValueFrom(
       this.http.put(this.endpoint, body).pipe(

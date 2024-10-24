@@ -59,8 +59,6 @@ export class FireComponent {
   public formData: FormGroup;
 
   async ngOnInit() {
-    this.menuItemActiveService.set.emit('/fire');
-
     this.formData = new FormGroup({
       name: new FormControl(),
       territory: new FormControl(),
@@ -77,6 +75,8 @@ export class FireComponent {
       end: new FormControl(),
     });
 
+    this.menuItemActiveService.set.emit('/fire');
+
     const territories = await this.territoryService.get();
     this.territories.set(territories);
 
@@ -91,17 +91,21 @@ export class FireComponent {
 
     const fires = await this.fireService.get();
     this.fires = fires;
+
+    console.log(fires.data);
   }
 
   openModal() {
     this.matDialog.open(FireNationalCreateComponent, {
       width: '1000px',
       maxWidth: '1000px',
+      disableClose: true,
     });
   }
 
   async loadProvinces(event: any) {
     const ac_id = event.target.value;
+    console.log(ac_id);
     const provinces = await this.provinceService.get(ac_id);
     this.provinces.set(provinces);
   }

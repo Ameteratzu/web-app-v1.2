@@ -1,15 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
-import { get, transform } from 'ol/proj';
+import Feature from 'ol/Feature';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { Draw, Modify, Snap } from 'ol/interaction';
-import { DrawEvent }  from 'ol/interaction/Draw';
 import Point from 'ol/geom/Point';
-import Feature from 'ol/Feature';
+import { Draw, Snap } from 'ol/interaction';
+import { DrawEvent } from 'ol/interaction/Draw';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { transform } from 'ol/proj';
+import { OSM, Vector as VectorSource } from 'ol/source';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
@@ -20,17 +20,15 @@ import { Municipality } from '../../types/municipality.type';
   standalone: true,
   imports: [],
   templateUrl: './map-create.component.html',
-  styleUrl: './map-create.component.css'
+  styleUrl: './map-create.component.css',
 })
-
 export class MapCreateComponent {
-
   public source: VectorSource;
   public map: Map;
   public draw: Draw;
   public snap: Snap;
   public vector: VectorLayer;
-  public coords:any;
+  public coords: any;
 
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
@@ -39,8 +37,10 @@ export class MapCreateComponent {
 
   public municipalities = signal<Municipality[]>([]);
 
-  public length:number;
-  public latitude:number;
+  public length: number;
+  public latitude: number;
+
+  public section: string = '';
 
   async ngOnInit() {
     // Map
@@ -60,28 +60,28 @@ export class MapCreateComponent {
     this.map = new Map({
       layers: [
         new TileLayer({
-          source: new OSM()
+          source: new OSM(),
         }),
-        this.vector
+        this.vector,
       ],
       target: 'map',
       view: new View({
         center: transform([-3, 40], 'EPSG:4326', 'EPSG:4326'),
         zoom: 6.4,
-        projection: 'EPSG:4326'
+        projection: 'EPSG:4326',
       }),
     });
 
     const point = new Point([this.length, this.latitude]);
 
     const feature = new Feature({
-      geometry: point
+      geometry: point,
     });
 
     const vectorLayer = new VectorLayer({
       source: new VectorSource({
-        features: [feature]
-      })
+        features: [feature],
+      }),
     });
 
     this.map.addLayer(vectorLayer);
@@ -95,14 +95,14 @@ export class MapCreateComponent {
       type: 'Polygon',
     });
 
-    this.draw.on('drawstart', (drawEvent:DrawEvent) => {
+    this.draw.on('drawstart', (drawEvent: DrawEvent) => {
       this.coords = null;
       const features = this.source.getFeatures();
       const last = features[features.length - 1];
       this.source.removeFeature(last);
     });
 
-    this.draw.on('drawend', (drawEvent:DrawEvent) => {
+    this.draw.on('drawend', (drawEvent: DrawEvent) => {
       const coords = [];
 
       for (let coord of drawEvent.target.sketchCoords_[0]) {
@@ -121,8 +121,8 @@ export class MapCreateComponent {
 
   savePolygon() {
     if (this.coords) {
-      localStorage.setItem('coordinates', this.coords);
-      localStorage.setItem('polygon', '1');
+      localStorage.setItem('coordinates' + this.section, this.coords);
+      localStorage.setItem('polygon' + this.section, '1');
       this.closeModal();
     }
   }
