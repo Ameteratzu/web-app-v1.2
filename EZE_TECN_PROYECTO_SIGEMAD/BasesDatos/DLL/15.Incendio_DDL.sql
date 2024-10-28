@@ -35,7 +35,7 @@ CREATE TABLE IncendioNacional (
 CREATE TABLE IncendioExtranjero (
 	IdIncendio INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.Incendio(Id),
 	IdPais INT NOT NULL FOREIGN KEY REFERENCES dbo.Pais(Id),
-    IdProvincia INT NULL FOREIGN KEY REFERENCES dbo.Provincia(Id),
-    IdMunicipio INT NULL FOREIGN KEY REFERENCES dbo.Municipio(Id),
+    IdDistrito INT NULL FOREIGN KEY REFERENCES dbo.Distrito(Id),
+    IdEntidadMenor INT NULL FOREIGN KEY REFERENCES dbo.EntidadMenor(Id),
 	Ubicacion NVARCHAR(255) NOT NULL
 );

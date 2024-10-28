@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Constants;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -14,17 +16,20 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGeometryValidator _geometryValidator;
     private readonly ICoordinateTransformationService _coordinateTransformationService;
+    private readonly IMapper _mapper;
 
     public CreateIncendioCommandHandler(
         ILogger<CreateIncendioCommandHandler> logger,
         IUnitOfWork unitOfWork,
         IGeometryValidator geometryValidator,
-        ICoordinateTransformationService coordinateTransformationService)
+        ICoordinateTransformationService coordinateTransformationService,
+        IMapper mapper)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _geometryValidator = geometryValidator;
         _coordinateTransformationService = coordinateTransformationService;
+        _mapper = mapper;
     }
 
     public async Task<CreateIncendioResponse> Handle(CreateIncendioCommand request, CancellationToken cancellationToken)
@@ -36,34 +41,6 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         {
             _logger.LogWarning($"request.IdTerritorio: {request.IdTerritorio}, no encontrado");
             throw new NotFoundException(nameof(Territorio), request.IdTerritorio);
-        }
-
-        var pais = await _unitOfWork.Repository<Pais>().GetByIdAsync(request.IdPais);
-        if (pais is null)
-        {
-            _logger.LogWarning($"request.IdPais: {request.IdPais}, no encontrado");
-            throw new NotFoundException(nameof(Pais), request.IdPais);
-        }
-
-        var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia);
-        if (provincia is null)
-        {
-            _logger.LogWarning($"request.IdProvincia: {request.IdProvincia}, no encontrado");
-            throw new NotFoundException(nameof(Provincia), request.IdProvincia);
-        }
-
-        var municipio = await _unitOfWork.Repository<Municipio>().GetByIdAsync(request.IdMunicipio);
-        if (municipio is null)
-        {
-            _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
-            throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
-        }
-
-        var tipoSuceso = await _unitOfWork.Repository<TipoSuceso>().GetByIdAsync(request.IdTipoSuceso);
-        if (tipoSuceso is null)
-        {
-            _logger.LogWarning($"request.IdTipoSuceso: {request.IdTipoSuceso}, no encontrado");
-            throw new NotFoundException(nameof(TipoSuceso), request.IdTipoSuceso);
         }
 
         var claseSuceso = await _unitOfWork.Repository<ClaseSuceso>().GetByIdAsync(request.IdClaseSuceso);
@@ -91,31 +68,68 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
 
         var suceso = new Suceso
         {
-            IdTipo = request.IdTipoSuceso
+            IdTipo = 1
         };
 
         var (utmX, utmY, huso) = _coordinateTransformationService.ConvertToUTM(request.GeoPosicion);
 
-        var incendio = new Incendio
-        {
-            Suceso = suceso,
-            IdTerritorio = request.IdTerritorio,
-            IdPais = request.IdPais,
-            IdProvincia = request.IdProvincia,
-            IdMunicipio = request.IdMunicipio,
-            IdClaseSuceso = request.IdClaseSuceso,
-            IdEstadoSuceso = request.IdEstadoSuceso,
-            Denominacion = request.Denominacion,
-            Comentarios = request.Comentarios,
-            FechaInicio = request.FechaInicio,
-            RutaMapaRiesgo = request.RutaMapaRiesgo,
-            GeoPosicion = request.GeoPosicion,
-            UtmX = (decimal?)utmX,
-            UtmY = (decimal?)utmY,
-            Huso = huso
-        };
 
-        _unitOfWork.Repository<Incendio>().AddEntity(incendio);
+        var incendioEntity = _mapper.Map<Incendio>(request);
+        incendioEntity.UtmX = (decimal?)utmX;
+        incendioEntity.UtmY = (decimal?)utmY;
+        incendioEntity.Huso = huso;
+        incendioEntity.Suceso = suceso;
+
+
+        if(request.IdTerritorio == TerritorioTipos.Nacional)
+        {
+            var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia.Value);
+            if (provincia is null)
+            {
+                _logger.LogWarning($"request.IdProvincia: {request.IdProvincia}, no encontrado");
+                throw new NotFoundException(nameof(Provincia), request.IdProvincia);
+            }
+
+            var municipio = await _unitOfWork.Repository<Municipio>().GetByIdAsync(request.IdMunicipio.Value);
+            if (municipio is null)
+            {
+                _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
+                throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
+            }
+
+
+            var incendioNacional = _mapper.Map<IncendioNacional>(request);
+            incendioEntity.IncendioNacional = incendioNacional;
+        } 
+        else if(request.IdTerritorio == TerritorioTipos.Extranjero)
+        {
+            var pais = await _unitOfWork.Repository<Pais>().GetByIdAsync(request.IdPais.Value);
+            if (pais is null)
+            {
+                _logger.LogWarning($"request.IdPais: {request.IdPais}, no encontrado");
+                throw new NotFoundException(nameof(Pais), request.IdPais);
+            }
+
+            var distrito = await _unitOfWork.Repository<Distrito>().GetByIdAsync(request.IdDistrito.Value);
+            if (pais is null)
+            {
+                _logger.LogWarning($"request.IdDistrito: {request.IdDistrito}, no encontrado");
+                throw new NotFoundException(nameof(Distrito), request.IdDistrito);
+            }
+
+            var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor.Value);
+            if (pais is null)
+            {
+                _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
+                throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
+            }
+
+            var incendioExtranjero = _mapper.Map<IncendioExtranjero>(request);
+            incendioEntity.IncendioExtranjero = incendioExtranjero;
+        }
+
+
+        _unitOfWork.Repository<Incendio>().AddEntity(incendioEntity);
 
         var result = await _unitOfWork.Complete();
         if (result <= 0)
@@ -123,9 +137,9 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             throw new Exception("No se pudo insertar nuevo incendio");
         }
 
-        _logger.LogInformation($"El incendio {incendio.Id} fue creado correctamente");
+        _logger.LogInformation($"El incendio {incendioEntity.Id} fue creado correctamente");
 
         _logger.LogInformation(nameof(CreateIncendioCommandHandler) + " - END");
-        return new CreateIncendioResponse { Id = incendio.Id } ;
+        return new CreateIncendioResponse { Id = incendioEntity.Id } ;
     }
 }
