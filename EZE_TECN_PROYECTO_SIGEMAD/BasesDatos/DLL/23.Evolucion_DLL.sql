@@ -1,23 +1,18 @@
 DROP TABLE IF EXISTS dbo.Evolucion;
 GO
 CREATE TABLE dbo.Evolucion (
-    Id INT PRIMARY KEY IDENTITY(1,1),
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
-    FechaHoraEvolucion DATETIME NOT NULL,
-    IdEntradaSalida int NOT NULL,
-    IdMedio int NOT NULL,
-    IdTecnico UNIQUEIDENTIFIER NOT NULL,
-    IdTipoRegistro int NOT NULL FOREIGN KEY REFERENCES TipoRegistro(Id),
-    Resumen bit NOT NULL,
+    FechaHoraEvolucion DATETIME2(7) NULL,
+    IdEntradaSalida int NULL FOREIGN KEY REFERENCES EntradaSalida(Id),
+    IdMedio int NULL FOREIGN KEY REFERENCES Medio(Id),
+    IdTipoRegistro int NULL FOREIGN KEY REFERENCES TipoRegistro(Id),
     Observaciones TEXT NULL,
     Prevision TEXT NULL,
-    IdEstadoIncendio int NOT NULL,
+    IdEstadoIncendio int NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
+    PlanEmergenciaActivado NVARCHAR(255) NULL,
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
-    FechaFinal DATETIME NULL,
-    IdProvinciaAfectada int NOT NULL,
-    IdMunicipioAfectado int NOT NULL,
-    IdEntidadMenor int NOT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
-    GeoPosicionAreaAfectada GEOMETRY,
+    FechaFinal DATETIME2(7) NULL,
     ---
     FechaCreacion DATETIME2(7) NOT NULL,
 	CreadoPor UNIQUEIDENTIFIER NULL,
@@ -26,10 +21,14 @@ CREATE TABLE dbo.Evolucion (
 	FechaEliminacion DATETIME2(7) NULL,
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
-    CONSTRAINT FK_Evolucion_EntradaSalida FOREIGN KEY (IdEntradaSalida) REFERENCES dbo.EntradaSalida(Id),
-    CONSTRAINT FK_Evolucion_Medio FOREIGN KEY (IdMedio) REFERENCES dbo.Medio(Id),
-    CONSTRAINT FK_Evolucion_ApplicationUsers FOREIGN KEY (IdTecnico) REFERENCES dbo.ApplicationUsers(Id),
-    CONSTRAINT FK_Evolucion_Provincia FOREIGN KEY (IdProvinciaAfectada) REFERENCES dbo.Provincia(Id),
-    CONSTRAINT FK_Evolucion_Municipio FOREIGN KEY (IdMunicipioAfectado) REFERENCES dbo.Municipio(Id),
-    CONSTRAINT FK_Evolucion_EstadoIncendio FOREIGN KEY (IdEstadoIncendio) REFERENCES dbo.EstadoIncendio(Id)
+);
+
+CREATE TABLE AreaAfectada (
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+    FechaHora DATETIME2(7) NOT NULL,
+    IdProvincia int NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
+    IdMunicipio int NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
+    IdEntidadMenor int NOT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
+    GeoPosicion GEOMETRY
 );

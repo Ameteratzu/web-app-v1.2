@@ -1,14 +1,14 @@
-INSERT INTO dbo.Pais (Id,Descripcion,X,Y) VALUES
-	 (0,N'Montenegro',NULL,NULL),
-	 (1,N'Portugal',-8.562741,39.600988),
-	 (2,N'Antillas Holandesas',-68.693668,12.187803),
-	 (3,N'Albania',20.068384,41.142286),
-	 (4,N'Argelia',2.632388,28.163240),
-	 (5,N'Andorra',1.576766,42.548654),
-	 (6,N'Angola',17.544676,-12.295286),
-	 (7,N'Antigua & Barbuda',-61.791237,17.279821),
-	 (8,N'Argentina',-65.167728,-35.376438),
-	 (9,N'Armenia',44.947394,40.286200);
+INSERT INTO dbo.Pais (Id,Descripcion,Fronterizo,X,Y) VALUES
+	 (0,N'Montenegro',0,NULL,NULL),
+	 (1,N'Portugal',1,-8.562741,39.600988),
+	 (2,N'Antillas Holandesas',0,-68.693668,12.187803),
+	 (3,N'Albania',0,20.068384,41.142286),
+	 (4,N'Argelia',0,2.632388,28.163240),
+	 (5,N'Andorra',0,1.576766,42.548654),
+	 (6,N'Angola',0,17.544676,-12.295286),
+	 (7,N'Antigua & Barbuda',0,-61.791237,17.279821),
+	 (8,N'Argentina',0,-65.167728,-35.376438),
+	 (9,N'Armenia',0,44.947394,40.286200);
 
 INSERT INTO dbo.Pais (Id,Descripcion,X,Y) VALUES
 	 (10,N'Aruba',-69.975640,12.515626),
@@ -70,17 +70,17 @@ INSERT INTO dbo.Pais (Id,Descripcion,X,Y) VALUES
 	 (58,N'Eritrea',38.851484,15.358494),
 	 (59,N'El Salvador',-88.866512,13.736897);
 
-INSERT INTO dbo.Pais (Id,Descripcion,X,Y) VALUES
-	 (60,N'España',-3.649566,40.226829),
-	 (61,N'Estonia',25.527616,58.674136),
-	 (62,N'Etiopía',39.616032,8.626219),
-	 (63,N'Islas Fidji',171.983183,-17.453531),
-	 (64,N'Finlandia',26.266371,64.500423),
-	 (65,N'Francia',2.551955,46.564503),
-	 (66,N'República Federal Alemana',10.393646,51.106562),
-	 (67,N'Micronesia',159.404223,6.492379),
-	 (68,N'Gabón',11.797237,-0.590945),
-	 (69,N'Gambia',-15.386641,13.452650);
+INSERT INTO dbo.Pais (Id,Descripcion,Fronterizo,X,Y) VALUES
+	 (60,N'España',0,-3.649566,40.226829),
+	 (61,N'Estonia',0,25.527616,58.674136),
+	 (62,N'Etiopía',0,39.616032,8.626219),
+	 (63,N'Islas Fidji',0,171.983183,-17.453531),
+	 (64,N'Finlandia',0,26.266371,64.500423),
+	 (65,N'Francia',1,2.551955,46.564503),
+	 (66,N'República Federal Alemana',0,10.393646,51.106562),
+	 (67,N'Micronesia',0,159.404223,6.492379),
+	 (68,N'Gabón',0,11.797237,-0.590945),
+	 (69,N'Gambia',0,-15.386641,13.452650);
 
 INSERT INTO dbo.Pais (Id,Descripcion,X,Y) VALUES
 	 (70,N'Guinea-Bissau',-14.965217,12.030309),
