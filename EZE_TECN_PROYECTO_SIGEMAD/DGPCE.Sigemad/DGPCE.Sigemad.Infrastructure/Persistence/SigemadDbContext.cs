@@ -99,6 +99,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoEntidadTitularidadMedio>().ToTable("TipoEntidadTitularidadMedio");
             modelBuilder.Entity<TipoDireccionEmergencia>().ToTable("TipoDireccionEmergencia");
             modelBuilder.Entity<TipoPlan>().ToTable("TipoPlan");
+            modelBuilder.Entity<AreaAfectada>().ToTable("areaafectada");
         }
 
 
