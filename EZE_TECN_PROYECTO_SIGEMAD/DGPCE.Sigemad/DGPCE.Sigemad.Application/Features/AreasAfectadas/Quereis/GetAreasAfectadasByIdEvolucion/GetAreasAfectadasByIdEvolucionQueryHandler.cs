@@ -6,18 +6,18 @@ using MediatR;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
-internal class GetAreaAfectadaListQueryHandler : IRequestHandler<GetAreaAfectadaListQuery, IReadOnlyList<AreaAfectadaVm>>
+internal class GetAreasAfectadasByIdEvolucionQueryHandler : IRequestHandler<GetAreasAfectadasByIdEvolucionQuery, IReadOnlyList<AreaAfectadaVm>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetAreaAfectadaListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetAreasAfectadasByIdEvolucionQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<AreaAfectadaVm>> Handle(GetAreaAfectadaListQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<AreaAfectadaVm>> Handle(GetAreasAfectadasByIdEvolucionQuery request, CancellationToken cancellationToken)
     {
      
         IReadOnlyList<AreaAfectada> areasAfectadas = (await _unitOfWork.Repository<AreaAfectada>().GetAsync(m => m.IdEvolucion == request.IdEvolucion))
