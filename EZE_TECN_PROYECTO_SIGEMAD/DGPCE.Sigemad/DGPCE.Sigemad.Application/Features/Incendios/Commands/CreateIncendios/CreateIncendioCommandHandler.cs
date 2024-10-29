@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Constants;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Domain.Constracts;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation.Results;
 using MediatR;
@@ -36,7 +37,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
     {
         _logger.LogInformation(nameof(CreateIncendioCommandHandler) + " - BEGIN");
 
-        var territorio = await _unitOfWork.Repository<Territorio>().GetByIdAsync(request.IdTerritorio);
+        var territorio = await _unitOfWork.Repository<Territorio>().GetByIdAsync((int)request.IdTerritorio);
         if (territorio is null)
         {
             _logger.LogWarning($"request.IdTerritorio: {request.IdTerritorio}, no encontrado");
@@ -81,7 +82,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
         incendioEntity.Suceso = suceso;
 
 
-        if(request.IdTerritorio == TerritorioTipos.Nacional)
+        if(request.IdTerritorio == TipoTerritorio.Nacional)
         {
             var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia.Value);
             if (provincia is null)
@@ -101,7 +102,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             var incendioNacional = _mapper.Map<IncendioNacional>(request);
             incendioEntity.IncendioNacional = incendioNacional;
         } 
-        else if(request.IdTerritorio == TerritorioTipos.Extranjero)
+        else if(request.IdTerritorio == TipoTerritorio.Extranjero)
         {
             var pais = await _unitOfWork.Repository<Pais>().GetByIdAsync(request.IdPais.Value);
             if (pais is null)

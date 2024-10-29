@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using DGPCE.Sigemad.Domain.Enums;
+using MediatR;
 using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 
 public class CreateIncendioCommand : IRequest<CreateIncendioResponse>
 {
-    public int IdTerritorio { get; set; }
+    public TipoTerritorio IdTerritorio { get; set; }
     public int IdClaseSuceso { get; set; }
     public int IdEstadoSuceso { get; set; }
     public DateTime FechaInicio { get; set; }
