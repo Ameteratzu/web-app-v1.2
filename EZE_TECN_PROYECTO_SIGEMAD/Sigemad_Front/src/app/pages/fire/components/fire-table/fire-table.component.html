@@ -1,0 +1,36 @@
+<app-fire-table-toolbar [fires]="fires"></app-fire-table-toolbar>
+<table width="100%">
+  <thead>
+    <tr>
+      <th align="left">Denominación</th>
+      <th align="left">Fecha inicio</th>
+      <th align="left">Estado</th>
+      <th align="left">NGP</th>
+      <th align="left">Max. NGP</th>
+      <th align="left">Ubicación</th>
+      <th align="left">Último registro</th>
+      <th align="left">Opciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let fire of fires.data">
+      <td>{{ fire.denominacion }}</td>
+      <td>{{ fire.fechaInicio }}</td>
+      <td>{{ fire.estadoSuceso.descripcion }}</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>
+        <a href="/fire-national-edit/{{ fire.id }}">
+          <img src="/assets/img/edit-btn.svg" alt="edit-btn" />
+        </a>
+
+        <a href="">
+          <img src="/assets/img/doc-btn.svg" alt="doc-btn" />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

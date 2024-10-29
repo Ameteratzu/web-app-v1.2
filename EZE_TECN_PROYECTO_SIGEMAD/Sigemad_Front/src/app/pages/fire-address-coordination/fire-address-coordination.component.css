@@ -3,6 +3,10 @@ select {
   padding: 12px;
 }
 
+.ml-10 {
+  margin-left: 10px;
+}
+
 .text-center {
   text-align: center;
 }
@@ -24,7 +28,8 @@ select {
 }
 
 .sidebar {
-  margin-left: 0px;
+  width: 200px;
+  margin-left: -140px;;
 }
 
 .font-size-24 {
@@ -79,9 +84,6 @@ select {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
-.ml-8 {
-  margin-left: 8px;
-}
 
 .mt-14 {
   margin-top: 14px;
@@ -119,11 +121,21 @@ select {
   margin-top: 10px;
 }
 
+.mt-12 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 input,
-select {
+select,
+.input-file {
   margin-left: 10px;
   border: 1px solid #c0c0c0;
   border-radius: 8px;
+}
+
+.input-file {
+  padding: 10px;
 }
 
 .text-right {

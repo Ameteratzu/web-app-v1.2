@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { FireForeignCreateComponent } from '../fire-foreign-create/fire-foreign-create.component';
 import { MapCreateComponent } from '../map-create/map-create.component';
 
-import { TerritoryService } from '../../services/territory.service';
-import { ProvinceService } from '../../services/province.service';
-import { MunicipalityService } from '../../services/municipality.service';
 import { EventService } from '../../services/event.service';
 import { FireService } from '../../services/fire.service';
+import { MunicipalityService } from '../../services/municipality.service';
+import { ProvinceService } from '../../services/province.service';
+import { TerritoryService } from '../../services/territory.service';
 
-import { Territory } from '../../types/territory.type';
-import { Province } from '../../types/province.type';
-import { Municipality } from '../../types/municipality.type';
 import { Event } from '../../types/event.type';
+import { Municipality } from '../../types/municipality.type';
+import { Province } from '../../types/province.type';
+import { Territory } from '../../types/territory.type';
 
 import {
   FormControl,
@@ -28,7 +28,7 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './fire-national-create.component.html',
-  styleUrl: './fire-national-create.component.css'
+  styleUrl: './fire-national-create.component.css',
 })
 export class FireNationalCreateComponent {
   public matDialogRef = inject(MatDialogRef);
@@ -47,17 +47,17 @@ export class FireNationalCreateComponent {
 
   public formData: FormGroup;
 
-  public error:boolean = false;
+  public error: boolean = false;
 
-  public length:number;
-  public latitude:number;
+  public length: number;
+  public latitude: number;
 
-  public municipalityName:string = '';
+  public municipalityName: string = '';
 
   async ngOnInit() {
     localStorage.removeItem('coordinates');
     localStorage.removeItem('polygon');
-    
+
     this.formData = new FormGroup({
       territory: new FormControl(),
       province: new FormControl(),
@@ -69,7 +69,7 @@ export class FireNationalCreateComponent {
     });
 
     this.formData.patchValue({
-      territory: 1
+      territory: 1,
     });
 
     const territories = await this.territoryService.get();
@@ -86,7 +86,7 @@ export class FireNationalCreateComponent {
     this.matDialogRef.close();
   }
 
-  onChange(event:any) {
+  onChange(event: any) {
     if (event.target.value == 2) {
       this.closeModal();
     }
@@ -111,7 +111,7 @@ export class FireNationalCreateComponent {
   }
 
   async setMunicipalityId(event: any) {
-    const municipality_id = event.target.value;
+    const municipality_id = event.value;
     localStorage.setItem('municipality', municipality_id);
 
     for (let municipality of this.municipalities()) {
@@ -121,21 +121,23 @@ export class FireNationalCreateComponent {
 
         const coordinates = [this.length, this.latitude];
 
-        localStorage.setItem('latitude', municipality.geoPosicion.coordinates[0]);
+        localStorage.setItem(
+          'latitude',
+          municipality.geoPosicion.coordinates[0]
+        );
         localStorage.setItem('length', municipality.geoPosicion.coordinates[1]);
         localStorage.setItem('coordinates', JSON.stringify(coordinates));
 
         this.municipalityName = municipality.descripcion;
 
         this.formData.patchValue({
-          name: municipality.descripcion
+          name: municipality.descripcion,
         });
       }
     }
   }
 
   async onSubmit() {
-
     this.error = false;
 
     const data = this.formData.value;
@@ -143,17 +145,15 @@ export class FireNationalCreateComponent {
 
     if (localStorage.getItem('polygon')) {
       data.geoposition = {
-        'type': 'Polygon',
-        'coordinates': [data.coordinates]
+        type: 'Polygon',
+        coordinates: [data.coordinates],
       };
-
     } else {
       data.geoposition = {
-        'type': 'Point',
-        'coordinates': data.coordinates
-      };      
+        type: 'Point',
+        coordinates: data.coordinates,
+      };
     }
-
 
     await this.fireService
       .post(data)

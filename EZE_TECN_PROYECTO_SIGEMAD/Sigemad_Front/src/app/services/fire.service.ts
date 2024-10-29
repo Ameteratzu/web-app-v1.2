@@ -4,8 +4,8 @@ import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
 import { ApiResponse } from '../types/api-response.type';
-import { Fire } from '../types/fire.type';
 import { FireDetail } from '../types/fire-detail.type';
+import { Fire } from '../types/fire.type';
 
 @Injectable({ providedIn: 'root' })
 export class FireService {
@@ -36,7 +36,7 @@ export class FireService {
     );
   }
 
-  details(fire_id:number) {
+  details(fire_id: number) {
     const endpoint = `/Incendios/${fire_id}/detalles`;
 
     return firstValueFrom(
@@ -49,8 +49,11 @@ export class FireService {
       IdTerritorio: data.territory,
       IdProvincia: data.province,
       IdMunicipio: data.municipality,
-      denominacion: data.name,
-      fechaInicio: this.datepipe.transform(data.start, 'yyyy-MM-dd h:mm:ss'),
+      denominacion: data.denomination,
+      fechaInicio: this.datepipe.transform(
+        data.startDate,
+        'yyyy-MM-dd h:mm:ss'
+      ),
       IdSuceso: data.event,
       IdTipoSuceso: data.event,
       IdClaseSuceso: 1,
@@ -80,8 +83,11 @@ export class FireService {
       IdTerritorio: data.territory,
       IdProvincia: data.province,
       IdMunicipio: data.municipality,
-      denominacion: data.name,
-      fechaInicio: this.datepipe.transform(data.start, 'yyyy-MM-dd h:mm:ss'),
+      denominacion: data.denomination,
+      fechaInicio: this.datepipe.transform(
+        data.startDate,
+        'yyyy-MM-dd h:mm:ss'
+      ),
       IdSuceso: data.event,
       IdTipoSuceso: data.event,
       IdClaseSuceso: 1,

@@ -2,6 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+
 import { FireStatusService } from '../../services/fire-status.service';
 
 import { EvolutionService } from '../../services/evolution.service';
@@ -46,7 +52,15 @@ import {
 @Component({
   selector: 'app-fire-evolution-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CalendarModule,
+    DropdownModule,
+    InputTextModule,
+    InputTextareaModule,
+  ],
   templateUrl: './fire-evolution-create.component.html',
   styleUrl: './fire-evolution-create.component.css',
 })
@@ -110,6 +124,7 @@ export class FireEvolutionCreateComponent {
   async ngOnInit() {
     this.formGroup = new FormGroup({
       datetime: new FormControl(),
+      inputOutput: new FormControl(),
       type: new FormControl(),
       media: new FormControl(),
       originDestination: new FormControl(),
@@ -149,6 +164,15 @@ export class FireEvolutionCreateComponent {
       province_2: new FormControl(),
       municipality_2: new FormControl(),
       observations_3: new FormControl(),
+    });
+
+    this.formGroup.patchValue({
+      affectedSurface: 86,
+      number: 1,
+      injureds: 22,
+      participants: 15,
+      unit: 'BRIF',
+      ownership_2: 'Comunidad Farol de Navarra',
     });
 
     localStorage.clear();
@@ -202,7 +226,7 @@ export class FireEvolutionCreateComponent {
   }
 
   public async loadMunicipalities(event: any, input: string) {
-    const province_id = event.target.value;
+    const province_id = event.value;
     const municipalities = await this.municipalityService.get(province_id);
 
     if (input == '1') {
@@ -222,6 +246,8 @@ export class FireEvolutionCreateComponent {
 
     mapModalRef.componentInstance.section = section;
   }
+
+  public saveAreaAffected() {}
 
   public saveConsequenceAction() {
     const data = this.formGroup.value;
@@ -518,7 +544,7 @@ export class FireEvolutionCreateComponent {
   }
 
   public setType(event: any) {
-    this.type = event.target.value;
+    this.type = event.value;
     this.getDenominations();
   }
 

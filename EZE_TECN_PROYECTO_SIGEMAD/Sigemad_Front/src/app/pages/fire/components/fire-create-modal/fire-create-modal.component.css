@@ -1,0 +1,29 @@
+.title-modal {
+  font-size: 24px;
+  color: #009900;
+  text-align: center;
+}
+.text-center {
+  text-align: center;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.d-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 20px;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.d-flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
