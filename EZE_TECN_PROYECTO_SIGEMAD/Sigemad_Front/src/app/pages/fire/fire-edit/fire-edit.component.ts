@@ -3,23 +3,27 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 
-import { FireAddressCoordinationComponent } from '../fire-address-coordination/fire-address-coordination.component';
-import { FireEvolutionCreateComponent } from '../fire-evolution-create/fire-evolution-create.component';
-import { MapCreateComponent } from '../map-create/map-create.component';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
-import { EventService } from '../../services/event.service';
-import { FireStatusService } from '../../services/fire-status.service';
-import { FireService } from '../../services/fire.service';
-import { MenuItemActiveService } from '../../services/menu-item-active.service';
-import { MunicipalityService } from '../../services/municipality.service';
-import { ProvinceService } from '../../services/province.service';
+import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+import { MapCreateComponent } from '../../map-create/map-create.component';
 
-import { Event } from '../../types/event.type';
-import { FireDetail } from '../../types/fire-detail.type';
-import { FireStatus } from '../../types/fire-status.type';
-import { Fire } from '../../types/fire.type';
-import { Municipality } from '../../types/municipality.type';
-import { Province } from '../../types/province.type';
+import { EventService } from '../../../services/event.service';
+import { FireStatusService } from '../../../services/fire-status.service';
+import { FireService } from '../../../services/fire.service';
+import { MenuItemActiveService } from '../../../services/menu-item-active.service';
+import { MunicipalityService } from '../../../services/municipality.service';
+import { ProvinceService } from '../../../services/province.service';
+
+import { Event } from '../../../types/event.type';
+import { FireDetail } from '../../../types/fire-detail.type';
+import { FireStatus } from '../../../types/fire-status.type';
+import { Fire } from '../../../types/fire.type';
+import { Municipality } from '../../../types/municipality.type';
+import { Province } from '../../../types/province.type';
 
 import {
   FormControl,
@@ -29,13 +33,21 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-fire-national-edit',
+  selector: 'app-fire-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './fire-national-edit.component.html',
-  styleUrl: './fire-national-edit.component.css',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    InputTextModule,
+    DropdownModule,
+    CalendarModule,
+    InputTextareaModule,
+  ],
+  templateUrl: './fire-edit.component.html',
+  styleUrl: './fire-edit.component.css',
 })
-export class FireNationalEditComponent {
+export class FireEditComponent {
   public route = inject(ActivatedRoute);
 
   public matDialog = inject(MatDialog);
@@ -113,13 +125,14 @@ export class FireNationalEditComponent {
 
     this.formData = new FormGroup({
       Id: new FormControl(),
-      name: new FormControl(),
+      denomination: new FormControl(),
       territory: new FormControl(),
       province: new FormControl(),
       municipality: new FormControl(),
-      start: new FormControl(),
+      startDate: new FormControl(),
       event: new FormControl(),
-      note: new FormControl(),
+      generalNote: new FormControl(),
+      idEstado: new FormControl(),
     });
 
     const fire_id = this.route.snapshot.paramMap.get('id');
@@ -152,12 +165,13 @@ export class FireNationalEditComponent {
     this.formData.patchValue({
       id: this.fire.id,
       territory: this.fire.idTerritorio,
-      name: this.fire.denominacion,
+      denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
       municipality: this.fire.idMunicipio,
-      start: this.fire.fechaInicio,
+      startDate: new Date(this.fire.fechaInicio),
       event: this.fire.idClaseSuceso,
-      note: this.fire.comentarios,
+      generalNote: this.fire.comentarios,
+      idEstado: this.fire.idEstado,
     });
   }
 
@@ -199,8 +213,9 @@ export class FireNationalEditComponent {
 
   openModalEvolution() {
     let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
-      width: '1500px',
-      maxWidth: '1500px',
+      width: '1220px',
+      maxWidth: '1220px',
+      height: '600px',
       disableClose: true,
     });
 

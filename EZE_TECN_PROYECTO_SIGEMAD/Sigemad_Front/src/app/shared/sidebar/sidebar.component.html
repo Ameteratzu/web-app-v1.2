@@ -1,0 +1,176 @@
+<div class="sidebar">
+  <div>
+    <div>
+      <img src="/assets/img/burger.svg" alt="burger" />
+    </div>
+
+    <div class="mt-32 mb-34">
+      <img src="/assets/img/logo.svg" alt="burger" width="100%" />
+    </div>
+
+    <div
+      *ngFor="let item of menu"
+      (click)="redirectTo(item.path)"
+      class="cursor-pointer menu-item mb-13 rounded mt-0"
+      [style]="
+        active == item.path
+          ? 'border: 2px solid rgb(' +
+            item.color +
+            '); background-color: rgb(' +
+            item.color +
+            ', 0.50); padding: 4px'
+          : ''
+      "
+    >
+      <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+      {{ item.name }}
+    </div>
+
+    <div
+      (click)="collapse('naturals')"
+      class="menu-item text-info font-weight-bold text-uppercase mt-7 mb-5 cursor-pointer calibri"
+    >
+      Riesgos naturales
+    </div>
+
+    <div *ngIf="showNaturals">
+      <div
+        *ngFor="let item of naturals"
+        (click)="redirectTo(item.path)"
+        class="cursor-pointer menu-item mb-13 rounded mt-0"
+        [style]="
+          active == item.path
+            ? 'border: 2px solid #FF8000; background-color: rgb(' +
+              item.color +
+              ', 0.50); padding: 4px'
+            : ''
+        "
+      >
+        <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+        {{ item.name }}
+      </div>
+    </div>
+
+    <div
+      (click)="collapse('technologicals')"
+      class="menu-item text-info font-weight-bold text-uppercase mt-7 mb-5 cursor-pointer calibri"
+    >
+      Riesgos tecnológicos
+    </div>
+
+    <div *ngIf="showTechnologicals">
+      <div
+        *ngFor="let item of technologicals"
+        (click)="redirectTo(item.path)"
+        class="cursor-pointer menu-item mb-13 rounded mt-0"
+        [style]="
+          active == item.path
+            ? 'border: 2px solid rgb(' +
+              item.color +
+              '); background-color: rgb(' +
+              item.color +
+              ', 0.50)'
+            : ''
+        "
+      >
+        <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+        {{ item.name }}
+      </div>
+    </div>
+
+    <div
+      (click)="collapse('others')"
+      class="menu-item text-info font-weight-bold text-uppercase mt-7 mb-5 cursor-pointer calibri"
+    >
+      Otros riesgos
+    </div>
+
+    <div *ngIf="showOthers">
+      <div
+        class="cursor-pointer menu-item mb-13 rounded mt-0"
+        (click)="redirectTo(item.path)"
+        *ngFor="let item of others"
+        [style]="
+          active == item.path
+            ? 'border: 2px solid rgb(' +
+              item.color +
+              '); background-color: rgb(' +
+              item.color +
+              ', 0.50)'
+            : ''
+        "
+      >
+        <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+        {{ item.name }}
+      </div>
+    </div>
+
+    <div
+      (click)="collapse('utilities')"
+      class="menu-item text-info font-weight-bold text-uppercase mt-7 mb-5 cursor-pointer calibri"
+    >
+      Utilidades
+    </div>
+
+    <div *ngIf="showUtilities">
+      <div
+        class="cursor-pointer menu-item mb-13 rounded mt-0"
+        (click)="redirectTo(item.path)"
+        *ngFor="let item of utilities"
+        [style]="
+          active == item.path
+            ? 'border: 2px solid rgb(' +
+              item.color +
+              '); background-color: rgb(' +
+              item.color +
+              ', 0.50)'
+            : ''
+        "
+      >
+        <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+        {{ item.name }}
+      </div>
+    </div>
+
+    <div
+      (click)="collapse('admins')"
+      class="menu-item text-info font-weight-bold text-uppercase mt-7 mb-5 cursor-pointer calibri"
+    >
+      Administración
+    </div>
+
+    <div *ngIf="showAdmins">
+      <div
+        class="cursor-pointer menu-item mb-13 rounded mt-0"
+        (click)="redirectTo(item.path)"
+        *ngFor="let item of admins"
+        [style]="
+          active == item.path
+            ? 'border: 2px solid rgb(' +
+              item.color +
+              '); background-color: rgb(' +
+              item.color +
+              ', 0.50)'
+            : ''
+        "
+      >
+        <img src="{{ item.icon }}" alt="{{ item.name }}" class="mr-5" />
+        {{ item.name }}
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-55vh">
+    <div class="d-flex gap-5">
+      <div>
+        <img src="/assets/img/user.svg" alt="" width="32" height="32" />
+      </div>
+
+      <div class="calibri mb-10">
+        <div class="mr-14 text-user">{{ user.name }}</div>
+
+        <div class="subtext-user">{{ user.role }}</div>
+      </div>
+    </div>
+  </div>
+</div>

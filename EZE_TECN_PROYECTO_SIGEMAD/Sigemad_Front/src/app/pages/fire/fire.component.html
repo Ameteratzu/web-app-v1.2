@@ -1,215 +1,25 @@
-<div class="d-flex border-bottom">
+<div class="d-flex justify-content-between">
   <div class="w-50">
-    <h1 class="text-info font-weight-bold font-size-48 calibri">
-      Sistema de gestión de emergencia <br />
-      y apoyo a la decisión
+    <h1 class="text-info font-weight-bold font-size-32 calibri">
+      Sistema de Gestión de Emergencia <br />
+      y Apoyo a la Decisión
     </h1>
   </div>
 
-  <div class="w-50 text-right">
-    <h1 class="text-blue font-weight-bold inter mt-20">Incendios forestales</h1>
+  <div class="text-right">
+    <h1 class="text-blue font-weight-bold inter font-size-24 mt-18">
+      Incendios forestales
+    </h1>
 
-    <h2 class="text-green font-weight-bold inter">Búsqueda de sucesos</h2>
+    <h2 class="text-green inter font-size-20 font-weight-500">
+      Búsqueda de sucesos
+    </h2>
   </div>
 </div>
+<hr style="margin-top: 10px" />
 
-<form (ngSubmit)="onSubmit()" [formGroup]="formData">
-  <div class="d-flex">
-    <div class="w-16">
-      <input
-        formControlName="name"
-        class="form-control"
-        type="text"
-        placeholder="Denominación"
-      />
-    </div>
+<app-fire-filter-form [fires]="fires"></app-fire-filter-form>
 
-    <div class="w-16">
-      <select formControlName="territory" class="form-control">
-        <option value="">Territorio</option>
-        <option
-          value="{{ territory.id }}"
-          *ngFor="let territory of territories()"
-        >
-          {{ territory.descripcion }}
-        </option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select
-        (change)="loadProvinces($event)"
-        formControlName="autonomousCommunity"
-        class="form-control"
-      >
-        <option value="">CCAA</option>
-        <option
-          value="{{ autonomousCommunity.id }}"
-          *ngFor="let autonomousCommunity of autonomousCommunities()"
-        >
-          {{ autonomousCommunity.descripcion }}
-        </option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select
-        (click)="loadMunicipalities($event)"
-        formControlName="province"
-        class="form-control"
-      >
-        <option value="">Provincia</option>
-        <option value="{{ province.id }}" *ngFor="let province of provinces()">
-          {{ province.descripcion }}
-        </option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select formControlName="municipality" class="form-control">
-        <option value="">Municipio</option>
-        <option
-          value="{{ municipality.id }}"
-          *ngFor="let municipality of municipalities()"
-        >
-          {{ municipality.descripcion }}
-        </option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select formControlName="fireStatus" class="form-control">
-        <option value="">Estado</option>
-        <option
-          value="{{ fireStatus.id }}"
-          *ngFor="let fireStatus of fireStatus()"
-        >
-          {{ fireStatus.descripcion }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="d-flex m--1">
-    <div class="w-16">
-      <select formControlName="episode" class="form-control">
-        <option value="">Episodio</option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select formControlName="severityLevel" class="form-control">
-        <option value="">Nivel de gravedad</option>
-        <option
-          value="{{ severityLevel.id }}"
-          *ngFor="let severityLevel of severityLevels()"
-        >
-          {{ severityLevel.descripcion }}
-        </option>
-      </select>
-    </div>
-
-    <div class="w-16">
-      <select formControlName="affectedArea" class="form-control">
-        <option value="">Área afectada</option>
-      </select>
-    </div>
-
-    <div class="w-10">
-      <select formControlName="move" class="form-control">
-        <option value="">Movimiento</option>
-      </select>
-    </div>
-
-    <div class="w-10">
-      <select formControlName="enter" class="form-control">
-        <option value="">Entre</option>
-      </select>
-    </div>
-
-    <div class="w-10">
-      <input formControlName="start" type="date" class="form-control" />
-    </div>
-
-    <div class="w-10">
-      <input formControlName="end" type="date" class="form-control" />
-    </div>
-  </div>
-
-  <div class="border-bottom w-100 text-right pb-15">
-    <button type="button" class="btn-blue">
-      <img src="/assets/img/filter-btn.svg" alt="filter-btn" />
-    </button>
-
-    <button type="submit" class="btn-blue">
-      <img src="/assets/img/search-btn.svg" alt="search-btn" />
-    </button>
-
-    <button type="button" class="btn-white">
-      <img src="/assets/img/delete-btn.svg" alt="delete-btn" />
-    </button>
-  </div>
-</form>
-
-<div class="d-flex mt-15">
-  <div class="w-50 inter text-silver text-weight-bold">
-    Resultados 1-{{ fires.pageSize }} de {{ fires.count }} ordenados por último
-    registro (descendente).
-  </div>
-
-  <div class="w-50 ms-50 text-right">
-    <button (click)="openModal()" class="btn-blue">
-      <img src="/assets/img/add-btn.svg" alt="add-btn" />
-    </button>
-
-    <button class="btn-green">
-      <img src="/assets/img/excel-btn.svg" alt="excel-btn" />
-    </button>
-
-    <button class="btn-white">
-      <img src="/assets/img/list-btn.svg" alt="list-btn" />
-    </button>
-
-    <button class="btn-white w-4699">
-      <img src="/assets/img/location-btn.svg" alt="location-btn" />
-    </button>
-  </div>
-</div>
-
-<div>
-  <table class="w-100">
-    <thead>
-      <tr>
-        <th>Denominación</th>
-        <th>Fecha inicio</th>
-        <th>Estado</th>
-        <th>NGP</th>
-        <th>Max. NGP</th>
-        <th>Ubicación</th>
-        <th>Último registro</th>
-        <th>Opciones</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let fire of fires.data">
-        <td>{{ fire.denominacion }}</td>
-        <td>{{ fire.fechaInicio }}</td>
-        <td>{{ fire.estadoSuceso.descripcion }}</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>
-          <a href="/fire-national-edit/{{ fire.id }}">
-            <img src="/assets/img/edit-btn.svg" alt="edit-btn" />
-          </a>
-
-          <a href="">
-            <img src="/assets/img/doc-btn.svg" alt="doc-btn" />
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="mt-10">
+  <app-fire-table [fires]="fires"></app-fire-table>
 </div>
