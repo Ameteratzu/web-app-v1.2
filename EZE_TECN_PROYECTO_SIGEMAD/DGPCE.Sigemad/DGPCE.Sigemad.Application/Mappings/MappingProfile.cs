@@ -26,6 +26,7 @@ using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
+using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings
@@ -95,6 +96,7 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
             CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
             CreateMap<AreaAfectada, AreaAfectadaVm>();
+            CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>();
         }
     }
 }
