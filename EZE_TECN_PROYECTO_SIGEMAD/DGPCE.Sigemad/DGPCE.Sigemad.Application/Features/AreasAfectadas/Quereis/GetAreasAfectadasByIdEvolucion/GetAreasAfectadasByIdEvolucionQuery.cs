@@ -2,11 +2,11 @@
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
-public class GetAreaAfectadaListQuery : IRequest<IReadOnlyList<AreaAfectadaVm>>
+public class GetAreasAfectadasByIdEvolucionQuery : IRequest<IReadOnlyList<AreaAfectadaVm>>
 {
     public int IdEvolucion { get; set; }
 
-    public GetAreaAfectadaListQuery(int id)
+    public GetAreasAfectadasByIdEvolucionQuery(int id)
     {
         IdEvolucion = id;
     }
