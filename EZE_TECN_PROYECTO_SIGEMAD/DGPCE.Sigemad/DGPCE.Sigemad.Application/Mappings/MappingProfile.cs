@@ -16,6 +16,7 @@ using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
+using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.CreateIntervencionMedios;
@@ -66,6 +67,9 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Municipio, MunicipioSinIdProvinciaVm>();
             CreateMap<Municipio, MunicipioConIdProvincia>();
 
+            CreateMap<CreateIncendioCommand, Incendio>();
+            CreateMap<CreateIncendioCommand, IncendioNacional>();
+            CreateMap<CreateIncendioCommand, IncendioExtranjero>();
 
             CreateMap<UpdateIncendioCommand, Incendio>();
             CreateMap<Incendio, IncendioVm>();
