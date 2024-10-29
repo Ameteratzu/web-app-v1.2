@@ -26,13 +26,9 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesB
         {
               var includes = new List<Expression<Func<Evolucion, object>>>
                 {
-                    e => e.Municipio,
-                    e => e.Provincia,
                     e => e.Medio,
                     e => e.EntradaSalida,
-                    e => e.Tecnico,
                     e => e.Incendio,
-                    e => e.EntidadMenor.Distrito.Pais,
                     e => e.TipoRegistro,
                     e => e.EstadoIncendio,
                     e => e.EvolucionProcedenciaDestinos

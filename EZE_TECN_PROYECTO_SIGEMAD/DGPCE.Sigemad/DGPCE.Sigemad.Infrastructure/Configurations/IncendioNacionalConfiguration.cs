@@ -13,5 +13,13 @@ class IncendioNacionalConfiguration : IEntityTypeConfiguration<IncendioNacional>
         builder.HasKey(n => n.IdIncendio);
         builder.Property(n => n.IdProvincia).IsRequired();
         builder.Property(n => n.IdMunicipio).IsRequired();
+
+        builder.HasOne(d => d.Provincia).WithMany()
+            .HasForeignKey(d => d.IdProvincia)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.Municipio).WithMany()
+            .HasForeignKey(d => d.IdMunicipio)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

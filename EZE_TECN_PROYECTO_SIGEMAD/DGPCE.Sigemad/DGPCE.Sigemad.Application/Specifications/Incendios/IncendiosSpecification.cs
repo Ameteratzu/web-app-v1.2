@@ -10,14 +10,20 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         (string.IsNullOrEmpty(request.Search) || incendio.Denominacion.Contains(request.Search)) &&
         (!request.Id.HasValue || incendio.Id == request.Id) &&
         (!request.IdTerritorio.HasValue || incendio.IdTerritorio == request.IdTerritorio) &&
-        //(!request.IdPais.HasValue || incendio.IdPais == request.IdPais) &&
-        //(!request.IdCcaa.HasValue || incendio.Provincia.IdCcaa == request.IdCcaa) &&
-        //(!request.IdProvincia.HasValue || incendio.IdProvincia == request.IdProvincia) &&
-        //(!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
+        (!request.IdPais.HasValue || incendio.IncendioExtranjero.IdPais == request.IdPais) &&
+        (!request.IdCcaa.HasValue || incendio.IncendioNacional.Provincia.IdCcaa == request.IdCcaa) &&
+        (!request.IdProvincia.HasValue || incendio.IncendioNacional.IdProvincia == request.IdProvincia) &&
+        (!request.IdMunicipio.HasValue || incendio.IncendioNacional.IdMunicipio == request.IdMunicipio) &&
         (!request.IdEstadoSuceso.HasValue || incendio.IdEstadoSuceso == request.IdEstadoSuceso) &&
         (incendio.Borrado != true)
         )
     {
+
+        if (request.IdEstadoIncendio.HasValue)
+        {
+            AddInclude(i => i.Evoluciones);
+            AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
+        }
 
         if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)
         {
@@ -138,6 +144,8 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         //AddInclude(i => i.Provincia);
         AddInclude(i => i.ClaseSuceso);
         AddInclude(i => i.EstadoSuceso);
+        AddInclude(i => i.IncendioNacional);
+        AddInclude(i => i.IncendioExtranjero);
 
         ApplyPaging(request);
 

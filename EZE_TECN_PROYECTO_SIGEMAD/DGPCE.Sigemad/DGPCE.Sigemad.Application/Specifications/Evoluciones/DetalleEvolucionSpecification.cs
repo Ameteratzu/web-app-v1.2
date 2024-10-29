@@ -7,6 +7,5 @@ public class DetalleEvolucionSpecification: BaseSpecification<Evolucion>
         : base(e => e.IdIncendio == idIncendio)
     {
         AddInclude(e => e.EntradaSalida);
-        AddInclude(e => e.Tecnico);
     }
 }

@@ -28,4 +28,6 @@ public class Incendio : BaseDomainModel<int>
 
     public virtual IncendioNacional IncendioNacional { get; set; } = null!;
     public virtual IncendioExtranjero IncendioExtranjero { get; set; } = null!;
+    public virtual ICollection<Evolucion> Evoluciones { get; set; }
+
 }

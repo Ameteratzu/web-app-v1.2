@@ -36,7 +36,6 @@ public class GetIncendioDetallesListQueryHandler : IRequestHandler<GetIncendioDe
                 Registro = d.EntradaSalida.Descripcion,
                 Origen = "",
                 TipoRegistro = "Datos de evolución",
-                Tecnico = d.Tecnico.Nombre,
             })
             .OrderByDescending(d => d.FechaRegistro)
             .ToList();

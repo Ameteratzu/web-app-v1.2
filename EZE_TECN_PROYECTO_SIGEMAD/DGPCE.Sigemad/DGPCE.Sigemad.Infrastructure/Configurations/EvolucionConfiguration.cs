@@ -23,26 +23,11 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         builder.Property(e => e.IdMedio)
             .IsRequired();
 
-        builder.Property(e => e.IdTecnico)
-            .IsRequired();
-
         builder.Property(e => e.IdTipoRegistro)
             .IsRequired();
 
-        builder.Property(e => e.IdProvinciaAfectada)
-           .IsRequired();
-
-        builder.Property(e => e.IdEntidadMenor)
-            .IsRequired();
-
-        builder.Property(e => e.IdMunicipioAfectado)
-       .IsRequired();
-
         builder.Property(e => e.IdIncendio)
             .IsRequired();
-
-        builder.Property(e => e.Resumen)
-        .IsRequired();
 
 
         builder.Property(e => e.SuperficieAfectadaHectarea)
@@ -65,9 +50,6 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         builder.Property(e => e.Prevision)
             .HasColumnType("text");
 
-        builder.Property(e => e.GeoPosicionAreaAfectada)
-            .HasColumnType("geometry");
-
         builder.HasOne(d => d.EntradaSalida)
             .WithMany()
             .HasForeignKey(d => d.IdEntradaSalida)
@@ -80,29 +62,10 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_Medio");
 
-        builder.HasOne(d => d.Tecnico)
-            .WithMany()
-            .HasForeignKey(d => d.IdTecnico)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Evolucion_ApplicationUsers");
-
-        builder.HasOne(d => d.Provincia)
-        .WithMany()
-        .HasForeignKey(d => d.IdProvinciaAfectada)
-        .OnDelete(DeleteBehavior.Restrict)
-        .HasConstraintName("FK_Evolucion_Provincia");
-
-        builder.HasOne(d => d.Municipio)
-            .WithMany()
-            .HasForeignKey(d => d.IdMunicipioAfectado)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Evolucion_Municipio");
-
-        builder.HasOne(d => d.Incendio)
-           .WithMany()
-           .HasForeignKey(d => d.IdIncendio)
-           .OnDelete(DeleteBehavior.Restrict)
-           .HasConstraintName("FK_Evolucion_Incendio");
+        builder.HasOne(e => e.Incendio)
+               .WithMany(i => i.Evoluciones)
+               .HasForeignKey(e => e.IdIncendio)
+               .OnDelete(DeleteBehavior.Cascade);
 
 
         builder.HasOne(d => d.EstadoIncendio)
@@ -110,13 +73,6 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .HasForeignKey(d => d.IdEstadoIncendio)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_EstadoIncendio");
-
-
-        builder.HasOne(d => d.EntidadMenor)
-            .WithMany()
-            .HasForeignKey(d => d.IdEntidadMenor)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("FK_Evolucion_EntidadMenor");
 
         builder.HasOne(d => d.TipoRegistro)
             .WithMany()
@@ -127,7 +83,7 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         builder.HasMany(e => e.EvolucionProcedenciaDestinos)
              .WithOne(epd => epd.Evolucion)
              .HasForeignKey(epd => epd.IdEvolucion)
-             .OnDelete(DeleteBehavior.Cascade);
+             .OnDelete(DeleteBehavior.Restrict);
     }
 }
 

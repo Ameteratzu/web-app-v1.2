@@ -86,16 +86,10 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
                 FechaHoraEvolucion = request.FechaHoraEvolucion,
                 IdEntradaSalida = request.IdEntradaSalida,
                 IdMedio = request.IdMedio,
-                IdTecnico = request.IdTecnico,
-                IdEntidadMenor = request.IdEntidadMenor,
-                Resumen = request.Resumen,
                 Observaciones = request.Observaciones,
                 Prevision = request.Prevision,
                 SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
                 FechaFinal = request.FechaFinal,
-                IdProvinciaAfectada = request.IdProvinciaAfectada,
-                IdMunicipioAfectado = request.IdMunicipioAfectado,
-                GeoPosicionAreaAfectada = request.GeoPosicionAreaAfectada,
                 IdTipoRegistro = request.IdTipoRegistro
             };
 
