@@ -112,14 +112,14 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
             }
 
             var distrito = await _unitOfWork.Repository<Distrito>().GetByIdAsync(request.IdDistrito.Value);
-            if (pais is null)
+            if (distrito is null)
             {
                 _logger.LogWarning($"request.IdDistrito: {request.IdDistrito}, no encontrado");
                 throw new NotFoundException(nameof(Distrito), request.IdDistrito);
             }
 
             var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor.Value);
-            if (pais is null)
+            if (entidadMenor is null)
             {
                 _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
                 throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);

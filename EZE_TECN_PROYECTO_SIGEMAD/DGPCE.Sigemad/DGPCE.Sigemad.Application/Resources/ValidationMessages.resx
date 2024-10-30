@@ -171,4 +171,10 @@
   <data name="UbicacionNoVacio" xml:space="preserve">
     <value>Ubicación no puede ser vacio</value>
   </data>
+  <data name="IdObligatorio" xml:space="preserve">
+    <value>Id es obligatorio</value>
+  </data>
+  <data name="IdNoVacio" xml:space="preserve">
+    <value>Id no puede ser vacio</value>
+  </data>
 </root>
