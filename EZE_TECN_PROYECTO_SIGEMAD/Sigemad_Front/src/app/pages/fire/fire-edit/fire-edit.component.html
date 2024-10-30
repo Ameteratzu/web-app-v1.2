@@ -20,6 +20,7 @@
 
 <form (ngSubmit)="onSubmit()" [formGroup]="formData">
   <input type="hidden" formControlName="id" value="{{ fire.id }}" />
+
   <input
     type="hidden"
     formControlName="territory"
@@ -37,6 +38,7 @@
           pInputText
           formControlName="denomination"
           placeholder="Santa María de Guía de Gran Canaría"
+          value="{{ fire.denominacion }}"
         />
       </div>
       <!--
@@ -189,7 +191,7 @@
           formControlName="idEstado"
           [options]="fireStatus()"
           optionLabel="descripcion"
-          optionValue="idEstado"
+          optionValue="id"
         />
         <!--
         <select formControlName="event" class="form-control">

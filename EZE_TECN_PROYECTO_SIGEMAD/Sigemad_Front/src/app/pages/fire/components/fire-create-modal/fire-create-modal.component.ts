@@ -164,7 +164,7 @@ export class FireCreateModalComponent implements OnInit {
         this.municipalityName = municipality.descripcion;
 
         this.formData.patchValue({
-          name: municipality.descripcion,
+          denomination: municipality.descripcion,
         });
       }
     }

@@ -9,7 +9,7 @@ export class EventService {
   private http = inject(HttpClient);
 
   get() {
-    const endpoint = '/tipo-sucesos';
+    const endpoint = '/clase-sucesos';
 
     return firstValueFrom(
       this.http.get<Event[]>(endpoint).pipe((response) => response)
