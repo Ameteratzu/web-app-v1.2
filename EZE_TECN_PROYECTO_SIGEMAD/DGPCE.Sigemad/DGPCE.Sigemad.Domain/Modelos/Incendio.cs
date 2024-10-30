@@ -13,7 +13,7 @@ public class Incendio : BaseDomainModel<int>
     public int IdEstadoSuceso { get; set; }
     public DateTime FechaInicio { get; set; }
     public string Denominacion { get; set; } = null!;
-    public string NotaGeneral { get; set; } = null!;
+    public string? NotaGeneral { get; set; }
     public string? RutaMapaRiesgo { get; set; }
     public decimal? UtmX { get; set; }
     public decimal? UtmY { get; set; }

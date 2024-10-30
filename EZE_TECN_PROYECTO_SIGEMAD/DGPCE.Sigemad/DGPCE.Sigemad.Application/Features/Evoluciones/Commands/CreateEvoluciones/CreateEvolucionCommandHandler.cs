@@ -117,7 +117,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                await _evolucionService.CrearEvolucioneProcedenciaDestinos(evolucion.Id, request.EvolucionProcedenciaDestinos);
             }
             
-            await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio, evolucion.IdIncendio);
+            await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio.Value, evolucion.IdIncendio);
 
             _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
             return new CreateEvolucionResponse { Id = evolucion.Id };
