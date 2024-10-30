@@ -56,7 +56,7 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
         if (municipio is null)
         {
             _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
-            throw new NotFoundException(nameof(EstadoSuceso), request.IdMunicipio);
+            throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
         }
 
         if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))
@@ -68,16 +68,7 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
             throw new ValidationException(new List<ValidationFailure> { validationFailure });
         }
 
-        var areaAfectadaEntity = new AreaAfectada
-        {
-            IdEvolucion = request.IdEvolucion,
-            FechaHora = request.FechaHora,
-            IdProvincia = request.IdProvincia,
-            IdMunicipio = request.IdMunicipio,
-            IdEntidadMenor = request.IdEntidadMenor,
-            GeoPosicion = request.GeoPosicion
-
-        };
+        var areaAfectadaEntity = _mapper.Map<AreaAfectada>(request);
 
         _unitOfWork.Repository<AreaAfectada>().AddEntity(areaAfectadaEntity);
 

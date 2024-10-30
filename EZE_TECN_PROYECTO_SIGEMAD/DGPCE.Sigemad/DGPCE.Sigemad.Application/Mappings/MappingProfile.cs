@@ -4,6 +4,8 @@ using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
@@ -102,6 +104,8 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
             CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
             CreateMap<AreaAfectada, AreaAfectadaVm>();
+            CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();
+            CreateMap<CreateAreaAfectadaCommand, AreaAfectada>();
             CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>();
         }
     }

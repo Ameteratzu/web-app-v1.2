@@ -1,5 +1,7 @@
 ﻿
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.DeleteAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -31,8 +33,30 @@ namespace DGPCE.Sigemad.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
         }
 
+        [HttpPut(Name = "UpdateAreaAfectada")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Update([FromBody] UpdateAreaAfectadaCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
 
-        [HttpGet("{id}")]
+        [HttpDelete("{id:int}", Name = "DeleteAreaAfectada")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var command = new DeleteAreaAfectadaCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+
+        [HttpGet("{id:int}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
