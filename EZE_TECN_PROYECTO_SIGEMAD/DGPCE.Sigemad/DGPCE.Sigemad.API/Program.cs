@@ -36,9 +36,24 @@ builder.Services.AddCors(options =>
     );
 });
 
+// Configuracion para multilenguaje
+builder.Services.AddLocalization(options => options.ResourcesPath = "");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "es" };
+    options.SetDefaultCulture("es");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+});
+
+
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
+
+// Habilitar multilenguaje
+app.UseRequestLocalization();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
