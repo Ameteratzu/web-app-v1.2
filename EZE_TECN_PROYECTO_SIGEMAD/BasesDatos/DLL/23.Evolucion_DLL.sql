@@ -30,5 +30,14 @@ CREATE TABLE AreaAfectada (
     IdProvincia int NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
     IdMunicipio int NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
     IdEntidadMenor int NOT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
-    GeoPosicion GEOMETRY
+    GeoPosicion GEOMETRY,
+
+     ---
+    FechaCreacion DATETIME2(7) NOT NULL,
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion DATETIME2(7) NULL,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );

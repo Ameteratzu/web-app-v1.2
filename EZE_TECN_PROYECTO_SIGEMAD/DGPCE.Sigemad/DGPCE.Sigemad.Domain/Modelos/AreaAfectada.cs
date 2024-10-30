@@ -1,8 +1,9 @@
 ﻿
+using DGPCE.Sigemad.Domain.Common;
 using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
-public class AreaAfectada
+public class AreaAfectada : BaseDomainModel<int>
 {
     public int Id { get; set; }
     public int IdEvolucion { get; set; }
