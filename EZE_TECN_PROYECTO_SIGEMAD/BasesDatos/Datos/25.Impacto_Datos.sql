@@ -732,10 +732,14 @@ INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, TipoCampo
 INSERT INTO ValidacionImpactoClasificado (IdImpactoClasificado, Campo, TipoCampo, EsObligatorio) VALUES (97, 'FechaHoraFin', 'Datetime', 1);
 
 
+SET IDENTITY_INSERT dbo.TipoDanio ON;
 
+INSERT INTO TipoDanio (Id, Descripcion) VALUES 
+(1, N'Leve'),
+(2, N'Moderado'),
+(3, N'Severo');
 
-
-
+SET IDENTITY_INSERT dbo.TipoDanio OFF;
 
 
 
