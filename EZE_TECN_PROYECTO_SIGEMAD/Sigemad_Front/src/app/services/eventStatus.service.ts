@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Menu } from '../types/menu.types';
+
+import { EventStatus } from '../types/eventStatus.type';
 
 @Injectable({ providedIn: 'root' })
-export class MenuService {
+export class EventStatusService {
   private http = inject(HttpClient);
 
   get() {
-    const endpoint = '/Menus';
+    let endpoint = '/estados-sucesos';
 
     return firstValueFrom(
-      this.http.get<Menu[]>(endpoint).pipe((response) => response)
+      this.http.get<EventStatus[]>(endpoint).pipe((response) => response)
     );
   }
 }

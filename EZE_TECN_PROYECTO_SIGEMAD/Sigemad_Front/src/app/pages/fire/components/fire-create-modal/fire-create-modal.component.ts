@@ -12,11 +12,13 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
 import { FireService } from '../../../../services/fire.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
 import { ProvinceService } from '../../../../services/province.service';
 import { TerritoryService } from '../../../../services/territory.service';
+import { Countries } from '../../../../types/country.type';
 import { Event } from '../../../../types/event.type';
 import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
@@ -49,12 +51,14 @@ export class FireCreateModalComponent implements OnInit {
   public provinceService = inject(ProvinceService);
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
+  public countryServices = inject(CountryService);
   public fireService = inject(FireService);
 
   public territories = signal<Territory[]>([]);
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public events = signal<Event[]>([]);
+  public countries = signal<Countries[]>([]);
 
   public length: number;
   public latitude: number;
@@ -94,6 +98,9 @@ export class FireCreateModalComponent implements OnInit {
 
     const events = await this.eventService.get();
     this.events.set(events);
+
+    const countries = await this.countryServices.get();
+    this.countries.set(countries);
   }
 
   onChange(event: any) {
@@ -118,7 +125,7 @@ export class FireCreateModalComponent implements OnInit {
     this.error = false;
 
     const data = this.formData.value;
-    console.info('data', data);
+
     data.coordinates = JSON.parse(localStorage.getItem('coordinates') ?? '{}');
 
     if (localStorage.getItem('polygon')) {

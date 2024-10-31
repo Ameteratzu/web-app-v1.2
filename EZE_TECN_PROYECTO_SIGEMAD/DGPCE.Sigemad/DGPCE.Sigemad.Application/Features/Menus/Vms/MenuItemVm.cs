@@ -6,5 +6,6 @@ public class MenuItemVm
     public string Nombre { get; set; } = null!;
     public string? Icono { get; set; }
     public string? ColorRgb { get; set; }
+    public string? Ruta { get; set; }
     public List<MenuItemVm> SubItems { get; set; }
 }

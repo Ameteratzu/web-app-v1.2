@@ -7,6 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { FireStatusService } from '../../services/fire-status.service';
 
@@ -48,6 +49,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { AreasAffectedService } from '../../services/areas-affected.service';
 
 @Component({
   selector: 'app-fire-evolution-create',
@@ -60,6 +62,7 @@ import {
     DropdownModule,
     InputTextModule,
     InputTextareaModule,
+    MultiSelectModule,
   ],
   templateUrl: './fire-evolution-create.component.html',
   styleUrl: './fire-evolution-create.component.css',
@@ -76,6 +79,7 @@ export class FireEvolutionCreateComponent {
   public municipalityService = inject(MunicipalityService);
   public impactTypeService = inject(ImpactTypeService);
   public impactGroupService = inject(ImpactGroupService);
+  public areaAffectedService = inject(AreasAffectedService);
   public impactService = inject(ImpactService);
   public impactEvolutionService = inject(ImpactEvolutionService);
   public mediaClassificationService = inject(MediaClassificationService);
@@ -101,10 +105,15 @@ export class FireEvolutionCreateComponent {
   public recordTypes = signal<RecordType[]>([]);
   public minorEntities = signal<MinorEntity[]>([]);
 
+  public disabledBenefits = signal<boolean>(false);
+  public disabledOwner1 = signal<boolean>(false);
+
   public impactTypes: any;
   public impactGroups: any;
 
+  public areasAffected = [] as any;
   public consequencesActions = [] as any;
+
   public interveningMedias = [] as any;
   public denominations = [] as any;
 
@@ -115,6 +124,7 @@ export class FireEvolutionCreateComponent {
   public errors: any;
 
   public consequenceActionError: boolean = false;
+  public areaAffectedActionError: boolean = false;
   public interveningMediaError: boolean = false;
   public errorAreaAfectada: boolean = false;
 
@@ -136,10 +146,16 @@ export class FireEvolutionCreateComponent {
       affectedSurface: new FormControl(),
       end_date: new FormControl(),
       emergencyPlanActivated: new FormControl(),
+
+      startAreaAffected: new FormControl(),
       province_1: new FormControl(),
       municipality_1: new FormControl(),
       minorEntity: new FormControl(),
       georeferencedFile: new FormControl(),
+      observationsAreaAffected: new FormControl(),
+
+      areaAffectedActionUpdate: new FormControl(),
+      areaAffectedActionIndex: new FormControl(),
 
       consequenceActionUpdate: new FormControl(),
       consequenceActionIndex: new FormControl(),
@@ -164,6 +180,8 @@ export class FireEvolutionCreateComponent {
       province_2: new FormControl(),
       municipality_2: new FormControl(),
       observations_3: new FormControl(),
+
+      startDate: new FormControl(),
     });
 
     this.formGroup.patchValue({
@@ -181,6 +199,7 @@ export class FireEvolutionCreateComponent {
     this.medias.set(medias);
 
     const originDestinations = await this.originDestinationService.get();
+
     this.originDestinations.set(originDestinations);
 
     const status = await this.fireStatusService.get();
@@ -208,13 +227,35 @@ export class FireEvolutionCreateComponent {
     this.inputOutputs.set(inputOutputs);
 
     const mediaTypes = await this.mediaTypeService.get();
+
     this.mediaTypes.set(mediaTypes);
 
     const recordTypes = await this.recordTypeService.get();
-    this.recordTypes.set(mediaTypes);
+    this.recordTypes.set(recordTypes);
 
     const minorEntities = await this.minorEntityService.get();
     this.minorEntities.set(minorEntities);
+  }
+
+  public changeMediaTypes(event: any) {
+    const mediaTypeSelected = this.mediaTypes().find(
+      (mediaType) => mediaType.id === event.value
+    );
+
+    let clasificacionMedio: any = mediaTypeSelected?.clasificacionMedio
+      ? mediaTypeSelected.clasificacionMedio
+      : null;
+    let titularidadMedio: any = mediaTypeSelected?.titularidadMedio
+      ? mediaTypeSelected.titularidadMedio
+      : null;
+
+    this.formGroup.patchValue({
+      classification: clasificacionMedio?.id,
+      ownership_1: titularidadMedio?.id,
+    });
+
+    this.disabledBenefits.update(() => (clasificacionMedio ? true : false));
+    this.disabledOwner1.update(() => (titularidadMedio ? true : false));
   }
 
   public changeTab(tab: string) {
@@ -247,7 +288,67 @@ export class FireEvolutionCreateComponent {
     mapModalRef.componentInstance.section = section;
   }
 
-  public saveAreaAffected() {}
+  public saveAreaAffected() {
+    const { value } = this.formGroup;
+    this.areaAffectedActionError = false;
+    if (
+      !value.startAreaAffected ||
+      !value.province_1 ||
+      !value.municipality_1 ||
+      !value.minorEntity
+    ) {
+      this.areaAffectedActionError = true;
+      return;
+    }
+    const newAreaAffected = {
+      startAreaAffected: value.startAreaAffected,
+      province_1: value.province_1,
+      municipality_1: value.municipality_1,
+      minorEntity: value.minorEntity,
+      observationAreaAffeted: value.observationsAreaAffected,
+      geoPosicion: '{}',
+    };
+
+    if (value.areaAffectedActionUpdate == '1') {
+      this.areasAffected.splice(
+        value.areaAffectedActionIndex,
+        1,
+        newAreaAffected
+      );
+    } else {
+      this.areasAffected.push(newAreaAffected);
+    }
+
+    this.formGroup.patchValue({
+      startAreaAffected: '',
+      province_1: '',
+      municipality_1: '',
+      minorEntity: '',
+      observationsAreaAffected: '',
+      areaAffectedActionUpdate: '',
+      areaAffectedActionIndex: '',
+    });
+  }
+
+  public showAreaAffectedDataInForm(index: number) {
+    const areaAffected = this.areasAffected[index];
+
+    this.formGroup.patchValue({
+      areaAffectedActionUpdate: '1',
+      areaAffectedActionIndex: index,
+      startAreaAffected: new Date(areaAffected.startAreaAffected),
+      province_1: areaAffected.province_1,
+      municipality_1: areaAffected.municipality_1,
+      minorEntity: areaAffected.minorEntity,
+      observationsAreaAffected: `${areaAffected.observationAreaAffeted}`,
+    });
+  }
+
+  public deleteAreaAffected(index: number) {
+    if (confirm('Está seguro que desea eliminar?')) {
+      this.areasAffected.splice(index, 1);
+    }
+  }
 
   public saveConsequenceAction() {
     const data = this.formGroup.value;
@@ -467,7 +568,12 @@ export class FireEvolutionCreateComponent {
     }
 
     await this.evolutionService
-      .post(data)
+      .post({
+        ...data,
+        consequencesActions: this.consequencesActions,
+        interveningMedias: this.interveningMedias,
+        areasAffected: this.areasAffected,
+      })
       .then((response) => {
         this.evolution_id = response;
         this.evolution_id = this.evolution_id.id;
@@ -519,6 +625,21 @@ export class FireEvolutionCreateComponent {
       };
 
       await this.interveningMediaService.post(interveningMedia);
+    }
+
+    for (let areaAffected of this.areasAffected) {
+      const { value } = this.formGroup;
+
+      const bodyAreaAffected = {
+        idEvolucion: this.evolution_id,
+        fechaHora: areaAffected.startAreaAffected,
+        idProvincia: areaAffected.province_1,
+        idMunicipio: areaAffected.municipality_1,
+        idEntidadMenor: areaAffected.minorEntity,
+        geoPosicion: data.geoPosicion,
+      };
+
+      const x = await this.areaAffectedService.post(bodyAreaAffected);
     }
 
     window.location.href = '/fire-national-edit/' + this.fire_id;

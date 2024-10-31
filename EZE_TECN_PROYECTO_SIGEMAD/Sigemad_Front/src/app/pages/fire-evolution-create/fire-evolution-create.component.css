@@ -181,3 +181,8 @@ table tr:nth-child(odd) {
 .justify-content-between {
   justify-content: between;
 }
+
+.p-multiselect-label {
+  height: 48px;
+  vertical-align: middle;
+}

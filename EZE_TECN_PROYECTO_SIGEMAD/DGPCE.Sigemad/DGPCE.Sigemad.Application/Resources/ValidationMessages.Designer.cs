@@ -22,7 +22,7 @@ namespace DGPCE.Sigemad.Application.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ValidationMessages {
+    public class ValidationMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         ///   Devuelve la instancia de ResourceManager almacenada en caché utilizada por esta clase.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DGPCE.Sigemad.Application.Resources.ValidationMessages", typeof(ValidationMessages).Assembly);
@@ -51,7 +51,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         ///   búsquedas de recursos mediante esta clase de recurso fuertemente tipado.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Clase de Suceso es obligatorio.
         /// </summary>
-        internal static string ClaseSucesoObligatorio {
+        public static string ClaseSucesoObligatorio {
             get {
                 return ResourceManager.GetString("ClaseSucesoObligatorio", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Denominacion no puede exceder los 255 caracteres.
         /// </summary>
-        internal static string DenominacionMaxLength {
+        public static string DenominacionMaxLength {
             get {
                 return ResourceManager.GetString("DenominacionMaxLength", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Neutral.
         /// </summary>
-        internal static string DenominacionNoVacio {
+        public static string DenominacionNoVacio {
             get {
                 return ResourceManager.GetString("DenominacionNoVacio", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Denominacion es obligatorio.
         /// </summary>
-        internal static string DenominacionObligatorio {
+        public static string DenominacionObligatorio {
             get {
                 return ResourceManager.GetString("DenominacionObligatorio", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Estado de Suceso es obligatorio.
         /// </summary>
-        internal static string EstadoSucesoObligatorio {
+        public static string EstadoSucesoObligatorio {
             get {
                 return ResourceManager.GetString("EstadoSucesoObligatorio", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Fecha de Inicio es obligatoria.
         /// </summary>
-        internal static string FechaInicioObligatorio {
+        public static string FechaInicioObligatorio {
             get {
                 return ResourceManager.GetString("FechaInicioObligatorio", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a La geometría no es válida, sistema de referencia no es Wgs84.
         /// </summary>
-        internal static string GeoPosicionInvalida {
+        public static string GeoPosicionInvalida {
             get {
                 return ResourceManager.GetString("GeoPosicionInvalida", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a GeoPosicion es obligatorio.
         /// </summary>
-        internal static string GeoPosicionObligatorio {
+        public static string GeoPosicionObligatorio {
             get {
                 return ResourceManager.GetString("GeoPosicionObligatorio", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Id no puede ser vacio.
         /// </summary>
-        internal static string IdNoVacio {
+        public static string IdNoVacio {
             get {
                 return ResourceManager.GetString("IdNoVacio", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Id es obligatorio.
         /// </summary>
-        internal static string IdObligatorio {
+        public static string IdObligatorio {
             get {
                 return ResourceManager.GetString("IdObligatorio", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Municipio es inválido.
         /// </summary>
-        internal static string MunicipioInvalido {
+        public static string MunicipioInvalido {
             get {
                 return ResourceManager.GetString("MunicipioInvalido", resourceCulture);
             }
@@ -162,7 +162,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Municipio es obligatorio.
         /// </summary>
-        internal static string MunicipioObligatorio {
+        public static string MunicipioObligatorio {
             get {
                 return ResourceManager.GetString("MunicipioObligatorio", resourceCulture);
             }
@@ -171,7 +171,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Pais es inválido.
         /// </summary>
-        internal static string PaisInvalido {
+        public static string PaisInvalido {
             get {
                 return ResourceManager.GetString("PaisInvalido", resourceCulture);
             }
@@ -180,7 +180,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Pais es obligatorio.
         /// </summary>
-        internal static string PaisObligatorio {
+        public static string PaisObligatorio {
             get {
                 return ResourceManager.GetString("PaisObligatorio", resourceCulture);
             }
@@ -189,7 +189,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Provincia es inválido.
         /// </summary>
-        internal static string ProvinciaInvalido {
+        public static string ProvinciaInvalido {
             get {
                 return ResourceManager.GetString("ProvinciaInvalido", resourceCulture);
             }
@@ -198,7 +198,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Provincia es obligatoria.
         /// </summary>
-        internal static string ProvinciaObligatorio {
+        public static string ProvinciaObligatorio {
             get {
                 return ResourceManager.GetString("ProvinciaObligatorio", resourceCulture);
             }
@@ -207,7 +207,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Neutral.
         /// </summary>
-        internal static string TerritorioInvalido {
+        public static string TerritorioInvalido {
             get {
                 return ResourceManager.GetString("TerritorioInvalido", resourceCulture);
             }
@@ -216,7 +216,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Neutral.
         /// </summary>
-        internal static string TerritorioObligatorio {
+        public static string TerritorioObligatorio {
             get {
                 return ResourceManager.GetString("TerritorioObligatorio", resourceCulture);
             }
@@ -225,7 +225,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Ubicación no puede ser vacio.
         /// </summary>
-        internal static string UbicacionNoVacio {
+        public static string UbicacionNoVacio {
             get {
                 return ResourceManager.GetString("UbicacionNoVacio", resourceCulture);
             }
@@ -234,7 +234,7 @@ namespace DGPCE.Sigemad.Application.Resources {
         /// <summary>
         ///   Busca una cadena traducida similar a Ubicación es obligatorio.
         /// </summary>
-        internal static string UbicacionObligatorio {
+        public static string UbicacionObligatorio {
             get {
                 return ResourceManager.GetString("UbicacionObligatorio", resourceCulture);
             }

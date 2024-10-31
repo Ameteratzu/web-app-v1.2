@@ -13,3 +13,24 @@
 .pb-15 {
   padding-bottom: 15px;
 }
+.w-50 {
+  width: 50%;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.child {
+  flex: 1;
+  width: 23%;
+}
+
+.border-secondary {
+  border: 1px solid #a9a9a9;
+}
+
+.align-items {
+  align-items: center;
+}
+.p4 {
+  padding: 4px 8px;
+}

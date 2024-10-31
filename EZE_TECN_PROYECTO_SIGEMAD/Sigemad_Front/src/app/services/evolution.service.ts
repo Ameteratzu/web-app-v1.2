@@ -22,18 +22,20 @@ export class EvolutionService {
     const body = {
       idTecnico: '550E683E-0458-43E8-A6E6-20887DC2BDDD',
       idIncendio: data.fire_id,
-      fechaHoraEvolucion: data.datetime,
+      fechaHoraEvolucion: data.startDate,
       idEntradaSalida: data.type,
       idMedio: data.media,
       idTipoRegistro: 1,
-      idEntidadMenor: data.minorEntity,
+      idEntidadMenor: data.areasAffected?.[0].minorEntity,
+      resumen: true, //?
       observaciones: data.observations_1,
       idEstadoIncendio: data.status,
       superficieAfectadaHectarea: data.affectedSurface,
       fechaFinal: data.end_date,
-      idProvinciaAfectada: data.province_1,
-      idMunicipioAfectado: data.municipality_1,
+      idProvinciaAfectada: data.areasAffected?.[0].province_1,
+      idMunicipioAfectado: data.areasAffected?.[0].municipality_1,
       geoPosicionAreaAfectada: data.geoPosicionAreaAfectada,
+      evolucionProcedenciaDestinos: data.originDestination,
     };
 
     return firstValueFrom(

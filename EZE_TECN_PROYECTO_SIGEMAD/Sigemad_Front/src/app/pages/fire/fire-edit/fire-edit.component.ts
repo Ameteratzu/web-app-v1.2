@@ -145,8 +145,6 @@ export class FireEditComponent {
       }
     }
 
-    console.log(this.fire);
-
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 

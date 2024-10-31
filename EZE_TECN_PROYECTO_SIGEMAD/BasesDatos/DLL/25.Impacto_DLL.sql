@@ -21,6 +21,7 @@ CREATE TABLE dbo.ValidacionImpactoClasificado (
     Id INT PRIMARY KEY IDENTITY(1,1),
     IdImpactoClasificado INT NOT NULL FOREIGN KEY REFERENCES ImpactoClasificado(Id),  -- Relaciona con ImpactoClasificado
     Campo NVARCHAR(100) NOT NULL,  -- El nombre del campo a validar, como 'Numero', 'Causa', etc.
+    TipoCampo NVARCHAR(100) NOT NULL,
     EsObligatorio BIT NOT NULL  -- Indica si el campo es obligatorio (1 = Sí, 0 = No)
 );
 

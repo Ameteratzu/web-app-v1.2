@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -10,6 +18,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
+
+import { EventStatusService } from '../../../../services/eventStatus.service';
 import { FireStatusService } from '../../../../services/fire-status.service';
 import { FireService } from '../../../../services/fire.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
@@ -19,6 +29,11 @@ import { SeverityLevelService } from '../../../../services/severity-level.servic
 import { TerritoryService } from '../../../../services/territory.service';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { AutonomousCommunity } from '../../../../types/autonomous-community.type';
+
+import { CountryService } from '../../../../services/country.service';
+
+import { Countries } from '../../../../types/country.type';
+import { EventStatus } from '../../../../types/eventStatus.type';
 import { FireStatus } from '../../../../types/fire-status.type';
 import { Fire } from '../../../../types/fire.type';
 import { Municipality } from '../../../../types/municipality.type';
@@ -42,11 +57,14 @@ import { Territory } from '../../../../types/territory.type';
 })
 export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]>;
+  @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
 
   public menuItemActiveService = inject(MenuItemActiveService);
   public territoryService = inject(TerritoryService);
   public autonomousCommunityService = inject(AutonomousCommunityService);
   public provinceService = inject(ProvinceService);
+  public countryService = inject(CountryService);
+  public eventStatusService = inject(EventStatusService);
   public municipalityService = inject(MunicipalityService);
   public fireStatusService = inject(FireStatusService);
   public severityLevelService = inject(SeverityLevelService);
@@ -55,6 +73,8 @@ export class FireFilterFormComponent implements OnInit {
   public territories = signal<Territory[]>([]);
   public autonomousCommunities = signal<AutonomousCommunity[]>([]);
   public provinces = signal<Province[]>([]);
+  public countries = signal<Countries[]>([]);
+  public eventStatus = signal<EventStatus[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
   public severityLevels = signal<SeverityLevel[]>([]);
@@ -91,6 +111,12 @@ export class FireFilterFormComponent implements OnInit {
 
     const severityLevels = await this.severityLevelService.get();
     this.severityLevels.set(severityLevels);
+
+    const eventStatus = await this.eventStatusService.get();
+    this.eventStatus.set(eventStatus);
+
+    const countries = await this.countryService.get();
+    this.countries.set(countries);
   }
 
   async loadProvinces(event: any) {
@@ -109,5 +135,6 @@ export class FireFilterFormComponent implements OnInit {
     const data = this.formData.value;
     const fires = await this.fireService.get(data);
     this.fires = fires;
+    this.firesChange.emit(this.fires);
   }
 }
