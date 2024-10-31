@@ -43,6 +43,7 @@ public class CreateImpactoEvolucionCommandHandler : IRequestHandler<CreateImpact
             throw new NotFoundException(nameof(ImpactoClasificado), request.IdImpactoClasificado);
         }
 
+
         var impactoEvolucionEntity = _mapper.Map<ImpactoEvolucion>(request);
         _unitOfWork.Repository<ImpactoEvolucion>().AddEntity(impactoEvolucionEntity);
 

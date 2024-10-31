@@ -47,7 +47,7 @@ CREATE TABLE dbo.ImpactoEvolucion (
     AlteracionInterrupcion CHAR(1) NULL CHECK (AlteracionInterrupcion IN ('A','I')),
     Causa NVARCHAR(255) NULL,
     NumeroGraves INT NULL,
-    TipoDanio INT NULL FOREIGN KEY REFERENCES TipoDanio(Id),
+    IdTipoDanio INT NULL FOREIGN KEY REFERENCES TipoDanio(Id),
     ZonaPlanificacion GEOMETRY NULL,
     NumeroUsuarios INT NULL,
     NumeroIntervinientes INT NULL,

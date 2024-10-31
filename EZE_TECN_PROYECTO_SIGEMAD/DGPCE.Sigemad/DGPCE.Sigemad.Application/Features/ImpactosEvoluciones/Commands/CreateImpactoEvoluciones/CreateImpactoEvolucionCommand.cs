@@ -17,7 +17,7 @@ public class CreateImpactoEvolucionCommand: IRequest<CreateImpactoEvolucionRespo
     public char? AlteracionInterrupcion { get; set; }
     public string? Causa { get; set; }
     public int? NumeroGraves { get; set; }
-    public string? TipoDanio { get; set; }
+    public int? IdTipoDanio { get; set; }
     public Geometry? ZonaPlanificacion { get; set; }
     public int? NumeroUsuarios { get; set; }
     public int? NumeroIntervinientes { get; set; }

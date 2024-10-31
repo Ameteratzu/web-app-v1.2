@@ -100,6 +100,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoDireccionEmergencia>().ToTable("TipoDireccionEmergencia");
             modelBuilder.Entity<TipoPlan>().ToTable("TipoPlan");
             modelBuilder.Entity<ValidacionImpactoClasificado>().ToTable("ValidacionImpactoClasificado");
+            modelBuilder.Entity<TipoDanio>().ToTable("TipoDanio");
         }
 
 
@@ -142,6 +143,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ActivacionPlanEmergencia> ActivacionPlanesEmergencias { get; set; }
         public DbSet<DireccionCoordinacionEmergencia>  DireccionCoordinacionEmergencias { get; set; }
         public DbSet<ValidacionImpactoClasificado> ValidacionImpactoClasificados { get; set; }
+
+        public DbSet<TipoDanio> TipoDanios { get; set; }
 
     }
 }

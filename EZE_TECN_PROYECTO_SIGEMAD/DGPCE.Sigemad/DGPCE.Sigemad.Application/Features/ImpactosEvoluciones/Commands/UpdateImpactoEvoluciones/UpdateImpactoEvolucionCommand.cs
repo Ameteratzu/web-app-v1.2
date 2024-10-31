@@ -7,6 +7,7 @@ public class UpdateImpactoEvolucionCommand: IRequest
     public int Id { get; set; }
     public int IdEvolucion { get; set; }
     public int IdImpactoClasificado { get; set; }
+    public int? IdTipoDanio { get; set; }
     public bool? Nuclear { get; set; }
     public int? ValorAD { get; set; }
     public int? Numero { get; set; }

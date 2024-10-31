@@ -21,7 +21,7 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public char? AlteracionInterrupcion { get; set; }
         public string? Causa { get; set; }
         public int? NumeroGraves { get; set; }
-        public string? TipoDanio { get; set; }
+        public int? IdTipoDanio { get; set; }
         public Geometry? ZonaPlanificacion { get; set; }
 
         public int? NumeroUsuarios { get; set; }
@@ -33,5 +33,6 @@ namespace DGPCE.Sigemad.Domain.Modelos
         public virtual Evolucion Evolucion { get; set; }
         public virtual ImpactoClasificado ImpactoClasificado { get; set; }
 
+        public virtual TipoDanio TipoDanio { get; set; }
     }
 }

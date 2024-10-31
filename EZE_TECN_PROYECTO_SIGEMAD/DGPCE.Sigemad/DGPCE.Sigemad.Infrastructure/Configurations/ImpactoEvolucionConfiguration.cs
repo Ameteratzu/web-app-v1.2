@@ -21,5 +21,11 @@ public class ImpactoEvolucionConfiguration : IEntityTypeConfiguration<ImpactoEvo
             .WithMany()
             .HasForeignKey(d => d.IdImpactoClasificado)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        builder.HasOne(d => d.TipoDanio)
+            .WithMany()
+            .HasForeignKey(d => d.IdTipoDanio)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
