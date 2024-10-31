@@ -177,4 +177,13 @@
   <data name="IdNoVacio" xml:space="preserve">
     <value>Id no puede ser vacio</value>
   </data>
+  <data name="EvolucionObligatorio" xml:space="preserve">
+    <value>Evolucion es obligatotio</value>
+  </data>
+  <data name="FechaHoraObligatorio" xml:space="preserve">
+    <value>Fecha hora es obligatoria</value>
+  </data>
+  <data name="EntidadMenorObligatorio" xml:space="preserve">
+    <value>Entidad Menor es obligatorio</value>
+  </data>
 </root>
