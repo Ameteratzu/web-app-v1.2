@@ -305,36 +305,39 @@ calendaricon {
 
 .form-container2 {
   width: 100%;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 }
 
 .form-row {
   display: flex;
-  flex-wrap: wrap; /* Permite que las columnas salten a la siguiente fila en pantallas pequeñas */
-  gap: 16px; /* Espacio entre columnas */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Cada columna en la fila */
 .form-column {
-  flex: 1 1 100%; /* Por defecto, las columnas ocuparán el 100% en pantallas pequeñas */
+  flex: 1 1 100%;
   max-width: 100%;
 }
 
-/* Media query para dividir en dos columnas en pantallas medianas */
 @media (min-width: 768px) {
   .form-column {
-    flex: 1 1 48%; /* Ocupa 48% de la fila, dejando espacio para el gap */
+    flex: 1 1 48%;
   }
 }
 
-/* Media query para dividir en tres columnas en pantallas grandes */
 @media (min-width: 1024px) {
   .form-column {
-    flex: 1 1 30%; /* Ocupa 30% de la fila, dejando espacio para el gap */
+    flex: 1 1 30%;
   }
 }
 
@@ -345,9 +348,21 @@ calendaricon {
 .flex-container-input {
   display: flex;
   align-items: center;
-  gap: 8px; /* Ajusta el espacio entre el label y el dropdown */
+  gap: 8px;
 }
 
 .underline {
   text-decoration: underline;
+}
+
+.p-dropdown-label {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.p-dropdown {
+  max-width: 100%;
 }

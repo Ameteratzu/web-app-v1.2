@@ -1,4 +1,4 @@
 export type GeoPosition = {
-	type: string;
-	coordinates: string[]
-}
+  type: string;
+  coordinates: string;
+};

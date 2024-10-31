@@ -12,9 +12,19 @@
       [options]="territories()"
       optionLabel="descripcion"
       placeholder="Territorio"
+      optionValue="id"
     />
 
     <p-dropdown
+      optionValue="id"
+      formControlName="country"
+      [options]="countries()"
+      optionLabel="descripcion"
+      placeholder="País"
+    />
+
+    <p-dropdown
+      optionValue="id"
       formControlName="autonomousCommunity"
       [options]="autonomousCommunities()"
       optionLabel="descripcion"
@@ -23,6 +33,7 @@
     />
 
     <p-dropdown
+      optionValue="id"
       formControlName="province"
       [options]="provinces()"
       optionLabel="descripcion"
@@ -31,13 +42,7 @@
     />
 
     <p-dropdown
-      formControlName="municipality"
-      [options]="municipalities()"
-      optionLabel="descripcion"
-      placeholder="Municipio"
-    />
-
-    <p-dropdown
+      optionValue="id"
       formControlName="fireStatus"
       [options]="fireStatus()"
       optionLabel="descripcion"
@@ -47,57 +52,77 @@
   </div>
 
   <div class="d-flex m--1 mt-15 gap-5">
-    <p-dropdown
-      formControlName="episode"
-      [options]="[]"
-      optionLabel="descripcion"
-      placeholder="Episodio"
-    />
+    <div class="d-flex m--1 gap-5 w-50 align-items p4">
+      <p-dropdown
+        optionValue="id"
+        formControlName="fireStatus"
+        [options]="eventStatus()"
+        optionLabel="descripcion"
+        placeholder="Estado del suceso"
+        class="child"
+      />
 
-    <p-dropdown
-      formControlName="severityLevel"
-      [options]="severityLevels()"
-      optionLabel="descripcion"
-      placeholder="Nivel de gravedad"
-      (onChange)="loadMunicipalities($event)"
-    />
+      <p-dropdown
+        optionValue="id"
+        formControlName="fireStatus"
+        [options]="fireStatus()"
+        optionLabel="descripcion"
+        placeholder="Estado del incendio"
+        class="child"
+      />
 
-    <p-dropdown
-      formControlName="affectedArea"
-      [options]="[]"
-      optionLabel="descripcion"
-      placeholder="Área afectada"
-    />
+      <p-dropdown
+        optionValue="id"
+        formControlName="severityLevel"
+        [options]="severityLevels()"
+        optionLabel="descripcion"
+        placeholder="Nivel de gravedad"
+        class="child"
+      />
 
-    <p-dropdown
-      formControlName="move"
-      [options]="[]"
-      optionLabel="descripcion"
-      placeholder="Movimiento"
-    />
+      <p-dropdown
+        optionValue="id"
+        formControlName="affectedArea"
+        [options]="[]"
+        optionLabel="descripcion"
+        placeholder="Superficie"
+        class="child"
+      />
+    </div>
+    <div class="d-flex m--1 gap-5 w-50 border-rounded align-items p4">
+      <span>Fecha</span>
+      <p-dropdown
+        optionValue="id"
+        formControlName="move"
+        [options]="[]"
+        optionLabel="descripcion"
+        placeholder="Movimiento"
+      />
 
-    <p-dropdown
-      formControlName="enter"
-      [options]="[]"
-      optionLabel="descripcion"
-      placeholder="Entre"
-    />
+      <p-dropdown
+        optionValue="id"
+        formControlName="enter"
+        [options]="[]"
+        optionLabel="descripcion"
+        placeholder="Entre"
+      />
 
-    <p-calendar
-      formControlName="start"
-      [iconDisplay]="'input'"
-      [showIcon]="true"
-      placeholder="Fecha inicio"
-      inputId="icondisplay"
-    />
+      <p-calendar
+        formControlName="start"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="Fecha inicio"
+        inputId="icondisplay"
+      />
 
-    <p-calendar
-      formControlName="end"
-      [iconDisplay]="'input'"
-      [showIcon]="true"
-      placeholder="Fecha fin"
-      inputId="icondisplay"
-    />
+      <p-calendar
+        formControlName="end"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="Fecha fin"
+        inputId="icondisplay"
+      />
+    </div>
   </div>
 
   <div class="border-bottom w-100 text-right pb-15 mt-15">

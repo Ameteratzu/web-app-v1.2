@@ -13,8 +13,10 @@ public  class Menu
     public int IdGrupo { get; set; }
 
     public int NumOrden { get; set; }
+    public string? Ruta { get; set; }
 
     public string? Icono { get; set; }
 
     public string? ColorRgb { get; set; }
+    
 }

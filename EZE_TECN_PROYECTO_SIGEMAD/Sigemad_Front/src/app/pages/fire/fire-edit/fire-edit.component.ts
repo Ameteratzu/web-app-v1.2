@@ -124,7 +124,7 @@ export class FireEditComponent {
     this.menuItemActiveService.set.emit('/fire');
 
     this.formData = new FormGroup({
-      Id: new FormControl(),
+      id: new FormControl(),
       denomination: new FormControl(),
       territory: new FormControl(),
       province: new FormControl(),
@@ -149,7 +149,7 @@ export class FireEditComponent {
     this.provinces.set(provinces);
 
     const municipalities = await this.municipalityService.get(
-      this.fire.idProvincia
+      this.fire.incendioNacional.idProvincia
     );
     this.municipalities.set(municipalities);
 
@@ -166,12 +166,12 @@ export class FireEditComponent {
       id: this.fire.id,
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
-      province: this.fire.idProvincia,
-      municipality: this.fire.idMunicipio,
+      province: this.fire.incendioNacional.idProvincia,
+      municipality: this.fire.incendioNacional.idMunicipio,
       startDate: new Date(this.fire.fechaInicio),
       event: this.fire.idClaseSuceso,
-      generalNote: this.fire.comentarios,
-      idEstado: this.fire.idEstado,
+      generalNote: this.fire.notaGeneral,
+      idEstado: this.fire.idEstadoSuceso,
     });
   }
 
@@ -184,7 +184,12 @@ export class FireEditComponent {
   async onSubmit() {
     this.error = false;
     const data = this.formData.value;
-    data.coordinates = JSON.parse(localStorage.getItem('coordinates') || '{}');
+    data.coordinates = JSON.parse(
+      localStorage.getItem('coordinates') ||
+        JSON.stringify(this.fire.geoPosicion.coordinates)
+    );
+
+    console.log(data);
 
     await this.fireService
       .update(data)

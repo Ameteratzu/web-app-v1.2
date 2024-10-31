@@ -72,7 +72,6 @@
               </div>
             </div>
 
-            <!-- <div class="mt-10 d-flex justify-content-between"> -->
             <div class="form-row">
               <div class="font-size-16 form-column">
                 <div class="form-container2">
@@ -88,12 +87,6 @@
                       [style]="{ width: '100%' }"
                       class="form-column"
                     />
-                    <!--      <input
-                  class="font-size-16"
-                  formControlName="datetime"
-                  type="datetime-local"
-                />
--->
                   </div>
                   <span *ngIf="errors?.fechaHoraEvolucion" class="text-red">
                     *
@@ -118,17 +111,6 @@
                     />
                   </div>
                 </div>
-                <!--
-                <select formControlName="type" class="font-size-16">
-                  <option value=""></option>
-                  <option
-                    *ngFor="let inputOutput of inputOutputs()"
-                    value="{{ inputOutput.id }}"
-                  >
-                    {{ inputOutput.descripcion }}
-                  </option>
-                </select>
--->
                 <span *ngIf="errors?.idEntradaSalida" class="text-red">
                   *
                 </span>
@@ -150,14 +132,6 @@
                     />
                   </div>
                 </div>
-                <!--
-                <select formControlName="media" class="font-size-16">
-                  <option value=""></option>
-                  <option *ngFor="let media of medias()" value="{{ media.id }}">
-                    {{ media.descripcion }}
-                  </option>
-                </select>
--->
                 <span *ngIf="errors?.idMedio" class="text-red"> * </span>
               </div>
             </div>
@@ -166,13 +140,16 @@
               <div class="form-container2">
                 <div class="form-row">
                   <b>Procedencia / Destino</b>
-                  <p-dropdown
+                  <p-multiSelect
                     formControlName="originDestination"
                     [options]="originDestinations()"
                     optionLabel="descripcion"
                     placeholder=""
                     optionValue="id"
-                    [style]="{ width: '100%' }"
+                    [style]="{
+                      width: '100%',
+                      height: '48px'
+                    }"
                     class="form-column"
                   />
                 </div>
@@ -200,13 +177,6 @@
                       class="form-column"
                     />
                   </div>
-                  <!--
-                <input
-                  class="font-size-16"
-                  formControlName="datetimeUpdate"
-                  type="datetime-local"
-                />
--->
                 </div>
               </div>
 
@@ -226,17 +196,6 @@
                     />
                   </div>
                 </div>
-                <!--
-                <select formControlName="recordType" class="font-size-16">
-                  <option value=""></option>
-                  <option
-                    *ngFor="let recordType of recordTypes()"
-                    value="{{ recordType.id }}"
-                  >
-                    {{ recordType.descripcion }}
-                  </option>
-                </select>
--->
               </div>
             </div>
 
@@ -251,13 +210,6 @@
                     [style]="{ width: '100%' }"
                     class="form-column"
                   />
-                  <!--
-                <input
-                  formControlName="observations_1"
-                  class="font-size-16"
-                  type="text"
-                />
--->
                 </div>
               </div>
             </div>
@@ -273,13 +225,6 @@
                     [style]="{ width: '100%' }"
                     class="form-column"
                   />
-                  <!--
-                <input
-                  formControlName="forecast"
-                  class="font-size-16"
-                  type="text"
-                />
--->
                 </div>
               </div>
             </div>
@@ -324,13 +269,6 @@
                         [style]="{ width: '100%' }"
                         class="form-column"
                       />
-                      <!--
-                    <input
-                      formControlName="emergencyPlanActivated"
-                      class="font-size-16"
-                      type="text"
-                    />
-    -->
                     </div>
                   </div>
                 </div>
@@ -394,6 +332,10 @@
               <div class="font-size-20 font-weight-bold text-orange">
                 AREA AFECTADA
               </div>
+            </div>
+
+            <div *ngIf="areaAffectedActionError" class="bg-red">
+              Todos los campos son obligatorios
             </div>
 
             <div class="mt-10 form-column">
@@ -496,7 +438,7 @@
                       <input
                         type="text"
                         pInputText
-                        formControlName="observationAreaAffeted"
+                        formControlName="observationsAreaAffected"
                         [style]="{ width: '100%' }"
                         class="form-column"
                       />
@@ -505,6 +447,21 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                </div>
+
+                <div class="form-column">
+                  <div class="form-container2">
+                    <div class="form-row">
+                      <b>Localización</b>
+                      <img
+                        src="/assets/img/location-btn.svg"
+                        height="20px"
+                        alt="location"
+                        class="cursor-pointer"
+                        (click)="openModalMapCreate('AreaAfectada')"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -540,29 +497,18 @@
                 </thead>
 
                 <tbody>
-                  <tr
-                    *ngFor="
-                      let consequenceAction of consequencesActions;
-                      let i = index
-                    "
-                  >
-                    <td>{{ consequenceAction.impactType }}</td>
-                    <td>{{ consequenceAction.impactGroup }}</td>
+                  <tr *ngFor="let area of areasAffected; let i = index">
+                    <td>{{ area.startAreaAffected }}</td>
+                    <td>{{ area.province_1 }}</td>
                     <td>
-                      {{
-                        getDenominationName(
-                          consequenceAction.impactType,
-                          consequenceAction.impactGroup,
-                          consequenceAction.name
-                        )
-                      }}
+                      {{ area.municipality_1 }}
                     </td>
-                    <td>{{ consequenceAction.number }}</td>
+                    <td>{{ area.minorEntity }}</td>
 
                     <td>
                       <button
                         type="button"
-                        (click)="showConsequenceDataInForm(i)"
+                        (click)="showAreaAffectedDataInForm(i)"
                         class="btn-white"
                       >
                         <img
@@ -574,7 +520,7 @@
 
                       <button
                         type="button"
-                        (click)="deleteConsequence(i)"
+                        (click)="deleteAreaAffected(i)"
                         class="btn-white"
                       >
                         <img
@@ -588,7 +534,7 @@
                 </tbody>
               </table>
             </div>
-            <!------------------------------------------>
+
             <div class="mt-14">
               <div class="font-size-20 font-weight-bold text-orange">
                 CONSECUENCIAS / ACTUACIONES
@@ -911,6 +857,7 @@
                         placeholder=""
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        (onChange)="changeMediaTypes($event)"
                       />
                     </div>
                   </div>
@@ -956,6 +903,7 @@
                     <div class="form-row">
                       <b>Clasificación</b>
                       <p-dropdown
+                        [disabled]="disabledBenefits()"
                         formControlName="classification"
                         [options]="mediaClassifications()"
                         optionLabel="descripcion"
@@ -972,6 +920,7 @@
                     <div class="form-row">
                       <b>Titularidad</b>
                       <p-dropdown
+                        [disabled]="disabledOwner1()"
                         formControlName="ownership_1"
                         [options]="mediaOwnerships()"
                         optionLabel="descripcion"

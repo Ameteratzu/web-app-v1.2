@@ -20,6 +20,7 @@
 
 <form (ngSubmit)="onSubmit()" [formGroup]="formData">
   <input type="hidden" formControlName="id" value="{{ fire.id }}" />
+
   <input
     type="hidden"
     formControlName="territory"
@@ -37,23 +38,9 @@
           pInputText
           formControlName="denomination"
           placeholder="Santa María de Guía de Gran Canaría"
-        />
-      </div>
-      <!--
-      <div class="pt-12 pe-15 inter font-weight-bold font-size-16">
-        Denominación
-      </div>
-
-      <div>
-        <input
-          formControlName="name"
           value="{{ fire.denominacion }}"
-          class="form-control"
-          type="text"
-          placeholder="Santa María de Guía de Gran Canaría"
         />
       </div>
-      -->
     </div>
 
     <div class="d-flex">
@@ -68,44 +55,13 @@
         optionValue="id"
         (onChange)="loadMunicipalities($event)"
       />
-      <!--
-      <div>
-        <select
-          formControlName="province"
-          class="form-control"
-          (change)="loadMunicipalities($event)"
-        >
-          <option value=""></option>
-          <option
-            [selected]="province.id == fire.idProvincia"
-            value="{{ province.id }}"
-            *ngFor="let province of provinces()"
-          >
-            {{ province.descripcion }}
-          </option>
-        </select>
-      </div>
-      -->
     </div>
 
     <div class="d-flex">
       <div class="pt-12 font-size-16 pe-15 inter font-weight-bold">
         Municipio
       </div>
-      <!--
-      <div>
-        <select formControlName="municipality" class="form-control">
-          <option value=""></option>
-          <option
-            [selected]="municipality.id == fire.idMunicipio"
-            value="{{ municipality.id }}"
-            *ngFor="let municipality of municipalities()"
-          >
-            {{ municipality.descripcion }}
-          </option>
-        </select>
-      </div>
-      -->
+
       <p-dropdown
         formControlName="municipality"
         [options]="municipalities()"
@@ -189,19 +145,8 @@
           formControlName="idEstado"
           [options]="fireStatus()"
           optionLabel="descripcion"
-          optionValue="idEstado"
+          optionValue="id"
         />
-        <!--
-        <select formControlName="event" class="form-control">
-          <option value=""></option>
-          <option
-            [selected]="status.id == fire.idEstado"
-            value="{{ status.id }}"
-            *ngFor="let status of fireStatus()"
-          >
-            {{ status.descripcion }}
-          </option>
-        </select> -->
       </div>
     </div>
 
@@ -236,7 +181,6 @@
 <hr class="me-20" />
 
 <div class="d-flex mb-100">
-  <!--------------------------------------->
   <div class="border p-16 mr-13 w-30p">
     <div class="d-flex justify-content-between">
       <div>
@@ -322,7 +266,7 @@
       </div>
     </div>
   </div>
-  <!--------------------------------------->
+
   <div class="border p-5 w-90">
     <div *ngIf="showUpdateLog">
       <div class="d-flex justify-content-between pt-10">

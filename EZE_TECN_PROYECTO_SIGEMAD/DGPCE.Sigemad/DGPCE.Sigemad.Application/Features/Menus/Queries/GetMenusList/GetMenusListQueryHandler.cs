@@ -39,6 +39,7 @@ public class GetMenusListQueryHandler : IRequestHandler<GetMenusListQuery, IRead
             Nombre = grupo.Nombre,
             Icono = grupo.Icono,
             ColorRgb = grupo.ColorRgb,
+            Ruta = grupo.Ruta,
             SubItems = allMenus
                 .Where(item => item.IdGrupo == grupo.Id)
                 .OrderBy(item => item.NumOrden)

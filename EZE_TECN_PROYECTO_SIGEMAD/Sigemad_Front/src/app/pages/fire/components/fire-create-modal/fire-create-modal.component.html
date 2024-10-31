@@ -6,133 +6,130 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="formData">
     <div *ngIf="!showInputForeign">
-      <div class="d-flex-between">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Territorio
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Territorio
+                </div>
+                <p-dropdown
+                  formControlName="territory"
+                  [options]="territories()"
+                  optionLabel="descripcion"
+                  placeholder="Territorio"
+                  optionValue="id"
+                  (onChange)="onChange($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
-          <p-dropdown
-            formControlName="territory"
-            [options]="territories()"
-            optionLabel="descripcion"
-            placeholder="Territorio"
-            optionValue="id"
-            (onChange)="onChange($event)"
-          />
 
-          <!-- <div class="inter p-12 font-weight-bold font-size-16 w-120">
-          Territorio
-        </div>
-
-        <div class="w-300">
-          <select
-            (change)="onChange($event)"
-            formControlName="territory"
-            class="form-control"
-          >
-            <option
-              value="{{ territory.id }}"
-              *ngFor="let territory of territories()"
-            >
-              {{ territory.descripcion }}
-            </option>
-          </select>
-        </div> -->
-        </div>
-
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-300">
-            Clase de suceso
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Clase de suceso
+                </div>
+                <p-dropdown
+                  formControlName="event"
+                  [options]="events()"
+                  optionLabel="descripcion"
+                  optionValue="id"
+                  placeholder="Clase suceso"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
-          <p-dropdown
-            formControlName="event"
-            [options]="events()"
-            optionLabel="descripcion"
-            placeholder="Clase suceso"
-          />
-
-          <!-- <div>
-          <select class="form-control" formControlName="event">
-            <option value=""></option>
-            <option value="{{ event.id }}" *ngFor="let event of events()">
-              {{ event.descripcion }}
-            </option>
-          </select>
-        </div> -->
         </div>
       </div>
 
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Provincia
-          </div>
-          <div class="w-300">
-            <p-dropdown
-              formControlName="province"
-              [options]="provinces()"
-              optionLabel="descripcion"
-              placeholder="Provincia"
-              optionValue="id"
-              (onChange)="loadMunicipalities($event)"
-            />
-          </div>
-        </div>
-
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120 ms-30">
-            Municipio
-          </div>
-
-          <div>
-            <p-dropdown
-              formControlName="municipality"
-              [options]="municipalities()"
-              optionLabel="descripcion"
-              placeholder="Municipio"
-              optionValue="id"
-              (onChange)="setMunicipalityId($event)"
-            />
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Provincia
+                </div>
+                <p-dropdown
+                  formControlName="province"
+                  [options]="provinces()"
+                  optionLabel="descripcion"
+                  placeholder="Provincia"
+                  optionValue="id"
+                  (onChange)="loadMunicipalities($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
 
-          <img
-            (click)="openModalMapCreate()"
-            style="cursor: pointer; margin-left: 10px"
-            src="/assets/img/location-btn.svg"
-            alt="location-btn"
-          />
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Municipio
+                </div>
+                <p-dropdown
+                  formControlName="municipality"
+                  [options]="municipalities()"
+                  optionLabel="descripcion"
+                  placeholder="Municipio"
+                  optionValue="id"
+                  (onChange)="setMunicipalityId($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Denominación
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Denominación
+                </div>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="denomination"
+                  placeholder="Santa María de Guía de Gran Canaria"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
 
-          <div class="w-300">
-            <input
-              type="text"
-              pInputText
-              formControlName="denomination"
-              placeholder="Santa María de Guía de Gran Canaria"
-            />
-          </div>
-        </div>
-
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 ms-30 w-120">
-            Fecha de inicio
-          </div>
-
-          <div class="me-30">
-            <p-calendar
-              formControlName="startDate"
-              [iconDisplay]="'input'"
-              [showIcon]="true"
-              placeholder="Fecha inicio"
-              inputId="icondisplay"
-            />
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Fecha de inicio
+                </div>
+                <p-calendar
+                  formControlName="startDate"
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  placeholder="Fecha inicio"
+                  inputId="icondisplay"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -155,162 +152,230 @@
     </div>
 
     <div *ngIf="showInputForeign">
-      <div class="d-flex-between">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Territorio
-          </div>
-          <p-dropdown
-            formControlName="territory"
-            [options]="territories()"
-            optionLabel="descripcion"
-            placeholder="Territorio"
-            optionValue="id"
-            (onChange)="onChange($event)"
-          />
-        </div>
-      </div>
-
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-300">
-            Clase de suceso
-          </div>
-          <p-dropdown
-            formControlName="event"
-            [options]="events()"
-            optionLabel="descripcion"
-            placeholder="Clase suceso"
-          />
-        </div>
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 ms-30 w-120">
-            Fecha de inicio
-          </div>
-
-          <div class="me-30">
-            <p-calendar
-              formControlName="startDate"
-              [iconDisplay]="'input'"
-              [showIcon]="true"
-              placeholder="Fecha inicio"
-              inputId="icondisplay"
-            />
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Territorio
+                </div>
+                <p-dropdown
+                  formControlName="territory"
+                  [options]="territories()"
+                  optionLabel="descripcion"
+                  placeholder="Territorio"
+                  optionValue="id"
+                  (onChange)="onChange($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">País</div>
-          <div class="w-300">
-            <p-dropdown
-              formControlName="province"
-              [options]="provinces()"
-              optionLabel="descripcion"
-              placeholder="Provincia"
-              optionValue="id"
-              (onChange)="loadMunicipalities($event)"
-            />
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Clase de suceso
+                </div>
+                <p-dropdown
+                  formControlName="event"
+                  [options]="events()"
+                  optionLabel="descripcion"
+                  placeholder="Clase suceso"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Ubicación
-          </div>
-
-          <input
-            type="text"
-            pInputText
-            formControlName="ubication"
-            placeholder="Ubicación"
-          />
-
-          <img
-            (click)="openModalMapCreate()"
-            style="cursor: pointer; margin-left: 10px"
-            src="/assets/img/location-btn.svg"
-            alt="location-btn"
-          />
-        </div>
-      </div>
-
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <label class="inter p-12 font-weight-bold font-size-16 w-120" for="ny"
-            >Limítrofe con España</label
-          >
-          <p-checkbox formControlName="limitSpain" value="true" inputId="ny" />
-        </div>
-      </div>
-
-      <div class="d-flex-between mt-15 my-15 border-rounded p-12">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Provincia
-          </div>
-          <div class="w-300">
-            <p-dropdown
-              formControlName="province"
-              [options]="provinces()"
-              optionLabel="descripcion"
-              placeholder="Provincia"
-              optionValue="id"
-              (onChange)="loadMunicipalities($event)"
-            />
-          </div>
-        </div>
-
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Municipio
-          </div>
-          <div class="w-300">
-            <p-dropdown
-              formControlName="municipality"
-              [options]="municipalities()"
-              optionLabel="descripcion"
-              placeholder="Municipio"
-              optionValue="id"
-              (onChange)="setMunicipalityId($event)"
-            />
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Fecha de inicio
+                </div>
+                <p-calendar
+                  formControlName="startDate"
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  placeholder="Fecha inicio"
+                  inputId="icondisplay"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="d-flex-between mt-15">
-        <div class="d-flex">
-          <div class="inter p-12 font-weight-bold font-size-16 w-120">
-            Denominación
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  País
+                </div>
+                <p-dropdown
+                  formControlName="province"
+                  [options]="countries()"
+                  optionLabel="descripcion"
+                  placeholder="Paises"
+                  optionValue="id"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
           </div>
-          <div class="w-300">
-            <input
-              type="text"
-              pInputText
-              formControlName="denomination"
-              placeholder="Santa María de Guía de Gran Canaria"
-            />
+
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Ubicación
+                </div>
+
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="ubication"
+                  placeholder="Ubicación"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+
+                <img
+                  (click)="openModalMapCreate()"
+                  style="cursor: pointer; margin-left: 10px"
+                  src="/assets/img/location-btn.svg"
+                  alt="location-btn"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="d-flex mt-15">
-        <div class="inter w-120 p-12 font-weight-bold font-size-16">
-          Nota general
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Limítrofe con España
+                </div>
+                <p-checkbox
+                  formControlName="limitSpain"
+                  value="true"
+                  inputId="ny"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div>
-          <textarea
-            rows="4"
-            cols="87"
-            pInputTextarea
-            formControlName="generalNote"
-          >
-          </textarea>
+      <div class="form-column mt-15 border-rounded p-12">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Provincia
+                </div>
+                <p-dropdown
+                  formControlName="province"
+                  [options]="provinces()"
+                  optionLabel="descripcion"
+                  placeholder="Provincia"
+                  optionValue="id"
+                  (onChange)="loadMunicipalities($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Municipio
+                </div>
+                <p-dropdown
+                  formControlName="municipality"
+                  [options]="municipalities()"
+                  optionLabel="descripcion"
+                  placeholder="Municipio"
+                  optionValue="id"
+                  (onChange)="setMunicipalityId($event)"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Denominación
+                </div>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="denomination"
+                  placeholder="Santa María de Guía de Gran Canaria"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-column mt-15">
+        <div class="form-row">
+          <div class="form-column">
+            <div class="form-container2">
+              <div class="form-row">
+                <div class="inter p-12 font-weight-bold font-size-16 w-120">
+                  Nota general
+                </div>
+                <textarea
+                  rows="4"
+                  cols="87"
+                  pInputTextarea
+                  formControlName="generalNote"
+                  [style]="{ width: '100%' }"
+                  class="form-column"
+                ></textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
     <div class="d-flex-end">
       <div class="mt-30 mb-30 text-right">
         <button type="submit" class="btn-blue">

@@ -14,7 +14,7 @@ export class FireService {
   public endpoint = '/Incendios';
 
   get(query: any = '') {
-    const endpoint = '/Incendios?Sort=desc&PageSize=15';
+    let endpoint = '/Incendios?Sort=desc&PageSize=15';
 
     if (query != '') {
       const territory = query.territory;
@@ -28,7 +28,17 @@ export class FireService {
       const start = query.start;
       const end = query.end;
 
-      const endpoint = `/Incendios?IdTerritorio=${territory}&IdCcaa=${autonomousCommunity}&IdProvincia=${province}&IdMunicipio=${municipality}&IdEstado=${fireStatus}&IdEpisodio=${episode}&IdNivelGravedad=${severityLevel}&IdSuperficieAfectada=${affectedArea}&FechaInicio=${start}&FechaFin=${end}&Sort=desc&Page=1&PageSize=15`;
+      endpoint = `/Incendios?PageSize=15&Sort=desc&IdTerritorio=${
+        territory ? territory : ''
+      }&IdCcaa=${autonomousCommunity ? autonomousCommunity : ''}&IdProvincia=${
+        province ? province : ''
+      }&IdMunicipio=${municipality ? municipality : ''}&IdEstado=${
+        fireStatus ? fireStatus : ''
+      }&IdEpisodio=${episode ? episode : ''}&IdNivelGravedad=${
+        severityLevel ? severityLevel : ''
+      }&IdSuperficieAfectada=${affectedArea ? affectedArea : ''}&FechaInicio=${
+        start ? start : ''
+      }&FechaFin=${end ? end : ''}&Page=1`;
     }
 
     return firstValueFrom(
@@ -56,10 +66,10 @@ export class FireService {
       ),
       IdSuceso: data.event,
       IdTipoSuceso: data.event,
-      IdClaseSuceso: 1,
+      IdClaseSuceso: data.event,
       IdEstado: 1,
       IdPeligroInicial: 1,
-      comentarios: data.generalNote,
+      notaGeneral: data.generalNote,
       GeoPosicion: data.geoposition,
       idPais: 60,
       IdEstadoSuceso: 1,
@@ -90,10 +100,11 @@ export class FireService {
       ),
       IdSuceso: data.event,
       IdTipoSuceso: data.event,
-      IdClaseSuceso: 1,
+      IdEstadoSuceso: data.event,
+      IdClaseSuceso: data.event,
       IdEstado: 1,
       IdPeligroInicial: 1,
-      comentarios: data.note,
+      notaGeneral: data.generalNote,
       GeoPosicion: {
         type: 'Polygon',
         coordinates: data.coordinates,

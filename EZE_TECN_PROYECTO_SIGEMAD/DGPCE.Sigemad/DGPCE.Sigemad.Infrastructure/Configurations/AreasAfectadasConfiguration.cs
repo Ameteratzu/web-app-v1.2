@@ -7,6 +7,7 @@ public class AreasAfectadasConfiguration : IEntityTypeConfiguration<AreaAfectada
 {
     public void Configure(EntityTypeBuilder<AreaAfectada> builder)
     {
+        builder.ToTable("AreaAfectada");
         builder.HasKey(a => a.Id);
 
         builder.Property(a => a.IdEvolucion)

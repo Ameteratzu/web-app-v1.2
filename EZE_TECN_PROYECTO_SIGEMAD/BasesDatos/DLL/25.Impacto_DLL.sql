@@ -21,7 +21,13 @@ CREATE TABLE dbo.ValidacionImpactoClasificado (
     Id INT PRIMARY KEY IDENTITY(1,1),
     IdImpactoClasificado INT NOT NULL FOREIGN KEY REFERENCES ImpactoClasificado(Id),  -- Relaciona con ImpactoClasificado
     Campo NVARCHAR(100) NOT NULL,  -- El nombre del campo a validar, como 'Numero', 'Causa', etc.
+    TipoCampo NVARCHAR(100) NOT NULL,
     EsObligatorio BIT NOT NULL  -- Indica si el campo es obligatorio (1 = Sí, 0 = No)
+);
+
+CREATE TABLE dbo.TipoDanio (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Descripcion NVARCHAR(100) NOT NULL
 );
 
 CREATE TABLE dbo.ImpactoEvolucion (
@@ -41,7 +47,7 @@ CREATE TABLE dbo.ImpactoEvolucion (
     AlteracionInterrupcion CHAR(1) NULL CHECK (AlteracionInterrupcion IN ('A','I')),
     Causa NVARCHAR(255) NULL,
     NumeroGraves INT NULL,
-    TipoDanio NVARCHAR(255) NULL,
+    TipoDanio INT NULL FOREIGN KEY REFERENCES TipoDanio(Id),
     ZonaPlanificacion GEOMETRY NULL,
     NumeroUsuarios INT NULL,
     NumeroIntervinientes INT NULL,

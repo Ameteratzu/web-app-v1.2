@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MenuService } from '../../services/menu.service';
+import { Menu } from '../../types/menu.types';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,9 +17,13 @@ export class SidebarComponent {
   public menuService = inject(MenuService);
   public changeDetectorRef = inject(ChangeDetectorRef);
 
+  public router = inject(Router);
+
   public title = 'sigemad';
 
   public active: string;
+
+  public menuBack = signal<Menu[]>([]);
 
   public menu = [
     {
@@ -162,7 +168,7 @@ export class SidebarComponent {
   public showUtilities = false;
   public showAdmins = false;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.menuItemActiveService.set.subscribe((data: string) => {
       this.active = data;
 
@@ -172,7 +178,13 @@ export class SidebarComponent {
       }
     });
 
-    this.menuService.get();
+    const respMenu = await this.menuService.get();
+    console.info('respMenu', respMenu);
+    this.menuBack.set(respMenu);
+  }
+
+  handleOpen(item: Menu) {
+    item.isOpen = !item.isOpen;
   }
 
   collapse(submenu: string) {
@@ -203,7 +215,25 @@ export class SidebarComponent {
     }
   }
 
+  /*
   redirectTo(path: string) {
     window.location.href = path;
+  }
+    */
+
+  redirectTo(itemSelected: Menu) {
+    if (itemSelected.subItems.length) {
+      this.menuBack.update((menuActual) =>
+        menuActual.map((item) =>
+          item.id === itemSelected.id ? { ...item, isOpen: !item.isOpen } : item
+        )
+      );
+    } else {
+      this.active = itemSelected.nombre;
+      this.router.navigate([`${itemSelected.ruta}`]);
+      //window.location.href = itemSelected.ruta;
+    }
+
+    //
   }
 }

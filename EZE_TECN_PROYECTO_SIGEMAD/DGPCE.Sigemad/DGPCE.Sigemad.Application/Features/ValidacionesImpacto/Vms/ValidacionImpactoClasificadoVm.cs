@@ -4,5 +4,6 @@ public class ValidacionImpactoClasificadoVm
     public int Id { get; set; }
     public int IdImpactoClasificado { get; set; }
     public string Campo { get; set; }
+    public string TipoCampo { get; set; }
     public bool EsObligatorio { get; set; }
 }

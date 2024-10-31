@@ -16,6 +16,7 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
 })
 export class FireComponent implements OnInit {
   public fires = <ApiResponse<Fire[]>>{};
+
   public fireService = inject(FireService);
 
   async ngOnInit() {
