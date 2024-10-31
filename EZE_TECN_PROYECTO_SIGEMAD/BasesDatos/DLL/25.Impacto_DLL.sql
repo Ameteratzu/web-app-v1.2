@@ -25,6 +25,11 @@ CREATE TABLE dbo.ValidacionImpactoClasificado (
     EsObligatorio BIT NOT NULL  -- Indica si el campo es obligatorio (1 = Sí, 0 = No)
 );
 
+CREATE TABLE dbo.TipoDanio (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Descripcion NVARCHAR(100) NOT NULL
+);
+
 CREATE TABLE dbo.ImpactoEvolucion (
     Id INT PRIMARY KEY IDENTITY(1,1),
     IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id), 
@@ -42,7 +47,7 @@ CREATE TABLE dbo.ImpactoEvolucion (
     AlteracionInterrupcion CHAR(1) NULL CHECK (AlteracionInterrupcion IN ('A','I')),
     Causa NVARCHAR(255) NULL,
     NumeroGraves INT NULL,
-    TipoDanio NVARCHAR(255) NULL,
+    TipoDanio INT NULL FOREIGN KEY REFERENCES TipoDanio(Id),
     ZonaPlanificacion GEOMETRY NULL,
     NumeroUsuarios INT NULL,
     NumeroIntervinientes INT NULL,
