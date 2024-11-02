@@ -1,71 +1,72 @@
-<h1 class="text-info text-center font-weight-bold font-size-48 calibri">
-	Sistema de gestión de emergencia y apoyo a la decisión
+<h1 class="text-info text-center font-weight-bold font-size-32 calibri">
+  Sistema de gestión de emergencia y apoyo a la decisión
 </h1>
 
 <div class="d-flex mb-75">
-	<div class="w-70">
-		<div class="font-size-20 inter">
-			Situación actual [13/06/2024 11:00] <img src="/assets/img/refresh.svg" alt="refresh">
-		</div>
+  <div class="w-70">
+    <div class="font-size-20 inter">
+      Situación actual [13/06/2024 11:00]
+      <img src="/assets/img/refresh.svg" alt="refresh" />
+    </div>
 
-		<div id="map" class="map w-full mt-20"></div>
+    <div id="map" class="map w-full mt-20"></div>
 
-		<div class="text-center mt-20">
-			<button class="bg-secondary">TODO</button>
-			<button class="bg-secondary">Incendios</button>
-			<button class="bg-secondary active">Terremotos</button>
-			<button class="bg-secondary">Meteorología</button>
-			<button class="bg-secondary">Otros sucesos</button>
-		</div>
-	</div>
+    <div class="text-center mt-20">
+      <button class="bg-secondary">TODO</button>
+      <button class="bg-secondary">Incendios</button>
+      <button class="bg-secondary active">Terremotos</button>
+      <button class="bg-secondary">Meteorología</button>
+      <button class="bg-secondary">Otros sucesos</button>
+    </div>
+  </div>
 
-	<div class="ms-23 w-30">
-		<div class="font-size-20">
-			<div class="d-flex justify-content-between">
-				<div class="inter">
-					Sucesos reseñables
-				</div>
+  <div class="ms-23 w-30">
+    <div class="font-size-20">
+      <div class="d-flex justify-content-between">
+        <div class="inter">Sucesos reseñables</div>
 
-				<div>
-					<img src="/assets/img/wrench.svg" alt="wrench">
-				</div>
-			</div>
-		</div>
+        <div>
+          <img src="/assets/img/wrench.svg" alt="wrench" />
+        </div>
+      </div>
+    </div>
 
-		<div class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20">
-			<div *ngFor="let event of events">
-				<div class="event">
-					<div class="d-flex justify-content-between">
-						<div class="text-secondary font-weight-bold calibri">
-							{{ event.date }}
-						</div>
+    <div
+      class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20"
+    >
+      <div *ngFor="let event of events">
+        <div class="event">
+          <div class="d-flex justify-content-between">
+            <div class="text-secondary font-weight-bold calibri">
+              {{ event.date }}
+            </div>
 
-						<div class="text-secondary font-weight-bold calibri">
-							{{ event.type }}
-						</div>
-					</div>
+            <div class="text-secondary font-weight-bold calibri">
+              {{ event.type }}
+            </div>
+          </div>
 
-					<div class="font-weight-bold calibri">
-						{{ event.description }}
-					</div>								
-				</div>
-			</div>
-		</div>
+          <div class="font-weight-bold calibri">
+            {{ event.description }}
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div class="font-size-20 mt-50">
-			<div class="d-flex justify-content-between">
-				<div class="inter">
-					Últimos 7 días
-				</div>
+    <div class="font-size-20 mt-50">
+      <div class="d-flex justify-content-between">
+        <div class="inter">Últimos 7 días</div>
 
-				<div>
-					<img src="/assets/img/wrench.svg" alt="wrench">
-				</div>
-			</div>
-		</div>
+        <div>
+          <img src="/assets/img/wrench.svg" alt="wrench" />
+        </div>
+      </div>
+    </div>
 
-		<div class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20">
-			<canvas id="chart">{{ chart }}</canvas>
-		</div>
-	</div>
+    <div
+      class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20"
+    >
+      <canvas id="chart">{{ chart }}</canvas>
+    </div>
+  </div>
 </div>

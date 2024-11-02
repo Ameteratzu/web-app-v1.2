@@ -13,6 +13,8 @@
       optionLabel="descripcion"
       placeholder="Territorio"
       optionValue="id"
+      required="true"
+      emptyMessage=" "
     />
 
     <p-dropdown
@@ -21,6 +23,7 @@
       [options]="countries()"
       optionLabel="descripcion"
       placeholder="País"
+      emptyMessage=" "
     />
 
     <p-dropdown
@@ -30,6 +33,7 @@
       optionLabel="descripcion"
       placeholder="CCAA"
       (onChange)="loadProvinces($event)"
+      emptyMessage=" "
     />
 
     <p-dropdown
@@ -38,9 +42,9 @@
       [options]="provinces()"
       optionLabel="descripcion"
       placeholder="Provincia"
-      (onChange)="loadMunicipalities($event)"
+      emptyMessage=" "
     />
-
+    <!--
     <p-dropdown
       optionValue="id"
       formControlName="fireStatus"
@@ -49,6 +53,7 @@
       placeholder="Estado"
       (onChange)="loadMunicipalities($event)"
     />
+    -->
   </div>
 
   <div class="d-flex m--1 mt-15 gap-5">
@@ -60,6 +65,7 @@
         optionLabel="descripcion"
         placeholder="Estado del suceso"
         class="child"
+        emptyMessage=" "
       />
 
       <p-dropdown
@@ -69,6 +75,7 @@
         optionLabel="descripcion"
         placeholder="Estado del incendio"
         class="child"
+        emptyMessage=" "
       />
 
       <p-dropdown
@@ -78,6 +85,7 @@
         optionLabel="descripcion"
         placeholder="Nivel de gravedad"
         class="child"
+        emptyMessage=" "
       />
 
       <p-dropdown
@@ -87,24 +95,29 @@
         optionLabel="descripcion"
         placeholder="Superficie"
         class="child"
+        emptyMessage=" "
       />
     </div>
     <div class="d-flex m--1 gap-5 w-50 border-rounded align-items p4">
       <span>Fecha</span>
+
       <p-dropdown
         optionValue="id"
         formControlName="move"
-        [options]="[]"
+        [options]="moves()"
         optionLabel="descripcion"
         placeholder="Movimiento"
+        emptyMessage=" "
       />
 
       <p-dropdown
         optionValue="id"
-        formControlName="enter"
-        [options]="[]"
+        formControlName="between"
+        [options]="comparativeDates()"
         optionLabel="descripcion"
         placeholder="Entre"
+        emptyMessage=" "
+        (onChange)="changeBetween($event)"
       />
 
       <p-calendar
@@ -121,6 +134,7 @@
         [showIcon]="true"
         placeholder="Fecha fin"
         inputId="icondisplay"
+        *ngIf="showDateEnd()"
       />
     </div>
   </div>

@@ -19,23 +19,26 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
 
+import moment from 'moment';
+import { ComparativeDateService } from '../../../../services/comparative-date.service';
+import { CountryService } from '../../../../services/country.service';
 import { EventStatusService } from '../../../../services/eventStatus.service';
 import { FireStatusService } from '../../../../services/fire-status.service';
 import { FireService } from '../../../../services/fire.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
+import { MoveService } from '../../../../services/move.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
 import { ProvinceService } from '../../../../services/province.service';
 import { SeverityLevelService } from '../../../../services/severity-level.service';
 import { TerritoryService } from '../../../../services/territory.service';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { AutonomousCommunity } from '../../../../types/autonomous-community.type';
-
-import { CountryService } from '../../../../services/country.service';
-
+import { ComparativeDate } from '../../../../types/comparative-date.type';
 import { Countries } from '../../../../types/country.type';
 import { EventStatus } from '../../../../types/eventStatus.type';
 import { FireStatus } from '../../../../types/fire-status.type';
 import { Fire } from '../../../../types/fire.type';
+import { Move } from '../../../../types/move.type';
 import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
@@ -70,6 +73,9 @@ export class FireFilterFormComponent implements OnInit {
   public severityLevelService = inject(SeverityLevelService);
   public fireService = inject(FireService);
 
+  public comparativeDateService = inject(ComparativeDateService);
+  public moveService = inject(MoveService);
+
   public territories = signal<Territory[]>([]);
   public autonomousCommunities = signal<AutonomousCommunity[]>([]);
   public provinces = signal<Province[]>([]);
@@ -79,6 +85,11 @@ export class FireFilterFormComponent implements OnInit {
   public fireStatus = signal<FireStatus[]>([]);
   public severityLevels = signal<SeverityLevel[]>([]);
 
+  public showDateEnd = signal<boolean>(true);
+
+  public moves = signal<Move[]>([]);
+  public comparativeDates = signal<ComparativeDate[]>([]);
+
   public formData: FormGroup;
 
   async ngOnInit() {
@@ -87,15 +98,26 @@ export class FireFilterFormComponent implements OnInit {
       territory: new FormControl(),
       autonomousCommunity: new FormControl(),
       province: new FormControl(),
+      country: new FormControl(),
       municipality: new FormControl(),
       fireStatus: new FormControl(),
       episode: new FormControl(),
       severityLevel: new FormControl(),
       affectedArea: new FormControl(),
       move: new FormControl(),
-      enter: new FormControl(),
+      //enter: new FormControl(),
       start: new FormControl(),
       end: new FormControl(),
+      between: new FormControl(),
+    });
+
+    this.formData.patchValue({
+      between: 1,
+      move: 1,
+      territory: 1,
+      country: 60,
+      start: moment().subtract(4, 'days').toDate(),
+      end: moment().toDate(),
     });
 
     this.menuItemActiveService.set.emit('/fire');
@@ -117,6 +139,12 @@ export class FireFilterFormComponent implements OnInit {
 
     const countries = await this.countryService.get();
     this.countries.set(countries);
+
+    const moves = await this.moveService.get();
+    this.moves.set(moves);
+
+    const comparativeDates = await this.comparativeDateService.get();
+    this.comparativeDates.set(comparativeDates);
   }
 
   async loadProvinces(event: any) {
@@ -131,6 +159,9 @@ export class FireFilterFormComponent implements OnInit {
     this.municipalities.set(municipalities);
   }
 
+  changeBetween(event: any) {
+    this.showDateEnd.set(event.value === 1 || event.value === 5 ? true : false);
+  }
   async onSubmit() {
     const data = this.formData.value;
     const fires = await this.fireService.get(data);

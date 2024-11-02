@@ -30,7 +30,7 @@
       <div *ngFor="let item of menuBack()">
         <div
           (click)="redirectTo(item)"
-          class="cursor-pointer menu-item mb-13 rounded mt-0 text-info"
+          class="cursor-pointer menu-item rounded mt-0 text-info"
           [style]="
             active == item.nombre
               ? 'border: 2px solid rgb(' +
@@ -38,7 +38,7 @@
                 '); background-color: rgb(' +
                 item.colorRgb +
                 ', 0.50); padding: 4px'
-              : ''
+              : 'padding: 4px; border: 2px solid transparent'
           "
         >
           <img
@@ -53,15 +53,15 @@
           <div
             *ngFor="let subItem of item.subItems"
             (click)="redirectTo(subItem)"
-            class="cursor-pointer menu-item mb-13 rounded mt-0"
+            class="cursor-pointer menu-item rounded mt-0"
             [style]="
               active == subItem.nombre
-                ? 'border: 2px solid rgb(' +
+                ? 'padding: 4px; border: 2px solid rgb(' +
                   subItem.colorRgb +
                   '); background-color: rgb(' +
                   subItem.colorRgb +
                   ', 0.50)'
-                : ''
+                : 'border: 2px solid transparent; padding: 4px'
             "
           >
             <img

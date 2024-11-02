@@ -99,6 +99,7 @@
                   <div class="form-row">
                     <b>Entrada / Salida</b>
                     <p-dropdown
+                      emptyMessage=" "
                       formControlName="type"
                       [options]="inputOutputs()"
                       optionLabel="descripcion"
@@ -121,6 +122,7 @@
                   <div class="form-row">
                     <b>Medio</b>
                     <p-dropdown
+                      emptyMessage=" "
                       formControlName="media"
                       [options]="medias()"
                       optionLabel="descripcion"
@@ -185,6 +187,7 @@
                   <div class="form-row">
                     <b>Tipo de registro</b>
                     <p-dropdown
+                      emptyMessage=" "
                       formControlName="recordType"
                       [options]="recordTypes()"
                       optionLabel="descripcion"
@@ -242,6 +245,7 @@
                     <div class="form-row">
                       <b>Estado</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="status"
                         [options]="status()"
                         optionLabel="descripcion"
@@ -282,6 +286,7 @@
                     <div class="form-row">
                       <b>Situación operativa</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="operativeStatus"
                         [options]="[]"
                         optionLabel="descripcion"
@@ -365,6 +370,7 @@
                     <div class="form-row">
                       <b>Provincia</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="province_1"
                         [options]="provinces()"
                         optionLabel="descripcion"
@@ -391,6 +397,7 @@
                     <div class="form-row">
                       <b>Municipio</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="municipality_1"
                         [options]="municipalities()"
                         optionLabel="descripcion"
@@ -412,6 +419,7 @@
                       <b>Entidad menor</b>
 
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="minorEntity"
                         [options]="minorEntities()"
                         optionLabel="descripcion"
@@ -555,6 +563,7 @@
                     <div class="form-row">
                       <b>Tipo</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="impactType"
                         [options]="impactTypes"
                         placeholder=""
@@ -574,6 +583,7 @@
                       <b>Grupo</b>
 
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="impactGroup"
                         [options]="impactGroups"
                         placeholder=""
@@ -596,6 +606,7 @@
                     <div class="form-row">
                       <b>Denominación</b>
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="name"
                         [options]="denominations"
                         optionLabel="descripcion"
@@ -850,6 +861,7 @@
                       <b>Tipo de medio</b>
 
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="mediaType"
                         [options]="mediaTypes()"
                         optionLabel="descripcion"
@@ -903,6 +915,7 @@
                     <div class="form-row">
                       <b>Clasificación</b>
                       <p-dropdown
+                        emptyMessage=" "
                         [disabled]="disabledBenefits()"
                         formControlName="classification"
                         [options]="mediaClassifications()"
@@ -920,6 +933,7 @@
                     <div class="form-row">
                       <b>Titularidad</b>
                       <p-dropdown
+                        emptyMessage=" "
                         [disabled]="disabledOwner1()"
                         formControlName="ownership_1"
                         [options]="mediaOwnerships()"
@@ -957,6 +971,7 @@
                       <b>Provincia</b>
 
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="province_2"
                         [options]="provinces()"
                         optionLabel="descripcion"
@@ -975,6 +990,7 @@
                       <b>Municipio</b>
 
                       <p-dropdown
+                        emptyMessage=" "
                         formControlName="municipality_2"
                         [options]="municipalities2()"
                         optionLabel="descripcion"

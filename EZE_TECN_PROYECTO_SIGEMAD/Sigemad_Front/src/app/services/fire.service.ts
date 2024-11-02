@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
+import moment from 'moment';
 import { ApiResponse } from '../types/api-response.type';
 import { FireDetail } from '../types/fire-detail.type';
 import { Fire } from '../types/fire.type';
@@ -17,6 +18,8 @@ export class FireService {
     let endpoint = '/Incendios?Sort=desc&PageSize=15';
 
     if (query != '') {
+      console.log(moment(query.start).format('MM-DD-YYYY'));
+
       const territory = query.territory;
       const autonomousCommunity = query.autonomousCommunity;
       const province = query.province;
@@ -25,8 +28,10 @@ export class FireService {
       const episode = query.episode;
       const severityLevel = query.severityLevel;
       const affectedArea = query.affectedArea;
-      const start = query.start;
-      const end = query.end;
+      const start = moment(query.start).format('YYYY-MM-DD HH:MM:SS.ssss');
+      const end = moment(query.end).format('YYYY-MM-DD HH:MM:SS.ssss');
+      const between = query.between;
+      const move = query.move;
 
       endpoint = `/Incendios?PageSize=15&Sort=desc&IdTerritorio=${
         territory ? territory : ''
@@ -38,6 +43,8 @@ export class FireService {
         severityLevel ? severityLevel : ''
       }&IdSuperficieAfectada=${affectedArea ? affectedArea : ''}&FechaInicio=${
         start ? start : ''
+      }&IdComparativoFecha=${between ? between : ''}&IdMovimiento=${
+        move ? move : ''
       }&FechaFin=${end ? end : ''}&Page=1`;
     }
 

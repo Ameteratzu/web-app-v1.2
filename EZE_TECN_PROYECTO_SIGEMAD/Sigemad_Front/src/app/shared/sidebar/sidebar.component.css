@@ -6,7 +6,6 @@
 .menu-item {
   font-family: "Inter";
   font-size: 14px;
-  margin-top: 7px;
   width: 231px;
   display: flex;
   align-items: center;
@@ -28,4 +27,8 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
 }

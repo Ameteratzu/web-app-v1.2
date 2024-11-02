@@ -48,6 +48,7 @@
         Provincia
       </div>
       <p-dropdown
+        emptyMessage=" "
         formControlName="province"
         [options]="provinces()"
         optionLabel="descripcion"
@@ -63,6 +64,7 @@
       </div>
 
       <p-dropdown
+        emptyMessage=" "
         formControlName="municipality"
         [options]="municipalities()"
         optionLabel="descripcion"
@@ -103,6 +105,7 @@
 
       <div>
         <p-dropdown
+          emptyMessage=" "
           formControlName="event"
           [options]="events()"
           optionLabel="descripcion"
@@ -142,6 +145,7 @@
 
       <div>
         <p-dropdown
+          emptyMessage=" "
           formControlName="idEstado"
           [options]="fireStatus()"
           optionLabel="descripcion"
