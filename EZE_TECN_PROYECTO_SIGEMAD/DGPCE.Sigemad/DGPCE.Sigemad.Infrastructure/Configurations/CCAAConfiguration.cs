@@ -17,6 +17,11 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             builder.HasMany(c => c.Provincia).WithOne(p => p.IdCcaaNavigation)
              .HasForeignKey(p => p.IdCcaa);
 
+            builder.HasOne(c => c.Pais)
+                .WithMany()
+                .HasForeignKey(c => c.IdPais)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

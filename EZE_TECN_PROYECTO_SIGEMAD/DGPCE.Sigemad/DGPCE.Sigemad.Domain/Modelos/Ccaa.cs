@@ -7,6 +7,9 @@ public class Ccaa
     public int Id { get; set; }
 
     public string Descripcion { get; set; } = null!;
+    public int IdPais { get; set; }
+
 
     public virtual ICollection<Provincia> Provincia { get; set; } = new List<Provincia>();
+    public Pais Pais { get; set; }
 }

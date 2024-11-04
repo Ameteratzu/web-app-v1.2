@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.CCAA.Queries.GetCCAAByIdPaisList;
 using DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -26,6 +27,17 @@ namespace DGPCE.Sigemad.API.Controllers
         public async Task<ActionResult<IReadOnlyList<Pais>>> GetAll()
         {
             var query = new GetPaisesListQuery();
+            var listado = await _mediator.Send(query);
+            return Ok(listado);
+        }
+
+        [HttpGet("{idPais}/comunidades")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de comunidades de un pais")]
+        public async Task<ActionResult<IReadOnlyList<Pais>>> GetComunidades(int idPais)
+        {
+            var query = new GetCCAAByIdPaisListQuery(idPais);
             var listado = await _mediator.Send(query);
             return Ok(listado);
         }
