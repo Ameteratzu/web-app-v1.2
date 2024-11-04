@@ -1,0 +1,100 @@
+<form [formGroup]="form" class="contenedor">
+  <div class="componente" *ngFor="let campo of campos">
+    <div class="contenedor">
+      <label class="font-size-16 font-weight-bold mr-8">{{
+        campo.campo
+      }}</label>
+
+      <ng-container [ngSwitch]="getComponente(campo.tipoCampo)">
+        <!-- Checkbox -->
+        <p-checkbox
+          [binary]="true"
+          value="true"
+          *ngSwitchCase="'checkbox'"
+          [formControlName]="campo.campo"
+          class="font-size-16"
+          [style]="{ width: '100%' }"
+          class="form-column"
+        ></p-checkbox>
+
+        <!-- Text Input -->
+        <input
+          *ngSwitchCase="'text'"
+          pInputText
+          [formControlName]="campo.campo"
+          pInputText
+          class="font-size-16"
+          [style]="{ width: '100%' }"
+          class="form-column"
+          chang
+        />
+
+        <!-- Number Input -->
+        <input
+          *ngSwitchCase="'number'"
+          type="number"
+          pInputNumber
+          [formControlName]="campo.campo"
+          pInputText
+          class="font-size-16"
+          [style]="{ width: '100%' }"
+          class="form-column"
+        />
+
+        <!-- Geometry / MAP-->
+        <div *ngSwitchCase="'map'">
+          <b>{{ campo.campo }}</b>
+          <img
+            src="/assets/img/location-btn.svg"
+            height="20px"
+            alt="location"
+            class="cursor-pointer"
+            (click)="openModalMapCreate('campo.campo')"
+          />
+        </div>
+
+        <!-- Select -->
+        <p-dropdown
+          *ngSwitchCase="'Select'"
+          emptyMessage=" "
+          formControlName="campo.campo"
+          [options]="campo.options"
+          placeholder=""
+          class="font-size-16"
+          [style]="{ width: '100%' }"
+          class="form-column"
+        />
+
+        <!-- Calendar Hour -->
+        <p-calendar
+          *ngSwitchCase="'calendarHour'"
+          [formControlName]="campo.campo"
+          [showTime]="true"
+          [hourFormat]="'12'"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          placeholder=""
+          inputId="icondisplay"
+          [style]="{ width: '100%' }"
+          class="form-column"
+        ></p-calendar>
+
+        <!-- Calendar -->
+        <p-calendar
+          *ngSwitchCase="'calendar'"
+          [formControlName]="campo.campo"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          placeholder=""
+          inputId="icondisplay"
+          [style]="{ width: '100%' }"
+          class="form-column"
+        ></p-calendar>
+      </ng-container>
+    </div>
+    <!-- Mensaje de error para campos obligatorios -->
+    <div *ngIf="form.get(campo.campo)?.hasError('required')">
+      Este campo es obligatorio.
+    </div>
+  </div>
+</form>

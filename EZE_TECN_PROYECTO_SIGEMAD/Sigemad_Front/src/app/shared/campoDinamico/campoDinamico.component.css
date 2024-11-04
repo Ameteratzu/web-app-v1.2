@@ -1,0 +1,16 @@
+.contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.componente {
+  flex: 1 1 50%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}

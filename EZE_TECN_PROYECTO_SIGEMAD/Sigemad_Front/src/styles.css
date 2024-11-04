@@ -12,6 +12,10 @@
   border: 1px striked red;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   height: 100%;
@@ -365,4 +369,8 @@ calendaricon {
 
 .p-dropdown {
   max-width: 100%;
+}
+
+.font-size-16 {
+  font-size: 16px;
 }

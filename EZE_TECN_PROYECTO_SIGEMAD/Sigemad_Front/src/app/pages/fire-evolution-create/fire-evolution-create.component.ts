@@ -50,6 +50,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { AreasAffectedService } from '../../services/areas-affected.service';
+import { CamposImpactoService } from '../../services/campos-impacto.service';
+import { CampoDinamico } from '../../shared/campoDinamico/campoDinamico.component';
+import { Campo } from '../../types/Campo.type';
 
 @Component({
   selector: 'app-fire-evolution-create',
@@ -63,6 +66,7 @@ import { AreasAffectedService } from '../../services/areas-affected.service';
     InputTextModule,
     InputTextareaModule,
     MultiSelectModule,
+    CampoDinamico,
   ],
   templateUrl: './fire-evolution-create.component.html',
   styleUrl: './fire-evolution-create.component.css',
@@ -90,6 +94,7 @@ export class FireEvolutionCreateComponent {
   public minorEntityService = inject(MinorEntityService);
   public evolutionService = inject(EvolutionService);
   public interveningMediaService = inject(InterveningMediaService);
+  public camposImpactoService = inject(CamposImpactoService);
 
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
@@ -105,8 +110,12 @@ export class FireEvolutionCreateComponent {
   public recordTypes = signal<RecordType[]>([]);
   public minorEntities = signal<MinorEntity[]>([]);
 
+  public fieldCampos = signal<Campo[]>([]);
+
   public disabledBenefits = signal<boolean>(false);
   public disabledOwner1 = signal<boolean>(false);
+
+  public dinamicDataConsecuencesActions = signal<any>({});
 
   public impactTypes: any;
   public impactGroups: any;
@@ -184,6 +193,11 @@ export class FireEvolutionCreateComponent {
       startDate: new FormControl(),
     });
 
+    const ID_EJEMPLO_CAMPOS_IMPACTO = `1`;
+
+    const impactTypes = await this.impactTypeService.get();
+    this.impactTypes = impactTypes;
+
     this.formGroup.patchValue({
       affectedSurface: 86,
       number: 1,
@@ -207,9 +221,6 @@ export class FireEvolutionCreateComponent {
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
-
-    const impactTypes = await this.impactTypeService.get();
-    this.impactTypes = impactTypes;
 
     const impactGroups = await this.impactGroupService.get();
     this.impactGroups = impactGroups;
@@ -235,6 +246,10 @@ export class FireEvolutionCreateComponent {
 
     const minorEntities = await this.minorEntityService.get();
     this.minorEntities.set(minorEntities);
+  }
+
+  getDataForConsecuenciasActuaciones(datos: any) {
+    this.dinamicDataConsecuencesActions.set(datos);
   }
 
   public changeMediaTypes(event: any) {
@@ -349,7 +364,7 @@ export class FireEvolutionCreateComponent {
       this.areasAffected.splice(index, 1);
     }
   }
-
+  /*
   public saveConsequenceAction() {
     const data = this.formGroup.value;
 
@@ -412,23 +427,96 @@ export class FireEvolutionCreateComponent {
       participants: '',
     });
   }
+  */
+  public saveConsequenceAction() {
+    this.dinamicDataConsecuencesActions;
+    this.consequenceActionError = false;
+    const fieldsRequired = this.fieldCampos().filter(
+      (item: any) => item.esObligatorio
+    );
 
-  public showConsequenceDataInForm(index: number) {
+    const data = this.formGroup.value;
+
+    this.consequenceActionError = false;
+
+    if (
+      !data.impactType ||
+      !data.impactGroup ||
+      !data.name ||
+      !data.number ||
+      !data.observations_2
+    ) {
+      this.consequenceActionError = true;
+      return;
+    }
+
+    const fieldError = fieldsRequired.some((field) => {
+      return this.dinamicDataConsecuencesActions()[field.campo] ? false : true;
+    });
+    console.info('fieldError', fieldError);
+    if (fieldError) {
+      this.consequenceActionError = true;
+      return;
+    }
+
+    if (data.consequenceActionUpdate == '1') {
+      const replace = {
+        impactType: data.impactType,
+        impactGroup: data.impactGroup,
+        name: data.name,
+        number: data.number,
+        observations_2: data.observations_2,
+        ...this.dinamicDataConsecuencesActions(),
+      };
+
+      this.consequencesActions.splice(data.consequenceActionIndex, 1, replace);
+    } else {
+      this.consequencesActions.push({
+        impactType: data.impactType,
+        impactGroup: data.impactGroup,
+        name: data.name,
+        number: data.number,
+        observations_2: data.observations_2,
+        ...this.dinamicDataConsecuencesActions(),
+      });
+    }
+
+    this.formGroup.patchValue({
+      consequenceActionIndex: '',
+      consequenceActionUpdate: '',
+      impactType: '',
+      impactGroup: '',
+      name: '',
+      number: '',
+      observations_2: '',
+    });
+    this.fieldCampos.set([]);
+  }
+
+  public async showConsequenceDataInForm(index: number) {
     const item = this.consequencesActions[index];
-
+    const { impactType, impactGroup, name, number, observations_2, ...res } =
+      item;
     this.formGroup.patchValue({
       consequenceActionIndex: index,
       consequenceActionUpdate: '1',
-      impactType: item.impactType,
-      impactGroup: item.impactGroup,
-      name: item.name,
-      number: item.number,
-      observations_2: item.observations_2,
-      start: item.start,
-      end: item.end,
-      injureds: item.injureds,
-      participants: item.participants,
+      impactType: impactType,
+      impactGroup: impactGroup,
+      name: name,
+      number: number,
+      observations_2: observations_2,
     });
+
+    const camposImpacto = await this.camposImpactoService.getFieldsById(
+      item.impactType === 'Consecuencia' ? `1` : `2`
+    );
+    const newCamposImpacto = camposImpacto.map((item) => {
+      return {
+        ...item,
+        initValue: res[item.campo],
+      };
+    });
+    this.fieldCampos.set(newCamposImpacto);
   }
 
   public showInterveningMediaDataInForm(index: number) {
@@ -591,19 +679,16 @@ export class FireEvolutionCreateComponent {
     }
 
     for (let consequence of this.consequencesActions) {
+      const { impactType, impactGroup, name, number, observations_2, ...res } =
+        consequence;
       const consequenceAction = {
-        numero: consequence.number,
-        observaciones: consequence.observations_2,
-        fechaHoraInicio: consequence.start,
-        fechaHora: consequence.start,
-        fechaHoraFin: consequence.end,
-        numeroGraves: consequence.injureds,
-        numeroIntervinientes: consequence.participants,
-        IdImpactoClasificado: 1,
-        nuclear: true,
-        causa: 'string',
-        valorAd: 0,
         idEvolucion: this.evolution_id,
+        IdImpactoClasificado: impactType === 'Consecuencia' ? 1 : 2,
+        observaciones: observations_2,
+        numero: number,
+        idImpactGroup: impactGroup, // ???
+        name: name, // ???
+        ...res,
       };
 
       await this.impactEvolutionService.post(consequenceAction);
@@ -664,13 +749,18 @@ export class FireEvolutionCreateComponent {
       .descripcion;
   }
 
-  public setType(event: any) {
+  public async setType(event: any) {
     this.type = event.value;
     this.getDenominations();
+
+    const camposImpacto = await this.camposImpactoService.getFieldsById(
+      event.value === 'Consecuencia' ? `1` : `2`
+    );
+    this.fieldCampos.set(camposImpacto);
   }
 
   public setGroup(event: any) {
-    this.group = event.target.value;
+    this.group = event.value;
     this.getDenominations();
   }
 
@@ -681,6 +771,7 @@ export class FireEvolutionCreateComponent {
       const type = this.impacts().filter(
         (item) => item.descripcion == this.type
       );
+      console.info('....', type);
 
       const subgrupos = type[0].grupos.filter(
         (item: any) => item.descripcion == this.group
@@ -720,6 +811,14 @@ export class FireEvolutionCreateComponent {
           }
         }
       }
+    }
+  }
+
+  scrollToSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   }
 }
