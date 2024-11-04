@@ -11,3 +11,8 @@
   font-size: 16px;
   color: #888888;
 }
+
+.custom-container {
+  width: 873px;
+  max-width: 873px;
+}

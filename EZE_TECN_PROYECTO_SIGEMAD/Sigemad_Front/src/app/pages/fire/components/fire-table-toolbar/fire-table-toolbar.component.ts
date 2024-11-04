@@ -24,8 +24,7 @@ export class FireTableToolbarComponent {
 
   openModal() {
     this.matDialog.open(FireCreateModalComponent, {
-      width: '873px',
-      maxWidth: '873px',
+      minWidth: '940px',
       disableClose: true,
     });
   }

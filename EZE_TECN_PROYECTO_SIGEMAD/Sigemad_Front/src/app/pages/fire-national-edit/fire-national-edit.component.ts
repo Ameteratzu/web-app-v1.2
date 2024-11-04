@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 
-import { FireAddressCoordinationComponent } from '../fire-address-coordination/fire-address-coordination.component';
 import { FireEvolutionCreateComponent } from '../fire-evolution-create/fire-evolution-create.component';
 import { MapCreateComponent } from '../map-create/map-create.component';
 
@@ -201,6 +200,7 @@ export class FireNationalEditComponent {
     let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
       width: '1500px',
       maxWidth: '1500px',
+      minHeight: '680px',
       disableClose: true,
     });
 

@@ -90,7 +90,7 @@ export class FireCreateModalComponent implements OnInit {
       territory: 1,
     });
 
-    const territories = await this.territoryService.get();
+    const territories = await this.territoryService.getForCreate();
     this.territories.set(territories);
 
     const provinces = await this.provinceService.get();

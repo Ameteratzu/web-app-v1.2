@@ -189,8 +189,6 @@ export class FireEditComponent {
         JSON.stringify(this.fire.geoPosicion.coordinates)
     );
 
-    console.log(data);
-
     await this.fireService
       .update(data)
       .then((response) => {
@@ -220,7 +218,7 @@ export class FireEditComponent {
     let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
       width: '1220px',
       maxWidth: '1220px',
-      height: '600px',
+      height: '720px',
       disableClose: true,
     });
 

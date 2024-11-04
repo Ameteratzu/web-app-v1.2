@@ -49,7 +49,7 @@
       <form (submit)="submit()" [formGroup]="formGroup">
         <div
           class="content border-silver border-radius-8 p-20"
-          style="width: 920px; height: 410px; overflow-y: scroll"
+          style="width: 920px; height: 520px; overflow-y: scroll"
         >
           <div>
             <div id="validation-evolution-error"></div>
@@ -85,9 +85,12 @@
               <div class="font-size-16 form-column">
                 <div class="form-container2">
                   <div class="form-row">
-                    <b>Fecha y hora </b>
+                    <b>Fecha y hora</b>
 
                     <p-calendar
+                      dateFormat="d/mm/yy HH:mm"
+                      [showTime]="true"
+                      [hourFormat]="'12'"
                       formControlName="startDate"
                       [iconDisplay]="'input'"
                       [showIcon]="true"
@@ -182,6 +185,9 @@
                   <div class="form-row">
                     <b>Fecha y hora de actualización</b>
                     <p-calendar
+                      dateFormat="d/mm/yy HH:mm"
+                      [showTime]="true"
+                      [hourFormat]="'12'"
                       formControlName="datetimeUpdate"
                       [iconDisplay]="'input'"
                       [showIcon]="true"
@@ -317,11 +323,14 @@
                 <div class="form-column">
                   <div class="form-container2">
                     <div class="form-row">
-                      <b>Superficie afec. (Ha)</b>
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="affectedSurface"
+                      <b>Fecha final</b>
+                      <p-calendar
+                        dateFormat="d/mm/yy"
+                        formControlName="end_date"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        placeholder=""
+                        inputId="icondisplay"
                         [style]="{ width: '100%' }"
                         class="form-column"
                       />
@@ -332,13 +341,11 @@
                 <div class="form-column">
                   <div class="form-container2">
                     <div class="form-row">
-                      <b>Fecha final</b>
-                      <p-calendar
-                        formControlName="end_date"
-                        [iconDisplay]="'input'"
-                        [showIcon]="true"
-                        placeholder=""
-                        inputId="icondisplay"
+                      <b>Superficie afec. (Ha)</b>
+                      <input
+                        type="number"
+                        pInputText
+                        formControlName="affectedSurface"
                         [style]="{ width: '100%' }"
                         class="form-column"
                       />
@@ -368,6 +375,9 @@
                     <div class="form-row">
                       <b>Fecha y hora</b>
                       <p-calendar
+                        dateFormat="d/mm/yy HH:mm"
+                        [showTime]="true"
+                        [hourFormat]="'12'"
                         formControlName="startAreaAffected"
                         [iconDisplay]="'input'"
                         [showIcon]="true"

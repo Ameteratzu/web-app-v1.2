@@ -1,6 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 import { Territory } from '../types/territory.type';
 
@@ -9,10 +9,18 @@ export class TerritoryService {
   private http = inject(HttpClient);
 
   get() {
-    const endpoint = '/Territorios';
+    const endpoint = '/territorios';
 
     return firstValueFrom(
-      this.http.get<Territory[]>(endpoint).pipe((response) => response),
+      this.http.get<Territory[]>(endpoint).pipe((response) => response)
+    );
+  }
+
+  getForCreate() {
+    const endpoint = '/territorios-crear';
+
+    return firstValueFrom(
+      this.http.get<Territory[]>(endpoint).pipe((response) => response)
     );
   }
 }

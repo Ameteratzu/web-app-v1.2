@@ -20,10 +20,14 @@
 }
 
 .mt-15 {
-  margin-top: 15px;
+  margin-top: 24px;
 }
 
 .d-flex-end {
   display: flex;
   justify-content: flex-end;
+}
+
+.mt-40 {
+  margin-top: 28px;
 }

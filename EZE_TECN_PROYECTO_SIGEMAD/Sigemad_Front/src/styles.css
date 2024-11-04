@@ -374,3 +374,14 @@ calendaricon {
 .font-size-16 {
   font-size: 16px;
 }
+
+.mat-dialog-container .mat-mdc-dialog-surface {
+  border-radius: 8px !important;
+}
+
+.p-dropdown-panel {
+  max-width: 150px !important; /* Ajusta al ancho del contenedor */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta cualquier desbordamiento */
+  text-overflow: ellipsis; /* Muestra los puntos suspensivos si el texto es demasiado largo */
+}

@@ -30,6 +30,7 @@ import { MoveService } from '../../../../services/move.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
 import { ProvinceService } from '../../../../services/province.service';
 import { SeverityLevelService } from '../../../../services/severity-level.service';
+import { SuperficiesService } from '../../../../services/superficies.service';
 import { TerritoryService } from '../../../../services/territory.service';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { AutonomousCommunity } from '../../../../types/autonomous-community.type';
@@ -62,6 +63,7 @@ export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]>;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
 
+  public superficiesService = inject(SuperficiesService);
   public menuItemActiveService = inject(MenuItemActiveService);
   public territoryService = inject(TerritoryService);
   public autonomousCommunityService = inject(AutonomousCommunityService);
@@ -76,6 +78,7 @@ export class FireFilterFormComponent implements OnInit {
   public comparativeDateService = inject(ComparativeDateService);
   public moveService = inject(MoveService);
 
+  public superficiesFiltro = signal<any[]>([]);
   public territories = signal<Territory[]>([]);
   public autonomousCommunities = signal<AutonomousCommunity[]>([]);
   public provinces = signal<Province[]>([]);
@@ -114,13 +117,17 @@ export class FireFilterFormComponent implements OnInit {
     this.formData.patchValue({
       between: 1,
       move: 1,
-      territory: 1,
-      country: 60,
+      territory: 1, //pre seleccionamos Nacional
+      country: 60, // pre seleccionamos España
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
     });
 
     this.menuItemActiveService.set.emit('/fire');
+
+    const superficiesFiltro =
+      await this.superficiesService.getSuperficiesFiltro();
+    this.superficiesFiltro.set(superficiesFiltro);
 
     const territories = await this.territoryService.get();
     this.territories.set(territories);
@@ -162,10 +169,31 @@ export class FireFilterFormComponent implements OnInit {
   changeBetween(event: any) {
     this.showDateEnd.set(event.value === 1 || event.value === 5 ? true : false);
   }
+
   async onSubmit() {
     const data = this.formData.value;
     const fires = await this.fireService.get(data);
     this.fires = fires;
     this.firesChange.emit(this.fires);
+  }
+
+  clearFormFilter() {
+    console.info('clearFormFilter');
+    this.formData.patchValue({
+      between: 1,
+      move: 1,
+      territory: 1, //pre seleccionamos Nacional
+      country: 60, // pre seleccionamos España
+      start: moment().subtract(4, 'days').toDate(),
+      end: moment().toDate(),
+      autonomousCommunity: null,
+      province: null,
+      municipality: null,
+      fireStatus: null,
+      episode: null,
+      affectedArea: null,
+      severityLevel: null,
+      name: '',
+    });
   }
 }

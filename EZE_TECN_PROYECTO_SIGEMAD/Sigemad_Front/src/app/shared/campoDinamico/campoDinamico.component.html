@@ -63,14 +63,17 @@
           class="font-size-16"
           [style]="{ width: '100%' }"
           class="form-column"
+          optionValue="id"
+          optionLabel="descripcion"
         />
 
         <!-- Calendar Hour -->
         <p-calendar
-          *ngSwitchCase="'calendarHour'"
-          [formControlName]="campo.campo"
+          dateFormat="d/mm/yy HH:mm"
           [showTime]="true"
           [hourFormat]="'12'"
+          *ngSwitchCase="'calendarHour'"
+          [formControlName]="campo.campo"
           [iconDisplay]="'input'"
           [showIcon]="true"
           placeholder=""
@@ -81,6 +84,7 @@
 
         <!-- Calendar -->
         <p-calendar
+          dateFormat="d/mm/yy"
           *ngSwitchCase="'calendar'"
           [formControlName]="campo.campo"
           [iconDisplay]="'input'"

@@ -322,3 +322,7 @@ td {
   align-items: center;
   width: 100%;
 }
+
+.font-color-grey {
+  color: #c0c0c0;
+}
