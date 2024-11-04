@@ -39,8 +39,8 @@ CREATE TABLE DireccionCoordinacionEmergencia (
     -- Campos de Coordinacion PMA
     FechaInicioPMA DATETIME2(7) NOT NULL,  -- Fecha de inicio de la coordinación en PMA
     FechaFinPMA DATETIME2(7) NULL,  -- Fecha de fin de la coordinación en PMA
-    ProvinciaPMA NVARCHAR(255) NOT NULL,  -- Provincia asociada a PMA
-    MunicipioPMA NVARCHAR(255) NOT NULL,  -- Municipio asociado a PMA
+    IdProvinciaPMA INT NOT NULL FOREIGN KEY REFERENCES dbo.Provincia(Id),
+    IdMunicipioPMA INT NOT NULL FOREIGN KEY REFERENCES dbo.Municipio(Id),
     LugarPMA NVARCHAR(255) NULL,  -- Lugar de la coordinación en PMA
     GeoPosicionPMA GEOMETRY NULL,
     ObservacionesPMA NVARCHAR(MAX) NULL,  -- Observaciones adicionales para PMA

@@ -1,5 +1,15 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
+DROP TABLE IF EXISTS OtraInformacion_ProcedenciaDestino
+GO
 
+DROP TABLE IF EXISTS OtraInformacionV2
+GO
+
+DROP TABLE IF EXISTS OtraInformacion
+GO
+
+DROP TABLE IF EXISTS SuperficieFiltro
+GO
 
 DROP TABLE IF EXISTS ActivacionPlanesEmergencia
 GO

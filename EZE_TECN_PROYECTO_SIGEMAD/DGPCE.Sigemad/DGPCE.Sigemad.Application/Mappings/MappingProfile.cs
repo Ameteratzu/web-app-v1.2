@@ -27,6 +27,7 @@ using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateInt
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -107,6 +108,8 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();
             CreateMap<CreateAreaAfectadaCommand, AreaAfectada>();
             CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>();
+
+            CreateMap<Territorio, TerritorioVm>();
         }
     }
 }
