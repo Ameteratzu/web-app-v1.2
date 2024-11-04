@@ -1,12 +1,13 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
-DROP TABLE IF EXISTS OtraInformacion_ProcedenciaDestino
+DROP TABLE IF EXISTS DetalleOtraInformacion_ProcedenciaDestino
 GO
 
-DROP TABLE IF EXISTS OtraInformacionV2
+DROP TABLE IF EXISTS DetalleOtraInformacion
 GO
 
 DROP TABLE IF EXISTS OtraInformacion
 GO
+
 
 DROP TABLE IF EXISTS SuperficieFiltro
 GO
