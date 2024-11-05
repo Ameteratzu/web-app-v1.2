@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Enums;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands;
+namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 public class CreateDireccionCoordinacionEmergenciasValidator : AbstractValidator<CreateDireccionCoordinacionEmergenciasCommand>
 {
     public CreateDireccionCoordinacionEmergenciasValidator(IStringLocalizer<ValidationMessages> localizer)

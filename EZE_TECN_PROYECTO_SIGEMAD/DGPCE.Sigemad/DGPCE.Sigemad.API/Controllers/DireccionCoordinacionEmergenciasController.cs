@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands;
+﻿using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Delete;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.DireccionCoordinacionEmergenciasById;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasByIdIncendioList;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasList;
@@ -31,6 +32,17 @@ namespace DGPCE.Sigemad.API.Controllers
         {
             var response = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetDireccionCoordinacionEmergencianById), new { id = response.Id }, response);
+        }
+
+        [HttpDelete("{id:int}", Name = "DeleteDireccionCoordinacionEmergencia")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var command = new DeleteDireccionCoordinacionEmergenciaCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
         }
 
         [HttpGet("{id}")]

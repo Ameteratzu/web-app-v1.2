@@ -8,11 +8,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 
-namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands
+namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create
 {
 
-        public class CreateDireccionCoordinacionEmergenciasCommandHandler : IRequestHandler<CreateDireccionCoordinacionEmergenciasCommand, CreateDireccionCoordinacionEmergenciasResponse>
-        {
+    public class CreateDireccionCoordinacionEmergenciasCommandHandler : IRequestHandler<CreateDireccionCoordinacionEmergenciasCommand, CreateDireccionCoordinacionEmergenciasResponse>
+    {
         private readonly ILogger<CreateDireccionCoordinacionEmergenciasCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGeometryValidator _geometryValidator;
@@ -104,7 +104,7 @@ namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Co
                 }
             }
 
-         
+
 
             var direccionCoordinacionEmergencias = _mapper.Map<DireccionCoordinacionEmergencia>(request);
 
@@ -123,5 +123,5 @@ namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Co
 
         }
     }
- }
+}
 

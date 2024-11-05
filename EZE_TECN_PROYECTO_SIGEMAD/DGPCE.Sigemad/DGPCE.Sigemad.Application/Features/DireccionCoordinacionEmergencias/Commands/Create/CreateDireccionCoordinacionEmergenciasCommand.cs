@@ -2,7 +2,7 @@
 using MediatR;
 using NetTopologySuite.Geometries;
 
-namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands;
+namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 public class CreateDireccionCoordinacionEmergenciasCommand : IRequest<CreateDireccionCoordinacionEmergenciasResponse>
 {
     public int IdIncendio { get; set; }

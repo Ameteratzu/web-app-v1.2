@@ -8,7 +8,7 @@ using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfec
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
