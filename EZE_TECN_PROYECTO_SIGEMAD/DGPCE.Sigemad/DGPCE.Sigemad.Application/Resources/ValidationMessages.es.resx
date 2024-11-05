@@ -171,4 +171,65 @@
   <data name="UbicacionNoVacio" xml:space="preserve">
     <value>Ubicación no puede ser vacio</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="IdNoVacio" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="IncendioObligatorio" xml:space="preserve">
+    <value>Incendio es obligatorio</value>
+  </data>
+  <data name="IncendioInvalido" xml:space="preserve">
+    <value>Fire es invalido</value>
+  </data>
+  <data name="TipoDireccionEmergenciaObligatorio" xml:space="preserve">
+    <value>Tipo dirección emergencia es obligatorio</value>
+  </data>
+  <data name="TipoDireccionEmergenciaInvalido" xml:space="preserve">
+    <value>Tipo dirección emergencia es invalido</value>
+  </data>
+  <data name="MunicipioCECOPIInvalido" xml:space="preserve">
+    <value>Municipio CECOPI es invalido</value>
+  </data>
+  <data name="MunicipioCECOPIObligatorio" xml:space="preserve">
+    <value>Municipio CECOPI es Obligatorio</value>
+  </data>
+  <data name="MunicipioPMAiInvalido" xml:space="preserve">
+    <value>Municipio CECOPI es invalido</value>
+  </data>
+  <data name="MunicipioPMAObligatorio" xml:space="preserve">
+    <value>Municipio PMA es Obligatorio</value>
+  </data>
+  <data name="ProvinciaPMAInvalido" xml:space="preserve">
+    <value>Provincia PMA es invalido</value>
+  </data>
+  <data name="ProvinciaPMAObligatorio" xml:space="preserve">
+    <value>Provincia PMA es obligatorio</value>
+  </data>
+  <data name="ProvinciaCECOPIInvalido" xml:space="preserve">
+    <value>Provincia CECOPI es invalido</value>
+  </data>
+  <data name="ProvinciaCECOPIObligatorio" xml:space="preserve">
+    <value>Provincia CECOPI es obligatorio</value>
+  </data>
+  <data name="GeoPosicionPMAInvalida" xml:space="preserve">
+    <value>La geometría PMA no es válida, sistema de referencia no es Wgs84</value>
+  </data>
+  <data name="GeoPosicionPMAObligatoria" xml:space="preserve">
+    <value>GeoPosicion PMA es obligatorio</value>
+  </data>
+  <data name="GeoPosicionCECOPInvalida" xml:space="preserve">
+    <value>La geometría CECOPI no es válida, sistema de referencia no es Wgs84</value>
+  </data>
+  <data name="GeoPosicionCECOPIObligatoria" xml:space="preserve">
+    <value>GeoPosicion CECOPI es obligatoria</value>
+  </data>
+  <data name="AutoridadQueDirigeObligatorio" xml:space="preserve">
+    <value>Autoridad que dirige es obligatorio</value>
+  </data>
+  <data name="AutoridadQueDirigeEnBlanco" xml:space="preserve">
+    <value>Autoridad que dirige no puede estar en blanco</value>
+  </data>
+  <data name="FechaInicioPMAObligatorio" xml:space="preserve">
+    <value>Fecha inicio PMA es obligatoria</value>
+  </data>
 </root>
