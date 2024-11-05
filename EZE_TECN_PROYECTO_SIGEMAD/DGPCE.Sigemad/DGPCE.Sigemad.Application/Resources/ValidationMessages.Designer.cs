@@ -142,6 +142,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a La geometría CECOPI no es válida, sistema de referencia no es Wgs84.
+        /// </summary>
+        public static string GeoPosicionCECOPInvalida {
+            get {
+                return ResourceManager.GetString("GeoPosicionCECOPInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a GeoPosicion CECOPI es obligatoria.
+        /// </summary>
+        public static string GeoPosicionCECOPIObligatoria {
+            get {
+                return ResourceManager.GetString("GeoPosicionCECOPIObligatoria", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a La geometría no es válida, sistema de referencia no es Wgs84.
         /// </summary>
         public static string GeoPosicionInvalida {
@@ -156,6 +174,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string GeoPosicionObligatorio {
             get {
                 return ResourceManager.GetString("GeoPosicionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La geometría PMA no es válida, sistema de referencia no es Wgs84.
+        /// </summary>
+        public static string GeoPosicionPMAInvalida {
+            get {
+                return ResourceManager.GetString("GeoPosicionPMAInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a GeoPosicion PMA es obligatorio.
+        /// </summary>
+        public static string GeoPosicionPMAObligatoria {
+            get {
+                return ResourceManager.GetString("GeoPosicionPMAObligatoria", resourceCulture);
             }
         }
         
@@ -178,6 +214,42 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Incendio es inválido.
+        /// </summary>
+        public static string IncendioInvalido {
+            get {
+                return ResourceManager.GetString("IncendioInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Incendio es obligatorio.
+        /// </summary>
+        public static string IncendioObligatorio {
+            get {
+                return ResourceManager.GetString("IncendioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Municipio CECOPI es invalido.
+        /// </summary>
+        public static string MunicipioCECOPIInvalido {
+            get {
+                return ResourceManager.GetString("MunicipioCECOPIInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Municipio CECOPI es Obligatorio.
+        /// </summary>
+        public static string MunicipioCECOPIObligatorio {
+            get {
+                return ResourceManager.GetString("MunicipioCECOPIObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Municipio es inválido.
         /// </summary>
         public static string MunicipioInvalido {
@@ -192,6 +264,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string MunicipioObligatorio {
             get {
                 return ResourceManager.GetString("MunicipioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Municipio CECOPI es invalido.
+        /// </summary>
+        public static string MunicipioPMAiInvalido {
+            get {
+                return ResourceManager.GetString("MunicipioPMAiInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Municipio PMA es Obligatorio.
+        /// </summary>
+        public static string MunicipioPMAObligatorio {
+            get {
+                return ResourceManager.GetString("MunicipioPMAObligatorio", resourceCulture);
             }
         }
         
@@ -214,6 +304,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Provincia CECOPI es invalido.
+        /// </summary>
+        public static string ProvinciaCECOPIInvalido {
+            get {
+                return ResourceManager.GetString("ProvinciaCECOPIInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Provincia CECOPI es obligatorio.
+        /// </summary>
+        public static string ProvinciaCECOPIObligatorio {
+            get {
+                return ResourceManager.GetString("ProvinciaCECOPIObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Provincia es inválido.
         /// </summary>
         public static string ProvinciaInvalido {
@@ -232,6 +340,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Provincia PMA es invalido.
+        /// </summary>
+        public static string ProvinciaPMAInvalido {
+            get {
+                return ResourceManager.GetString("ProvinciaPMAInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Provincia PMA es obligatorio.
+        /// </summary>
+        public static string ProvinciaPMAObligatorio {
+            get {
+                return ResourceManager.GetString("ProvinciaPMAObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Neutral.
         /// </summary>
         public static string TerritorioInvalido {
@@ -246,6 +372,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string TerritorioObligatorio {
             get {
                 return ResourceManager.GetString("TerritorioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tipo dirección emergencia es invalido.
+        /// </summary>
+        public static string TipoDireccionEmergenciaInvalido {
+            get {
+                return ResourceManager.GetString("TipoDireccionEmergenciaInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tipo dirección emergencia es obligatorio.
+        /// </summary>
+        public static string TipoDireccionEmergenciaObligatorio {
+            get {
+                return ResourceManager.GetString("TipoDireccionEmergenciaObligatorio", resourceCulture);
             }
         }
         

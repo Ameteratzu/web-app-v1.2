@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasList;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using System.Linq.Expressions;
 
-
-
 namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasByIdIncendioList;
-internal class GetDCEByIdIncendioListHandler : IRequestHandler<GetDCEByIdIncendioListQuery, IReadOnlyList<DireccionCoordinacionEmergenciaVm>>
+public class GetDCEByIdIncendioListHandler : IRequestHandler<GetDCEByIdIncendioListQuery, IReadOnlyList<DireccionCoordinacionEmergenciaVm>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
