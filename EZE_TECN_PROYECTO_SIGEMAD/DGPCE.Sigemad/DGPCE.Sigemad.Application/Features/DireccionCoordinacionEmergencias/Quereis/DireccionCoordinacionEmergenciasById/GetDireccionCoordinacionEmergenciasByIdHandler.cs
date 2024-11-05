@@ -28,7 +28,7 @@ public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<Ge
 
         _logger.LogInformation($"{nameof(GetDireccionCoordinacionEmergenciasById)} - BEGIN");
 
-        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaByIdSpecification(request.Id);
+        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaActiveByIdSpecification(request.Id);
         var direccionCoordinacionEmergencia = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(direccionCoordinacionEmergenciaSpec);
         if (direccionCoordinacionEmergencia == null)
         {

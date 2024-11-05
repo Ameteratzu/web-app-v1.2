@@ -9,6 +9,7 @@ using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfec
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
@@ -107,6 +108,7 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Territorio, TerritorioVm>();
             CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
+            CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
             CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
             .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
         }

@@ -5,9 +5,9 @@ namespace DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergenc
 
 
 
-public class DireccionCoordinacionEmergenciaByIdSpecification : BaseSpecification<DireccionCoordinacionEmergencia>
+public class DireccionCoordinacionEmergenciaActiveByIdSpecification : BaseSpecification<DireccionCoordinacionEmergencia>
 {
-    public DireccionCoordinacionEmergenciaByIdSpecification(int id)
+    public DireccionCoordinacionEmergenciaActiveByIdSpecification(int id)
         : base(e => e.Id == id && e.Borrado == false)
     {
         AddInclude(e => e.ActivacionPlanEmergencia);

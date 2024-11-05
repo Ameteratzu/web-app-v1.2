@@ -35,6 +35,7 @@ public class DeleteDireccionCoordinacionEmergenciaCommandHandler : IRequestHandl
         }
 
         direccionCoordinacionEmergenciaToDelete.Borrado = true;
+        direccionCoordinacionEmergenciaToDelete.FechaEliminacion = DateTime.Now;
         _unitOfWork.Repository<DireccionCoordinacionEmergencia>().UpdateEntity(direccionCoordinacionEmergenciaToDelete);
 
         await _unitOfWork.Complete();
