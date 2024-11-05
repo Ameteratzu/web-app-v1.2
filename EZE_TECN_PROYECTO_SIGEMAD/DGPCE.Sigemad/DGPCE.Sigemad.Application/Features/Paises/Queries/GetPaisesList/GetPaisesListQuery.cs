@@ -1,9 +1,9 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList
+namespace DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList;
+
+public class GetPaisesListQuery : IRequest<IReadOnlyList<Pais>>
 {
-    public class GetPaisesListQuery: IRequest<IReadOnlyList<Pais>>
-    {
-    }
+    public bool ExcluirNacional { get; set; }
 }

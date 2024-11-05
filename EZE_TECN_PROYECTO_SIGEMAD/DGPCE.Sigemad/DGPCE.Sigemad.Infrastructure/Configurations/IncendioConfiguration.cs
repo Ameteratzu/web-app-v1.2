@@ -59,20 +59,25 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Incendio_EstadoSuceso");
 
-        // Relación uno a uno con IncendioNacional
-        builder.HasOne(i => i.IncendioNacional)
-               .WithOne(n => n.Incendio)
-               .HasForeignKey<IncendioNacional>(n => n.IdIncendio)
-               .IsRequired(false)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(d => d.Pais).WithMany()
+            .HasForeignKey(d => d.IdPais)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // Relación uno a uno con IncendioExtranjero
-        builder.HasOne(i => i.IncendioExtranjero)
-               .WithOne(e => e.Incendio)
-               .HasForeignKey<IncendioExtranjero>(e => e.IdIncendio)
-               .IsRequired(false)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(d => d.Distrito).WithMany()
+            .HasForeignKey(d => d.IdDistrito)
+            .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(d => d.MunicipioExtranjero).WithMany()
+            .HasForeignKey(d => d.IdMunicipioExtranjero)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.Provincia).WithMany()
+            .HasForeignKey(d => d.IdProvincia)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.Municipio).WithMany()
+            .HasForeignKey(d => d.IdMunicipio)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 }

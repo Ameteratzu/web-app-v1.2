@@ -6,8 +6,6 @@ public class IncendioActiveByIdSpecification : BaseSpecification<Incendio>
     public IncendioActiveByIdSpecification(int id)
         : base(i => i.Id == id && i.Borrado == false)
     {
-        AddInclude(p => p.IncendioNacional!);
-        AddInclude(p => p.IncendioExtranjero!);
         AddInclude(p => p.Suceso!);
     }
     

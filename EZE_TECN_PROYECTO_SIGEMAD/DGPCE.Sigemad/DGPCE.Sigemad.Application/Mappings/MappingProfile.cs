@@ -73,15 +73,9 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Municipio, MunicipioConIdProvincia>();
 
             CreateMap<CreateIncendioCommand, Incendio>();
-            CreateMap<CreateIncendioCommand, IncendioNacional>();
-            CreateMap<CreateIncendioCommand, IncendioExtranjero>();
-                        
+            
             CreateMap<UpdateIncendioCommand, Incendio>()
                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
-            CreateMap<UpdateIncendioCommand, IncendioNacional>()
-               .ForMember(dest => dest.IdIncendio, opt => opt.Ignore());
-            CreateMap<UpdateIncendioCommand, IncendioExtranjero>()
-               .ForMember(dest => dest.IdPais, opt => opt.Ignore());
 
             CreateMap<Incendio, IncendioVm>();
             CreateMap<Evolucion, EvolucionVm>()

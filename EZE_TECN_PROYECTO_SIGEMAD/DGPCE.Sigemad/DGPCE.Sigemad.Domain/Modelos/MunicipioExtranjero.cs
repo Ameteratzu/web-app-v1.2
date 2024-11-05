@@ -1,18 +1,14 @@
 ﻿using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
-
-public class Pais
+public class MunicipioExtranjero
 {
-    public Pais() { }
     public int Id { get; set; }
-
+    public int IdDistrito { get; set; }
     public string Descripcion { get; set; } = null!;
-    public bool Fronterizo { get; set; }
-
-    public decimal? X { get; set; }
-
-    public decimal? Y { get; set; }
-
+    public int? UtmX { get; set; }
+    public int? UtmY { get; set; }
     public Geometry? GeoPosicion { get; set; }
+
+    public virtual Distrito Distrito { get; set; } = null!;
 }

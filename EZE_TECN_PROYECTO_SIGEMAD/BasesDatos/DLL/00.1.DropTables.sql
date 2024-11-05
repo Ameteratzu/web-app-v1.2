@@ -42,6 +42,9 @@ GO
 DROP TABLE IF EXISTS CaracterMedio
 GO
 
+DROP TABLE IF EXISTS TipoDanio
+GO
+
 DROP TABLE IF EXISTS ImpactoEvolucion
 GO
 
@@ -109,6 +112,9 @@ DROP TABLE IF EXISTS TipoSuceso
 GO
 
 DROP TABLE IF EXISTS NivelGravedad
+GO
+
+DROP TABLE IF EXISTS MunicipioExtranjero
 GO
 
 DROP TABLE IF EXISTS Municipio

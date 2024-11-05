@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Specifications.Paises;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -15,7 +16,8 @@ namespace DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList
 
         public async Task<IReadOnlyList<Pais>> Handle(GetPaisesListQuery request, CancellationToken cancellationToken)
         {
-            var paises = await _unitOfWork.Repository<Pais>().GetAllAsync();
+            var specification = new PaisesSpecification(request.ExcluirNacional);
+            var paises = await _unitOfWork.Repository<Pais>().GetAllWithSpec(specification);
             return paises;
         }
     }

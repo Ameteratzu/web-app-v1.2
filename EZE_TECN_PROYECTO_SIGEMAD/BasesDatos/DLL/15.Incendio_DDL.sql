@@ -5,7 +5,14 @@ CREATE TABLE dbo.Incendio (
 	IdTerritorio int NOT NULL FOREIGN KEY REFERENCES Territorio(Id),
 	IdClaseSuceso int NOT NULL FOREIGN KEY REFERENCES ClaseSuceso(Id),
 	IdEstadoSuceso int NULL FOREIGN KEY REFERENCES EstadoSuceso(Id),
+	IdPais INT NOT NULL FOREIGN KEY REFERENCES dbo.Pais(Id),
+	EsLimitrofe BIT NOT NULL DEFAULT 0,
+	IdDistrito INT FOREIGN KEY REFERENCES dbo.Distrito(Id),
+	IdMunicipioExtranjero INT FOREIGN KEY REFERENCES dbo.MunicipioExtranjero(Id),
+	IdProvincia INT FOREIGN KEY REFERENCES dbo.Provincia(Id),
+    IdMunicipio INT FOREIGN KEY REFERENCES dbo.Municipio(Id),
 	FechaInicio DATETIME2(7) NOT NULL,
+	Ubicacion NVARCHAR(255) NULL,
 	Denominacion NVARCHAR(255) NOT NULL,
 	NotaGeneral NVARCHAR(MAX) NULL,
 	RutaMapaRiesgo NVARCHAR(MAX),
@@ -25,17 +32,3 @@ CREATE TABLE dbo.Incendio (
 
 CREATE INDEX IX_Incendio ON dbo.Incendio (Denominacion);
 CREATE INDEX IX_Incendio_1 ON dbo.Incendio (IdSuceso);
-
-CREATE TABLE IncendioNacional (
-	IdIncendio INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.Incendio(Id),
-    IdProvincia INT NOT NULL FOREIGN KEY REFERENCES dbo.Provincia(Id),
-    IdMunicipio INT NOT NULL FOREIGN KEY REFERENCES dbo.Municipio(Id)
-);
-
-CREATE TABLE IncendioExtranjero (
-	IdIncendio INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.Incendio(Id),
-	IdPais INT NOT NULL FOREIGN KEY REFERENCES dbo.Pais(Id),
-    IdDistrito INT NULL FOREIGN KEY REFERENCES dbo.Distrito(Id),
-    IdEntidadMenor INT NULL FOREIGN KEY REFERENCES dbo.EntidadMenor(Id),
-	Ubicacion NVARCHAR(255) NOT NULL
-);

@@ -20,7 +20,8 @@ public class UpdateIncendioCommand: IRequest
     public int? IdMunicipio { get; set; }
 
     public int? IdPais { get; set; }
-    public int? IdDistrito { get; set; }
-    public int? IdEntidadMenor { get; set; }
+    //public int? IdDistrito { get; set; }
+    public int? IdMunicipioExtranjero { get; set; }
     public string? Ubicacion { get; set; }
+    public bool EsLimitrofe { get; set; }
 }

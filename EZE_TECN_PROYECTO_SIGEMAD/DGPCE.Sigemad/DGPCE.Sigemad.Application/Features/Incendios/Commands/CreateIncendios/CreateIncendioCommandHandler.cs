@@ -97,10 +97,8 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
                 _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
                 throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
             }
-
-
-            var incendioNacional = _mapper.Map<IncendioNacional>(request);
-            incendioEntity.IncendioNacional = incendioNacional;
+            
+            incendioEntity.IdPais = (int)PaisesEnum.Espana;
         } 
         else if(request.IdTerritorio == TipoTerritorio.Extranjero)
         {
@@ -111,22 +109,49 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
                 throw new NotFoundException(nameof(Pais), request.IdPais);
             }
 
+            /*
             var distrito = await _unitOfWork.Repository<Distrito>().GetByIdAsync(request.IdDistrito.Value);
             if (distrito is null)
             {
                 _logger.LogWarning($"request.IdDistrito: {request.IdDistrito}, no encontrado");
                 throw new NotFoundException(nameof(Distrito), request.IdDistrito);
             }
-
-            var entidadMenor = await _unitOfWork.Repository<EntidadMenor>().GetByIdAsync(request.IdEntidadMenor.Value);
-            if (entidadMenor is null)
+            */
+            if (request.IdMunicipioExtranjero.HasValue)
             {
-                _logger.LogWarning($"request.IdEntidadMenor: {request.IdEntidadMenor}, no encontrado");
-                throw new NotFoundException(nameof(EntidadMenor), request.IdEntidadMenor);
+                var municipioExtranjero = await _unitOfWork.Repository<MunicipioExtranjero>().GetByIdAsync(request.IdMunicipioExtranjero.Value);
+                if (municipioExtranjero is null)
+                {
+                    _logger.LogWarning($"request.IdMunicipioExtranjero: {request.IdMunicipioExtranjero}, no encontrado");
+                    throw new NotFoundException(nameof(EntidadMenor), request.IdMunicipioExtranjero);
+                }
+                incendioEntity.IdDistrito = municipioExtranjero.IdDistrito;
+            }
+                        
+            if (request.IdProvincia.HasValue)
+            {
+                var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia.Value);
+                if (provincia is null)
+                {
+                    _logger.LogWarning($"request.IdProvincia: {request.IdProvincia}, no encontrado");
+                    throw new NotFoundException(nameof(Provincia), request.IdProvincia);
+                }
             }
 
-            var incendioExtranjero = _mapper.Map<IncendioExtranjero>(request);
-            incendioEntity.IncendioExtranjero = incendioExtranjero;
+            if (request.IdMunicipio.HasValue)
+            {
+                var municipio = await _unitOfWork.Repository<Municipio>().GetByIdAsync(request.IdMunicipio.Value);
+                if (municipio is null)
+                {
+                    _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
+                    throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
+                }
+            }
+        }
+
+        if (request.EsLimitrofe)
+        {
+            incendioEntity.IdTerritorio = (int)TipoTerritorio.Transfronterizo;
         }
 
 
