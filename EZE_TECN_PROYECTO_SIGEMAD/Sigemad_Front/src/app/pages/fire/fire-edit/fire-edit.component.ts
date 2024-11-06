@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
@@ -48,6 +48,8 @@ import {
   styleUrl: './fire-edit.component.css',
 })
 export class FireEditComponent {
+  public router = inject(Router);
+
   public route = inject(ActivatedRoute);
 
   public matDialog = inject(MatDialog);
@@ -135,21 +137,16 @@ export class FireEditComponent {
       idEstado: new FormControl(),
     });
 
-    const fire_id = this.route.snapshot.paramMap.get('id');
+    const fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
-    const fires = await this.fireService.get();
-
-    for (let fire of fires.data) {
-      if (fire.id == Number(fire_id)) {
-        this.fire = fire;
-      }
-    }
+    const fire = await this.fireService.getById(fire_id);
+    this.fire = fire;
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
     const municipalities = await this.municipalityService.get(
-      this.fire.incendioNacional.idProvincia
+      this.fire.idProvincia
     );
     this.municipalities.set(municipalities);
 
@@ -166,8 +163,8 @@ export class FireEditComponent {
       id: this.fire.id,
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
-      province: this.fire.incendioNacional.idProvincia,
-      municipality: this.fire.incendioNacional.idMunicipio,
+      province: this.fire.idProvincia,
+      municipality: this.fire.idMunicipio,
       startDate: new Date(this.fire.fechaInicio),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
@@ -176,7 +173,7 @@ export class FireEditComponent {
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.target.value;
+    const province_id = event.value;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
   }
@@ -238,5 +235,9 @@ export class FireEditComponent {
     if (table == 'showDetailsUpdate') {
       this.showDetailsUpdate = true;
     }
+  }
+
+  back() {
+    this.router.navigate([`/fire`]);
   }
 }

@@ -6,7 +6,7 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="formData">
     <div *ngIf="!showInputForeign">
-      <div class="form-column mt-40">
+      <div class="mt-40">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -41,8 +41,9 @@
                   optionLabel="descripcion"
                   optionValue="id"
                   placeholder="Clase suceso"
-                  [style]="{ width: '100%' }"
+                  [style]="{ width: '100%', }"
                   class="form-column"
+                  [panelStyle]="{ maxWidth: '200px' }"
                   emptyMessage=" "
                 />
               </div>
@@ -51,7 +52,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -97,13 +98,13 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
               <div class="form-row">
                 <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Denominación
+                  Denominación.
                 </div>
                 <input
                   type="text"
@@ -182,7 +183,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -225,7 +226,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -275,7 +276,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -297,7 +298,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15 border-rounded p-12">
+      <div class="mt-15 border-rounded p-12">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -343,7 +344,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -365,7 +366,7 @@
         </div>
       </div>
 
-      <div class="form-column mt-15">
+      <div class="mt-15">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">

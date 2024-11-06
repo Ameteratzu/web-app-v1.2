@@ -53,6 +53,14 @@ export class FireService {
     );
   }
 
+  getById(id: number) {
+    let endpoint = `/Incendios/${id}`;
+
+    return firstValueFrom(
+      this.http.get<Fire>(endpoint).pipe((response) => response)
+    );
+  }
+
   details(fire_id: number) {
     const endpoint = `/Incendios/${fire_id}/detalles`;
 

@@ -182,6 +182,10 @@ table tr:nth-child(odd) {
   justify-content: between;
 }
 
+.justify-content-end {
+  justify-content: flex-end !important;
+}
+
 .p-multiselect-label {
   height: 48px;
   vertical-align: middle;

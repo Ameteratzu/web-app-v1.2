@@ -132,8 +132,9 @@ export class FireFilterFormComponent implements OnInit {
     const territories = await this.territoryService.get();
     this.territories.set(territories);
 
-    const autonomousCommunities = await this.autonomousCommunityService.get();
-    this.autonomousCommunities.set(autonomousCommunities);
+    //const autonomousCommunities = await this.autonomousCommunityService.get();
+    //this.autonomousCommunities.set(autonomousCommunities);
+    //getByCountry;
 
     const fireStatus = await this.fireStatusService.get();
     this.fireStatus.set(fireStatus);
@@ -152,6 +153,32 @@ export class FireFilterFormComponent implements OnInit {
 
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
+
+    this.loadCommunities();
+  }
+
+  changeTerritory(event: any) {
+    this.formData.patchValue({
+      country: event.value == 1 ? 60 : null,
+      autonomousCommunity: null,
+      province: null,
+      municipality: null,
+    });
+    if (event.value == 1) {
+      this.loadCommunities();
+    } else {
+      this.autonomousCommunities.set([]);
+    }
+
+    this.provinces.set([]);
+  }
+
+  async loadCommunities() {
+    const autonomousCommunities =
+      await this.autonomousCommunityService.getByCountry(
+        this.formData.value.country
+      );
+    this.autonomousCommunities.set(autonomousCommunities);
   }
 
   async loadProvinces(event: any) {

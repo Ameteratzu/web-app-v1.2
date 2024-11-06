@@ -7,8 +7,8 @@ import { Campo } from '../types/Campo.type';
 export class CamposImpactoService {
   private http = inject(HttpClient);
 
-  getFieldsById(id: string) {
-    let endpoint = `/campos-impactos/${id}`;
+  getFieldsById(idImpacto: string) {
+    let endpoint = `/campos-impactos/${idImpacto}`;
 
     return firstValueFrom(
       this.http.get<Campo[]>(endpoint).pipe((response) => response)

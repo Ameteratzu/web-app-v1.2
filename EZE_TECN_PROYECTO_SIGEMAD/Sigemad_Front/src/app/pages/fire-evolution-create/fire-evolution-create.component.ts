@@ -109,6 +109,8 @@ export class FireEvolutionCreateComponent {
   public mediaTypes = signal<MediaType[]>([]);
   public recordTypes = signal<RecordType[]>([]);
   public minorEntities = signal<MinorEntity[]>([]);
+  //se esta creando o modificando un campo
+  public isCreate = signal<boolean>(false);
 
   public fieldCampos = signal<Campo[]>([]);
 
@@ -199,11 +201,9 @@ export class FireEvolutionCreateComponent {
     this.impactTypes = impactTypes;
 
     this.formGroup.patchValue({
-      affectedSurface: 86,
       number: 1,
       injureds: 22,
       participants: 15,
-      unit: 'BRIF',
       ownership_2: 'Comunidad Farol de Navarra',
     });
 
@@ -752,7 +752,9 @@ export class FireEvolutionCreateComponent {
   public async setType(event: any) {
     this.type = event.value;
     this.getDenominations();
+  }
 
+  async changeDenomination(event: any) {
     const camposImpacto = await this.camposImpactoService.getFieldsById(
       event.value === 'Consecuencia' ? `1` : `2`
     );
@@ -771,7 +773,6 @@ export class FireEvolutionCreateComponent {
       const type = this.impacts().filter(
         (item) => item.descripcion == this.type
       );
-      console.info('....', type);
 
       const subgrupos = type[0].grupos.filter(
         (item: any) => item.descripcion == this.group
