@@ -8,6 +8,8 @@ using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfec
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
@@ -30,6 +32,7 @@ using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings
@@ -104,6 +107,10 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>();
 
             CreateMap<Territorio, TerritorioVm>();
+            CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
+            CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
+            CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
+            .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
         }
     }
 }

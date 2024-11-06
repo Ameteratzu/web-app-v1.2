@@ -171,4 +171,61 @@
   <data name="UbicacionNoVacio" xml:space="preserve">
     <value>Location cannot be empty</value>
   </data>
+  <data name="IncendioObligatorio" xml:space="preserve">
+    <value>Fire is mandatory</value>
+  </data>
+  <data name="IncendioInvalido" xml:space="preserve">
+    <value>Fire is invalid</value>
+  </data>
+  <data name="TipoDireccionEmergenciaObligatorio" xml:space="preserve">
+    <value>Emergency address type is mandatory</value>
+  </data>
+  <data name="TipoDireccionEmergenciaInvalido" xml:space="preserve">
+    <value>Emergency address type is invalid</value>
+  </data>
+  <data name="MunicipioCECOPIInvalido" xml:space="preserve">
+    <value>Municipality CECOPI is invalid</value>
+  </data>
+  <data name="MunicipioCECOPIObligatorio" xml:space="preserve">
+    <value>Municipality CECOPI is mandatory</value>
+  </data>
+  <data name="MunicipioPMAiInvalido" xml:space="preserve">
+    <value>Municipality PMA is invalid</value>
+  </data>
+  <data name="MunicipioPMAObligatorio" xml:space="preserve">
+    <value>Municipality PMA is mandatory</value>
+  </data>
+  <data name="ProvinciaPMAInvalido" xml:space="preserve">
+    <value>Province PMA es invalido</value>
+  </data>
+  <data name="ProvinciaPMAObligatorio" xml:space="preserve">
+    <value>Province PMA is invalido</value>
+  </data>
+  <data name="ProvinciaCECOPIInvalido" xml:space="preserve">
+    <value>Province CECOPI es invalid</value>
+  </data>
+  <data name="ProvinciaCECOPIObligatorio" xml:space="preserve">
+    <value>Province CECOPI es mandatory</value>
+  </data>
+  <data name="GeoPosicionPMAInvalida" xml:space="preserve">
+    <value>PMA Geometry is invalid, reference system is not Wgs84</value>
+  </data>
+  <data name="GeoPosicionPMAObligatoria" xml:space="preserve">
+    <value>GeoPosicion PMA is mandatory</value>
+  </data>
+  <data name="GeoPosicionCECOPInvalida" xml:space="preserve">
+    <value>CECOPI Geometry is invalid, reference system is not Wgs84</value>
+  </data>
+  <data name="GeoPosicionCECOPIObligatoria" xml:space="preserve">
+    <value>CECOPI GeoPositioning is mandatory</value>
+  </data>
+  <data name="AutoridadQueDirigeObligatorio" xml:space="preserve">
+    <value>Directing Authority is mandatory</value>
+  </data>
+  <data name="AutoridadQueDirigeEnBlanco" xml:space="preserve">
+    <value>Directing authority cannot be blank</value>
+  </data>
+  <data name="FechaInicioPMAObligatorio" xml:space="preserve">
+    <value>PMA Start date is mandatory</value>
+  </data>
 </root>
