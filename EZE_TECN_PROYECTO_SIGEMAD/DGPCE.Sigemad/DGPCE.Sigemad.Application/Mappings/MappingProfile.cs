@@ -104,7 +104,8 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<AreaAfectada, AreaAfectadaVm>();
             CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();
             CreateMap<CreateAreaAfectadaCommand, AreaAfectada>();
-            CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>();
+            CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>()
+                .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Etiqueta));
 
             CreateMap<Territorio, TerritorioVm>();
             CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
