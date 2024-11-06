@@ -16,7 +16,11 @@ SET IDENTITY_INSERT dbo.TipoPlan ON;
 
 INSERT INTO dbo.TipoPlan (Id,Descripcion) VALUES
 	 (2,N'Estatal'),
-	 (3,N'Autonómica'),
-	 (4,N'Municipal');
+	 --(3,N'Autonómica'),
+	 --(4,N'Municipal');
+	 (5,N'Territorial'),
+	 (6,N'Especial de CA'),
+	 (7,N'Autoprotección'),
+	 (8,N'Otro');
 
 SET IDENTITY_INSERT dbo.TipoPlan OFF;

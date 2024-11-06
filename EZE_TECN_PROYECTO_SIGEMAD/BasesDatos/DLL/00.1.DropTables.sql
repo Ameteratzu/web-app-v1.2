@@ -42,10 +42,10 @@ GO
 DROP TABLE IF EXISTS CaracterMedio
 GO
 
-DROP TABLE IF EXISTS TipoDanio
+DROP TABLE IF EXISTS ImpactoEvolucion
 GO
 
-DROP TABLE IF EXISTS ImpactoEvolucion
+DROP TABLE IF EXISTS TipoDanio
 GO
 
 DROP TABLE IF EXISTS ValidacionImpactoClasificado
