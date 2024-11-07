@@ -396,3 +396,10 @@ calendaricon {
   margin-top: -8px !important;
   margin-right: -12px !important;
 }
+
+.p-toast-message-content {
+  padding: 12px !important;
+}
+.p-toast-message-text {
+  margin-left: 12px;
+}

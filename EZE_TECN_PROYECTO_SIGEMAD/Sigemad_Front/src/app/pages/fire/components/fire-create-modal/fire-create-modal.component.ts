@@ -14,11 +14,13 @@ import {
 } from '@angular/material/dialog';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
+import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ToastModule } from 'primeng/toast';
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
 import { FireService } from '../../../../services/fire.service';
@@ -47,7 +49,9 @@ import { MapCreateComponent } from '../../../map-create/map-create.component';
     CheckboxModule,
     MatDialogModule,
     MapCreateComponent,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './fire-create-modal.component.html',
   styleUrl: './fire-create-modal.component.css',
 })
@@ -64,6 +68,8 @@ export class FireCreateModalComponent implements OnInit {
   public eventService = inject(EventService);
   public countryServices = inject(CountryService);
   public fireService = inject(FireService);
+
+  public messageService = inject(MessageService);
 
   public territories = signal<Territory[]>([]);
   public provinces = signal<Province[]>([]);
@@ -162,11 +168,19 @@ export class FireCreateModalComponent implements OnInit {
 
       const data = this.formData.value;
 
+      const municipio = this.municipalities().find(
+        (item) => item.id === data.municipality
+      );
+
       data.geoposition = {
-        type: 'Polygon',
-        coordinates: this.featuresCoords,
+        type: 'Point',
+        coordinates: [
+          municipio?.geoPosicion.coordinates[0],
+          municipio?.geoPosicion.coordinates[1],
+        ],
       };
 
+      /*
       data.coordinates = JSON.parse(
         localStorage.getItem('coordinates') ?? '{}'
       );
@@ -182,11 +196,21 @@ export class FireCreateModalComponent implements OnInit {
           coordinates: data.coordinates,
         };
       }
+      */
 
       await this.fireService
         .post(data)
         .then((response) => {
-          //window.location.href = '/fire';
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Creado',
+            detail: 'Incendio creado correctamente',
+            //life: 90000,
+          });
+          //this.matDialogRef.close();
+          new Promise((resolve) => setTimeout(resolve, 2000)).then(
+            () => (window.location.href = '/fire')
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -226,16 +250,25 @@ export class FireCreateModalComponent implements OnInit {
   }
 
   openModalMapCreate() {
-    const municipio = this.municipalities().find(
-      (item) => item.id === this.formData.value.municipality
-    );
+    let x;
+    if (this.showInputForeign) {
+      const paises = this.countries().find(
+        (item) => item.id === this.formData.value.country
+      );
+      x = paises;
+    } else {
+      const municipio = this.municipalities().find(
+        (item) => item.id === this.formData.value.municipality
+      );
+      x = municipio;
+    }
 
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
       height: '780px',
       maxHeight: '780px',
-      data: { municipio, listaMunicipios: this.municipalities() },
+      data: { municipio: x, listaMunicipios: this.municipalities() },
     });
 
     dialogRef.componentInstance.save.subscribe(

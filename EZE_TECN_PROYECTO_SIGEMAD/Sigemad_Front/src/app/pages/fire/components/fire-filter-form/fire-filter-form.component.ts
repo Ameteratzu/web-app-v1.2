@@ -240,8 +240,8 @@ export class FireFilterFormComponent implements OnInit {
       IdSuperficieAfectada: affectedArea,
       IdMovimiento: move,
       IdComparativoFecha: between,
-      FechaInicio: moment(start).format('YYYY-MM-DD HH:MM:SS.ssss'),
-      FechaFin: moment(end).format('YYYY-MM-DD HH:MM:SS.ssss'),
+      FechaInicio: moment(start).format('YYYY-MM-DD'),
+      FechaFin: moment(end).format('YYYY-MM-DD'),
     });
     this.fires = fires;
     this.firesChange.emit(this.fires);
