@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import moment from 'moment';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { Fire } from '../../../../types/fire.type';
 import { FireTableToolbarComponent } from '../fire-table-toolbar/fire-table-toolbar.component';
@@ -14,4 +15,30 @@ import { FireTableToolbarComponent } from '../fire-table-toolbar/fire-table-tool
 })
 export class FireTableComponent {
   @Input() fires: ApiResponse<Fire[]>;
+
+  getUbicacion(fire: Fire) {
+    let label = '';
+    switch (fire.idTerritorio) {
+      case 1:
+        label = `${fire?.municipio?.descripcion}`;
+        break;
+      case 2:
+        label = `${fire?.municipio?.descripcion}`;
+        break;
+      case 3:
+        label = `Transfronterizo`;
+        break;
+
+      default:
+        break;
+    }
+    return label;
+  }
+
+  getLastUpdated(fire: Fire) {
+    const { fechaInicio, fechaModificacion } = fire;
+    return fechaModificacion
+      ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm')
+      : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+  }
 }

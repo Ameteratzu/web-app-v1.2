@@ -61,6 +61,33 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Asunto no puede superar 500 caracteres.
+        /// </summary>
+        public static string AsuntoMaxLegth {
+            get {
+                return ResourceManager.GetString("AsuntoMaxLegth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Asunto es obligatorio.
+        /// </summary>
+        public static string AsuntoNoNulo {
+            get {
+                return ResourceManager.GetString("AsuntoNoNulo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Asunto no puede ser vacio.
+        /// </summary>
+        public static string AsuntoNoVacio {
+            get {
+                return ResourceManager.GetString("AsuntoNoVacio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Autoridad que dirige no puede estar en blanco.
         /// </summary>
         public static string AutoridadQueDirigeEnBlanco {
@@ -133,11 +160,20 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Evolucion es obligatotio.
+        ///   Busca una cadena traducida similar a Evolucion es obligatorio.
         /// </summary>
         public static string EvolucionObligatorio {
             get {
                 return ResourceManager.GetString("EvolucionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a FechaHora no puede ser vacio.
+        /// </summary>
+        public static string FechaHoraNoVacio {
+            get {
+                return ResourceManager.GetString("FechaHoraNoVacio", resourceCulture);
             }
         }
         
@@ -241,6 +277,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Id Incendio no puede estar vacio.
+        /// </summary>
+        public static string IncendioIdNoVacio {
+            get {
+                return ResourceManager.GetString("IncendioIdNoVacio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Id Incendio es obligatorio.
+        /// </summary>
+        public static string IncendioIdObligatorio {
+            get {
+                return ResourceManager.GetString("IncendioIdObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Incendio es inválido.
         /// </summary>
         public static string IncendioInvalido {
@@ -255,6 +309,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string IncendioObligatorio {
             get {
                 return ResourceManager.GetString("IncendioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a MedioId no puede ser vacio.
+        /// </summary>
+        public static string MedioIdNoVacio {
+            get {
+                return ResourceManager.GetString("MedioIdNoVacio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a MedioId es obligatorio.
+        /// </summary>
+        public static string MedioIdObligatorio {
+            get {
+                return ResourceManager.GetString("MedioIdObligatorio", resourceCulture);
             }
         }
         

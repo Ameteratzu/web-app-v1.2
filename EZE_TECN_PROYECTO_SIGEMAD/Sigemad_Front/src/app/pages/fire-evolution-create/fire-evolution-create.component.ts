@@ -453,7 +453,7 @@ export class FireEvolutionCreateComponent {
     const fieldError = fieldsRequired.some((field) => {
       return this.dinamicDataConsecuencesActions()[field.campo] ? false : true;
     });
-    console.info('fieldError', fieldError);
+
     if (fieldError) {
       this.consequenceActionError = true;
       return;

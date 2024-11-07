@@ -1,12 +1,14 @@
 <div>
+  <!--
   <div class="header font-size-24 p-20">
     <div class="text-red ml-20">Nuevo</div>
 
     <div class="text-center text-green">Datos evolución</div>
   </div>
-
+  -->
   <div class="container">
     <div class="sidebar">
+      <div class="text-red ml-20 font-size-24 my-20">Nuevo</div>
       <div
         class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
         (click)="scrollToSection('sectionRegistro')"
@@ -17,7 +19,7 @@
         class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
         (click)="scrollToSection('sectionDatosPersonales')"
       >
-        Datos personales
+        Datos principales
       </div>
       <div
         class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
@@ -47,19 +49,33 @@
 
     <div class="form-container">
       <form (submit)="submit()" [formGroup]="formGroup">
-        <div class="d-flex justify-content-end mb-20">
-          <div>
-            <button type="submit" class="btn-blue">
-              <img class="w-30 h-30" src="/assets/img/check.svg" alt="check" />
-            </button>
+        <div class="flex-container mb-20">
+          <div class="center-input font-size-24 text-green">
+            Datos evolución
+          </div>
 
-            <button (click)="closeModal()" type="button" class="btn-white">
-              <img class="w-30 h-30" src="/assets/img/close.svg" alt="close" />
-            </button>
+          <div class="right-input">
+            <div>
+              <button type="submit" class="btn-blue">
+                <img
+                  class="w-30 h-30"
+                  src="/assets/img/check.svg"
+                  alt="check"
+                />
+              </button>
 
-            <button (click)="closeModal()" type="button" class="btn-white">
-              <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
-            </button>
+              <button (click)="closeModal()" type="button" class="btn-white">
+                <img
+                  class="w-30 h-30"
+                  src="/assets/img/close.svg"
+                  alt="close"
+                />
+              </button>
+
+              <button (click)="closeModal()" type="button" class="btn-white">
+                <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -103,7 +119,7 @@
                     <b>Fecha y hora</b>
 
                     <p-calendar
-                      dateFormat="d/mm/yy HH:mm"
+                      dateFormat="d/mm/yy"
                       [showTime]="true"
                       [hourFormat]="'12'"
                       formControlName="startDate"
@@ -136,6 +152,7 @@
                       autoWidth="false"
                       [style]="{ width: '100%' }"
                       class="form-column"
+                      [showClear]="true"
                     />
                   </div>
                 </div>
@@ -158,6 +175,7 @@
                       autoWidth="false"
                       [style]="{ width: '100%' }"
                       class="form-column"
+                      [showClear]="true"
                     />
                   </div>
                 </div>
@@ -190,7 +208,7 @@
                 id="sectionDatosPersonales"
                 class="font-size-20 font-weight-bold text-orange"
               >
-                DATOS PERSONALES
+                DATOS PRINCIPALES
               </div>
             </div>
 
@@ -200,7 +218,7 @@
                   <div class="form-row">
                     <b>Fecha y hora de actualización</b>
                     <p-calendar
-                      dateFormat="d/mm/yy HH:mm"
+                      dateFormat="d/mm/yy"
                       [showTime]="true"
                       [hourFormat]="'12'"
                       formControlName="datetimeUpdate"
@@ -229,6 +247,7 @@
                       autoWidth="false"
                       [style]="{ width: '100%' }"
                       class="form-column"
+                      [showClear]="true"
                     />
                   </div>
                 </div>
@@ -289,6 +308,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                     <span *ngIf="errors?.idEstadoIncendio" class="text-red">
@@ -330,6 +350,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -390,7 +411,7 @@
                     <div class="form-row">
                       <b>Fecha y hora</b>
                       <p-calendar
-                        dateFormat="d/mm/yy HH:mm"
+                        dateFormat="d/mm/yy"
                         [showTime]="true"
                         [hourFormat]="'12'"
                         formControlName="startAreaAffected"
@@ -423,6 +444,7 @@
                         (onChange)="loadMunicipalities($event, '1')"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -448,6 +470,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -470,6 +493,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -618,6 +642,7 @@
                         (onChange)="setType($event)"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -637,6 +662,7 @@
                         [style]="{ width: '100%' }"
                         class="form-column"
                         (onChange)="setGroup($event)"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -663,6 +689,7 @@
                         [style]="{ width: '100%' }"
                         class="form-column"
                         (onChange)="changeDenomination($event)"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -859,6 +886,7 @@
                         [style]="{ width: '100%' }"
                         class="form-column"
                         (onChange)="changeMediaTypes($event)"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -912,6 +940,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -930,6 +959,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -968,6 +998,7 @@
                         (onChange)="loadMunicipalities($event, '2')"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>
@@ -986,6 +1017,7 @@
                         optionValue="id"
                         [style]="{ width: '100%' }"
                         class="form-column"
+                        [showClear]="true"
                       />
                     </div>
                   </div>

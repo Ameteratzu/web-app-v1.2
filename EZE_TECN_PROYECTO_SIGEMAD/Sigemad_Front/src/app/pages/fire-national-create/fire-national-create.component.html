@@ -1,104 +1,148 @@
 <div class="ms-30">
-	<div class="text-green mt-20 font-size-24 inter text-center">Crear incendio</div>
+  <div class="text-green mt-20 font-size-24 inter text-center">
+    Crear incendio
+  </div>
 
-	<div *ngIf="error" class="text-center alert-danger">Se produjeron uno o más errores de validación</div>
+  <div *ngIf="error" class="text-center alert-danger">
+    Se produjeron uno o más errores de validación
+  </div>
 
-	<form (ngSubmit)="onSubmit()" [formGroup]="formData">
-		<div class="d-flex mt-30">
-			<div class="inter p-12 font-weight-bold font-size-16 w-120">
-				Territorio
-			</div>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formData">
+    <div class="d-flex mt-30">
+      <div class="inter p-12 font-weight-bold font-size-16 w-120">
+        Territorio
+      </div>
 
-			<div class="w-300">
-				<select (change)="onChange($event)" formControlName="territory" class="form-control">
-					<option value="{{ territory.id }}" *ngFor="let territory of territories()">
-						{{ territory.descripcion }}
-					</option>
-				</select>
-			</div>
-		</div>
+      <div class="w-300">
+        <select
+          (change)="onChange($event)"
+          formControlName="territory"
+          class="form-control"
+        >
+          <option
+            value="{{ territory.id }}"
+            *ngFor="let territory of territories()"
+          >
+            {{ territory.descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
 
-		<div class="d-flex mt-15">
-			<div class="inter p-12 font-weight-bold font-size-16 w-120">
-				Provincia
-			</div>
+    <div class="d-flex mt-15">
+      <div class="inter p-12 font-weight-bold font-size-16 w-120">
+        Provincia
+      </div>
 
-			<div class="w-300">
-				<select class="form-control" formControlName="province" (change)="loadMunicipalities($event)">
-					<option value=""></option>
-					<option value="{{ province.id }}" *ngFor="let province of provinces()">
-						{{ province.descripcion }}
-					</option>
-				</select>
-			</div>
+      <div class="w-300">
+        <select
+          class="form-control"
+          formControlName="province"
+          (change)="loadMunicipalities($event)"
+        >
+          <option value=""></option>
+          <option
+            value="{{ province.id }}"
+            *ngFor="let province of provinces()"
+          >
+            {{ province.descripcion }}
+          </option>
+        </select>
+      </div>
 
-			<div class="inter p-12 font-weight-bold font-size-16 w-120 ms-30">
-				Municipio
-			</div>
+      <div class="inter p-12 font-weight-bold font-size-16 w-120 ms-30">
+        Municipio
+      </div>
 
-			<div>
-				<select class="form-control" formControlName="municipality" (change)="setMunicipalityId($event)">
-					<option value=""></option>
-					<option value="{{ municipality.id }}" *ngFor="let municipality of municipalities()">
-						{{ municipality.descripcion }}
-					</option>
-				</select>
-			</div>
+      <div>
+        <select
+          class="form-control"
+          formControlName="municipality"
+          (change)="setMunicipalityId($event)"
+        >
+          <option value=""></option>
+          <option
+            value="{{ municipality.id }}"
+            *ngFor="let municipality of municipalities()"
+          >
+            {{ municipality.descripcion }}
+          </option>
+        </select>
+      </div>
 
-			<img (click)="openModalMapCreate()" style="cursor: pointer; margin-left: 10px" src="/assets/img/location-btn.svg" alt="location-btn">
-		</div>
+      <img
+        (click)="openModalMapCreate()"
+        style="cursor: pointer; margin-left: 10px"
+        src="/assets/img/location-btn.svg"
+        alt="location-btn"
+      />
+    </div>
 
-		<div class="d-flex mt-15">
-			<div class="inter p-12 font-weight-bold font-size-16 w-120">
-				Denominación
-			</div>
+    <div class="d-flex mt-15">
+      <div class="inter p-12 font-weight-bold font-size-16 w-120">
+        Denominación
+      </div>
 
-			<div class="w-300">
-				<input class="form-control" formControlName="name" value="{{ municipalityName }}" placeholder="Santa María de Guía de Gran Canaria">
-			</div>
+      <div class="w-300">
+        <input
+          class="form-control"
+          formControlName="name"
+          value="{{ municipalityName }}"
+          placeholder="Santa María de Guía de Gran Canaria"
+        />
+      </div>
 
-			<div class="inter p-12 font-weight-bold font-size-16 ms-30 w-120">
-				Fecha de inicio
-			</div>
+      <div class="inter p-12 font-weight-bold font-size-16 ms-30 w-120">
+        Fecha de inicio
+      </div>
 
-			<div class="me-30">
-				<input type="datetime-local" formControlName="start" class="form-control">
-			</div>
-		</div>
+      <div class="me-30">
+        <input
+          type="datetime-local"
+          formControlName="start"
+          class="form-control"
+        />
+      </div>
+    </div>
 
-		<div class="d-flex mt-15">
-			<div class="inter p-12 font-weight-bold font-size-16 w-120">
-				Tipo de suceso
-			</div>
+    <div class="d-flex mt-15">
+      <div class="inter p-12 font-weight-bold font-size-16 w-120">
+        Tipo de suceso
+      </div>
 
-			<div>
-				<select class="form-control" formControlName="event">
-					<option value=""></option>
-					<option value="{{ event.id }}" *ngFor="let event of events()">
-						{{ event.descripcion }}
-					</option>
-				</select>
-			</div>
-		</div>
+      <div>
+        <select class="form-control" formControlName="event">
+          <option value=""></option>
+          <option value="{{ event.id }}" *ngFor="let event of events()">
+            {{ event.descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
 
-		<div class="d-flex mt-15">
-			<div class="inter w-120 p-12 font-weight-bold font-size-16">
-				Nota general
-			</div>
+    <div class="d-flex mt-15">
+      <div class="inter w-120 p-12 font-weight-bold font-size-16">
+        Nota general
+      </div>
 
-			<div>
-				<textarea formControlName="generalNote" cols="87" rows="4" class="form-control"></textarea>
-			</div>
-		</div>
+      <div>
+        <textarea
+          formControlName="generalNote"
+          cols="87"
+          rows="4"
+          class="form-control"
+        ></textarea>
+      </div>
+    </div>
 
-		<div class="mt-30 mb-30 text-right" style="margin-right: 50px">
-			<button type="submit" class="btn-blue">
-				<img src="/assets/img/check.svg" alt="check">
-			</button>
+    <div class="mt-30 mb-30 text-right" style="margin-right: 50px">
+      <button type="submit" class="btn-blue">
+        <img src="/assets/img/check.svg" alt="check" />
+      </button>
 
-			<button type="button" (click)="closeModal()" class="btn-white">
-				<img src="/assets/img/close.svg" alt="close">
-			</button>
-		</div>
-	</form>
+      <button type="button" (click)="closeModal()" class="btn-white">
+        <img src="/assets/img/close.svg" alt="close" />
+      </button>
+    </div>
+  </form>
 </div>

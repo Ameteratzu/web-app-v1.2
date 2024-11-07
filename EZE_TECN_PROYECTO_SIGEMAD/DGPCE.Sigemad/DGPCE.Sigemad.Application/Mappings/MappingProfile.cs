@@ -28,6 +28,7 @@ using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.CreateInt
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateIntervencionMedios;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
@@ -114,6 +115,8 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
             CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
             .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
+
+            CreateMap<CreateOtraInformacionCommand, OtraInformacion>();                     
         }
 
         private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

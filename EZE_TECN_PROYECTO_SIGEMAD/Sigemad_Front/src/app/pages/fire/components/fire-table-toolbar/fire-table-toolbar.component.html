@@ -1,7 +1,9 @@
 <div class="d-flex-center mt-15">
   <div class="w-50 inter text-silver text-weight-bold">
-    Resultados 1-{{ fires.pageSize }} de {{ fires.count }} ordenados por último
-    registro (desc).
+    Resultados 1-{{
+      fires.count < fires.pageSize ? fires.count : fires.pageSize
+    }}
+    de {{ fires.count }} ordenados por último registro (desc).
   </div>
 
   <div class="w-50 ms-50 text-right">

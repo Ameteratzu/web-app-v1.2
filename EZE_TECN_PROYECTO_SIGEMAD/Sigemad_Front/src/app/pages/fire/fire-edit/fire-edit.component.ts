@@ -122,6 +122,7 @@ export class FireEditComponent {
 
   async ngOnInit() {
     localStorage.removeItem('coordinates');
+    console.info('----');
 
     this.menuItemActiveService.set.emit('/fire');
 
@@ -141,7 +142,6 @@ export class FireEditComponent {
 
     const fire = await this.fireService.getById(fire_id);
     this.fire = fire;
-
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
@@ -239,5 +239,13 @@ export class FireEditComponent {
 
   back() {
     this.router.navigate([`/fire`]);
+  }
+
+  getEstadoDesc(fire: Fire) {
+    const desc = fire?.estadoSuceso?.descripcion
+      ? fire?.estadoSuceso?.descripcion
+      : '';
+    return;
+    desc;
   }
 }

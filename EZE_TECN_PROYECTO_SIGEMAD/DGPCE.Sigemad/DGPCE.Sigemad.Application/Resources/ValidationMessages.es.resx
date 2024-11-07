@@ -171,9 +171,20 @@
   <data name="UbicacionNoVacio" xml:space="preserve">
     <value>Ubicación no puede ser vacio</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="IdNoVacio" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="IdObligatorio" xml:space="preserve">
+    <value>Id es obligatorio</value>
+  </data>
+  <data name="IdNoVacio" xml:space="preserve">
+    <value>Id no puede ser vacio</value>
+  </data>
+  <data name="EvolucionObligatorio" xml:space="preserve">
+    <value>Evolucion es obligatorio</value>
+  </data>
+  <data name="FechaHoraObligatorio" xml:space="preserve">
+    <value>FechaHora es obligatorio</value>
+  </data>
+  <data name="EntidadMenorObligatorio" xml:space="preserve">
+    <value>Entidad Menor es obligatorio</value>
   </data>
   <data name="IncendioObligatorio" xml:space="preserve">
     <value>Incendio es obligatorio</value>
@@ -231,5 +242,29 @@
   </data>
   <data name="FechaInicioPMAObligatorio" xml:space="preserve">
     <value>Fecha inicio PMA es obligatoria</value>
+  </data>
+  <data name="IncendioIdNoVacio" xml:space="preserve">
+    <value>Id Incendio no puede estar vacio</value>
+  </data>
+  <data name="IncendioIdObligatorio" xml:space="preserve">
+    <value>IdIncendio es obligatorio</value>
+  </data>
+  <data name="MedioIdNoVacio" xml:space="preserve">
+    <value>MedioId no puede ser vacio</value>
+  </data>
+  <data name="MedioIdObligatorio" xml:space="preserve">
+    <value>MedioId es obligatorio</value>
+  </data>
+  <data name="FechaHoraNoVacio" xml:space="preserve">
+    <value>FechaHora no puede ser vacio</value>
+  </data>
+  <data name="AsuntoNoVacio" xml:space="preserve">
+    <value>Asunto no puede ser vacio</value>
+  </data>
+  <data name="AsuntoNoNulo" xml:space="preserve">
+    <value>Asunto es obligatorio</value>
+  </data>
+  <data name="AsuntoMaxLegth" xml:space="preserve">
+    <value>Asunto no puede superar 500 caracteres</value>
   </data>
 </root>

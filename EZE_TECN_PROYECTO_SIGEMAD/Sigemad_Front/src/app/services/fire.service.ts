@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
-import moment from 'moment';
 import { ApiResponse } from '../types/api-response.type';
 import { FireDetail } from '../types/fire-detail.type';
 import { Fire } from '../types/fire.type';
@@ -14,39 +13,22 @@ export class FireService {
   public datepipe = inject(DatePipe);
   public endpoint = '/Incendios';
 
+  generateUrlWitchParams({ url, params }: any) {
+    return Object.keys(params).reduce((prev: any, key: any, index: any) => {
+      if (!params[key]) {
+        return `${prev}`;
+      }
+      return `${prev}&${key}=${params[key]}`;
+    }, `${url}`);
+  }
+
   get(query: any = '') {
-    let endpoint = '/Incendios?Sort=desc&PageSize=15';
+    const URLBASE = '/Incendios?Sort=desc&PageSize=15';
 
-    if (query != '') {
-      console.log(moment(query.start).format('MM-DD-YYYY'));
-
-      const territory = query.territory;
-      const autonomousCommunity = query.autonomousCommunity;
-      const province = query.province;
-      const municipality = query.municipality;
-      const fireStatus = query.fireStatus;
-      const episode = query.episode;
-      const severityLevel = query.severityLevel;
-      const affectedArea = query.affectedArea;
-      const start = moment(query.start).format('YYYY-MM-DD HH:MM:SS.ssss');
-      const end = moment(query.end).format('YYYY-MM-DD HH:MM:SS.ssss');
-      const between = query.between;
-      const move = query.move;
-
-      endpoint = `/Incendios?PageSize=15&Sort=desc&IdTerritorio=${
-        territory ? territory : ''
-      }&IdCcaa=${autonomousCommunity ? autonomousCommunity : ''}&IdProvincia=${
-        province ? province : ''
-      }&IdMunicipio=${municipality ? municipality : ''}&IdEstado=${
-        fireStatus ? fireStatus : ''
-      }&IdEpisodio=${episode ? episode : ''}&IdNivelGravedad=${
-        severityLevel ? severityLevel : ''
-      }&IdSuperficieAfectada=${affectedArea ? affectedArea : ''}&FechaInicio=${
-        start ? start : ''
-      }&IdComparativoFecha=${between ? between : ''}&IdMovimiento=${
-        move ? move : ''
-      }&FechaFin=${end ? end : ''}&Page=1`;
-    }
+    const endpoint = this.generateUrlWitchParams({
+      url: URLBASE,
+      params: query,
+    });
 
     return firstValueFrom(
       this.http.get<ApiResponse<Fire[]>>(endpoint).pipe((response) => response)
@@ -82,12 +64,13 @@ export class FireService {
       IdSuceso: data.event,
       IdTipoSuceso: data.event,
       IdClaseSuceso: data.event,
-      IdEstado: 1,
-      IdPeligroInicial: 1,
       notaGeneral: data.generalNote,
       GeoPosicion: data.geoposition,
-      idPais: 60,
+      idPais: data.country,
+      ubicacion: data.ubication,
       IdEstadoSuceso: 1,
+      IdEstado: 1,
+      IdPeligroInicial: 1,
     };
 
     return firstValueFrom(

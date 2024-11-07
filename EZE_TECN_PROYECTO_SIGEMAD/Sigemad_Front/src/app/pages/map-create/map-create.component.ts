@@ -1,5 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+
+import { DropdownModule } from 'primeng/dropdown';
 
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
@@ -8,21 +22,27 @@ import Point from 'ol/geom/Point';
 import { Draw, Snap } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { transform } from 'ol/proj';
 import { OSM, Vector as VectorSource } from 'ol/source';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
+import { CommonModule } from '@angular/common';
+import { Geometry } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
 import { Municipality } from '../../types/municipality.type';
 
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, MatDialogModule, DropdownModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
 export class MapCreateComponent {
+  @Input() municipio: any;
+  @Input() listaMunicipios: any;
+  @Output() save = new EventEmitter<Feature<Geometry>[]>();
+
   public source: VectorSource;
   public map: Map;
   public draw: Draw;
@@ -30,12 +50,15 @@ export class MapCreateComponent {
   public vector: VectorLayer;
   public coords: any;
 
+  public data = inject(MAT_DIALOG_DATA);
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
 
   public municipalityService = inject(MunicipalityService);
 
   public municipalities = signal<Municipality[]>([]);
+
+  public municipioSelected = signal(this.data?.municipio || {});
 
   public length: number;
   public latitude: number;
@@ -44,8 +67,11 @@ export class MapCreateComponent {
 
   async ngOnInit() {
     // Map
-    this.length = Number(localStorage.getItem('length'));
-    this.latitude = Number(localStorage.getItem('latitude'));
+    //this.length = Number(localStorage.getItem('length'));
+    //this.latitude = Number(localStorage.getItem('latitude'));
+
+    const { municipio, listaMunicipios } = this.data;
+    //console.info('+++', municipio, listaMunicipios);
 
     this.source = new VectorSource();
     this.vector = new VectorLayer({
@@ -57,6 +83,7 @@ export class MapCreateComponent {
       },
     });
 
+    //console.info('----------', transform([-3, 40], 'EPSG:4326', 'EPSG:4326'));
     this.map = new Map({
       layers: [
         new TileLayer({
@@ -66,13 +93,20 @@ export class MapCreateComponent {
       ],
       target: 'map',
       view: new View({
-        center: transform([-3, 40], 'EPSG:4326', 'EPSG:4326'),
-        zoom: 6.4,
-        projection: 'EPSG:4326',
+        center: fromLonLat([
+          municipio.geoPosicion.coordinates[1],
+          municipio.geoPosicion.coordinates[0],
+        ]),
+        //center: fromLonLat([-2.9704191830794, 43.0277066101594]),
+        zoom: 12,
+        //projection: 'EPSG:4326',
       }),
     });
 
-    const point = new Point([this.length, this.latitude]);
+    const point = new Point([
+      municipio.geoPosicion.coordinates[1],
+      municipio.geoPosicion.coordinates[0],
+    ]);
 
     const feature = new Feature({
       geometry: point,
@@ -89,6 +123,9 @@ export class MapCreateComponent {
     this.addInteractions();
   }
 
+  changeMunicipio(event: any) {
+    console.info('event', event);
+  }
   addInteractions() {
     this.draw = new Draw({
       source: this.source,
@@ -123,6 +160,7 @@ export class MapCreateComponent {
     if (this.coords) {
       localStorage.setItem('coordinates' + this.section, this.coords);
       localStorage.setItem('polygon' + this.section, '1');
+      this.save.emit(this.coords);
       this.closeModal();
     }
   }

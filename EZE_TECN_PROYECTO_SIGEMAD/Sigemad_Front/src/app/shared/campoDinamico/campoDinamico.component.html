@@ -65,11 +65,12 @@
           class="form-column"
           optionValue="id"
           optionLabel="descripcion"
+          [showClear]="true"
         />
 
         <!-- Calendar Hour -->
         <p-calendar
-          dateFormat="d/mm/yy HH:mm"
+          dateFormat="d/mm/yy h:mm"
           [showTime]="true"
           [hourFormat]="'12'"
           *ngSwitchCase="'calendarHour'"

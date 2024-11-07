@@ -6,6 +6,7 @@ export type Fire = {
   id: number;
   denominacion: string;
   fechaInicio: string;
+  fechaModificacion: string;
   estadoSuceso: FireStatus;
   notaGeneral: string;
   idSuceso: number;
@@ -17,4 +18,7 @@ export type Fire = {
   idClaseSuceso: number;
   incendioNacional: FireNational;
   geoPosicion: GeoPosition;
+  municipio?: {
+    descripcion: string;
+  };
 };
