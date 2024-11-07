@@ -84,7 +84,9 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Evolucion, EvolucionVm>()
               .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.EvolucionProcedenciaDestinos != null ? src.EvolucionProcedenciaDestinos.Select(epd => epd.ProcedenciaDestino).ToList() : new List<ProcedenciaDestino>()));
 
-            CreateMap<UpdateEvolucionCommand, Evolucion>();
+            CreateMap<UpdateEvolucionCommand, Evolucion>()
+              .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
+
             CreateMap<ApplicationUser, ApplicationUserVm>();
 
             CreateMap<CreateImpactoEvolucionCommand, ImpactoEvolucion>();
@@ -112,6 +114,16 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
             CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
             .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
+        }
+
+        private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
+        {
+            if (source == null)
+            {
+                return new List<EvolucionProcedenciaDestino>();
+            }
+
+            return source.Select(id => new EvolucionProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
         }
     }
 }

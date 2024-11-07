@@ -1,7 +1,6 @@
 ﻿
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
-using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Features.Evoluciones.Services
@@ -12,6 +11,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Services
         Task<bool> ComprobacionEvolucionProcedenciaDestinos(ICollection<int>? evolucionProcedenciaDestinos);
         Task<Evolucion> CrearNuevaEvolucion(CreateEvolucionCommand request);
         Task EliminarEvolucion(DeleteEvolucionesCommand request);
-        Task CrearEvolucioneProcedenciaDestinos(int idEvolucion,ICollection<int> evolucionProcedenciaDestinos);
+        ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source);
     }
 }

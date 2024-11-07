@@ -74,6 +74,11 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Evolucion_EstadoIncendio");
 
+        builder.HasOne(d => d.SituacionOperativa)
+            .WithMany()
+            .HasForeignKey(d => d.IdSituacionOperativa)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(d => d.TipoRegistro)
             .WithMany()
             .HasForeignKey(d => d.IdTipoRegistro)
@@ -84,6 +89,7 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
              .WithOne(epd => epd.Evolucion)
              .HasForeignKey(epd => epd.IdEvolucion)
              .OnDelete(DeleteBehavior.Restrict);
+            
     }
 }
 

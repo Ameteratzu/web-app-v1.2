@@ -32,6 +32,8 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Vms
         public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
         public virtual TipoRegistro TipoRegistro { get; set; } = null!;
 
+        public virtual SituacionOperativa SituacionOperativa { get; set; } = null!;
+
         public ICollection<ProcedenciaDestino>? ProcedenciaDestinos { get; set; }
     }
 }

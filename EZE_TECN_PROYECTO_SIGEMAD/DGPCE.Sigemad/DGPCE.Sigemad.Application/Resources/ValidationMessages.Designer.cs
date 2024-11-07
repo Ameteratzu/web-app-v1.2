@@ -61,6 +61,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Autoridad que dirige no puede estar en blanco.
+        /// </summary>
+        public static string AutoridadQueDirigeEnBlanco {
+            get {
+                return ResourceManager.GetString("AutoridadQueDirigeEnBlanco", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Autoridad Que Dirige es obligatorio.
+        /// </summary>
+        public static string AutoridadQueDirigeObligatorio {
+            get {
+                return ResourceManager.GetString("AutoridadQueDirigeObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Clase de Suceso es obligatorio.
         /// </summary>
         public static string ClaseSucesoObligatorio {
@@ -138,6 +156,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string FechaInicioObligatorio {
             get {
                 return ResourceManager.GetString("FechaInicioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Fecha inicio PMA es obligatoria.
+        /// </summary>
+        public static string FechaInicioPMAObligatorio {
+            get {
+                return ResourceManager.GetString("FechaInicioPMAObligatorio", resourceCulture);
             }
         }
         
