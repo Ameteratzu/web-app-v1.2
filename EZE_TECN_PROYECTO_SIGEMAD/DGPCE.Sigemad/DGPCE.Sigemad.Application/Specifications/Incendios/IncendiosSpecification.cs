@@ -25,23 +25,24 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
 
+        
         if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)
         {
             switch (request.IdComparativoFecha.Value)
             {
                 case ComparacionTipos.IgualA:
-                    AddCriteria(incendio => incendio.FechaCreacion == request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) == request.FechaInicio);
                     break;
                 case ComparacionTipos.MayorQue:
-                    AddCriteria(incendio => incendio.FechaCreacion > request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaInicio);
                     break;
                 case ComparacionTipos.MenorQue:
-                    AddCriteria(incendio => incendio.FechaCreacion < request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio);
                     break;
                 case ComparacionTipos.Entre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaCreacion >= request.FechaInicio && incendio.FechaCreacion <= request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaCreacion) <= request.FechaFin);
                     }
                     else
                     {
@@ -51,7 +52,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case ComparacionTipos.NoEntre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaCreacion < request.FechaInicio || incendio.FechaCreacion > request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaFin);
                     }
                     else
                     {
@@ -67,18 +68,18 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             switch (request.IdComparativoFecha.Value)
             {
                 case ComparacionTipos.IgualA:
-                    AddCriteria(incendio => incendio.FechaInicio == request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaInicio) == request.FechaInicio);
                     break;
                 case ComparacionTipos.MayorQue:
-                    AddCriteria(incendio => incendio.FechaInicio > request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaInicio) > request.FechaInicio);
                     break;
                 case ComparacionTipos.MenorQue:
-                    AddCriteria(incendio => incendio.FechaInicio < request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaInicio) < request.FechaInicio);
                     break;
                 case ComparacionTipos.Entre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaInicio >= request.FechaInicio && incendio.FechaInicio <= request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaInicio) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaInicio) <= request.FechaFin);
                     }
                     else
                     {
@@ -88,7 +89,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case ComparacionTipos.NoEntre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaInicio < request.FechaInicio || incendio.FechaInicio > request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaInicio) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaInicio) > request.FechaFin);
                     }
                     else
                     {
@@ -104,18 +105,18 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             switch (request.IdComparativoFecha.Value)
             {
                 case ComparacionTipos.IgualA:
-                    AddCriteria(incendio => incendio.FechaModificacion == request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaModificacion.Value) == request.FechaInicio);
                     break;
                 case ComparacionTipos.MayorQue:
-                    AddCriteria(incendio => incendio.FechaModificacion > request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaModificacion.Value) > request.FechaInicio);
                     break;
                 case ComparacionTipos.MenorQue:
-                    AddCriteria(incendio => incendio.FechaModificacion < request.FechaInicio);
+                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaModificacion.Value) < request.FechaInicio);
                     break;
                 case ComparacionTipos.Entre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaModificacion >= request.FechaInicio && incendio.FechaModificacion <= request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaModificacion.Value) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaModificacion.Value) <= request.FechaFin);
                     }
                     else
                     {
@@ -125,7 +126,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case ComparacionTipos.NoEntre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => incendio.FechaModificacion < request.FechaInicio || incendio.FechaModificacion > request.FechaFin);
+                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaModificacion.Value) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaModificacion.Value) > request.FechaFin);
                     }
                     else
                     {
@@ -136,7 +137,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                     throw new ArgumentException("Operador de comparar fechas no válido");
             }
         }
-
+        
 
         AddInclude(i => i.Territorio);
         AddInclude(i => i.Suceso);
