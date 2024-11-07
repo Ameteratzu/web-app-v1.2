@@ -1,5 +1,16 @@
 DROP TABLE IF EXISTS dbo.Evolucion;
 GO
+
+DROP TABLE IF EXISTS dbo.SituacionOperativa;
+GO
+
+
+CREATE TABLE dbo.SituacionOperativa (
+	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Descripcion NVARCHAR(255) NOT NULL,
+);
+
+
 CREATE TABLE dbo.Evolucion (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
@@ -11,6 +22,7 @@ CREATE TABLE dbo.Evolucion (
     Prevision TEXT NULL,
     IdEstadoIncendio int NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
     PlanEmergenciaActivado NVARCHAR(255) NULL,
+    IdSituacionOperativa int NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     FechaFinal DATETIME2(7) NULL,
     ---

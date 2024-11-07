@@ -102,6 +102,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<ValidacionImpactoClasificado>().ToTable("ValidacionImpactoClasificado");
             modelBuilder.Entity<TipoDanio>().ToTable("TipoDanio");
             modelBuilder.Entity<SuperficieFiltro>().ToTable(nameof(SuperficieFiltro));
+            modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
         }
 
 

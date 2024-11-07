@@ -32,18 +32,30 @@ function Test-DatabaseConnection {
     param(
         [string]$dbServer,
         [string]$dbName,
+        [string]$useWindowsAuth,
+        [string]$dbUser,
+        [string]$dbPassword,
         [string]$logFile
     )
 
     $testQuery = "SELECT 1"
-    $sqlcmd = "sqlcmd -S $dbServer -d $dbName -Q `"$testQuery`" -E"
-    Write-Host "Verificando conexión a la base de datos..."
-    Add-Content -Path $logFile -Value "Verificando conexión a la base de datos..."
+    # Construir el comando sqlcmd dependiendo del valor de USE_WINDOWS_AUTH
+    if ($useWindowsAuth -eq "true") {
+        $sqlcmd = "sqlcmd -S $dbServer -d $dbName -Q `"$testQuery`" -E"
+    } else {
+        #$sqlcmd = "sqlcmd -S $dbServer -d $dbName -U $dbUser -P $dbPassword -Q `"$testQuery`""
+        $sqlcmd = "sqlcmd -S $dbServer -d $dbName -U `"$dbUser`" -P `"$dbPassword`" -C -N -Q `"$testQuery`""
+    }
+
+
+    # $sqlcmd = "sqlcmd -S $dbServer -d $dbName -Q `"$testQuery`" -E"
+    Write-Host "Verificando conexión a la base de datos... ($sqlcmd)"
+    Add-Content -Path $logFile -Value "Verificando conexión a la base de datos ($sqlcmd) ..."
     $result = Invoke-Expression $sqlcmd
 
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Error: No se pudo conectar a la base de datos $dbName en el servidor $dbServer" -ForegroundColor Red
-        Add-Content -Path $logFile -Value "Error: No se pudo conectar a la base de datos $dbName en el servidor $dbServer"
+        Write-Host "Error: No se pudo conectar a la base de datos $dbName en el servidor $dbServer ($result)" -ForegroundColor Red
+        Add-Content -Path $logFile -Value "Error: No se pudo conectar a la base de datos $dbName en el servidor $dbServer ($result)"
         exit 1  # Salir si no se puede conectar a la base de datos
     } else {
         Write-Host "Conexión a la base de datos verificada correctamente."
@@ -57,6 +69,9 @@ function Execute-Scripts {
         [string]$folder,
         [string]$dbServer,
         [string]$dbName,
+        [string]$useWindowsAuth,
+        [string]$dbUser,
+        [string]$dbPassword,
         [string]$logFile
     )
 
@@ -76,7 +91,15 @@ function Execute-Scripts {
 
         # Ejecutar el script usando sqlcmd con codificación UTF-8
         $startTime = Get-Date
-        $sqlcmd = "sqlcmd -S $dbServer -d $dbName -i `"$($file.FullName)`" -f 65001 -E -o output.log"
+        #$sqlcmd = "sqlcmd -S $dbServer -d $dbName -i `"$($file.FullName)`" -f 65001 -E -o output.log"
+
+        # Construir el comando sqlcmd dependiendo del valor de USE_WINDOWS_AUTH
+        if ($useWindowsAuth -eq "true") {
+            $sqlcmd = "sqlcmd -S $dbServer -d $dbName -i `"$($file.FullName)`" -f 65001 -E -o output.log"
+        } else {
+            $sqlcmd = "sqlcmd -S $dbServer -d $dbName -U $dbUser -P $dbPassword -i `"$($file.FullName)`" -f 65001 -o output.log"
+        }
+
         Write-Host "Comando: $sqlcmd"  # Para depuración
         Add-Content -Path $logFile -Value "Comando: $sqlcmd"
         $result = Invoke-Expression $sqlcmd
@@ -117,6 +140,9 @@ $config = Get-IniContent $configFile
 # Parámetros de conexión obtenidos desde el archivo de configuración
 $DB_SERVER = $config['DatabaseSettings']['DB_SERVER']
 $DB_NAME = $config['DatabaseSettings']['DB_NAME']
+$USE_WINDOWS_AUTH = $config['DatabaseSettings']['USE_WINDOWS_AUTH']
+$DB_USER = $config['DatabaseSettings']['DB_USER']
+$DB_PASSWORD = $config['DatabaseSettings']['DB_PASSWORD']
 $DLL_FOLDER = $config['DatabaseSettings']['DLL_FOLDER']  # Ruta a los scripts DLL
 $DATOS_FOLDER = $config['DatabaseSettings']['DATOS_FOLDER']  # Ruta a los scripts de Datos
 
@@ -124,7 +150,8 @@ $DATOS_FOLDER = $config['DatabaseSettings']['DATOS_FOLDER']  # Ruta a los script
 $logFile = "execution_log_$(Get-Date -Format yyyyMMddHHmmss).log"
 
 # Verificar la conexión a la base de datos
-Test-DatabaseConnection -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+#Test-DatabaseConnection -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+Test-DatabaseConnection -dbServer $DB_SERVER -dbName $DB_NAME -useWindowsAuth $USE_WINDOWS_AUTH -dbUser $DB_USER -dbPassword $DB_PASSWORD -logFile $logFile
 
 # Ejecutar scripts en la carpeta DLL
 Write-Host "==========================================="
@@ -134,7 +161,8 @@ Write-Host "==========================================="
 Add-Content -Path $logFile -Value "$1`r`n==========================================="
 Add-Content -Path $logFile -Value "Ejecutando scripts en la carpeta DLL..."
 Add-Content -Path $logFile -Value "$1`r`n==========================================="
-$dllExecutionResult = Execute-Scripts -folder $DLL_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+#$dllExecutionResult = Execute-Scripts -folder $DLL_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+$dllExecutionResult = Execute-Scripts -folder $DLL_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -useWindowsAuth $USE_WINDOWS_AUTH -dbUser $DB_USER -dbPassword $DB_PASSWORD -logFile $logFile
 
 # Verificar si los scripts de DLL se ejecutaron correctamente
 if ($dllExecutionResult) {
@@ -149,7 +177,8 @@ if ($dllExecutionResult) {
     Add-Content -Path $logFile -Value "$1`r`n==========================================="
     
     # Ejecutar scripts en la carpeta Datos
-    $datosExecutionResult = Execute-Scripts -folder $DATOS_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+    #$datosExecutionResult = Execute-Scripts -folder $DATOS_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -logFile $logFile
+    $datosExecutionResult = Execute-Scripts -folder $DATOS_FOLDER -dbServer $DB_SERVER -dbName $DB_NAME -useWindowsAuth $USE_WINDOWS_AUTH -dbUser $DB_USER -dbPassword $DB_PASSWORD -logFile $logFile
 
     if ($datosExecutionResult) {
         Write-Host "Todos los scripts de Datos se ejecutaron correctamente."
