@@ -20,8 +20,8 @@
       <td>{{ fire.estadoSuceso.descripcion }}</td>
       <td>-</td>
       <td>-</td>
-      <td>-</td>
-      <td>-</td>
+      <td>{{ getUbicacion(fire) }}</td>
+      <td>{{ getLastUpdated(fire) }}</td>
       <td>
         <a href="/fire-national-edit/{{ fire.id }}">
           <img src="/assets/img/edit-btn.svg" alt="edit-btn" />

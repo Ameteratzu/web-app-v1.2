@@ -179,7 +179,7 @@ export class SidebarComponent {
     });
 
     const respMenu = await this.menuService.get();
-    console.info('respMenu', respMenu);
+
     this.menuBack.set(respMenu);
   }
 

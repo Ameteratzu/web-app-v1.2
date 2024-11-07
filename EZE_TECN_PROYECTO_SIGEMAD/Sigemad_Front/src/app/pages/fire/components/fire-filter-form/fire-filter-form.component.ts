@@ -93,6 +93,8 @@ export class FireFilterFormComponent implements OnInit {
   public moves = signal<Move[]>([]);
   public comparativeDates = signal<ComparativeDate[]>([]);
 
+  public disabledCountry = signal<boolean>(false);
+
   public formData: FormGroup;
 
   async ngOnInit() {
@@ -112,6 +114,7 @@ export class FireFilterFormComponent implements OnInit {
       start: new FormControl(),
       end: new FormControl(),
       between: new FormControl(),
+      eventStatus: new FormControl(),
     });
 
     this.formData.patchValue({
@@ -157,17 +160,30 @@ export class FireFilterFormComponent implements OnInit {
     this.loadCommunities();
   }
 
-  changeTerritory(event: any) {
+  async changeTerritory(event: any) {
     this.formData.patchValue({
       country: event.value == 1 ? 60 : null,
       autonomousCommunity: null,
       province: null,
       municipality: null,
     });
+
     if (event.value == 1) {
+      const countries = await this.countryService.get();
+      this.countries.set(countries);
       this.loadCommunities();
-    } else {
+      this.disabledCountry.set(false);
+    }
+    if (event.value == 2) {
+      const countries = await this.countryService.get();
+      this.countries.set(countries);
+      this.loadCommunities();
       this.autonomousCommunities.set([]);
+      this.disabledCountry.set(false);
+    }
+    if (event.value == 3) {
+      this.disabledCountry.set(true);
+      this.countries.set([]);
     }
 
     this.provinces.set([]);
@@ -198,14 +214,40 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-    const data = this.formData.value;
-    const fires = await this.fireService.get(data);
+    const {
+      territory,
+      country,
+      autonomousCommunity,
+      province,
+      fireStatus,
+      eventStatus,
+      severityLevel,
+      affectedArea,
+      move,
+      between,
+      start,
+      end,
+    } = this.formData.value;
+
+    const fires = await this.fireService.get({
+      IdTerritorio: territory,
+      IdPais: country,
+      IdCcaa: autonomousCommunity,
+      IdProvincia: province,
+      IdEstadoSuceso: fireStatus,
+      IdEstadoIncendio: eventStatus,
+      IdNivelGravedad: severityLevel,
+      IdSuperficieAfectada: affectedArea,
+      IdMovimiento: move,
+      IdComparativoFecha: between,
+      FechaInicio: moment(start).format('YYYY-MM-DD HH:MM:SS.ssss'),
+      FechaFin: moment(end).format('YYYY-MM-DD HH:MM:SS.ssss'),
+    });
     this.fires = fires;
     this.firesChange.emit(this.fires);
   }
 
   clearFormFilter() {
-    console.info('clearFormFilter');
     this.formData.patchValue({
       between: 1,
       move: 1,

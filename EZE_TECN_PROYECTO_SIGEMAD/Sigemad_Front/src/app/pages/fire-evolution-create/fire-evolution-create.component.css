@@ -164,6 +164,7 @@ table tr:nth-child(odd) {
   display: grid;
   grid-template-columns: 1fr 4fr;
   margin-bottom: 20px;
+  margin-left: 32px;
 }
 
 .mt-20 {
@@ -189,4 +190,27 @@ table tr:nth-child(odd) {
 .p-multiselect-label {
   height: 48px;
   vertical-align: middle;
+}
+.my-20 {
+  margin-top: 32px;
+  margin-bottom: 22px;
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.center-input {
+  margin-right: auto;
+  margin-left: 35%;
+}
+
+.right-input {
+}
+
+::ng-deep .p-multiselect-label {
+  display: flex !important;
+  align-items: center !important;
+  margin-left: 8px !important;
 }

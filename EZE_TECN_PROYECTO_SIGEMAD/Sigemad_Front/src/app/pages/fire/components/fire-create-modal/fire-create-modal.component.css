@@ -23,6 +23,10 @@
   margin-top: 24px;
 }
 
+.mt-8 {
+  margin-top: 8px;
+}
+
 .d-flex-end {
   display: flex;
   justify-content: flex-end;

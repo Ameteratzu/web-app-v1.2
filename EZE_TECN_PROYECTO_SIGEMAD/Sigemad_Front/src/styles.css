@@ -386,3 +386,13 @@ calendaricon {
 .mat-mdc-dialog-surface {
   border-radius: 8px !important;
 }
+
+.error-message {
+  color: red;
+  opacity: 0.7;
+}
+
+.p-dropdown-clear-icon {
+  margin-top: -8px !important;
+  margin-right: -12px !important;
+}

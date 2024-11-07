@@ -19,6 +19,7 @@
         emptyMessage=" "
         class="inputText child w-full"
         (onChange)="changeTerritory($event)"
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -30,6 +31,8 @@
         emptyMessage=" "
         (onChange)="loadCommunities()"
         class="child w-full"
+        [disabled]="disabledCountry()"
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -41,6 +44,7 @@
         (onChange)="loadProvinces($event)"
         emptyMessage=" "
         class="child w-full add"
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -51,6 +55,7 @@
         placeholder="Provincia"
         emptyMessage=" "
         class="child w-full"
+        [showClear]="true"
       />
     </div>
   </div>
@@ -59,12 +64,13 @@
     <div class="d-flex m--1 gap-5 w-60 align-items p4">
       <p-dropdown
         optionValue="id"
-        formControlName="fireStatus"
+        formControlName="eventStatus"
         [options]="eventStatus()"
         optionLabel="descripcion"
         placeholder="Estado del suceso"
         class="child"
         emptyMessage=" "
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -75,6 +81,7 @@
         placeholder="Estado del incendio"
         class="child"
         emptyMessage=" "
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -82,9 +89,10 @@
         formControlName="severityLevel"
         [options]="severityLevels()"
         optionLabel="descripcion"
-        placeholder="Nivel de gravedad"
+        placeholder="Nivel/Situación"
         class="child"
         emptyMessage=" "
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -95,6 +103,7 @@
         placeholder="Superficie"
         class="child"
         emptyMessage=" "
+        [showClear]="true"
       />
     </div>
     <div class="d-flex m--1 gap-5 w-40 border-rounded align-items p4">
@@ -107,6 +116,7 @@
         optionLabel="descripcion"
         placeholder="Movimiento"
         emptyMessage=" "
+        [showClear]="true"
       />
 
       <p-dropdown
@@ -117,6 +127,7 @@
         placeholder="Entre"
         emptyMessage=" "
         (onChange)="changeBetween($event)"
+        [showClear]="true"
       />
 
       <p-calendar
@@ -126,6 +137,9 @@
         [showIcon]="true"
         placeholder="Fecha inicio"
         inputId="icondisplay"
+        dateFormat="d/mm/yy"
+        [showTime]="true"
+        [hourFormat]="'12'"
       />
 
       <p-calendar
@@ -136,6 +150,9 @@
         placeholder="Fecha fin"
         inputId="icondisplay"
         *ngIf="showDateEnd()"
+        dateFormat="d/mm/yy"
+        [showTime]="true"
+        [hourFormat]="'12'"
       />
     </div>
   </div>

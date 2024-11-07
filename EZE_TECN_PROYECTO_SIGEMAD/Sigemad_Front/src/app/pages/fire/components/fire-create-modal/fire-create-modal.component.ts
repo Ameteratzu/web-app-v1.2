@@ -5,8 +5,15 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DropdownModule } from 'primeng/dropdown';
@@ -38,11 +45,15 @@ import { MapCreateComponent } from '../../../map-create/map-create.component';
     InputTextareaModule,
     InputTextareaModule,
     CheckboxModule,
+    MatDialogModule,
+    MapCreateComponent,
   ],
   templateUrl: './fire-create-modal.component.html',
   styleUrl: './fire-create-modal.component.css',
 })
 export class FireCreateModalComponent implements OnInit {
+  featuresCoords: Feature<Geometry>[] = [];
+
   public error: boolean = false;
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
@@ -67,23 +78,29 @@ export class FireCreateModalComponent implements OnInit {
 
   public formData: FormGroup;
 
+  today = new Date();
+
+  //MAP
+  public coordinates = signal<any>({});
+  public polygon = signal<any>({});
+
   async ngOnInit() {
     localStorage.removeItem('coordinates');
     localStorage.removeItem('polygon');
 
     this.formData = new FormGroup({
-      territory: new FormControl(),
-      event: new FormControl(),
-      province: new FormControl(),
-      municipality: new FormControl(),
-      denomination: new FormControl(),
-      startDate: new FormControl(),
+      territory: new FormControl('', Validators.required),
+      event: new FormControl('', Validators.required),
+      province: new FormControl('', Validators.required),
+      municipality: new FormControl('', Validators.required),
+      denomination: new FormControl('', Validators.required),
+      startDate: new FormControl('', Validators.required),
       generalNote: new FormControl(),
       //name: new FormControl(),
       //Foreign
-      country: new FormControl(),
-      ubication: new FormControl(),
-      limitSpain: new FormControl(),
+      country: new FormControl(''),
+      ubication: new FormControl(''),
+      limitSpain: new FormControl(false),
     });
 
     this.formData.patchValue({
@@ -105,14 +122,32 @@ export class FireCreateModalComponent implements OnInit {
 
   onChange(event: any) {
     if (event.value == 1) {
+      this.clearValidatosToForeign();
       this.showInputForeign = false;
     }
     if (event.value == 2) {
+      this.addValidatorsToForeign();
       this.showInputForeign = true;
     }
     if (event.value == 3) {
       //TODO
     }
+  }
+
+  addValidatorsToForeign() {
+    this.formData.get('country')?.setValidators([Validators.required]);
+    this.formData.get('ubication')?.setValidators([Validators.required]);
+
+    this.formData.get('country')?.updateValueAndValidity();
+    this.formData.get('ubication')?.updateValueAndValidity();
+  }
+
+  clearValidatosToForeign() {
+    this.formData.get('country')?.clearValidators();
+    this.formData.get('ubication')?.clearValidators();
+
+    this.formData.get('country')?.updateValueAndValidity();
+    this.formData.get('ubication')?.updateValueAndValidity();
   }
 
   async loadMunicipalities(event: any) {
@@ -122,32 +157,44 @@ export class FireCreateModalComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.error = false;
+    if (this.formData.valid) {
+      this.error = false;
 
-    const data = this.formData.value;
+      const data = this.formData.value;
 
-    data.coordinates = JSON.parse(localStorage.getItem('coordinates') ?? '{}');
-
-    if (localStorage.getItem('polygon')) {
       data.geoposition = {
         type: 'Polygon',
-        coordinates: [data.coordinates],
+        coordinates: this.featuresCoords,
       };
-    } else {
-      data.geoposition = {
-        type: 'Point',
-        coordinates: data.coordinates,
-      };
-    }
 
-    await this.fireService
-      .post(data)
-      .then((response) => {
-        window.location.href = '/fire';
-      })
-      .catch((error) => {
-        this.error = true;
-      });
+      data.coordinates = JSON.parse(
+        localStorage.getItem('coordinates') ?? '{}'
+      );
+
+      if (localStorage.getItem('polygon')) {
+        data.geoposition = {
+          type: 'Polygon',
+          coordinates: [data.coordinates],
+        };
+      } else {
+        data.geoposition = {
+          type: 'Point',
+          coordinates: data.coordinates,
+        };
+      }
+
+      await this.fireService
+        .post(data)
+        .then((response) => {
+          //window.location.href = '/fire';
+        })
+        .catch((error) => {
+          console.log(error);
+          this.error = true;
+        });
+    } else {
+      console.info('error...');
+    }
   }
 
   async setMunicipalityId(event: any) {
@@ -156,6 +203,7 @@ export class FireCreateModalComponent implements OnInit {
 
     for (let municipality of this.municipalities()) {
       if (municipality.id == Number(localStorage.getItem('municipality'))) {
+        /*
         this.latitude = Number(municipality.geoPosicion.coordinates[0]);
         this.length = Number(municipality.geoPosicion.coordinates[1]);
 
@@ -167,7 +215,7 @@ export class FireCreateModalComponent implements OnInit {
         );
         localStorage.setItem('length', municipality.geoPosicion.coordinates[1]);
         localStorage.setItem('coordinates', JSON.stringify(coordinates));
-
+        */
         this.municipalityName = municipality.descripcion;
 
         this.formData.patchValue({
@@ -178,10 +226,24 @@ export class FireCreateModalComponent implements OnInit {
   }
 
   openModalMapCreate() {
-    this.matDialog.open(MapCreateComponent, {
-      width: '1000px',
-      maxWidth: '1000px',
+    const municipio = this.municipalities().find(
+      (item) => item.id === this.formData.value.municipality
+    );
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      height: '780px',
+      maxHeight: '780px',
+      data: { municipio, listaMunicipios: this.municipalities() },
     });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        this.featuresCoords = features; // Almacena o manipula las características aquí
+        console.info('features---', this.featuresCoords);
+      }
+    );
   }
 
   closeModal() {

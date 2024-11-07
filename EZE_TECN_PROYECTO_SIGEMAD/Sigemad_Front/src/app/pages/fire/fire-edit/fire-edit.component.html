@@ -27,73 +27,83 @@
     value="{{ fire.idTerritorio }}"
   />
 
-  <div class="d-flex pt-15 justify-content-between mr-20">
-    <div class="d-flex">
-      <div class="inter p-12 font-weight-bold font-size-16 font-color-grey">
-        Denominación
-      </div>
-      <div class="w-300">
+  <div class="d-flex pt-15 gap8 mr-20">
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div class="inter p-12 font-weight-bold font-size-16 font-color-grey">
+          Denominación
+        </div>
+
         <input
           type="text"
           pInputText
           formControlName="denomination"
           placeholder=""
           value="{{ fire.denominacion }}"
+          class="inputText child w-full"
         />
       </div>
     </div>
 
-    <div class="d-flex">
-      <div
-        class="pt-12 pe-15 inter font-weight-bold font-size-16 font-color-grey"
-      >
-        Provincia
-      </div>
-      <p-dropdown
-        emptyMessage=" "
-        formControlName="province"
-        [options]="provinces()"
-        optionLabel="descripcion"
-        placeholder="Provincia"
-        optionValue="id"
-        (onChange)="loadMunicipalities($event)"
-      />
-    </div>
-
-    <div class="d-flex">
-      <div
-        class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-      >
-        Municipio
-      </div>
-
-      <p-dropdown
-        emptyMessage=" "
-        formControlName="municipality"
-        [options]="municipalities()"
-        optionLabel="descripcion"
-        placeholder="Municipios"
-        optionValue="id"
-      />
-
-      <div class="ms-10">
-        <img
-          (click)="openModalMapEdit()"
-          style="cursor: pointer"
-          src="/assets/img/location-btn.svg"
-          alt="location-btn"
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div
+          class="pt-12 pe-15 inter font-weight-bold font-size-16 font-color-grey"
+        >
+          Provincia
+        </div>
+        <p-dropdown
+          emptyMessage=" "
+          formControlName="province"
+          [options]="provinces()"
+          optionLabel="descripcion"
+          placeholder="Provincia"
+          optionValue="id"
+          (onChange)="loadMunicipalities($event)"
+          [showClear]="true"
+          class="inputText child w-full"
         />
       </div>
     </div>
 
-    <div class="d-flex">
-      <div
-        class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-      >
-        Inicio
-      </div>
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div
+          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
+        >
+          Municipio
+        </div>
 
-      <div class="me-30">
+        <p-dropdown
+          emptyMessage=" "
+          formControlName="municipality"
+          [options]="municipalities()"
+          optionLabel="descripcion"
+          placeholder="Municipios"
+          optionValue="id"
+          [showClear]="true"
+          class="inputText child w-full"
+        />
+
+        <div class="ms-10">
+          <img
+            (click)="openModalMapEdit()"
+            style="cursor: pointer"
+            src="/assets/img/location-btn.svg"
+            alt="location-btn"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div
+          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
+        >
+          Inicio
+        </div>
+
         <p-calendar
           dateFormat="d/mm/yy"
           formControlName="startDate"
@@ -101,90 +111,101 @@
           [showIcon]="true"
           placeholder="Inicio"
           inputId="icondisplay"
+          class="inputText child w-full"
         />
       </div>
     </div>
   </div>
 
-  <div class="d-flex pt-15 gap-50 justify-content-between mr-20">
-    <div class="d-flex">
-      <div
-        class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-      >
-        Tipo de suceso
-      </div>
+  <div class="d-flex pt-15 gap8 mr-20">
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div
+          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
+        >
+          Tipo de suceso
+        </div>
 
-      <div>
         <p-dropdown
           emptyMessage=" "
           formControlName="event"
           [options]="events()"
           optionLabel="descripcion"
           optionValue="id"
+          [showClear]="true"
+          class="inputText child2 w-full"
         />
       </div>
     </div>
 
-    <div class="d-flex">
-      <div
-        class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-      >
-        Nota general
-      </div>
+    <div class="d-flex w-full">
+      <div class="d-flex w-full">
+        <div class="font-size-16 inter font-weight-bold font-color-grey">
+          Nota general
+        </div>
 
-      <div class="d-flex">
         <textarea
           rows="1"
           cols="134"
           pInputTextarea
           formControlName="generalNote"
+          class="inputText child2 w-full"
         >
         </textarea>
       </div>
     </div>
   </div>
 
-  <div
-    class="border-bottom text-right me-20 pt-15 pb-15 d-flex justify-content-between"
-  >
-    <div class="d-flex">
+  <div class="border-bottom d-flex pt-15 gap8 mr-20 me-20 pt-15 pb-15">
+    <div class="d-flex w-full">
       <div
         class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
       >
         Estado de suceso
       </div>
 
-      <div>
-        <p-dropdown
-          emptyMessage=" "
-          formControlName="idEstado"
-          [options]="fireStatus()"
-          optionLabel="descripcion"
-          optionValue="id"
-        />
-      </div>
+      <p-dropdown
+        emptyMessage=" "
+        formControlName="idEstado"
+        [options]="fireStatus()"
+        optionLabel="descripcion"
+        optionValue="id"
+        [showClear]="true"
+        class="inputText child2 w-full"
+      />
     </div>
+    <div class="d-flex w-full">
+      <div class="inputText child2 w-full justify-end">
+        <div class="d-flex justify-end">
+          <button type="submit" class="btn-blue">
+            <img class="w-30 h-30" src="/assets/img/check.svg" alt="check" />
+          </button>
 
-    <div class="text-right">
-      <button type="submit" class="btn-blue">
-        <img class="w-30 h-30" src="/assets/img/check.svg" alt="check" />
-      </button>
+          <button type="button" class="btn-white">
+            <img
+              class="w-30 h-30"
+              src="/assets/img/list-btn.svg"
+              alt="list-btn"
+            />
+          </button>
 
-      <button type="button" class="btn-white">
-        <img class="w-30 h-30" src="/assets/img/list-btn.svg" alt="list-btn" />
-      </button>
+          <button (click)="confirmDelete()" type="button" class="btn-white">
+            <img class="w-30 h-30" src="/assets/img/close.svg" alt="close" />
+          </button>
 
-      <button (click)="confirmDelete()" type="button" class="btn-white">
-        <img class="w-30 h-30" src="/assets/img/close.svg" alt="close" />
-      </button>
+          <button (click)="ngOnInit()" type="button" class="btn-white">
+            <img
+              class="w-30 h-30"
+              src="/assets/img/refresh.svg"
+              alt="refresh"
+            />
+          </button>
 
-      <button type="button" class="btn-white">
-        <img class="w-30 h-30" src="/assets/img/refresh.svg" alt="refresh" />
-      </button>
-
-      <button type="button" (click)="back()" class="btn-white">
-        <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
-      </button>
+          <button type="button" (click)="back()" class="btn-white">
+            <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </form>
@@ -221,9 +242,7 @@
 
     <div class="mt-8">
       <span class="font-weight-bold font-size-16 inter">Estado</span>
-      <span class="font-size-12 inter">
-        {{ fire.estadoSuceso.descripcion }}</span
-      >
+      <span class="font-size-12 inter"> {{ getEstadoDesc(fire) }}</span>
     </div>
 
     <div class="mt-8">

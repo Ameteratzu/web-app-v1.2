@@ -1,7 +1,8 @@
 <div style="padding: 20px 60px 60px">
   <div class="mt-20 inter title-modal">Crear incendio</div>
+
   <div *ngIf="error" class="text-center alert-danger">
-    Se produjeron uno o más errores de validación
+    Ha ocurrido un error intentelo nuevamente
   </div>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="formData">
@@ -24,7 +25,19 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('territory')?.invalid &&
+                    formData.get('territory')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -45,14 +58,26 @@
                   class="form-column"
                   [panelStyle]="{ maxWidth: '200px' }"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
               </div>
+            </div>
+            <div
+              [style]="{
+                visibility:
+                  formData.get('event')?.invalid &&
+                  formData.get('event')?.touched
+                    ? 'visible'
+                    : 'hidden'
+              }"
+            >
+              <small class="error-message"> Este campo es requerido. </small>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -70,7 +95,19 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('province')?.invalid &&
+                    formData.get('province')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -91,20 +128,32 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('municipality')?.invalid &&
+                    formData.get('municipality')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
               <div class="form-row">
                 <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Denominación.
+                  Denominación
                 </div>
                 <input
                   type="text"
@@ -114,6 +163,17 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('denomination')?.invalid &&
+                    formData.get('denomination')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -133,14 +193,26 @@
                   inputId="icondisplay"
                   [style]="{ width: '100%' }"
                   class="form-column"
+                  [minDate]="today"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('startDate')?.invalid &&
+                    formData.get('startDate')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="d-flex mt-15">
+      <div class="d-flex mt-8">
         <div class="inter w-120 p-12 font-weight-bold font-size-16">
           Nota general
         </div>
@@ -154,6 +226,17 @@
           >
           </textarea>
         </div>
+      </div>
+      <div
+        [style]="{
+          visibility:
+            formData.get('generalNote')?.invalid &&
+            formData.get('generalNote')?.touched
+              ? 'visible'
+              : 'hidden'
+        }"
+      >
+        <small class="error-message"> Este campo es requerido. </small>
       </div>
     </div>
 
@@ -176,14 +259,26 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('territory')?.invalid &&
+                    formData.get('territory')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -195,11 +290,24 @@
                   formControlName="event"
                   [options]="events()"
                   optionLabel="descripcion"
+                  optionValue="id"
                   placeholder="Clase suceso"
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('event')?.invalid &&
+                    formData.get('event')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -221,12 +329,23 @@
                   class="form-column"
                 />
               </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('startDate')?.invalid &&
+                    formData.get('startDate')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -235,7 +354,7 @@
                   País
                 </div>
                 <p-dropdown
-                  formControlName="province"
+                  formControlName="country"
                   [options]="countries()"
                   optionLabel="descripcion"
                   placeholder="Paises"
@@ -243,7 +362,19 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('country')?.invalid &&
+                    formData.get('country')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -271,12 +402,23 @@
                   alt="location-btn"
                 />
               </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('ubication')?.invalid &&
+                    formData.get('ubication')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -293,12 +435,23 @@
                   class="form-column"
                 />
               </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('limitSpain')?.invalid &&
+                    formData.get('limitSpain')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15 border-rounded p-12">
+      <div class="mt-8 border-rounded p-12">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -316,7 +469,19 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('province')?.invalid &&
+                    formData.get('province')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
@@ -337,14 +502,26 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                   emptyMessage=" "
+                  [showClear]="true"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('municipality')?.invalid &&
+                    formData.get('municipality')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -356,17 +533,28 @@
                   type="text"
                   pInputText
                   formControlName="denomination"
-                  placeholder="Santa María de Guía de Gran Canaria"
+                  placeholder=""
                   [style]="{ width: '100%' }"
                   class="form-column"
                 />
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('denomination')?.invalid &&
+                    formData.get('denomination')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-15">
+      <div class="mt-8">
         <div class="form-row">
           <div class="form-column">
             <div class="form-container2">
@@ -382,6 +570,17 @@
                   [style]="{ width: '100%' }"
                   class="form-column"
                 ></textarea>
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formData.get('generalNote')?.invalid &&
+                    formData.get('generalNote')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
