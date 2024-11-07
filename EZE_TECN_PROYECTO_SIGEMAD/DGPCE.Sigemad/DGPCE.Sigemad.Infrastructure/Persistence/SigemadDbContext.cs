@@ -148,5 +148,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<TipoDanio> TipoDanios { get; set; }
 
+        public DbSet<OtraInformacion> OtrasInformaciones { get; set; }
+        public DbSet<DetalleOtraInformacion> DetallesOtraInformacion { get; set; }
+        public DbSet<DetalleOtraInformacion_ProcedenciaDestino> DetallesOtraInformacion_ProcedenciaDestinos { get; set; }
+
     }
 }
