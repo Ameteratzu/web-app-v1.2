@@ -29,6 +29,7 @@ using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateInt
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
@@ -116,7 +117,17 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
             .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
 
-            CreateMap<CreateOtraInformacionCommand, OtraInformacion>();                     
+            CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
+            CreateMap<OtraInformacion, OtraInformacionVm>()
+                .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
+
+            CreateMap<DetalleOtraInformacion, OtraInformacionVm>()
+                .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaHora))
+                .ForMember(dest => dest.IdMedio, opt => opt.MapFrom(src => src.IdMedio))
+                .ForMember(dest => dest.Asunto, opt => opt.MapFrom(src => src.Asunto))
+                .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
+                .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
         }
 
         private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

@@ -6,5 +6,6 @@ public class OtraInformacionActiveByIdSpecification : BaseSpecification<OtraInfo
     public OtraInformacionActiveByIdSpecification(int id)
         : base(i => i.Id == id && i.Borrado == false)
     {
+        AddInclude(i => i.DetallesOtraInformacion);
     }
 }

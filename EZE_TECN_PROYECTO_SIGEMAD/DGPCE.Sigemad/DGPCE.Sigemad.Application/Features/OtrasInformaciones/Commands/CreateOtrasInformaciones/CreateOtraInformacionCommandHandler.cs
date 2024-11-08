@@ -49,7 +49,9 @@ public class CreateOtraInformacionCommandHandler : IRequestHandler<CreateOtraInf
             otraInformacionEntity = new OtraInformacion
             {
                 IdIncendio = request.IdIncendio
-            };            
+            };
+
+            _unitOfWork.Repository<OtraInformacion>().AddEntity(otraInformacionEntity);
         }
 
         var medio = await _unitOfWork.Repository<Medio>().GetByIdAsync(request.IdMedio);
@@ -59,10 +61,21 @@ public class CreateOtraInformacionCommandHandler : IRequestHandler<CreateOtraInf
             throw new NotFoundException(nameof(Medio), request.IdMedio);
         }
 
-        var procedenciasDestinos = request.IdsProcedenciaDestino.Select(idProcedenciaDestino => new DetalleOtraInformacion_ProcedenciaDestino
+        foreach (var idProcedenciaDestino in request.IdsProcedenciaDestino)
+        {
+            var procedenciaDestino = await _unitOfWork.Repository<ProcedenciaDestino>().GetByIdAsync(idProcedenciaDestino);
+            if (procedenciaDestino == null)
+            {
+                _logger.LogWarning($"IdProcedenciaDestino: {idProcedenciaDestino}, no encontrado");
+                throw new NotFoundException(nameof(ProcedenciaDestino), idProcedenciaDestino);
+            }            
+        }
+
+        var procedenciasDestinos = new List<DetalleOtraInformacion_ProcedenciaDestino>();
+        procedenciasDestinos = request.IdsProcedenciaDestino.Select(idProcedenciaDestino => new DetalleOtraInformacion_ProcedenciaDestino
         {
             IdProcedenciaDestino = idProcedenciaDestino
-        }).ToList();
+        }).ToList();        
 
         var detalleOtraInformacion = new DetalleOtraInformacion
         {            
@@ -74,8 +87,6 @@ public class CreateOtraInformacionCommandHandler : IRequestHandler<CreateOtraInf
         };
 
         otraInformacionEntity.DetallesOtraInformacion.Add(detalleOtraInformacion);
-        
-        _unitOfWork.Repository<OtraInformacion>().AddEntity(otraInformacionEntity);
 
         var result = await _unitOfWork.Complete();
         if (result == 0)
