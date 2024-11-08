@@ -23,7 +23,7 @@
       <td>{{ getUbicacion(fire) }}</td>
       <td>{{ getLastUpdated(fire) }}</td>
       <td>
-        <a href="/fire-national-edit/{{ fire.id }}">
+        <a (click)="goToEdit(fire)">
           <img src="/assets/img/edit-btn.svg" alt="edit-btn" />
         </a>
 

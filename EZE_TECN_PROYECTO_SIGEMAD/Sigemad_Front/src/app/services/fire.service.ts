@@ -104,7 +104,7 @@ export class FireService {
       IdPeligroInicial: 1,
       notaGeneral: data.generalNote,
       GeoPosicion: {
-        type: 'Polygon',
+        type: 'Point',
         coordinates: data.coordinates,
       },
     };

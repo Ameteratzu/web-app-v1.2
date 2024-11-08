@@ -63,6 +63,12 @@ export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]>;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
 
+  COUNTRIES_ID = {
+    PORTUGAL: 1,
+    SPAIN: 60,
+    FRANCE: 65,
+  };
+
   public superficiesService = inject(SuperficiesService);
   public menuItemActiveService = inject(MenuItemActiveService);
   public territoryService = inject(TerritoryService);
@@ -94,6 +100,10 @@ export class FireFilterFormComponent implements OnInit {
   public comparativeDates = signal<ComparativeDate[]>([]);
 
   public disabledCountry = signal<boolean>(false);
+  public disabledAutonomousCommunity = signal<boolean>(false);
+  public disabledProvince = signal<boolean>(false);
+
+  public filterCountries = signal<any[]>([]);
 
   public formData: FormGroup;
 
@@ -121,7 +131,7 @@ export class FireFilterFormComponent implements OnInit {
       between: 1,
       move: 1,
       territory: 1, //pre seleccionamos Nacional
-      country: 60, // pre seleccionamos España
+      country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
     });
@@ -158,11 +168,12 @@ export class FireFilterFormComponent implements OnInit {
     this.comparativeDates.set(comparativeDates);
 
     this.loadCommunities();
+    this.getCountriesByTerritory();
   }
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value == 1 ? 60 : null,
+      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : null,
       autonomousCommunity: null,
       province: null,
       municipality: null,
@@ -172,7 +183,12 @@ export class FireFilterFormComponent implements OnInit {
       const countries = await this.countryService.get();
       this.countries.set(countries);
       this.loadCommunities();
-      this.disabledCountry.set(false);
+      this.disabledCountry.set(true);
+      this.disabledAutonomousCommunity.set(false);
+      this.disabledProvince.set(false);
+      this.formData.patchValue({
+        country: this.COUNTRIES_ID.SPAIN,
+      });
     }
     if (event.value == 2) {
       const countries = await this.countryService.get();
@@ -180,13 +196,63 @@ export class FireFilterFormComponent implements OnInit {
       this.loadCommunities();
       this.autonomousCommunities.set([]);
       this.disabledCountry.set(false);
+      this.disabledAutonomousCommunity.set(false);
+      this.disabledProvince.set(false);
+      this.formData.patchValue({
+        country: null,
+      });
     }
     if (event.value == 3) {
       this.disabledCountry.set(true);
+      this.disabledAutonomousCommunity.set(true);
+      this.disabledProvince.set(true);
       this.countries.set([]);
+      this.formData.patchValue({
+        country: null,
+      });
     }
 
     this.provinces.set([]);
+    this.getCountriesByTerritory();
+  }
+
+  getCountriesByTerritory() {
+    let original = [...this.countries()];
+    let newCountries = [...this.countries()];
+
+    if (this.formData.value.territory != 2) {
+      this.filterCountries.set(newCountries);
+    }
+    if (this.formData.value.territory == 2) {
+      const indexSpain = newCountries.findIndex(
+        (country) => country.id == this.COUNTRIES_ID.SPAIN
+      );
+      newCountries.splice(indexSpain, 1);
+      const indexPortugal = newCountries.findIndex(
+        (country) => country.id == this.COUNTRIES_ID.PORTUGAL
+      );
+      newCountries.splice(indexPortugal, 1);
+      const indexFrance = newCountries.findIndex(
+        (country) => country.id == this.COUNTRIES_ID.FRANCE
+      );
+      newCountries.splice(indexFrance, 1);
+
+      const portugal = original.find(
+        (country) => country.id === this.COUNTRIES_ID.PORTUGAL
+      );
+      const france = original.find(
+        (country) => country.id === this.COUNTRIES_ID.FRANCE
+      );
+
+      if (france) {
+        newCountries.unshift(france);
+      }
+      if (portugal) {
+        newCountries.unshift(portugal);
+      }
+
+      this.filterCountries.set(newCountries);
+    }
   }
 
   async loadCommunities() {
@@ -252,7 +318,7 @@ export class FireFilterFormComponent implements OnInit {
       between: 1,
       move: 1,
       territory: 1, //pre seleccionamos Nacional
-      country: 60, // pre seleccionamos España
+      country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
       autonomousCommunity: null,
@@ -264,5 +330,6 @@ export class FireFilterFormComponent implements OnInit {
       severityLevel: null,
       name: '',
     });
+    this.getCountriesByTerritory();
   }
 }

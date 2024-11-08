@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
+import { Router } from '@angular/router';
 import moment from 'moment';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { Fire } from '../../../../types/fire.type';
@@ -15,6 +21,12 @@ import { FireTableToolbarComponent } from '../fire-table-toolbar/fire-table-tool
 })
 export class FireTableComponent {
   @Input() fires: ApiResponse<Fire[]>;
+
+  public router = inject(Router);
+
+  goToEdit(fire: Fire) {
+    this.router.navigate([`/fire-national-edit/${fire.id}`]);
+  }
 
   getUbicacion(fire: Fire) {
     let label = '';

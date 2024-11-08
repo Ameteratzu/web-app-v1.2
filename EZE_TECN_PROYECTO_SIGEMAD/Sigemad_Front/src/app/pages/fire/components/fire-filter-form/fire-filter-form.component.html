@@ -19,13 +19,13 @@
         emptyMessage=" "
         class="inputText child w-full"
         (onChange)="changeTerritory($event)"
-        [showClear]="true"
+        [showClear]="false"
       />
 
       <p-dropdown
         optionValue="id"
         formControlName="country"
-        [options]="countries()"
+        [options]="filterCountries()"
         optionLabel="descripcion"
         placeholder="País"
         emptyMessage=" "
@@ -45,6 +45,7 @@
         emptyMessage=" "
         class="child w-full add"
         [showClear]="true"
+        [disabled]="disabledAutonomousCommunity()"
       />
 
       <p-dropdown
@@ -56,12 +57,13 @@
         emptyMessage=" "
         class="child w-full"
         [showClear]="true"
+        [disabled]="disabledProvince()"
       />
     </div>
   </div>
 
   <div class="d-flex m--1 mt-15 gap-5">
-    <div class="d-flex m--1 gap-5 w-60 align-items p4">
+    <div class="d-flex m--1 gap-5 w-full align-items p4">
       <p-dropdown
         optionValue="id"
         formControlName="eventStatus"
@@ -71,6 +73,7 @@
         class="child"
         emptyMessage=" "
         [showClear]="true"
+        class="inputText child w-full"
       />
 
       <p-dropdown
@@ -82,6 +85,7 @@
         class="child"
         emptyMessage=" "
         [showClear]="true"
+        class="inputText child w-full"
       />
 
       <p-dropdown
@@ -93,6 +97,7 @@
         class="child"
         emptyMessage=" "
         [showClear]="true"
+        class="inputText child w-full"
       />
 
       <p-dropdown
@@ -104,9 +109,13 @@
         class="child"
         emptyMessage=" "
         [showClear]="true"
+        class="inputText child w-full"
       />
     </div>
-    <div class="d-flex m--1 gap-5 w-40 border-rounded align-items p4">
+  </div>
+
+  <div class="d-flex m--1 mt-15 gap-5">
+    <div class="d-flex m--1 gap-5 w-full border-rounded align-items p4">
       <span>Fecha</span>
 
       <p-dropdown
@@ -116,7 +125,8 @@
         optionLabel="descripcion"
         placeholder="Movimiento"
         emptyMessage=" "
-        [showClear]="true"
+        [showClear]="false"
+        class="inputText child w-full"
       />
 
       <p-dropdown
@@ -127,7 +137,8 @@
         placeholder="Entre"
         emptyMessage=" "
         (onChange)="changeBetween($event)"
-        [showClear]="true"
+        [showClear]="false"
+        class="inputText child w-full"
       />
 
       <p-calendar
@@ -138,10 +149,10 @@
         placeholder="Fecha inicio"
         inputId="icondisplay"
         dateFormat="d/mm/yy"
+        class="inputText child w-full"
       />
 
       <p-calendar
-        dateFormat="d/mm/yy"
         formControlName="end"
         [iconDisplay]="'input'"
         [showIcon]="true"
@@ -149,6 +160,7 @@
         inputId="icondisplay"
         *ngIf="showDateEnd()"
         dateFormat="d/mm/yy"
+        class="inputText child w-full"
       />
     </div>
   </div>

@@ -403,3 +403,8 @@ calendaricon {
 .p-toast-message-text {
   margin-left: 12px;
 }
+
+.flex-label {
+  white-space: nowrap; /* Evita que el label se divida en varias líneas */
+  flex-shrink: 0; /* Evita que el label se encoja */
+}

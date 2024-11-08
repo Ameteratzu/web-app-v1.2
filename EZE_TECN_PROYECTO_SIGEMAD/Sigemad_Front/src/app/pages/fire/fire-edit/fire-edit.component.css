@@ -71,6 +71,15 @@
 
 .d-flex {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.d-flex2 {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
 }
 
 .justify-content-between {
@@ -329,7 +338,6 @@ td {
 
 .child {
   flex: 1;
-  width: 23%;
 }
 
 .gap8 {
@@ -344,4 +352,30 @@ td {
 
 .justify-end {
   justify-content: flex-end;
+}
+
+.inputText {
+  color: #000 !important;
+}
+::placeholder {
+  color: #c0c0c0;
+  opacity: 1;
+}
+
+::ng-deep .p-dropdown-label.p-placeholder {
+  color: #c0c0c0 !important; /* Usa !important si es necesario */
+}
+
+::ng-deep .p-dropdown-label:not(.p-placeholder) {
+  color: #000 !important; /* Usa !important si es necesario */
+}
+
+/* Usa ::ng-deep para el placeholder del p-calendar en rojo */
+::ng-deep .p-inputtext.p-placeholder {
+  color: #c0c0c0 !important; /* Aplica color rojo al placeholder */
+}
+
+/* Usa ::ng-deep para el texto seleccionado en verde */
+::ng-deep .p-inputtext:not(.p-placeholder) {
+  color: #000 !important; /* Aplica color verde al texto seleccionado */
 }

@@ -17,7 +17,7 @@
   </div>
 </div>
 <hr style="margin-top: 10px" />
-
+<p-toast />
 <form (ngSubmit)="onSubmit()" [formGroup]="formData">
   <input type="hidden" formControlName="id" value="{{ fire.id }}" />
 
@@ -30,7 +30,7 @@
   <div class="d-flex pt-15 gap8 mr-20">
     <div class="d-flex w-full">
       <div class="child w-full d-flex">
-        <div class="inter p-12 font-weight-bold font-size-16 font-color-grey">
+        <div class="inter font-weight-bold font-size-16 inputText">
           Denominación
         </div>
 
@@ -47,9 +47,25 @@
 
     <div class="d-flex w-full">
       <div class="child w-full d-flex">
-        <div
-          class="pt-12 pe-15 inter font-weight-bold font-size-16 font-color-grey"
-        >
+        <div class="font-size-16 inter font-weight-bold inputText">Inicio</div>
+
+        <p-calendar
+          dateFormat="d/mm/yy"
+          formControlName="startDate"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          placeholder="Inicio"
+          inputId="icondisplay"
+          class="inputText child w-full"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex pt-15 gap8 mr-20">
+    <div class="d-flex w-full">
+      <div class="child w-full d-flex">
+        <div class="inter font-weight-bold font-size-16 inputText">
           Provincia
         </div>
         <p-dropdown
@@ -68,9 +84,7 @@
 
     <div class="d-flex w-full">
       <div class="child w-full d-flex">
-        <div
-          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-        >
+        <div class="font-size-16 inter font-weight-bold inputText">
           Municipio
         </div>
 
@@ -95,34 +109,12 @@
         </div>
       </div>
     </div>
-
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div
-          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-        >
-          Inicio
-        </div>
-
-        <p-calendar
-          dateFormat="d/mm/yy"
-          formControlName="startDate"
-          [iconDisplay]="'input'"
-          [showIcon]="true"
-          placeholder="Inicio"
-          inputId="icondisplay"
-          class="inputText child w-full"
-        />
-      </div>
-    </div>
   </div>
 
   <div class="d-flex pt-15 gap8 mr-20">
     <div class="d-flex w-full">
       <div class="child w-full d-flex">
-        <div
-          class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-        >
+        <div class="flex-label font-size-16 inter font-weight-bold inputText">
           Tipo de suceso
         </div>
 
@@ -140,7 +132,7 @@
 
     <div class="d-flex w-full">
       <div class="d-flex w-full">
-        <div class="font-size-16 inter font-weight-bold font-color-grey">
+        <div class="flex-label font-size-16 inter font-weight-bold inputText">
           Nota general
         </div>
 
@@ -158,9 +150,7 @@
 
   <div class="border-bottom d-flex pt-15 gap8 mr-20 me-20 pt-15 pb-15">
     <div class="d-flex w-full">
-      <div
-        class="pt-12 font-size-16 pe-15 inter font-weight-bold font-color-grey"
-      >
+      <div class="flex-label font-size-16 inter font-weight-bold inputText">
         Estado de suceso
       </div>
 
@@ -216,7 +206,7 @@
 
 <hr class="me-20" />
 
-<div class="d-flex mb-100">
+<div class="d-flex2 mb-100">
   <div class="border p-16 mr-13 w-30p">
     <div class="d-flex justify-content-between">
       <div>

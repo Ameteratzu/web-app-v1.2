@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,19 +19,21 @@ import { MenuItemActiveService } from '../../../services/menu-item-active.servic
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 
-import { Event } from '../../../types/event.type';
-import { FireDetail } from '../../../types/fire-detail.type';
-import { FireStatus } from '../../../types/fire-status.type';
-import { Fire } from '../../../types/fire.type';
-import { Municipality } from '../../../types/municipality.type';
-import { Province } from '../../../types/province.type';
-
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import { ToastModule } from 'primeng/toast';
+import { Event } from '../../../types/event.type';
+import { FireDetail } from '../../../types/fire-detail.type';
+import { FireStatus } from '../../../types/fire-status.type';
+import { Fire } from '../../../types/fire.type';
+import { Municipality } from '../../../types/municipality.type';
+import { Province } from '../../../types/province.type';
 
 @Component({
   selector: 'app-fire-edit',
@@ -43,11 +46,17 @@ import {
     DropdownModule,
     CalendarModule,
     InputTextareaModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './fire-edit.component.html',
   styleUrl: './fire-edit.component.css',
 })
 export class FireEditComponent {
+  featuresCoords: Feature<Geometry>[] = [];
+
+  public messageService = inject(MessageService);
+
   public router = inject(Router);
 
   public route = inject(ActivatedRoute);
@@ -122,7 +131,6 @@ export class FireEditComponent {
 
   async ngOnInit() {
     localStorage.removeItem('coordinates');
-    console.info('----');
 
     this.menuItemActiveService.set.emit('/fire');
 
@@ -181,15 +189,42 @@ export class FireEditComponent {
   async onSubmit() {
     this.error = false;
     const data = this.formData.value;
+    //console.info('this.featuresCoords', this.featuresCoords.length);
+    if (this.featuresCoords.length) {
+      data.coordinates = this.featuresCoords;
+    } else {
+      const municipio = this.municipalities().find(
+        (item) => item.id === this.formData.value.municipality
+      );
+
+      data.coordinates = [
+        municipio?.geoPosicion?.coordinates[1],
+        municipio?.geoPosicion?.coordinates[0],
+      ];
+    }
+
+    /*
     data.coordinates = JSON.parse(
       localStorage.getItem('coordinates') ||
         JSON.stringify(this.fire.geoPosicion.coordinates)
     );
+    */
 
     await this.fireService
       .update(data)
       .then((response) => {
-        window.location.href = window.location.href;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Modificado',
+          detail: 'Incendio modificado correctamente',
+          //life: 90000,
+        });
+        //this.matDialogRef.close();
+        new Promise((resolve) => setTimeout(resolve, 2000)).then(
+          //window.location.href = window.location.href
+          () => this.router.navigate([`/fire`])
+        );
+        //
       })
       .catch((error) => {
         this.error = true;
@@ -199,16 +234,45 @@ export class FireEditComponent {
   async confirmDelete() {
     if (confirm('¿Está seguro que desea eliminar este incendio?')) {
       const fire_id = Number(this.route.snapshot.paramMap.get('id'));
-      await this.fireService.delete(fire_id);
-      window.location.href = '/fire';
+
+      await this.fireService
+        .delete(fire_id)
+        .then((response) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Eliminado',
+            detail: 'Incendio eliminado correctamente',
+            //life: 90000,
+          });
+          new Promise((resolve) => setTimeout(resolve, 2000)).then(
+            () => (window.location.href = '/fire')
+          );
+        })
+        .catch((error) => {
+          this.error = true;
+        });
     }
   }
 
   openModalMapEdit() {
-    this.matDialog.open(MapCreateComponent, {
-      width: '1000px',
-      maxWidth: '1000px',
+    const municipio = this.municipalities().find(
+      (item) => item.id === this.formData.value.municipality
+    );
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      height: '780px',
+      maxHeight: '780px',
+      data: { municipio: municipio, listaMunicipios: this.municipalities() },
     });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        this.featuresCoords = features;
+        console.info('this.featuresCoords', this.featuresCoords);
+      }
+    );
   }
 
   openModalEvolution() {

@@ -8,11 +8,12 @@ select {
 }
 
 .bg-red {
-  background-color: red;
+  background-color: #ff7a77;
   text-align: center;
   color: white;
   padding: 10px;
   margin-bottom: 10px;
+  border-radius: 4px;
 }
 
 .text-red {
@@ -213,4 +214,9 @@ table tr:nth-child(odd) {
   display: flex !important;
   align-items: center !important;
   margin-left: 8px !important;
+}
+
+.btn-blue:disabled,
+.btn-blue[disabled] {
+  opacity: 0.5;
 }

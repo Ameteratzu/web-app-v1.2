@@ -1,4 +1,5 @@
 <div>
+  <p-toast />
   <!--
   <div class="header font-size-24 p-20">
     <div class="text-red ml-20">Nuevo</div>
@@ -134,6 +135,19 @@
                   <span *ngIf="errors?.fechaHoraEvolucion" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('startDate')?.invalid &&
+                        formGroup.get('startDate')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
 
@@ -143,7 +157,7 @@
                     <b>Entrada / Salida</b>
                     <p-dropdown
                       emptyMessage=" "
-                      formControlName="type"
+                      formControlName="inputOutput"
                       [options]="inputOutputs()"
                       optionLabel="descripcion"
                       placeholder=""
@@ -159,6 +173,19 @@
                 <span *ngIf="errors?.idEntradaSalida" class="text-red">
                   *
                 </span>
+                <div
+                  [style]="{
+                    visibility:
+                      formGroup.get('inputOutput')?.invalid &&
+                      formGroup.get('inputOutput')?.touched
+                        ? 'visible'
+                        : 'hidden'
+                  }"
+                >
+                  <small class="error-message">
+                    Este campo es requerido.
+                  </small>
+                </div>
               </div>
 
               <div class="font-size-16 form-column">
@@ -180,6 +207,19 @@
                   </div>
                 </div>
                 <span *ngIf="errors?.idMedio" class="text-red"> * </span>
+                <div
+                  [style]="{
+                    visibility:
+                      formGroup.get('media')?.invalid &&
+                      formGroup.get('media')?.touched
+                        ? 'visible'
+                        : 'hidden'
+                  }"
+                >
+                  <small class="error-message">
+                    Este campo es requerido.
+                  </small>
+                </div>
               </div>
             </div>
 
@@ -200,6 +240,17 @@
                     class="form-column"
                   />
                 </div>
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formGroup.get('originDestination')?.invalid &&
+                    formGroup.get('originDestination')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
 
@@ -231,6 +282,19 @@
                     />
                   </div>
                 </div>
+                <div
+                  [style]="{
+                    visibility:
+                      formGroup.get('datetimeUpdate')?.invalid &&
+                      formGroup.get('datetimeUpdate')?.touched
+                        ? 'visible'
+                        : 'hidden'
+                  }"
+                >
+                  <small class="error-message">
+                    Este campo es requerido.
+                  </small>
+                </div>
               </div>
 
               <div class="font-size-16 form-column">
@@ -251,6 +315,19 @@
                     />
                   </div>
                 </div>
+                <div
+                  [style]="{
+                    visibility:
+                      formGroup.get('recordType')?.invalid &&
+                      formGroup.get('recordType')?.touched
+                        ? 'visible'
+                        : 'hidden'
+                  }"
+                >
+                  <small class="error-message">
+                    Este campo es requerido.
+                  </small>
+                </div>
               </div>
             </div>
 
@@ -267,6 +344,17 @@
                   />
                 </div>
               </div>
+              <div
+                [style]="{
+                  visibility:
+                    formGroup.get('observations_1')?.invalid &&
+                    formGroup.get('observations_1')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
+              </div>
             </div>
 
             <div class="mt-10 form-row">
@@ -281,6 +369,17 @@
                     class="form-column"
                   />
                 </div>
+              </div>
+              <div
+                [style]="{
+                  visibility:
+                    formGroup.get('forecast')?.invalid &&
+                    formGroup.get('forecast')?.touched
+                      ? 'visible'
+                      : 'hidden'
+                }"
+              >
+                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
 
@@ -314,6 +413,19 @@
                     <span *ngIf="errors?.idEstadoIncendio" class="text-red">
                       *
                     </span>
+                    <div
+                      [style]="{
+                        visibility:
+                          formGroup.get('status')?.invalid &&
+                          formGroup.get('status')?.touched
+                            ? 'visible'
+                            : 'hidden'
+                      }"
+                    >
+                      <small class="error-message">
+                        Este campo es requerido.
+                      </small>
+                    </div>
                   </div>
                 </div>
 
@@ -330,6 +442,19 @@
                         class="form-column"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('emergencyPlanActivated')?.invalid &&
+                        formGroup.get('emergencyPlanActivated')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
               </div>
@@ -354,6 +479,19 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('operativeStatus')?.invalid &&
+                        formGroup.get('operativeStatus')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -372,6 +510,19 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('end_date')?.invalid &&
+                        formGroup.get('end_date')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -387,6 +538,19 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('affectedSurface')?.invalid &&
+                        formGroup.get('affectedSurface')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -398,10 +562,6 @@
               >
                 AREA AFECTADA
               </div>
-            </div>
-
-            <div *ngIf="areaAffectedActionError" class="bg-red">
-              Todos los campos son obligatorios
             </div>
 
             <div class="mt-10 form-column">
@@ -427,6 +587,17 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('startAreaAffected')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -451,6 +622,19 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('province_1')?.invalid &&
+                        formGroup.get('province_1')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -477,6 +661,19 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('municipality_1')?.invalid &&
+                        formGroup.get('municipality_1')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -500,6 +697,19 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('minorEntity')?.invalid &&
+                        formGroup.get('minorEntity')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -522,6 +732,19 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility:
+                        formGroup.get('observationsAreaAffected')?.invalid &&
+                        formGroup.get('observationsAreaAffected')?.touched
+                          ? 'visible'
+                          : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -557,6 +780,10 @@
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div *ngIf="areaAffectedActionError" class="bg-red">
+              Todos los campos son obligatorios
             </div>
 
             <div class="mt-10">
@@ -620,10 +847,6 @@
               </div>
             </div>
 
-            <div *ngIf="consequenceActionError" class="bg-red">
-              Todos los campos son obligatorios
-            </div>
-
             <input type="hidden" formControlName="consequenceActionIndex" />
             <input type="hidden" formControlName="consequenceActionUpdate" />
 
@@ -647,6 +870,17 @@
                     </div>
                   </div>
                   <span *ngIf="errors?.impactType" class="text-red"> * </span>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('impactType')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -669,6 +903,17 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('impactGroup')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -696,6 +941,17 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('name')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -717,6 +973,17 @@
                   <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
                     *
                   </span>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('number')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -753,6 +1020,17 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('observations_2')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -763,6 +1041,9 @@
               </div>
             </div>
 
+            <div *ngIf="consequenceActionError" class="bg-red">
+              Todos los campos son obligatorios
+            </div>
             <app-campo-dinamico
               [campos]="fieldCampos()"
               (formData)="getDataForConsecuenciasActuaciones($event)"
@@ -890,6 +1171,17 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('mediaType')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -904,6 +1196,17 @@
                         class="form-column"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('quantity')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
 
@@ -920,6 +1223,17 @@
                         class="form-column"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('unit')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
               </div>
@@ -944,6 +1258,17 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('classification')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -963,6 +1288,17 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('ownership_1')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -977,6 +1313,17 @@
                         class="form-column"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('ownership_2')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
               </div>
@@ -1002,6 +1349,17 @@
                       />
                     </div>
                   </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('province_2')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
+                  </div>
                 </div>
 
                 <div class="form-column">
@@ -1020,6 +1378,17 @@
                         [showClear]="true"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('municipality_2')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
 
@@ -1055,6 +1424,17 @@
                         class="form-column"
                       />
                     </div>
+                  </div>
+                  <div
+                    [style]="{
+                      visibility: formGroup.get('observations_3')?.invalid
+                        ? 'visible'
+                        : 'hidden'
+                    }"
+                  >
+                    <small class="error-message">
+                      Este campo es requerido.
+                    </small>
                   </div>
                 </div>
 

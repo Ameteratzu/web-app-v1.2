@@ -32,3 +32,17 @@
 .mb-8 {
   margin-bottom: 8px;
 }
+.container-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+}
+
+.item-sidebar {
+  margin-bottom: 16px;
+}
+
+.container-sidebar .item-sidebar:last-child {
+  margin-top: auto;
+}

@@ -218,6 +218,7 @@ export class FireCreateModalComponent implements OnInit {
         });
     } else {
       console.info('error...');
+      this.formData.markAllAsTouched();
     }
   }
 
