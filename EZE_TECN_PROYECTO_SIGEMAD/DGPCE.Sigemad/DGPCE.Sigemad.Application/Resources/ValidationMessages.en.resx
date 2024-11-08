@@ -171,6 +171,21 @@
   <data name="UbicacionNoVacio" xml:space="preserve">
     <value>Location cannot be empty</value>
   </data>
+  <data name="IdObligatorio" xml:space="preserve">
+    <value>Id is mandatory</value>
+  </data>
+  <data name="IdNoVacio" xml:space="preserve">
+    <value>Id cannot be empty</value>
+  </data>
+  <data name="EvolucionObligatorio" xml:space="preserve">
+    <value>Evolution is mandatory</value>
+  </data>
+  <data name="FechaHoraObligatorio" xml:space="preserve">
+    <value>DateHour is mandatory</value>
+  </data>
+  <data name="EntidadMenorObligatorio" xml:space="preserve">
+    <value>Minor Entity is mandatory</value>
+  </data>
   <data name="IncendioObligatorio" xml:space="preserve">
     <value>Fire is mandatory</value>
   </data>
@@ -227,5 +242,29 @@
   </data>
   <data name="FechaInicioPMAObligatorio" xml:space="preserve">
     <value>PMA Start date is mandatory</value>
+  </data>
+  <data name="IncendioIdNoVacio" xml:space="preserve">
+    <value>Id Incendio cannot be empty</value>
+  </data>
+  <data name="IncendioIdObligatorio" xml:space="preserve">
+    <value>IdIncendio is mandatory</value>
+  </data>
+  <data name="MedioIdNoVacio" xml:space="preserve">
+    <value>MedioId cannot be empty</value>
+  </data>
+  <data name="MedioIdObligatorio" xml:space="preserve">
+    <value>MedioId is mandatory</value>
+  </data>
+  <data name="FechaHoraNoVacio" xml:space="preserve">
+    <value>DateHour cannot be empty</value>
+  </data>
+  <data name="AsuntoNoVacio" xml:space="preserve">
+    <value>Subjetc cannot be empty</value>
+  </data>
+  <data name="AsuntoNoNulo" xml:space="preserve">
+    <value>Subjet is mandatory</value>
+  </data>
+  <data name="AsuntoMaxLegth" xml:space="preserve">
+    <value>Subject cannot exceed 500 characters</value>
   </data>
 </root>

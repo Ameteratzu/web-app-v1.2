@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Features.EstadosIncendio.Enumerations;
 using DGPCE.Sigemad.Application.Features.EstadosSucesos.Enumerations;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -82,15 +83,18 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             var evolucion = new Evolucion
             {
                 IdIncendio = request.IdIncendio,
-                IdEstadoIncendio = request.IdEstadoIncendio,
                 FechaHoraEvolucion = request.FechaHoraEvolucion,
                 IdEntradaSalida = request.IdEntradaSalida,
                 IdMedio = request.IdMedio,
+                IdTipoRegistro = request.IdTipoRegistro,
                 Observaciones = request.Observaciones,
                 Prevision = request.Prevision,
+                IdEstadoIncendio = request.IdEstadoIncendio,
+                PlanEmergenciaActivado = request.PlanEmergenciaActivado,
+                IdSituacionOperativa = request.IdSituacionOperativa,
                 SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
                 FechaFinal = request.FechaFinal,
-                IdTipoRegistro = request.IdTipoRegistro
+                EvolucionProcedenciaDestinos = request.EvolucionProcedenciaDestinos != null ? MapEvolucionProcedenciaDestinos(request.EvolucionProcedenciaDestinos): null
             };
 
             _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
@@ -107,25 +111,16 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
         }
 
-        public async Task CrearEvolucioneProcedenciaDestinos(int idEvolucion, ICollection<int> listadoProcedencias)
+        public ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
         {
-            _logger.LogInformation($"Creando evolucionProcedenciasDestinos para la evolución {idEvolucion}");
-            foreach (var procedenciaDestino in listadoProcedencias)
+            if (source == null)
             {
-                var evolucionProcedenciaDestino = new EvolucionProcedenciaDestino
-                {
-                    IdEvolucion = idEvolucion,
-                    IdProcedenciaDestino = procedenciaDestino
-                };
-
-                await _unitOfWork.Repository<EvolucionProcedenciaDestino>().AddAsync(evolucionProcedenciaDestino);
-
+                return new List<EvolucionProcedenciaDestino>();
             }
 
-          await _unitOfWork.Complete();
-          
-         _logger.LogInformation($"evolucionProcedenciasDestinos creadas correctamente para la evolución {idEvolucion}");
+            return source.Select(id => new EvolucionProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
         }
+
 
         public async Task EliminarEvolucion(DeleteEvolucionesCommand request)
         {

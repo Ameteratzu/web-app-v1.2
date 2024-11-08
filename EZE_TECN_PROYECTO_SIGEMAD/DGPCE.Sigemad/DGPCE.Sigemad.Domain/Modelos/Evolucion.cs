@@ -14,15 +14,17 @@ public class Evolucion : BaseDomainModel<int>
     public string? Prevision { get; set; }
     public int? IdEstadoIncendio { get; set; }
     public string? PlanEmergenciaActivado { get; set; }
+    public int? IdSituacionOperativa { get; set; }
     public decimal? SuperficieAfectadaHectarea { get; set; }
     public DateTime? FechaFinal { get; set; }
-
 
     public virtual Medio Medio { get; set; } = null!;
     public virtual EntradaSalida EntradaSalida { get; set; } = null!;
     public virtual Incendio Incendio { get; set; } = null!;
     public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
     public virtual TipoRegistro TipoRegistro { get; set; } = null!;
+    public virtual SituacionOperativa SituacionOperativa { get; set; } = null!;
+
 
     public ICollection<EvolucionProcedenciaDestino>? EvolucionProcedenciaDestinos { get; set; } = null;
 
