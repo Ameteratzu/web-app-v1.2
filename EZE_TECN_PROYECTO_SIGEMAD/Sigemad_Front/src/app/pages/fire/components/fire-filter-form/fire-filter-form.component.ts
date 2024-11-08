@@ -193,7 +193,7 @@ export class FireFilterFormComponent implements OnInit {
     if (event.value == 2) {
       const countries = await this.countryService.get();
       this.countries.set(countries);
-      this.loadCommunities();
+      //this.loadCommunities();
       this.autonomousCommunities.set([]);
       this.disabledCountry.set(false);
       this.disabledAutonomousCommunity.set(false);
