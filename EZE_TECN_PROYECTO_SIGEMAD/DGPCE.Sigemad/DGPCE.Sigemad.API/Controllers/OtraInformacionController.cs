@@ -1,5 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtrasInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.UpdateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,18 @@ public class OtraInformacionController : ControllerBase
     public async Task<ActionResult> Delete(int idDetalleOtraInformacion)
     {
         var command = new DeleteDetalleOtraInformacionCommand { IdDetalleOtraInformacion = idDetalleOtraInformacion };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPut("detalles", Name = "UpdateOtraInformacion")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Actualizar otra información")]
+    public async Task<ActionResult> Update([FromBody] UpdateDetalleOtraInformacionCommand command)
+    {
         await _mediator.Send(command);
         return NoContent();
     }
