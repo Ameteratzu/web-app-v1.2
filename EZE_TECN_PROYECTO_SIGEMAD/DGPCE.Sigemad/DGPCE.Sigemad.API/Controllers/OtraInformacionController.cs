@@ -62,7 +62,7 @@ public class OtraInformacionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerOperation(Summary = "Actualizar otra información")]
+    [SwaggerOperation(Summary = "Actualizar detalle otra información")]
     public async Task<ActionResult> Update([FromBody] UpdateDetalleOtraInformacionCommand command)
     {
         await _mediator.Send(command);
