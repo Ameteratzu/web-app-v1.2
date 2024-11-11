@@ -48,7 +48,6 @@ import { MapCreateComponent } from '../../../map-create/map-create.component';
     InputTextareaModule,
     CheckboxModule,
     MatDialogModule,
-    MapCreateComponent,
     ToastModule,
   ],
   providers: [MessageService],
@@ -68,6 +67,7 @@ export class FireCreateModalComponent implements OnInit {
   public eventService = inject(EventService);
   public countryServices = inject(CountryService);
   public fireService = inject(FireService);
+  public classValidate = signal<string>('needs-validation');
 
   public messageService = inject(MessageService);
 
@@ -127,15 +127,15 @@ export class FireCreateModalComponent implements OnInit {
   }
 
   onChange(event: any) {
-    if (event.value == 1) {
+    if (event.target.value == 1) {
       this.clearValidatosToForeign();
       this.showInputForeign = false;
     }
-    if (event.value == 2) {
+    if (event.target.value == 2) {
       this.addValidatorsToForeign();
       this.showInputForeign = true;
     }
-    if (event.value == 3) {
+    if (event.target.value == 3) {
       //TODO
     }
   }
@@ -157,7 +157,7 @@ export class FireCreateModalComponent implements OnInit {
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value;
+    const province_id = event.target.value;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
   }
@@ -166,6 +166,7 @@ export class FireCreateModalComponent implements OnInit {
     if (this.formData.valid) {
       this.error = false;
 
+      this.classValidate.set('needs-validation');
       const data = this.formData.value;
 
       const municipio = this.municipalities().find(
@@ -180,24 +181,9 @@ export class FireCreateModalComponent implements OnInit {
         ],
       };
 
-      /*
-      data.coordinates = JSON.parse(
-        localStorage.getItem('coordinates') ?? '{}'
-      );
-
-      if (localStorage.getItem('polygon')) {
-        data.geoposition = {
-          type: 'Polygon',
-          coordinates: [data.coordinates],
-        };
-      } else {
-        data.geoposition = {
-          type: 'Point',
-          coordinates: data.coordinates,
-        };
+      if (this.formData.valid) {
+        this.classValidate.set('needs-validation');
       }
-      */
-
       await this.fireService
         .post(data)
         .then((response) => {
@@ -205,9 +191,8 @@ export class FireCreateModalComponent implements OnInit {
             severity: 'success',
             summary: 'Creado',
             detail: 'Incendio creado correctamente',
-            //life: 90000,
           });
-          //this.matDialogRef.close();
+
           new Promise((resolve) => setTimeout(resolve, 2000)).then(
             () => (window.location.href = '/fire')
           );
@@ -218,29 +203,17 @@ export class FireCreateModalComponent implements OnInit {
         });
     } else {
       console.info('error...');
+      this.classValidate.set('needs-validation was-validated');
       this.formData.markAllAsTouched();
     }
   }
 
   async setMunicipalityId(event: any) {
-    const municipality_id = event.value;
+    const municipality_id = event.target.value;
     localStorage.setItem('municipality', municipality_id);
 
     for (let municipality of this.municipalities()) {
       if (municipality.id == Number(localStorage.getItem('municipality'))) {
-        /*
-        this.latitude = Number(municipality.geoPosicion.coordinates[0]);
-        this.length = Number(municipality.geoPosicion.coordinates[1]);
-
-        const coordinates = [this.length, this.latitude];
-
-        localStorage.setItem(
-          'latitude',
-          municipality.geoPosicion.coordinates[0]
-        );
-        localStorage.setItem('length', municipality.geoPosicion.coordinates[1]);
-        localStorage.setItem('coordinates', JSON.stringify(coordinates));
-        */
         this.municipalityName = municipality.descripcion;
 
         this.formData.patchValue({
@@ -254,12 +227,12 @@ export class FireCreateModalComponent implements OnInit {
     let x;
     if (this.showInputForeign) {
       const paises = this.countries().find(
-        (item) => item.id === this.formData.value.country
+        (item) => item.id == this.formData.value.country
       );
       x = paises;
     } else {
       const municipio = this.municipalities().find(
-        (item) => item.id === this.formData.value.municipality
+        (item) => item.id == this.formData.value.municipality
       );
       x = municipio;
     }

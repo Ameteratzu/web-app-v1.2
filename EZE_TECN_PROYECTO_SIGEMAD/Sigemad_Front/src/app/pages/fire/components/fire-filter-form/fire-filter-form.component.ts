@@ -132,8 +132,8 @@ export class FireFilterFormComponent implements OnInit {
       move: 1,
       territory: 1, //pre seleccionamos Nacional
       country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
-      start: moment().subtract(4, 'days').toDate(),
-      end: moment().toDate(),
+      start: moment().subtract(4, 'days').format('YYYY-MM-DD'),
+      end: moment().format('YYYY-MM-DD'),
     });
 
     this.menuItemActiveService.set.emit('/fire');
@@ -144,10 +144,6 @@ export class FireFilterFormComponent implements OnInit {
 
     const territories = await this.territoryService.get();
     this.territories.set(territories);
-
-    //const autonomousCommunities = await this.autonomousCommunityService.get();
-    //this.autonomousCommunities.set(autonomousCommunities);
-    //getByCountry;
 
     const fireStatus = await this.fireStatusService.get();
     this.fireStatus.set(fireStatus);
@@ -173,13 +169,13 @@ export class FireFilterFormComponent implements OnInit {
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : null,
+      country: event.target.value == 1 ? this.COUNTRIES_ID.SPAIN : null,
       autonomousCommunity: null,
       province: null,
       municipality: null,
     });
 
-    if (event.value == 1) {
+    if (event.target.value == 1) {
       const countries = await this.countryService.get();
       this.countries.set(countries);
       this.loadCommunities();
@@ -190,7 +186,7 @@ export class FireFilterFormComponent implements OnInit {
         country: this.COUNTRIES_ID.SPAIN,
       });
     }
-    if (event.value == 2) {
+    if (event.target.value == 2) {
       const countries = await this.countryService.get();
       this.countries.set(countries);
       //this.loadCommunities();
@@ -202,7 +198,7 @@ export class FireFilterFormComponent implements OnInit {
         country: null,
       });
     }
-    if (event.value == 3) {
+    if (event.target.value == 3) {
       this.disabledCountry.set(true);
       this.disabledAutonomousCommunity.set(true);
       this.disabledProvince.set(true);
@@ -264,15 +260,9 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async loadProvinces(event: any) {
-    const ac_id = event.value.id;
+    const ac_id = event.target.value;
     const provinces = await this.provinceService.get(ac_id);
     this.provinces.set(provinces);
-  }
-
-  async loadMunicipalities(event: any) {
-    const province_id = event.value.id;
-    const municipalities = await this.municipalityService.get(province_id);
-    this.municipalities.set(municipalities);
   }
 
   changeBetween(event: any) {

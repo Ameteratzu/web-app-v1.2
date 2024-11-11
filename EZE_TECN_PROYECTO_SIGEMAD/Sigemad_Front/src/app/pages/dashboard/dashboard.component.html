@@ -2,8 +2,8 @@
   Sistema de gestión de emergencia y apoyo a la decisión
 </h1>
 
-<div class="d-flex mb-75">
-  <div class="w-70">
+<div class="d-flex row">
+  <div class="col-9">
     <div class="font-size-20 inter">
       Situación actual [13/06/2024 11:00]
       <img src="/assets/img/refresh.svg" alt="refresh" />
@@ -11,16 +11,16 @@
 
     <div id="map" class="map w-full mt-20"></div>
 
-    <div class="text-center mt-20">
-      <button class="bg-secondary">TODO</button>
-      <button class="bg-secondary">Incendios</button>
-      <button class="bg-secondary active">Terremotos</button>
-      <button class="bg-secondary">Meteorología</button>
-      <button class="bg-secondary">Otros sucesos</button>
+    <div class="d-flex gap-4  align-items-center justify-content-center pt-4">
+      <button class="btn btn-secondary">TODO</button>
+      <button class="btn btn-secondary">Incendios</button>
+      <button class="btn btn-primary">Terremotos</button>
+      <button class="btn btn-secondary">Meteorología</button>
+      <button class="btn btn-secondary">Otros sucesos</button>
     </div>
   </div>
 
-  <div class="ms-23 w-30">
+  <div class="col-3">
     <div class="font-size-20">
       <div class="d-flex justify-content-between">
         <div class="inter">Sucesos reseñables</div>

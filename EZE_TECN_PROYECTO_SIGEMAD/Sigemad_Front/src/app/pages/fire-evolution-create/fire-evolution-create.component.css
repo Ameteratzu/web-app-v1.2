@@ -1,3 +1,4 @@
+/*
 input,
 select {
   padding: 12px;
@@ -219,4 +220,13 @@ table tr:nth-child(odd) {
 .btn-blue:disabled,
 .btn-blue[disabled] {
   opacity: 0.5;
+}
+*/
+
+.text-green{
+  color: #009900;
+}
+
+.text-red{
+  color: #bb0000;
 }

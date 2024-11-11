@@ -34,6 +34,7 @@ import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
+import moment from 'moment';
 
 @Component({
   selector: 'app-fire-edit',
@@ -54,6 +55,8 @@ import { Province } from '../../../types/province.type';
 })
 export class FireEditComponent {
   featuresCoords: Feature<Geometry>[] = [];
+
+  classValidate = signal<string>('needs-validation');
 
   public messageService = inject(MessageService);
 
@@ -173,23 +176,31 @@ export class FireEditComponent {
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
       municipality: this.fire.idMunicipio,
-      startDate: new Date(this.fire.fechaInicio),
+      startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
       idEstado: this.fire.idEstadoSuceso,
     });
+    //this.openModalEvolution()
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value;
+    const province_id = event.target.value;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
   }
 
   async onSubmit() {
     this.error = false;
-    const data = this.formData.value;
-    //console.info('this.featuresCoords', this.featuresCoords.length);
+    const data = this.formData.value;    
+    
+    if(data){
+      this.classValidate.set('needs-validation was-validated')
+      
+    } else {
+      this.classValidate.set('needs-validation')
+    }
+    
     if (this.featuresCoords.length) {
       data.coordinates = this.featuresCoords;
     } else {
@@ -203,13 +214,6 @@ export class FireEditComponent {
       ];
     }
 
-    /*
-    data.coordinates = JSON.parse(
-      localStorage.getItem('coordinates') ||
-        JSON.stringify(this.fire.geoPosicion.coordinates)
-    );
-    */
-
     await this.fireService
       .update(data)
       .then((response) => {
@@ -217,14 +221,11 @@ export class FireEditComponent {
           severity: 'success',
           summary: 'Modificado',
           detail: 'Incendio modificado correctamente',
-          //life: 90000,
         });
-        //this.matDialogRef.close();
+        
         new Promise((resolve) => setTimeout(resolve, 2000)).then(
-          //window.location.href = window.location.href
           () => this.router.navigate([`/fire`])
         );
-        //
       })
       .catch((error) => {
         this.error = true;
@@ -242,7 +243,6 @@ export class FireEditComponent {
             severity: 'success',
             summary: 'Eliminado',
             detail: 'Incendio eliminado correctamente',
-            //life: 90000,
           });
           new Promise((resolve) => setTimeout(resolve, 2000)).then(
             () => (window.location.href = '/fire')

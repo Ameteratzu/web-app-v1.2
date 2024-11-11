@@ -1,3 +1,261 @@
+<div class="container-fluid">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formData">
+    <div class="row">
+      <div class="col-4">
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="floatingInput"
+            formControlName="name"
+            placeholder="Denominación"
+          />
+          <label for="floatingInput">Denominación</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            (change)="changeTerritory($event)"
+            formControlName="territory"
+          >
+            <option
+              *ngFor="let territory of territories()"
+              value="{{ territory.id }}"
+            >
+              {{ territory.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Territorio</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            (change)="loadCommunities()"
+            [disabled]="disabledCountry()"
+            formControlName="country"
+          >
+            <option
+              *ngFor="let country of filterCountries()"
+              value="{{ country.id }}"
+            >
+              {{ country.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">País</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            (change)="loadProvinces($event)"
+            [disabled]="disabledAutonomousCommunity()"
+            formControlName="autonomousCommunity"
+          >
+            <option
+              *ngFor="let community of autonomousCommunities()"
+              value="{{ community.id }}"
+            >
+              {{ community.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">CCAA</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            [disabled]="disabledProvince()"
+            formControlName="autonomousCommunity"
+          >
+            <option
+              *ngFor="let province of provinces()"
+              value="{{ province.id }}"
+            >
+              {{ province.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Provincia</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="eventStatus"
+          >
+            <option *ngFor="let event of eventStatus()" value="{{ event.id }}">
+              {{ event.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Estado del suceso</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="fireStatus"
+          >
+            <option
+              *ngFor="let fireStatu of fireStatus()"
+              value="{{ fireStatu.id }}"
+            >
+              {{ fireStatu.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Estado del incendio</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="severityLevel"
+          >
+            <option
+              *ngFor="let levels of severityLevels()"
+              value="{{ levels.id }}"
+            >
+              {{ levels.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Nivel/Situación</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="affectedArea"
+          >
+            <option
+              *ngFor="let superficie of superficiesFiltro()"
+              value="{{ superficie.id }}"
+            >
+              {{ superficie.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Superficie</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="move"
+          >
+            <option *ngFor="let move of moves()" value="{{ move.id }}">
+              {{ move.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Movimiento</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating">
+          <select
+            class="form-select"
+            id="floatingSelect"
+            aria-label="Floating label select example"
+            formControlName="between"
+            (change)="changeBetween($event)"
+          >
+            <option
+              *ngFor="let comparative of comparativeDates()"
+              value="{{ comparative.id }}"
+            >
+              {{ comparative.descripcion }}
+            </option>
+          </select>
+          <label for="floatingSelect">Entre</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating mb-3">
+          <input
+            type="date"
+            formControlName="start"
+            class="form-control"
+            id="floatingInput"
+          />
+          <label for="floatingInput">Fecha Inicio</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="form-floating mb-3">
+          <input
+            type="date"
+            class="form-control"
+            id="floatingInput"
+            formControlName="end"
+          />
+          <label for="floatingInput">Fecha Fin</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex text-right justify-content-end">
+      <div class="mr-3">
+        <button type="submit" class="btn btn-primary">
+          <img src="/assets/img/search-btn.svg" alt="search-btn" />
+        </button>
+      </div>
+
+      <div style="margin-left: 10px">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
+          <img src="/assets/img/icon-filter.svg" alt="filter-btn" />
+        </button>
+      </div>
+
+      <div style="margin-left: 10px">
+        <button
+          type="button"
+          (click)="clearFormFilter()"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
+          <img src="/assets/img/delete-btn.svg" alt="delete-btn" />
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<hr />
+<!--
 <form (ngSubmit)="onSubmit()" [formGroup]="formData">
   <div class="d-flex m--1 mt-15 gap-5">
     <div class="d-flex m--1 gap-5 w-full align-items p4">
@@ -164,17 +422,4 @@
       />
     </div>
   </div>
-
-  <div class="border-bottom w-100 text-right pb-15 mt-15">
-    <button type="submit" class="btn-blue">
-      <img src="/assets/img/search-btn.svg" alt="search-btn" />
-    </button>
-    <button type="button" class="btn-white">
-      <img src="/assets/img/icon-filter.svg" alt="filter-btn" />
-    </button>
-
-    <button type="button" (click)="clearFormFilter()" class="btn-white">
-      <img src="/assets/img/delete-btn.svg" alt="delete-btn" />
-    </button>
-  </div>
-</form>
+</form> -->

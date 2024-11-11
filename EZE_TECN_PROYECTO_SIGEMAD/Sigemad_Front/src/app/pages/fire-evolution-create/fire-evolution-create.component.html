@@ -1,1533 +1,1062 @@
 <div>
   <p-toast />
-  <!--
-  <div class="header font-size-24 p-20">
-    <div class="text-red ml-20">Nuevo</div>
+  <form (submit)="submit()" [formGroup]="formGroup">
+    <div class="d-flex justify-content-between mx-4 p-4">
+      <div class="flex-fill text-start text-red font-20 fw-bold col-4">
+        Nuevo
+      </div>
+      <div class="flex-fill text-center text-green font-20 fw-bold col-5">
+        Datos evolución
+      </div>
+      <div class="flex-fill text-end col-3">
+        <div class="d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-primary">
+            <img src="/assets/img/check.svg" alt="check" />
+          </button>
 
-    <div class="text-center text-green">Datos evolución</div>
-  </div>
-  -->
-  <div class="container">
-    <div class="sidebar">
-      <div class="text-red ml-20 font-size-24 my-20">Nuevo</div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionRegistro')"
-      >
-        Registro
-      </div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionDatosPersonales')"
-      >
-        Datos principales
-      </div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionParametros')"
-      >
-        Parámetros
-      </div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionAreaAfectada')"
-      >
-        Área afectada
-      </div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionConsecuenciasActuaciones')"
-      >
-        Consecuencias/Actuac.
-      </div>
-      <div
-        class="cursor-pointer font-size-16 border-silver border-radius-8 p-10"
-        (click)="scrollToSection('sectionIntervencionMedios')"
-      >
-        Intervención de medios
+          <button (click)="closeModal()" type="button" class="btn btn-secondary" style="background-color: white;">
+            <img src="/assets/img/close.svg" alt="close" />
+          </button>
+
+          <button (click)="closeModal()" type="button" class="btn btn-secondary" style="background-color: white;">
+            <img src="/assets/img/back.svg" alt="back" />
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="form-container">
-      <form (submit)="submit()" [formGroup]="formGroup">
-        <div class="flex-container mb-20">
-          <div class="center-input font-size-24 text-green">
-            Datos evolución
-          </div>
-
-          <div class="right-input">
-            <div>
-              <button type="submit" class="btn-blue">
-                <img
-                  class="w-30 h-30"
-                  src="/assets/img/check.svg"
-                  alt="check"
-                />
-              </button>
-
-              <button (click)="closeModal()" type="button" class="btn-white">
-                <img
-                  class="w-30 h-30"
-                  src="/assets/img/close.svg"
-                  alt="close"
-                />
-              </button>
-
-              <button (click)="closeModal()" type="button" class="btn-white">
-                <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
-              </button>
-            </div>
-          </div>
+    <div class="d-flex mx-4 p-4 gap-2">
+      <div
+        class="flex-shrink-0 d-flex gap-2 flex-column"
+        style="flex-basis: 20%"
+      >
+        <div
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionRegistro')"
+        >
+          Registro
         </div>
         <div
-          class="content border-silver border-radius-8 p-20"
-          style="width: 920px; height: 520px; overflow-y: scroll"
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionDatosPersonales')"
         >
-          <div>
-            <div id="validation-evolution-error"></div>
-
-            <div *ngIf="errors" class="bg-red">
-              Los campos con * son obligatorios
-            </div>
-
-            <div *ngIf="errorAreaAfectada" class="bg-red">
-              Debe seleccionar datos en el mapa de área afectada
-            </div>
-
-            <div class="d-flex justify-content-between" *ngIf="!isCreate">
-              <div class="font-size-16">
-                <b>Alta:</b> sguijarro (SACOP) - 24/08/2024 17:24
+          Datos principales
+        </div>
+        <div
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionParametros')"
+        >
+          Parámetros
+        </div>
+        <div
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionAreaAfectada')"
+        >
+          Área afectada
+        </div>
+        <div
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionConsecuenciasActuaciones')"
+        >
+          Consecuencias/Actuac.
+        </div>
+        <div
+          class="cursor-pointer font-16 border rounded p-2"
+          (click)="scrollToSection('sectionIntervencionMedios')"
+        >
+          Intervención de medios
+        </div>
+      </div>
+      <div class="flex-grow-1" style="flex-basis: 80%">
+        <form
+          (submit)="submit()"
+          [formGroup]="formGroup"
+          [class]="classValidate()"
+        >
+          <div
+            class="content border border-radius-2p-20"
+            style="width: 920px; height: 520px; overflow-y: scroll"
+          >
+            <div>
+              <div id="validation-evolution-error"></div>
+              <div *ngIf="errorAreaAfectada" class="bg-red">
+                Debe seleccionar datos en el mapa de área afectada
               </div>
 
-              <div class="font-size-16">
-                <b>Ult. modificación:</b> sguijarro (SACOP) - 24/08/2024 17:24
+              <div class="d-flex justify-content-between" *ngIf="!isCreate">
+                <div class="font-size-16">
+                  <b>Alta:</b> sguijarro (SACOP) - 24/08/2024 17:24
+                </div>
+
+                <div class="font-size-16">
+                  <b>Ult. modificación:</b> sguijarro (SACOP) - 24/08/2024 17:24
+                </div>
               </div>
-            </div>
-
-            <div class="mt-14">
-              <div
-                id="sectionRegistro"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                REGISTRO
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="font-size-16 form-column">
-                <div class="form-container2">
-                  <div class="form-row">
-                    <b>Fecha y hora</b>
-
-                    <p-calendar
-                      dateFormat="d/mm/yy"
-                      [showTime]="true"
-                      [hourFormat]="'12'"
-                      formControlName="startDate"
-                      [iconDisplay]="'input'"
-                      [showIcon]="true"
-                      placeholder=""
-                      inputId="icondisplay"
-                      [style]="{ width: '100%' }"
-                      class="form-column"
-                    />
+              <div class="p-4">
+                <!-- Registro -->
+                <div>
+                  <div id="sectionRegistro" class="font-20 fw-bold text-orange">
+                    REGISTRO
                   </div>
-                  <span *ngIf="errors?.fechaHoraEvolucion" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('startDate')?.invalid &&
-                        formGroup.get('startDate')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            class="form-control"
+                            formControlName="startDate"
+                            type="datetime-local"  
+                            id="startDate"
+                            placeholder="Fecha y hora"
+                            required
+                          />
+                          <label for="startDate"
+                            >Fecha y hora</label
+                          >
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="inputOutput"
+                          formControlName="inputOutput"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of inputOutputs()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Entrada / salida</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div class="font-size-16 form-column">
-                <div class="form-container2">
-                  <div class="form-row">
-                    <b>Entrada / Salida</b>
-                    <p-dropdown
-                      emptyMessage=" "
-                      formControlName="inputOutput"
-                      [options]="inputOutputs()"
-                      optionLabel="descripcion"
-                      placeholder=""
-                      optionValue="id"
-                      class="font-size-16"
-                      autoWidth="false"
-                      [style]="{ width: '100%' }"
-                      class="form-column"
-                      [showClear]="true"
-                    />
-                  </div>
-                </div>
-                <span *ngIf="errors?.idEntradaSalida" class="text-red">
-                  *
-                </span>
-                <div
-                  [style]="{
-                    visibility:
-                      formGroup.get('inputOutput')?.invalid &&
-                      formGroup.get('inputOutput')?.touched
-                        ? 'visible'
-                        : 'hidden'
-                  }"
-                >
-                  <small class="error-message">
-                    Este campo es requerido.
-                  </small>
-                </div>
-              </div>
-
-              <div class="font-size-16 form-column">
-                <div class="form-container2">
-                  <div class="form-row">
-                    <b>Medio</b>
-                    <p-dropdown
-                      emptyMessage=" "
-                      formControlName="media"
-                      [options]="medias()"
-                      optionLabel="descripcion"
-                      placeholder=""
-                      optionValue="id"
-                      autoWidth="false"
-                      [style]="{ width: '100%' }"
-                      class="form-column"
-                      [showClear]="true"
-                    />
-                  </div>
-                </div>
-                <span *ngIf="errors?.idMedio" class="text-red"> * </span>
-                <div
-                  [style]="{
-                    visibility:
-                      formGroup.get('media')?.invalid &&
-                      formGroup.get('media')?.touched
-                        ? 'visible'
-                        : 'hidden'
-                  }"
-                >
-                  <small class="error-message">
-                    Este campo es requerido.
-                  </small>
-                </div>
-              </div>
-            </div>
-
-            <div class="font-size-16 form-column mt-10">
-              <div class="form-container2">
-                <div class="form-row">
-                  <b>Procedencia / Destino</b>
-                  <p-multiSelect
-                    formControlName="originDestination"
-                    [options]="originDestinations()"
-                    optionLabel="descripcion"
-                    placeholder=""
-                    optionValue="id"
-                    [style]="{
-                      width: '100%',
-                      height: '48px'
-                    }"
-                    class="form-column"
-                  />
-                </div>
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formGroup.get('originDestination')?.invalid &&
-                    formGroup.get('originDestination')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-
-            <div class="mt-30">
-              <div
-                id="sectionDatosPersonales"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                DATOS PRINCIPALES
-              </div>
-            </div>
-
-            <div class="mt-10 font-size-16 form-row">
-              <div class="font-size-16 form-column">
-                <div class="form-container2">
-                  <div class="form-row">
-                    <b>Fecha y hora de actualización</b>
-                    <p-calendar
-                      dateFormat="d/mm/yy"
-                      [showTime]="true"
-                      [hourFormat]="'12'"
-                      formControlName="datetimeUpdate"
-                      [iconDisplay]="'input'"
-                      [showIcon]="true"
-                      placeholder=""
-                      inputId="icondisplay"
-                      [style]="{ width: '100%' }"
-                      class="form-column"
-                    />
-                  </div>
-                </div>
-                <div
-                  [style]="{
-                    visibility:
-                      formGroup.get('datetimeUpdate')?.invalid &&
-                      formGroup.get('datetimeUpdate')?.touched
-                        ? 'visible'
-                        : 'hidden'
-                  }"
-                >
-                  <small class="error-message">
-                    Este campo es requerido.
-                  </small>
-                </div>
-              </div>
-
-              <div class="font-size-16 form-column">
-                <div class="form-container2">
-                  <div class="form-row">
-                    <b>Tipo de registro</b>
-                    <p-dropdown
-                      emptyMessage=" "
-                      formControlName="recordType"
-                      [options]="recordTypes()"
-                      optionLabel="descripcion"
-                      placeholder=""
-                      optionValue="id"
-                      autoWidth="false"
-                      [style]="{ width: '100%' }"
-                      class="form-column"
-                      [showClear]="true"
-                    />
-                  </div>
-                </div>
-                <div
-                  [style]="{
-                    visibility:
-                      formGroup.get('recordType')?.invalid &&
-                      formGroup.get('recordType')?.touched
-                        ? 'visible'
-                        : 'hidden'
-                  }"
-                >
-                  <small class="error-message">
-                    Este campo es requerido.
-                  </small>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-row">
-              <div class="form-container2">
-                <div class="form-row">
-                  <b>Observaciones</b>
-                  <input
-                    type="text"
-                    pInputText
-                    formControlName="observations_1"
-                    [style]="{ width: '100%' }"
-                    class="form-column"
-                  />
-                </div>
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formGroup.get('observations_1')?.invalid &&
-                    formGroup.get('observations_1')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-
-            <div class="mt-10 form-row">
-              <div class="form-container2">
-                <div class="form-row">
-                  <b>Previsión</b>
-                  <input
-                    type="text"
-                    pInputText
-                    formControlName="forecast"
-                    [style]="{ width: '100%' }"
-                    class="form-column"
-                  />
-                </div>
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formGroup.get('forecast')?.invalid &&
-                    formGroup.get('forecast')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-
-            <div class="mt-30">
-              <div
-                id="sectionParametros"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                PARAMETROS
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="mt-10 form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Estado</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="status"
-                        [options]="status()"
+                  <div class="row">
+                    <div class="col">
+                      <p-multiSelect
+                        required
+                        id="originDestination"
+                        formControlName="originDestination"
+                        [options]="originDestinations()"
                         optionLabel="descripcion"
                         placeholder=""
                         optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
+                        [style]="{
+                          width: '100%',
+                          height: '58px'
+                        }"
                       />
+                      <div class="invalid-feedback">Campo requerido</div>
                     </div>
-                    <span *ngIf="errors?.idEstadoIncendio" class="text-red">
-                      *
-                    </span>
-                    <div
-                      [style]="{
-                        visibility:
-                          formGroup.get('status')?.invalid &&
-                          formGroup.get('status')?.touched
-                            ? 'visible'
-                            : 'hidden'
-                      }"
-                    >
-                      <small class="error-message">
-                        Este campo es requerido.
-                      </small>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="media"
+                          formControlName="media"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of medias()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Medio</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                        <!--
+                  <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+                  type="button" >
+                    Limpiar
+                  </button>
+                  -->
+                      </div>
                     </div>
+
+                    
                   </div>
                 </div>
 
-                <div class="mt-10 form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Plan de emergencia activado</b>
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="emergencyPlanActivated"
-                        class="font-size-16"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
+                <!-- Datos principales -->
+                <div>
                   <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('emergencyPlanActivated')?.invalid &&
-                        formGroup.get('emergencyPlanActivated')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
+                    id="sectionParametros"
+                    class="font-20 fw-bold text-orange"
                   >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
+                    DATOS PRINCIPALES
                   </div>
-                </div>
-              </div>
-            </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="datetimeUpdate"
+                            type="datetime-local"
+                            class="form-control"
+                            id="datetimeUpdate"
+                            placeholder="Fecha y hora de actualización"
+                          />
+                          <label for="datetimeUpdate"
+                            >Fecha y hora de actualización</label
+                          >
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
 
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Situación operativa</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="operativeStatus"
-                        [options]="[]"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="recordType"
+                          formControlName="recordType"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of recordTypes()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Tipo de Registro</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
                     </div>
                   </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="observations_1"
+                            type="text"
+                            class="form-control"
+                            id="observations_1"
+                            placeholder="Observaciones"
+                          />
+                          <label for="observations_1">Observaciones</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="forecast"
+                            type="text"
+                            class="form-control"
+                            id="forecast"
+                            placeholder="Previsión"
+                          />
+                          <label for="forecast">Previsión</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Parametros -->
+                <div>
                   <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('operativeStatus')?.invalid &&
-                        formGroup.get('operativeStatus')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
+                    id="sectionParametros"
+                    class="font-20 fw-bold text-orange"
                   >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
+                    PARAMETROS
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="status"
+                          formControlName="status"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of status()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Estado</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="emergencyPlanActivated"
+                            type="text"
+                            class="form-control"
+                            id="emergencyPlanActivated"
+                            placeholder="Plan de emergencia activado"
+                          />
+                          <label for="emergencyPlanActivated"
+                            >Plan de emergencia activado</label
+                          >
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="operativeStatus"
+                          formControlName="operativeStatus"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of status()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Situación operativa</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="end_date"
+                            type="date"
+                            class="form-control"
+                            id="end_date"
+                            placeholder="Fecha final"
+                          />
+                          <label for="end_date">Fecha final</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="affectedSurface"
+                            type="number"
+                            class="form-control"
+                            id="affectedSurface"
+                            placeholder="Superficie afec. (Ha)"
+                          />
+                          <label for="affectedSurface"
+                            >Superficie afec. (Ha)</label
+                          >
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Fecha final</b>
-                      <p-calendar
-                        dateFormat="d/mm/yy"
-                        formControlName="end_date"
-                        [iconDisplay]="'input'"
-                        [showIcon]="true"
-                        placeholder=""
-                        inputId="icondisplay"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
+                <!-- area afectada-->
+                <form [class]="classValidateArea()" (submit)="saveAreaAffected()" [formGroup]="formGroupAreaAfectada">
                   <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('end_date')?.invalid &&
-                        formGroup.get('end_date')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
+                    id="sectionParametros"
+                    class="font-20 fw-bold text-orange"
                   >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
+                    AREA AFECTADA
                   </div>
-                </div>
 
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Superficie afec. (Ha)</b>
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="affectedSurface"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="startAreaAffected"
+                            type="date"
+                            class="form-control"
+                            id="startAreaAffected"
+                            placeholder="Fecha y hora"
+                          />
+                          <label for="startAreaAffected">Fecha y hora</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="province_1"
+                          formControlName="province_1"
+                          (change)="loadMunicipalities($event, '1')"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of provinces()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Provincia</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
                     </div>
                   </div>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('affectedSurface')?.invalid &&
-                        formGroup.get('affectedSurface')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="mt-30">
-              <div
-                id="sectionAreaAfectada"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                AREA AFECTADA
-              </div>
-            </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="municipality_1"
+                          formControlName="municipality_1"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of municipalities()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Municipio</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
+                    </div>
 
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Fecha y hora</b>
-                      <p-calendar
-                        dateFormat="d/mm/yy"
-                        [showTime]="true"
-                        [hourFormat]="'12'"
-                        formControlName="startAreaAffected"
-                        [iconDisplay]="'input'"
-                        [showIcon]="true"
-                        placeholder=""
-                        inputId="icondisplay"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="minorEntity"
+                          formControlName="minorEntity"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of minorEntities()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Entidad menor</label>
+                        <div class="invalid-feedback">Campo requerido</div>
+                      </div>
                     </div>
                   </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('startAreaAffected')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
 
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Provincia</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="province_1"
-                        [options]="provinces()"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        class="font-size-16"
-                        (onChange)="loadMunicipalities($event, '1')"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
+                  <div class="row align-items-center">
+                    <div class="col-6">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="observationsAreaAffected"
+                            type="text"
+                            class="form-control"
+                            id="observationsAreaAffected"
+                            placeholder="Observaciones"
+                          />
+                          <label for="observationsAreaAffected"
+                            >Observaciones</label
+                          >
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('province_1')?.invalid &&
-                        formGroup.get('province_1')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Municipio</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="municipality_1"
-                        [options]="municipalities()"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
+                    <div class="col-3 d-flex justify-content-center mb-3">
+                      <div class="form-floating">
+                        <b class="">Localización</b>
+                        <img
+                          src="/assets/img/location-btn.svg"
+                          height="20px"
+                          alt="location"
+                          class="cursor-pointer"
+                          (click)="openModalMapCreate('AreaAfectada')"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('municipality_1')?.invalid &&
-                        formGroup.get('municipality_1')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
 
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Entidad menor</b>
-
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="minorEntity"
-                        [options]="minorEntities()"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('minorEntity')?.invalid &&
-                        formGroup.get('minorEntity')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Observaciones</b>
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="observationsAreaAffected"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility:
-                        formGroup.get('observationsAreaAffected')?.invalid &&
-                        formGroup.get('observationsAreaAffected')?.touched
-                          ? 'visible'
-                          : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Localización</b>
-                      <img
-                        src="/assets/img/location-btn.svg"
-                        height="20px"
-                        alt="location"
-                        class="cursor-pointer"
-                        (click)="openModalMapCreate('AreaAfectada')"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
+                    <div class="col-3 d-flex justify-content-center">
                       <button
-                        type="button"
+                        type="submit"
                         class="btn-blue"
-                        (click)="saveAreaAffected()"
                       >
                         <img
-                          class="w-30 h-30"
+                          class="btn btn-primary"
                           src="/assets/img/plus.svg"
                           alt="check"
                         />
                       </button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            <div *ngIf="areaAffectedActionError" class="bg-red">
-              Todos los campos son obligatorios
-            </div>
+                  <table class="table table-striped">
+                    <thead class="table-secondary">
+                      <tr>
+                        <th>Fecha y hora</th>
+                        <th>Provincia</th>
+                        <th>Municipio</th>
+                        <th>Entidad menor</th>
+                        <th></th>
+                      </tr>
+                    </thead>
 
-            <div class="mt-10">
-              <table class="border-radius-8 border-silver w-100">
-                <thead>
-                  <tr>
-                    <th>Fecha y hora</th>
-                    <th>Provincia</th>
-                    <th>Municipio</th>
-                    <th>Entidad menor</th>
-                    <th></th>
-                  </tr>
-                </thead>
+                    <tbody>
+                      <tr *ngFor="let area of areasAffected; let i = index">
+                        <td>{{ area.startAreaAffected }}</td>
+                        <td>{{ area.province_1 }}</td>
+                        <td>
+                          {{ area.municipality_1 }}
+                        </td>
+                        <td>{{ area.minorEntity }}</td>
 
-                <tbody>
-                  <tr *ngFor="let area of areasAffected; let i = index">
-                    <td>{{ area.startAreaAffected }}</td>
-                    <td>{{ area.province_1 }}</td>
-                    <td>
-                      {{ area.municipality_1 }}
-                    </td>
-                    <td>{{ area.minorEntity }}</td>
+                        <td>
+                          <button
+                            type="button"
+                            (click)="showAreaAffectedDataInForm(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/edit-btn.svg"
+                              alt="edit-btn"
+                            />
+                          </button>
 
-                    <td>
-                      <button
-                        type="button"
-                        (click)="showAreaAffectedDataInForm(i)"
-                        class="btn-white"
-                      >
+                          <button
+                            type="button"
+                            (click)="deleteAreaAffected(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/close.svg"
+                              alt="close"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+
+                <!-- consecuencias actuaciones -->
+                <form [class]="classValidateConsecuencia()" (submit)="saveConsequenceAction()" [formGroup]="formGroupConsecuenciasActuaciones">
+                  <div
+                    id="sectionParametros"
+                    class="font-20 fw-bold text-orange"
+                  >
+                    CONSECUENCIAS / ACTUACIONES
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="impactType"
+                          (change)="setType($event)"
+                          formControlName="impactType"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of impactTypes"
+                            [value]="option"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Tipo</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="impactGroup"
+                          (change)="setGroup($event)"
+                          formControlName="impactGroup"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of impactGroups"
+                            [value]="option"
+                          >
+                            {{ option }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Grupo</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="name"
+                          formControlName="name"
+                          aria-label="Floating label select example"
+                          (change)="changeDenomination($event)"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of denominations"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Denominación</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="number"
+                            type="number"
+                            class="form-control"
+                            id="number"
+                            placeholder="Número"
+                          />
+                          <label for="end_date">Número</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row align-items-center">
+                    <div class="col d-flex justify-content-center mb-3">
+                      <div class="form-floating">
+                        <b class="">Localización</b>
                         <img
-                          class="w-20 h-20"
-                          src="/assets/img/edit-btn.svg"
-                          alt="edit-btn"
+                          src="/assets/img/location-btn.svg"
+                          height="20px"
+                          alt="location"
+                          class="cursor-pointer"
+                          (click)="
+                            openModalMapCreate('ConsecuenciasActuaciones')
+                          "
                         />
-                      </button>
+                      </div>
+                    </div>
 
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="observations_2"
+                            type="text"
+                            class="form-control"
+                            id="observations_2"
+                            placeholder="Observaciones"
+                          />
+                          <label for="observations_2">Observaciones</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="">Datos complementarios</div>
+
+                  <app-campo-dinamico
+                    [campos]="fieldCampos()"
+                    (formData)="getDataForConsecuenciasActuaciones($event)"
+                  >
+                  </app-campo-dinamico>
+                  <div class="row mb-3">
+                    <div class="col-5 d-flex justify-content-center"></div>
+                    <div class="col-2 d-flex justify-content-center">
                       <button
-                        type="button"
-                        (click)="deleteAreaAffected(i)"
-                        class="btn-white"
-                      >
-                        <img
-                          class="w-20 h-20"
-                          src="/assets/img/close.svg"
-                          alt="close"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!------------------------------------------------------------>
-            <div class="mt-14">
-              <div
-                id="sectionConsecuenciasActuaciones"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                CONSECUENCIAS / ACTUACIONES
-              </div>
-            </div>
-
-            <input type="hidden" formControlName="consequenceActionIndex" />
-            <input type="hidden" formControlName="consequenceActionUpdate" />
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Tipo</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="impactType"
-                        [options]="impactTypes"
-                        placeholder=""
-                        class="font-size-16"
-                        (onChange)="setType($event)"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.impactType" class="text-red"> * </span>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('impactType')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Grupo</b>
-
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="impactGroup"
-                        [options]="impactGroups"
-                        placeholder=""
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        (onChange)="setGroup($event)"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('impactGroup')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Denominación</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="name"
-                        [options]="denominations"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        (onChange)="changeDenomination($event)"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('name')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Número</b>
-
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="number"
-                        pInputText
-                        class="font-size-16"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <span *ngIf="errors?.idProvinciaAfectada" class="text-red">
-                    *
-                  </span>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('number')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Localización</b>
-                      <img
-                        src="/assets/img/location-btn.svg"
-                        height="20px"
-                        alt="location"
-                        class="cursor-pointer"
-                        (click)="openModalMapCreate('ConsecuenciasActuaciones')"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Observaciones</b>
-
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="observations_2"
-                        class="font-size-16"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('observations_2')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-30">
-              <div class="font-size-16 font-weight-bold underline">
-                Datos complementarios
-              </div>
-            </div>
-
-            <div *ngIf="consequenceActionError" class="bg-red">
-              Todos los campos son obligatorios
-            </div>
-            <app-campo-dinamico
-              [campos]="fieldCampos()"
-              (formData)="getDataForConsecuenciasActuaciones($event)"
-            >
-            </app-campo-dinamico>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <button
-                        type="button"
+                        type="submit"
                         class="btn-blue"
-                        (click)="saveConsequenceAction()"
                       >
                         <img
-                          class="w-30 h-30"
+                          class="btn btn-primary"
                           src="/assets/img/plus.svg"
                           alt="check"
                         />
                       </button>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <!------------------------------------------------------------>
-            <div class="mt-10">
-              <table class="border-radius-8 border-silver w-100">
-                <thead>
-                  <tr>
-                    <th>Tipo</th>
-                    <th>Grupo</th>
-                    <th>Descripción</th>
-                    <th>Número</th>
-                    <th></th>
-                  </tr>
-                </thead>
 
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let consequenceAction of consequencesActions;
-                      let i = index
-                    "
-                  >
-                    <td>{{ consequenceAction.impactType }}</td>
-                    <td>{{ consequenceAction.impactGroup }}</td>
-                    <td>
-                      {{
-                        getDenominationName(
-                          consequenceAction.impactType,
-                          consequenceAction.impactGroup,
-                          consequenceAction.name
-                        )
-                      }}
-                    </td>
-                    <td>{{ consequenceAction.number }}</td>
+                  <table class="table table-striped">
+                    <thead class="table-secondary">
+                      <tr>
+                        <th>Tipo</th>
+                        <th>Grupo</th>
+                        <th>Descripción</th>
+                        <th>Número</th>
+                        <th></th>
+                      </tr>
+                    </thead>
 
-                    <td>
-                      <button
-                        type="button"
-                        (click)="showConsequenceDataInForm(i)"
-                        class="btn-white"
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let consequenceAction of consequencesActions;
+                          let i = index
+                        "
                       >
+                        <td>{{ consequenceAction.impactType }}</td>
+                        <td>{{ consequenceAction.impactGroup }}</td>
+                        <td>
+                          {{
+                            getDenominationName(
+                              consequenceAction.impactType,
+                              consequenceAction.impactGroup,
+                              consequenceAction.name
+                            )
+                          }}
+                        </td>
+                        <td>{{ consequenceAction.number }}</td>
+
+                        <td>
+                          <button
+                            type="button"
+                            (click)="showConsequenceDataInForm(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/edit-btn.svg"
+                              alt="edit-btn"
+                            />
+                          </button>
+
+                          <button
+                            type="button"
+                            (click)="deleteConsequence(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/close.svg"
+                              alt="close"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+
+                <!-- INTERVENCIÓN DE MEDIOS -->
+                <form [class]="classValidateMedio()" (submit)="saveInterveningMedia()" [formGroup]="formGroupIntervecionMedios">
+                  <div
+                    id="sectionParametros"
+                    class="font-20 fw-bold text-orange"
+                  >
+                    INTERVENCIÓN DE MEDIOS
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="mediaType"
+                          (change)="changeMediaTypes($event)"
+                          formControlName="mediaType"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of mediaTypes()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Tipo de Medio</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="quantity"
+                            type="number"
+                            class="form-control"
+                            id="quantity"
+                            placeholder="Cantidad"
+                          />
+                          <label for="quantity">Cantidad</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="unit"
+                            type="number"
+                            class="form-control"
+                            id="unit"
+                            placeholder="Unidad"
+                          />
+                          <label for="unit">Unidad</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="classification"
+                          formControlName="classification"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of mediaClassifications()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Clasificación</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="ownership_1"
+                          formControlName="ownership_1"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of mediaOwnerships()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Titularidad</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            id="ownership_2"
+                            formControlName="ownership_2"
+                            type="text"
+                            class="form-control"
+                            placeholder="Titularidad"
+                          />
+                          <label for="unit">Titularidad</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="province_2"
+                          formControlName="province_2"
+                          (change)="loadMunicipalities($event, '2')"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of provinces()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Provincia</label>
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="form-floating mb-3 position-relative">
+                        <select
+                          class="form-select"
+                          id="municipality_2"
+                          formControlName="municipality_2"
+                          aria-label="Floating label select example"
+                        >
+                          <option value="" selected>Seleccione una opción</option>
+                          <option
+                            *ngFor="let option of municipalities2()"
+                            [value]="option.id"
+                          >
+                            {{ option.descripcion }}
+                          </option>
+                        </select>
+                        <label for="floatingSelect">Municipio</label>
+                      </div>
+                    </div>
+
+                    <div class="col d-flex justify-content-center mb-3" >
+                      <div class="form-floating">
+                        <b class="">Localización</b>
                         <img
-                          class="w-20 h-20"
-                          src="/assets/img/edit-btn.svg"
-                          alt="edit-btn"
+                          src="/assets/img/location-btn.svg"
+                          height="20px"
+                          alt="location"
+                          class="cursor-pointer"
+                          (click)="openModalMapCreate('IntervencionMedios')"
                         />
-                      </button>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div class="row align-items-center">
+                    <div class="col-8">
+                      <div class="form-floating mb-3">
+                        <div class="form-floating">
+                          <input
+                            formControlName="observations_3"
+                            type="text"
+                            class="form-control"
+                            id="observations_3"
+                            placeholder="Observaciones"
+                          />
+                          <label for="observations_3">Observaciones</label>
+                          <div class="invalid-feedback">Campo requerido</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-4 d-flex justify-content-center mb-3" >
                       <button
-                        type="button"
-                        (click)="deleteConsequence(i)"
-                        class="btn-white"
-                      >
-                        <img
-                          class="w-20 h-20"
-                          src="/assets/img/close.svg"
-                          alt="close"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="mt-30">
-              <div
-                id="sectionIntervencionMedios"
-                class="font-size-20 font-weight-bold text-orange"
-              >
-                INTERVENCIÓN DE MEDIOS
-              </div>
-            </div>
-
-            <div *ngIf="interveningMediaError" class="bg-red">
-              Todos los campos son obligatorios
-            </div>
-
-            <input type="hidden" formControlName="interveningMediaIndex" />
-            <input type="hidden" formControlName="interveningMediaUpdate" />
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Tipo de medio</b>
-
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="mediaType"
-                        [options]="mediaTypes()"
-                        optionLabel="descripcion"
-                        optionValue="id"
-                        placeholder=""
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        (onChange)="changeMediaTypes($event)"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('mediaType')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Cantidad</b>
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="quantity"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('quantity')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Unidad</b>
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="unit"
-                        class="font-size-16"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('unit')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Clasificación</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        [disabled]="disabledBenefits()"
-                        formControlName="classification"
-                        [options]="mediaClassifications()"
-                        optionLabel="descripcion"
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('classification')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Titularidad</b>
-                      <p-dropdown
-                        emptyMessage=" "
-                        [disabled]="disabledOwner1()"
-                        formControlName="ownership_1"
-                        [options]="mediaOwnerships()"
-                        optionLabel="descripcion"
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('ownership_1')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Titularidad</b>
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="ownership_2"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('ownership_2')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Provincia</b>
-
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="province_2"
-                        [options]="provinces()"
-                        optionLabel="descripcion"
-                        optionValue="id"
-                        (onChange)="loadMunicipalities($event, '2')"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('province_2')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Municipio</b>
-
-                      <p-dropdown
-                        emptyMessage=" "
-                        formControlName="municipality_2"
-                        [options]="municipalities2()"
-                        optionLabel="descripcion"
-                        optionValue="id"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                        [showClear]="true"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('municipality_2')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Localización</b>
-                      <img
-                        src="/assets/img/location-btn.svg"
-                        height="20px"
-                        alt="location"
-                        class="cursor-pointer"
-                        (click)="openModalMapCreate('IntervencionMedios')"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-10 form-column">
-              <div class="form-row">
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <b>Observaciones</b>
-                      <input
-                        type="text"
-                        pInputText
-                        formControlName="observations_3"
-                        class="font-size-16"
-                        [style]="{ width: '100%' }"
-                        class="form-column"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    [style]="{
-                      visibility: formGroup.get('observations_3')?.invalid
-                        ? 'visible'
-                        : 'hidden'
-                    }"
-                  >
-                    <small class="error-message">
-                      Este campo es requerido.
-                    </small>
-                  </div>
-                </div>
-
-                <div class="form-column">
-                  <div class="form-container2">
-                    <div class="form-row">
-                      <button
-                        type="button"
+                        type="submit"
                         class="btn-blue"
-                        (click)="saveInterveningMedia()"
                       >
                         <img
-                          class="w-30 h-30"
+                          class="btn btn-primary"
                           src="/assets/img/plus.svg"
                           alt="check"
                         />
                       </button>
                     </div>
                   </div>
-                </div>
+
+                  <table class="table table-striped">
+                    <thead class="table-secondary">
+                      <tr>
+                        <th>Medio</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                        <th>Clasificación</th>
+                        <th>Titularidad</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let interveningMedia of interveningMedias;
+                          let i = index
+                        "
+                      >
+                        <td>
+                          {{
+                            getMediaTypeDescription(interveningMedia.mediaType)
+                          }}
+                        </td>
+                        <td>{{ interveningMedia.quantity }}</td>
+                        <td>{{ interveningMedia.unit }}</td>
+                        <td>
+                          {{
+                            getClassificationDescription(
+                              interveningMedia.classification
+                            )
+                          }}
+                        </td>
+                        <td>
+                          {{
+                            getOwnershipDescription(
+                              interveningMedia.ownership_1
+                            )
+                          }}
+                        </td>
+
+                        <td>
+                          <button
+                            type="button"
+                            (click)="showInterveningMediaDataInForm(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/edit-btn.svg"
+                              alt="edit-btn"
+                            />
+                          </button>
+
+                          <button
+                            type="button"
+                            (click)="deleteInterveningMedia(i)"
+                            class="btn-white"
+                          >
+                            <img
+                              class="w-20 h-20"
+                              src="/assets/img/close.svg"
+                              alt="close"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
               </div>
-            </div>
-
-            <div class="mt-10">
-              <table class="border-radius-8 border-silver w-100">
-                <thead>
-                  <tr>
-                    <th>Medio</th>
-                    <th>Cantidad</th>
-                    <th>Unidad</th>
-                    <th>Clasificación</th>
-                    <th>Titularidad</th>
-                    <th></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let interveningMedia of interveningMedias;
-                      let i = index
-                    "
-                  >
-                    <td>
-                      {{ getMediaTypeDescription(interveningMedia.mediaType) }}
-                    </td>
-                    <td>{{ interveningMedia.quantity }}</td>
-                    <td>{{ interveningMedia.unit }}</td>
-                    <td>
-                      {{
-                        getClassificationDescription(
-                          interveningMedia.classification
-                        )
-                      }}
-                    </td>
-                    <td>
-                      {{
-                        getOwnershipDescription(interveningMedia.ownership_1)
-                      }}
-                    </td>
-
-                    <td>
-                      <button
-                        type="button"
-                        (click)="showInterveningMediaDataInForm(i)"
-                        class="btn-white"
-                      >
-                        <img
-                          class="w-20 h-20"
-                          src="/assets/img/edit-btn.svg"
-                          alt="edit-btn"
-                        />
-                      </button>
-
-                      <button
-                        type="button"
-                        (click)="deleteInterveningMedia(i)"
-                        class="btn-white"
-                      >
-                        <img
-                          class="w-20 h-20"
-                          src="/assets/img/close.svg"
-                          alt="close"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

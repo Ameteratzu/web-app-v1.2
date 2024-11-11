@@ -1,604 +1,392 @@
 <div style="padding: 20px 60px 60px">
   <p-toast />
-  <div class="mt-20 inter title-modal">Crear incendio</div>
-
-  <div *ngIf="error" class="text-center alert-danger">
-    Ha ocurrido un error intentelo nuevamente
-  </div>
-
-  <form (ngSubmit)="onSubmit()" [formGroup]="formData">
-    <div *ngIf="!showInputForeign">
-      <div class="mt-40">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Territorio
-                </div>
-                <p-dropdown
-                  formControlName="territory"
-                  [options]="territories()"
-                  optionLabel="descripcion"
-                  placeholder="Territorio"
-                  optionValue="id"
-                  (onChange)="onChange($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('territory')?.invalid &&
-                    formData.get('territory')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Clase de suceso
-                </div>
-                <p-dropdown
-                  formControlName="event"
-                  [options]="events()"
-                  optionLabel="descripcion"
-                  optionValue="id"
-                  placeholder="Clase suceso"
-                  [style]="{ width: '100%', }"
-                  class="form-column"
-                  [panelStyle]="{ maxWidth: '200px' }"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-            </div>
-            <div
-              [style]="{
-                visibility:
-                  formData.get('event')?.invalid &&
-                  formData.get('event')?.touched
-                    ? 'visible'
-                    : 'hidden'
-              }"
-            >
-              <small class="error-message"> Este campo es requerido. </small>
-            </div>
-          </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="inter title-modal">Crear incendio</div>
+      </div>
+      <div class="col-12">
+        <div *ngIf="error" class="text-center alert alert-danger mt-3">
+          Ha ocurrido un error inténtelo nuevamente
         </div>
       </div>
 
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Provincia
-                </div>
-                <p-dropdown
-                  formControlName="province"
-                  [options]="provinces()"
-                  optionLabel="descripcion"
-                  placeholder="Provincia"
-                  optionValue="id"
-                  (onChange)="loadMunicipalities($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('province')?.invalid &&
-                    formData.get('province')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Municipio
-                </div>
-                <p-dropdown
-                  formControlName="municipality"
-                  [options]="municipalities()"
-                  optionLabel="descripcion"
-                  placeholder="Municipio"
-                  optionValue="id"
-                  (onChange)="setMunicipalityId($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('municipality')?.invalid &&
-                    formData.get('municipality')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Denominación
-                </div>
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="denomination"
-                  placeholder=""
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('denomination')?.invalid &&
-                    formData.get('denomination')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Fecha de inicio
-                </div>
-                <p-calendar
-                  dateFormat="d/mm/yy"
-                  formControlName="startDate"
-                  [iconDisplay]="'input'"
-                  [showIcon]="true"
-                  placeholder="Fecha inicio"
-                  inputId="icondisplay"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  [minDate]="today"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('startDate')?.invalid &&
-                    formData.get('startDate')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-flex mt-8">
-        <div class="inter w-120 p-12 font-weight-bold font-size-16">
-          Nota general
-        </div>
-
-        <div>
-          <textarea
-            rows="4"
-            cols="87"
-            pInputTextarea
-            formControlName="generalNote"
-          >
-          </textarea>
-        </div>
-      </div>
-      <div
-        [style]="{
-          visibility:
-            formData.get('generalNote')?.invalid &&
-            formData.get('generalNote')?.touched
-              ? 'visible'
-              : 'hidden'
-        }"
+      <form
+        (ngSubmit)="onSubmit()"
+        [formGroup]="formData"
+        class="mt-5"
+        [class]="classValidate()"
       >
-        <small class="error-message"> Este campo es requerido. </small>
-      </div>
-    </div>
-
-    <div *ngIf="showInputForeign">
-      <div class="form-column mt-40">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Territorio
-                </div>
-                <p-dropdown
+        <div *ngIf="!showInputForeign">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="onChange($event)"
                   formControlName="territory"
-                  [options]="territories()"
-                  optionLabel="descripcion"
-                  placeholder="Territorio"
-                  optionValue="id"
-                  (onChange)="onChange($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('territory')?.invalid &&
-                    formData.get('territory')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+                  required
+                >
+                  <option
+                    *ngFor="let territory of territories()"
+                    value="{{ territory.id }}"
+                  >
+                    {{ territory.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Territorio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Clase de suceso
-                </div>
-                <p-dropdown
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
                   formControlName="event"
-                  [options]="events()"
-                  optionLabel="descripcion"
-                  optionValue="id"
-                  placeholder="Clase suceso"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('event')?.invalid &&
-                    formData.get('event')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option *ngFor="let event of events()" value="{{ event.id }}">
+                    {{ event.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Clase de suceso</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
             </div>
           </div>
 
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Fecha de inicio
-                </div>
-                <p-calendar
-                  dateFormat="d/mm/yy"
-                  formControlName="startDate"
-                  [iconDisplay]="'input'"
-                  [showIcon]="true"
-                  placeholder="Fecha inicio"
-                  inputId="icondisplay"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('startDate')?.invalid &&
-                    formData.get('startDate')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="loadMunicipalities($event)"
+                  formControlName="province"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let province of provinces()"
+                    value="{{ province.id }}"
+                  >
+                    {{ province.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Provincia</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  País
-                </div>
-                <p-dropdown
-                  formControlName="country"
-                  [options]="countries()"
-                  optionLabel="descripcion"
-                  placeholder="Paises"
-                  optionValue="id"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('country')?.invalid &&
-                    formData.get('country')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+            <div class="col-5">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="setMunicipalityId($event)"
+                  formControlName="municipality"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let municipality of municipalities()"
+                    value="{{ municipality.id }}"
+                  >
+                    {{ municipality.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Municipio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
             </div>
-          </div>
 
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Ubicación
-                </div>
-
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="ubication"
-                  placeholder="Ubicación"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                />
-
+            <div class="col-1">
+              <div class="d-flex justify-content-center align-items-center">
                 <img
                   (click)="openModalMapCreate()"
-                  style="cursor: pointer; margin-left: 10px"
+                  style="cursor: pointer"
                   src="/assets/img/location-btn.svg"
                   alt="location-btn"
+                  width="30"
                 />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('ubication')?.invalid &&
-                    formData.get('ubication')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Limítrofe con España
-                </div>
-                <p-checkbox
-                  [binary]="true"
-                  formControlName="limitSpain"
-                  value="true"
-                  inputId="limitSpain"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('limitSpain')?.invalid &&
-                    formData.get('limitSpain')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8 border-rounded p-12">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Provincia
-                </div>
-                <p-dropdown
-                  formControlName="province"
-                  [options]="provinces()"
-                  optionLabel="descripcion"
-                  placeholder="Provincia"
-                  optionValue="id"
-                  (onChange)="loadMunicipalities($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('province')?.invalid &&
-                    formData.get('province')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
               </div>
             </div>
           </div>
 
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Municipio
-                </div>
-                <p-dropdown
-                  formControlName="municipality"
-                  [options]="municipalities()"
-                  optionLabel="descripcion"
-                  placeholder="Municipio"
-                  optionValue="id"
-                  (onChange)="setMunicipalityId($event)"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
-                  emptyMessage=" "
-                  [showClear]="true"
-                />
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('municipality')?.invalid &&
-                    formData.get('municipality')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Denominación
-                </div>
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="form-floating mb-3">
                 <input
                   type="text"
-                  pInputText
                   formControlName="denomination"
-                  placeholder=""
-                  [style]="{ width: '100%' }"
-                  class="form-column"
+                  class="form-control"
+                  id="floatingInput"
+                  required
                 />
+                <label for="floatingInput">Denominación</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('denomination')?.invalid &&
-                    formData.get('denomination')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+            </div>
+            <div class="col-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="form-control"
+                  id="floatingInput"
+                  required
+                />
+                <label for="floatingInput">Fecha Inicio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="mt-8">
-        <div class="form-row">
-          <div class="form-column">
-            <div class="form-container2">
-              <div class="form-row">
-                <div class="inter p-12 font-weight-bold font-size-16 w-120">
-                  Nota general
-                </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="form-floating">
                 <textarea
+                  class="form-control"
+                  placeholder="Leave a comment here"
+                  id="floatingTextarea2"
+                  style="height: 100px"
+                  formControlName="generalNote"
                   rows="4"
                   cols="87"
-                  pInputTextarea
-                  formControlName="generalNote"
-                  [style]="{ width: '100%' }"
-                  class="form-column"
                 ></textarea>
-              </div>
-              <div
-                [style]="{
-                  visibility:
-                    formData.get('generalNote')?.invalid &&
-                    formData.get('generalNote')?.touched
-                      ? 'visible'
-                      : 'hidden'
-                }"
-              >
-                <small class="error-message"> Este campo es requerido. </small>
+                <label for="floatingTextarea2">Nota general</label>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="d-flex-end">
-      <div class="mt-40 mb-30 text-right">
-        <button type="submit" class="btn-blue">
-          <img src="/assets/img/check.svg" alt="check" />
-        </button>
+        <div *ngIf="showInputForeign">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="onChange($event)"
+                  formControlName="territory"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let territory of territories()"
+                    value="{{ territory.id }}"
+                  >
+                    {{ territory.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Territorio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  formControlName="event"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option *ngFor="let event of events()" value="{{ event.id }}">
+                    {{ event.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Clase de suceso</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+          </div>
 
-        <button type="button" (click)="closeModal()" class="btn-white">
-          <img src="/assets/img/close.svg" alt="close" />
-        </button>
-      </div>
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  formControlName="country"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let country of countries()"
+                    value="{{ country.id }}"
+                  >
+                    {{ country.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">País</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+
+            <div class="col-5">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  formControlName="ubication"
+                  class="form-control"
+                  id="floatingInput"
+                  required
+                />
+                <label for="floatingInput">Ubicación</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+
+            <div class="col-1">
+              <div class="d-flex justify-content-center align-items-center">
+                <img
+                  (click)="openModalMapCreate()"
+                  style="cursor: pointer"
+                  src="/assets/img/location-btn.svg"
+                  alt="location-btn"
+                  width="30"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3 align-items-center justify-content-center">
+            <div class="col-6">
+              <div class="form-floating mb-3">
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="form-control"
+                  id="floatingInput"
+                  required
+                />
+                <label for="floatingInput">Fecha Inicio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+            <div class="col-6 align-items-center justify-content-center">
+              <div class="form-check mb-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                  formControlName="limitSpain"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Limítrofe con España
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="loadMunicipalities($event)"
+                  formControlName="province"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let province of provinces()"
+                    value="{{ province.id }}"
+                  >
+                    {{ province.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Provincia</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  (change)="setMunicipalityId($event)"
+                  formControlName="municipality"
+                  required
+                >
+                  <option selected value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let municipality of municipalities()"
+                    value="{{ municipality.id }}"
+                  >
+                    {{ municipality.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Municipio</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="form-floating mb-3">
+                <input
+                  type="text"
+                  formControlName="denomination"
+                  class="form-control"
+                  id="floatingInput"
+                  required
+                />
+                <label for="floatingInput">Denominación</label>
+                <div class="invalid-feedback">Este campo es requerido</div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea
+                  class="form-control"
+                  placeholder="Leave a comment here"
+                  id="floatingTextarea2"
+                  style="height: 100px"
+                  formControlName="generalNote"
+                  rows="4"
+                  cols="87"
+                ></textarea>
+                <label for="floatingTextarea2">Nota general</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex-end">
+          <div class="mt-40 mb-30 text-right">
+            <button type="submit" class="btn btn-primary">
+              <img src="/assets/img/check.svg" alt="check" />
+            </button>
+
+            <button
+              type="button"
+              (click)="closeModal()"
+              class="btn btn-secondary"
+              style="background-color: white; margin-left: 10px"
+            >
+              <img src="/assets/img/close.svg" alt="close" />
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>

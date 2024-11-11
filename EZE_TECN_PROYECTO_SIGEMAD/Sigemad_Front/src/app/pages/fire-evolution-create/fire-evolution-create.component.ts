@@ -83,6 +83,11 @@ import { Campo } from '../../types/Campo.type';
   styleUrl: './fire-evolution-create.component.css',
 })
 export class FireEvolutionCreateComponent {
+  classValidate = signal<string>('needs-validation');
+  classValidateArea = signal<string>('needs-validation');
+  classValidateConsecuencia = signal<string>('needs-validation');
+  classValidateMedio = signal<string>('needs-validation');
+
   public activeTab: string = 'Registro';
 
   public router = inject(Router);
@@ -142,6 +147,9 @@ export class FireEvolutionCreateComponent {
   public denominations = [] as any;
 
   public formGroup: FormGroup;
+  public formGroupAreaAfectada: FormGroup;
+  public formGroupConsecuenciasActuaciones: FormGroup;
+  public formGroupIntervecionMedios: FormGroup;
 
   public fire_id: number;
   public evolution_id: any;
@@ -156,11 +164,53 @@ export class FireEvolutionCreateComponent {
   public group: string = '';
 
   async ngOnInit() {
+    this.formGroupAreaAfectada = new FormGroup({
+      startAreaAffected: new FormControl(''),
+      province_1: new FormControl(''),
+      municipality_1: new FormControl(''),
+      minorEntity: new FormControl(''),
+      //georeferencedFile: new FormControl(''),
+      observationsAreaAffected: new FormControl(''),
+      coordsAreaAffected: new FormControl(''),
+
+      areaAffectedActionUpdate: new FormControl(''),
+      areaAffectedActionIndex: new FormControl(''),
+    });
+    this.formGroupConsecuenciasActuaciones = new FormGroup({
+      consequenceActionUpdate: new FormControl(''),
+      consequenceActionIndex: new FormControl(''),
+      impactType: new FormControl(''),
+      impactGroup: new FormControl(''),
+      name: new FormControl(''),
+      number: new FormControl(''),
+      observations_2: new FormControl(''),
+      coordsConsecuencias: new FormControl(''),
+      /*
+      end: new FormControl('', [Validators.required]),
+      start: new FormControl('', [Validators.required]),
+      injureds: new FormControl('', [Validators.required]),
+      participants: new FormControl('', [Validators.required]),
+      */
+    });
+    this.formGroupIntervecionMedios = new FormGroup({
+      interveningMediaIndex: new FormControl(''),
+      interveningMediaUpdate: new FormControl(''),
+      mediaType: new FormControl(''),
+      quantity: new FormControl(''),
+      unit: new FormControl(''),
+      classification: new FormControl(''),
+      ownership_1: new FormControl(''),
+      ownership_2: new FormControl(''),
+      province_2: new FormControl(''),
+      municipality_2: new FormControl(''),
+      observations_3: new FormControl(''),
+      coordsIntervencionMedios: new FormControl(''),
+    });
     this.formGroup = new FormGroup({
       // Registro
       //datetime: new FormControl('', [Validators.required]),
       //type: new FormControl('', [Validators.required]),
-      startDate: new FormControl('', [Validators.required]),
+      startDate: new FormControl(new Date(), [Validators.required]),
       inputOutput: new FormControl('', [Validators.required]),
       media: new FormControl('', [Validators.required]),
       originDestination: new FormControl('', [Validators.required]),
@@ -176,57 +226,21 @@ export class FireEvolutionCreateComponent {
       affectedSurface: new FormControl(''),
       end_date: new FormControl(''),
       emergencyPlanActivated: new FormControl(''),
-
-      // Area afectada
-      startAreaAffected: new FormControl(''),
-      province_1: new FormControl(''),
-      municipality_1: new FormControl(''),
-      minorEntity: new FormControl(''),
-      //georeferencedFile: new FormControl(''),
-      observationsAreaAffected: new FormControl(''),
-      coordsAreaAffected: new FormControl(''),
-
-      areaAffectedActionUpdate: new FormControl(''),
-      areaAffectedActionIndex: new FormControl(''),
+      operativeStatus: new FormControl(''),
 
       // Consecuencias / actuaciones
-      consequenceActionUpdate: new FormControl(''),
-      consequenceActionIndex: new FormControl(''),
-      impactType: new FormControl(''),
-      impactGroup: new FormControl(''),
-      name: new FormControl(''),
-      number: new FormControl(''),
-      observations_2: new FormControl(''),
-      coordsConsecuencias: new FormControl(''),
-      /*
-      end: new FormControl('', [Validators.required]),
-      start: new FormControl('', [Validators.required]),
-      injureds: new FormControl('', [Validators.required]),
-      participants: new FormControl('', [Validators.required]),
-      */
 
       // Intervencion de medios
-      interveningMediaIndex: new FormControl(''),
-      interveningMediaUpdate: new FormControl(''),
-      mediaType: new FormControl(''),
-      quantity: new FormControl(''),
-      unit: new FormControl(''),
-      classification: new FormControl(''),
-      ownership_1: new FormControl(''),
-      ownership_2: new FormControl(''),
-      province_2: new FormControl(''),
-      municipality_2: new FormControl(''),
-      observations_3: new FormControl(''),
-      coordsIntervencionMedios: new FormControl(''),
     });
 
     const impactTypes = await this.impactTypeService.get();
+
     this.impactTypes = impactTypes;
 
-    this.formGroup.patchValue({
+    this.formGroupConsecuenciasActuaciones.patchValue({
       number: 1,
-      injureds: 22,
-      participants: 15,
+    });
+    this.formGroupIntervecionMedios.patchValue({
       ownership_2: 'Comunidad Farol de Navarra',
     });
 
@@ -277,7 +291,7 @@ export class FireEvolutionCreateComponent {
 
   public changeMediaTypes(event: any) {
     const mediaTypeSelected = this.mediaTypes().find(
-      (mediaType) => mediaType.id === event.value
+      (mediaType) => mediaType.id == event.target.value
     );
 
     let clasificacionMedio: any = mediaTypeSelected?.clasificacionMedio
@@ -287,7 +301,7 @@ export class FireEvolutionCreateComponent {
       ? mediaTypeSelected.titularidadMedio
       : null;
 
-    this.formGroup.patchValue({
+    this.formGroupIntervecionMedios.patchValue({
       classification: clasificacionMedio?.id,
       ownership_1: titularidadMedio?.id,
     });
@@ -305,7 +319,7 @@ export class FireEvolutionCreateComponent {
   }
 
   public async loadMunicipalities(event: any, input: string) {
-    const province_id = event.value;
+    const province_id = event.target.value;
     const municipalities = await this.municipalityService.get(province_id);
 
     if (input == '1') {
@@ -320,23 +334,21 @@ export class FireEvolutionCreateComponent {
   public openModalMapCreate(section: string = '') {
     let idMunicipio = 1;
     let listaMunicipio: any[] = [];
-    console.info(
-      'this.formGroup.value.municipality_2',
-      this.formGroup.value,
-      section
-    );
-
+    if(section == 'ConsecuenciasActuaciones'){
+      return 
+    }
     switch (section) {
       case 'AreaAfectada':
-        idMunicipio = this.formGroup.value.municipality_1;
+        idMunicipio = this.formGroupAreaAfectada.value.municipality_1;
         listaMunicipio = this.municipalities();
         break;
       case 'ConsecuenciasActuaciones':
-        idMunicipio = this.formGroup.value.municipality_1; //Esta tomando el de area afecta xq no se cual sera el de consecuencia
+        idMunicipio =
+          this.formGroupConsecuenciasActuaciones.value.municipality_1; //Esta tomando el de area afecta xq no se cual sera el de consecuencia
         listaMunicipio = this.municipalities();
         break;
       case 'IntervencionMedios':
-        idMunicipio = this.formGroup.value.municipality_2;
+        idMunicipio = this.formGroupIntervecionMedios.value.municipality_2;
         listaMunicipio = this.municipalities2();
         break;
 
@@ -344,7 +356,7 @@ export class FireEvolutionCreateComponent {
         break;
     }
 
-    const municipio = listaMunicipio.find((item) => item.id === idMunicipio);
+    const municipio = listaMunicipio.find((item) => item.id == idMunicipio);
 
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
@@ -360,17 +372,17 @@ export class FireEvolutionCreateComponent {
       (features: Feature<Geometry>[]) => {
         switch (section) {
           case 'AreaAfectada':
-            this.formGroup.patchValue({
+            this.formGroupAreaAfectada.patchValue({
               coordsAreaAffected: features,
             });
             break;
           case 'ConsecuenciasActuaciones':
-            this.formGroup.patchValue({
+            this.formGroupConsecuenciasActuaciones.patchValue({
               coordsConsecuencias: features,
             });
             break;
           case 'IntervencionMedios':
-            this.formGroup.patchValue({
+            this.formGroupIntervecionMedios.patchValue({
               coordsIntervencionMedios: features,
             });
             break;
@@ -383,9 +395,112 @@ export class FireEvolutionCreateComponent {
     );
   }
 
+  public changeRequireForm(required = false) {
+    const startDate = document.getElementById('startDate') as HTMLInputElement;
+    startDate.required = required;
+    const inputOutput = document.getElementById(
+      'inputOutput'
+    ) as HTMLInputElement;
+    inputOutput.required = required;
+    const media = document.getElementById('media') as HTMLInputElement;
+    media.required = required;
+    const originDestination = document.getElementById(
+      'originDestination'
+    ) as HTMLInputElement;
+    originDestination.required = required;
+
+    const datetimeUpdate = document.getElementById(
+      'datetimeUpdate'
+    ) as HTMLInputElement;
+    datetimeUpdate.required = required;
+    const recordType = document.getElementById(
+      'recordType'
+    ) as HTMLInputElement;
+    recordType.required = required;
+
+    const status = document.getElementById('status') as HTMLInputElement;
+    status.required = required;
+  }
+
+  public changeRequireAreaAffected(required = false) {
+    const province_1 = document.getElementById(
+      'province_1'
+    ) as HTMLInputElement;
+    province_1.required = required;
+    const municipality_1 = document.getElementById(
+      'municipality_1'
+    ) as HTMLInputElement;
+    municipality_1.required = required;
+    const minorEntity = document.getElementById(
+      'minorEntity'
+    ) as HTMLInputElement;
+    minorEntity.required = required;
+    const observationsAreaAffected = document.getElementById(
+      'observationsAreaAffected'
+    ) as HTMLInputElement;
+    observationsAreaAffected.required = required;
+    const startAreaAffected = document.getElementById(
+      'startAreaAffected'
+    ) as HTMLInputElement;
+    startAreaAffected.required = required;
+  }
+
+  public changeRequireConsecuenciasActuaciones(required = false) {
+    const impactType = document.getElementById(
+      'impactType'
+    ) as HTMLInputElement;
+    impactType.required = required;
+    const impactGroup = document.getElementById(
+      'impactGroup'
+    ) as HTMLInputElement;
+    impactGroup.required = required;
+    const name = document.getElementById('name') as HTMLInputElement;
+    name.required = required;
+    const number = document.getElementById('number') as HTMLInputElement;
+    number.required = required;
+    const observations_2 = document.getElementById(
+      'observations_2'
+    ) as HTMLInputElement;
+    observations_2.required = required;
+  }
+
+  public changeRequireIntevencionMedios(required = false) {
+    const mediaType = document.getElementById('mediaType') as HTMLInputElement;
+    mediaType.required = required;
+
+    const quantity = document.getElementById('quantity') as HTMLInputElement;
+    quantity.required = required;
+    const unit = document.getElementById('unit') as HTMLInputElement;
+    unit.required = required;
+    const classification = document.getElementById(
+      'classification'
+    ) as HTMLInputElement;
+    classification.required = required;
+    const ownership_1 = document.getElementById(
+      'ownership_1'
+    ) as HTMLInputElement;
+    ownership_1.required = required;
+    const ownership_2 = document.getElementById(
+      'ownership_2'
+    ) as HTMLInputElement;
+    ownership_2.required = required;
+    const province_2 = document.getElementById(
+      'province_2'
+    ) as HTMLInputElement;
+    province_2.required = required;
+    const municipality_2 = document.getElementById(
+      'municipality_2'
+    ) as HTMLInputElement;
+    municipality_2.required = required;
+    const observations_3 = document.getElementById(
+      'observations_3'
+    ) as HTMLInputElement;
+    observations_3.required = required;
+  }
+
   public saveAreaAffected() {
-    const { value } = this.formGroup;
-    //this.areaAffectedActionError = false;
+    const { value } = this.formGroupAreaAfectada;
+
     if (
       !value.startAreaAffected ||
       !value.province_1 ||
@@ -393,32 +508,14 @@ export class FireEvolutionCreateComponent {
       !value.minorEntity ||
       !value.observationsAreaAffected
     ) {
-      this.formGroup
-        .get('startAreaAffected')
-        ?.setValidators([Validators.required]);
-      this.formGroup.get('province_1')?.setValidators([Validators.required]);
-      this.formGroup
-        .get('municipality_1')
-        ?.setValidators([Validators.required]);
-      this.formGroup.get('minorEntity')?.setValidators([Validators.required]);
-      this.formGroup
-        .get('observationsAreaAffected')
-        ?.setValidators([Validators.required]);
-
-      this.formGroup.get('startAreaAffected')?.updateValueAndValidity();
-      this.formGroup.get('province_1')?.updateValueAndValidity();
-      this.formGroup.get('municipality_1')?.updateValueAndValidity();
-      this.formGroup.get('minorEntity')?.updateValueAndValidity();
-      this.formGroup.get('observationsAreaAffected')?.updateValueAndValidity();
-      this.formGroup.markAllAsTouched();
+      this.changeRequireAreaAffected(true);
+      this.changeRequireConsecuenciasActuaciones(false);
+      this.changeRequireIntevencionMedios(false);
+      this.classValidateArea.set('needs-validation was-validated');
       return;
     }
 
-    this.formGroup.get('startAreaAffected')?.clearValidators();
-    this.formGroup.get('province_1')?.clearValidators();
-    this.formGroup.get('municipality_1')?.clearValidators();
-    this.formGroup.get('minorEntity')?.clearValidators();
-    this.formGroup.get('observationsAreaAffected')?.clearValidators();
+    this.classValidateArea.set('needs-validation');
 
     const newAreaAffected = {
       startAreaAffected: value.startAreaAffected,
@@ -442,7 +539,7 @@ export class FireEvolutionCreateComponent {
       this.areasAffected.push(newAreaAffected);
     }
 
-    this.formGroup.patchValue({
+    this.formGroupAreaAfectada.patchValue({
       startAreaAffected: '',
       province_1: '',
       municipality_1: '',
@@ -457,7 +554,7 @@ export class FireEvolutionCreateComponent {
   public showAreaAffectedDataInForm(index: number) {
     const areaAffected = this.areasAffected[index];
 
-    this.formGroup.patchValue({
+    this.formGroupAreaAfectada.patchValue({
       areaAffectedActionUpdate: '1',
       areaAffectedActionIndex: index,
       startAreaAffected: new Date(areaAffected.startAreaAffected),
@@ -481,7 +578,7 @@ export class FireEvolutionCreateComponent {
       (item: any) => item.esObligatorio
     );
 
-    const data = this.formGroup.value;
+    const data = this.formGroupConsecuenciasActuaciones.value;
 
     this.consequenceActionError = false;
 
@@ -492,25 +589,10 @@ export class FireEvolutionCreateComponent {
       !data.number ||
       !data.observations_2
     ) {
-      //this.consequenceActionError = true;
-      this.formGroup.get('impactType')?.setValidators([Validators.required]);
-      this.formGroup.get('impactGroup')?.setValidators([Validators.required]);
-      this.formGroup.get('name')?.setValidators([Validators.required]);
-      this.formGroup.get('number')?.setValidators([Validators.required]);
-      this.formGroup
-        .get('observations_2')
-        ?.setValidators([Validators.required]);
-
-      this.formGroup.get('impactType')?.updateValueAndValidity();
-      this.formGroup.get('impactGroup')?.updateValueAndValidity();
-      this.formGroup.get('name')?.updateValueAndValidity();
-      this.formGroup.get('number')?.updateValueAndValidity();
-      this.formGroup.get('observations_2')?.updateValueAndValidity();
-      console.info(
-        'fieldsRequired',
-        fieldsRequired,
-        this.dinamicDataConsecuencesActions()
-      );
+      this.changeRequireAreaAffected(false);
+      this.changeRequireConsecuenciasActuaciones(true);
+      this.changeRequireIntevencionMedios(false);
+      this.classValidateConsecuencia.set('needs-validation was-validated');
       const fieldError = fieldsRequired.some((field) => {
         return this.dinamicDataConsecuencesActions()[field.campo]
           ? false
@@ -521,13 +603,7 @@ export class FireEvolutionCreateComponent {
 
       return;
     }
-
-    this.formGroup.get('impactType')?.clearValidators();
-    this.formGroup.get('impactGroup')?.clearValidators();
-    this.formGroup.get('name')?.clearValidators();
-    this.formGroup.get('number')?.clearValidators();
-    this.formGroup.get('observations_2')?.clearValidators();
-
+    this.classValidateConsecuencia.set('needs-validation');
     const newConsequence = {
       impactType: data.impactType,
       impactGroup: data.impactGroup,
@@ -551,7 +627,7 @@ export class FireEvolutionCreateComponent {
       this.consequencesActions.push(newConsequence);
     }
 
-    this.formGroup.patchValue({
+    this.formGroupConsecuenciasActuaciones.patchValue({
       consequenceActionIndex: '',
       consequenceActionUpdate: '',
       impactType: '',
@@ -567,7 +643,7 @@ export class FireEvolutionCreateComponent {
     const item = this.consequencesActions[index];
     const { impactType, impactGroup, name, number, observations_2, ...res } =
       item;
-    this.formGroup.patchValue({
+    this.formGroupConsecuenciasActuaciones.patchValue({
       consequenceActionIndex: index,
       consequenceActionUpdate: '1',
       impactType: impactType,
@@ -578,7 +654,7 @@ export class FireEvolutionCreateComponent {
     });
 
     const camposImpacto = await this.camposImpactoService.getFieldsById(
-      item.impactType === 'Consecuencia' ? `1` : `2`
+      item.impactType == 'Consecuencia' ? `1` : `2`
     );
     const newCamposImpacto = camposImpacto.map((item) => {
       return {
@@ -597,7 +673,7 @@ export class FireEvolutionCreateComponent {
 
   public saveInterveningMedia() {
     //this.interveningMediaError = false;
-    const data = this.formGroup.value;
+    const data = this.formGroupIntervecionMedios.value;
 
     if (
       !data.mediaType ||
@@ -610,45 +686,13 @@ export class FireEvolutionCreateComponent {
       !data.municipality_2 ||
       !data.observations_3
     ) {
-      //this.interveningMediaError = true;
-      this.formGroup.get('mediaType')?.setValidators([Validators.required]);
-      this.formGroup.get('quantity')?.setValidators([Validators.required]);
-      this.formGroup.get('unit')?.setValidators([Validators.required]);
-      this.formGroup
-        .get('classification')
-        ?.setValidators([Validators.required]);
-      this.formGroup.get('ownership_1')?.setValidators([Validators.required]);
-      this.formGroup.get('ownership_2')?.setValidators([Validators.required]);
-      this.formGroup.get('province_2')?.setValidators([Validators.required]);
-      this.formGroup
-        .get('municipality_2')
-        ?.setValidators([Validators.required]);
-      this.formGroup
-        .get('observations_3')
-        ?.setValidators([Validators.required]);
-
-      this.formGroup.get('mediaType')?.updateValueAndValidity();
-      this.formGroup.get('quantity')?.updateValueAndValidity();
-      this.formGroup.get('unit')?.updateValueAndValidity();
-      this.formGroup.get('classification')?.updateValueAndValidity();
-      this.formGroup.get('ownership_1')?.updateValueAndValidity();
-      this.formGroup.get('ownership_2')?.updateValueAndValidity();
-      this.formGroup.get('province_2')?.updateValueAndValidity();
-      this.formGroup.get('municipality_2')?.updateValueAndValidity();
-      this.formGroup.get('observations_3')?.updateValueAndValidity();
+      this.changeRequireAreaAffected(false);
+      this.changeRequireConsecuenciasActuaciones(false);
+      this.changeRequireIntevencionMedios(true);
+      this.classValidateMedio.set('needs-validation was-validated');
       return;
     }
-
-    this.formGroup.get('mediaType')?.clearValidators();
-    this.formGroup.get('quantity')?.clearValidators();
-    this.formGroup.get('unit')?.clearValidators();
-    this.formGroup.get('classification')?.clearValidators();
-    this.formGroup.get('ownership_1')?.clearValidators();
-    this.formGroup.get('ownership_2')?.clearValidators();
-    this.formGroup.get('province_2')?.clearValidators();
-    this.formGroup.get('municipality_2')?.clearValidators();
-    this.formGroup.get('observations_3')?.clearValidators();
-
+    this.classValidateMedio.set('needs-validation ');
     const newIntervencion = {
       mediaType: data.mediaType,
       quantity: data.quantity,
@@ -674,7 +718,7 @@ export class FireEvolutionCreateComponent {
       this.interveningMedias.push(newIntervencion);
     }
 
-    this.formGroup.patchValue({
+    this.formGroupIntervecionMedios.patchValue({
       interveningMediaIndex: '',
       interveningMediaUpdate: '',
       mediaType: '',
@@ -692,7 +736,7 @@ export class FireEvolutionCreateComponent {
   public showInterveningMediaDataInForm(index: number) {
     const item = this.interveningMedias[index];
 
-    this.formGroup.patchValue({
+    this.formGroupIntervecionMedios.patchValue({
       interveningMediaIndex: index,
       interveningMediaUpdate: 1,
       mediaType: item.mediaType,
@@ -715,10 +759,18 @@ export class FireEvolutionCreateComponent {
 
   public async submit() {
     const data = this.formGroup.value;
-    if (!this.formGroup.valid) {
-      this.formGroup.markAllAsTouched();
+    this.changeRequireForm(true);
+    this.changeRequireAreaAffected(false);
+    this.changeRequireConsecuenciasActuaciones(false);
+    this.changeRequireIntevencionMedios(false);
+
+    if (this.formGroup.valid) {
+      this.classValidate.set('needs-validation');
+    } else {
+      this.classValidate.set('needs-validation was-validated');
       return;
     }
+
     data.fire_id = this.fire_id;
 
     this.errorAreaAfectada = false;
@@ -752,7 +804,7 @@ export class FireEvolutionCreateComponent {
         consequence;
       const consequenceAction = {
         idEvolucion: this.evolution_id,
-        IdImpactoClasificado: impactType === 'Consecuencia' ? 1 : 2,
+        IdImpactoClasificado: impactType == 'Consecuencia' ? 1 : 2,
         observaciones: observations_2,
         numero: number,
         idImpactGroup: impactGroup,
@@ -783,8 +835,6 @@ export class FireEvolutionCreateComponent {
     }
 
     for (let areaAffected of this.areasAffected) {
-      const { value } = this.formGroup;
-
       const bodyAreaAffected = {
         idEvolucion: this.evolution_id,
         fechaHora: areaAffected.startAreaAffected,
@@ -831,19 +881,19 @@ export class FireEvolutionCreateComponent {
   }
 
   public async setType(event: any) {
-    this.type = event.value;
+    this.type = event.target.value;
     this.getDenominations();
   }
 
   async changeDenomination(event: any) {
     const camposImpacto = await this.camposImpactoService.getFieldsById(
-      event.value === 'Consecuencia' ? `1` : `2`
+      event.target.value
     );
     this.fieldCampos.set(camposImpacto);
   }
 
   public setGroup(event: any) {
-    this.group = event.value;
+    this.group = event.target.value;
     this.getDenominations();
   }
 

@@ -1,3 +1,5 @@
+/*
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -323,7 +325,7 @@ td {
 }
 .line {
   flex-grow: 1;
-  border-bottom: 1px solid #c0c0c0; /* Línea en el borde inferior */
+  border-bottom: 1px solid #c0c0c0;
 }
 
 .container {
@@ -363,19 +365,37 @@ td {
 }
 
 ::ng-deep .p-dropdown-label.p-placeholder {
-  color: #c0c0c0 !important; /* Usa !important si es necesario */
+  color: #c0c0c0 !important;
 }
 
 ::ng-deep .p-dropdown-label:not(.p-placeholder) {
-  color: #000 !important; /* Usa !important si es necesario */
+  color: #000 !important;
 }
 
-/* Usa ::ng-deep para el placeholder del p-calendar en rojo */
 ::ng-deep .p-inputtext.p-placeholder {
-  color: #c0c0c0 !important; /* Aplica color rojo al placeholder */
+  color: #c0c0c0 !important;
 }
 
-/* Usa ::ng-deep para el texto seleccionado en verde */
 ::ng-deep .p-inputtext:not(.p-placeholder) {
-  color: #000 !important; /* Aplica color verde al texto seleccionado */
+  color: #000 !important;
+}
+*/
+.line {
+  flex-grow: 1;
+  border-bottom: 1px solid #c0c0c0;
+}
+.text-blue {
+  color: #3399ff;
+}
+
+.text-green {
+  color: #009900;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-18 {
+  margin-top: 18px;
 }

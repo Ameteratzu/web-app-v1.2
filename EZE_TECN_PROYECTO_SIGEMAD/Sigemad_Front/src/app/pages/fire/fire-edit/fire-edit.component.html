@@ -1,384 +1,307 @@
 <div class="d-flex justify-content-between">
-  <div class="w-50">
-    <h1 class="text-info font-weight-bold font-size-32 calibri">
-      Sistema de Gestión de Emergencia <br />
-      y Apoyo a la Decisión
-    </h1>
-  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-6">
+        <h1 class="text-info font-weight-bold font-size-32 calibri">
+          Sistema de Gestión de Emergencia <br />
+          y Apoyo a la Decisión
+        </h1>
+      </div>
+      <div class="col-6">
+        <div class="text-right">
+          <h1 class="text-blue font-weight-bold calibri font-size-24 mt-18">
+            Incendios forestales
+          </h1>
 
-  <div class="text-right">
-    <h1 class="text-blue font-weight-bold inter font-size-24 mt-18">
-      Incendios forestales
-    </h1>
-
-    <h2 class="text-green inter font-size-20 font-weight-500">
-      Búsqueda de sucesos
-    </h2>
+          <h2 class="text-green calibri font-size-20 font-weight-500">
+            Búsqueda de sucesos
+          </h2>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<hr style="margin-top: 10px" />
+
 <p-toast />
-<form (ngSubmit)="onSubmit()" [formGroup]="formData">
-  <input type="hidden" formControlName="id" value="{{ fire.id }}" />
 
-  <input
-    type="hidden"
-    formControlName="territory"
-    value="{{ fire.idTerritorio }}"
-  />
 
-  <div class="d-flex pt-15 gap8 mr-20">
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div class="inter font-weight-bold font-size-16 inputText">
-          Denominación
+<form (ngSubmit)="onSubmit()" [formGroup]="formData" [class]="classValidate()" class="px-4 py-2">
+  <div class="row">
+    <div class="col">
+      <div class="form-floating mb-3 ">
+        <input class="form-control" type="text" id="denomination" placeholder="Denominación" required
+          formControlName="denomination">
+        <label class="form-label" for="denomination">Denominación</label>
+        <div class="invalid-feedback">
+          Campo requerido
         </div>
-
-        <input
-          type="text"
-          pInputText
-          formControlName="denomination"
-          placeholder=""
-          value="{{ fire.denominacion }}"
-          class="inputText child w-full"
-        />
+      </div>
+    </div>
+    <div class="col">
+      <div class="mb-3">
+        <div class="form-floating">
+          <input formControlName="startDate" type="date" class="form-control" id="startDate" placeholder="Inicio"
+            required>
+          <label for="startDate">Inicio</label>
+          <div class="invalid-feedback">
+            Campo requerido
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div class="font-size-16 inter font-weight-bold inputText">Inicio</div>
+    <div class="col">
+      <div class="form-floating mb-3 position-relative">
+        <select class="form-select" id="floatingSelect" formControlName="event"
+          aria-label="Floating label select example" required="">
+          <option selected></option>
+          <option *ngFor="let option of provinces()" [value]="option.id">
+            {{ option.descripcion }}
+          </option>
 
-        <p-calendar
-          dateFormat="d/mm/yy"
-          formControlName="startDate"
-          [iconDisplay]="'input'"
-          [showIcon]="true"
-          placeholder="Inicio"
-          inputId="icondisplay"
-          class="inputText child w-full"
-        />
+        </select>
+        <label for="floatingSelect">Tipo de suceco</label>
+        <!--
+        <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+        type="button" >
+          Limpiar
+        </button>
+        -->
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-floating">
+        <select formControlName="idEstado" class="form-select" id="floatingSelect"
+          aria-label="Floating label select example" required="">
+          <option selected></option>
+          <option *ngFor="let option of fireStatus()" [value]="option.id">
+            {{ option.descripcion }}
+          </option>
 
-  <div class="d-flex pt-15 gap8 mr-20">
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div class="inter font-weight-bold font-size-16 inputText">
-          Provincia
-        </div>
-        <p-dropdown
-          emptyMessage=" "
-          formControlName="province"
-          [options]="provinces()"
-          optionLabel="descripcion"
-          placeholder="Provincia"
-          optionValue="id"
-          (onChange)="loadMunicipalities($event)"
-          [showClear]="true"
-          class="inputText child w-full"
-        />
+        </select>
+        <label for="floatingSelect">Estado de suceso</label>
       </div>
     </div>
+    <div class="col-4">
+      <div class="form-floating mb-3">
 
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div class="font-size-16 inter font-weight-bold inputText">
-          Municipio
-        </div>
+        <select (change)="loadMunicipalities($event)" class="form-select" formControlName="province" id="floatingSelect"
+          aria-label="Floating label select example" required="">
+          <option selected></option>
+          <option *ngFor="let option of provinces()" [value]="option.id">
+            {{ option.descripcion }}
+          </option>
 
-        <p-dropdown
-          emptyMessage=" "
-          formControlName="municipality"
-          [options]="municipalities()"
-          optionLabel="descripcion"
-          placeholder="Municipios"
-          optionValue="id"
-          [showClear]="true"
-          class="inputText child w-full"
-        />
-
-        <div class="ms-10">
-          <img
-            (click)="openModalMapEdit()"
-            style="cursor: pointer"
-            src="/assets/img/location-btn.svg"
-            alt="location-btn"
-          />
-        </div>
+        </select>
+        <label for="floatingSelect">Provincia</label>
       </div>
     </div>
+    <div class="col-3">
+      <div class="form-floating">
+        <select formControlName="municipality" class="form-select" id="floatingSelect"
+          aria-label="Floating label select example" required="">
+          <option selected></option>
+          <option *ngFor="let option of municipalities()" [value]="option.id">
+            {{ option.descripcion }}
+          </option>
+
+        </select>
+        <label for="floatingSelect">Municipio</label>
+
+      </div>
+    </div>
+    <div class="col-1 d-flex justify-content-center align-items-center mb-3">
+      <img (click)="openModalMapEdit()" style="cursor: pointer; width: 32px; height: 32px;"
+        src="/assets/img/location-btn.svg" alt="location-btn" />
+    </div>
+
   </div>
+  <div class="row">
+    
+    
 
-  <div class="d-flex pt-15 gap8 mr-20">
-    <div class="d-flex w-full">
-      <div class="child w-full d-flex">
-        <div class="flex-label font-size-16 inter font-weight-bold inputText">
-          Tipo de suceso
-        </div>
-
-        <p-dropdown
-          emptyMessage=" "
-          formControlName="event"
-          [options]="events()"
-          optionLabel="descripcion"
-          optionValue="id"
-          [showClear]="true"
-          class="inputText child2 w-full"
-        />
-      </div>
-    </div>
-
-    <div class="d-flex w-full">
-      <div class="d-flex w-full">
-        <div class="flex-label font-size-16 inter font-weight-bold inputText">
-          Nota general
-        </div>
-
-        <textarea
-          rows="1"
-          cols="134"
-          pInputTextarea
-          formControlName="generalNote"
-          class="inputText child2 w-full"
-        >
-        </textarea>
-      </div>
-    </div>
   </div>
-
-  <div class="border-bottom d-flex pt-15 gap8 mr-20 me-20 pt-15 pb-15">
-    <div class="d-flex w-full">
-      <div class="flex-label font-size-16 inter font-weight-bold inputText">
-        Estado de suceso
-      </div>
-
-      <p-dropdown
-        emptyMessage=" "
-        formControlName="idEstado"
-        [options]="fireStatus()"
-        optionLabel="descripcion"
-        optionValue="id"
-        [showClear]="true"
-        class="inputText child2 w-full"
-      />
-    </div>
-    <div class="d-flex w-full">
-      <div class="inputText child2 w-full justify-end">
-        <div class="d-flex justify-end">
-          <button type="submit" class="btn-blue">
-            <img class="w-30 h-30" src="/assets/img/check.svg" alt="check" />
-          </button>
-
-          <button type="button" class="btn-white">
-            <img
-              class="w-30 h-30"
-              src="/assets/img/list-btn.svg"
-              alt="list-btn"
-            />
-          </button>
-
-          <button (click)="confirmDelete()" type="button" class="btn-white">
-            <img class="w-30 h-30" src="/assets/img/close.svg" alt="close" />
-          </button>
-
-          <button (click)="ngOnInit()" type="button" class="btn-white">
-            <img
-              class="w-30 h-30"
-              src="/assets/img/refresh.svg"
-              alt="refresh"
-            />
-          </button>
-
-          <button type="button" (click)="back()" class="btn-white">
-            <img class="w-30 h-30" src="/assets/img/back.svg" alt="back" />
-          </button>
-        </div>
+  <div class="row">
+    <div class="col-8">
+      <div class="form-floating mb-3">
+        <textarea formControlName="generalNote" class="form-control" placeholder="Nota general"
+          id="floatingTextarea"></textarea>
+        <label for="floatingSelect">Nota General</label>
       </div>
     </div>
+
+    <div class="col-4">
+      <div class="d-flex justify-content-end  gap-2">
+        <button type="submit" class="btn btn-primary">
+          <img src="/assets/img/check.svg" alt="check" />
+        </button>
+
+        <button type="button" class="btn btn-secondary" style="background-color: white;">
+          <img src="/assets/img/list-btn.svg" alt="list-btn" />
+        </button>
+
+        <button (click)="confirmDelete()" type="button" class="btn btn-secondary" style="background-color: white;">
+          <img src="/assets/img/close.svg" alt="close" />
+        </button>
+
+        <button (click)="ngOnInit()" type="button" class="btn btn-secondary" style="background-color: white;">
+          <img src="/assets/img/refresh.svg" alt="refresh" />
+        </button>
+
+        <button type="button" (click)="back()" class="btn btn-secondary" style="background-color: white;">
+          <img src="/assets/img/back.svg" alt="back" />
+        </button>
+      </div>
+    </div>
+
   </div>
 </form>
 
-<div class="me-20 mt-8">
+<div class="px-4 py-2">
   <img class="w-100" src="/assets/img/graph.svg" alt="graph" />
 </div>
 
-<hr class="me-20" />
 
-<div class="d-flex2 mb-100">
-  <div class="border p-16 mr-13 w-30p">
-    <div class="d-flex justify-content-between">
-      <div>
-        <span class="font-size-20 text-blue font-weight-bold inter"
-          >Datos consolidados</span
-        >
-        <span class="font-size-12 inter"> (Act: 19/08/2024 19:45) </span>
+
+<div class="row g-3 px-4 py-2" >
+  <div class="col-3 border p-2">
+    <div class="row p-0">
+      <div class="col-10">
+        <span class="fw-bold text-blue font-20">Datos consolidados</span>
+        <span class="font-12"> (Act: 19/08/2024 19:45) </span>
       </div>
 
-      <div>
+      <div class="col-2">
         <img src="/assets/img/doc-btn.svg" alt="doc-btn" />
       </div>
     </div>
 
-    <div class="mt-24">
-      <span class="font-weight-bold font-size-16 inter"
-        >Inicio de incendio</span
-      >
-      <span class="font-size-12 inter">
+    <div class="mt-4">
+      <span class="fw-bold font-size-16">Inicio de incendio</span>
+      <span class="font-12">
         {{ fire.fechaInicio }}
       </span>
     </div>
 
-    <div class="mt-8">
-      <span class="font-weight-bold font-size-16 inter">Estado</span>
-      <span class="font-size-12 inter"> {{ getEstadoDesc(fire) }}</span>
+    <div class="mt-2">
+      <span class="fw-bold font-size-16 ">Estado</span>
+      <span class="font-12"> {{ getEstadoDesc(fire) }}</span>
     </div>
 
-    <div class="mt-8">
-      <span class="font-weight-bold font-size-16 inter">Nivel de gravedad</span>
-      <span class="font-size-12 inter"> Activo </span>
+    <div class="mt-2">
+      <span class="fw-bold font-size-16 ">Nivel de gravedad</span>
+      <span class="font-12"> Activo </span>
     </div>
 
-    <div class="mt-20 container">
-      <span class="font-weight-bold font-size-16 inter hechos-relevantes"
-        >Hechos relevantes</span
-      ><span class="line"> </span>
+
+    <div class="mt-4 ms-4 d-flex align-items-center">
+      <span class="fw-bold font-size-16 ">Hechos relevantes</span>
+      <span class="line ms-1"> </span>
     </div>
-    <div class="ml-20">
-      <div class="font-size-12 inter mt-8">
+    <div class="ms-4">
+      <div class="font-12 ms-2 mt-2">
         Activado plan nacional XX (18/08/2024 10:00)
       </div>
-      <div class="font-size-12 inter mt-8">
+      <div class="font-12 ms-2 mt-2">
         Activado Coppernico (18/08/2024 12:00)
       </div>
-      <div class="font-size-12 inter mt-8">CECOPI (19/08/2024 18:15)</div>
+      <div class="font-12 ms-2 mt-2">CECOPI (19/08/2024 18:15)</div>
     </div>
 
-    <div class="mt-20 container">
-      <span class="font-weight-bold font-size-16 inter">Consecuencias</span>
-      <span class="line"> </span>
+    <div class="mt-4 ms-4 d-flex align-items-center">
+      <span class="fw-bold font-size-16 ">Consecuencias</span>
+      <span class="line ms-1"> </span>
     </div>
-    <div class="ml-20">
-      <div class="font-size-12 inter mt-8">Heridos: 2</div>
-      <div class="font-size-12 inter mt-8">
+
+    <div class="ms-4">
+      <div class="font-12 ms-2 mt-2">Heridos: 2</div>
+      <div class="font-12 ms-2 mt-2">
         Evacuados: 134 (Santa María - 18/08/2024 19:45)
       </div>
-      <div class="font-size-12 inter mt-8">
+      <div class="font-12 ms-2 mt-2">
         Area afectada: Santa María de Guía de Gran Canaria
       </div>
-      <div class="font-size-12 inter mt-8">
+      <div class="font-12 ms-2 mt-2">
         Viabilidad: Corte CN-21 PK 2,300-3,100
       </div>
     </div>
 
-    <div class="mt-20 container">
-      <span class="font-weight-bold font-size-16 inter"
-        >Medios intervinientes</span
-      ><span class="line"> </span>
+    <div class="mt-4 ms-4 d-flex align-items-center">
+      <span class="fw-bold font-size-16 ">Medios intervinientes</span>
+      <span class="line ms-1"> </span>
     </div>
 
-    <div class="ml-20">
-      <div class="font-size-12 inter mt-8">
+    <div class="ms-4 mb-3">
+      <div class="font-12 ms-2 mt-2">
         Ordinarios: BRIF/A - Tineo (18/08/2024 12:40)
       </div>
-      <div class="font-size-12 inter mt-8">
+      <div class="font-12 ms-2 mt-2">
         Ordinarios: FOCA - Torrejon (18/08/2024 16:35)
       </div>
-      <div class="font-size-12 inter mt-8">
+      <div class="font-12 ms-2 mt-2">
         Extraordinarios: UME - Aprobación (19/08/2024 19:15)
       </div>
     </div>
-  </div>
 
-  <div class="border p-5 w-90">
+  </div>
+  <div class="col-9 border p-2">
     <div *ngIf="showUpdateLog">
-      <div class="d-flex justify-content-between pt-10">
-        <div>
-          <img
-            (click)="showTable('showDetailsUpdate')"
-            class="cursor-pointer"
-            src="/assets/img/doc-btn.svg"
-            alt="doc-btn"
-          />
-          <span class="font-size-20 text-blue font-weight-bold inter"
-            >Registro de actualizaciones</span
-          >
-          <span class="font-size-12">
+      <div class="row pb-2">
+        <div class="col-8">
+          <img (click)="showTable('showDetailsUpdate')" class="" src="/assets/img/doc-btn.svg" alt="doc-btn" />
+          <span class="fw-bold text-blue font-20 ">Registro de actualizaciones</span>
+          <span class="font-10">
             (Cantidad: 10 - Orden Fecha y hora desc.)
           </span>
         </div>
 
-        <div>
-          <a
-            (click)="openModalEvolution()"
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >E</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >C</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >R</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >D</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >O</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-18 p-8 w-36 mr-8 cursor-pointer"
-            >S</a
-          >
-
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8 cursor-pointer"
-          >
-            <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
-          </a>
+        <div class="col-4 px-5">
+          <div class="row d-flex flex-nowrap justify-content-center align-items-center gap-2">
+            <button class="col text-blue font btn fw-bold border border-radius"
+              (click)="openModalEvolution()">E</button>
+            <button class="col text-blue font btn fw-bold border border-radius">C</button>
+            <button class="col text-blue font btn fw-bold border border-radius">R</button>
+            <button class="col text-blue font btn fw-bold border border-radius">D</button>
+            <button class="col text-blue font btn fw-bold border border-radius">O</button>
+            <button class="col text-blue font btn fw-bold border border-radius">S</button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <table class="w-100 mt-15">
-        <thead>
+      <table class="table table-striped">
+        <thead class="table-secondary">
           <tr>
-            <th class="font-weight-bold font-size-16 inter">
+            <th class="fw-bold font-size-16">
               N° <img src="/assets/img/orderIcon.svg" />
             </th>
-            <th class="font-weight-bold font-size-16 inter">Fecha / hora</th>
-            <th class="font-weight-bold font-size-16 inter">Registro</th>
-            <th class="font-weight-bold font-size-16 inter">Origen</th>
-            <th class="font-weight-bold font-size-16 inter">
+            <th class="fw-bold font-size-16">Fecha / hora</th>
+            <th class="fw-bold font-size-16">Registro</th>
+            <th class="fw-bold font-size-16">Origen</th>
+            <th class="fw-bold font-size-16">
               Tipo de re-gistro
             </th>
-            <th class="font-weight-bold font-size-16 inter">Técnico</th>
+            <th class="fw-bold font-size-16">Técnico</th>
             <th></th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let log of logs().splice(0, 10); let no = index">
-            <td class="font-size-12 inter p-5 h-48">{{ no + 1 }}</td>
-            <td class="font-size-12 inter p-5 h-48">{{ log.fechaRegistro }}</td>
-            <td class="font-size-12 inter p-5 h-48">{{ log.registro }}</td>
-            <td class="font-size-12 inter p-5 h-48">{{ log.origen }}</td>
-            <td class="font-size-12 inter p-5 h-48">{{ log.tipoRegistro }}</td>
-            <td class="font-size-12 inter p-5 h-48">{{ log.tecnico }}</td>
+            <td class="font-12">{{ no + 1 }}</td>
+            <td class="font-12">{{ log.fechaRegistro }}</td>
+            <td class="font-12">{{ log.registro }}</td>
+            <td class="font-12">{{ log.origen }}</td>
+            <td class="font-12">{{ log.tipoRegistro }}</td>
+            <td class="font-12">{{ log.tecnico }}</td>
 
             <td>
-              <a
-                class="border-silver text-secondary-blue border-radius-8 p-5 w-36 mr-8"
-              >
-                <img
-                  src="/assets/img/options.png"
-                  width="30px"
-                  alt="option-btn"
-                />
+              <a class="">
+                <img src="/assets/img/options.png" width="30px" alt="option-btn" />
               </a>
             </td>
           </tr>
@@ -387,55 +310,29 @@
     </div>
 
     <div *ngIf="showDetailsUpdate">
-      <div class="d-flex justify-content-between pt-10">
-        <div>
-          <img
-            (click)="showTable('showUpdateLog')"
-            class="cursor-pointer"
-            src="/assets/img/doc-btn.svg"
-            alt="doc-btn"
-          />
-          <span class="font-size-20 text-blue font-weight-bold"
-            >Detalle de las actualizaciones</span
-          >
+      <div class="row">
+        <div class="col-8">
+          <img (click)="showTable('showUpdateLog')" class="cursor-pointer" src="/assets/img/doc-btn.svg"
+            alt="doc-btn" />
+          <span class="font-size-20 text-blue fw-bold">Detalle de las actualizaciones</span>
           (Cantidad: 10 - Orden Fecha/hora desc.)
         </div>
 
-        <div>
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >E</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >C</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >R</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >D</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >O</a
-          >
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-            >S</a
-          >
+        <div class="col-4">
+          <a class="">E</a>
+          <a class="">C</a>
+          <a class="">R</a>
+          <a class="">D</a>
+          <a class="">O</a>
+          <a class="">S</a>
 
-          <a
-            class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-          >
+          <a class="">
             <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
           </a>
         </div>
       </div>
 
-      <table class="w-100 mt-15">
+      <table class="table table-striped">
         <thead>
           <tr>
             <th>Reg</th>
@@ -456,14 +353,8 @@
             <td>{{ detail.implication }}</td>
 
             <td>
-              <a
-                class="border-silver text-secondary-blue font-weight-bold border-radius-8 font-size-20 p-8 w-36 mr-8"
-              >
-                <img
-                  src="/assets/img/options.png"
-                  width="30px"
-                  alt="option-btn"
-                />
+              <a class="">
+                <img src="/assets/img/options.png" width="30px" alt="option-btn" />
               </a>
             </td>
           </tr>
@@ -471,4 +362,5 @@
       </table>
     </div>
   </div>
+
 </div>
