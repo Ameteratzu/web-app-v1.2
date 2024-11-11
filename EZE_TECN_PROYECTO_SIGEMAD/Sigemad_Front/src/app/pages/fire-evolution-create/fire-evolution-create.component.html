@@ -14,11 +14,21 @@
             <img src="/assets/img/check.svg" alt="check" />
           </button>
 
-          <button (click)="closeModal()" type="button" class="btn btn-secondary" style="background-color: white;">
+          <button
+            (click)="closeModal()"
+            type="button"
+            class="btn btn-secondary"
+            style="background-color: white"
+          >
             <img src="/assets/img/close.svg" alt="close" />
           </button>
 
-          <button (click)="closeModal()" type="button" class="btn btn-secondary" style="background-color: white;">
+          <button
+            (click)="closeModal()"
+            type="button"
+            class="btn btn-secondary"
+            style="background-color: white"
+          >
             <img src="/assets/img/back.svg" alt="back" />
           </button>
         </div>
@@ -105,14 +115,12 @@
                           <input
                             class="form-control"
                             formControlName="startDate"
-                            type="datetime-local"  
+                            type="datetime-local"
                             id="startDate"
                             placeholder="Fecha y hora"
                             required
                           />
-                          <label for="startDate"
-                            >Fecha y hora</label
-                          >
+                          <label for="startDate">Fecha y hora</label>
                           <div class="invalid-feedback">Campo requerido</div>
                         </div>
                       </div>
@@ -126,7 +134,9 @@
                           formControlName="inputOutput"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of inputOutputs()"
                             [value]="option.id"
@@ -165,7 +175,9 @@
                           formControlName="media"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of medias()"
                             [value]="option.id"
@@ -176,15 +188,13 @@
                         <label for="floatingSelect">Medio</label>
                         <div class="invalid-feedback">Campo requerido</div>
                         <!--
-                  <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+                  <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
                   type="button" >
                     Limpiar
                   </button>
                   -->
                       </div>
                     </div>
-
-                    
                   </div>
                 </div>
 
@@ -223,7 +233,9 @@
                           formControlName="recordType"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of recordTypes()"
                             [value]="option.id"
@@ -289,7 +301,9 @@
                           formControlName="status"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of status()"
                             [value]="option.id"
@@ -329,7 +343,9 @@
                           formControlName="operativeStatus"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of status()"
                             [value]="option.id"
@@ -378,7 +394,11 @@
                 </div>
 
                 <!-- area afectada-->
-                <form [class]="classValidateArea()" (submit)="saveAreaAffected()" [formGroup]="formGroupAreaAfectada">
+                <form
+                  [class]="classValidateArea()"
+                  (submit)="saveAreaAffected()"
+                  [formGroup]="formGroupAreaAfectada"
+                >
                   <div
                     id="sectionParametros"
                     class="font-20 fw-bold text-orange"
@@ -412,7 +432,9 @@
                           (change)="loadMunicipalities($event, '1')"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of provinces()"
                             [value]="option.id"
@@ -435,7 +457,9 @@
                           formControlName="municipality_1"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of municipalities()"
                             [value]="option.id"
@@ -456,7 +480,9 @@
                           formControlName="minorEntity"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of minorEntities()"
                             [value]="option.id"
@@ -503,10 +529,7 @@
                     </div>
 
                     <div class="col-3 d-flex justify-content-center">
-                      <button
-                        type="submit"
-                        class="btn-blue"
-                      >
+                      <button type="submit" class="btn-blue">
                         <img
                           class="btn btn-primary"
                           src="/assets/img/plus.svg"
@@ -530,11 +553,11 @@
                     <tbody>
                       <tr *ngFor="let area of areasAffected; let i = index">
                         <td>{{ area.startAreaAffected }}</td>
-                        <td>{{ area.province_1 }}</td>
+                        <td>{{ getProvincia(area.province_1) }}</td>
                         <td>
-                          {{ area.municipality_1 }}
+                          {{ getMunicipio(area.municipality_1) }}
                         </td>
-                        <td>{{ area.minorEntity }}</td>
+                        <td>{{ getEntidadMenor(area.minorEntity) }}</td>
 
                         <td>
                           <button
@@ -567,7 +590,11 @@
                 </form>
 
                 <!-- consecuencias actuaciones -->
-                <form [class]="classValidateConsecuencia()" (submit)="saveConsequenceAction()" [formGroup]="formGroupConsecuenciasActuaciones">
+                <form
+                  [class]="classValidateConsecuencia()"
+                  (submit)="saveConsequenceAction()"
+                  [formGroup]="formGroupConsecuenciasActuaciones"
+                >
                   <div
                     id="sectionParametros"
                     class="font-20 fw-bold text-orange"
@@ -585,7 +612,9 @@
                           formControlName="impactType"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of impactTypes"
                             [value]="option"
@@ -606,7 +635,9 @@
                           formControlName="impactGroup"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of impactGroups"
                             [value]="option"
@@ -629,7 +660,9 @@
                           aria-label="Floating label select example"
                           (change)="changeDenomination($event)"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of denominations"
                             [value]="option.id"
@@ -701,10 +734,7 @@
                   <div class="row mb-3">
                     <div class="col-5 d-flex justify-content-center"></div>
                     <div class="col-2 d-flex justify-content-center">
-                      <button
-                        type="submit"
-                        class="btn-blue"
-                      >
+                      <button type="submit" class="btn-blue">
                         <img
                           class="btn btn-primary"
                           src="/assets/img/plus.svg"
@@ -776,7 +806,11 @@
                 </form>
 
                 <!-- INTERVENCIÓN DE MEDIOS -->
-                <form [class]="classValidateMedio()" (submit)="saveInterveningMedia()" [formGroup]="formGroupIntervecionMedios">
+                <form
+                  [class]="classValidateMedio()"
+                  (submit)="saveInterveningMedia()"
+                  [formGroup]="formGroupIntervecionMedios"
+                >
                   <div
                     id="sectionParametros"
                     class="font-20 fw-bold text-orange"
@@ -793,7 +827,9 @@
                           formControlName="mediaType"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of mediaTypes()"
                             [value]="option.id"
@@ -847,7 +883,9 @@
                           formControlName="classification"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of mediaClassifications()"
                             [value]="option.id"
@@ -867,7 +905,9 @@
                           formControlName="ownership_1"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of mediaOwnerships()"
                             [value]="option.id"
@@ -906,7 +946,9 @@
                           (change)="loadMunicipalities($event, '2')"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of provinces()"
                             [value]="option.id"
@@ -926,7 +968,9 @@
                           formControlName="municipality_2"
                           aria-label="Floating label select example"
                         >
-                          <option value="" selected>Seleccione una opción</option>
+                          <option value="" selected>
+                            Seleccione una opción
+                          </option>
                           <option
                             *ngFor="let option of municipalities2()"
                             [value]="option.id"
@@ -938,7 +982,7 @@
                       </div>
                     </div>
 
-                    <div class="col d-flex justify-content-center mb-3" >
+                    <div class="col d-flex justify-content-center mb-3">
                       <div class="form-floating">
                         <b class="">Localización</b>
                         <img
@@ -968,11 +1012,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-4 d-flex justify-content-center mb-3" >
-                      <button
-                        type="submit"
-                        class="btn-blue"
-                      >
+                    <div class="col-4 d-flex justify-content-center mb-3">
+                      <button type="submit" class="btn-blue">
                         <img
                           class="btn btn-primary"
                           src="/assets/img/plus.svg"

@@ -334,8 +334,8 @@ export class FireEvolutionCreateComponent {
   public openModalMapCreate(section: string = '') {
     let idMunicipio = 1;
     let listaMunicipio: any[] = [];
-    if(section == 'ConsecuenciasActuaciones'){
-      return 
+    if (section == 'ConsecuenciasActuaciones') {
+      return;
     }
     switch (section) {
       case 'AreaAfectada':
@@ -952,5 +952,22 @@ export class FireEvolutionCreateComponent {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  getProvincia(id: string | number) {
+    const provincia = this.provinces().find((province) => province.id == id);
+    return provincia?.descripcion;
+  }
+  getMunicipio(id: string | number) {
+    const municipio = this.municipalities().find(
+      (municipio) => municipio.id == id
+    );
+    return municipio?.descripcion;
+  }
+  getEntidadMenor(id: string | number) {
+    const entidadMenor = this.minorEntities().find(
+      (minorEntity) => minorEntity.id == id
+    );
+    return entidadMenor?.descripcion;
   }
 }
