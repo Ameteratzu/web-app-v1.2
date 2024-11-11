@@ -1,13 +1,12 @@
 ﻿using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
-using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
-[Route("api/v1/[controller]")]
+[Route("api/v1/otras-informaciones")]
 [ApiController]
 public class OtraInformacionController : ControllerBase
 {
@@ -43,5 +42,17 @@ public class OtraInformacionController : ControllerBase
             return NotFound();
         }
         return Ok(otraInformacion);
+    }
+
+    [HttpDelete("detalles/{idDetalleOtraInformacion}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Eliminar un detalle de otra información mediante Id")]
+    public async Task<ActionResult> Delete(int idDetalleOtraInformacion)
+    {
+        var command = new DeleteDetalleOtraInformacionCommand { IdDetalleOtraInformacion = idDetalleOtraInformacion };
+        await _mediator.Send(command);
+        return NoContent();
     }
 }

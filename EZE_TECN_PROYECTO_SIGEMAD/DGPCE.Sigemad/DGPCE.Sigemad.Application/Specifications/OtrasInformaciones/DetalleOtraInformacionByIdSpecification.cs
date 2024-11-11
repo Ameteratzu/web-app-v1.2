@@ -3,8 +3,8 @@
 namespace DGPCE.Sigemad.Application.Specifications.OtrasInformaciones;
 public class DetalleOtraInformacionByIdSpecification : BaseSpecification<DetalleOtraInformacion>
 {
-    public DetalleOtraInformacionByIdSpecification(int idOtraInformacion)
-        : base(i => i.IdOtraInformacion == idOtraInformacion)
+    public DetalleOtraInformacionByIdSpecification(int idDetalle)
+        : base(i => i.Id == idDetalle && i.Borrado == false)
     {
         AddInclude(i => i.ProcedenciasDestinos);
     }

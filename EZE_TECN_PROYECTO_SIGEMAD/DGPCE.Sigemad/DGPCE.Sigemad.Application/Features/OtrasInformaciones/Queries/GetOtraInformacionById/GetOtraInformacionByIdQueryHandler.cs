@@ -38,7 +38,7 @@ public class GetOtraInformacionByIdQueryHandler : IRequestHandler<GetOtraInforma
             throw new NotFoundException(nameof(OtraInformacion), request.Id);
         }
 
-        var specDetalle = new DetalleOtraInformacionByIdSpecification(request.Id);
+        var specDetalle = new DetalleOtraInformacionByIdOtraInformacionSpecification(request.Id);
         var detalleOtraInformacion = await _unitOfWork.Repository<DetalleOtraInformacion>().GetAllWithSpec(specDetalle);        
 
         var otraInformacionVms = detalleOtraInformacion
