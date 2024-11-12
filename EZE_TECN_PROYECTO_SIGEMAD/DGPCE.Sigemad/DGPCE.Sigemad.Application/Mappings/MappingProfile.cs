@@ -16,8 +16,10 @@ using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
+using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
@@ -83,10 +85,12 @@ namespace DGPCE.Sigemad.Application.Mappings
                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             CreateMap<Incendio, IncendioVm>();
-            CreateMap<Evolucion, EvolucionVm>()
-              .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.EvolucionProcedenciaDestinos != null ? src.EvolucionProcedenciaDestinos.Select(epd => epd.ProcedenciaDestino).ToList() : new List<ProcedenciaDestino>()));
+            CreateMap<Evolucion, EvolucionVm>();
 
             CreateMap<UpdateEvolucionCommand, Evolucion>()
+              .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
+
+            CreateMap<CreateEvolucionCommand, Evolucion>()
               .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
 
             CreateMap<ApplicationUser, ApplicationUserVm>();
@@ -128,6 +132,8 @@ namespace DGPCE.Sigemad.Application.Mappings
                 .ForMember(dest => dest.Asunto, opt => opt.MapFrom(src => src.Asunto))
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
                 .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
+
+            CreateMap<EvolucionProcedenciaDestino, EvolucionProcedenciaDestinoVm>();
         }
 
         private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

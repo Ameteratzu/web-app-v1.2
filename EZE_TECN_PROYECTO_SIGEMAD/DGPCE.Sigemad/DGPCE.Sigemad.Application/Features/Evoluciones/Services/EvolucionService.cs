@@ -2,9 +2,7 @@
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.EstadosIncendio.Enumerations;
 using DGPCE.Sigemad.Application.Features.EstadosSucesos.Enumerations;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -77,49 +75,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             return true;
         }
 
-
-        public async Task<Evolucion>  CrearNuevaEvolucion(CreateEvolucionCommand request)
-        {
-            var evolucion = new Evolucion
-            {
-                IdIncendio = request.IdIncendio,
-                FechaHoraEvolucion = request.FechaHoraEvolucion,
-                IdEntradaSalida = request.IdEntradaSalida,
-                IdMedio = request.IdMedio,
-                IdTipoRegistro = request.IdTipoRegistro,
-                Observaciones = request.Observaciones,
-                Prevision = request.Prevision,
-                IdEstadoIncendio = request.IdEstadoIncendio,
-                PlanEmergenciaActivado = request.PlanEmergenciaActivado,
-                IdSituacionOperativa = request.IdSituacionOperativa,
-                SuperficieAfectadaHectarea = request.SuperficieAfectadaHectarea,
-                FechaFinal = request.FechaFinal,
-                EvolucionProcedenciaDestinos = request.EvolucionProcedenciaDestinos != null ? MapEvolucionProcedenciaDestinos(request.EvolucionProcedenciaDestinos): null
-            };
-
-            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
-
-            var result = await _unitOfWork.Complete();
-            if (result <= 0)
-            {
-                throw new Exception("No se pudo insertar nueva evolución");
-            }
-
-            _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
-
-            return evolucion;
-
-        }
-
-        public ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
-        {
-            if (source == null)
-            {
-                return new List<EvolucionProcedenciaDestino>();
-            }
-
-            return source.Select(id => new EvolucionProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
-        }
 
 
         public async Task EliminarEvolucion(DeleteEvolucionesCommand request)

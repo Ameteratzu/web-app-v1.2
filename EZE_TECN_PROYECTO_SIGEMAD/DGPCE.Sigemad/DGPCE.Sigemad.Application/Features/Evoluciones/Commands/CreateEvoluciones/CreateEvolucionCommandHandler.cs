@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Domain.Constracts;
@@ -16,6 +17,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
         private readonly ILogger<CreateEvolucionCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGeometryValidator _geometryValidator;
+        private readonly IMapper _mapper;
         private readonly IEvolucionService _evolucionService;
 
 
@@ -23,10 +25,12 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             ILogger<CreateEvolucionCommandHandler> logger,
             IUnitOfWork unitOfWork,
             IGeometryValidator geometryValidator,
+            IMapper mapper,
             IEvolucionService evolucionService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _geometryValidator = geometryValidator;
             _evolucionService = evolucionService;
         }
@@ -94,8 +98,18 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             }
 
             await _evolucionService.ComprobacionEvolucionProcedenciaDestinos(request.EvolucionProcedenciaDestinos);
-            var evolucion = await _evolucionService.CrearNuevaEvolucion(request);
-            
+            var evolucion = _mapper.Map<Evolucion>(request);
+
+            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
+
+            var result = await _unitOfWork.Complete();
+            if (result <= 0)
+            {
+                throw new Exception("No se pudo insertar nueva evolución");
+            }
+
+            _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
+
             await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio.Value, evolucion.IdIncendio);
 
             _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");

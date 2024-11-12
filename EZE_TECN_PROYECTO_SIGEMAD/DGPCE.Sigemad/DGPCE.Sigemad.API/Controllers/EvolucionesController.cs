@@ -63,10 +63,6 @@ namespace DGPCE.Sigemad.API.Controllers
         {
             var query = new GetEvolucionesByIdIncendioListQuery(idIncendio);
             var listado = await _mediator.Send(query);
-
-            if (listado.Count == 0)
-                return NotFound();
-
             return Ok(listado);
         }
 

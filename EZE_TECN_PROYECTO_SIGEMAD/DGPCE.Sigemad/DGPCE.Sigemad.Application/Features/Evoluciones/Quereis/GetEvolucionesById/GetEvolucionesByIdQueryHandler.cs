@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -20,7 +21,16 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesB
 
         public async Task<EvolucionVm> Handle(GetEvolucionesByIdQuery request, CancellationToken cancellationToken)
         {
-            var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.Id);
+
+            var evolucionParams = new EvolucionSpecificationParams
+            {
+                Id = request.Id
+            };
+
+            var spec = new EvolucionSpecification(evolucionParams);
+            var evolucion = await _unitOfWork.Repository<Evolucion>()
+            .GetByIdWithSpec(spec);
+
             var evolucionVm = _mapper.Map<Evolucion, EvolucionVm>(evolucion);
             return evolucionVm;
         }
