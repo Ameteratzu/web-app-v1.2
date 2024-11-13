@@ -1,5 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesoRelacionadoById;
+using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesosRelacionadosByIdSucesoPrincipal;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -38,6 +39,22 @@ public class SucesoRelacionadoController : ControllerBase
     public async Task<ActionResult> GetSucesoRelacionadoById(int id)
     {
         var query = new GetSucesoRelacionadoByIdQuery(id);
+        var sucesoRelacionado = await _mediator.Send(query);
+        if (sucesoRelacionado == null)
+        {
+            return NotFound();
+        }
+        return Ok(sucesoRelacionado);
+    }
+
+    [HttpGet("{idSucesoPrincipal}/relacionados")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Obtiene los sucesos relacionados por el idSucesoPrincipal")]
+    public async Task<ActionResult> GetSucesosRelacionadosByIdSucesoPrincipal(int idSucesoPrincipal)
+    {
+        var query = new GetSucesosRelacionadosByIdSucesoPrincipalQuery(idSucesoPrincipal);
         var sucesoRelacionado = await _mediator.Send(query);
         if (sucesoRelacionado == null)
         {
