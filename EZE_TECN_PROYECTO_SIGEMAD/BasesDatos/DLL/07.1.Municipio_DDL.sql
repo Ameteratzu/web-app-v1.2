@@ -1,22 +1,21 @@
--- dbo.Municipio definition
-
--- Drop table
-
-IF OBJECT_ID('dbo.Municipio', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE dbo.Municipio;
-END
+DROP TABLE IF EXISTS dbo.Municipio;
 GO
 
 CREATE TABLE dbo.Municipio (
-	Id int NOT NULL,
-	IdProvincia int NOT NULL,
+	Id int NOT NULL PRIMARY KEY,
+	IdProvincia int NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
 	Descripcion varchar(255) NOT NULL,
 	UtmX int NULL,
 	UtmY int NULL,
 	Huso varchar(3) NULL,
 	GeoPosicion GEOMETRY,
-	CONSTRAINT Municipios_PK PRIMARY KEY (Id),
-	CONSTRAINT ProvinciaMunicipio FOREIGN KEY (IdProvincia) REFERENCES Provincia(Id)
+	---
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion DATETIME2(7) NULL,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );
 CREATE INDEX IX_Municipio ON dbo.Municipio (IdProvincia);

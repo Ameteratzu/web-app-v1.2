@@ -21,7 +21,7 @@ CREATE TABLE dbo.Incendio (
 	Huso int NULL,
     GeoPosicion GEOMETRY NULL,
 	---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,

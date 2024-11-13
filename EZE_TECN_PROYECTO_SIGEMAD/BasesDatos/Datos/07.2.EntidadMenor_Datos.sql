@@ -1,0 +1,2 @@
+INSERT [dbo].[EntidadMenor] ([Id], [IdMunicipio], [Descripcion], [UtmX], [UtmY], [Huso], [GeoPosicion]) VALUES 
+(101, 1001, N'ÁGUEDA', 43185, 4506805, NULL, 0xE6100000010CC86031372DCB20C08292D491FD4A4440);

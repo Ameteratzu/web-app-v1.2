@@ -12,7 +12,7 @@ CREATE TABLE dbo.OtraInformacion (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdIncendio INT NULL FOREIGN KEY REFERENCES Incendio(Id), 
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
@@ -29,7 +29,7 @@ CREATE TABLE dbo.DetalleOtraInformacion (
     Asunto NVARCHAR(500) NULL,
     Observaciones NVARCHAR(MAX) NULL,
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
@@ -43,7 +43,7 @@ CREATE TABLE dbo.DetalleOtraInformacion_ProcedenciaDestino (
 	IdDetalleOtraInformacion int NOT NULL FOREIGN KEY REFERENCES DetalleOtraInformacion(Id),
 	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,

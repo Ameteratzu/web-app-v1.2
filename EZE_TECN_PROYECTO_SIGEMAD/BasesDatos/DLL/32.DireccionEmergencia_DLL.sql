@@ -46,7 +46,7 @@ CREATE TABLE DireccionCoordinacionEmergencia (
     ObservacionesPMA NVARCHAR(MAX) NULL,  -- Observaciones adicionales para PMA
 
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
@@ -72,7 +72,7 @@ CREATE TABLE ActivacionPlanesEmergencia (
     FechaFin DATETIME2(7) NULL,  -- Fecha de fin del plan
     Observaciones NVARCHAR(MAX) NULL,  -- Observaciones adicionales
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
