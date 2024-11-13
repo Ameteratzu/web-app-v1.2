@@ -97,7 +97,7 @@
           required=""
         >
           <option selected></option>
-          <option *ngFor="let option of fireStatus()" [value]="option.id">
+          <option *ngFor="let option of eventsStatus()" [value]="option.id">
             {{ option.descripcion }}
           </option>
         </select>

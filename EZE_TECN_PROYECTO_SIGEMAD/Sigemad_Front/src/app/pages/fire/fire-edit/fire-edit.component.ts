@@ -13,6 +13,7 @@ import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-e
 import { MapCreateComponent } from '../../map-create/map-create.component';
 
 import { EventService } from '../../../services/event.service';
+import { EventStatusService } from '../../../services/eventStatus.service';
 import { FireStatusService } from '../../../services/fire-status.service';
 import { FireService } from '../../../services/fire.service';
 import { MenuItemActiveService } from '../../../services/menu-item-active.service';
@@ -30,6 +31,7 @@ import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { ToastModule } from 'primeng/toast';
 import { Event } from '../../../types/event.type';
+import { EventStatus } from '../../../types/eventStatus.type';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
@@ -71,12 +73,15 @@ export class FireEditComponent {
   public provinceService = inject(ProvinceService);
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
+  public eventStatusService = inject(EventStatusService);
+
   public fireStatusService = inject(FireStatusService);
 
   public fire = <Fire>{};
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public events = signal<Event[]>([]);
+  public eventsStatus = signal<EventStatus[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
   public logs = signal<FireDetail[]>([]);
 
@@ -163,6 +168,9 @@ export class FireEditComponent {
 
     const events = await this.eventService.get();
     this.events.set(events);
+
+    const eventsStatus = await this.eventStatusService.get();
+    this.eventsStatus.set(eventsStatus);
 
     const fireStatus = await this.fireStatusService.get();
     this.fireStatus.set(fireStatus);
