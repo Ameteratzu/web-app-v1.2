@@ -1,20 +1,20 @@
--- dbo.Provincia definition
-
--- Drop table
-IF OBJECT_ID('dbo.Provincia', 'U') IS NOT NULL
-BEGIN
-    DROP TABLE dbo.Provincia;
-END
+DROP TABLE IF EXISTS dbo.Provincia;
 GO
 
 CREATE TABLE dbo.Provincia (
-	Id int NOT NULL,
-	IdCcaa int NOT NULL,
+	Id int NOT NULL PRIMARY KEY,
+	IdCcaa INT NOT NULL FOREIGN KEY REFERENCES dbo.CCAA(Id),
 	Descripcion varchar(255) NOT NULL,
 	UtmX int NULL,
 	UtmY int NULL,
 	Huso varchar(3) NULL,
 	GeoPosicion GEOMETRY,
-	CONSTRAINT Provincias_PK PRIMARY KEY (Id),
-	CONSTRAINT CCAAProvincia FOREIGN KEY (IdCcaa) REFERENCES dbo.CCAA(Id)
+	---
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion DATETIME2(7) NULL,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );

@@ -15,7 +15,7 @@ CREATE TABLE dbo.IntervencionMedio (
 	GeoPosicion GEOMETRY,
 	Observaciones text NULL,
 	---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,

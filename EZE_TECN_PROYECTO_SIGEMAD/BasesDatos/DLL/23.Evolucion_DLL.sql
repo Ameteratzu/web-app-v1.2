@@ -26,7 +26,7 @@ CREATE TABLE dbo.Evolucion (
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     FechaFinal DATETIME2(7) NULL,
     ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,
@@ -45,7 +45,7 @@ CREATE TABLE AreaAfectada (
     GeoPosicion GEOMETRY,
 
      ---
-    FechaCreacion DATETIME2(7) NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
 	FechaModificacion DATETIME2(7) NULL,
 	ModificadoPor UNIQUEIDENTIFIER NULL,

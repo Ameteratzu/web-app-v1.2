@@ -2,10 +2,17 @@ DROP TABLE IF EXISTS dbo.Distrito;
 GO
 
 CREATE TABLE dbo.Distrito (
-	Id int NOT NULL,
-	IdPais int NOT NULL,
-	Descripcion varchar(255) NOT NULL,
-	CONSTRAINT Distrito_PK PRIMARY KEY (Id),
-	CONSTRAINT PaisDistrito FOREIGN KEY (IdPais) REFERENCES Pais(Id) 
+	Id INT NOT NULL PRIMARY KEY,
+	IdPais int NOT NULL FOREIGN KEY REFERENCES Pais(Id),
+	Descripcion NVARCHAR(255) NOT NULL,
+	CodigoOficial VARCHAR(10) NULL,
+	---
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion DATETIME2(7) NULL,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );
 GO

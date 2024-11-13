@@ -34,6 +34,22 @@ VALUES ('C596AD0C-17D1-48D0-B08B-F635B83D14C2', 'interno@example.com', 'INTERNO@
 INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount)
 VALUES ('FB161AB0-96C6-4549-9395-2C1EC5FD9B46', 'externo@example.com', 'EXTERNO@EXAMPLE.COM', 'externo@example.com', 'EXTERNO@EXAMPLE.COM', 1, 'AQAAAAEAACcQAAAAECaWXRR0KIKEpE++JFanlo7bjiotVXQTzrloTEa6vmD1u9CNvAElAo49x4zpuwSDgQ==',  NULL, NULL, 0, 0, 0, 0);
 
+-- Insert usuario de sistema
+INSERT INTO [AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount])
+VALUES (
+    '00000000-0000-0000-0000-000000000001', 'system_user', 'SYSTEM_USER', 'system@domain.com', 'SYSTEM@DOMAIN.COM',
+    1, -- Email confirmado
+    NULL, -- No necesita un hash de contraseña
+    NEWID(), -- SecurityStamp generado
+    NEWID(), -- ConcurrencyStamp generado
+    NULL, -- Sin teléfono
+    0, -- No se requiere confirmación de teléfono
+    0, -- Sin autenticación de dos factores
+    NULL, -- No hay fin de bloqueo
+    0, -- Bloqueo deshabilitado
+    0  -- Sin fallos de acceso
+);
+
 -- ============================
 -- Para tabla ApplicationUsers
 -- ============================
@@ -50,6 +66,19 @@ VALUES ('550E683E-0458-43E8-A6E6-20887DC2BDDD', 'C596AD0C-17D1-48D0-B08B-F635B83
 INSERT INTO ApplicationUsers (Id, IdentityId, Nombre, Apellidos, Email, Telefono, FechaCreacion, CreadoPor, FechaModificacion, ModificadoPor, Borrado)
 VALUES ('D3813C04-4EEE-4D37-84B7-49EC293F92D2', 'FB161AB0-96C6-4549-9395-2C1EC5FD9B46', 'Externo', 'Proveedor', 'externo@example.com', '555-9876', GETDATE(), NULL, NULL, NULL, 0);
 
+INSERT INTO [ApplicationUsers] ([Id], [IdentityId], [Nombre], [Apellidos], [Email], [Telefono], [FechaCreacion], [CreadoPor], [Borrado]
+)
+VALUES (
+    '00000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-000000000001',
+    'Usuario',
+    'Del Sistema',
+    'system@domain.com',
+    '', -- Sin teléfono
+    GETDATE(),
+    NULL, -- Este es el primer registro, por lo tanto CreadoPor puede ser NULL
+    0 -- No borrado
+);
 
 -- ====================================================================
 -- USUARIOS - ROLES
