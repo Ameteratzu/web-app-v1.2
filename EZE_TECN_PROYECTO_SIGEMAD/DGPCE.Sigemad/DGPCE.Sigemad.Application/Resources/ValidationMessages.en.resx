@@ -267,4 +267,16 @@
   <data name="AsuntoMaxLegth" xml:space="preserve">
     <value>Subject cannot exceed 500 characters</value>
   </data>
+  <data name="IdSucesoAsociadoNoVacio" xml:space="preserve">
+    <value>Associated Event Id cannot be empty</value>
+  </data>
+  <data name="IdSucesoAsociadoObligatorio" xml:space="preserve">
+    <value>Associated Event Id is mandatory</value>
+  </data>
+  <data name="IdSucesoPrincipalNoVacio" xml:space="preserve">
+    <value>Main Event Id cannot be empty</value>
+  </data>
+  <data name="IdSucesoPrincipalObligatorio" xml:space="preserve">
+    <value>Main Event Id is mandatory</value>
+  </data>
 </root>

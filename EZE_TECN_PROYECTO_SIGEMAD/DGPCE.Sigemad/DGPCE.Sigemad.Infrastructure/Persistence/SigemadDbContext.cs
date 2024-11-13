@@ -103,6 +103,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoDanio>().ToTable("TipoDanio");
             modelBuilder.Entity<SuperficieFiltro>().ToTable(nameof(SuperficieFiltro));
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
+            modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
         }
 
 
@@ -151,6 +152,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<OtraInformacion> OtrasInformaciones { get; set; }
         public DbSet<DetalleOtraInformacion> DetallesOtraInformacion { get; set; }
         public DbSet<DetalleOtraInformacion_ProcedenciaDestino> DetallesOtraInformacion_ProcedenciaDestinos { get; set; }
+
+        public DbSet<SucesoRelacionado> SucesosRelacionados { get; set; }
 
     }
 }

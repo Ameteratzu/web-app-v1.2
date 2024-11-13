@@ -1,5 +1,5 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
-DROP TABLE IF EXISTS SucesosRelacionado
+DROP TABLE IF EXISTS SucesoRelacionado
 GO
 
 DROP TABLE IF EXISTS DetalleOtraInformacion_ProcedenciaDestino

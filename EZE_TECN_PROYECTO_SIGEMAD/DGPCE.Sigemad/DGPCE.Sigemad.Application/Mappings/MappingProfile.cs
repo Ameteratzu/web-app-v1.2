@@ -33,6 +33,8 @@ using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
+using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
@@ -134,6 +136,9 @@ namespace DGPCE.Sigemad.Application.Mappings
                 .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
             CreateMap<EvolucionProcedenciaDestino, EvolucionProcedenciaDestinoVm>();
+
+            CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
+            CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
         }
 
         private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

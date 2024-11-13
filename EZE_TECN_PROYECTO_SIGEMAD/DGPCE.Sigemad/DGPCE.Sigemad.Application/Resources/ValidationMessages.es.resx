@@ -267,4 +267,16 @@
   <data name="AsuntoMaxLegth" xml:space="preserve">
     <value>Asunto no puede superar 500 caracteres</value>
   </data>
+  <data name="IdSucesoAsociadoNoVacio" xml:space="preserve">
+    <value>Id Suceso asociado no puede ser vacio</value>
+  </data>
+  <data name="IdSucesoAsociadoObligatorio" xml:space="preserve">
+    <value>Id suceso asociado es oblogatorio</value>
+  </data>
+  <data name="IdSucesoPrincipalNoVacio" xml:space="preserve">
+    <value>Id Suceso principal no puede ser vacio</value>
+  </data>
+  <data name="IdSucesoPrincipalObligatorio" xml:space="preserve">
+    <value>Id Suceso principal es obligatorio</value>
+  </data>
 </root>

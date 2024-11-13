@@ -277,6 +277,42 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Id Suceso asociado no puede ser vacio.
+        /// </summary>
+        public static string IdSucesoAsociadoNoVacio {
+            get {
+                return ResourceManager.GetString("IdSucesoAsociadoNoVacio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Id suceso asociado es oblogatorio.
+        /// </summary>
+        public static string IdSucesoAsociadoObligatorio {
+            get {
+                return ResourceManager.GetString("IdSucesoAsociadoObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Id Suceso principal no puede ser vacio.
+        /// </summary>
+        public static string IdSucesoPrincipalNoVacio {
+            get {
+                return ResourceManager.GetString("IdSucesoPrincipalNoVacio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Id Suceso principal es obligatorio.
+        /// </summary>
+        public static string IdSucesoPrincipalObligatorio {
+            get {
+                return ResourceManager.GetString("IdSucesoPrincipalObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Id Incendio no puede estar vacio.
         /// </summary>
         public static string IncendioIdNoVacio {
