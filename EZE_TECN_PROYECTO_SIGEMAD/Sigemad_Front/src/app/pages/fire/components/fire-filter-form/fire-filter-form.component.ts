@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   signal,
+  SimpleChanges,
 } from '@angular/core';
 import {
   FormControl,
@@ -44,6 +45,7 @@ import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
+import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -61,6 +63,7 @@ import { Territory } from '../../../../types/territory.type';
 })
 export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]>;
+  @Input() filtros: any;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
 
   COUNTRIES_ID = {
@@ -68,6 +71,8 @@ export class FireFilterFormComponent implements OnInit {
     SPAIN: 60,
     FRANCE: 65,
   };
+
+  public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
   public superficiesService = inject(SuperficiesService);
   public menuItemActiveService = inject(MenuItemActiveService);
@@ -108,32 +113,52 @@ export class FireFilterFormComponent implements OnInit {
   public formData: FormGroup;
 
   async ngOnInit() {
+    const {
+      name,
+      territory,
+      country,
+      autonomousCommunity,
+      province,
+      fireStatus: initFireStatus,
+      eventStatus: initEventStatus,
+      severityLevel,
+      affectedArea,
+      move,
+      between,
+      start,
+      end,
+      municipality,
+      episode,
+    } = this.filtros();
+
     this.formData = new FormGroup({
-      name: new FormControl(),
-      territory: new FormControl(),
-      autonomousCommunity: new FormControl(),
-      province: new FormControl(),
-      country: new FormControl(),
-      municipality: new FormControl(),
-      fireStatus: new FormControl(),
-      episode: new FormControl(),
-      severityLevel: new FormControl(),
-      affectedArea: new FormControl(),
-      move: new FormControl(),
-      //enter: new FormControl(),
-      start: new FormControl(),
-      end: new FormControl(),
-      between: new FormControl(),
-      eventStatus: new FormControl(),
+      name: new FormControl(name ?? ''),
+      territory: new FormControl(territory ?? ''),
+      autonomousCommunity: new FormControl(autonomousCommunity ?? ''),
+      province: new FormControl(province ?? ''),
+      country: new FormControl(country ?? ''),
+      municipality: new FormControl(municipality ?? ''),
+      fireStatus: new FormControl(initFireStatus ?? ''),
+      episode: new FormControl(episode ?? ''),
+      severityLevel: new FormControl(severityLevel ?? ''),
+      affectedArea: new FormControl(affectedArea ?? ''),
+      move: new FormControl(move ?? ''),
+      //enter: new FormControl(?? ''),
+      start: new FormControl(start ?? ''),
+      end: new FormControl(end ?? ''),
+      between: new FormControl(between ?? ''),
+      eventStatus: new FormControl(initEventStatus ?? ''),
     });
 
+    
+    
     this.formData.patchValue({
-      between: 1,
-      move: 1,
-      territory: 1, //pre seleccionamos Nacional
-      country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
-      start: moment().subtract(4, 'days').format('YYYY-MM-DD'),
-      end: moment().format('YYYY-MM-DD'),
+      between: between ?? 1,
+      move: move ?? 1,
+      territory: territory ?? 1, //pre seleccionamos Nacional
+      country: this.getCountryByTerritory(country, territory), // pre seleccionamos España
+      start: start ?? moment().subtract(4, 'days').format('YYYY-MM-DD'),
+      end: end ?? moment().format('YYYY-MM-DD'),
     });
 
     this.menuItemActiveService.set.emit('/fire');
@@ -165,6 +190,26 @@ export class FireFilterFormComponent implements OnInit {
 
     this.loadCommunities();
     this.getCountriesByTerritory();
+
+    this.onSubmit()
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['filtros']) {
+      console.log('El filtro ha cambiado:', changes['filtro'].currentValue);
+      
+    }
+  }
+
+  getCountryByTerritory (country: any, territory: any ){
+    if(territory == 1){
+      return country
+    }
+    if(territory == 2){
+      if(country == this.COUNTRIES_ID.SPAIN){
+        return null
+      }
+    }
   }
 
   async changeTerritory(event: any) {
@@ -283,6 +328,7 @@ export class FireFilterFormComponent implements OnInit {
       between,
       start,
       end,
+      name
     } = this.formData.value;
 
     const fires = await this.fireService.get({
@@ -298,9 +344,12 @@ export class FireFilterFormComponent implements OnInit {
       IdComparativoFecha: between,
       FechaInicio: moment(start).format('YYYY-MM-DD'),
       FechaFin: moment(end).format('YYYY-MM-DD'),
+      denominacion: name
     });
+    this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
+    
   }
 
   clearFormFilter() {

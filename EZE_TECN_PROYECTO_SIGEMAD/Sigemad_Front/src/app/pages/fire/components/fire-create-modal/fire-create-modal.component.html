@@ -142,6 +142,7 @@
                   class="form-control"
                   id="floatingInput"
                   required
+                  [max]="today"
                 />
                 <label for="floatingInput">Fecha Inicio</label>
                 <div class="invalid-feedback">Este campo es requerido</div>
@@ -269,6 +270,7 @@
                   formControlName="startDate"
                   class="form-control"
                   id="floatingInput"
+                  [max]="today"
                   required
                 />
                 <label for="floatingInput">Fecha Inicio</label>

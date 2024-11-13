@@ -24,45 +24,61 @@
 
 <p-toast />
 
-
-<form (ngSubmit)="onSubmit()" [formGroup]="formData" [class]="classValidate()" class="px-4 py-2">
+<form
+  (ngSubmit)="onSubmit()"
+  [formGroup]="formData"
+  [class]="classValidate()"
+  class="px-4 py-2"
+>
   <div class="row">
     <div class="col">
-      <div class="form-floating mb-3 ">
-        <input class="form-control" type="text" id="denomination" placeholder="Denominación" required
-          formControlName="denomination">
+      <div class="form-floating mb-3">
+        <input
+          class="form-control"
+          type="text"
+          id="denomination"
+          placeholder="Denominación"
+          required
+          formControlName="denomination"
+        />
         <label class="form-label" for="denomination">Denominación</label>
-        <div class="invalid-feedback">
-          Campo requerido
-        </div>
+        <div class="invalid-feedback">Campo requerido</div>
       </div>
     </div>
     <div class="col">
       <div class="mb-3">
         <div class="form-floating">
-          <input formControlName="startDate" type="date" class="form-control" id="startDate" placeholder="Inicio"
-            required>
+          <input
+            formControlName="startDate"
+            type="date"
+            class="form-control"
+            id="startDate"
+            placeholder="Inicio"
+            required
+          />
           <label for="startDate">Inicio</label>
-          <div class="invalid-feedback">
-            Campo requerido
-          </div>
+          <div class="invalid-feedback">Campo requerido</div>
         </div>
       </div>
     </div>
 
     <div class="col">
       <div class="form-floating mb-3 position-relative">
-        <select class="form-select" id="floatingSelect" formControlName="event"
-          aria-label="Floating label select example" required="">
+        <select
+          class="form-select"
+          id="floatingSelect"
+          formControlName="event"
+          aria-label="Floating label select example"
+          required=""
+        >
           <option selected></option>
           <option *ngFor="let option of provinces()" [value]="option.id">
             {{ option.descripcion }}
           </option>
-
         </select>
         <label for="floatingSelect">Tipo de suceco</label>
         <!--
-        <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+        <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
         type="button" >
           Limpiar
         </button>
@@ -73,89 +89,121 @@
   <div class="row">
     <div class="col-4">
       <div class="form-floating">
-        <select formControlName="idEstado" class="form-select" id="floatingSelect"
-          aria-label="Floating label select example" required="">
+        <select
+          formControlName="idEstado"
+          class="form-select"
+          id="floatingSelect"
+          aria-label="Floating label select example"
+          required=""
+        >
           <option selected></option>
           <option *ngFor="let option of fireStatus()" [value]="option.id">
             {{ option.descripcion }}
           </option>
-
         </select>
         <label for="floatingSelect">Estado de suceso</label>
       </div>
     </div>
     <div class="col-4">
       <div class="form-floating mb-3">
-
-        <select (change)="loadMunicipalities($event)" class="form-select" formControlName="province" id="floatingSelect"
-          aria-label="Floating label select example" required="">
+        <select
+          (change)="loadMunicipalities($event)"
+          class="form-select"
+          formControlName="province"
+          id="floatingSelect"
+          aria-label="Floating label select example"
+          required=""
+        >
           <option selected></option>
           <option *ngFor="let option of provinces()" [value]="option.id">
             {{ option.descripcion }}
           </option>
-
         </select>
         <label for="floatingSelect">Provincia</label>
       </div>
     </div>
     <div class="col-3">
       <div class="form-floating">
-        <select formControlName="municipality" class="form-select" id="floatingSelect"
-          aria-label="Floating label select example" required="">
+        <select
+          formControlName="municipality"
+          class="form-select"
+          id="floatingSelect"
+          aria-label="Floating label select example"
+          required=""
+        >
           <option selected></option>
           <option *ngFor="let option of municipalities()" [value]="option.id">
             {{ option.descripcion }}
           </option>
-
         </select>
         <label for="floatingSelect">Municipio</label>
-
       </div>
     </div>
     <div class="col-1 d-flex justify-content-center align-items-center mb-3">
-      <img (click)="openModalMapEdit()" style="cursor: pointer; width: 32px; height: 32px;"
-        src="/assets/img/location-btn.svg" alt="location-btn" />
+      <img
+        (click)="openModalMapEdit()"
+        style="cursor: pointer; width: 32px; height: 32px"
+        src="/assets/img/location-btn.svg"
+        alt="location-btn"
+      />
     </div>
-
   </div>
-  <div class="row">
-    
-    
-
-  </div>
+  <div class="row"></div>
   <div class="row">
     <div class="col-8">
       <div class="form-floating mb-3">
-        <textarea formControlName="generalNote" class="form-control" placeholder="Nota general"
-          id="floatingTextarea"></textarea>
+        <textarea
+          formControlName="generalNote"
+          class="form-control"
+          placeholder="Nota general"
+          id="floatingTextarea"
+        ></textarea>
         <label for="floatingSelect">Nota General</label>
       </div>
     </div>
 
     <div class="col-4">
-      <div class="d-flex justify-content-end  gap-2">
+      <div class="d-flex justify-content-end gap-2">
         <button type="submit" class="btn btn-primary">
           <img src="/assets/img/check.svg" alt="check" />
         </button>
 
-        <button type="button" class="btn btn-secondary" style="background-color: white;">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
           <img src="/assets/img/list-btn.svg" alt="list-btn" />
         </button>
 
-        <button (click)="confirmDelete()" type="button" class="btn btn-secondary" style="background-color: white;">
+        <button
+          (click)="confirmDelete()"
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
           <img src="/assets/img/close.svg" alt="close" />
         </button>
 
-        <button (click)="ngOnInit()" type="button" class="btn btn-secondary" style="background-color: white;">
+        <button
+          (click)="ngOnInit()"
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
           <img src="/assets/img/refresh.svg" alt="refresh" />
         </button>
 
-        <button type="button" (click)="back()" class="btn btn-secondary" style="background-color: white;">
+        <button
+          type="button"
+          (click)="back()"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
           <img src="/assets/img/back.svg" alt="back" />
         </button>
       </div>
     </div>
-
   </div>
 </form>
 
@@ -163,9 +211,7 @@
   <img class="w-100" src="/assets/img/graph.svg" alt="graph" />
 </div>
 
-
-
-<div class="row g-3 px-4 py-2" >
+<div class="row g-3 px-4 py-2">
   <div class="col-3 border p-2">
     <div class="row p-0">
       <div class="col-10">
@@ -186,18 +232,17 @@
     </div>
 
     <div class="mt-2">
-      <span class="fw-bold font-size-16 ">Estado</span>
+      <span class="fw-bold font-size-16">Estado</span>
       <span class="font-12"> {{ getEstadoDesc(fire) }}</span>
     </div>
 
     <div class="mt-2">
-      <span class="fw-bold font-size-16 ">Nivel de gravedad</span>
+      <span class="fw-bold font-size-16">Nivel de gravedad</span>
       <span class="font-12"> Activo </span>
     </div>
 
-
     <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16 ">Hechos relevantes</span>
+      <span class="fw-bold font-size-16">Hechos relevantes</span>
       <span class="line ms-1"> </span>
     </div>
     <div class="ms-4">
@@ -211,7 +256,7 @@
     </div>
 
     <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16 ">Consecuencias</span>
+      <span class="fw-bold font-size-16">Consecuencias</span>
       <span class="line ms-1"> </span>
     </div>
 
@@ -229,7 +274,7 @@
     </div>
 
     <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16 ">Medios intervinientes</span>
+      <span class="fw-bold font-size-16">Medios intervinientes</span>
       <span class="line ms-1"> </span>
     </div>
 
@@ -244,28 +289,50 @@
         Extraordinarios: UME - Aprobación (19/08/2024 19:15)
       </div>
     </div>
-
   </div>
   <div class="col-9 border p-2">
     <div *ngIf="showUpdateLog">
       <div class="row pb-2">
         <div class="col-8">
-          <img (click)="showTable('showDetailsUpdate')" class="" src="/assets/img/doc-btn.svg" alt="doc-btn" />
-          <span class="fw-bold text-blue font-20 ">Registro de actualizaciones</span>
+          <img
+            (click)="showTable('showDetailsUpdate')"
+            class=""
+            src="/assets/img/doc-btn.svg"
+            alt="doc-btn"
+          />
+          <span class="fw-bold text-blue font-20"
+            >Registro de actualizaciones</span
+          >
           <span class="font-10">
             (Cantidad: 10 - Orden Fecha y hora desc.)
           </span>
         </div>
 
         <div class="col-4 px-5">
-          <div class="row d-flex flex-nowrap justify-content-center align-items-center gap-2">
-            <button class="col text-blue font btn fw-bold border border-radius"
-              (click)="openModalEvolution()">E</button>
-            <button class="col text-blue font btn fw-bold border border-radius">C</button>
-            <button class="col text-blue font btn fw-bold border border-radius">R</button>
-            <button class="col text-blue font btn fw-bold border border-radius">D</button>
-            <button class="col text-blue font btn fw-bold border border-radius">O</button>
-            <button class="col text-blue font btn fw-bold border border-radius">S</button>
+          <div
+            class="row d-flex flex-nowrap justify-content-center align-items-center gap-2"
+          >
+            <button
+              class="col text-blue font btn fw-bold border border-radius"
+              (click)="openModalEvolution()"
+            >
+              E
+            </button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              C
+            </button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              R
+            </button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              D
+            </button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              O
+            </button>
+            <button class="col text-blue font btn fw-bold border border-radius">
+              S
+            </button>
             <button class="col text-blue font btn fw-bold border border-radius">
               <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
             </button>
@@ -282,9 +349,7 @@
             <th class="fw-bold font-size-16">Fecha / hora</th>
             <th class="fw-bold font-size-16">Registro</th>
             <th class="fw-bold font-size-16">Origen</th>
-            <th class="fw-bold font-size-16">
-              Tipo de re-gistro
-            </th>
+            <th class="fw-bold font-size-16">Tipo de re-gistro</th>
             <th class="fw-bold font-size-16">Técnico</th>
             <th></th>
           </tr>
@@ -301,7 +366,11 @@
 
             <td>
               <a class="">
-                <img src="/assets/img/options.png" width="30px" alt="option-btn" />
+                <img
+                  src="/assets/img/options.png"
+                  width="30px"
+                  alt="option-btn"
+                />
               </a>
             </td>
           </tr>
@@ -312,9 +381,15 @@
     <div *ngIf="showDetailsUpdate">
       <div class="row">
         <div class="col-8">
-          <img (click)="showTable('showUpdateLog')" class="cursor-pointer" src="/assets/img/doc-btn.svg"
-            alt="doc-btn" />
-          <span class="font-size-20 text-blue fw-bold">Detalle de las actualizaciones</span>
+          <img
+            (click)="showTable('showUpdateLog')"
+            class="cursor-pointer"
+            src="/assets/img/doc-btn.svg"
+            alt="doc-btn"
+          />
+          <span class="font-size-20 text-blue fw-bold"
+            >Detalle de las actualizaciones</span
+          >
           (Cantidad: 10 - Orden Fecha/hora desc.)
         </div>
 
@@ -354,7 +429,11 @@
 
             <td>
               <a class="">
-                <img src="/assets/img/options.png" width="30px" alt="option-btn" />
+                <img
+                  src="/assets/img/options.png"
+                  width="30px"
+                  alt="option-btn"
+                />
               </a>
             </td>
           </tr>
@@ -362,5 +441,4 @@
       </table>
     </div>
   </div>
-
 </div>

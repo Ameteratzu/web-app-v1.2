@@ -25,6 +25,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
+import moment from 'moment';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { ToastModule } from 'primeng/toast';
@@ -34,7 +35,6 @@ import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
-import moment from 'moment';
 
 @Component({
   selector: 'app-fire-edit',
@@ -192,15 +192,14 @@ export class FireEditComponent {
 
   async onSubmit() {
     this.error = false;
-    const data = this.formData.value;    
-    
-    if(data){
-      this.classValidate.set('needs-validation was-validated')
-      
+    const data = this.formData.value;
+
+    if (data) {
+      this.classValidate.set('needs-validation was-validated');
     } else {
-      this.classValidate.set('needs-validation')
+      this.classValidate.set('needs-validation');
     }
-    
+
     if (this.featuresCoords.length) {
       data.coordinates = this.featuresCoords;
     } else {
@@ -222,9 +221,9 @@ export class FireEditComponent {
           summary: 'Modificado',
           detail: 'Incendio modificado correctamente',
         });
-        
-        new Promise((resolve) => setTimeout(resolve, 2000)).then(
-          () => this.router.navigate([`/fire`])
+
+        new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
+          this.router.navigate([`/fire`])
         );
       })
       .catch((error) => {

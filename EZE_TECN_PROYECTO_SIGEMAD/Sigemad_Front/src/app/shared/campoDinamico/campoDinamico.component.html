@@ -1,130 +1,125 @@
 <form [formGroup]="form">
   <div class="d-flex row align-items-center" *ngFor="let campo of campos">
-    
-      <ng-container [ngSwitch]="getComponente(campo.tipoCampo)" class="col-6">
-        <!-- Checkbox -->
+    <ng-container [ngSwitch]="getComponente(campo.tipoCampo)" class="col-6">
+      <!-- Checkbox -->
 
-        <div class="" *ngSwitchCase="'checkbox'">
-          <input
-            class="form-check-input"
-            [formControlName]="campo.campo"
-            type="checkbox"
-            id="flexCheckDefault"
-            [required]="campo.esObligatorio"
-          />
-          <label class="form-check-label" for="flexCheckDefault">
-            {{campo.campo}}
-          </label>
-        </div>
+      <div class="" *ngSwitchCase="'checkbox'">
+        <input
+          class="form-check-input"
+          [formControlName]="campo.campo"
+          type="checkbox"
+          id="flexCheckDefault"
+          [required]="campo.esObligatorio"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          {{ campo.campo }}
+        </label>
+      </div>
 
-        <!-- Text Input -->
-        <div class="" *ngSwitchCase="'text'">
-          <div class="mb-3">
-            <div class="form-floating">
-              <input
-                [formControlName]="campo.campo"
-                type="text"
-                class="form-control"
-                [id]="campo.campo"
-                [placeholder]="campo.campo"
-                [required]="campo.esObligatorio"
-              />
-              <label for="end_date">{{ campo.campo }}</label>
-              <div class="invalid-feedback">Campo requerido</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Number Input -->
-        <div class="" *ngSwitchCase="'number'">
-          <div class="mb-3">
-            <div class="form-floating">
-              <input
-                [formControlName]="campo.campo"
-                type="text"
-                class="form-control"
-                [id]="campo.campo"
-                [placeholder]="campo.campo"
-                [required]="campo.esObligatorio"
-              />
-              <label for="end_date">{{ campo.campo }}</label>
-              <div class="invalid-feedback">Campo requerido</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Geometry / MAP-->
-        <div *ngSwitchCase="'map'">
-          <b>{{ campo.campo }}</b>
-          <img
-            src="/assets/img/location-btn.svg"
-            height="20px"
-            alt="location"
-            class="cursor-pointer"
-            (click)="openModalMapCreate('campo.campo')"
-          />
-        </div>
-
-        <!-- Select -->
-        <div class="" *ngSwitchCase="'Select'">
-          <div class="form-floating mb-3 position-relative">
-            <select
-              class="form-select"
-              [id]="campo.campo"
+      <!-- Text Input -->
+      <div class="" *ngSwitchCase="'text'">
+        <div class="mb-3">
+          <div class="form-floating">
+            <input
               [formControlName]="campo.campo"
-              aria-label="Floating label select example"
+              type="text"
+              class="form-control"
+              [id]="campo.campo"
+              [placeholder]="campo.campo"
               [required]="campo.esObligatorio"
-            >
-              <option selected value="">Seleccione una opción</option>
-              <option
-                *ngFor="let option of campo.options"
-                [value]="option.id"
-              >
-                {{ option.description }}
-              </option>
-            </select>
-            <label for="floatingSelect">{{campo.campo}}</label>
+            />
+            <label for="end_date">{{ campo.campo }}</label>
+            <div class="invalid-feedback">Campo requerido</div>
           </div>
         </div>
+      </div>
 
-        <!-- Calendar Hour -->
-        <div class="" *ngSwitchCase="'calendarHour'">
-          <div class="mb-3">
-            <div class="form-floating">
-              <input
-                [formControlName]="campo.campo"
-                type="datetime-local"
-                class="form-control"
-                [id]="campo.campo"
-                [placeholder]="campo.campo"
-                [required]="campo.esObligatorio"
-              />
-              <label [for]="campo.campo">{{campo.campo}}</label>
-              <div class="invalid-feedback">Campo requerido</div>
-            </div>
+      <!-- Number Input -->
+      <div class="" *ngSwitchCase="'number'">
+        <div class="mb-3">
+          <div class="form-floating">
+            <input
+              [formControlName]="campo.campo"
+              type="text"
+              class="form-control"
+              [id]="campo.campo"
+              [placeholder]="campo.campo"
+              [required]="campo.esObligatorio"
+            />
+            <label for="end_date">{{ campo.campo }}</label>
+            <div class="invalid-feedback">Campo requerido</div>
           </div>
         </div>
-        <!-- Calendar -->
+      </div>
 
-        <div class="" *ngSwitchCase="'calendar'">
-          <div class="mb-3">
-            <div class="form-floating">
-              <input
-                [formControlName]="campo.campo"
-                type="date"
-                class="form-control"
-                [id]="campo.campo"
-                [placeholder]="campo.campo"
-                [required]="campo.esObligatorio"
-              />
-              <label [for]="campo.campo">{{campo.campo}}</label>
-              <div class="invalid-feedback">Campo requerido</div>
-            </div>
+      <!-- Geometry / MAP-->
+      <div *ngSwitchCase="'map'">
+        <b>{{ campo.campo }}</b>
+        <img
+          src="/assets/img/location-btn.svg"
+          height="20px"
+          alt="location"
+          class="cursor-pointer"
+          (click)="openModalMapCreate('campo.campo')"
+        />
+      </div>
+
+      <!-- Select -->
+      <div class="" *ngSwitchCase="'Select'">
+        <div class="form-floating mb-3 position-relative">
+          <select
+            class="form-select"
+            [id]="campo.campo"
+            [formControlName]="campo.campo"
+            aria-label="Floating label select example"
+            [required]="campo.esObligatorio"
+          >
+            <option selected value="">Seleccione una opción</option>
+            <option *ngFor="let option of campo.options" [value]="option.id">
+              {{ option.description }}
+            </option>
+          </select>
+          <label for="floatingSelect">{{ campo.campo }}</label>
+        </div>
+      </div>
+
+      <!-- Calendar Hour -->
+      <div class="" *ngSwitchCase="'calendarHour'">
+        <div class="mb-3">
+          <div class="form-floating">
+            <input
+              [formControlName]="campo.campo"
+              type="datetime-local"
+              class="form-control"
+              [id]="campo.campo"
+              [placeholder]="campo.campo"
+              [required]="campo.esObligatorio"
+            />
+            <label [for]="campo.campo">{{ campo.campo }}</label>
+            <div class="invalid-feedback">Campo requerido</div>
           </div>
         </div>
+      </div>
+      <!-- Calendar -->
 
-      </ng-container>
-    
+      <div class="" *ngSwitchCase="'calendar'">
+        <div class="mb-3">
+          <div class="form-floating">
+            <input
+              [formControlName]="campo.campo"
+              type="date"
+              class="form-control"
+              [id]="campo.campo"
+              [placeholder]="campo.campo"
+              [required]="campo.esObligatorio"
+            />
+            <label [for]="campo.campo">{{ campo.campo }}</label>
+            <div class="invalid-feedback">Campo requerido</div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
     <!-- Mensaje de error para campos obligatorios -->
     <div *ngIf="form.get(campo.campo)?.hasError('required')">
       Este campo es obligatorio.

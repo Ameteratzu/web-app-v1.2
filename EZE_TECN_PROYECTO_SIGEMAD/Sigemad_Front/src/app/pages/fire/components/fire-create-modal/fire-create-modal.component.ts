@@ -33,6 +33,7 @@ import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { Territory } from '../../../../types/territory.type';
 import { MapCreateComponent } from '../../../map-create/map-create.component';
+import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 
 @Component({
   selector: 'app-fire-create-modal',
@@ -58,6 +59,9 @@ export class FireCreateModalComponent implements OnInit {
   featuresCoords: Feature<Geometry>[] = [];
 
   public error: boolean = false;
+
+  public filtrosIncendioService = inject(LocalFiltrosIncendio);
+  
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
   public showInputForeign: boolean = false;
@@ -79,12 +83,11 @@ export class FireCreateModalComponent implements OnInit {
 
   public length: number;
   public latitude: number;
-
   public municipalityName: string = '';
 
   public formData: FormGroup;
 
-  today = new Date();
+  public today: string;
 
   //MAP
   public coordinates = signal<any>({});
@@ -93,6 +96,8 @@ export class FireCreateModalComponent implements OnInit {
   async ngOnInit() {
     localStorage.removeItem('coordinates');
     localStorage.removeItem('polygon');
+
+    this.today = new Date().toISOString().split('T')[0];
 
     this.formData = new FormGroup({
       territory: new FormControl('', Validators.required),
@@ -192,7 +197,7 @@ export class FireCreateModalComponent implements OnInit {
             summary: 'Creado',
             detail: 'Incendio creado correctamente',
           });
-
+          this.filtrosIncendioService.setFilters({});
           new Promise((resolve) => setTimeout(resolve, 2000)).then(
             () => (window.location.href = '/fire')
           );
