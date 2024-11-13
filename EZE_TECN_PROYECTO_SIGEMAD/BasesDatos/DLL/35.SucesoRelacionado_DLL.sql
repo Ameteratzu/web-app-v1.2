@@ -1,4 +1,4 @@
-CREATE TABLE SucesosRelacionados (
+CREATE TABLE SucesosRelacionado (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1, 1),
     IdSucesoPrincipal INT NOT NULL FOREIGN KEY REFERENCES Suceso(Id),
     IdSucesoRelacionado INT NOT NULL FOREIGN KEY REFERENCES Suceso(Id),
