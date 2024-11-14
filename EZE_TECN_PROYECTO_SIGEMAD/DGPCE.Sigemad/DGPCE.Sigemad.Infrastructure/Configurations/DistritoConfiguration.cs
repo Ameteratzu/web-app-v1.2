@@ -24,6 +24,21 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
                                .HasForeignKey(e => e.IdPais)
                                .OnDelete(DeleteBehavior.Restrict)
                                .HasConstraintName("PaisDistrito");
+
+           builder.Property(e => e.CreadoPor)
+              .HasMaxLength(500)
+              .IsUnicode(false);
+
+            builder.Property(e => e.FechaCreacion).HasColumnType("datetime");
+            builder.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            builder.Property(e => e.FechaEliminacion).HasColumnType("datetime");
+            builder.Property(e => e.ModificadoPor)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+
+            builder.Property(e => e.EliminadoPor)
+                .HasMaxLength(500)
+                .IsUnicode(false);
         }
     }
 }

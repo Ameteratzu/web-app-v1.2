@@ -1,11 +1,11 @@
-﻿using NetTopologySuite.Geometries;
+﻿using DGPCE.Sigemad.Domain.Common;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
 
-public class Provincia
+public class Provincia : BaseDomainModel<int>
 {
     public Provincia() { }
-    public int Id { get; set; }
 
     public int IdCcaa { get; set; }
 

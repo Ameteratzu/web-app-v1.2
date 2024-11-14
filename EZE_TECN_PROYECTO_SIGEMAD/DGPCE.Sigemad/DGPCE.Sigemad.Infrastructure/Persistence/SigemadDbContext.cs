@@ -81,7 +81,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<ClaseSuceso>().ToTable("ClaseSuceso");
             modelBuilder.Entity<Menu>().ToTable("Menu");
             modelBuilder.Entity<Territorio>().ToTable("Territorio");
-            modelBuilder.Entity<Municipio>().ToTable("Municipio");
             modelBuilder.Entity<NivelGravedad>().ToTable("NivelGravedad");
             modelBuilder.Entity<EstadoIncendio>().ToTable("EstadoIncendio");
             modelBuilder.Entity<TipoMovimiento>().ToTable("TipoMovimiento");
