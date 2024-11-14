@@ -16,9 +16,9 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             builder.ToTable("EntidadMenor");
 
 
-            builder.HasOne(e => e.Distrito)
+            builder.HasOne(e => e.Municipio)
                                .WithMany()
-                               .HasForeignKey(e => e.IdDistrito)
+                               .HasForeignKey(e => e.IdMunicipio)
                                .OnDelete(DeleteBehavior.Restrict)
                                .HasConstraintName("DistritoEntidadmenor");
         }
