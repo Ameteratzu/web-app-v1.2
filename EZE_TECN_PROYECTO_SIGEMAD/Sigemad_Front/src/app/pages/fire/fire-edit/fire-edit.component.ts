@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 
 import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+
 import { MapCreateComponent } from '../../map-create/map-create.component';
 
 import { EventService } from '../../../services/event.service';
@@ -31,12 +32,13 @@ import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { ToastModule } from 'primeng/toast';
 import { Event } from '../../../types/event.type';
-import { EventStatus } from '../../../types/eventStatus.type';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
+import { EventStatus } from '../../../types/eventStatus.type';
+import { FireDirectionCoordinationComponent } from '../components/fire-direction-coordination/fire-direction-coordination.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -74,7 +76,7 @@ export class FireEditComponent {
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
   public eventStatusService = inject(EventStatusService);
-
+  
   public fireStatusService = inject(FireStatusService);
 
   public fire = <Fire>{};
@@ -293,6 +295,18 @@ export class FireEditComponent {
     evolutionModalRef.componentInstance.fire_id = Number(
       this.route.snapshot.paramMap.get('id')
     );
+  }
+
+  openModalDireccion() {
+    let evolutionModalRef = this.matDialog.open(FireDirectionCoordinationComponent, {
+      width: '1220px',
+      maxWidth: '1220px',
+      height: '720px',
+      disableClose: true,
+    });
+
+    
+    
   }
 
   showTable(table: string) {

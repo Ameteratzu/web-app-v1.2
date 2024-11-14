@@ -1,0 +1,806 @@
+<div>
+  <div class="d-flex justify-content-between p-4">
+    <div class="flex-fill text-start text-red font-20 fw-bold col-2">Nuevo</div>
+    <div class="flex-fill text-center text-green font-20 fw-bold col-7">
+      Datos de dirección y coordinación de la emergencia
+    </div>
+    <form (ngSubmit)="onSubmit()" class="flex-fill text-end col-3">
+      <div class="d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary">
+          <img src="/assets/img/check.svg" alt="check" />
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+          (click)="closeModal()"
+        >
+          <img src="/assets/img/close.svg" alt="close" />
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="background-color: white"
+        >
+          <img src="/assets/img/back.svg" alt="back" />
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="d-flex mx-4 p-4 gap-2">
+    <div
+      class="flex-shrink-0 d-flex gap-2 flex-column"
+      style="flex-basis: 20%; max-width: 20%"
+    >
+      <div
+        class="cursor-pointer font-16 border rounded p-2 text-truncate"
+        style="width: 100%"
+        (click)="scrollToSection('sectionDireccion')"
+      >
+        Dirección
+      </div>
+      <div
+        class="cursor-pointer font-16 border rounded p-2 text-truncate"
+        style="width: 100%"
+        (click)="scrollToSection('sectionCECOPI')"
+      >
+        Coordinación CECOPI
+      </div>
+      <div
+        class="cursor-pointer font-16 border rounded p-2 text-truncate"
+        style="width: 100%"
+        (click)="scrollToSection('sectionPMA')"
+      >
+        Coordinación PMA
+      </div>
+      <div
+        class="cursor-pointer font-16 border rounded p-2 text-truncate"
+        style="width: 100%"
+        (click)="scrollToSection('sectionEmergencia')"
+      >
+        Activación Plan Emergencia con un texto largito
+      </div>
+    </div>
+
+    <div class="flex-grow-1" style="flex-basis: 80%">
+      <div class="d-flex justify-content-between" *ngIf="!isCreate()">
+        <div class="font-size-16">
+          <b>Alta:</b> sguijarro (SACOP) - 24/08/2024 17:24
+        </div>
+
+        <div class="font-size-16">
+          <b>Ult. modificación:</b> sguijarro (SACOP) - 24/08/2024 17:24
+        </div>
+      </div>
+
+      <div class="px-4">
+        <!-- Direccion -->
+        <form
+          (ngSubmit)="onSubmitDireccion()"
+          [formGroup]="formularioDireccion"
+          class="needs-validation000 was-validated000"
+        >
+          <div id="sectionDireccion" class="font-20 fw-bold text-orange mb-2">
+            DIRECCION
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  class="form-select"
+                  [class]="getValid(formularioDireccion, 'autoridad', true)"
+                  id="direccion"
+                  formControlName="direccion"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaDirecciones()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Dirección</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="autoridad"
+                    type="text"
+                    [class]="getValid(formularioDireccion, 'autoridad')"
+                    id="autoridad"
+                    placeholder="Autoridad"
+                  />
+                  <label for="startDate">Autoridad</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-5">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaInicio"
+                    type="date"
+                    [class]="getValid(formularioDireccion, 'fechaInicio')"
+                    id="fechaInicio"
+                    placeholder="Fecha final"
+                  />
+                  <label for="fechaInicio">Fecha Inicio</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-5">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaFin"
+                    type="date"
+                    [class]="getValid(formularioDireccion, 'fechaFin')"
+                    id="fechaFin"
+                    placeholder="Fecha final"
+                  />
+                  <label for="fechaFin">Fecha Fin</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <button type="submit" class="btn-blue">
+                <img
+                  class="btn btn-primary"
+                  src="/assets/img/plus.svg"
+                  alt="check"
+                />
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-striped mb-4">
+            <thead class="table-secondary">
+              <tr>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Dirección</th>
+                <th>Autoridad</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="let direccion of direccionesInsertadas(); let i = index"
+              >
+                <td> {{ direccion.fechaInicio }} </td>
+                <td> {{ direccion.fechaFin }} </td>
+                <td> {{ getDescripcion(listaDirecciones(), direccion.direccion) }} </td>
+                <td> {{ direccion.autoridad }} </td>
+
+                <td>
+                  <button
+                    type="button"
+                    (click)="onEditDireccion(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/edit-btn.svg"
+                      alt="edit-btn"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="onRemoveDireccion(direccion.id)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/close.svg"
+                      alt="close"
+                    />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+
+        <!-- CECOPI -->
+        <form (ngSubmit)="onSubmitCECOPI()" [formGroup]="formularioCECOPI">
+          <div id="sectionCECOPI" class="font-20 fw-bold text-orange mb-2">
+            COORDINACION EN CECOPI
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaInicio"
+                    type="date"
+                    [class]="getValid(formularioCECOPI, 'fechaInicio')"
+                    id="fechaInicio"
+                    placeholder="Fecha final"
+                  />
+                  <label for="fechaInicio">Fecha Inicio</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaFin"
+                    type="date"
+                    [class]="getValid(formularioCECOPI, 'fechaFin')"
+                    id="fechaFin"
+                    placeholder="Fecha fin"
+                  />
+                  <label for="fechaFin">Fecha Fin</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  [class]="getValid(formularioCECOPI, 'provincia')"
+                  id="provincia"
+                  formControlName="provincia"
+                  aria-label="Floating label select example"
+                  (change)="getMunicipiosByPronvincia($event)"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaProvincia()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Provincia</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  [class]="getValid(formularioCECOPI, 'municipio')"
+                  id="municipio"
+                  formControlName="municipio"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaMunicipio()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Municipio</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="lugar"
+                    type="text"
+                    [class]="getValid(formularioCECOPI, 'lugar')"
+                    id="lugar"
+                    placeholder="Lugar"
+                  />
+                  <label for="startDate">Lugar</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-1 d-flex justify-content-center mb-3">
+              <div class="form-floating">
+                <img
+                  src="/assets/img/location-btn.svg"
+                  height="20px"
+                  alt="location"
+                  class="cursor-pointer"
+                  (click)="openModalMapCreate(formularioCECOPI)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-10">
+              <div class="form-floating mb-3">
+                <textarea
+                  [class]="getValid(formularioCECOPI, 'observaciones')"
+                  placeholder="Observaciones"
+                  id="observaciones"
+                  style="height: 100px"
+                  formControlName="observaciones"
+                  rows="4"
+                  cols="87"
+                ></textarea>
+                <label for="observaciones">Observaciones</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn-blue">
+                <img
+                  class="btn btn-primary"
+                  src="/assets/img/plus.svg"
+                  alt="check"
+                />
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-striped mb-4">
+            <thead class="table-secondary">
+              <tr>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Lugar</th>
+                <th>Ubicación</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let CECOPI of CECOPIInsertadas(); let i = index">
+                <td>{{ CECOPI.fechaInicio }}</td>
+                <td>{{ CECOPI.fechaFin }}</td>
+                <td>{{ CECOPI.lugar }}</td>
+                <td>{{ CECOPI.ubicacion }}</td>
+
+                <td>
+                  <button
+                    type="button"
+                    (click)="onEditCECOPIInsertadas(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/edit-btn.svg"
+                      alt="edit-btn"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="onRemoveCECOPIInsertadas(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/close.svg"
+                      alt="close"
+                    />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+
+        <!-- PMA -->
+        <form (ngSubmit)="onSubmitPMA()" [formGroup]="formularioPMA">
+          <div id="sectionPAM" class="font-20 fw-bold text-orange mb-2">
+            COORDINACION EN PMA
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaInicio"
+                    type="date"
+                    [class]="getValid(formularioPMA, 'fechaInicio')"
+                    id="fechaInicio"
+                    placeholder="Fecha final"
+                  />
+                  <label for="fechaInicio">Fecha Inicio</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaFin"
+                    type="date"
+                    [class]="getValid(formularioPMA, 'fechaFin')"
+                    id="fechaFin"
+                    placeholder="Fecha fin"
+                  />
+                  <label for="fechaFin">Fecha Fin</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  class="form-select"
+                  id="provincia"
+                  [class]="getValid(formularioPMA, 'provincia')"
+                  formControlName="provincia"
+                  (change)="getMunicipiosByPronvincia($event)"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaProvincia()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Provincia</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  [class]="getValid(formularioPMA, 'municipio')"
+                  id="municipio"
+                  formControlName="municipio"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaMunicipio()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Municipio</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="lugar"
+                    type="text"
+                    class="form-control"
+                    id="lugar"
+                    placeholder="Lugar"
+                    [class]="getValid(formularioPMA, 'lugar')"
+                  />
+                  <label for="startDate">Lugar</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-1 d-flex justify-content-center mb-3">
+              <div class="form-floating">
+                <img
+                  src="/assets/img/location-btn.svg"
+                  height="20px"
+                  alt="location"
+                  class="cursor-pointer"
+                  (click)="openModalMapCreate(formularioPMA)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-10">
+              <div class="form-floating mb-3">
+                <textarea
+                  [class]="getValid(formularioPMA, 'observaciones')"
+                  placeholder="Observaciones"
+                  id="observaciones"
+                  style="height: 100px"
+                  formControlName="observaciones"
+                  rows="4"
+                  cols="87"
+                ></textarea>
+                <label for="observaciones">Observaciones</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn-blue">
+                <img
+                  class="btn btn-primary"
+                  src="/assets/img/plus.svg"
+                  alt="check"
+                />
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-striped mb-4">
+            <thead class="table-secondary">
+              <tr>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Lugar</th>
+                <th>Ubicación</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let PMA of PMAInsertadas(); let i = index">
+                <td>{{ PMA.fechaInicio }}</td>
+                <td>{{ PMA.fechaFin }}</td>
+                <td>{{ PMA.lugar }}</td>
+                <td>{{ PMA.ubicacion }}</td>
+
+                <td>
+                  <button
+                    type="button"
+                    (click)="onEditPMAInsertadas(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/edit-btn.svg"
+                      alt="edit-btn"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="onRemovePMAInsertadas(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/close.svg"
+                      alt="close"
+                    />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+
+        <!-- Emergencia -->
+        <form
+          (ngSubmit)="onSubmitEmergencia()"
+          [formGroup]="formularioEmergencia"
+        >
+          <div id="sectionEmergencia" class="font-20 fw-bold text-orange mb-2">
+            ACTIVACION DE PLANES DE EMERGENCIA
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  [class]="getValid(formularioEmergencia, 'tipoPlan', true)"
+                  id="tipoPlan"
+                  formControlName="tipoPlan"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaTipoPlan()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Tipo de Plan</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="form-floating mb-3 position-relative">
+                <select
+                  [class]="getValid(formularioEmergencia, 'nombre')"
+                  id="nombre"
+                  formControlName="nombre"
+                  aria-label="Floating label select example"
+                >
+                  <option value="" selected>Seleccione una opción</option>
+                  <option
+                    *ngFor="let option of listaNombrePlan()"
+                    [value]="option.id"
+                  >
+                    {{ option.descripcion }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Nombre del plan</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="autoridadActiva"
+                    type="text"
+                    [class]="getValid(formularioEmergencia, 'autoridadActiva')"
+                    id="autoridadActiva"
+                    placeholder="Autoridad que lo activa"
+                  />
+                  <label for="autoridadActiva">Autoridad que lo activa</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="documento"
+                    type="file"
+                    [class]="getValid(formularioEmergencia, 'documento')"
+                    id="documento"
+                    placeholder="Documento de activación"
+                  />
+                  <label for="documento">Documento de activación</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaInicio"
+                    type="date"
+                    [class]="getValid(formularioEmergencia, 'fechaInicio')"
+                    id="fechaInicio"
+                    placeholder="Fecha final"
+                  />
+                  <label for="fechaInicio">Fecha Inicio</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-floating">
+                  <input
+                    formControlName="fechaFin"
+                    type="date"
+                    [class]="getValid(formularioEmergencia, 'fechaFin')"
+                    id="fechaFin"
+                    placeholder="Fecha fin"
+                  />
+                  <label for="fechaFin">Fecha Fin</label>
+                  <div class="invalid-feedback">Campo requerido</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-10">
+              <div class="form-floating mb-3">
+                <textarea
+                  [class]="getValid(formularioEmergencia, 'observaciones')"
+                  placeholder="Observaciones"
+                  id="observaciones"
+                  style="height: 100px"
+                  formControlName="observaciones"
+                  rows="4"
+                  cols="87"
+                ></textarea>
+                <label for="observaciones">Observaciones</label>
+                <div class="invalid-feedback">Campo requerido</div>
+              </div>
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn-blue">
+                <img
+                  class="btn btn-primary"
+                  src="/assets/img/plus.svg"
+                  alt="check"
+                />
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-striped mb-4">
+            <thead class="table-secondary">
+              <tr>
+                <th>Tipo de plan</th>
+                <th>Nombre del plan</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="
+                  let emergencia of emergenciasInsertadas();
+                  let i = index
+                "
+              >
+                <td>{{ getDescripcion(listaTipoPlan(), emergencia.tipoPlan) }}</td>
+                <td>{{ emergencia.nombre }}</td>
+                <td>{{ emergencia.fechaInicio }}</td>
+                <td>{{ emergencia.fechaFin }}</td>
+
+                <td>
+                  <button
+                    type="button"
+                    (click)="onEditEmergenciaInsertada(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/edit-btn.svg"
+                      alt="edit-btn"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    (click)="onRemoveEmergenciaInsertada(i)"
+                    class="btn-white"
+                  >
+                    <img
+                      class="w-20 h-20"
+                      src="/assets/img/close.svg"
+                      alt="close"
+                    />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="mb-3">
+    <label *ngIf="label" class="form-label">{{ label }}</label>
+  
+    <!-- Input estándar o fecha -->
+    <input
+      *ngIf="type === 'text' || type === 'date'"
+      [type]="type"
+      [formControl]="formControl"
+      class="form-control"
+      [ngClass]="{ 'is-invalid': showError }"
+    />
+  
+    <!-- Selector de lista desplegable -->
+    <select
+      *ngIf="type === 'select'"
+      [formControl]="formControl"
+      class="form-select"
+      [ngClass]="{ 'is-invalid': showError }"
+    >
+      <option value="">Seleccione una opción</option>
+      <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+    </select>
+  
+    <!-- Mensaje de error -->
+    <div *ngIf="showError" class="invalid-feedback">
+      {{ label }} es requerido.
+    </div>
+  </div>

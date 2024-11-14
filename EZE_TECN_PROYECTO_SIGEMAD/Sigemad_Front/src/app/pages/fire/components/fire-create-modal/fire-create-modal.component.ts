@@ -252,8 +252,7 @@ export class FireCreateModalComponent implements OnInit {
 
     dialogRef.componentInstance.save.subscribe(
       (features: Feature<Geometry>[]) => {
-        this.featuresCoords = features; // Almacena o manipula las características aquí
-        console.info('features---', this.featuresCoords);
+        this.featuresCoords = features;
       }
     );
   }
