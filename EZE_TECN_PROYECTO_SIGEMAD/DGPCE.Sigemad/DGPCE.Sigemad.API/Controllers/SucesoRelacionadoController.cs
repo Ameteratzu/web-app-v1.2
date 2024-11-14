@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
+using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.UpdateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesoRelacionadoById;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesosRelacionadosByIdSucesoPrincipal;
 using MediatR;
@@ -61,6 +62,23 @@ public class SucesoRelacionadoController : ControllerBase
             return NotFound();
         }
         return Ok(sucesoRelacionado);
+    }
+
+    [HttpPut("{idSucesoPrincipal}/relacionados/{idSucesoAsociado}", Name = "UpdateSucesoRelacionado")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Actualiza un suceso relacionado")]
+    public async Task<ActionResult> Update(
+        [FromRoute] int idSucesoPrincipal,
+        [FromRoute] int idSucesoAsociado,
+        [FromBody] UpdateSucesoRelacionadoCommand command)
+    {
+        command.IdSucesoAsociado = idSucesoAsociado;
+        command.IdSucesoPrincipal = idSucesoPrincipal;
+        await _mediator.Send(command);
+        return NoContent();
     }
 
 }
