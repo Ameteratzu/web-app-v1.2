@@ -1,12 +1,11 @@
-﻿using NetTopologySuite.Geometries;
+﻿using DGPCE.Sigemad.Domain.Common;
+using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
 
-public class Municipio
+public class Municipio : BaseDomainModel<int>
 {
     public Municipio() { }
-
-    public int Id { get; set; }
 
     public int IdProvincia { get; set; }
 

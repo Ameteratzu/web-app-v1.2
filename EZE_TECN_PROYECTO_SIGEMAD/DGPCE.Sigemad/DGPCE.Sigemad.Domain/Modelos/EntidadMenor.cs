@@ -1,13 +1,12 @@
 ﻿
+using DGPCE.Sigemad.Domain.Common;
 using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Domain.Modelos
 {
-    public class EntidadMenor
+    public class EntidadMenor : BaseDomainModel<int>
     {
-        public int Id { get; set; }
-
-        public int? IdDistrito { get; set; }
+        public int? IdMunicipio { get; set; }
         public string Descripcion { get; set; } = null!;
 
         public int? UtmX { get; set; }
@@ -16,6 +15,6 @@ namespace DGPCE.Sigemad.Domain.Modelos
 
         public Geometry? GeoPosicion { get; set; }
 
-        public virtual Distrito Distrito { get; set; } = null!;
+        public virtual Municipio Municipio { get; set; } = null!;
     }
 }

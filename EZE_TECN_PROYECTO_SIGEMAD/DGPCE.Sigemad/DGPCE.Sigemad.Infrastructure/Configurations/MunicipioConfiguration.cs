@@ -1,19 +1,19 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations;
-
-class MunicipioExtranjeroConfiguration : IEntityTypeConfiguration<MunicipioExtranjero>
+internal class MunicipioConfiguration : IEntityTypeConfiguration<Municipio>
 {
-    public void Configure(EntityTypeBuilder<MunicipioExtranjero> builder)
+
+    public void Configure(EntityTypeBuilder<Municipio> builder)
     {
-        builder.ToTable(nameof(MunicipioExtranjero));
+        builder.ToTable(nameof(Municipio));
 
         builder.HasKey(e => e.Id);
-        builder.HasOne(e => e.Distrito)
+        builder.HasOne(e => e.Provincia)
                            .WithMany()
-                           .HasForeignKey(e => e.IdDistrito)
+                           .HasForeignKey(e => e.IdProvincia)
                            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(e => e.CreadoPor)

@@ -107,7 +107,7 @@ public class UpdateDireccionCoordinacionEmergenciaCommandHandler : IRequestHandl
             }
         }
 
-        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaActiveByIdSpecification(request.Id);
+        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaActiveByIdSpecification(new DireccionCoordinacionEmergenciaSpecificationParams {Id = request.Id });
         var direccionCoordinacionEmergenciaToUpdate = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(direccionCoordinacionEmergenciaSpec);
 
         if (direccionCoordinacionEmergenciaToUpdate == null)
