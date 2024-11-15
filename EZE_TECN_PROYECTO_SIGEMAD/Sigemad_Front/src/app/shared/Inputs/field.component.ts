@@ -43,7 +43,6 @@ export class FormFieldComponent implements OnInit, ControlValueAccessor  {
 
   
   ngOnInit() {
-    //console.info("formControl", this.formControl)
     if (this.isRequired && this.formControl instanceof FormControl) {
       this.formControl.addValidators(Validators.required);
       this.formControl.updateValueAndValidity();
@@ -60,7 +59,7 @@ export class FormFieldComponent implements OnInit, ControlValueAccessor  {
     return false;
   }
 
-   // Implementación de ControlValueAccessor
+   //ControlValueAccessor
    writeValue(value: any): void {
     if (value !== undefined) {
       this.value = value;
@@ -75,12 +74,10 @@ export class FormFieldComponent implements OnInit, ControlValueAccessor  {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    // Puedes manejar el estado deshabilitado aquí si es necesario
-  }
+  setDisabledState(isDisabled: boolean): void {}
 
   onSelectChange(value: string): void {
     this.value = value;
-    this.onChange(value); // Propagar el valor cambiado
+    this.onChange(value);
   }
 }

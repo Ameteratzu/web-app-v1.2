@@ -76,11 +76,6 @@ import { Campo } from '../../types/Campo.type';
   styleUrl: './fire-evolution-create.component.css',
 })
 export class FireEvolutionCreateComponent {
-  classValidate = signal<string>('needs-validation');
-  classValidateArea = signal<string>('needs-validation');
-  classValidateConsecuencia = signal<string>('needs-validation');
-  classValidateMedio = signal<string>('needs-validation');
-
   public activeTab: string = 'Registro';
 
   public router = inject(Router);
@@ -203,7 +198,7 @@ export class FireEvolutionCreateComponent {
       // Registro
       //datetime: new FormControl('', [Validators.required]),
       //type: new FormControl('', [Validators.required]),
-      startDate: new FormControl(new Date(), [Validators.required]),
+      startDate: new FormControl('', [Validators.required]),
       inputOutput: new FormControl('', [Validators.required]),
       media: new FormControl('', [Validators.required]),
       originDestination: new FormControl('', [Validators.required]),
@@ -220,10 +215,6 @@ export class FireEvolutionCreateComponent {
       end_date: new FormControl(''),
       emergencyPlanActivated: new FormControl(''),
       operativeStatus: new FormControl(''),
-
-      // Consecuencias / actuaciones
-
-      // Intervencion de medios
     });
 
     const impactTypes = await this.impactTypeService.get();
@@ -388,109 +379,6 @@ export class FireEvolutionCreateComponent {
     );
   }
 
-  public changeRequireForm(required = false) {
-    const startDate = document.getElementById('startDate') as HTMLInputElement;
-    startDate.required = required;
-    const inputOutput = document.getElementById(
-      'inputOutput'
-    ) as HTMLInputElement;
-    inputOutput.required = required;
-    const media = document.getElementById('media') as HTMLInputElement;
-    media.required = required;
-    const originDestination = document.getElementById(
-      'originDestination'
-    ) as HTMLInputElement;
-    originDestination.required = required;
-
-    const datetimeUpdate = document.getElementById(
-      'datetimeUpdate'
-    ) as HTMLInputElement;
-    datetimeUpdate.required = required;
-    const recordType = document.getElementById(
-      'recordType'
-    ) as HTMLInputElement;
-    recordType.required = required;
-
-    const status = document.getElementById('status') as HTMLInputElement;
-    status.required = required;
-  }
-
-  public changeRequireAreaAffected(required = false) {
-    const province_1 = document.getElementById(
-      'province_1'
-    ) as HTMLInputElement;
-    province_1.required = required;
-    const municipality_1 = document.getElementById(
-      'municipality_1'
-    ) as HTMLInputElement;
-    municipality_1.required = required;
-    const minorEntity = document.getElementById(
-      'minorEntity'
-    ) as HTMLInputElement;
-    minorEntity.required = required;
-    const observationsAreaAffected = document.getElementById(
-      'observationsAreaAffected'
-    ) as HTMLInputElement;
-    observationsAreaAffected.required = required;
-    const startAreaAffected = document.getElementById(
-      'startAreaAffected'
-    ) as HTMLInputElement;
-    startAreaAffected.required = required;
-  }
-
-  public changeRequireConsecuenciasActuaciones(required = false) {
-    const impactType = document.getElementById(
-      'impactType'
-    ) as HTMLInputElement;
-    impactType.required = required;
-    const impactGroup = document.getElementById(
-      'impactGroup'
-    ) as HTMLInputElement;
-    impactGroup.required = required;
-    const name = document.getElementById('name') as HTMLInputElement;
-    name.required = required;
-    const number = document.getElementById('number') as HTMLInputElement;
-    number.required = required;
-    const observations_2 = document.getElementById(
-      'observations_2'
-    ) as HTMLInputElement;
-    observations_2.required = required;
-  }
-
-  public changeRequireIntevencionMedios(required = false) {
-    const mediaType = document.getElementById('mediaType') as HTMLInputElement;
-    mediaType.required = required;
-
-    const quantity = document.getElementById('quantity') as HTMLInputElement;
-    quantity.required = required;
-    const unit = document.getElementById('unit') as HTMLInputElement;
-    unit.required = required;
-    const classification = document.getElementById(
-      'classification'
-    ) as HTMLInputElement;
-    classification.required = required;
-    const ownership_1 = document.getElementById(
-      'ownership_1'
-    ) as HTMLInputElement;
-    ownership_1.required = required;
-    const ownership_2 = document.getElementById(
-      'ownership_2'
-    ) as HTMLInputElement;
-    ownership_2.required = required;
-    const province_2 = document.getElementById(
-      'province_2'
-    ) as HTMLInputElement;
-    province_2.required = required;
-    const municipality_2 = document.getElementById(
-      'municipality_2'
-    ) as HTMLInputElement;
-    municipality_2.required = required;
-    const observations_3 = document.getElementById(
-      'observations_3'
-    ) as HTMLInputElement;
-    observations_3.required = required;
-  }
-
   public saveAreaAffected() {
     if (this.formGroupAreaAfectada.invalid) {
       this.formGroupAreaAfectada.markAllAsTouched();
@@ -567,28 +455,15 @@ export class FireEvolutionCreateComponent {
 
     this.consequenceActionError = false;
 
-    if (
-      !data.impactType ||
-      !data.impactGroup ||
-      !data.name ||
-      !data.number ||
-      !data.observations_2
-    ) {
-      this.changeRequireAreaAffected(false);
-      this.changeRequireConsecuenciasActuaciones(true);
-      this.changeRequireIntevencionMedios(false);
-      this.classValidateConsecuencia.set('needs-validation was-validated');
-      const fieldError = fieldsRequired.some((field) => {
-        return this.dinamicDataConsecuencesActions()[field.campo]
-          ? false
-          : true;
-      });
+    const fieldError = fieldsRequired.some((field) => {
+      return this.dinamicDataConsecuencesActions()[field.campo] ? false : true;
+    });
 
+    if (fieldError) {
       this.consequenceActionError = fieldError;
-
       return;
     }
-    this.classValidateConsecuencia.set('needs-validation');
+
     const newConsequence = {
       impactType: data.impactType,
       impactGroup: data.impactGroup,
@@ -657,7 +532,6 @@ export class FireEvolutionCreateComponent {
   }
 
   public saveInterveningMedia() {
-    //this.interveningMediaError = false;
     if (this.formGroupIntervecionMedios.invalid) {
       this.formGroupIntervecionMedios.markAllAsTouched();
       return;
@@ -665,24 +539,6 @@ export class FireEvolutionCreateComponent {
 
     const data = this.formGroupIntervecionMedios.value;
 
-    if (
-      !data.mediaType ||
-      !data.quantity ||
-      !data.unit ||
-      !data.classification ||
-      !data.ownership_1 ||
-      !data.ownership_2 ||
-      !data.province_2 ||
-      !data.municipality_2 ||
-      !data.observations_3
-    ) {
-      this.changeRequireAreaAffected(false);
-      this.changeRequireConsecuenciasActuaciones(false);
-      this.changeRequireIntevencionMedios(true);
-      this.classValidateMedio.set('needs-validation was-validated');
-      return;
-    }
-    this.classValidateMedio.set('needs-validation ');
     const newIntervencion = {
       mediaType: data.mediaType,
       quantity: data.quantity,
@@ -749,16 +605,9 @@ export class FireEvolutionCreateComponent {
 
   public async submit() {
     const data = this.formGroup.value;
-    this.changeRequireForm(true);
-    this.changeRequireAreaAffected(false);
-    this.changeRequireConsecuenciasActuaciones(false);
-    this.changeRequireIntevencionMedios(false);
 
     if (this.formGroup.invalid) {
       this.formGroup.markAllAsTouched();
-      //this.classValidate.set('needs-validation');
-    } else {
-      this.classValidate.set('needs-validation was-validated');
       return;
     }
 
