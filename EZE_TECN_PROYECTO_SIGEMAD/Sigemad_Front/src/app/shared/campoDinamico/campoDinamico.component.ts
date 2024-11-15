@@ -24,8 +24,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MapCreateComponent } from '../../pages/map-create/map-create.component';
 import { Campo } from '../../types/Campo.type';
+import { MapCreateComponent } from '../mapCreate/map-create.component';
 
 @Component({
   selector: 'app-campo-dinamico',

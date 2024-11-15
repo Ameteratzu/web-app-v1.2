@@ -11,100 +11,55 @@
         </div>
       </div>
 
-      <form
-        (ngSubmit)="onSubmit()"
-        [formGroup]="formData"
-        class="mt-5"
-        [class]="classValidate()"
-      >
+      <form (ngSubmit)="onSubmit()" [formGroup]="formData" class="mt-5">
         <div *ngIf="!showInputForeign">
           <div class="row">
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="onChange($event)"
-                  formControlName="territory"
-                  required
-                >
-                  <option
-                    *ngFor="let territory of territories()"
-                    value="{{ territory.id }}"
-                  >
-                    {{ territory.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Territorio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Territorio"
+                type="select"
+                [options]="territories()"
+                [formControl]="getForm('territory')"
+                (change)="onChange($event)"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  formControlName="event"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option *ngFor="let event of events()" value="{{ event.id }}">
-                    {{ event.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Clase de suceso</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Clase de suceso"
+                type="select"
+                [options]="events()"
+                [formControl]="getForm('event')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="loadMunicipalities($event)"
-                  formControlName="province"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let province of provinces()"
-                    value="{{ province.id }}"
-                  >
-                    {{ province.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Provincia</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Provincia"
+                type="select"
+                [options]="provinces()"
+                [formControl]="getForm('province')"
+                [isRequired]="true"
+                (change)="loadMunicipalities($event)"
+              >
+              </sg-field>
             </div>
 
             <div class="col-5">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="setMunicipalityId($event)"
-                  formControlName="municipality"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let municipality of municipalities()"
-                    value="{{ municipality.id }}"
-                  >
-                    {{ municipality.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Municipio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Municipio"
+                type="select"
+                [options]="municipalities()"
+                [formControl]="getForm('municipality')"
+                [isRequired]="true"
+                (change)="setMunicipalityId($event)"
+              >
+              </sg-field>
             </div>
 
             <div class="col-1">
@@ -122,48 +77,34 @@
 
           <div class="row mt-3">
             <div class="col-6">
-              <div class="form-floating mb-3">
-                <input
-                  type="text"
-                  formControlName="denomination"
-                  class="form-control"
-                  id="floatingInput"
-                  required
-                />
-                <label for="floatingInput">Denominación</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Denominación"
+                type="text"
+                [formControl]="getForm('denomination')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
             <div class="col-6">
-              <div class="form-floating mb-3">
-                <input
-                  type="date"
-                  formControlName="startDate"
-                  class="form-control"
-                  id="floatingInput"
-                  required
-                  [max]="today"
-                />
-                <label for="floatingInput">Fecha Inicio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Fecha Inicio"
+                type="date"
+                [formControl]="getForm('startDate')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-12">
-              <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  placeholder="Leave a comment here"
-                  id="floatingTextarea2"
-                  style="height: 100px"
-                  formControlName="generalNote"
-                  rows="4"
-                  cols="87"
-                ></textarea>
-                <label for="floatingTextarea2">Nota general</label>
-              </div>
+              <sg-field
+                label="Nota general"
+                type="textArea"
+                [isRequired]="true"
+                [formControl]="getForm('generalNote')"
+              >
+              </sg-field>
             </div>
           </div>
         </div>
@@ -171,82 +112,48 @@
         <div *ngIf="showInputForeign">
           <div class="row">
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="onChange($event)"
-                  formControlName="territory"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let territory of territories()"
-                    value="{{ territory.id }}"
-                  >
-                    {{ territory.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Territorio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Territorio"
+                type="select"
+                [options]="territories()"
+                [formControl]="getForm('territory')"
+                [isRequired]="true"
+                (change)="onChange($event)"
+              >
+              </sg-field>
             </div>
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  formControlName="event"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option *ngFor="let event of events()" value="{{ event.id }}">
-                    {{ event.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Clase de suceso</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Clase de suceso"
+                type="select"
+                [options]="events()"
+                [formControl]="getForm('event')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  formControlName="country"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let country of countries()"
-                    value="{{ country.id }}"
-                  >
-                    {{ country.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">País</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="País"
+                type="select"
+                [options]="countries()"
+                [formControl]="getForm('country')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
 
             <div class="col-5">
-              <div class="form-floating mb-3">
-                <input
-                  type="text"
-                  formControlName="ubication"
-                  class="form-control"
-                  id="floatingInput"
-                  required
-                />
-                <label for="floatingInput">Ubicación</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Ubicación"
+                type="text"
+                [formControl]="getForm('ubication')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
 
             <div class="col-1">
@@ -264,18 +171,13 @@
 
           <div class="row mt-3 align-items-center justify-content-center">
             <div class="col-6">
-              <div class="form-floating mb-3">
-                <input
-                  type="date"
-                  formControlName="startDate"
-                  class="form-control"
-                  id="floatingInput"
-                  [max]="today"
-                  required
-                />
-                <label for="floatingInput">Fecha Inicio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Fecha Inicio"
+                type="date"
+                [formControl]="getForm('startDate')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
             <div class="col-6 align-items-center justify-content-center">
               <div class="form-check mb-3">
@@ -295,80 +197,49 @@
 
           <div class="row mt-3">
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="loadMunicipalities($event)"
-                  formControlName="province"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let province of provinces()"
-                    value="{{ province.id }}"
-                  >
-                    {{ province.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Provincia</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Provincia"
+                type="select"
+                [options]="provinces()"
+                [formControl]="getForm('province')"
+                (change)="loadMunicipalities($event)"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
 
             <div class="col-6">
-              <div class="form-floating">
-                <select
-                  class="form-select"
-                  id="floatingSelect"
-                  aria-label="Floating label select example"
-                  (change)="setMunicipalityId($event)"
-                  formControlName="municipality"
-                  required
-                >
-                  <option selected value="">Seleccione una opción</option>
-                  <option
-                    *ngFor="let municipality of municipalities()"
-                    value="{{ municipality.id }}"
-                  >
-                    {{ municipality.descripcion }}
-                  </option>
-                </select>
-                <label for="floatingSelect">Municipio</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Municipio"
+                type="select"
+                [options]="municipalities()"
+                [formControl]="getForm('municipality')"
+                (change)="setMunicipalityId($event)"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-12">
-              <div class="form-floating mb-3">
-                <input
-                  type="text"
-                  formControlName="denomination"
-                  class="form-control"
-                  id="floatingInput"
-                  required
-                />
-                <label for="floatingInput">Denominación</label>
-                <div class="invalid-feedback">Este campo es requerido</div>
-              </div>
+              <sg-field
+                label="Denominación"
+                type="text"
+                [formControl]="getForm('denomination')"
+                [isRequired]="true"
+              >
+              </sg-field>
             </div>
 
             <div class="col-12">
-              <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  placeholder="Leave a comment here"
-                  id="floatingTextarea2"
-                  style="height: 100px"
-                  formControlName="generalNote"
-                  rows="4"
-                  cols="87"
-                ></textarea>
-                <label for="floatingTextarea2">Nota general</label>
-              </div>
+              <sg-field
+                label="Nota general"
+                type="textArea"
+                [isRequired]="true"
+                [formControl]="getForm('generalNote')"
+              >
+              </sg-field>
             </div>
           </div>
         </div>

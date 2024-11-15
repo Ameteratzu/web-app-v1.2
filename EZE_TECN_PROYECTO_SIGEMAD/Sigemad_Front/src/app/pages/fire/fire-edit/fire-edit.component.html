@@ -27,117 +27,70 @@
 <form
   (ngSubmit)="onSubmit()"
   [formGroup]="formData"
-  [class]="classValidate()"
   class="px-4 py-2"
 >
   <div class="row">
     <div class="col">
-      <div class="form-floating mb-3">
-        <input
-          class="form-control"
-          type="text"
-          id="denomination"
-          placeholder="Denominación"
-          required
-          formControlName="denomination"
-        />
-        <label class="form-label" for="denomination">Denominación</label>
-        <div class="invalid-feedback">Campo requerido</div>
-      </div>
+      <sg-field
+        label="Denominación"
+        type="text"
+        [formControl]="getForm('denomination')"
+        [isRequired]="true"
+      >
+      </sg-field>
     </div>
     <div class="col">
-      <div class="mb-3">
-        <div class="form-floating">
-          <input
-            formControlName="startDate"
-            type="date"
-            class="form-control"
-            id="startDate"
-            placeholder="Inicio"
-            required
-          />
-          <label for="startDate">Inicio</label>
-          <div class="invalid-feedback">Campo requerido</div>
-        </div>
-      </div>
+      <sg-field
+        label="Inicio"
+        type="date"
+        [formControl]="getForm('startDate')"
+        [isRequired]="true"
+      >
+      </sg-field>
     </div>
 
     <div class="col">
-      <div class="form-floating mb-3 position-relative">
-        <select
-          class="form-select"
-          id="floatingSelect"
-          formControlName="event"
-          aria-label="Floating label select example"
-          required=""
-        >
-          <option selected></option>
-          <option *ngFor="let option of provinces()" [value]="option.id">
-            {{ option.descripcion }}
-          </option>
-        </select>
-        <label for="floatingSelect">Tipo de suceco</label>
-        <!--
-        <button class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
-        type="button" >
-          Limpiar
-        </button>
-        -->
-      </div>
+      <sg-field
+        label="Tipo de Suceco"
+        type="select"
+        [options]="events()"
+        [formControl]="getForm('event')"
+        [isRequired]="true"
+      >
+      </sg-field>
     </div>
   </div>
   <div class="row">
     <div class="col-4">
-      <div class="form-floating">
-        <select
-          formControlName="idEstado"
-          class="form-select"
-          id="floatingSelect"
-          aria-label="Floating label select example"
-          required=""
-        >
-          <option selected></option>
-          <option *ngFor="let option of eventsStatus()" [value]="option.id">
-            {{ option.descripcion }}
-          </option>
-        </select>
-        <label for="floatingSelect">Estado de suceso</label>
-      </div>
+      <sg-field
+        label="Estado de suceso"
+        type="select"
+        [options]="eventsStatus()"
+        [formControl]="getForm('idEstado')"
+        [isRequired]="true"
+      >
+      </sg-field>
     </div>
     <div class="col-4">
-      <div class="form-floating mb-3">
-        <select
-          (change)="loadMunicipalities($event)"
-          class="form-select"
-          formControlName="province"
-          id="floatingSelect"
-          aria-label="Floating label select example"
-          required=""
-        >
-          <option selected></option>
-          <option *ngFor="let option of provinces()" [value]="option.id">
-            {{ option.descripcion }}
-          </option>
-        </select>
-        <label for="floatingSelect">Provincia</label>
-      </div>
+      <sg-field
+        label="Provincia"
+        type="select"
+        [options]="provinces()"
+        [formControl]="getForm('province')"
+        [isRequired]="true"
+        (change)="loadMunicipalities($event)"
+      >
+      </sg-field>
     </div>
     <div class="col-3">
-      <div class="form-floating">
-        <select
-          formControlName="municipality"
-          class="form-select"
-          id="floatingSelect"
-          aria-label="Floating label select example"
-          required=""
-        >
-          <option selected></option>
-          <option *ngFor="let option of municipalities()" [value]="option.id">
-            {{ option.descripcion }}
-          </option>
-        </select>
-        <label for="floatingSelect">Municipio</label>
-      </div>
+      <sg-field
+        label="Municipio"
+        type="select"
+        [options]="municipalities()"
+        [formControl]="getForm('municipality')"
+        [isRequired]="true"
+      >
+      </sg-field>
     </div>
     <div class="col-1 d-flex justify-content-center align-items-center mb-3">
       <img
@@ -318,7 +271,10 @@
             >
               E
             </button>
-            <button (click)="openModalDireccion()" class="col text-blue font btn fw-bold border border-radius">
+            <button
+              (click)="openModalDireccion()"
+              class="col text-blue font btn fw-bold border border-radius"
+            >
               C
             </button>
             <button class="col text-blue font btn fw-bold border border-radius">

@@ -5,10 +5,6 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { Router } from '@angular/router';
 
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 import { FireStatusService } from '../../services/fire-status.service';
@@ -45,8 +41,6 @@ import { OriginDestination } from '../../types/origin-destination.type';
 import { Province } from '../../types/province.type';
 import { RecordType } from '../../types/record-type.type';
 
-import { MapCreateComponent } from '../map-create/map-create.component';
-
 import {
   FormControl,
   FormGroup,
@@ -61,6 +55,8 @@ import { MessageService } from 'primeng/api';
 import { AreasAffectedService } from '../../services/areas-affected.service';
 import { CamposImpactoService } from '../../services/campos-impacto.service';
 import { CampoDinamico } from '../../shared/campoDinamico/campoDinamico.component';
+import { FormFieldComponent } from '../../shared/Inputs/field.component';
+import { MapCreateComponent } from '../../shared/mapCreate/map-create.component';
 import { Campo } from '../../types/Campo.type';
 
 @Component({
@@ -70,13 +66,10 @@ import { Campo } from '../../types/Campo.type';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    CalendarModule,
-    DropdownModule,
-    InputTextModule,
-    InputTextareaModule,
     MultiSelectModule,
     CampoDinamico,
     ToastModule,
+    FormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: './fire-evolution-create.component.html',
@@ -499,24 +492,11 @@ export class FireEvolutionCreateComponent {
   }
 
   public saveAreaAffected() {
-    const { value } = this.formGroupAreaAfectada;
-
-    if (
-      !value.startAreaAffected ||
-      !value.province_1 ||
-      !value.municipality_1 ||
-      !value.minorEntity ||
-      !value.observationsAreaAffected
-    ) {
-      this.changeRequireAreaAffected(true);
-      this.changeRequireConsecuenciasActuaciones(false);
-      this.changeRequireIntevencionMedios(false);
-      this.classValidateArea.set('needs-validation was-validated');
+    if (this.formGroupAreaAfectada.invalid) {
+      this.formGroupAreaAfectada.markAllAsTouched();
       return;
     }
-
-    this.classValidateArea.set('needs-validation');
-
+    const { value } = this.formGroupAreaAfectada;
     const newAreaAffected = {
       startAreaAffected: value.startAreaAffected,
       province_1: value.province_1,
@@ -572,6 +552,11 @@ export class FireEvolutionCreateComponent {
   }
 
   public saveConsequenceAction() {
+    if (this.formGroupConsecuenciasActuaciones.invalid) {
+      this.formGroupConsecuenciasActuaciones.markAllAsTouched();
+      return;
+    }
+
     this.dinamicDataConsecuencesActions;
     this.consequenceActionError = false;
     const fieldsRequired = this.fieldCampos().filter(
@@ -673,6 +658,11 @@ export class FireEvolutionCreateComponent {
 
   public saveInterveningMedia() {
     //this.interveningMediaError = false;
+    if (this.formGroupIntervecionMedios.invalid) {
+      this.formGroupIntervecionMedios.markAllAsTouched();
+      return;
+    }
+
     const data = this.formGroupIntervecionMedios.value;
 
     if (
@@ -764,8 +754,9 @@ export class FireEvolutionCreateComponent {
     this.changeRequireConsecuenciasActuaciones(false);
     this.changeRequireIntevencionMedios(false);
 
-    if (this.formGroup.valid) {
-      this.classValidate.set('needs-validation');
+    if (this.formGroup.invalid) {
+      this.formGroup.markAllAsTouched();
+      //this.classValidate.set('needs-validation');
     } else {
       this.classValidate.set('needs-validation was-validated');
       return;
@@ -969,5 +960,18 @@ export class FireEvolutionCreateComponent {
       (minorEntity) => minorEntity.id == id
     );
     return entidadMenor?.descripcion;
+  }
+
+  getForm(atributo: string): any {
+    return this.formGroup.controls[atributo];
+  }
+  getFormAreaAfectada(atributo: string): any {
+    return this.formGroupAreaAfectada.controls[atributo];
+  }
+  getFormConsecuencias(atributo: string): any {
+    return this.formGroupConsecuenciasActuaciones.controls[atributo];
+  }
+  getFormIntervencionsMedio(atributo: string): any {
+    return this.formGroupIntervecionMedios.controls[atributo];
   }
 }

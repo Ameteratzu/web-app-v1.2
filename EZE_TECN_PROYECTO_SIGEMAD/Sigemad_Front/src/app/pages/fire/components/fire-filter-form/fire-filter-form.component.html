@@ -2,225 +2,144 @@
   <form (ngSubmit)="onSubmit()" [formGroup]="formData">
     <div class="row">
       <div class="col-4">
-        <div class="form-floating mb-3">
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            id="floatingInput"
-            formControlName="name"
-            placeholder="Denominación"
-          />
-          <label for="floatingInput">Denominación</label>
-        </div>
+        <sg-field
+          label="Denominación"
+          type="text"
+          [formControl]="getForm('name')"
+          [isRequired]="true"
+        >
+        </sg-field>
       </div>
       <div class="col-2">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            (change)="changeTerritory($event)"
-            formControlName="territory"
-          >
-            <option
-              *ngFor="let territory of territories()"
-              value="{{ territory.id }}"
-            >
-              {{ territory.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Territorio</label>
-        </div>
+        <sg-field
+          label="Territorio"
+          type="select"
+          [options]="territories()"
+          [formControl]="getForm('territory')"
+          [isRequired]="true"
+          (change)="changeTerritory($event)"
+        >
+        </sg-field>
       </div>
       <div class="col-2">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            (change)="loadCommunities()"
-            [disabled]="disabledCountry()"
-            formControlName="country"
-          >
-            <option
-              *ngFor="let country of filterCountries()"
-              value="{{ country.id }}"
-            >
-              {{ country.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">País</label>
-        </div>
+        <sg-field
+          label="País"
+          type="select"
+          [options]="filterCountries()"
+          [formControl]="getForm('country')"
+          (change)="loadCommunities()"
+        >
+        </sg-field>
+
       </div>
       <div class="col-2">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            (change)="loadProvinces($event)"
-            [disabled]="disabledAutonomousCommunity()"
-            formControlName="autonomousCommunity"
-          >
-            <option
-              *ngFor="let community of autonomousCommunities()"
-              value="{{ community.id }}"
-            >
-              {{ community.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">CCAA</label>
-        </div>
+        <sg-field
+          label="CCAA"
+          type="select"
+          [options]="autonomousCommunities()"
+          [formControl]="getForm('autonomousCommunity')"
+          (change)="loadProvinces($event)"
+        >
+        </sg-field>
+
       </div>
       <div class="col-2">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            [disabled]="disabledProvince()"
-            formControlName="autonomousCommunity"
-          >
-            <option
-              *ngFor="let province of provinces()"
-              value="{{ province.id }}"
-            >
-              {{ province.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Provincia</label>
-        </div>
+        <sg-field
+          label="Provincia"
+          type="select"
+          [options]="provinces()"
+          [formControl]="getForm('provincia')"
+        >
+        </sg-field>
       </div>
     </div>
 
     <div class="row">
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="eventStatus"
-          >
-            <option *ngFor="let event of eventStatus()" value="{{ event.id }}">
-              {{ event.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Estado del suceso</label>
-        </div>
+        <sg-field
+          label="Estado del suceso"
+          type="select"
+          [options]="eventStatus()"
+          [formControl]="getForm('eventStatus')"
+        >
+        </sg-field>
       </div>
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="fireStatus"
-          >
-            <option
-              *ngFor="let fireStatu of fireStatus()"
-              value="{{ fireStatu.id }}"
-            >
-              {{ fireStatu.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Estado del incendio</label>
-        </div>
+        <sg-field
+          label="Estado del incendio"
+          type="select"
+          [options]="fireStatus()"
+          [formControl]="getForm('fireStatus')"
+        >
+        </sg-field>
       </div>
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="severityLevel"
-          >
-            <option
-              *ngFor="let levels of severityLevels()"
-              value="{{ levels.id }}"
-            >
-              {{ levels.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Nivel/Situación</label>
-        </div>
+        <sg-field
+          label="Nivel/Situación"
+          type="select"
+          [options]="severityLevels()"
+          [formControl]="getForm('severityLevel')"
+        >
+        </sg-field>
+
       </div>
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="affectedArea"
-          >
-            <option
-              *ngFor="let superficie of superficiesFiltro()"
-              value="{{ superficie.id }}"
-            >
-              {{ superficie.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Superficie</label>
-        </div>
+
+        <sg-field
+          label="Superficie"
+          type="select"
+          [options]="superficiesFiltro()"
+          [formControl]="getForm('affectedArea')"
+        >
+        </sg-field>
+
+
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="move"
-          >
-            <option *ngFor="let move of moves()" value="{{ move.id }}">
-              {{ move.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Movimiento</label>
-        </div>
+
+        <sg-field
+          label="Movimiento"
+          type="select"
+          [options]="moves()"
+          [formControl]="getForm('move')"
+        >
+        </sg-field>
+
       </div>
       <div class="col-3">
-        <div class="form-floating">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="Floating label select example"
-            formControlName="between"
-            (change)="changeBetween($event)"
-          >
-            <option
-              *ngFor="let comparative of comparativeDates()"
-              value="{{ comparative.id }}"
-            >
-              {{ comparative.descripcion }}
-            </option>
-          </select>
-          <label for="floatingSelect">Entre</label>
-        </div>
+
+        <sg-field
+          label="Entre"
+          type="select"
+          [options]="comparativeDates()"
+          [formControl]="getForm('between')"
+          (change)="changeBetween($event)"
+        >
+        </sg-field>
       </div>
       <div class="col-3">
-        <div class="form-floating mb-3">
-          <input
-            type="date"
-            formControlName="start"
-            class="form-control"
-            id="floatingInput"
-          />
-          <label for="floatingInput">Fecha Inicio</label>
-        </div>
+
+        <sg-field
+          label="Fecha Inicio"
+          type="date"
+          [formControl]="getForm('fechaInicio')"
+        >
+        </sg-field>
+
       </div>
       <div class="col-3">
-        <div class="form-floating mb-3">
-          <input
-            type="date"
-            class="form-control"
-            id="floatingInput"
-            formControlName="end"
-          />
-          <label for="floatingInput">Fecha Fin</label>
-        </div>
+
+        <sg-field
+          label="Fecha Fin"
+          type="date"
+          [formControl]="getForm('fechaFin')"
+        >
+        </sg-field>
+
+
       </div>
     </div>
 
@@ -255,171 +174,3 @@
   </form>
 </div>
 <hr />
-<!--
-<form (ngSubmit)="onSubmit()" [formGroup]="formData">
-  <div class="d-flex m--1 mt-15 gap-5">
-    <div class="d-flex m--1 gap-5 w-full align-items p4">
-      <input
-        type="text"
-        pInputText
-        formControlName="name"
-        placeholder="Denominación"
-        class="inputText child w-full"
-      />
-
-      <p-dropdown
-        formControlName="territory"
-        [options]="territories()"
-        optionLabel="descripcion"
-        placeholder="Territorio"
-        optionValue="id"
-        required="true"
-        emptyMessage=" "
-        class="inputText child w-full"
-        (onChange)="changeTerritory($event)"
-        [showClear]="false"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="country"
-        [options]="filterCountries()"
-        optionLabel="descripcion"
-        placeholder="País"
-        emptyMessage=" "
-        (onChange)="loadCommunities()"
-        class="child w-full"
-        [disabled]="disabledCountry()"
-        [showClear]="true"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="autonomousCommunity"
-        [options]="autonomousCommunities()"
-        optionLabel="descripcion"
-        placeholder="CCAA"
-        (onChange)="loadProvinces($event)"
-        emptyMessage=" "
-        class="child w-full add"
-        [showClear]="true"
-        [disabled]="disabledAutonomousCommunity()"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="province"
-        [options]="provinces()"
-        optionLabel="descripcion"
-        placeholder="Provincia"
-        emptyMessage=" "
-        class="child w-full"
-        [showClear]="true"
-        [disabled]="disabledProvince()"
-      />
-    </div>
-  </div>
-
-  <div class="d-flex m--1 mt-15 gap-5">
-    <div class="d-flex m--1 gap-5 w-full align-items p4">
-      <p-dropdown
-        optionValue="id"
-        formControlName="eventStatus"
-        [options]="eventStatus()"
-        optionLabel="descripcion"
-        placeholder="Estado del suceso"
-        class="child"
-        emptyMessage=" "
-        [showClear]="true"
-        class="inputText child w-full"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="fireStatus"
-        [options]="fireStatus()"
-        optionLabel="descripcion"
-        placeholder="Estado del incendio"
-        class="child"
-        emptyMessage=" "
-        [showClear]="true"
-        class="inputText child w-full"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="severityLevel"
-        [options]="severityLevels()"
-        optionLabel="descripcion"
-        placeholder="Nivel/Situación"
-        class="child"
-        emptyMessage=" "
-        [showClear]="true"
-        class="inputText child w-full"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="affectedArea"
-        [options]="superficiesFiltro()"
-        optionLabel="descripcion"
-        placeholder="Superficie"
-        class="child"
-        emptyMessage=" "
-        [showClear]="true"
-        class="inputText child w-full"
-      />
-    </div>
-  </div>
-
-  <div class="d-flex m--1 mt-15 gap-5">
-    <div class="d-flex m--1 gap-5 w-full border-rounded align-items p4">
-      <span>Fecha</span>
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="move"
-        [options]="moves()"
-        optionLabel="descripcion"
-        placeholder="Movimiento"
-        emptyMessage=" "
-        [showClear]="false"
-        class="inputText child w-full"
-      />
-
-      <p-dropdown
-        optionValue="id"
-        formControlName="between"
-        [options]="comparativeDates()"
-        optionLabel="descripcion"
-        placeholder="Entre"
-        emptyMessage=" "
-        (onChange)="changeBetween($event)"
-        [showClear]="false"
-        class="inputText child w-full"
-      />
-
-      <p-calendar
-        dateFormat="d/mm/yy"
-        formControlName="start"
-        [iconDisplay]="'input'"
-        [showIcon]="true"
-        placeholder="Fecha inicio"
-        inputId="icondisplay"
-        dateFormat="d/mm/yy"
-        class="inputText child w-full"
-      />
-
-      <p-calendar
-        formControlName="end"
-        [iconDisplay]="'input'"
-        [showIcon]="true"
-        placeholder="Fecha fin"
-        inputId="icondisplay"
-        *ngIf="showDateEnd()"
-        dateFormat="d/mm/yy"
-        class="inputText child w-full"
-      />
-    </div>
-  </div>
-</form> -->

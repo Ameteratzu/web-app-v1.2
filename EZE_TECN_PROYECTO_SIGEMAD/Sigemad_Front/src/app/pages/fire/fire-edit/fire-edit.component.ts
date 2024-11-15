@@ -9,9 +9,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 
-import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
-
-import { MapCreateComponent } from '../../map-create/map-create.component';
+//import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 
 import { EventService } from '../../../services/event.service';
 import { EventStatusService } from '../../../services/eventStatus.service';
@@ -39,6 +37,9 @@ import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { EventStatus } from '../../../types/eventStatus.type';
 import { FireDirectionCoordinationComponent } from '../components/fire-direction-coordination/fire-direction-coordination.component';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+import { FormFieldComponent } from '../../../shared/Inputs/field.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -52,6 +53,7 @@ import { FireDirectionCoordinationComponent } from '../components/fire-direction
     CalendarModule,
     InputTextareaModule,
     ToastModule,
+    FormFieldComponent
   ],
   providers: [MessageService],
   templateUrl: './fire-edit.component.html',
@@ -201,14 +203,15 @@ export class FireEditComponent {
   }
 
   async onSubmit() {
+    if (this.formData.invalid) {
+      this.formData.markAllAsTouched();
+      return 
+    }
+    
     this.error = false;
     const data = this.formData.value;
 
-    if (data) {
-      this.classValidate.set('needs-validation was-validated');
-    } else {
-      this.classValidate.set('needs-validation');
-    }
+    
 
     if (this.featuresCoords.length) {
       data.coordinates = this.featuresCoords;
@@ -332,5 +335,9 @@ export class FireEditComponent {
       : '';
     return;
     desc;
+  }
+
+  getForm(atributo: string): any {
+    return this.formData.controls[atributo];
   }
 }

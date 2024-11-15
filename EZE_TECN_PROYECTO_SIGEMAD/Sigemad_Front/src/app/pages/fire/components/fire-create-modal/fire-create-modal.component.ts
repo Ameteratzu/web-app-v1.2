@@ -15,11 +15,6 @@ import {
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { MessageService } from 'primeng/api';
-import { CalendarModule } from 'primeng/calendar';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToastModule } from 'primeng/toast';
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
@@ -32,8 +27,9 @@ import { Event } from '../../../../types/event.type';
 import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { Territory } from '../../../../types/territory.type';
-import { MapCreateComponent } from '../../../map-create/map-create.component';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
+import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
+import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
 @Component({
   selector: 'app-fire-create-modal',
@@ -42,14 +38,9 @@ import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    DropdownModule,
-    InputTextModule,
-    CalendarModule,
-    InputTextareaModule,
-    InputTextareaModule,
-    CheckboxModule,
     MatDialogModule,
     ToastModule,
+    FormFieldComponent
   ],
   providers: [MessageService],
   templateUrl: './fire-create-modal.component.html',
@@ -100,12 +91,12 @@ export class FireCreateModalComponent implements OnInit {
     this.today = new Date().toISOString().split('T')[0];
 
     this.formData = new FormGroup({
-      territory: new FormControl('', Validators.required),
-      event: new FormControl('', Validators.required),
-      province: new FormControl('', Validators.required),
-      municipality: new FormControl('', Validators.required),
-      denomination: new FormControl('', Validators.required),
-      startDate: new FormControl('', Validators.required),
+      territory: new FormControl(''),
+      event: new FormControl(''),
+      province: new FormControl(''),
+      municipality: new FormControl(''),
+      denomination: new FormControl(''),
+      startDate: new FormControl(''),
       generalNote: new FormControl(),
       //name: new FormControl(),
       //Foreign
@@ -133,18 +124,18 @@ export class FireCreateModalComponent implements OnInit {
 
   onChange(event: any) {
     if (event.target.value == 1) {
-      this.clearValidatosToForeign();
+      //this.clearValidatosToForeign();
       this.showInputForeign = false;
     }
     if (event.target.value == 2) {
-      this.addValidatorsToForeign();
+      //this.addValidatorsToForeign();
       this.showInputForeign = true;
     }
     if (event.target.value == 3) {
       //TODO
     }
   }
-
+  /*
   addValidatorsToForeign() {
     this.formData.get('country')?.setValidators([Validators.required]);
     this.formData.get('ubication')?.setValidators([Validators.required]);
@@ -160,6 +151,7 @@ export class FireCreateModalComponent implements OnInit {
     this.formData.get('country')?.updateValueAndValidity();
     this.formData.get('ubication')?.updateValueAndValidity();
   }
+  */
 
   async loadMunicipalities(event: any) {
     const province_id = event.target.value;
@@ -186,9 +178,12 @@ export class FireCreateModalComponent implements OnInit {
         ],
       };
 
+      /*
       if (this.formData.valid) {
         this.classValidate.set('needs-validation');
       }
+      */
+
       await this.fireService
         .post(data)
         .then((response) => {
@@ -207,8 +202,6 @@ export class FireCreateModalComponent implements OnInit {
           this.error = true;
         });
     } else {
-      console.info('error...');
-      this.classValidate.set('needs-validation was-validated');
       this.formData.markAllAsTouched();
     }
   }
@@ -259,5 +252,9 @@ export class FireCreateModalComponent implements OnInit {
 
   closeModal() {
     this.matDialogRef.close();
+  }
+
+  getForm(atributo: string): any {
+    return this.formData.controls[atributo];
   }
 }

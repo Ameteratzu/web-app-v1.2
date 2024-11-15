@@ -9,15 +9,14 @@ import {
   signal,
   SimpleChanges,
 } from '@angular/core';
+
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
+
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
 
 import moment from 'moment';
@@ -46,6 +45,7 @@ import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
+import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -54,9 +54,7 @@ import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    InputTextModule,
-    DropdownModule,
-    CalendarModule,
+    FormFieldComponent
   ],
   templateUrl: './fire-filter-form.component.html',
   styleUrl: './fire-filter-form.component.css',
@@ -114,6 +112,7 @@ export class FireFilterFormComponent implements OnInit {
 
   async ngOnInit() {
     const {
+      severityLevel,
       name,
       territory,
       country,
@@ -121,7 +120,7 @@ export class FireFilterFormComponent implements OnInit {
       province,
       fireStatus: initFireStatus,
       eventStatus: initEventStatus,
-      severityLevel,
+      CCAA,
       affectedArea,
       move,
       between,
@@ -129,6 +128,7 @@ export class FireFilterFormComponent implements OnInit {
       end,
       municipality,
       episode,
+      provincia
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -148,19 +148,11 @@ export class FireFilterFormComponent implements OnInit {
       end: new FormControl(end ?? ''),
       between: new FormControl(between ?? ''),
       eventStatus: new FormControl(initEventStatus ?? ''),
+      CCAA: new FormControl(CCAA ?? ''),
+      provincia: new FormControl(provincia ?? ''),
     });
 
-    
-    
-    this.formData.patchValue({
-      between: between ?? 1,
-      move: move ?? 1,
-      territory: territory ?? 1, //pre seleccionamos Nacional
-      country: this.getCountryByTerritory(country, territory), // pre seleccionamos España
-      start: start ?? moment().subtract(4, 'days').format('YYYY-MM-DD'),
-      end: end ?? moment().format('YYYY-MM-DD'),
-    });
-
+    this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
     const superficiesFiltro =
@@ -214,10 +206,10 @@ export class FireFilterFormComponent implements OnInit {
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.target.value == 1 ? this.COUNTRIES_ID.SPAIN : null,
-      autonomousCommunity: null,
-      province: null,
-      municipality: null,
+      country: event.target.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      autonomousCommunity: '',
+      province: '',
+      municipality: '',
     });
 
     if (event.target.value == 1) {
@@ -240,7 +232,7 @@ export class FireFilterFormComponent implements OnInit {
       this.disabledAutonomousCommunity.set(false);
       this.disabledProvince.set(false);
       this.formData.patchValue({
-        country: null,
+        country: '',
       });
     }
     if (event.target.value == 3) {
@@ -249,7 +241,7 @@ export class FireFilterFormComponent implements OnInit {
       this.disabledProvince.set(true);
       this.countries.set([]);
       this.formData.patchValue({
-        country: null,
+        country: '',
       });
     }
 
@@ -360,15 +352,19 @@ export class FireFilterFormComponent implements OnInit {
       country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
-      autonomousCommunity: null,
-      province: null,
-      municipality: null,
-      fireStatus: null,
-      episode: null,
-      affectedArea: null,
-      severityLevel: null,
+      autonomousCommunity: '',
+      province: '',
+      municipality: '',
+      fireStatus: '',
+      episode: '',
+      affectedArea: '',
+      severityLevel: '',
       name: '',
     });
     this.getCountriesByTerritory();
+  }
+
+  getForm(atributo: string): any {
+    return this.formData.controls[atributo];
   }
 }

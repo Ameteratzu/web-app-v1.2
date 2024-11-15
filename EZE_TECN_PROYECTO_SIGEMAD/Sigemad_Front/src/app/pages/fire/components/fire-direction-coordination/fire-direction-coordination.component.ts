@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import {
   MatDialog,
@@ -18,21 +16,33 @@ import { DireccionesService } from '../../../../services/direcciones.service';
 import { ProvinceService } from '../../../../services/province.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
 import { PlanesService } from '../../../../services/planes.service';
-import { MapCreateComponent } from '../../../map-create/map-create.component';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
+import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
+import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
 @Component({
   selector: 'app-fire-direction-coordination',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatDialogModule],
+  imports: [
+    FormFieldComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatDialogModule,
+  ],
   providers: [],
   templateUrl: './fire-direction-coordination.component.html',
   styleUrl: './fire-direction-coordination.component.css',
 })
 export class FireDirectionCoordinationComponent implements OnInit {
   /** Formularios */
-  public formularioDireccion: FormGroup;
+  public formularioDireccion: FormGroup = new FormGroup({
+    direccion: new FormControl(''),
+    autoridad: new FormControl(''),
+    fechaInicio: new FormControl(''),
+    fechaFin: new FormControl(''),
+  });
   public formularioCECOPI: FormGroup;
   public formularioPMA: FormGroup;
   public formularioEmergencia: FormGroup;
@@ -50,6 +60,7 @@ export class FireDirectionCoordinationComponent implements OnInit {
   public indexEmergencia = signal<number>(0);
 
   /**Listas */
+
   public listaDirecciones = signal<any[]>([]);
   public listaProvincia = signal<any[]>([]);
   public listaMunicipio = signal<any[]>([]);
@@ -68,41 +79,41 @@ export class FireDirectionCoordinationComponent implements OnInit {
   async ngOnInit() {
     this.formularioDireccion = new FormGroup({
       direccion: new FormControl(''),
-      autoridad: new FormControl('', Validators.required),
-      fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
+      autoridad: new FormControl(''),
+      fechaInicio: new FormControl(''),
+      fechaFin: new FormControl(''),
     });
 
     this.formularioCECOPI = new FormGroup({
-      fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
-      lugar: new FormControl('', Validators.required),
-      provincia: new FormControl('', Validators.required),
-      municipio: new FormControl('', Validators.required),
-      observaciones: new FormControl('', Validators.required),
+      fechaInicio: new FormControl(''),
+      fechaFin: new FormControl(''),
+      lugar: new FormControl(''),
+      provincia: new FormControl(''),
+      municipio: new FormControl(''),
+      observaciones: new FormControl(''),
       coordenadas: new FormControl(''),
     });
 
     this.formularioPMA = new FormGroup({
-      fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
-      lugar: new FormControl('', Validators.required),
-      provincia: new FormControl('', Validators.required),
-      municipio: new FormControl('', Validators.required),
-      observaciones: new FormControl('', Validators.required),
+      fechaInicio: new FormControl(''),
+      fechaFin: new FormControl(''),
+      lugar: new FormControl(''),
+      provincia: new FormControl(''),
+      municipio: new FormControl(''),
+      observaciones: new FormControl(''),
       coordenadas: new FormControl(''),
     });
 
     this.formularioEmergencia = new FormGroup({
-      tipoPlan: new FormControl('', Validators.required),
+      tipoPlan: new FormControl(''),
       //nombre: new FormControl('', Validators.required),
       nombre: new FormControl(''),
-      autoridadActiva: new FormControl('', Validators.required),
+      autoridadActiva: new FormControl(''),
       //documento: new FormControl('', Validators.required),
       documento: new FormControl(''),
-      fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
-      observaciones: new FormControl('', Validators.required),
+      fechaInicio: new FormControl(''),
+      fechaFin: new FormControl(''),
+      observaciones: new FormControl(''),
     });
 
     const direcciones = await this.direccionesService.getAllDirecciones();
@@ -245,7 +256,7 @@ export class FireDirectionCoordinationComponent implements OnInit {
   onEditEmergenciaInsertada(index: number) {
     this.indexEmergencia.set(index);
     const itemUpdated = this.emergenciasInsertadas()[index];
-    console.info('itemUpdated', itemUpdated);
+
     this.formularioEmergencia.patchValue(itemUpdated);
   }
 
@@ -269,7 +280,6 @@ export class FireDirectionCoordinationComponent implements OnInit {
   }
 
   esRequerido(formulario: any, campo: string): boolean {
-    console.info('formulario.controls[campo]', formulario.controls[campo]);
     if (formulario.controls[campo].touched) {
       return true;
     }
@@ -324,5 +334,20 @@ export class FireDirectionCoordinationComponent implements OnInit {
 
   getDescripcion(lista: any[], id: any) {
     return lista.find((item: any) => item.id == id).descripcion;
+  }
+
+  getFormDireccion(atributo: string): any {
+    return this.formularioDireccion.controls[atributo];
+  }
+
+  getFormCECOPI(atributo: string): any {
+    return this.formularioCECOPI.controls[atributo];
+  }
+
+  getFormPMA(atributo: string): any {
+    return this.formularioPMA.controls[atributo];
+  }
+  getFormEmergencia(atributo: string): any {
+    return this.formularioEmergencia.controls[atributo];
   }
 }
