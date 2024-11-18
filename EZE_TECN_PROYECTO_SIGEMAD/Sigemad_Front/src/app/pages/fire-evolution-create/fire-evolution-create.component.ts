@@ -194,23 +194,27 @@ export class FireEvolutionCreateComponent {
       observations_3: new FormControl(''),
       coordsIntervencionMedios: new FormControl(''),
     });
+
+    const now = new Date();
+    const formattedDate = this.formatDateToDateTimeLocalInitial(now);
+
     this.formGroup = new FormGroup({
       // Registro
       //datetime: new FormControl('', [Validators.required]),
       //type: new FormControl('', [Validators.required]),
-      startDate: new FormControl('', [Validators.required]),
-      inputOutput: new FormControl('', [Validators.required]),
+      startDate: new FormControl(formattedDate, [Validators.required]),
+      inputOutput: new FormControl('1', [Validators.required]),
       media: new FormControl('', [Validators.required]),
       originDestination: new FormControl('', [Validators.required]),
 
       // Datos principales
       datetimeUpdate: new FormControl('', [Validators.required]),
-      recordType: new FormControl('', [Validators.required]),
+      recordType: new FormControl('1', [Validators.required]),
       observations_1: new FormControl(''),
       forecast: new FormControl(''),
 
       // Parametros
-      status: new FormControl('', [Validators.required]),
+      status: new FormControl('1', [Validators.required]),
       affectedSurface: new FormControl(''),
       end_date: new FormControl(''),
       emergencyPlanActivated: new FormControl(''),
@@ -822,5 +826,15 @@ export class FireEvolutionCreateComponent {
   }
   getFormIntervencionsMedio(atributo: string): any {
     return this.formGroupIntervecionMedios.controls[atributo];
+  }
+
+  private formatDateToDateTimeLocalInitial(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = '00';
+    const minutes = '00';
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 }
