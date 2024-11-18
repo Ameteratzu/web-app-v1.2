@@ -701,7 +701,9 @@ export class FireEvolutionCreateComponent {
     //(window.location.href = '/fire-national-edit/' + this.fire_id)
     new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
       this.closeModal();
-      this.router.navigate([`/fire-national-edit/${this.fire_id}`]);
+      this.router.navigate([`/fire-national-edit/${this.fire_id}`]).then(() => {
+        window.location.reload();
+      });
     });
   }
 
