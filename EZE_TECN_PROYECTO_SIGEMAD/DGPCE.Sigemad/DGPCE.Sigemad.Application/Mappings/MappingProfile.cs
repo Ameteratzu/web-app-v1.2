@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
+using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
@@ -139,6 +140,7 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
             CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
+            CreateMap<CreateFileCommand, Archivo>();
         }
 
         private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

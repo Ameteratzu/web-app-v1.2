@@ -103,6 +103,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SuperficieFiltro>().ToTable(nameof(SuperficieFiltro));
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
             modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
+            modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
         }
 
 
