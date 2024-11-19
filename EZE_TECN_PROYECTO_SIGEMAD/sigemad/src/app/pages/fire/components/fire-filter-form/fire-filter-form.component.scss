@@ -1,0 +1,27 @@
+.form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+   
+  .submit-button {
+    margin-top: 24px;
+    align-self: flex-start;
+  }
+
+  .button-container {
+    margin-top: 16px; /* Espaciado superior */
+  }
+  
+  .custom-button {
+    font-size: 16px; /* Ajusta el tamaño del texto */
+    text-transform: none; /* Evita que el texto se convierta en mayúsculas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espaciado entre el ícono y el texto */
+  }
+  
+  mat-icon {
+    font-size: 24px;
+  }

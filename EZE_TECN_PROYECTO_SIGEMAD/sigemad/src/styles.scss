@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+@use './app/m3-theme.scss' as theme;
+
+@include mat.core();
+
+$font-family: 'Nunito', sans-serif;
+
+:root {
+  --primary-50: #186c93; // Color directo
+  --secondary-50: #608215; // Color directo
+}
+
+html {
+  @include mat.all-component-themes(theme.$light-theme)
+}
+
+html,
+body {
+  height: 100%;
+  font-family: $font-family;
+  margin:0;
+}
+
+h1 {
+  font-family: $font-family;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: $font-family;
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 500;
+}
+
+h3, h4, h5, h6 {
+  font-family: $font-family;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+p {
+ 
+  font-size: 14px;
+  line-height: 20px;
+}
+
+//Navbar
+mat-toolbar h1 {
+  font-family: $font-family !important;
+  font-size: 32px !important;
+  line-height: 40px !important;
+  font-weight: 700 !important;
+}
+//Items menu
+.mdc-list-item__primary-text {
+  font-family: $font-family !important;
+}
+
+.mat-expansion-panel-header-title {
+  font-family: $font-family;
+  color: var(--primary-50) !important;
+  font-size: 24px !important;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+  font-family: $font-family;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
+  font-family: $font-family;
+}
+
+.mat-mdc-unelevated-button .mdc-button__label {
+  font-family: $font-family;
+  color: white;
+}
