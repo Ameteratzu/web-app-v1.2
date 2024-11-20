@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.API.Constants;using DGPCE.Sigemad.Application.Features.Fases.Queries;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.SituacionesEquivalentes.Queries;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,12 @@ namespace DGPCE.Sigemad.API.Controllers;
 
 
 [ApiController]
-[Route("/api/v1/fases")]
-public class FasesController : Controller
+[Route("/api/v1/situaciones-equivalentes")]
+public class SituacionesEquivalentesController : Controller
 {
     private readonly IMediator _mediator;
 
-    public FasesController(IMediator mediator)
+    public SituacionesEquivalentesController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -22,10 +23,10 @@ public class FasesController : Controller
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado completo de fases")]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado completo de situaciones equivalentes")]
     public async Task<ActionResult<IReadOnlyList<Fase>>> GetAll()
     {
-        var query = new GetFasesListQuery();
+        var query = new GetSituacionesEquivalentesListQuery();
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }
