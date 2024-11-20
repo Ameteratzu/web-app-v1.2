@@ -5,28 +5,7 @@
         [style.height]="logoSize().height"
         alt="Logo"
     />
-    <div class="header-text">
-        <!-- <h2>Mi Canal</h2>
-        <p>Francisco Morales</p> -->
-    </div>
 </div>
-<!-- <mat-nav-list>
-    <a 
-        mat-list-item 
-        class="menu-item"
-        *ngFor="let item of menuBack()" 
-        (click)="redirectTo(item)"
-        routerLinkActive="selected-menu-item" 
-        #rla="routerLinkActive" 
-        [activated]="rla.isActive"
-    >
-        <mat-icon *ngIf="item.ruta === '/dashboard'" matListItemIcon svgIcon="dashboard"></mat-icon>
-        <mat-icon *ngIf="item.ruta === '/search'" matListItemIcon svgIcon="search"></mat-icon>
-        <mat-icon *ngIf="item.ruta === '/episodes'" matListItemIcon svgIcon="episodes"></mat-icon>
-
-        <span matListItemTitle>{{item.nombre}}</span>
-    </a>
-</mat-nav-list> -->
 
 <mat-nav-list>
     <ng-container *ngFor="let item of menuBack()">

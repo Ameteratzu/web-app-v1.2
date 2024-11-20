@@ -5,7 +5,7 @@ import { FireComponent } from './pages/fire/fire.component';
 
 export const routes: Routes = [
 
-    { path: '*', redirectTo: 'dashboard', pathMatch: 'full' }, // Ruta predeterminada
+    { path: '*', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     { path: 'fire', component: FireComponent },
     { path: 'earthquakes', component: CommentsComponent },

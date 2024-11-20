@@ -113,11 +113,11 @@ export class CustomSidenavComponent {
   getActiveStyle(item: any, isActive: boolean): { [key: string]: string } {
     if (isActive && item.colorRgb) {
       return {
-        backgroundColor: `rgba(${item.colorRgb}, 0.2)`, // Fondo con opacidad
-        borderLeft: `4px solid rgb(${item.colorRgb})`,  // Línea indicadora
+        backgroundColor: `rgba(${item.colorRgb}, 0.2)`,
+        borderLeft: `4px solid rgb(${item.colorRgb})`,
       };
     }
-    return {}; // Sin estilos adicionales si no está activo
+    return {};
   }
 
   logoSize = computed<{ width: string; height: string }>(() => {
