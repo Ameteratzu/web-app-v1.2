@@ -22,7 +22,25 @@ GO
 DROP TABLE IF EXISTS ActivacionPlanesEmergencia
 GO
 
+DROP TABLE IF EXISTS ActivacionPlanEmergencia
+GO
+
+DROP TABLE IF EXISTS PlanEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
 DROP TABLE IF EXISTS TipoPlan
+GO
+
+DROP TABLE IF EXISTS CoordinacionCecopi
+GO
+
+DROP TABLE IF EXISTS CoordinacionPMA
+GO
+
+DROP TABLE IF EXISTS Direccion
 GO
 
 DROP TABLE IF EXISTS DireccionCoordinacionEmergencia
@@ -64,6 +82,20 @@ GO
 DROP TABLE IF EXISTS AreaAfectada
 GO
 
+
+DROP TABLE IF EXISTS ParametroEvolucion
+GO
+
+
+DROP TABLE IF EXISTS DatoPrincipalEvolucion
+GO
+
+DROP TABLE IF EXISTS RegistroEvolucion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS RegistroEvolucion
+GO
+
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino
 GO
 
@@ -71,6 +103,12 @@ DROP TABLE IF EXISTS Evolucion
 GO
 
 DROP TABLE IF EXISTS SituacionOperativa
+GO
+
+DROP TABLE IF EXISTS Fase
+GO
+
+DROP TABLE IF EXISTS SituacionEquivalente
 GO
 
 DROP TABLE IF EXISTS TipoRegistro
@@ -116,6 +154,9 @@ DROP TABLE IF EXISTS Menu
 GO
 
 DROP TABLE IF EXISTS EstadoSuceso
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
 GO
 
 DROP TABLE IF EXISTS TipoSuceso
