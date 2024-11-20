@@ -52,7 +52,7 @@ CREATE TABLE dbo.Registro (
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
 	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdRegistroEvolucion int NOT NULL FOREIGN KEY REFERENCES RegistroEvolucion(Id),
+	IdRegistroEvolucion int NOT NULL FOREIGN KEY REFERENCES Registro(Id),
 	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id)
 );
 
