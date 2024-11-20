@@ -37,9 +37,9 @@ CREATE TABLE dbo.Evolucion (
 CREATE TABLE dbo.Registro (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
-    FechaHoraEvolucion DATETIME2(7) NULL,
-    IdEntradaSalida int NULL FOREIGN KEY REFERENCES EntradaSalida(Id),
-    IdMedio int NULL FOREIGN KEY REFERENCES Medio(Id),
+    FechaHoraEvolucion DATETIME2(7) NOT NULL,
+    IdEntradaSalida int NOT NULL FOREIGN KEY REFERENCES EntradaSalida(Id),
+    IdMedio int NOT NULL FOREIGN KEY REFERENCES Medio(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
