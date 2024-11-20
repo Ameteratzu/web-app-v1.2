@@ -8,7 +8,7 @@ import { Municipality } from '../types/municipality.type';
 export class MunicipalityService {
   private http = inject(HttpClient);
 
-  get(province_id: number) {
+  get(province_id: number | string) {
     const endpoint = `/Municipios/${province_id}`;
 
     return firstValueFrom(

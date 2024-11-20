@@ -25,3 +25,25 @@
   mat-icon {
     font-size: 24px;
   }
+
+  .dialog-title{
+    text-align: center;
+    color: #009900;
+  }
+
+  .mb-3{
+    margin-bottom: 12px;
+  }
+
+
+  ::ng-deep .mat-option:hover {
+    background-color: #ffcc00 !important; /* Cambia esto por el color deseado */
+    color: #000; /* Cambia el color del texto si es necesario */
+  }
+
+  .pin-location{
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    margin-top: 12px;
+  }

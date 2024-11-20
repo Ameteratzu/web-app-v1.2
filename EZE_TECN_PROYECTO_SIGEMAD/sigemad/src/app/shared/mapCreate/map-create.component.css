@@ -1,0 +1,44 @@
+* {
+  font-family: "Calibri" !important;
+}
+
+#map {
+  height: 600px;
+  width: 600px;
+}
+
+.m-30 {
+  padding: 30px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+button {
+  margin-right: 10px;
+  color: white;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: #30a0ff;
+  border-color: #30a0ff;
+}
+
+.btn-danger {
+  background-color: red;
+  border-color: red;
+}
+.container {
+  width: 780px !important;
+  height: 780px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mt-4 {
+  margin-top: 16px;
+}

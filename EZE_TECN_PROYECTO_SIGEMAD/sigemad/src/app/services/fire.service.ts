@@ -53,24 +53,21 @@ export class FireService {
 
   post(data: any) {
     const body = {
-      IdTerritorio: data.territory,
-      IdProvincia: data.province,
-      IdMunicipio: data.municipality,
-      denominacion: data.denomination,
+      IdTerritorio: data.territory ? data.territory : 1,
+      idClaseSuceso: data.classEvent,
+      idEstadoSuceso: data.eventStatus,
       fechaInicio: this.datepipe.transform(
         data.startDate,
         'yyyy-MM-dd h:mm:ss'
       ),
-      IdSuceso: data.event,
-      IdTipoSuceso: data.event,
-      IdClaseSuceso: data.event,
+      denominacion: data.denomination,
       notaGeneral: data.generalNote,
-      GeoPosicion: data.geoposition,
+      IdProvincia: data.province,
+      IdMunicipio: data.municipality,
       idPais: data.country,
       ubicacion: data.ubication,
-      IdEstadoSuceso: 1,
-      IdEstado: 1,
-      IdPeligroInicial: 1,
+      esLimitrofe: data.isLimitrofe,
+      GeoPosicion: data.geoposition,
     };
 
     return firstValueFrom(
@@ -89,24 +86,20 @@ export class FireService {
     const body = {
       id: data.id,
       IdTerritorio: data.territory,
-      IdProvincia: data.province,
-      IdMunicipio: data.municipality,
-      denominacion: data.denomination,
+      idClaseSuceso: data.classEvent,
+      idEstadoSuceso: data.eventStatus,
       fechaInicio: this.datepipe.transform(
         data.startDate,
         'yyyy-MM-dd h:mm:ss'
       ),
-      IdSuceso: data.event,
-      IdTipoSuceso: data.event,
-      IdEstadoSuceso: data.event,
-      IdClaseSuceso: data.event,
-      IdEstado: 1,
-      IdPeligroInicial: 1,
+      denominacion: data.denomination,
       notaGeneral: data.generalNote,
-      GeoPosicion: {
-        type: 'Point',
-        coordinates: data.coordinates,
-      },
+      IdProvincia: data.province,
+      IdMunicipio: data.municipality,
+      idPais: data.country,
+      ubicacion: data.ubication,
+      esLimitrofe: data.isLimitrofe,
+      GeoPosicion: data.geoposition,
     };
 
     return firstValueFrom(
