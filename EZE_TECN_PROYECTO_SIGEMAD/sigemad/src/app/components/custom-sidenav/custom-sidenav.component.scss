@@ -35,8 +35,16 @@
 .menu-item {
     border-left: 5px solid;
     border-left-color: rgb(0, 0, 0, 0) ;
+    height: 40px !important;
+
 }
 
 .submenu-item {
     font-size: 10px !important;
+    height: 40px !important;
+}
+
+.mat-mdc-list-base {
+    padding-left: 7px;
+    padding-right: 7px;
 }
