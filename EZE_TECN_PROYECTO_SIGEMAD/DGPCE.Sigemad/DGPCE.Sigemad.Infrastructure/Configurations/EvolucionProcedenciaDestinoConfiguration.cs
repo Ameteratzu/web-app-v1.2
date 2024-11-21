@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations
 {
-    public class EvolucionProcedenciaDestinoConfiguration : IEntityTypeConfiguration<EvolucionProcedenciaDestino>
+    public class EvolucionProcedenciaDestinoConfiguration : IEntityTypeConfiguration<RegistroProcedenciaDestino>
     {
-        public void Configure(EntityTypeBuilder<EvolucionProcedenciaDestino> builder)
+        public void Configure(EntityTypeBuilder<RegistroProcedenciaDestino> builder)
         {
        
-                builder.ToTable("Evolucion_ProcedenciaDestino");
+                builder.ToTable("Registro_ProcedenciaDestino");
 
                 builder.HasKey(e => e.Id);
 
                 builder.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
 
-                builder.HasOne(e => e.Evolucion)
-                       .WithMany(e => e.EvolucionProcedenciaDestinos)
-                      .HasForeignKey(e => e.IdEvolucion)
+                builder.HasOne(e => e.Registro)
+                       .WithMany(e => e.RegistrosProcedenciasDestinos)
+                      .HasForeignKey(e => e.IdRegistroEvolucion)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 builder.HasOne(e => e.ProcedenciaDestino)

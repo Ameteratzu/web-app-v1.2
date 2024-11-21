@@ -136,21 +136,21 @@ namespace DGPCE.Sigemad.Application.Mappings
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
                 .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
-            CreateMap<EvolucionProcedenciaDestino, EvolucionProcedenciaDestinoVm>();
+            CreateMap<RegistroProcedenciaDestino, EvolucionProcedenciaDestinoVm>();
 
             CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
             CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
             CreateMap<CreateFileCommand, Archivo>();
         }
 
-        private ICollection<EvolucionProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
+        private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
         {
             if (source == null)
             {
-                return new List<EvolucionProcedenciaDestino>();
+                return new List<RegistroProcedenciaDestino>();
             }
 
-            return source.Select(id => new EvolucionProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
+            return source.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
         }
     }
 }
