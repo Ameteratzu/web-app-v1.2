@@ -25,20 +25,24 @@ import { OSM, Vector as VectorSource } from 'ol/source';
 import { MunicipalityService } from '../../services/municipality.service';
 
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+import { Geometry } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
+import { Municipality } from '../../types/municipality.type';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { Geometry } from 'ol/geom';
-import { fromLonLat } from 'ol/proj';
-import { Municipality } from '../../types/municipality.type';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+  ],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
   providers: [
@@ -58,7 +62,7 @@ export class MapCreateComponent {
   public vector: VectorLayer | undefined;
 
   public coords: any;
-
+  
   public data = inject(MAT_DIALOG_DATA);
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
@@ -72,6 +76,7 @@ export class MapCreateComponent {
   public section: string = '';
 
   async ngOnInit() {
+
     const { municipio, listaMunicipios } = this.data;
     console.info('+++', municipio, listaMunicipios);
 

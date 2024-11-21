@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  Inject,
+  inject,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,7 +18,6 @@ import {
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
 import { FireService } from '../../../../services/fire.service';
-import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
 import { ProvinceService } from '../../../../services/province.service';
 import { TerritoryService } from '../../../../services/territory.service';
@@ -20,36 +26,37 @@ import { Event } from '../../../../types/event.type';
 import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { Territory } from '../../../../types/territory.type';
+import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 
+import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  NativeDateAdapter,
+} from '@angular/material/core';
+import { EventStatus } from '../../../../types/eventStatus.type';
+import { EventStatusService } from '../../../../services/eventStatus.service';
 import moment from 'moment';
+import { Router } from '@angular/router';
+import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
-import { EventStatusService } from '../../../../services/eventStatus.service';
-import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
-import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
-import { EventStatus } from '../../../../types/eventStatus.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -107,7 +114,7 @@ export class FireCreateEdit implements OnInit {
 
     private router: Router,
 
-    @Inject(MAT_DIALOG_DATA) public data: { isCreate: boolean; fire: any }
+    @Inject(MAT_DIALOG_DATA) public data: { fire: any }
   ) {
     console.info('constructor');
     console.info('data', this.data);
@@ -140,9 +147,7 @@ export class FireCreateEdit implements OnInit {
   public polygon = signal<any>({});
 
   async ngOnInit() {
-    localStorage.removeItem('coordinates');
-    localStorage.removeItem('polygon');
-    console.info('data?.fire?.id', this.data?.fire?.id);
+    
     this.formData = new FormGroup({
       territory: new FormControl('', Validators.required),
       classEvent: new FormControl('', Validators.required),
@@ -152,8 +157,8 @@ export class FireCreateEdit implements OnInit {
       startDate: new FormControl('', Validators.required),
       generalNote: new FormControl('', Validators.required),
       eventStatus: new FormControl('', Validators.required),
-      //name: new FormControl(),
-      //Foreign
+      
+      //Foreign No se utiliza actualmente
       country: new FormControl(''),
       ubication: new FormControl(''),
       limitSpain: new FormControl(false),
@@ -231,6 +236,7 @@ export class FireCreateEdit implements OnInit {
         (item) => item.id === data.municipality
       );
 
+      //Coordenadas del municipio
       data.geoposition = {
         type: 'Point',
         coordinates: [
@@ -302,18 +308,23 @@ export class FireCreateEdit implements OnInit {
     if (!this.formData.value.municipality) {
       return;
     }
-    let x;
-    const municipio = this.municipalities().find(
+    const municipioSelected = this.municipalities().find(
       (item) => item.id == this.formData.value.municipality
     );
-    x = municipio;
+
+    if (!municipioSelected) {
+      return;
+    }
 
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
       height: '780px',
       maxHeight: '780px',
-      data: { municipio: x, listaMunicipios: this.municipalities() },
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+      },
     });
 
     dialogRef.componentInstance.save.subscribe(
