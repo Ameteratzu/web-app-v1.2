@@ -11,6 +11,13 @@ import {
 } from '@angular/core';
 
 import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  NativeDateAdapter,
+} from '@angular/material/core';
+
+import {
   FormControl,
   FormGroup,
   FormsModule,
@@ -26,6 +33,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
 import moment from 'moment';
@@ -56,6 +64,17 @@ import { Territory } from '../../../../types/territory.type';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
+const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'LL', // Definir el formato de entrada
+  },
+  display: {
+    dateInput: 'LL', // Definir cómo mostrar la fecha
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -72,7 +91,12 @@ import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
     MatAutocompleteModule,
     MatIconModule,
     FlexLayoutModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDatepickerModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './fire-filter-form.component.html',
   styleUrl: './fire-filter-form.component.scss',
@@ -160,7 +184,9 @@ export class FireFilterFormComponent implements OnInit {
       end,
       municipality,
       episode,
-      provincia
+      provincia,
+      fechaInicio,
+      fechaFin
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -182,6 +208,8 @@ export class FireFilterFormComponent implements OnInit {
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
+      fechaInicio: new FormControl(fechaInicio ?? ''),
+      fechaFin: new FormControl(fechaFin ?? ''),
     });
 
     // Obtén la lista de países desde el servicio
