@@ -279,4 +279,10 @@
   <data name="IdSucesoPrincipalObligatorio" xml:space="preserve">
     <value>Main Event Id is mandatory</value>
   </data>
+  <data name="AreaAfectadaNoNulo" xml:space="preserve">
+    <value>The list of affected areas cannot be zero.</value>
+  </data>
+  <data name="AreaAfectadaVacio" xml:space="preserve">
+    <value>The list of affected areas cannot be empty.</value>
+  </data>
 </root>

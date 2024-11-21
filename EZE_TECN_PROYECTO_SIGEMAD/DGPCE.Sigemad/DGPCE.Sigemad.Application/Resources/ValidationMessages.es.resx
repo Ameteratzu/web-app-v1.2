@@ -279,4 +279,10 @@
   <data name="IdSucesoPrincipalObligatorio" xml:space="preserve">
     <value>Id Suceso principal es obligatorio</value>
   </data>
+  <data name="AreaAfectadaNoNulo" xml:space="preserve">
+    <value>La lista de áreas afectadas no puede ser nula.</value>
+  </data>
+  <data name="AreaAfectadaVacio" xml:space="preserve">
+    <value>La lista de áreas afectadas no puede estar vacía.</value>
+  </data>
 </root>

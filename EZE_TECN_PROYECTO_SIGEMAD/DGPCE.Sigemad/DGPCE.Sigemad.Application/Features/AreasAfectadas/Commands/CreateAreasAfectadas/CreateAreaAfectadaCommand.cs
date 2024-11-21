@@ -1,14 +1,12 @@
-﻿using MediatR;
-using NetTopologySuite.Geometries;
+﻿using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
+using MediatR;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 public class CreateAreaAfectadaCommand : IRequest<CreateAreaAfectadaResponse>
 {
-    public int IdEvolucion { get; set; }
-    public DateTime FechaHora { get; set; }
-    public int IdProvincia { get; set; }
-    public int IdMunicipio { get; set; }
-    public int IdEntidadMenor { get; set; }
-    public Geometry? GeoPosicion { get; set; }
+    public int? IdEvolucion { get; set; }
+    public int IdIncendio { get; set; }
+    public List<AreaAfectadaDto> AreasAfectadas { get; set; } = new();
+
 }

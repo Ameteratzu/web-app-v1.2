@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Helpers;
+﻿using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
+using DGPCE.Sigemad.Application.Helpers;
 using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
@@ -8,9 +9,22 @@ public class CreateAreaAfectadaCommandValidator : AbstractValidator<CreateAreaAf
 {
     public CreateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(p => p.IdEvolucion)
-            .GreaterThan(0).WithMessage(localizer["EvolucionObligatorio"]);
+        RuleFor(p => p.IdIncendio)
+            .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
 
+        RuleFor(command => command.AreasAfectadas)
+            .NotNull().WithMessage(localizer["AreaAfectadaNoNulo"])
+            .NotEmpty().WithMessage(localizer["AreaAfectadaVacio"]);
+
+        // Validación para cada elemento de la lista AreasAfectadas
+        RuleForEach(command => command.AreasAfectadas).SetValidator(new AreaAfectadaDtoValidator(localizer));
+    }
+}
+
+public class AreaAfectadaDtoValidator : AbstractValidator<AreaAfectadaDto>
+{
+    public AreaAfectadaDtoValidator(IStringLocalizer<ValidationMessages> localizer)
+    {
         RuleFor(p => p.FechaHora)
             .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
 
@@ -29,5 +43,4 @@ public class CreateAreaAfectadaCommandValidator : AbstractValidator<CreateAreaAf
                 .NotNull().WithMessage(localizer["GeoPosicionObligatorio"])
                 .Must(GeoJsonValidatorUtil.IsGeometryInWgs84).WithMessage(localizer["GeoPosicionInvalida"]);
     }
-
 }

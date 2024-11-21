@@ -18,10 +18,13 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
                 builder.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
 
-                builder.HasOne(e => e.Evolucion)
+            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
+            /*
+            builder.HasOne(e => e.Evolucion)
                        .WithMany(e => e.EvolucionProcedenciaDestinos)
                       .HasForeignKey(e => e.IdEvolucion)
                       .OnDelete(DeleteBehavior.Cascade);
+            */
 
                 builder.HasOne(e => e.ProcedenciaDestino)
                       .WithMany()

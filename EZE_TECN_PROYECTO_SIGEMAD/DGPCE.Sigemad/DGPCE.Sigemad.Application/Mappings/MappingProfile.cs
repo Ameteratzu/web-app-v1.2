@@ -7,6 +7,7 @@ using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
@@ -90,11 +91,14 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Incendio, IncendioVm>();
             CreateMap<Evolucion, EvolucionVm>();
 
+            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
+            /*
             CreateMap<UpdateEvolucionCommand, Evolucion>()
               .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
 
             CreateMap<CreateEvolucionCommand, Evolucion>()
               .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
+            */
 
             CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -112,9 +116,12 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<EntidadMenor, EntidadMenorVm>();
             CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
             CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
+
+
+            CreateMap<AreaAfectadaDto, AreaAfectada>();
             CreateMap<AreaAfectada, AreaAfectadaVm>();
             CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();
-            CreateMap<CreateAreaAfectadaCommand, AreaAfectada>();
+            
             CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>()
                 .ForMember(dest => dest.Label, opt => opt.MapFrom(src => src.Etiqueta));
 

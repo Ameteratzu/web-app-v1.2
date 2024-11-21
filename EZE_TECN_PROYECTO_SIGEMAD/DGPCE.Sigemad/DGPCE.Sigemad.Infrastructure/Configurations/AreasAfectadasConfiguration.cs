@@ -10,25 +10,17 @@ public class AreasAfectadasConfiguration : IEntityTypeConfiguration<AreaAfectada
         builder.ToTable("AreaAfectada");
         builder.HasKey(a => a.Id);
 
-        builder.Property(a => a.IdEvolucion)
-            .IsRequired();
-
-        builder.Property(a => a.FechaHora)
-            .IsRequired();
-
-        builder.Property(a => a.IdProvincia)
-            .IsRequired();
-
-        builder.Property(a => a.IdMunicipio)
-            .IsRequired();
-
-        builder.Property(a => a.IdEntidadMenor)
-            .IsRequired();
+        builder.Property(a => a.IdEvolucion).IsRequired();
+        builder.Property(a => a.FechaHora).IsRequired();
+        builder.Property(a => a.IdProvincia).IsRequired();
+        builder.Property(a => a.IdMunicipio).IsRequired();
+        builder.Property(a => a.IdEntidadMenor).IsRequired();
 
         builder.Property(a => a.GeoPosicion)
             .HasColumnType("geometry");
 
-        builder.HasOne(d => d.Evolucion).WithMany()
+        builder.HasOne(d => d.Evolucion)
+            .WithMany(e => e.AreaAfectadas)
             .HasForeignKey(d => d.IdEvolucion)
             .OnDelete(DeleteBehavior.Restrict);
 
@@ -39,10 +31,6 @@ public class AreasAfectadasConfiguration : IEntityTypeConfiguration<AreaAfectada
         builder.HasOne(d => d.Municipio).WithMany()
         .HasForeignKey(d => d.IdMunicipio)
         .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(d => d.Evolucion).WithMany()
-          .HasForeignKey(d => d.IdEvolucion)
-          .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(d => d.EntidadMenor).WithMany()
             .HasForeignKey(d => d.IdEntidadMenor)

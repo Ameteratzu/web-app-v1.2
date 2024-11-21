@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Constants;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
@@ -38,50 +39,111 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
     {
         _logger.LogInformation(nameof(CreateAreaAfectadaCommandHandler) + " - BEGIN");
 
-        var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion);
-        if (evolucion is null)
+        Evolucion evolucion = null;
+        if (request.IdEvolucion.HasValue)
         {
-            _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");
-            throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
+            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion.Value);
+            if (evolucion is null)
+            {
+                _logger.LogWarning($"idEvolucion: {request.IdEvolucion}, no encontrado");
+                throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
+            }
+        }
+        else
+        {
+            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
+            if (incendio is null || incendio.Borrado)
+            {
+                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
+                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+            }
+
+
+            evolucion = new Evolucion()
+            {
+                IdIncendio = request.IdIncendio
+            };
         }
 
-        var provincia = await _unitOfWork.Repository<Provincia>().GetByIdAsync(request.IdProvincia);
-        if (provincia is null)
+        //VALIDACION DE ID EN LISTA DE AREAS AFECTADAS
+        var idsProvincias = request.AreasAfectadas.Select(a => a.IdProvincia).Distinct();
+        var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(p => idsProvincias.Contains(p.Id) && p.Borrado == false);
+        if (provinciasExistentes.Count() != idsProvincias.Count())
         {
-            _logger.LogWarning($"request.IdProvincia: {request.IdProvincia}, no encontrado");
-            throw new NotFoundException(nameof(Provincia), request.IdProvincia);
+            var idsProvinciasExistentes = provinciasExistentes.Select(p => p.Id).ToList();
+            var idsProvinciasInvalidas = idsProvincias.Except(idsProvinciasExistentes).ToList();
+
+            if (idsProvinciasInvalidas.Any())
+            {
+                _logger.LogWarning($"Las siguientes Id's de provincias: {string.Join(", ", idsProvinciasInvalidas)}, no se encontraron");
+                throw new NotFoundException(nameof(Provincia), string.Join(", ", idsProvinciasInvalidas));
+            }
         }
 
-        var municipio = await _unitOfWork.Repository<Municipio>().GetByIdAsync(request.IdMunicipio);
-        if (municipio is null)
+
+        var idsMunicipios = request.AreasAfectadas.Select(a => a.IdMunicipio).Distinct();
+        var municipiosExistentes = await _unitOfWork.Repository<Municipio>().GetAsync(p => idsMunicipios.Contains(p.Id) && p.Borrado == false);
+        if (municipiosExistentes.Count() != idsMunicipios.Count())
         {
-            _logger.LogWarning($"request.IdMunicipio: {request.IdMunicipio}, no encontrado");
-            throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
+            var idsMunicipiosExistentes = provinciasExistentes.Select(p => p.Id).ToList();
+            var idsMunicipiosInvalidas = idsProvincias.Except(idsMunicipiosExistentes).ToList();
+
+            if (idsMunicipiosInvalidas.Any())
+            {
+                _logger.LogWarning($"Las siguientes Id's de municipios: {string.Join(", ", idsMunicipiosInvalidas)}, no se encontraron");
+                throw new NotFoundException(nameof(Municipio), string.Join(", ", idsMunicipiosInvalidas));
+            }
         }
 
-        if (!_geometryValidator.IsGeometryValidAndInEPSG4326(request.GeoPosicion))
+        var idsEntidadMenor = request.AreasAfectadas.Select(a => a.IdEntidadMenor).Distinct();
+        var entidadMenorExistentes = await _unitOfWork.Repository<EntidadMenor>().GetAsync(p => idsEntidadMenor.Contains(p.Id) && p.Borrado == false);
+        if (entidadMenorExistentes.Count() != idsEntidadMenor.Count())
         {
-            ValidationFailure validationFailure = new ValidationFailure();
-            validationFailure.ErrorMessage = "No es una geometria valida o no tiene el EPS4326";
+            var idsEntidadMenorExistentes = entidadMenorExistentes.Select(p => p.Id).ToList();
+            var idsEntidadMenorInvalidas = idsEntidadMenor.Except(idsEntidadMenorExistentes).ToList();
 
-            _logger.LogWarning($"{validationFailure}, geometria -> {request.GeoPosicion}");
-            throw new ValidationException(new List<ValidationFailure> { validationFailure });
+            if (idsEntidadMenorInvalidas.Any())
+            {
+                _logger.LogWarning($"Las siguientes Id's de entidad menor: {string.Join(", ", idsEntidadMenorInvalidas)}, no se encontraron");
+                throw new NotFoundException(nameof(EntidadMenor), string.Join(", ", idsEntidadMenorInvalidas));
+            }
         }
 
-        var areaAfectadaEntity = _mapper.Map<AreaAfectada>(request);
 
-        _unitOfWork.Repository<AreaAfectada>().AddEntity(areaAfectadaEntity);
+        //Validar geometria
+        foreach (var item in request.AreasAfectadas)
+        {
+            if (!_geometryValidator.IsGeometryValidAndInEPSG4326(item.GeoPosicion))
+            {
+                ValidationFailure validationFailure = new ValidationFailure();
+                validationFailure.ErrorMessage = "No es una geometria valida o no tiene el EPS4326";
+
+                _logger.LogWarning($"{validationFailure}, geometria -> {item.GeoPosicion}");
+                throw new ValidationException(new List<ValidationFailure> { validationFailure });
+            }
+        }
+
+
+        //Guardar en base de datos
+        evolucion.AreaAfectadas = _mapper.Map<ICollection<AreaAfectada>>(request.AreasAfectadas);
+
+        if (request.IdEvolucion.HasValue)
+        {
+            _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+        }
+        else
+        {
+            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
+        }
 
         var result = await _unitOfWork.Complete();
         if (result <= 0)
         {
-            throw new Exception("No se pudo insertar nueva area afectada");
+            throw new Exception("No se pudo insertar area afectada");
         }
 
-        _logger.LogInformation($"El area afectada {areaAfectadaEntity.Id} fue creado correctamente");
-
         _logger.LogInformation(nameof(CreateAreaAfectadaCommandHandler) + " - END");
-        return new CreateAreaAfectadaResponse { Id = areaAfectadaEntity.Id };
+        return new CreateAreaAfectadaResponse { IdEvolucion = evolucion.Id };
     }
 
 

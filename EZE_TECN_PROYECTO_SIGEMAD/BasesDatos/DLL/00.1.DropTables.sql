@@ -96,6 +96,9 @@ GO
 DROP TABLE IF EXISTS RegistroEvolucion
 GO
 
+DROP TABLE IF EXISTS Registro
+GO
+
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino
 GO
 

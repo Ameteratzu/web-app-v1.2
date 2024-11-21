@@ -1,13 +1,9 @@
 ﻿
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.DeleteAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
-using DGPCE.Sigemad.Domain.Modelos;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
@@ -30,7 +26,8 @@ public class AreasAfectadasController : ControllerBase
     public async Task<ActionResult<CreateAreaAfectadaResponse>> Create([FromBody] CreateAreaAfectadaCommand command)
     {
         var response = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+
+        return Ok(response);
     }
 
     [HttpPut(Name = "UpdateAreaAfectada")]
@@ -38,12 +35,13 @@ public class AreasAfectadasController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> Update([FromBody] UpdateAreaAfectadaCommand command)
+    public async Task<ActionResult> Update(int idEvolucion, [FromBody] UpdateAreaAfectadaCommand command)
     {
         await _mediator.Send(command);
         return NoContent();
     }
 
+    /*
     [HttpDelete("{id:int}", Name = "DeleteAreaAfectada")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -55,6 +53,7 @@ public class AreasAfectadasController : ControllerBase
         return NoContent();
     }
 
+    
 
     [HttpGet("{id:int}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -81,4 +80,6 @@ public class AreasAfectadasController : ControllerBase
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }
+
+    */
 }

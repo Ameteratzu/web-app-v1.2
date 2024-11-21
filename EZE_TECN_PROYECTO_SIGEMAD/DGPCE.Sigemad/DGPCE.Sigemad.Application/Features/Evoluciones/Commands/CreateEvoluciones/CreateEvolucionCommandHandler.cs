@@ -110,7 +110,8 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
 
             _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
 
-            await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio.Value, evolucion.IdIncendio);
+            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
+            //await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio.Value, evolucion.IdIncendio);
 
             _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
             return new CreateEvolucionResponse { Id = evolucion.Id };
