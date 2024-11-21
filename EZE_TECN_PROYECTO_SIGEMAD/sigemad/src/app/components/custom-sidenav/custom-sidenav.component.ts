@@ -3,17 +3,18 @@ import { MatListModule } from '@angular/material/list'
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
 import { CommonModule } from '@angular/common'; 
 import { RouterLink, RouterModule } from '@angular/router';
-import { ChangeDetectorRef, Component, inject, signal, Input, computed } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, signal, Input, computed, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../types/menu.types';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-custom-sidenav',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatIconModule, RouterLink, RouterModule],
+  imports: [CommonModule, MatListModule, MatIconModule, RouterLink, RouterModule, NgxSpinnerModule],
   templateUrl: './custom-sidenav.component.html',
   styleUrl: './custom-sidenav.component.scss'
 })
@@ -22,13 +23,13 @@ export class CustomSidenavComponent {
   public menuItemActiveService = inject(MenuItemActiveService);
   public menuService = inject(MenuService);
   public changeDetectorRef = inject(ChangeDetectorRef);
-
+  public renderer = inject(Renderer2);
+  public iconRegistry = inject(MatIconRegistry);
+  public sanitizer = inject(DomSanitizer);
+  private spinner = inject(NgxSpinnerService);
   public router = inject(Router);
-
   public title = 'sigemad';
-
   public active: string | undefined;
-
   public menuBack = signal<Menu[]>([]);
 
   public user = {
@@ -64,9 +65,7 @@ export class CustomSidenavComponent {
     '/episodes': 'episodes'
   };
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
-    this.registerIcons();
-  }
+
 
   registerIcons(): void {
     const icons = [
@@ -101,7 +100,6 @@ export class CustomSidenavComponent {
   
 
   toggleSubmenu(item: any): void {
-    console.log("🚀 ~ CustomSidenavComponent ~ toggleSubmenu ~ item:", item)
     item.ruta ? this.redirectTo(item) : "";
     if (this.expandedMenuId === item.id) {
       this.expandedMenuId = null;
@@ -133,6 +131,15 @@ export class CustomSidenavComponent {
   });
 
   async ngOnInit() {
+    this.registerIcons();
+    const toolbar = document.querySelector('mat-toolbar');
+    this.spinner.show();
+    this.renderer.setStyle(toolbar, 'z-index', '1');
+
+    setTimeout(() => {
+      this.spinner.hide();
+      this.renderer.setStyle(toolbar, 'z-index', '5');
+    }, 3000);
     this.menuItemActiveService.set.subscribe((data: string) => {
       this.active = data;
     });
@@ -142,9 +149,6 @@ export class CustomSidenavComponent {
   }
 
   redirectTo(itemSelected: Menu) {
-  console.log("🚀 ~ CustomSidenavComponent ~ redirectTo ~ itemSelected:", itemSelected)
-
       this.router.navigate([`${itemSelected.ruta}`]);
-    
   }
 }
