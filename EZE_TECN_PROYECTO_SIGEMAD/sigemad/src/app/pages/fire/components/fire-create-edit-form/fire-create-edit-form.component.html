@@ -1,4 +1,4 @@
-<h2 mat-dialog-title class="dialog-title">Crear Incendio</h2>
+<h2 mat-dialog-title class="dialog-title">{{data.fire.id ? 'Modificar' : 'Crear'}} Incendio</h2>
 <form [formGroup]="formData" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div
