@@ -1,49 +1,43 @@
 .form-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-   
-  .submit-button {
-    margin-top: 24px;
-    align-self: flex-start;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  .button-container {
-    margin-top: 16px; /* Espaciado superior */
-  }
-  
-  .custom-button {
-    font-size: 16px; /* Ajusta el tamaño del texto */
-    text-transform: none; /* Evita que el texto se convierta en mayúsculas */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Espaciado entre el ícono y el texto */
-  }
-  
-  mat-icon {
-    font-size: 24px;
-  }
+.submit-button {
+  margin-top: 24px;
+  align-self: flex-start;
+}
 
-  .dialog-title{
-    text-align: center;
-    color: #009900;
-  }
+.button-container {
+  margin-top: 16px;
+}
 
-  .mb-3{
-    margin-bottom: 12px;
-  }
+.custom-button {
+  font-size: 16px;
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
+mat-icon {
+  font-size: 24px;
+}
 
-  ::ng-deep .mat-option:hover {
-    background-color: #ffcc00 !important; /* Cambia esto por el color deseado */
-    color: #000; /* Cambia el color del texto si es necesario */
-  }
+.dialog-title {
+  text-align: center;
+  color: #009900;
+}
 
-  .pin-location{
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    margin-top: 12px;
-  }
+.mb-3 {
+  margin-bottom: 12px;
+}
+
+.pin-location {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  margin-top: 12px;
+}

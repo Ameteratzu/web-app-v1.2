@@ -1,9 +1,9 @@
-@use '@angular/material' as mat;
-@use './app/m3-theme.scss' as theme;
+@use "@angular/material" as mat;
+@use "./app/m3-theme.scss" as theme;
 
 @include mat.core();
 
-$font-family: 'Nunito', sans-serif;
+$font-family: "Nunito", sans-serif;
 
 :root {
   --primary-50: #186c93; // Color directo
@@ -11,14 +11,14 @@ $font-family: 'Nunito', sans-serif;
 }
 
 html {
-  @include mat.all-component-themes(theme.$light-theme)
+  @include mat.all-component-themes(theme.$light-theme);
 }
 
 html,
 body {
   height: 100%;
   font-family: $font-family;
-  margin:0;
+  margin: 0;
 }
 
 h1 {
@@ -35,7 +35,10 @@ h2 {
   font-weight: 500;
 }
 
-h3, h4, h5, h6 {
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-family;
   font-size: 24px;
   line-height: 32px;
@@ -43,7 +46,6 @@ h3, h4, h5, h6 {
 }
 
 p {
- 
   font-size: 14px;
   line-height: 20px;
 }
@@ -66,7 +68,8 @@ mat-toolbar h1 {
   font-size: 24px !important;
 }
 
-.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+.mat-mdc-form-field:not(.mat-form-field-disabled)
+  .mat-mdc-floating-label.mdc-floating-label {
   font-family: $font-family;
 }
 
@@ -77,4 +80,12 @@ mat-toolbar h1 {
 .mat-mdc-unelevated-button .mdc-button__label {
   font-family: $font-family;
   color: white;
+}
+
+.mat-mdc-dialog-title {
+  font-family: $font-family !important;
+}
+
+.mat-mdc-raised-button {
+  font-family: $font-family !important;
 }

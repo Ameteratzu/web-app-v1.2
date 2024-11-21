@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  Inject,
   inject,
   Input,
   Output,
@@ -14,13 +13,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 
-/*
-import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
-import { Map, View } from 'ol';
-import { Tile as TileLayer } from 'ol/layer';
-import { OSM } from 'ol/source';
-*/
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -33,19 +25,20 @@ import { OSM, Vector as VectorSource } from 'ol/source';
 import { MunicipalityService } from '../../services/municipality.service';
 
 import { CommonModule } from '@angular/common';
-import { Geometry } from 'ol/geom';
-import { fromLonLat } from 'ol/proj';
-import { Municipality } from '../../types/municipality.type';
+import { MatButtonModule } from '@angular/material/button';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   NativeDateAdapter,
 } from '@angular/material/core';
+import { Geometry } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
+import { Municipality } from '../../types/municipality.type';
 
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
   providers: [
@@ -65,19 +58,7 @@ export class MapCreateComponent {
   public vector: VectorLayer | undefined;
 
   public coords: any;
-  /*
-  constructor(
-    private source: VectorSource,
-    private map: Map,
-    private draw: Draw,
-    private snap: Snap | undefined,
-    private vector: VectorLayer | undefined,
-    @Inject(MAT_DIALOG_DATA) public data: { municipio: any; listaMunicipios: any },
-    private matDialogRef: MatDialogRef<any>,
-    private matDialog: MatDialog,
-    private municipalityService: MunicipalityService,
-  ){}
-  */
+
   public data = inject(MAT_DIALOG_DATA);
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
@@ -88,16 +69,9 @@ export class MapCreateComponent {
 
   public municipioSelected = signal(this.data?.municipio || {});
 
-  //public length: number;
-  //public latitude: number;
-
   public section: string = '';
 
   async ngOnInit() {
-    // Map
-    //this.length = Number(localStorage.getItem('length'));
-    //this.latitude = Number(localStorage.getItem('latitude'));
-
     const { municipio, listaMunicipios } = this.data;
     console.info('+++', municipio, listaMunicipios);
 
@@ -111,7 +85,6 @@ export class MapCreateComponent {
       },
     });
 
-    //console.info('----------', transform([-3, 40], 'EPSG:4326', 'EPSG:4326'));
     this.map = new Map({
       layers: [
         new TileLayer({
@@ -189,8 +162,6 @@ export class MapCreateComponent {
 
   savePolygon() {
     if (this.coords) {
-      //localStorage.setItem('coordinates' + this.section, this.coords);
-      //localStorage.setItem('polygon' + this.section, '1');
       this.save.emit(this.coords);
       this.closeModal();
     }
