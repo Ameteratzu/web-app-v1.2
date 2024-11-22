@@ -1,0 +1,149 @@
+<div class="modal-header">
+    <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+  </div>
+  
+  <div class="container">
+    <div class="side-menu">
+      <mat-chip-listbox>
+        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" class="full-width-chip">
+          {{ sec }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  
+    <div class="form-container">
+      <form [formGroup]="formData">
+        <!-- REGISTRO -->
+        <div>
+          <h3 class="title">REGISTRO</h3>
+          <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+            <mat-form-field class="input spaced-input" fxFlex="22%">
+              <mat-label>Fecha y hora</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="registroFechaHora">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="22%">
+              <mat-label>Entrada / salida</mat-label>
+              <mat-select formControlName="registroEntradaSalida">
+                <mat-option *ngFor="let option of entradaSalidaOptions" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="22%">
+              <mat-label>Medio</mat-label>
+              <mat-select formControlName="registroMedio">
+                <mat-option *ngFor="let medio of mediosOptions" [value]="medio">
+                  {{ medio }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="22%">
+              <mat-label>Procedencia/Destino</mat-label>
+              <input matInput formControlName="registroProcedenciaDestino">
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- DATOS PRINCIPALES -->
+        <div>
+          <h3 class="title">DATOS PRINCIPALES</h3>
+  
+          <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+            <mat-form-field class="input spaced-input" fxFlex="45%">
+              <mat-label>Fecha y hora de actualización</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="datosFechaHoraActualizacion">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="45%">
+              <mat-label>Observaciones</mat-label>
+              <textarea matInput formControlName="datosObservaciones"></textarea>
+            </mat-form-field>
+          </div>
+  
+          <div class="row" fxLayout="row" fxLayoutAlign="start center">
+            <mat-form-field class="input full-width-input" fxFlex="95%">
+              <mat-label>Previsión</mat-label>
+              <textarea matInput formControlName="datosPrevision"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- PARÁMETROS -->
+        <div>
+          <h3 class="title">PARÁMETROS</h3>
+          <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+  
+            <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Selecciona opción</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="picker" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="60%">
+              <mat-label>Selecciona otro</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let option of anotherSelectOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+          <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 1</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 2</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 3</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Texto</mat-label>
+            <input matInput />
+          </mat-form-field>
+        </div>
+      </form>  
+      <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center">
+        <button mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+        
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <button mat-flat-button color="accent" style="margin-right: 10px;">Volver</button>
+            <button mat-raised-button color="secondary" style="margin-right: 10px;">Foto</button>
+            <button mat-flat-button color="primary" style="margin-right: 10px;">Guardar</button>
+          </div>
+        </div>
+    </div>
+    
+  </div>
+
+
+  
+ 

@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <form (ngSubmit)="onSubmit()" [formGroup]="formData" class="mt-5">
+      <form *ngIf="formData" (ngSubmit)="onSubmit()" [formGroup]="formData" class="mt-5">
         <div *ngIf="!showInputForeign">
           <div class="row">
             <div class="col-6">

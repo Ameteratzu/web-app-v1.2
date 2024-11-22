@@ -85,8 +85,12 @@ export class FireCreateModalComponent implements OnInit {
   public polygon = signal<any>({});
 
   async ngOnInit() {
-    localStorage.removeItem('coordinates');
-    localStorage.removeItem('polygon');
+    try {
+      localStorage.removeItem('coordinates');
+      localStorage.removeItem('polygon');
+    } catch (e) {
+      console.warn('Error al acceder a localStorage:', e);
+    }
 
     this.today = new Date().toISOString().split('T')[0];
 

@@ -186,12 +186,12 @@ export class FireFilterFormComponent implements OnInit {
     this.onSubmit()
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['filtros']) {
-      console.log('El filtro ha cambiado:', changes['filtro'].currentValue);
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (changes['filtros']) {
+  //     console.log('El filtro ha cambiado:', changes['filtro'].currentValue);
       
-    }
-  }
+  //   }
+  // }
 
   getCountryByTerritory (country: any, territory: any ){
     if(territory == 1){

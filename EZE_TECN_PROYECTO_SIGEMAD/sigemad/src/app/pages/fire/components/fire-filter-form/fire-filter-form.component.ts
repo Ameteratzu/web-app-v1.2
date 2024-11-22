@@ -66,10 +66,10 @@ import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
 const MY_DATE_FORMATS = {
   parse: {
-    dateInput: 'LL', // Definir el formato de entrada
+    dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', // Definir cómo mostrar la fecha
+    dateInput: 'LL', 
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -151,17 +151,17 @@ export class FireFilterFormComponent implements OnInit {
   public filteredCountries = signal<Countries[]>([]);
   public formData!: FormGroup;
 
-  myForm!: FormGroup; // Declaración con Non-Null Assertion
+  myForm!: FormGroup; 
   options = [
     { label: 'Opción 1', value: 'option1' },
     { label: 'Opción 2', value: 'option2' },
     { label: 'Opción 3', value: 'option3' }
   ];
 
-  showFilters = false; // Controla la visibilidad de los filtros
+  showFilters = false;
 
   async ngOnInit() {
-    const fb = new FormBuilder(); // Instancia local de FormBuilder
+    const fb = new FormBuilder(); 
     this.myForm = fb.group({
       selectField: ['', Validators.required],
       inputField1: ['', Validators.required],
@@ -201,7 +201,6 @@ export class FireFilterFormComponent implements OnInit {
       severityLevel: new FormControl(severityLevel ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
       move: new FormControl(move ?? ''),
-      //enter: new FormControl(?? ''),
       start: new FormControl(start ?? ''),
       end: new FormControl(end ?? ''),
       between: new FormControl(between ?? ''),
@@ -212,18 +211,15 @@ export class FireFilterFormComponent implements OnInit {
       fechaFin: new FormControl(fechaFin ?? ''),
     });
 
-    // Obtén la lista de países desde el servicio
     const countries = await this.countryService.get();
     this.countries.set(countries);
 
-    // Configura el filtrado dinámico
     this.formData.get('country')?.valueChanges.subscribe((value) => {
       
       this.updateFilteredCountries(value || '');
 
     });
 
-    // Inicializa la lista de países filtrados
     this.updateFilteredCountries('');
     
     this.clearFormFilter();
@@ -261,14 +257,13 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   toggleAccordion(panel: MatExpansionPanel) {
-    panel.toggle(); // Abre o cierra el panel
+    panel.toggle(); 
   }
 
-   // Método para actualizar la lista de países filtrados
    private updateFilteredCountries(value: string) {
     
     const filterValue = value.toLowerCase();
-    const allCountries = this.countries(); // Obtiene el valor actual del signal
+    const allCountries = this.countries();
     this.filteredCountries.set(
       allCountries.filter((country) =>
         country.descripcion.toLowerCase().includes(filterValue)
@@ -276,7 +271,6 @@ export class FireFilterFormComponent implements OnInit {
     );
   }
 
-  // Método para obtener los países filtrados
   filteredCountriesList() {
     return this.filteredCountries();
   }
@@ -343,7 +337,7 @@ export class FireFilterFormComponent implements OnInit {
     let newCountries = [...this.countries()];
     
     if (this.formData.value.territory != 2) {
-      this.filteredCountries.set(newCountries); // Cambiar filterCountries por filteredCountries
+      this.filteredCountries.set(newCountries); 
     }
     if (this.formData.value.territory == 2) {
       const indexSpain = newCountries.findIndex(
@@ -437,7 +431,7 @@ export class FireFilterFormComponent implements OnInit {
     this.formData.patchValue({
       between: 1,
       move: 1,
-      territory: 1, //pre seleccionamos Nacional
+      territory: 1, 
       country: "",
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),

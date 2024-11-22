@@ -9,6 +9,7 @@ $font-family: 'Nunito', sans-serif;
   --primary-50: #186c93;
   --secondary-50: #608215;
   --icons: #608215;
+  --fire-color:rgb(255, 128, 0);
 }
 
 html {
@@ -34,6 +35,8 @@ h2 {
   font-size: 28px;
   line-height: 36px;
   font-weight: 500;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 h3, h4, h5, h6 {
@@ -41,6 +44,8 @@ h3, h4, h5, h6 {
   font-size: 24px;
   line-height: 32px;
   font-weight: 400;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 p {
