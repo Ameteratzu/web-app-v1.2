@@ -14,7 +14,6 @@ public class AreasAfectadasConfiguration : IEntityTypeConfiguration<AreaAfectada
         builder.Property(a => a.FechaHora).IsRequired();
         builder.Property(a => a.IdProvincia).IsRequired();
         builder.Property(a => a.IdMunicipio).IsRequired();
-        builder.Property(a => a.IdEntidadMenor).IsRequired();
 
         builder.Property(a => a.GeoPosicion)
             .HasColumnType("geometry");

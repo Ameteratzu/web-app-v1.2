@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
+using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
+using DGPCE.Sigemad.Application.Dtos.Municipios;
+using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
@@ -7,7 +11,6 @@ using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
@@ -80,8 +83,11 @@ namespace DGPCE.Sigemad.Application.Mappings
 
             CreateMap<Provincia, ProvinciaSinMunicipiosVm>();
             CreateMap<Provincia, ProvinciaSinMunicipiosConIdComunidadVm>();
+            CreateMap<Provincia, ProvinciaDto>();
+
             CreateMap<Municipio, MunicipioSinIdProvinciaVm>();
             CreateMap<Municipio, MunicipioConIdProvincia>();
+            CreateMap<Municipio, MunicipioDto>();
 
             CreateMap<CreateIncendioCommand, Incendio>();
             
@@ -113,13 +119,18 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<UpdateIntervencionMedioCommand, IntervencionMedio>();
 
             CreateMap<Distrito, DistritoVm>();
+            
             CreateMap<EntidadMenor, EntidadMenorVm>();
+            CreateMap<EntidadMenor, EntidadMenorDto>();
+
+
             CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
             CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
 
 
-            CreateMap<AreaAfectadaDto, AreaAfectada>();
+            CreateMap<CreateAreaAfectadaDto, AreaAfectada>();
             CreateMap<AreaAfectada, AreaAfectadaVm>();
+            CreateMap<AreaAfectada, AreaAfectadaDto>();
             CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();
             
             CreateMap<ValidacionImpactoClasificado, ValidacionImpactoClasificadoVm>()

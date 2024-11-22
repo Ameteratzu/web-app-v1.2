@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
+﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Helpers;
 using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
@@ -21,7 +21,7 @@ public class CreateAreaAfectadaCommandValidator : AbstractValidator<CreateAreaAf
     }
 }
 
-public class AreaAfectadaDtoValidator : AbstractValidator<AreaAfectadaDto>
+public class AreaAfectadaDtoValidator : AbstractValidator<CreateAreaAfectadaDto>
 {
     public AreaAfectadaDtoValidator(IStringLocalizer<ValidationMessages> localizer)
     {

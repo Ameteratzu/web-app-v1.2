@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
+﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using MediatR;
 
 
@@ -7,6 +7,6 @@ public class CreateAreaAfectadaCommand : IRequest<CreateAreaAfectadaResponse>
 {
     public int? IdEvolucion { get; set; }
     public int IdIncendio { get; set; }
-    public List<AreaAfectadaDto> AreasAfectadas { get; set; } = new();
+    public List<CreateAreaAfectadaDto> AreasAfectadas { get; set; } = new();
 
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Specifications.AreasAfectadas;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
-internal class GetAreasAfectadasByIdEvolucionQueryHandler : IRequestHandler<GetAreasAfectadasByIdEvolucionQuery, IReadOnlyList<AreaAfectadaVm>>
+internal class GetAreasAfectadasByIdEvolucionQueryHandler : IRequestHandler<GetAreasAfectadasByIdEvolucionQuery, IReadOnlyList<AreaAfectadaDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ internal class GetAreasAfectadasByIdEvolucionQueryHandler : IRequestHandler<GetA
         _logger = logger;
     }
 
-    public async Task<IReadOnlyList<AreaAfectadaVm>> Handle(GetAreasAfectadasByIdEvolucionQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<AreaAfectadaDto>> Handle(GetAreasAfectadasByIdEvolucionQuery request, CancellationToken cancellationToken)
     {
         var evolucionSpec = new EvolucionActiveByIdSpecification(request.IdEvolucion);
         var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(evolucionSpec);
@@ -38,7 +38,7 @@ internal class GetAreasAfectadasByIdEvolucionQueryHandler : IRequestHandler<GetA
         var areaAfectadaSpec = new AreaAfectadaActiveByIdEvolucionSpecification(request.IdEvolucion);
         IReadOnlyList<AreaAfectada> areasAfectadas = await _unitOfWork.Repository<AreaAfectada>().GetAllWithSpec(areaAfectadaSpec);
 
-        var areasAfectadasVm = _mapper.Map<IReadOnlyList<AreaAfectada>, IReadOnlyList<AreaAfectadaVm>>(areasAfectadas);
+        var areasAfectadasVm = _mapper.Map<IReadOnlyList<AreaAfectada>, IReadOnlyList<AreaAfectadaDto>>(areasAfectadas);
         return areasAfectadasVm;
     }
 

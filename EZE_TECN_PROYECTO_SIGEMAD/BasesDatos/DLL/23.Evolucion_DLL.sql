@@ -96,11 +96,11 @@ CREATE TABLE dbo.Parametro (
 
 CREATE TABLE AreaAfectada (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+    IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
     FechaHora DATETIME2(7) NOT NULL,
-    IdProvincia int NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
-    IdMunicipio int NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
-    IdEntidadMenor int NOT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
+    IdProvincia INT NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
+    IdMunicipio INT NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
+    IdEntidadMenor INT NULL FOREIGN KEY REFERENCES EntidadMenor(Id),
     GeoPosicion GEOMETRY,
     Observaciones NVARCHAR(MAX) NULL,
     ---

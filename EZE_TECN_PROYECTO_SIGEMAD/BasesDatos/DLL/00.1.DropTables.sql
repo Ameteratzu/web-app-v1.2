@@ -93,13 +93,27 @@ GO
 DROP TABLE IF EXISTS RegistroEvolucion_ProcedenciaDestino
 GO
 
+DROP TABLE IF EXISTS Registro_ProcedenciaDestino
+GO
+
 DROP TABLE IF EXISTS RegistroEvolucion
 GO
+
+DROP TABLE IF EXISTS Datoprincipal
+GO
+
 
 DROP TABLE IF EXISTS Registro
 GO
 
+
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS DatoPrincipal
+GO
+
+DROP TABLE IF EXISTS Parametro
 GO
 
 DROP TABLE IF EXISTS Evolucion

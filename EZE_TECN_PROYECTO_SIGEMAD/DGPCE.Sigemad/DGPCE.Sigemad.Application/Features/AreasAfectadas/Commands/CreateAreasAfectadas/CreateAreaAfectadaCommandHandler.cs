@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
@@ -95,7 +94,12 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
             }
         }
 
-        var idsEntidadMenor = request.AreasAfectadas.Select(a => a.IdEntidadMenor).Distinct();
+        var idsEntidadMenor = request.AreasAfectadas
+            .Where(a => a.IdEntidadMenor.HasValue)
+            .Select(a => a.IdEntidadMenor.Value)
+            .Distinct()
+            .ToList();
+
         var entidadMenorExistentes = await _unitOfWork.Repository<EntidadMenor>().GetAsync(p => idsEntidadMenor.Contains(p.Id) && p.Borrado == false);
         if (entidadMenorExistentes.Count() != idsEntidadMenor.Count())
         {

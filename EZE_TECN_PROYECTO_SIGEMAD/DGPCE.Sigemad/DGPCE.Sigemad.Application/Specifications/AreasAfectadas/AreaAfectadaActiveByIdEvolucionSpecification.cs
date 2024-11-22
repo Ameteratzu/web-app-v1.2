@@ -6,6 +6,9 @@ public class AreaAfectadaActiveByIdEvolucionSpecification : BaseSpecification<Ar
     public AreaAfectadaActiveByIdEvolucionSpecification(int idEvolucion)
         : base(a => a.IdEvolucion == idEvolucion && a.Borrado == false)
     {
+        AddInclude(a => a.Provincia);
+        AddInclude(a => a.Municipio);
+        AddInclude(a => a.EntidadMenor);
         AddOrderBy(a => a.FechaHora);
     }
 }

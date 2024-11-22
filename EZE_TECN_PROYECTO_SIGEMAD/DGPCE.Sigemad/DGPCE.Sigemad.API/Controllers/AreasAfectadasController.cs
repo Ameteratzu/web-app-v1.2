@@ -1,9 +1,11 @@
 ﻿
+using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Dtos;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
@@ -67,19 +69,20 @@ public class AreasAfectadasController : ControllerBase
 
         return Ok(areaAfectada);
     }
+    */
 
     [HttpGet]
-    [Route("evolucion/{idEvolucion}")]
+    [Route("/api/v1/evoluciones/{idEvolucion}/areas-afectadas/")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Summary = "Obtiene la lista de área afectada por idEvolucion")]
-    public async Task<ActionResult<IReadOnlyList<CaracterMedio>>> GetAreasAfectadasPorIdEvolucion(int idEvolucion)
+    public async Task<ActionResult<IReadOnlyList<AreaAfectadaDto>>> GetAreasAfectadasPorIdEvolucion(int idEvolucion)
     {
         var query = new GetAreasAfectadasByIdEvolucionQuery(idEvolucion);
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }
 
-    */
+
 }
