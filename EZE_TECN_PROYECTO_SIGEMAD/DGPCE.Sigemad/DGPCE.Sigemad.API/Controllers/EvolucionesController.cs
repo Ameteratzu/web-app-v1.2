@@ -23,8 +23,8 @@ namespace DGPCE.Sigemad.API.Controllers
 
         }
 
-
-        [HttpPost(Name = "CreateEvolucion")]
+     
+        [HttpPost(("Datos"),Name = "CreateEvolucion")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<CreateEvolucionResponse>> Create([FromBody] CreateEvolucionCommand command)
@@ -33,25 +33,25 @@ namespace DGPCE.Sigemad.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
         }
 
-        [HttpPut(Name = "UpdateEvolucion")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Update([FromBody] UpdateEvolucionCommand command)
-        {
-            await _mediator.Send(command);
-            return NoContent();
-        }
+        //[HttpPut(Name = "UpdateEvolucion")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<ActionResult> Update([FromBody] UpdateEvolucionCommand command)
+        //{
+        //    await _mediator.Send(command);
+        //    return NoContent();
+        //}
 
-        [HttpDelete("{id:int}", Name = "DeleteEvolucion")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var command = new DeleteEvolucionesCommand { Id = id };
-            await _mediator.Send(command);
-            return NoContent();
-        }
+        //[HttpDelete("{id:int}", Name = "DeleteEvolucion")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult> Delete(int id)
+        //{
+        //    var command = new DeleteEvolucionesCommand { Id = id };
+        //    await _mediator.Send(command);
+        //    return NoContent();
+        //}
 
         [HttpGet]
         [Route("{idIncendio}")]

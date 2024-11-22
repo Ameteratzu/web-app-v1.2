@@ -9,6 +9,7 @@ using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfec
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
@@ -33,7 +34,9 @@ using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
+using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
@@ -90,11 +93,11 @@ namespace DGPCE.Sigemad.Application.Mappings
             CreateMap<Incendio, IncendioVm>();
             CreateMap<Evolucion, EvolucionVm>();
 
-            CreateMap<UpdateEvolucionCommand, Evolucion>()
-              .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
+            //CreateMap<UpdateEvolucionCommand, Evolucion>()
+            //  .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
 
             CreateMap<CreateEvolucionCommand, Evolucion>()
-              .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
+              .ForMember(dest => dest.RegistroProcedenciasDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.RegistroProcedenciasDestinos)));
 
             CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -136,11 +139,18 @@ namespace DGPCE.Sigemad.Application.Mappings
                 .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
                 .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
-            CreateMap<RegistroProcedenciaDestino, EvolucionProcedenciaDestinoVm>();
+            CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
             CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
             CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
             CreateMap<CreateFileCommand, Archivo>();
+            CreateMap<CreateRegistroCommand, Registro>();
+
+            CreateMap<CreateParametroCommand, Parametro>();
+
+            CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
+
+
         }
 
         private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)

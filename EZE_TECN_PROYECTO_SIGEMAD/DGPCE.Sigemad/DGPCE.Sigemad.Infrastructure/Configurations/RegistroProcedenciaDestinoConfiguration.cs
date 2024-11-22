@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations
 {
-    public class EvolucionProcedenciaDestinoConfiguration : IEntityTypeConfiguration<RegistroProcedenciaDestino>
+    public class RegistroProcedenciaDestinoConfiguration : IEntityTypeConfiguration<RegistroProcedenciaDestino>
     {
         public void Configure(EntityTypeBuilder<RegistroProcedenciaDestino> builder)
         {
@@ -18,9 +18,9 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
                 builder.Property(e => e.Id)
                       .ValueGeneratedOnAdd();
 
-                builder.HasOne(e => e.Registro)
-                       .WithMany(e => e.RegistrosProcedenciasDestinos)
-                      .HasForeignKey(e => e.IdRegistroEvolucion)
+                builder.HasOne(e => e.Evolucion)
+                       .WithMany(e => e.RegistroProcedenciasDestinos)
+                      .HasForeignKey(e => e.IdRegistro)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 builder.HasOne(e => e.ProcedenciaDestino)

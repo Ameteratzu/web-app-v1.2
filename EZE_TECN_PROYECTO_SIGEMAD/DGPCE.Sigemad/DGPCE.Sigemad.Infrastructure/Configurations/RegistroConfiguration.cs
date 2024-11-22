@@ -41,5 +41,11 @@ internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
             .WithMany()
             .HasForeignKey(d => d.IdEntradaSalida)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Relación uno a uno con Evolucion        
+        builder.HasOne(r => r.Evolucion)
+        .WithOne(e => e.Registro)
+        .HasForeignKey<Registro>(r => r.Id)
+        .OnDelete(DeleteBehavior.Restrict);
     }
 }

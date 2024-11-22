@@ -35,8 +35,8 @@ CREATE TABLE dbo.Evolucion (
 );
 
 CREATE TABLE dbo.Registro (
-    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+    --Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
     FechaHoraEvolucion DATETIME2(7) NULL,
     IdEntradaSalida int NULL FOREIGN KEY REFERENCES EntradaSalida(Id),
     IdMedio int NULL FOREIGN KEY REFERENCES Medio(Id),
@@ -52,13 +52,13 @@ CREATE TABLE dbo.Registro (
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
 	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdRegistroEvolucion int NOT NULL FOREIGN KEY REFERENCES RegistroEvolucion(Id),
+	IdRegistro int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
 	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id)
 );
 
 CREATE TABLE dbo.DatoPrincipal (
-	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
     FechaHora DATETIME2(7) NULL,
     Observaciones NVARCHAR(MAX) NULL,
     Prevision NVARCHAR(MAX) NULL,
@@ -74,8 +74,8 @@ CREATE TABLE dbo.DatoPrincipal (
 
 
 CREATE TABLE dbo.Parametro (
-	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdEvolucion int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
     IdEstadoIncendio int NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
     FechaFinal DATETIME2(7) NULL,
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,

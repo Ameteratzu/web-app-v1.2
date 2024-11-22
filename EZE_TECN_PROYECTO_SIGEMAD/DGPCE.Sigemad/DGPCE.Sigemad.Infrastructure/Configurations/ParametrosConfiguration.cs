@@ -1,0 +1,64 @@
+﻿using DGPCE.Sigemad.Domain.Modelos;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+
+
+namespace DGPCE.Sigemad.Infrastructure.Configurations;
+
+public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
+{
+    public void Configure(EntityTypeBuilder<Parametro> builder)
+    {
+
+        builder.ToTable("Parametro");
+
+        builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.FechaCreacion)
+            .HasColumnType("datetime");
+
+        builder.Property(e => e.FechaModificacion)
+            .HasColumnType("datetime");
+
+        builder.Property(e => e.FechaModificacion)
+            .HasColumnType("datetime");
+
+        builder.Property(e => e.CreadoPor)
+          .HasMaxLength(500)
+          .IsUnicode(false);
+
+        builder.Property(e => e.ModificadoPor)
+          .HasMaxLength(500)
+          .IsUnicode(false);
+
+        builder.Property(e => e.EliminadoPor)
+        .HasMaxLength(500)
+        .IsUnicode(false);
+
+        // Relación uno a uno con Evolucion        
+        builder.HasOne(r => r.Evolucion)
+            .WithOne(e => e.Parametro)
+            .HasForeignKey<Parametro>(r => r.Id)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.EstadoIncendio)
+            .WithMany()
+            .HasForeignKey(d => d.IdEstadoIncendio)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.Fase)
+            .WithMany()
+            .HasForeignKey(d => d.IdFase)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.SituacionOperativa)
+            .WithMany()
+            .HasForeignKey(d => d.IdSituacionOperativa)
+            .OnDelete(DeleteBehavior.Restrict);
+
+          builder.HasOne(d => d.SituacionEquivalente)
+          .WithMany()
+          .HasForeignKey(d => d.IdSituacionEquivalente)
+          .OnDelete(DeleteBehavior.Restrict);
+    }
+}

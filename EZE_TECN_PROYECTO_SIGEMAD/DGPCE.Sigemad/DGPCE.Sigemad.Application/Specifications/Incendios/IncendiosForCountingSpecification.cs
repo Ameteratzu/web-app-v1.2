@@ -21,7 +21,6 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         if (request.IdEstadoIncendio.HasValue)
         {
             AddInclude(i => i.Evoluciones);
-            AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
 
         if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)

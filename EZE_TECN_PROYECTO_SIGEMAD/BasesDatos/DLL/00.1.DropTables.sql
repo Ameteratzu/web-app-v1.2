@@ -83,17 +83,17 @@ DROP TABLE IF EXISTS AreaAfectada
 GO
 
 
-DROP TABLE IF EXISTS ParametroEvolucion
+DROP TABLE IF EXISTS Parametro
 GO
 
 
-DROP TABLE IF EXISTS DatoPrincipalEvolucion
+DROP TABLE IF EXISTS DatoPrincipal
 GO
 
 DROP TABLE IF EXISTS RegistroEvolucion_ProcedenciaDestino
 GO
 
-DROP TABLE IF EXISTS RegistroEvolucion
+DROP TABLE IF EXISTS Registro
 GO
 
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino

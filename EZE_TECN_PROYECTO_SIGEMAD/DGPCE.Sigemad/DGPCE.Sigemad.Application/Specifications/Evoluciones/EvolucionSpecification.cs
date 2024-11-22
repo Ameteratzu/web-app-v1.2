@@ -10,14 +10,14 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
          : base(Evolucion =>
         (!request.Id.HasValue || Evolucion.Id == request.Id) &&
         (!request.IdIncendio.HasValue || Evolucion.IdIncendio == request.IdIncendio) &&
-        (!request.IdEntradaSalida.HasValue || Evolucion.IdEntradaSalida == request.IdEntradaSalida) &&
-        (!request.IdMedio.HasValue || Evolucion.IdMedio == request.IdMedio) &&
-        (!request.IdTipoRegistro.HasValue || Evolucion.IdTipoRegistro == request.IdTipoRegistro) &&
-        (!request.IdSituacionOperativa.HasValue || Evolucion.IdSituacionOperativa == request.IdSituacionOperativa) &&
         (Evolucion.Borrado == false)
        )
         {
-            AddInclude(i => i.EvolucionProcedenciaDestinos);
+
+            AddInclude(i => i.Parametro);
+            AddInclude(i => i.Registro);
+            AddInclude(i => i.DatoPrincipal);
+            AddInclude(i => i.RegistroProcedenciasDestinos);
         }
 
     }

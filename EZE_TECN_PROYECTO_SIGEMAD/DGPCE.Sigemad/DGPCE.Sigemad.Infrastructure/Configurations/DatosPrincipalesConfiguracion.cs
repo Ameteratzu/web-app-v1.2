@@ -3,16 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations;
-
-public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
+public class DatosPrincipalesConfiguracion : IEntityTypeConfiguration<DatoPrincipal>
 {
-    public void Configure(EntityTypeBuilder<Evolucion> builder)
+    public void Configure(EntityTypeBuilder<DatoPrincipal> builder)
     {
 
-        builder.ToTable("Evolucion");
-
-        builder.Property(e => e.IdIncendio)
-         .IsRequired();
+        builder.ToTable("DatoPrincipal");
 
         builder.HasKey(e => e.Id);
 
@@ -37,12 +33,10 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         .HasMaxLength(500)
         .IsUnicode(false);
 
-
-        builder.HasOne(d => d.Incendio)
-                .WithMany(i => i.Evoluciones)
-                .HasForeignKey(d => d.IdIncendio);
-
+        // Relación uno a uno con Evolucion        
+        builder.HasOne(r => r.Evolucion)
+            .WithOne(e => e.DatoPrincipal)
+            .HasForeignKey<DatoPrincipal>(r => r.Id)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
-
-
