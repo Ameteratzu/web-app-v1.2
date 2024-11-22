@@ -94,25 +94,28 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
             }
         }
 
+        // Validar Entidades Menores (opcional)
         var idsEntidadMenor = request.AreasAfectadas
             .Where(a => a.IdEntidadMenor.HasValue)
             .Select(a => a.IdEntidadMenor.Value)
             .Distinct()
             .ToList();
 
-        var entidadMenorExistentes = await _unitOfWork.Repository<EntidadMenor>().GetAsync(p => idsEntidadMenor.Contains(p.Id) && p.Borrado == false);
-        if (entidadMenorExistentes.Count() != idsEntidadMenor.Count())
+        if (idsEntidadMenor.Any())
         {
-            var idsEntidadMenorExistentes = entidadMenorExistentes.Select(p => p.Id).ToList();
-            var idsEntidadMenorInvalidas = idsEntidadMenor.Except(idsEntidadMenorExistentes).ToList();
-
-            if (idsEntidadMenorInvalidas.Any())
+            var entidadMenorExistentes = await _unitOfWork.Repository<EntidadMenor>().GetAsync(p => idsEntidadMenor.Contains(p.Id) && p.Borrado == false);
+            if (entidadMenorExistentes.Count() != idsEntidadMenor.Count())
             {
-                _logger.LogWarning($"Las siguientes Id's de entidad menor: {string.Join(", ", idsEntidadMenorInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(EntidadMenor), string.Join(", ", idsEntidadMenorInvalidas));
+                var idsEntidadMenorExistentes = entidadMenorExistentes.Select(p => p.Id).ToList();
+                var idsEntidadMenorInvalidas = idsEntidadMenor.Except(idsEntidadMenorExistentes).ToList();
+
+                if (idsEntidadMenorInvalidas.Any())
+                {
+                    _logger.LogWarning($"Las siguientes Id's de entidad menor: {string.Join(", ", idsEntidadMenorInvalidas)}, no se encontraron");
+                    throw new NotFoundException(nameof(EntidadMenor), string.Join(", ", idsEntidadMenorInvalidas));
+                }
             }
         }
-
 
         //Validar geometria
         foreach (var item in request.AreasAfectadas)

@@ -27,6 +27,12 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                         entry.Entity.FechaModificacion = DateTime.Now;
                         //entry.Entity.ModificadoPor = "system";
                         break;
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
+                        entry.Entity.Borrado = true;
+                        entry.Entity.FechaEliminacion = DateTime.Now;
+                        //entry.Entity.ModificadoPor = "system";
+                        break;
                 }
             }
 
