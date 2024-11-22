@@ -1,7 +1,9 @@
 ﻿
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.DeleteAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +45,6 @@ public class AreasAfectadasController : ControllerBase
         return NoContent();
     }
 
-    /*
     [HttpDelete("{id:int}", Name = "DeleteAreaAfectada")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -54,7 +55,6 @@ public class AreasAfectadasController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
-
     
 
     [HttpGet("{id:int}")]
@@ -62,14 +62,13 @@ public class AreasAfectadasController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Summary = "Busqueda de area afectada por id")]
-    public async Task<ActionResult<Incendio>> GetById(int id)
+    public async Task<ActionResult<AreaAfectadaDto>> GetById(int id)
     {
         var query = new GetAreaAfectadaByIdQuery(id);
         var areaAfectada = await _mediator.Send(query);
 
         return Ok(areaAfectada);
     }
-    */
 
     [HttpGet]
     [Route("/api/v1/evoluciones/{idEvolucion}/areas-afectadas/")]

@@ -6,6 +6,8 @@ public class AreaAfectadaActiveByIdSpecification : BaseSpecification<AreaAfectad
     public AreaAfectadaActiveByIdSpecification(int id)
         : base(a => a.Id == id && a.Borrado == false)
     {
-
+        AddInclude(a => a.Provincia);
+        AddInclude(a => a.Municipio);
+        AddInclude(a => a.EntidadMenor);
     }
 }

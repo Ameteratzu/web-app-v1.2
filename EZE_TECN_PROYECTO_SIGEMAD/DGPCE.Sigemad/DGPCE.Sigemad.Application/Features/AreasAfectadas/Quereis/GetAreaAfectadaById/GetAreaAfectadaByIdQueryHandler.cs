@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Vms;
 using DGPCE.Sigemad.Application.Specifications.AreasAfectadas;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
 
-public class GetAreaAfectadaByIdQueryHandler : IRequestHandler<GetAreaAfectadaByIdQuery, AreaAfectadaVm>
+public class GetAreaAfectadaByIdQueryHandler : IRequestHandler<GetAreaAfectadaByIdQuery, AreaAfectadaDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ public class GetAreaAfectadaByIdQueryHandler : IRequestHandler<GetAreaAfectadaBy
         _logger = logger;
     }
 
-    public async Task<AreaAfectadaVm> Handle(GetAreaAfectadaByIdQuery request, CancellationToken cancellationToken)
+    public async Task<AreaAfectadaDto> Handle(GetAreaAfectadaByIdQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(GetAreaAfectadaByIdQueryHandler)} - BEGIN");
 
@@ -38,7 +38,7 @@ public class GetAreaAfectadaByIdQueryHandler : IRequestHandler<GetAreaAfectadaBy
             throw new NotFoundException(nameof(AreaAfectada), request.Id);
         }
 
-        var areaAfectadaVm = _mapper.Map<AreaAfectada, AreaAfectadaVm>(areaAfectada);
+        var areaAfectadaVm = _mapper.Map<AreaAfectada, AreaAfectadaDto>(areaAfectada);
 
         _logger.LogInformation($"{nameof(GetAreaAfectadaByIdQueryHandler)} - END");
         return areaAfectadaVm;
