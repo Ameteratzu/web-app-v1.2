@@ -108,7 +108,7 @@ public class MappingProfile : Profile
         CreateMap<CreateImpactoEvolucionCommand, ImpactoEvolucion>();
         CreateMap<CreateImpactoEvolucionDto, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
-
+        CreateMap<UpdateImpactoEvolucionDto, ImpactoEvolucion>();
         CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();
 
         CreateMap<TipoIntervencionMedio, TipoIntervencionMedioVm>();

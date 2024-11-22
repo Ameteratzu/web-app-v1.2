@@ -71,7 +71,7 @@ public class AreasAfectadasController : ControllerBase
     }
 
     [HttpGet]
-    [Route("/api/v1/evoluciones/{idEvolucion}/areas-afectadas/")]
+    [Route("/api/v1/evoluciones/{idEvolucion}/areas-afectadas")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
