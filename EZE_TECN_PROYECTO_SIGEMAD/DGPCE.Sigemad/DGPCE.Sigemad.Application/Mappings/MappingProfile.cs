@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
+using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
@@ -105,6 +106,7 @@ public class MappingProfile : Profile
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
         CreateMap<CreateImpactoEvolucionCommand, ImpactoEvolucion>();
+        CreateMap<CreateImpactoEvolucionDto, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
 
         CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();

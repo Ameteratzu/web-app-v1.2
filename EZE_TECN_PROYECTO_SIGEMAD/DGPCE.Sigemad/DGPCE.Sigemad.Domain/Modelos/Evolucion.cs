@@ -9,5 +9,6 @@ public class Evolucion : BaseDomainModel<int>
     public virtual Incendio Incendio { get; set; }
 
     public ICollection<AreaAfectada> AreaAfectadas { get; set; } = new List<AreaAfectada>();
+    public ICollection<ImpactoEvolucion> Impactos { get; set; } = new List<ImpactoEvolucion>();
 
 }
