@@ -19,9 +19,6 @@ GO
 DROP TABLE IF EXISTS SuperficieFiltro
 GO
 
-DROP TABLE IF EXISTS ActivacionPlanesEmergencia
-GO
-
 DROP TABLE IF EXISTS ActivacionPlanEmergencia
 GO
 
@@ -29,9 +26,6 @@ DROP TABLE IF EXISTS PlanEmergencia
 GO
 
 DROP TABLE IF EXISTS TipoPlanMapeo
-GO
-
-DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS CoordinacionCecopi
@@ -44,6 +38,15 @@ DROP TABLE IF EXISTS Direccion
 GO
 
 DROP TABLE IF EXISTS DireccionCoordinacionEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS TipoDireccionEmergencia
