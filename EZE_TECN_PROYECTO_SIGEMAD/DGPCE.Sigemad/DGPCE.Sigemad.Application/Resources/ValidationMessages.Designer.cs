@@ -133,6 +133,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La lista de coordinaciones es obligatorio.
+        /// </summary>
+        public static string CoordinacionesObligatorio {
+            get {
+                return ResourceManager.GetString("CoordinacionesObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Denominacion no puede exceder los 255 caracteres.
         /// </summary>
         public static string DenominacionMaxLength {
@@ -156,6 +165,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string DenominacionObligatorio {
             get {
                 return ResourceManager.GetString("DenominacionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Las lista de direcciones es obligatorio.
+        /// </summary>
+        public static string DireccionesObligatorio {
+            get {
+                return ResourceManager.GetString("DireccionesObligatorio", resourceCulture);
             }
         }
         
@@ -381,6 +399,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string IncendioObligatorio {
             get {
                 return ResourceManager.GetString("IncendioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El lugar es obligatorio.
+        /// </summary>
+        public static string LugarObligatorio {
+            get {
+                return ResourceManager.GetString("LugarObligatorio", resourceCulture);
             }
         }
         

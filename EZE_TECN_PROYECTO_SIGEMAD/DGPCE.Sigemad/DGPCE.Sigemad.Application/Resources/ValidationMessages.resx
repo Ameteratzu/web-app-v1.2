@@ -292,4 +292,13 @@
   <data name="FechaInicioDebeSerMenorQueFechaFin" xml:space="preserve">
     <value>Fecha de Inicio debe ser menor que Fecha Fin</value>
   </data>
+  <data name="LugarObligatorio" xml:space="preserve">
+    <value>El lugar es obligatorio</value>
+  </data>
+  <data name="DireccionesObligatorio" xml:space="preserve">
+    <value>Las lista de direcciones es obligatorio</value>
+  </data>
+  <data name="CoordinacionesObligatorio" xml:space="preserve">
+    <value>La lista de coordinaciones es obligatorio</value>
+  </data>
 </root>

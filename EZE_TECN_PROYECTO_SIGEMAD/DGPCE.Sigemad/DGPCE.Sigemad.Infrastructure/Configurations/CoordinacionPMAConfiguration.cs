@@ -32,5 +32,10 @@ public class CoordinacionPMAConfiguration : IEntityTypeConfiguration<Coordinacio
            .WithMany()
            .HasForeignKey(d => d.IdMunicipio)
            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.DireccionCoordinacionEmergencia)
+            .WithMany(dce => dce.CoordinacionesPMA)
+            .HasForeignKey(d => d.IdDireccionCoordinacionEmergencia)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -291,4 +291,13 @@
   <data name="FechaInicioDebeSerMenorQueFechaFin" xml:space="preserve">
     <value>Start Date must be less than End Date</value>
   </data>
+  <data name="LugarObligatorio" xml:space="preserve">
+    <value>The location is mandatory</value>
+  </data>
+  <data name="DireccionesObligatorio" xml:space="preserve">
+    <value>Address list is mandatory</value>
+  </data>
+  <data name="CoordinacionesObligatorio" xml:space="preserve">
+    <value>The coordination list is mandatory</value>
+  </data>
 </root>

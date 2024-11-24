@@ -1,4 +1,6 @@
-﻿using DGPCE.Sigemad.Application.Dtos.Direcciones;
+﻿using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
+using DGPCE.Sigemad.Application.Dtos.Direcciones;
+using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Delete;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
@@ -103,7 +105,16 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpPost("direcciones")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<CreateOrUpdateDireccionDto>> CreateDirecciones([FromBody] CreateOrUpdateDireccionCommand command)
+        public async Task<ActionResult<CreateOrUpdateDireccionResponse>> CreateDirecciones([FromBody] CreateOrUpdateDireccionCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("coordinaciones-cecopi")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CreateOrUpdateCoordinacionCecopiResponse>> CreateCoordinacionesCecopi([FromBody] CreateOrUpdateCoordinacionCecopiCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);

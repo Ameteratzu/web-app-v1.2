@@ -11,6 +11,7 @@ public class CoordinacionCecopiConfiguration : IEntityTypeConfiguration<Coordina
         builder.ToTable(nameof(CoordinacionCecopi));
 
         builder.HasKey(c => c.Id);
+        builder.Property(e => e.GeoPosicion).HasColumnType("geometry");
 
         // Configuración para `FechaInicio` con DateOnly
         builder.Property(d => d.FechaInicio)
@@ -31,5 +32,10 @@ public class CoordinacionCecopiConfiguration : IEntityTypeConfiguration<Coordina
            .WithMany()
            .HasForeignKey(d => d.IdMunicipio)
            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.DireccionCoordinacionEmergencia)
+            .WithMany(dce => dce.CoordinacionesCecopi)
+            .HasForeignKey(d => d.IdDireccionCoordinacionEmergencia)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
