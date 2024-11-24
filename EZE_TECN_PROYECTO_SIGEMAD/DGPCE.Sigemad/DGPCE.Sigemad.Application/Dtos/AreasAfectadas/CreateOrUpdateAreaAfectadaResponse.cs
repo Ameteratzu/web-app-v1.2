@@ -1,5 +1,5 @@
 ﻿namespace DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
-public class CreateAreaAfectadaResponse
+public class CreateOrUpdateAreaAfectadaResponse
 {
     public int IdEvolucion { get; set; }
 }

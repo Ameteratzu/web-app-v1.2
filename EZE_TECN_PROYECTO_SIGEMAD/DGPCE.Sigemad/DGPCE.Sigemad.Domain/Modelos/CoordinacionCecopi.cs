@@ -16,6 +16,6 @@ public class CoordinacionCecopi : BaseDomainModel<int>
     public int IdMunicipio { get; set; }
     public Municipio Municipio { get; set; }
     public string Lugar { get; set; }
-    public string Observaciones { get; set; }
-    public Geometry GeoPosicion { get; set; }
+    public string? Observaciones { get; set; }
+    public Geometry? GeoPosicion { get; set; }
 }

@@ -1,13 +1,13 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
-using DGPCE.Sigemad.Application.Helpers;
 using DGPCE.Sigemad.Application.Resources;
+using DGPCE.Sigemad.Domain.Constracts;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
-public class CreateAreaAfectadaCommandValidator : AbstractValidator<CreateAreaAfectadaCommand>
+public class CreateOrUpdateAreaAfectadaCommandValidator : AbstractValidator<CreateOrUpdateAreaAfectadaCommand>
 {
-    public CreateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer)
+    public CreateOrUpdateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
         RuleFor(p => p.IdIncendio)
             .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
@@ -17,13 +17,13 @@ public class CreateAreaAfectadaCommandValidator : AbstractValidator<CreateAreaAf
             .NotEmpty().WithMessage(localizer["AreaAfectadaVacio"]);
 
         // Validación para cada elemento de la lista AreasAfectadas
-        RuleForEach(command => command.AreasAfectadas).SetValidator(new AreaAfectadaDtoValidator(localizer));
+        RuleForEach(command => command.AreasAfectadas).SetValidator(new AreaAfectadaDtoValidator(localizer, geometryValidator));
     }
 }
 
-public class AreaAfectadaDtoValidator : AbstractValidator<CreateAreaAfectadaDto>
+public class AreaAfectadaDtoValidator : AbstractValidator<CreateOrUpdateAreaAfectadaDto>
 {
-    public AreaAfectadaDtoValidator(IStringLocalizer<ValidationMessages> localizer)
+    public AreaAfectadaDtoValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
         RuleFor(p => p.FechaHora)
             .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
@@ -40,7 +40,7 @@ public class AreaAfectadaDtoValidator : AbstractValidator<CreateAreaAfectadaDto>
                 .GreaterThan(0).WithMessage(localizer["EntidadMenorObligatorio"]);
 
         RuleFor(p => p.GeoPosicion)
-                .NotNull().WithMessage(localizer["GeoPosicionObligatorio"])
-                .Must(GeoJsonValidatorUtil.IsGeometryInWgs84).WithMessage(localizer["GeoPosicionInvalida"]);
+            .NotNull().When(p => p.GeoPosicion != null)
+            .Must(geometryValidator.IsGeometryValidAndInEPSG4326).WithMessage(localizer["GeoPosicionInvalida"]);
     }
 }

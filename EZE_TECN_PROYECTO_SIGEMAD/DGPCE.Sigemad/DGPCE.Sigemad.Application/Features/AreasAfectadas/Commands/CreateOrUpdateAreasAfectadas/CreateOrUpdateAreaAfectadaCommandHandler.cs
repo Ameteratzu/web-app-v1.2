@@ -3,6 +3,8 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
+using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation.Results;
@@ -11,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 
 namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
-public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfectadaCommand, CreateAreaAfectadaResponse>
+public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOrUpdateAreaAfectadaCommand, CreateOrUpdateAreaAfectadaResponse>
 {
     private readonly ILogger<CreateIncendioCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +21,7 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
     private readonly ICoordinateTransformationService _coordinateTransformationService;
     private readonly IMapper _mapper;
 
-    public CreateAreaAfectadaCommandHandler(
+    public CreateOrUpdateAreaAfectadaCommandHandler(
         ILogger<CreateIncendioCommandHandler> logger,
         IUnitOfWork unitOfWork,
         IGeometryValidator geometryValidator,
@@ -34,13 +36,14 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
     }
 
 
-    public async Task<CreateAreaAfectadaResponse> Handle(CreateAreaAfectadaCommand request, CancellationToken cancellationToken)
+    public async Task<CreateOrUpdateAreaAfectadaResponse> Handle(CreateOrUpdateAreaAfectadaCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation(nameof(CreateAreaAfectadaCommandHandler) + " - BEGIN");
+        _logger.LogInformation(nameof(CreateOrUpdateAreaAfectadaCommandHandler) + " - BEGIN");
 
-        Evolucion evolucion = null;
+        Evolucion evolucion;
         if (request.IdEvolucion.HasValue)
         {
+            var spec = new EvolucionByIdWithAreaAfectadaSpecification(request.IdEvolucion.Value);
             evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion.Value);
             if (evolucion is null)
             {
@@ -117,16 +120,50 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
             }
         }
 
-        //Validar geometria
-        foreach (var item in request.AreasAfectadas)
+        // Mapear y actualizar/crear las áreas afectadas
+        foreach (var areaDto in request.AreasAfectadas)
         {
-            if (!_geometryValidator.IsGeometryValidAndInEPSG4326(item.GeoPosicion))
+            if (areaDto.Id.HasValue && areaDto.Id > 0)
             {
-                ValidationFailure validationFailure = new ValidationFailure();
-                validationFailure.ErrorMessage = "No es una geometria valida o no tiene el EPS4326";
+                var areaAfectada = evolucion.AreaAfectadas.FirstOrDefault(a => a.Id == areaDto.Id.Value);
+                if (areaAfectada != null)
+                {
+                    // Actualizar datos existentes
+                    _mapper.Map(areaDto, areaAfectada);
+                    areaAfectada.Borrado = false;
+                }
+                else
+                {
+                    // Crear nueva área afectada
+                    var nuevaArea = _mapper.Map<AreaAfectada>(areaDto);
+                    nuevaArea.Id = 0;
+                    evolucion.AreaAfectadas.Add(nuevaArea);
+                }
+            }
+            else
+            {
+                // Crear nueva área afectada
+                var nuevaArea = _mapper.Map<AreaAfectada>(areaDto);
+                nuevaArea.Id = 0;
+                evolucion.AreaAfectadas.Add(nuevaArea);
+            }
+        }
 
-                _logger.LogWarning($"{validationFailure}, geometria -> {item.GeoPosicion}");
-                throw new ValidationException(new List<ValidationFailure> { validationFailure });
+        // Eliminar lógicamente las áreas afectadas que no están presentes en el request
+        if (request.IdEvolucion.HasValue)
+        {
+            var idsEnRequest = request.AreasAfectadas
+                .Where(a => a.Id.HasValue && a.Id > 0)
+                .Select(a => a.Id)
+                .ToList();
+
+            var areasParaEliminar = evolucion.AreaAfectadas
+                .Where(a => a.Id > 0 && !idsEnRequest.Contains(a.Id))
+                .ToList();
+
+            foreach (var area in areasParaEliminar)
+            {
+                _unitOfWork.Repository<AreaAfectada>().DeleteEntity(area);
             }
         }
 
@@ -149,8 +186,8 @@ public class CreateAreaAfectadaCommandHandler : IRequestHandler<CreateAreaAfecta
             throw new Exception("No se pudo insertar area afectada");
         }
 
-        _logger.LogInformation(nameof(CreateAreaAfectadaCommandHandler) + " - END");
-        return new CreateAreaAfectadaResponse { IdEvolucion = evolucion.Id };
+        _logger.LogInformation(nameof(CreateOrUpdateAreaAfectadaCommandHandler) + " - END");
+        return new CreateOrUpdateAreaAfectadaResponse { IdEvolucion = evolucion.Id };
     }
 
 

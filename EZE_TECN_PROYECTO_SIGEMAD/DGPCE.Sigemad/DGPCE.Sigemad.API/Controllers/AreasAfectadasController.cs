@@ -24,16 +24,6 @@ public class AreasAfectadasController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost(Name = "CreateAreaAfectada")]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<ActionResult<CreateAreaAfectadaResponse>> Create([FromBody] CreateAreaAfectadaCommand command)
-    {
-        var response = await _mediator.Send(command);
-
-        return Ok(response);
-    }
-
     [HttpPut(Name = "UpdateAreaAfectada")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,18 +57,5 @@ public class AreasAfectadasController : ControllerBase
         var areaAfectada = await _mediator.Send(query);
 
         return Ok(areaAfectada);
-    }
-
-    [HttpGet]
-    [Route("/api/v1/evoluciones/{idEvolucion}/areas-afectadas")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Summary = "Obtiene la lista de área afectada por idEvolucion")]
-    public async Task<ActionResult<IReadOnlyList<AreaAfectadaDto>>> GetAreasAfectadasPorIdEvolucion(int idEvolucion)
-    {
-        var query = new GetAreasAfectadasByIdEvolucionQuery(idEvolucion);
-        var listado = await _mediator.Send(query);
-        return Ok(listado);
     }
 }

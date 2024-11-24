@@ -1,8 +1,9 @@
 ﻿using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Application.Dtos.Impactos;
-public class CreateImpactoEvolucionDto
+public class ManageImpactoDto
 {
+    public int? Id { get; set; }
     public int IdImpactoClasificado { get; set; }
     public bool? Nuclear { get; set; }
     public int? ValorAD { get; set; }

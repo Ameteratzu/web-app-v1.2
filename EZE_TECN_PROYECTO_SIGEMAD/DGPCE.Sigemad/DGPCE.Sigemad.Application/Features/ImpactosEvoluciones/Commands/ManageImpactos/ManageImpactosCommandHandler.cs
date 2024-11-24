@@ -4,18 +4,19 @@ using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateListaImpactoEvolucion;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateListaImpactos;
-public class CreateListaImpactosCommandHandler : IRequestHandler<CreateListaImpactosCommand, CreateListaImpactosResponse>
+public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosCommand, ManageImpactoResponse>
 {
     private readonly ILogger<CreateImpactoEvolucionCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateListaImpactosCommandHandler(
+    public ManageImpactosCommandHandler(
         ILogger<CreateImpactoEvolucionCommandHandler> logger,
         IUnitOfWork unitOfWork,
         IMapper mapper
@@ -26,7 +27,7 @@ public class CreateListaImpactosCommandHandler : IRequestHandler<CreateListaImpa
         _mapper = mapper;
     }
 
-    public async Task<CreateListaImpactosResponse> Handle(CreateListaImpactosCommand request, CancellationToken cancellationToken)
+    public async Task<ManageImpactoResponse> Handle(ManageImpactosCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - BEGIN");
 
@@ -35,8 +36,9 @@ public class CreateListaImpactosCommandHandler : IRequestHandler<CreateListaImpa
         // Verificar si el IdEvolucion es proporcionado, si no, crear una nueva evolución
         if (request.IdEvolucion.HasValue)
         {
-            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion.Value);
-            if (evolucion is null || evolucion.Borrado)
+            var spec = new EvolucionByIdWithImpactosSpecification(request.IdEvolucion.Value);
+            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(spec);
+            if (evolucion is null)
             {
                 _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");
                 throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
@@ -98,9 +100,56 @@ public class CreateListaImpactosCommandHandler : IRequestHandler<CreateListaImpa
             }
         }
 
-        // Mapear y guardar los impactos de evolución
-        evolucion.Impactos = _mapper.Map<ICollection<ImpactoEvolucion>>(request.Impactos);
+        // Mapear y actualizar/crear las direcciones de la emergencia
+        foreach (var impactoDto in request.Impactos)
+        {
+            if (impactoDto.Id.HasValue && impactoDto.Id > 0)
+            {
+                var direccion = evolucion.Impactos.FirstOrDefault(d => d.Id == impactoDto.Id.Value);
+                if (direccion != null)
+                {
+                    // Actualizar datos existentes
+                    _mapper.Map(impactoDto, direccion);
+                    direccion.Borrado = false;
+                }
+                else
+                {
+                    // Crear nueva dirección
+                    var nuevoImpacto = _mapper.Map<ImpactoEvolucion>(impactoDto);
+                    nuevoImpacto.Id = 0;
+                    evolucion.Impactos.Add(nuevoImpacto);
+                }
+            }
+            else
+            {
+                // Crear nueva dirección
+                var nuevoImpacto = _mapper.Map<ImpactoEvolucion>(impactoDto);
+                nuevoImpacto.Id = 0;
+                evolucion.Impactos.Add(nuevoImpacto);
+            }
+        }
 
+        // Eliminar lógicamente las direcciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
+        if (request.IdEvolucion.HasValue)
+        {
+            // Solo las direcciones con Id existente (no nuevas)
+            var idsEnRequest = request.Impactos
+                .Where(d => d.Id.HasValue && d.Id > 0)
+            .Select(d => d.Id)
+            .ToList();
+
+            var impactosParaEliminar = evolucion.Impactos
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id)) // Solo las direcciones que ya existen en la base de datos y no están en el request
+                .ToList();
+            foreach (var impacto in impactosParaEliminar)
+            {
+                _unitOfWork.Repository<ImpactoEvolucion>().DeleteEntity(impacto);
+            }
+        }
+
+
+
+        // Guardar los impactos de evolución
         if (request.IdEvolucion.HasValue)
         {
             _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
@@ -117,6 +166,6 @@ public class CreateListaImpactosCommandHandler : IRequestHandler<CreateListaImpa
         }
 
         _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - END");
-        return new CreateListaImpactosResponse { IdEvolucion = evolucion.Id };
+        return new ManageImpactoResponse { IdEvolucion = evolucion.Id };
     }
 }

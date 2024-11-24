@@ -1,8 +1,9 @@
 ﻿using NetTopologySuite.Geometries;
 
 namespace DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
-public class CreateAreaAfectadaDto
+public class CreateOrUpdateAreaAfectadaDto
 {
+    public int? Id { get; set; }
     public DateTime FechaHora { get; set; }
     public int IdProvincia { get; set; }
     public int IdMunicipio { get; set; }

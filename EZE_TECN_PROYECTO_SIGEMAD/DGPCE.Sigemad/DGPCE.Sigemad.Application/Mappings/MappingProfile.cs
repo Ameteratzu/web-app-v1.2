@@ -112,7 +112,7 @@ public class MappingProfile : Profile
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
         CreateMap<CreateImpactoEvolucionCommand, ImpactoEvolucion>();
-        CreateMap<CreateImpactoEvolucionDto, ImpactoEvolucion>();
+        CreateMap<ManageImpactoDto, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionDto, ImpactoEvolucion>();
         CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();
@@ -142,7 +142,7 @@ public class MappingProfile : Profile
 
 
 
-        CreateMap<CreateAreaAfectadaDto, AreaAfectada>();
+        CreateMap<CreateOrUpdateAreaAfectadaDto, AreaAfectada>();
         CreateMap<UpdateAreaAfectadaDto, AreaAfectada>();
         CreateMap<AreaAfectada, AreaAfectadaDto>();
         CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();

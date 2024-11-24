@@ -17,6 +17,6 @@ public class CoordinacionPMA : BaseDomainModel<int>
     public Municipio Municipio { get; set; }
 
     public string Lugar { get; set; }
-    public string Observaciones { get; set; }
-    public Geometry GeoPosicion { get; set; }
+    public string? Observaciones { get; set; }
+    public Geometry? GeoPosicion { get; set; }
 }
