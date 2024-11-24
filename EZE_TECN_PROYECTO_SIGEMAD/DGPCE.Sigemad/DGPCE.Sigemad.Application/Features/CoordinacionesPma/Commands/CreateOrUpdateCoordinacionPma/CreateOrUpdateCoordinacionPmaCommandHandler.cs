@@ -6,35 +6,40 @@ using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
-public class CreateOrUpdateCoordinacionCecopiCommandHandler : IRequestHandler<CreateOrUpdateCoordinacionCecopiCommand, CreateOrUpdateCoordinacionCecopiResponse>
+namespace DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
+public class CreateOrUpdateCoordinacionPmaCommandHandler: IRequestHandler<CreateOrUpdateCoordinacionPmaCommand, CreateOrUpdateCoordinacionPmaResponse>
 {
-    private readonly ILogger<CreateOrUpdateCoordinacionCecopiCommandHandler> _logger;
+    private readonly ILogger<CreateOrUpdateCoordinacionPmaCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CreateOrUpdateCoordinacionCecopiCommandHandler(
-        ILogger<CreateOrUpdateCoordinacionCecopiCommandHandler> logger,
+    public CreateOrUpdateCoordinacionPmaCommandHandler(
+        ILogger<CreateOrUpdateCoordinacionPmaCommandHandler> logger,
         IUnitOfWork unitOfWork,
         IMapper mapper
-    )
+        )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<CreateOrUpdateCoordinacionCecopiResponse> Handle(CreateOrUpdateCoordinacionCecopiCommand request, CancellationToken cancellationToken)
+    public async Task<CreateOrUpdateCoordinacionPmaResponse> Handle(CreateOrUpdateCoordinacionPmaCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionCecopiCommandHandler)} - BEGIN");
+        _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionPmaCommandHandler)} - BEGIN");
 
         DireccionCoordinacionEmergencia direccionCoordinacionEmergencia;
 
         // Si el IdDireccionCoordinacionEmergencia es proporcionado, intentar actualizar, si no, crear nueva instancia
         if (request.IdDireccionCoordinacionEmergencia.HasValue)
         {
-            var spec = new DireccionCoordinacionEmergenciaWithCoordinacionCecopis(request.IdDireccionCoordinacionEmergencia.Value);
+            var spec = new DireccionCoordinacionEmergenciaWithCoordinacionPma(request.IdDireccionCoordinacionEmergencia.Value);
             direccionCoordinacionEmergencia = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(spec);
             if (direccionCoordinacionEmergencia is null || direccionCoordinacionEmergencia.Borrado)
             {
@@ -59,7 +64,7 @@ public class CreateOrUpdateCoordinacionCecopiCommandHandler : IRequestHandler<Cr
             };
         }
 
-        // Validar los IdProvincia e IdMunicipio de las Coordinaciones en el listado
+        // Validar los IdProvincia y IdMunicipio de las CoordinacionesPMA en el listado
         var idsProvincias = request.Coordinaciones.Select(c => c.IdProvincia).Distinct();
         var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(p => idsProvincias.Contains(p.Id));
 
@@ -81,59 +86,59 @@ public class CreateOrUpdateCoordinacionCecopiCommandHandler : IRequestHandler<Cr
         if (municipiosExistentes.Count() != idsMunicipios.Count())
         {
             var idsMunicipiosExistentes = municipiosExistentes.Select(m => m.Id).ToList();
-            var idsMunicipiosInvalidos = idsMunicipios.Except(idsMunicipiosExistentes).ToList();
+            var idsMunicipiosInvalidas = idsMunicipios.Except(idsMunicipiosExistentes).ToList();
 
-            if (idsMunicipiosInvalidos.Any())
+            if (idsMunicipiosInvalidas.Any())
             {
-                _logger.LogWarning($"Los siguientes Id's de Municipio: {string.Join(", ", idsMunicipiosInvalidos)}, no se encontraron");
-                throw new NotFoundException(nameof(Municipio), string.Join(", ", idsMunicipiosInvalidos));
+                _logger.LogWarning($"Los siguientes Id's de Municipio: {string.Join(", ", idsMunicipiosInvalidas)}, no se encontraron");
+                throw new NotFoundException(nameof(Municipio), string.Join(", ", idsMunicipiosInvalidas));
             }
         }
 
-        // Mapear y actualizar/crear las coordinaciones del CECOPI
-        foreach (var coordinacionDto in request.Coordinaciones)
+        // Mapear y actualizar/crear las coordinaciones PMA de la emergencia
+        foreach (var coordinacionPmaDto in request.Coordinaciones)
         {
-            if (coordinacionDto.Id.HasValue && coordinacionDto.Id > 0)
+            if (coordinacionPmaDto.Id.HasValue && coordinacionPmaDto.Id > 0)
             {
-                var coordinacion = direccionCoordinacionEmergencia.CoordinacionesCecopi.FirstOrDefault(c => c.Id == coordinacionDto.Id.Value);
+                var coordinacion = direccionCoordinacionEmergencia.CoordinacionesPMA.FirstOrDefault(c => c.Id == coordinacionPmaDto.Id.Value);
                 if (coordinacion != null)
                 {
                     // Actualizar datos existentes
-                    _mapper.Map(coordinacionDto, coordinacion);
+                    _mapper.Map(coordinacionPmaDto, coordinacion);
                     coordinacion.Borrado = false;
                 }
                 else
                 {
                     // Crear nueva coordinación
-                    var nuevaCoordinacion = _mapper.Map<CoordinacionCecopi>(coordinacionDto);
+                    var nuevaCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionPmaDto);
                     nuevaCoordinacion.Id = 0;
-                    direccionCoordinacionEmergencia.CoordinacionesCecopi.Add(nuevaCoordinacion);
+                    direccionCoordinacionEmergencia.CoordinacionesPMA.Add(nuevaCoordinacion);
                 }
             }
             else
             {
                 // Crear nueva coordinación
-                var nuevaCoordinacion = _mapper.Map<CoordinacionCecopi>(coordinacionDto);
+                var nuevaCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionPmaDto);
                 nuevaCoordinacion.Id = 0;
-                direccionCoordinacionEmergencia.CoordinacionesCecopi.Add(nuevaCoordinacion);
+                direccionCoordinacionEmergencia.CoordinacionesPMA.Add(nuevaCoordinacion);
             }
         }
 
-        // Eliminar lógicamente las coordinaciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
+        // Eliminar lógicamente las coordinaciones PMA que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
         if (request.IdDireccionCoordinacionEmergencia.HasValue)
         {
-            // Solo las coordinaciones con Id existente (no nuevas)
             var idsEnRequest = request.Coordinaciones
                 .Where(c => c.Id.HasValue && c.Id > 0)
                 .Select(c => c.Id)
                 .ToList();
 
-            var coordinacionesParaEliminar = direccionCoordinacionEmergencia.CoordinacionesCecopi
-                .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
+            var coordinacionesParaEliminar = direccionCoordinacionEmergencia.CoordinacionesPMA
+            .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id))
                 .ToList();
+
             foreach (var coordinacion in coordinacionesParaEliminar)
             {
-                _unitOfWork.Repository<CoordinacionCecopi>().DeleteEntity(coordinacion);
+                _unitOfWork.Repository<CoordinacionPMA>().DeleteEntity(coordinacion);
             }
         }
 
@@ -149,10 +154,10 @@ public class CreateOrUpdateCoordinacionCecopiCommandHandler : IRequestHandler<Cr
         var result = await _unitOfWork.Complete();
         if (result <= 0)
         {
-            throw new Exception("No se pudo insertar/actualizar la Coordinación CECOPI");
+            throw new Exception("No se pudo insertar/actualizar la Coordinación PMA");
         }
 
-        _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionCecopiCommandHandler)} - END");
-        return new CreateOrUpdateCoordinacionCecopiResponse { IdDireccionCoordinacionEmergencia = direccionCoordinacionEmergencia.Id };
+        _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionPmaCommandHandler)} - END");
+        return new CreateOrUpdateCoordinacionPmaResponse { IdDireccionCoordinacionEmergencia = direccionCoordinacionEmergencia.Id };
     }
 }

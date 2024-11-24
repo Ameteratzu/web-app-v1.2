@@ -55,6 +55,15 @@ public class GeometryValidator : IGeometryValidator
     public bool IsGeometryValidAndInEPSG4326(Geometry geometry)
     {
         if (geometry == null) return false;
+
+        foreach (var coordinate in geometry.Coordinates)
+        {
+            if (coordinate.X < -180 || coordinate.X > 180 || coordinate.Y < -90 || coordinate.Y > 90)
+            {
+                return false;
+            }
+        }
+
         if (!geometry.IsValid) return false;
 
         if (geometry.SRID == -1)

@@ -1,15 +1,13 @@
-﻿using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
-using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
-using DGPCE.Sigemad.Application.Helpers;
+﻿using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Resources;
 using DGPCE.Sigemad.Domain.Constracts;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateOrUpdateCoordinacionCecopi;
-public class CreateOrUpdateCoordinacionCecopiCommandValidator : AbstractValidator<CreateOrUpdateCoordinacionCecopiCommand>
+namespace DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
+internal class CreateOrUpdateCoordinacionPmaCommandValidator : AbstractValidator<CreateOrUpdateCoordinacionPmaCommand>
 {
-    public CreateOrUpdateCoordinacionCecopiCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
+    public CreateOrUpdateCoordinacionPmaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
         RuleFor(x => x.IdIncendio)
             .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
@@ -18,13 +16,13 @@ public class CreateOrUpdateCoordinacionCecopiCommandValidator : AbstractValidato
             .NotNull().WithMessage(localizer["CoordinacionesObligatorio"])
             .NotEmpty().WithMessage(localizer["CoordinacionesObligatorio"]);
 
-        RuleForEach(x => x.Coordinaciones).SetValidator(new CoordinacionCecopiDtoValidator(localizer, geometryValidator));
+        RuleForEach(x => x.Coordinaciones).SetValidator(new CoordinacionPmaDtoValidator(localizer, geometryValidator));
     }
 }
 
-public class CoordinacionCecopiDtoValidator : AbstractValidator<CreateOrUpdateCoordinacionCecopiDto>
+public class CoordinacionPmaDtoValidator : AbstractValidator<CreateOrUpdateCoordinacionPmaDto>
 {
-    public CoordinacionCecopiDtoValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
+    public CoordinacionPmaDtoValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
 
         RuleFor(x => x.Lugar)

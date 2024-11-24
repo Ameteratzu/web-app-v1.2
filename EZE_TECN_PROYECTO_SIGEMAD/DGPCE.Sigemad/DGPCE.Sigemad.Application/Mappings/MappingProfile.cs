@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
+using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
@@ -130,6 +131,7 @@ public class MappingProfile : Profile
         CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
         CreateMap<CreateOrUpdateDireccionDto, Direccion>();
         CreateMap<CreateOrUpdateCoordinacionCecopiDto, CoordinacionCecopi>();
+        CreateMap<CreateOrUpdateCoordinacionPmaDto, CoordinacionPMA>();
         CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
 
 
