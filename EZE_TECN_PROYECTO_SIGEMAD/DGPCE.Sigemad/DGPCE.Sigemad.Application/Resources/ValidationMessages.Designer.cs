@@ -205,6 +205,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fecha de Inicio debe ser menor que Fecha Fin.
+        /// </summary>
+        public static string FechaInicioDebeSerMenorQueFechaFin {
+            get {
+                return ResourceManager.GetString("FechaInicioDebeSerMenorQueFechaFin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fecha de Inicio es obligatoria.
         /// </summary>
         public static string FechaInicioObligatorio {
@@ -327,6 +336,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string IdSucesoPrincipalObligatorio {
             get {
                 return ResourceManager.GetString("IdSucesoPrincipalObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id Tipo de Direccion es inválido.
+        /// </summary>
+        public static string IdTipoDireccionEmergenciaInvalido {
+            get {
+                return ResourceManager.GetString("IdTipoDireccionEmergenciaInvalido", resourceCulture);
             }
         }
         

@@ -22,6 +22,9 @@ GO
 DROP TABLE IF EXISTS ActivacionPlanEmergencia
 GO
 
+DROP TABLE IF EXISTS ActivacionPlanesEmergencia
+GO
+
 DROP TABLE IF EXISTS PlanEmergencia
 GO
 

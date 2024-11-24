@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
+using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
@@ -124,7 +125,9 @@ public class MappingProfile : Profile
         CreateMap<EntidadMenor, EntidadMenorDto>();
 
 
+        // Direccion y Coordinacion de Emergencia
         CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
+        CreateMap<CreateOrUpdateDireccionDto, Direccion>();
         CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
 
 
@@ -139,8 +142,6 @@ public class MappingProfile : Profile
         CreateMap<Territorio, TerritorioVm>();
         CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
         CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
-        CreateMap<DireccionCoordinacionEmergencia, CreateDireccionCoordinacionEmergenciasCommand>()
-        .ForMember(dest => dest.IdTipoDireccionEmergencia, opt => opt.MapFrom(src => (TipoDireccionEmergenciaEnum)src.IdTipoDireccionEmergencia));
 
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()

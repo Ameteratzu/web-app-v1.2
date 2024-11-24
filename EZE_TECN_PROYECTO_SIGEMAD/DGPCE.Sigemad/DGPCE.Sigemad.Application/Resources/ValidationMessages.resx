@@ -286,4 +286,10 @@
   <data name="AreaAfectadaVacio" xml:space="preserve">
     <value>La lista de áreas afectadas no puede estar vacía.</value>
   </data>
+  <data name="IdTipoDireccionEmergenciaInvalido" xml:space="preserve">
+    <value>Id Tipo de Direccion es inválido</value>
+  </data>
+  <data name="FechaInicioDebeSerMenorQueFechaFin" xml:space="preserve">
+    <value>Fecha de Inicio debe ser menor que Fecha Fin</value>
+  </data>
 </root>

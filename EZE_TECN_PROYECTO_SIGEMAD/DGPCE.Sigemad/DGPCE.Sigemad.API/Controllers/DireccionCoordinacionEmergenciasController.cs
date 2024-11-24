@@ -1,10 +1,12 @@
-﻿using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
+﻿using DGPCE.Sigemad.Application.Dtos.Direcciones;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Delete;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.DireccionCoordinacionEmergenciasById;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasByIdIncendioList;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasList;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
+using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -96,6 +98,15 @@ namespace DGPCE.Sigemad.API.Controllers
                 return NotFound();
 
             return Ok(listado);
+        }
+
+        [HttpPost("direcciones")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<CreateOrUpdateDireccionDto>> CreateDirecciones([FromBody] CreateOrUpdateDireccionCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }
