@@ -1,6 +1,8 @@
 ﻿
+using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
+using DGPCE.Sigemad.Application.Features.Parametros.Commands;
+using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using MediatR;
-using NetTopologySuite.Geometries;
 
 
 namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
@@ -8,17 +10,11 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
     public class CreateEvolucionCommand : IRequest<CreateEvolucionResponse>
     {
         public int IdIncendio { get; set; }
-        public DateTime? FechaHoraEvolucion { get; set; }
-        public int? IdEntradaSalida { get; set; }
-        public int? IdMedio { get; set; }
-        public int? IdTipoRegistro { get; set; }
-        public string? Observaciones { get; set; }
-        public string? Prevision { get; set; }
-        public int? IdEstadoIncendio { get; set; }
-        public string? PlanEmergenciaActivado { get; set; }
-        public int? IdSituacionOperativa { get; set; }
-        public decimal? SuperficieAfectadaHectarea { get; set; }
-        public DateTime? FechaFinal { get; set; }
-        public ICollection<int>? EvolucionProcedenciaDestinos { get; set; }
+        public int? IdEvolucion { get; set; }
+        public CreateRegistroCommand? Registro { get; set; }
+        public CreateDatoPrincipalCommand? DatoPrincipal { get; set; }
+        public CreateParametroCommand? Parametro { get; set; }
+
+        public ICollection<int>? RegistroProcedenciasDestinos { get; set; }
     }
 }

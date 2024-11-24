@@ -56,7 +56,6 @@ public class AreasAfectadasController : ControllerBase
         return NoContent();
     }
     
-
     [HttpGet("{id:int}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -82,6 +81,4 @@ public class AreasAfectadasController : ControllerBase
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }
-
-
 }

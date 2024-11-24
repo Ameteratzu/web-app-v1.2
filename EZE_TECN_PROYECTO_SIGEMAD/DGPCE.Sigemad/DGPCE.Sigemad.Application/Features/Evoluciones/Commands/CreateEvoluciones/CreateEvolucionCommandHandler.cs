@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
-using DGPCE.Sigemad.Domain.Constracts;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Parametros.Commands;
+using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,56 +18,106 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
     {
         private readonly ILogger<CreateEvolucionCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IGeometryValidator _geometryValidator;
         private readonly IMapper _mapper;
-        private readonly IEvolucionService _evolucionService;
 
 
         public CreateEvolucionCommandHandler(
             ILogger<CreateEvolucionCommandHandler> logger,
             IUnitOfWork unitOfWork,
-            IGeometryValidator geometryValidator,
-            IMapper mapper,
-            IEvolucionService evolucionService)
+            IMapper mapper)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _geometryValidator = geometryValidator;
-            _evolucionService = evolucionService;
         }
 
         public async Task<CreateEvolucionResponse> Handle(CreateEvolucionCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - BEGIN");
 
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
-            if (incendio is null)
+            var idEvolucion = 0;
+            var result = 0;
+
+            if (request.Registro != null)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                await comprobarRegistro(request.Registro);
             }
 
-            if (request.IdEntradaSalida !=null)
+            if (request.Parametro != null)
             {
-                var entradaSalida = await _unitOfWork.Repository<EntradaSalida>().GetByIdAsync((int)request.IdEntradaSalida);
-                if (entradaSalida is null)
+                await comprobarParametros(request.Parametro);
+            }
+
+
+            if (request.RegistroProcedenciasDestinos != null)
+            {
+                var idsEvolucionProcedenciaDestinos = request.RegistroProcedenciasDestinos.Select(a => a).Distinct();
+                var evolucionProcedenciaDestinosExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(p => idsEvolucionProcedenciaDestinos.Contains(p.Id));
+                if (evolucionProcedenciaDestinosExistentes.Count() != idsEvolucionProcedenciaDestinos.Count())
                 {
-                    _logger.LogWarning($"request.IdEntradaSalida: {request.IdEntradaSalida}, no encontrado");
-                    throw new NotFoundException(nameof(EntradaSalida), request.IdEntradaSalida);
+                    var idsEvolucionProcedenciaDestinoExistentes = evolucionProcedenciaDestinosExistentes.Select(p => p.Id).ToList();
+                    var idsEvolucionProcedenciaDestinosExistentesInvalidas = idsEvolucionProcedenciaDestinos.Except(idsEvolucionProcedenciaDestinoExistentes).ToList();
+
+                    if (idsEvolucionProcedenciaDestinosExistentesInvalidas.Any())
+                    {
+                        _logger.LogWarning($"Las siguientes Id's de procedencia destinos: {string.Join(", ", idsEvolucionProcedenciaDestinosExistentesInvalidas)}, no se encontraron");
+                        throw new NotFoundException(nameof(ProcedenciaDestino), string.Join(", ", idsEvolucionProcedenciaDestinosExistentesInvalidas));
+                    }
                 }
             }
 
-            if (request.IdTipoRegistro != null)
+
+            Evolucion evolucion = null;
+            if (request.IdEvolucion.HasValue)
             {
-                var tipoRegistro = await _unitOfWork.Repository<TipoRegistro>().GetByIdAsync((int)request.IdTipoRegistro);
-                if (tipoRegistro is null)
+
+                var evolucionSpec = new EvolucionSpecificationParams() { Id= request.IdEvolucion};
+                    evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(new EvolucionSpecification(evolucionSpec));
+
+                if (evolucion is null || evolucion.Borrado)
                 {
-                    _logger.LogWarning($"request.IdTipoRegistro: {request.IdTipoRegistro}, no encontrado");
-                    throw new NotFoundException(nameof(TipoRegistro), request.IdTipoRegistro);
+                    _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");
+                    throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
                 }
+
+                _mapper.Map(request, evolucion, typeof(CreateRegistroCommand), typeof(Evolucion));
+
+                _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+                result = await _unitOfWork.Complete();
+                idEvolucion = evolucion.Id;
+
+            }
+            else
+            {
+                var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
+                if (incendio is null || incendio.Borrado)
+                {
+                    _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
+                    throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                }
+
+               var evolucionEntity = _mapper.Map<Evolucion>(request);
+
+                _unitOfWork.Repository<Evolucion>().AddEntity(evolucionEntity);
+                result = await _unitOfWork.Complete();
+                idEvolucion = evolucionEntity.Id;
+            }
+  
+       
+            if (result <= 0)
+            {
+                throw new Exception("No se pudo insertar la Evolución");
             }
 
+            _logger.LogInformation(nameof(CreateEvolucionResponse) + " - END");
+            return new CreateEvolucionResponse {Id = idEvolucion };
+
+        }
+
+
+
+        private async Task comprobarRegistro(CreateRegistroCommand request)
+        {
             if (request.IdMedio != null)
             {
                 var medio = await _unitOfWork.Repository<Medio>().GetByIdAsync((int)request.IdMedio);
@@ -76,45 +128,71 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 }
             }
 
-
-            if (request.IdEstadoIncendio != null)
+            if (request.IdEntradaSalida != null)
             {
-                var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync((int)request.IdEstadoIncendio);
-                if (estadoIncendio is null)
+                var entradaSalida = await _unitOfWork.Repository<EntradaSalida>().GetByIdAsync((int)request.IdEntradaSalida);
+                if (entradaSalida is null)
+                {
+                    _logger.LogWarning($"request.IdEntradaSalida: {request.IdEntradaSalida}, no encontrado");
+                    throw new NotFoundException(nameof(EntradaSalida), request.IdEntradaSalida);
+                }
+            }
+
+        }
+
+        private async Task comprobarParametros(CreateParametroCommand request)
+        {
+  
+              var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync((int)request.IdEstadoIncendio);
+                if (estadoIncendio is null || estadoIncendio.Obsoleto)
                 {
                     _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
                     throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
+                }
+
+            if (request.IdFase != null)
+            {
+                var fase = await _unitOfWork.Repository<Fase>().GetByIdAsync((int)request.IdFase);
+                if (fase is null)
+                {
+                    _logger.LogWarning($"request.IdFase: {request.IdFase}, no encontrado");
+                    throw new NotFoundException(nameof(Fase), request.IdFase);
+                }
+            }
+
+            if (request.IdFase != null)
+            {
+                var fase = await _unitOfWork.Repository<Fase>().GetByIdAsync((int)request.IdFase);
+                if (fase is null)
+                {
+                    _logger.LogWarning($"request.IdFase: {request.IdFase}, no encontrado");
+                    throw new NotFoundException(nameof(Fase), request.IdFase);
                 }
             }
 
             if (request.IdSituacionOperativa != null)
             {
-                var estadoIncendio = await _unitOfWork.Repository<SituacionOperativa>().GetByIdAsync((int)request.IdSituacionOperativa);
-                if (estadoIncendio is null)
+                var situacionOperativa = await _unitOfWork.Repository<SituacionOperativa>().GetByIdAsync((int)request.IdSituacionOperativa);
+                if (situacionOperativa is null)
                 {
-                    _logger.LogWarning($"request.IdSituacionOperativa: {request.IdSituacionOperativa}, no encontrado");
+                    _logger.LogWarning($"request.IdFase: {request.IdSituacionOperativa}, no encontrado");
                     throw new NotFoundException(nameof(SituacionOperativa), request.IdSituacionOperativa);
                 }
             }
 
-            await _evolucionService.ComprobacionEvolucionProcedenciaDestinos(request.EvolucionProcedenciaDestinos);
-            var evolucion = _mapper.Map<Evolucion>(request);
-
-            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
-
-            var result = await _unitOfWork.Complete();
-            if (result <= 0)
+            if (request.IdSituacionEquivalente != null)
             {
-                throw new Exception("No se pudo insertar nueva evolución");
+                var situacionEquivalente = await _unitOfWork.Repository<SituacionOperativa>().GetByIdAsync((int)request.IdSituacionEquivalente);
+                if (situacionEquivalente is null)
+                {
+                    _logger.LogWarning($"request.IdSituacionEquivalente: {request.IdSituacionEquivalente}, no encontrado");
+                    throw new NotFoundException(nameof(SituacionOperativa), request.IdSituacionEquivalente);
+                }
             }
 
-            _logger.LogInformation($"La evolución {evolucion.Id} fue creado correctamente");
 
-            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
-            //await _evolucionService.CambiarEstadoSucesoIncendioEvolucion(evolucion.IdEstadoIncendio.Value, evolucion.IdIncendio);
-
-            _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
-            return new CreateEvolucionResponse { Id = evolucion.Id };
         }
+
+
     }
 }

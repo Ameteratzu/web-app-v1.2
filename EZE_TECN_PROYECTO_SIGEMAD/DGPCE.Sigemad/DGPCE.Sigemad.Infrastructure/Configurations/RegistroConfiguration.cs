@@ -1,18 +1,13 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace DGPCE.Sigemad.Infrastructure.Configurations;
-
-public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
+internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
 {
-    public void Configure(EntityTypeBuilder<Evolucion> builder)
+    public void Configure(EntityTypeBuilder<Registro> builder)
     {
 
-        builder.ToTable("Evolucion");
-
-        builder.Property(e => e.IdIncendio)
-         .IsRequired();
+        builder.ToTable("Registro");
 
         builder.HasKey(e => e.Id);
 
@@ -37,12 +32,20 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         .HasMaxLength(500)
         .IsUnicode(false);
 
+        builder.HasOne(d => d.Medio)
+           .WithMany()
+           .HasForeignKey(d => d.IdMedio)
+           .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(d => d.Incendio)
-                .WithMany(i => i.Evoluciones)
-                .HasForeignKey(d => d.IdIncendio);
+        builder.HasOne(d => d.EntradaSalida)
+            .WithMany()
+            .HasForeignKey(d => d.IdEntradaSalida)
+            .OnDelete(DeleteBehavior.Restrict);
 
+        // Relación uno a uno con Evolucion        
+        builder.HasOne(r => r.Evolucion)
+        .WithOne(e => e.Registro)
+        .HasForeignKey<Registro>(r => r.Id)
+        .OnDelete(DeleteBehavior.Restrict);
     }
 }
-
-

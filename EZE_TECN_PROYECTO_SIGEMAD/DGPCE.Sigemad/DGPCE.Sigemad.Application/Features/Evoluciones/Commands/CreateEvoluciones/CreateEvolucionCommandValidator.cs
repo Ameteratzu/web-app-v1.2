@@ -9,8 +9,7 @@ public class CreateEvolucionCommandValidator : AbstractValidator<CreateEvolucion
 
     public CreateEvolucionCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(p => p.IdIncendio)
-                 .GreaterThan(0).WithMessage(localizer["IncendioObligatorio"]);
+
 
     }
 }

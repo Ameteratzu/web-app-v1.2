@@ -142,7 +142,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
         public DbSet<Evolucion> Evoluciones { get; set; }
-        public DbSet<EvolucionProcedenciaDestino> EvolucionesProcedenciaDestinos { get; set; }
+        public DbSet<RegistroProcedenciaDestino> RegistroProcedenciasDestinos { get; set; }
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
         public DbSet<TitularidadMedio> TitularidadMedios { get; set; }
@@ -165,5 +165,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<Fase> Fases { get; set; }
         public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
 
+        public DbSet<Registro> Registros { get; set; }
+
+        public DbSet<Parametro> Parametro { get; set; }
+        public DbSet<DatoPrincipal> DatoPrincipal { get; set; }
     }
 }
