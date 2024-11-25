@@ -12,40 +12,46 @@
     </div>
   
     <div class="form-container">
-      <form [formGroup]="formData">
+      <form *ngIf="formData" [formGroup]="formData">
         <!-- REGISTRO -->
         <div>
           <h3 class="title">REGISTRO</h3>
           <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-            <mat-form-field class="input spaced-input" fxFlex="22%">
-              <mat-label>Fecha y hora</mat-label>
-              <input matInput [matDatepicker]="picker1" formControlName="registroFechaHora">
+
+            <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
+              <mat-label>Fecha y Hora</mat-label>
+              <input matInput [matDatepicker]="picker1" [formControl]="getForm('startDate')" />
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
   
-            <mat-form-field class="input spaced-input" fxFlex="22%">
+            <mat-form-field class="input spaced-input" fxFlex="25%">
               <mat-label>Entrada / salida</mat-label>
-              <mat-select formControlName="registroEntradaSalida">
-                <mat-option *ngFor="let option of entradaSalidaOptions" [value]="option">
-                  {{ option }}
+              <mat-select formControlName="inputOutput">
+                <mat-option *ngFor="let option of inputOutputs()" [value]="option.id">
+                  {{ option.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
   
-            <mat-form-field class="input spaced-input" fxFlex="22%">
+            <mat-form-field class="input spaced-input" fxFlex="25%">
               <mat-label>Medio</mat-label>
-              <mat-select formControlName="registroMedio">
-                <mat-option *ngFor="let medio of mediosOptions" [value]="medio">
-                  {{ medio }}
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let medio of medias()" [value]="medio.id">
+                  {{ medio.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-  
-            <mat-form-field class="input spaced-input" fxFlex="22%">
-              <mat-label>Procedencia/Destino</mat-label>
-              <input matInput formControlName="registroProcedenciaDestino">
+
+            <mat-form-field class="input spaced-input" fxFlex="25%">
+              <mat-label>Procedencia / Destino </mat-label>
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let origen of originDestinations()" [value]="origen.id">
+                  {{ origen.descripcion }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
+
           </div>
         </div>
   
@@ -54,23 +60,25 @@
           <h3 class="title">DATOS PRINCIPALES</h3>
   
           <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-            <mat-form-field class="input spaced-input" fxFlex="45%">
+      
+            <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
               <mat-label>Fecha y hora de actualización</mat-label>
-              <input matInput [matDatepicker]="picker2" formControlName="datosFechaHoraActualizacion">
+              <input matInput [matDatepicker]="picker2" [formControl]="getForm('datetimeUpdate')" />
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
-  
-            <mat-form-field class="input spaced-input" fxFlex="45%">
+
+            <mat-form-field class="input spaced-input" fxFlex="75%">
               <mat-label>Observaciones</mat-label>
-              <textarea matInput formControlName="datosObservaciones"></textarea>
+              <textarea matInput [formControl]="getForm('observations_1')"> </textarea>
             </mat-form-field>
           </div>
   
           <div class="row" fxLayout="row" fxLayoutAlign="start center">
-            <mat-form-field class="input full-width-input" fxFlex="95%">
+
+            <mat-form-field class="input full-width-input" fxFlex="99%">
               <mat-label>Previsión</mat-label>
-              <textarea matInput formControlName="datosPrevision"></textarea>
+              <textarea matInput [formControl]="getForm('forecast')"> </textarea>
             </mat-form-field>
           </div>
         </div>
@@ -81,54 +89,68 @@
           <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
   
             <mat-form-field class="input spaced-input" fxFlex="20%">
-              <mat-label>Selecciona opción</mat-label>
-              <mat-select>
-                <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+              <mat-label>Estado del incendio </mat-label>
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let op of status()" [value]="op.id">
+                  {{ op.descripcion }}
+                </mat-option>
               </mat-select>
             </mat-form-field>
-  
+
             <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Fecha final</mat-label>
+              <input matInput [matDatepicker]="picker3" [formControl]="getForm('end_date')" />
+              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="input spaced-input" fxFlex="60%">
+              <mat-label>Plan de emergencias activado</mat-label>
+              <input matInput [formControl]="getForm('emergencyPlanActivated')" placeholder="Ingresa texto" required />
+            </mat-form-field>
+  
+            <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
               <mat-label>Fecha</mat-label>
               <input matInput [matDatepicker]="picker" />
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+            </mat-form-field> -->
   
-            <mat-form-field class="input spaced-input" fxFlex="60%">
+            <!-- <mat-form-field class="input spaced-input" fxFlex="60%">
               <mat-label>Selecciona otro</mat-label>
               <mat-select>
                 <mat-option *ngFor="let option of anotherSelectOptions" [value]="option">{{ option }}</mat-option>
               </mat-select>
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
         </div>
   
         <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
-          <mat-form-field class="input spaced-input" fxFlex="20%">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
             <mat-label>Campo 1</mat-label>
             <mat-select>
               <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
   
-          <mat-form-field class="input spaced-input" fxFlex="20%">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
             <mat-label>Campo 2</mat-label>
             <mat-select>
               <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
   
-          <mat-form-field class="input spaced-input" fxFlex="20%">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
             <mat-label>Campo 3</mat-label>
             <mat-select>
               <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field> -->
   
-          <mat-form-field class="input spaced-input" fxFlex="20%">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
             <mat-label>Texto</mat-label>
             <input matInput />
-          </mat-form-field>
+          </mat-form-field> -->
         </div>
       </form>  
       <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center">

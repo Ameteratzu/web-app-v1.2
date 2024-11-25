@@ -39,7 +39,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-h3, h4, h5, h6 {
+h3, h5, h6 {
   font-family: $font-family;
   font-size: 24px;
   line-height: 32px;
@@ -48,20 +48,30 @@ h3, h4, h5, h6 {
   margin-bottom: 0px;
 }
 
+h4 {
+  font-family: $font-family;
+  font-size: 18px;
+  line-height: 32px;
+  font-weight: 400;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  color: var(--primary-50) !important;
+}
+
 p {
- 
+  font-family: $font-family;
   font-size: 14px;
   line-height: 20px;
 }
 
-//Navbar
+
 mat-toolbar h1 {
   font-family: $font-family !important;
   font-size: 32px !important;
   line-height: 40px !important;
   font-weight: 700 !important;
 }
-//Items menu
+
 .mdc-list-item__primary-text {
   font-family: $font-family !important;
 }
@@ -83,4 +93,25 @@ mat-toolbar h1 {
 .mat-mdc-unelevated-button .mdc-button__label {
   font-family: $font-family;
   color: white;
+}
+
+table .mat-mdc-header-cell {
+  font-family: $font-family;
+}
+
+.mat-mdc-cell {
+  font-family: $font-family;
+}
+
+.mat-mdc-paginator-page-size-label {
+  font-family: $font-family;
+}
+
+.mat-mdc-paginator-range-label {
+  font-family: $font-family;
+}
+
+.mat-mdc-card-title {
+  font-family: $font-family !important;
+  color: var(--primary-50) !important;
 }

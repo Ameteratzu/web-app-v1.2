@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CommentsComponent } from './pages/comments/comments.component';
 import { FireComponent } from './pages/fire/fire.component';
+import { FireEditComponent } from './pages/fire/fire-edit/fire-edit.component';
 
 export const routes: Routes = [
 
@@ -24,5 +25,6 @@ export const routes: Routes = [
     { path: 'catalogs', component: CommentsComponent },
     { path: 'search', component: CommentsComponent },
     { path: 'episodes', component: CommentsComponent },
+    { path: 'fire-national-edit/:id', component: FireEditComponent },
 ];
 
