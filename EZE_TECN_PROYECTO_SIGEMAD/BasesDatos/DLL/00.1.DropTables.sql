@@ -1,5 +1,14 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
 
+DROP TABLE IF EXISTS Documentacion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS Documentacion
+GO
+
+DROP TABLE IF EXISTS TipoDocumento
+GO
+
 DROP TABLE IF EXISTS Archivo
 GO
 
