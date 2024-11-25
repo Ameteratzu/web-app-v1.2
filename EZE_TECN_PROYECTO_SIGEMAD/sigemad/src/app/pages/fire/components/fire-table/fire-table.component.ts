@@ -8,6 +8,7 @@ import moment from 'moment';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FireCreateComponent } from '../../../fire-evolution-create/fire-evolution-create.component';
+import { FireOtherInformationComponent } from '../../../fire-other-information/fire-other-information.component';
 
 @Component({
   selector: 'app-fire-table',
@@ -60,6 +61,23 @@ export class FireTableComponent implements OnChanges {
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos Evolución', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
+  }
+
+  goModalOtherInformation() {
+    const dialogRef = this.dialog.open(FireOtherInformationComponent, {
+      width: '90vw', 
+      maxWidth: 'none', 
+      //height: '90vh', 
+      data: {
+        title: 'Nuevo - Otra Información', 
       },
     });
 
