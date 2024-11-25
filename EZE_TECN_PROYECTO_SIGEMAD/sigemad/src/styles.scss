@@ -115,3 +115,15 @@ table .mat-mdc-header-cell {
   font-family: $font-family !important;
   color: var(--primary-50) !important;
 }
+.mat-mdc-dialog-title{
+  font-family: $font-family !important;
+}
+
+.mat-mdc-raised-button {
+  font-family: $font-family !important;
+}
+
+.dialog-title{
+  text-align: center;
+  color: var( --primary-50) !important;
+}
