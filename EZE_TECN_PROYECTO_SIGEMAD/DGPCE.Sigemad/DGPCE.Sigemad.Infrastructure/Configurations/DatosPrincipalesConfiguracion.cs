@@ -37,6 +37,6 @@ public class DatosPrincipalesConfiguracion : IEntityTypeConfiguration<DatoPrinci
         builder.HasOne(r => r.Evolucion)
             .WithOne(e => e.DatoPrincipal)
             .HasForeignKey<DatoPrincipal>(r => r.Id)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

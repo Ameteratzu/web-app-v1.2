@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Mappings;
@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Tests.Features.Evoluciones;
 public class CreateEvolucionCommandHandlerTests
 {
 
-    private readonly Mock<ILogger<CreateEvolucionCommandHandler>> _loggerMock;
+    private readonly Mock<ILogger<ManageEvolucionCommandHandler>> _loggerMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly IMapper _mapper;
     private readonly Mock<IGeometryValidator> _geometryValidatorMock;
@@ -25,7 +25,7 @@ public class CreateEvolucionCommandHandlerTests
 
     public CreateEvolucionCommandHandlerTests()
     {
-        _loggerMock = new Mock<ILogger<CreateEvolucionCommandHandler>>();
+        _loggerMock = new Mock<ILogger<ManageEvolucionCommandHandler>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _geometryValidatorMock = new Mock<IGeometryValidator>();
         _evolucionServiceMock = new Mock<IEvolucionService>();
@@ -44,7 +44,7 @@ public class CreateEvolucionCommandHandlerTests
         public async Task Handle_GivenValidCommand_ShouldReturnSuccess()
         {
             // Arrange
-            var command = new CreateEvolucionCommand
+            var command = new ManageEvolucionCommand
             {
                 IdIncendio = 1,
                 FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -112,7 +112,7 @@ public class CreateEvolucionCommandHandlerTests
             _coordinateTransformationServiceMock.Setup(u => u.ConvertToUTM(It.IsAny<Geometry>()))
                 .Returns((Geometry geometry) => (500000.0, 4649776.22482, 30));
 
-            _evolucionServiceMock.Setup(e => e.CrearNuevaEvolucion(It.IsAny<CreateEvolucionCommand>()))
+            _evolucionServiceMock.Setup(e => e.CrearNuevaEvolucion(It.IsAny<ManageEvolucionCommand>()))
                 .ReturnsAsync(new Evolucion { Id = 1 });
    
         var handler = new CreateEvolucionCommandHandler(
@@ -127,7 +127,7 @@ public class CreateEvolucionCommandHandlerTests
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<CreateEvolucionResponse>();
+            result.Should().BeOfType<ManageEvolucionResponse>();
             result.Id.Should().Be(1);
 
     }
@@ -138,7 +138,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidIncendioId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -194,7 +194,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidProvinciaAfectadaId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -253,7 +253,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidMunicipioAfectadoId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -318,7 +318,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidEntradaSalidaId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -386,7 +386,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidTipoRegistroId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -458,7 +458,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidTipoMedioId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -534,7 +534,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidTipoTecnicoId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -615,7 +615,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidEntidadMenorId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),
@@ -699,7 +699,7 @@ public class CreateEvolucionCommandHandlerTests
     public async Task Handle_GivenInvalidEstadoIncendioId_ShouldThrowNotFoundException()
     {
         // Arrange
-        var command = new CreateEvolucionCommand
+        var command = new ManageEvolucionCommand
         {
             IdIncendio = 1,
             FechaHoraEvolucion = DateTime.Parse("2024-10-09T14:05:59Z"),

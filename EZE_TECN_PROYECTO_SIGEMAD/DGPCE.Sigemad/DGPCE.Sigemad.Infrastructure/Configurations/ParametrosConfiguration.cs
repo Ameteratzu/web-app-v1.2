@@ -39,7 +39,7 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
         builder.HasOne(r => r.Evolucion)
             .WithOne(e => e.Parametro)
             .HasForeignKey<Parametro>(r => r.Id)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(d => d.EstadoIncendio)
             .WithMany()

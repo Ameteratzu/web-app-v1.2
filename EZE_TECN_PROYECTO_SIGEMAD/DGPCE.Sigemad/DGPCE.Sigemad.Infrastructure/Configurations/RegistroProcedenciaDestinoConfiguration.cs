@@ -21,7 +21,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
                 builder.HasOne(e => e.Evolucion)
                        .WithMany(e => e.RegistroProcedenciasDestinos)
                       .HasForeignKey(e => e.IdRegistro)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.ClientCascade);
 
                 builder.HasOne(e => e.ProcedenciaDestino)
                       .WithMany()

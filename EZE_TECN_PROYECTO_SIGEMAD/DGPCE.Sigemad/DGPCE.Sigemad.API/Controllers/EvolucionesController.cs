@@ -2,8 +2,8 @@
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesById;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Quereis.GetEvolucionesByIdIncendioList;
@@ -33,7 +33,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [HttpPost(("Datos"),Name = "CreateEvolucion")]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<CreateEvolucionResponse>> Create([FromBody] CreateEvolucionCommand command)
+        public async Task<ActionResult<ManageEvolucionResponse>> Create([FromBody] ManageEvolucionCommand command)
         {
             var response = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);

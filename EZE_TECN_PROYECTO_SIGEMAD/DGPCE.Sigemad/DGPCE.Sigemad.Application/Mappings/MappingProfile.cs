@@ -25,7 +25,7 @@ using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
@@ -106,7 +106,7 @@ public class MappingProfile : Profile
         //CreateMap<UpdateEvolucionCommand, Evolucion>()
         //  .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
 
-        CreateMap<CreateEvolucionCommand, Evolucion>()
+        CreateMap<ManageEvolucionCommand, Evolucion>()
             .ForMember(dest => dest.RegistroProcedenciasDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.RegistroProcedenciasDestinos)));
 
         CreateMap<ApplicationUser, ApplicationUserVm>();

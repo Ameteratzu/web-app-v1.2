@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
+using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
@@ -11,18 +12,18 @@ using Microsoft.Extensions.Logging;
 
 
 
-namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
+namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones
 {
 
-    public class CreateEvolucionCommandHandler : IRequestHandler<CreateEvolucionCommand, CreateEvolucionResponse>
+    public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionCommand, ManageEvolucionResponse>
     {
-        private readonly ILogger<CreateEvolucionCommandHandler> _logger;
+        private readonly ILogger<ManageEvolucionCommandHandler> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
 
-        public CreateEvolucionCommandHandler(
-            ILogger<CreateEvolucionCommandHandler> logger,
+        public ManageEvolucionCommandHandler(
+            ILogger<ManageEvolucionCommandHandler> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -31,9 +32,9 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             _mapper = mapper;
         }
 
-        public async Task<CreateEvolucionResponse> Handle(CreateEvolucionCommand request, CancellationToken cancellationToken)
+        public async Task<ManageEvolucionResponse> Handle(ManageEvolucionCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - BEGIN");
+            _logger.LogInformation(nameof(ManageEvolucionCommandHandler) + " - BEGIN");
 
             var idEvolucion = 0;
             var result = 0;
@@ -71,8 +72,8 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
             if (request.IdEvolucion.HasValue)
             {
 
-                var evolucionSpec = new EvolucionSpecificationParams() { Id= request.IdEvolucion};
-                    evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(new EvolucionSpecification(evolucionSpec));
+                var evolucionSpec = new EvolucionSpecificationParams() { Id = request.IdEvolucion };
+                evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(new EvolucionSpecification(evolucionSpec));
 
                 if (evolucion is null)
                 {
@@ -80,9 +81,17 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                     throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
                 }
 
-                _mapper.Map(request, evolucion, typeof(CreateRegistroCommand), typeof(Evolucion));
+                if (request.DatoPrincipal is null && request.Parametro is null && request.Registro is null)
+                {
+                    _unitOfWork.Repository<Evolucion>().DeleteEntity(evolucion);
+                }
+                else
+                {
+                    _mapper.Map(request, evolucion, typeof(CreateRegistroCommand), typeof(Evolucion));
 
-                _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+                    _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+                }
+
                 result = await _unitOfWork.Complete();
                 idEvolucion = evolucion.Id;
 
@@ -96,21 +105,21 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                     throw new NotFoundException(nameof(Incendio), request.IdIncendio);
                 }
 
-               var evolucionEntity = _mapper.Map<Evolucion>(request);
+                var evolucionEntity = _mapper.Map<Evolucion>(request);
 
                 _unitOfWork.Repository<Evolucion>().AddEntity(evolucionEntity);
                 result = await _unitOfWork.Complete();
                 idEvolucion = evolucionEntity.Id;
             }
-  
-       
+
+
             if (result <= 0)
             {
-                throw new Exception("No se pudo insertar la Evolución");
+                throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datops de la evolución");
             }
 
-            _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
-            return new CreateEvolucionResponse {Id = idEvolucion };
+            _logger.LogInformation(nameof(ManageEvolucionCommandHandler) + " - END");
+            return new ManageEvolucionResponse { Id = idEvolucion };
 
         }
 
@@ -142,13 +151,13 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
 
         private async Task comprobarParametros(CreateParametroCommand request)
         {
-  
-              var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync((int)request.IdEstadoIncendio);
-                if (estadoIncendio is null || estadoIncendio.Obsoleto)
-                {
-                    _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
-                    throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
-                }
+
+            var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
+            if (estadoIncendio is null || estadoIncendio.Obsoleto)
+            {
+                _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
+                throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
+            }
 
             if (request.IdFase != null)
             {

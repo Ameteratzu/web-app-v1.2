@@ -46,6 +46,6 @@ internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
         builder.HasOne(r => r.Evolucion)
         .WithOne(e => e.Registro)
         .HasForeignKey<Registro>(r => r.Id)
-        .OnDelete(DeleteBehavior.Restrict);
+        .OnDelete(DeleteBehavior.Cascade);
     }
 }

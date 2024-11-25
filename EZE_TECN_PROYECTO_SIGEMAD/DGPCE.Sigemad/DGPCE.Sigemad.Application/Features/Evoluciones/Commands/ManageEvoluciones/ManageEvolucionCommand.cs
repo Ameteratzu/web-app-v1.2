@@ -1,13 +1,12 @@
-﻿
-using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
+﻿using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using MediatR;
 
 
-namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvoluciones
+namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones
 {
-    public class CreateEvolucionCommand : IRequest<CreateEvolucionResponse>
+    public class ManageEvolucionCommand : IRequest<ManageEvolucionResponse>
     {
         public int IdIncendio { get; set; }
         public int? IdEvolucion { get; set; }
