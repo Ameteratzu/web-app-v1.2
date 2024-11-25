@@ -32,9 +32,7 @@ public class DeleteAreaAfectadaCommandHandler : IRequestHandler<DeleteAreaAfecta
             throw new NotFoundException(nameof(AreaAfectada), request.Id);
         }
 
-        areaAfectadaToDelete.Borrado = true;
-        areaAfectadaToDelete.FechaEliminacion = DateTime.Now;
-        _unitOfWork.Repository<AreaAfectada>().UpdateEntity(areaAfectadaToDelete);
+        _unitOfWork.Repository<AreaAfectada>().DeleteEntity(areaAfectadaToDelete);
 
         await _unitOfWork.Complete();
         _logger.LogInformation($"El area afectada con id: {request.Id}, se actualizo estado de borrado con éxito");

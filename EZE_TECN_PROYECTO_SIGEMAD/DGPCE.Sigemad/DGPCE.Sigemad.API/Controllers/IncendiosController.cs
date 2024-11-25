@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
+﻿using DGPCE.Sigemad.Application.Features.Documentciones.Queries.GetDocumentacionesByIdIncendioList;
+using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendioDetalles;
@@ -89,5 +90,18 @@ namespace DGPCE.Sigemad.API.Controllers
             var result = await _mediator.Send(query);
             return result;
         }
+
+        [HttpGet("{idIncendio}/documentaciones")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(Summary = "Listar toda la documentacion por Id de incendio")]
+        public async Task<IActionResult> GetImpactosByIdEvolucion(int idIncendio)
+        {
+            var query = new GetDocumentacionesByIdIncendioListQuery(idIncendio);
+            var listado = await _mediator.Send(query);
+            return Ok(listado);
+        }
+
     }
 }

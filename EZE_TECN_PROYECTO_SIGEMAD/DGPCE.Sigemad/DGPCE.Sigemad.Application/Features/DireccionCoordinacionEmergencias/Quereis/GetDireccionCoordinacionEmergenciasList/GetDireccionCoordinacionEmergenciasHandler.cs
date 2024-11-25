@@ -21,7 +21,8 @@ public class GetDireccionCoordinacionEmergenciasHandler : IRequestHandler<GetDir
     public async Task<IReadOnlyList<DireccionCoordinacionEmergenciaVm>> Handle(GetDireccionCoordinacionEmergenciasListQuery request, CancellationToken cancellationToken)
     {
         var includes = new List<Expression<Func<DireccionCoordinacionEmergencia, object>>>();
-        includes.Add(c => c.ActivacionPlanEmergencia);
+        //TODO: CORREGIR CUANDO SE CAMBIOS A LISTAS TABLAS
+        //includes.Add(c => c.ActivacionPlanEmergencia);
 
         var DireccionCoordinacionEmergencias = (await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetAsync(null, null, includes))
             .ToList()

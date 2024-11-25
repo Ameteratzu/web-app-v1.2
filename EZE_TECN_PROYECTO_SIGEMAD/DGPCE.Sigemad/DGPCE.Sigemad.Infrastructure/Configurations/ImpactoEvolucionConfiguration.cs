@@ -10,10 +10,14 @@ public class ImpactoEvolucionConfiguration : IEntityTypeConfiguration<ImpactoEvo
         builder.HasKey(e => e.Id);
         builder.ToTable("ImpactoEvolucion");
 
+
+        builder.Property(ie => ie.IdEvolucion)
+               .IsRequired();
+
         builder.Property(e => e.ZonaPlanificacion).HasColumnType("geometry");
 
         builder.HasOne(d => d.Evolucion)
-            .WithMany()
+            .WithMany(e => e.Impactos)
             .HasForeignKey(d => d.IdEvolucion)
             .OnDelete(DeleteBehavior.Restrict);
 

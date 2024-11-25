@@ -1,0 +1,46 @@
+﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
+using DGPCE.Sigemad.Application.Resources;
+using DGPCE.Sigemad.Domain.Constracts;
+using FluentValidation;
+using Microsoft.Extensions.Localization;
+
+namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+public class CreateOrUpdateAreaAfectadaCommandValidator : AbstractValidator<CreateOrUpdateAreaAfectadaCommand>
+{
+    public CreateOrUpdateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
+    {
+        RuleFor(p => p.IdIncendio)
+            .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
+
+        RuleFor(command => command.AreasAfectadas)
+            .NotNull().WithMessage(localizer["AreaAfectadaNoNulo"])
+            .NotEmpty().WithMessage(localizer["AreaAfectadaVacio"]);
+
+        // Validación para cada elemento de la lista AreasAfectadas
+        RuleForEach(command => command.AreasAfectadas).SetValidator(new AreaAfectadaDtoValidator(localizer, geometryValidator));
+    }
+}
+
+public class AreaAfectadaDtoValidator : AbstractValidator<CreateOrUpdateAreaAfectadaDto>
+{
+    public AreaAfectadaDtoValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
+    {
+        RuleFor(p => p.FechaHora)
+            .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
+
+        RuleFor(p => p.IdProvincia)
+           .NotNull().WithMessage(localizer["ProvinciaObligatorio"])
+           .GreaterThan(0).WithMessage(localizer["ProvinciaInvalido"]);
+
+        RuleFor(p => p.IdMunicipio)
+            .NotNull().WithMessage(localizer["MunicipioObligatorio"])
+            .GreaterThan(0).WithMessage(localizer["MunicipioInvalido"]);
+
+        RuleFor(p => p.IdEntidadMenor)
+                .GreaterThan(0).WithMessage(localizer["EntidadMenorObligatorio"]);
+
+        RuleFor(p => p.GeoPosicion)
+            .NotNull().When(p => p.GeoPosicion != null)
+            .Must(geometryValidator.IsGeometryValidAndInEPSG4326).WithMessage(localizer["GeoPosicionInvalida"]);
+    }
+}

@@ -85,7 +85,7 @@
           
         >
           <div
-            class="content border border-radius-2p-20"
+            class="content border border-radius-2 "
             style="width: 920px; height: 520px; overflow-y: scroll"
           >
             <div>
@@ -165,7 +165,7 @@
                 <!-- Datos principales -->
                 <div>
                   <div
-                    id="sectionParametros"
+                    id="sectionDatosPersonales"
                     class="font-20 fw-bold text-orange"
                   >
                     DATOS PRINCIPALES
@@ -208,7 +208,7 @@
                       <sg-field
                         label="Previsión"
                         type="textArea"
-                        [formControl]="getForm('Previsión')"
+                        [formControl]="getForm('forecast')"
                         [isRequired]="true"
                       >
                       </sg-field>
@@ -287,7 +287,7 @@
                   [formGroup]="formGroupAreaAfectada"
                 >
                   <div
-                    id="sectionParametros"
+                    id="sectionAreaAfectada"
                     class="font-20 fw-bold text-orange"
                   >
                     AREA AFECTADA
@@ -435,7 +435,7 @@
                   [formGroup]="formGroupConsecuenciasActuaciones"
                 >
                   <div
-                    id="sectionParametros"
+                    id="sectionConsecuenciasActuaciones"
                     class="font-20 fw-bold text-orange"
                   >
                     CONSECUENCIAS / ACTUACIONES

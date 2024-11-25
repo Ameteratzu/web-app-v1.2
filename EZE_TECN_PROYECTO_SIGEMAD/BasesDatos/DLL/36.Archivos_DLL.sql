@@ -1,0 +1,11 @@
+CREATE TABLE Archivo (
+    Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    NombreOriginal NVARCHAR(255) NOT NULL,
+    RutaDeAlmacenamiento NVARCHAR(255) NOT NULL,
+    NombreUnico NVARCHAR(255) NOT NULL,
+    Tipo NVARCHAR(255) NOT NULL,
+    Extension NVARCHAR(255) NOT NULL,
+    PesoEnBytes BIGINT NOT NULL,
+    FechaCreacion DATETIME2(7) NOT NULL,
+    CreadoPor UNIQUEIDENTIFIER NULL,
+);

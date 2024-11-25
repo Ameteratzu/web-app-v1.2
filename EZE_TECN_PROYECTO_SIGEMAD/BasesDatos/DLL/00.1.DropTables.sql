@@ -1,4 +1,17 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
+
+DROP TABLE IF EXISTS Documentacion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS Documentacion
+GO
+
+DROP TABLE IF EXISTS TipoDocumento
+GO
+
+DROP TABLE IF EXISTS Archivo
+GO
+
 DROP TABLE IF EXISTS SucesoRelacionado
 GO
 
@@ -15,13 +28,37 @@ GO
 DROP TABLE IF EXISTS SuperficieFiltro
 GO
 
+DROP TABLE IF EXISTS ActivacionPlanEmergencia
+GO
+
 DROP TABLE IF EXISTS ActivacionPlanesEmergencia
 GO
 
-DROP TABLE IF EXISTS TipoPlan
+DROP TABLE IF EXISTS PlanEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS CoordinacionCecopi
+GO
+
+DROP TABLE IF EXISTS CoordinacionPMA
+GO
+
+DROP TABLE IF EXISTS Direccion
 GO
 
 DROP TABLE IF EXISTS DireccionCoordinacionEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS TipoDireccionEmergencia
@@ -60,13 +97,53 @@ GO
 DROP TABLE IF EXISTS AreaAfectada
 GO
 
+
+DROP TABLE IF EXISTS Parametro
+GO
+
+
+DROP TABLE IF EXISTS DatoPrincipal
+GO
+
+DROP TABLE IF EXISTS RegistroEvolucion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS Registro_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS Registro_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS Registro
+GO
+
+DROP TABLE IF EXISTS Datoprincipal
+GO
+
+
+DROP TABLE IF EXISTS Registro
+GO
+
+
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino
+GO
+
+DROP TABLE IF EXISTS DatoPrincipal
+GO
+
+DROP TABLE IF EXISTS Parametro
 GO
 
 DROP TABLE IF EXISTS Evolucion
 GO
 
 DROP TABLE IF EXISTS SituacionOperativa
+GO
+
+DROP TABLE IF EXISTS Fase
+GO
+
+DROP TABLE IF EXISTS SituacionEquivalente
 GO
 
 DROP TABLE IF EXISTS TipoRegistro
@@ -112,6 +189,9 @@ DROP TABLE IF EXISTS Menu
 GO
 
 DROP TABLE IF EXISTS EstadoSuceso
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
 GO
 
 DROP TABLE IF EXISTS TipoSuceso

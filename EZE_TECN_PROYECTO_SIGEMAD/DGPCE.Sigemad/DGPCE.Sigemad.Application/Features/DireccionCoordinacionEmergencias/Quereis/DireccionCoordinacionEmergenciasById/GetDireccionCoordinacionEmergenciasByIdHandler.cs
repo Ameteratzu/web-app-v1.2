@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Queries.GetIntervencionById;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 
 namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.DireccionCoordinacionEmergenciasById;
-public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<GetDireccionCoordinacionEmergenciasById, DireccionCoordinacionEmergenciaVm>
+public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<GetDireccionCoordinacionEmergenciasById, DireccionCoordinacionEmergenciaDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<GetIntervencionByIdQueryHandler> _logger;
@@ -23,7 +24,7 @@ public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<Ge
         _mapper = mapper;
 
     }
-    public async Task<DireccionCoordinacionEmergenciaVm> Handle(GetDireccionCoordinacionEmergenciasById request, CancellationToken cancellationToken)
+    public async Task<DireccionCoordinacionEmergenciaDto> Handle(GetDireccionCoordinacionEmergenciasById request, CancellationToken cancellationToken)
     {
 
         _logger.LogInformation($"{nameof(GetDireccionCoordinacionEmergenciasById)} - BEGIN");
@@ -37,9 +38,7 @@ public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<Ge
         }
 
         _logger.LogInformation($"{nameof(GetDireccionCoordinacionEmergenciasById)} - END");
-
-        var direccionCoordinacionEmergenciaVm = _mapper.Map<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>(direccionCoordinacionEmergencia);
-        return direccionCoordinacionEmergenciaVm;
+        return _mapper.Map<DireccionCoordinacionEmergenciaDto>(direccionCoordinacionEmergencia);
 
     }
 }

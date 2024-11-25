@@ -23,11 +23,6 @@ public class ActivacionPlanEmergenciaConfiguration : IEntityTypeConfiguration<Ac
         builder.Property(a => a.RutaDocumentoActivacion)
             .HasMaxLength(255);
 
-        builder.HasOne(a => a.DireccionCoordinacionEmergencia)
-            .WithOne(d => d.ActivacionPlanEmergencia)
-            .HasForeignKey<ActivacionPlanEmergencia>(a => a.IdDireccionCoordinacionEmergencia)
-            .OnDelete(DeleteBehavior.Restrict);
-
         builder.HasOne(a => a.TipoPlan)
             .WithMany()
             .HasForeignKey(a => a.IdTipoPlan)

@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using DGPCE.Sigemad.Application.Contracts.Files;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Domain.Constracts;
 using DGPCE.Sigemad.Infrastructure.Persistence;
 using DGPCE.Sigemad.Infrastructure.Repositories;
@@ -26,6 +27,7 @@ namespace DGPCE.Sigemad.Infrastructure
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             services.AddScoped<IGeometryValidator, GeometryValidator>();
             services.AddScoped<ICoordinateTransformationService, CoordinateTransformationService>();
+            services.AddTransient<IFileService, LocalFileService> (provider => new LocalFileService(configuration));
 
             return services;
         }

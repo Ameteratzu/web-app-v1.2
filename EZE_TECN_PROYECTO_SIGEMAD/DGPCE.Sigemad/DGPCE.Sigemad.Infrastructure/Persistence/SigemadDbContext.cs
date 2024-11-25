@@ -27,6 +27,12 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                         entry.Entity.FechaModificacion = DateTime.Now;
                         //entry.Entity.ModificadoPor = "system";
                         break;
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
+                        entry.Entity.Borrado = true;
+                        entry.Entity.FechaEliminacion = DateTime.Now;
+                        //entry.Entity.ModificadoPor = "system";
+                        break;
                 }
             }
 
@@ -103,6 +109,10 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SuperficieFiltro>().ToTable(nameof(SuperficieFiltro));
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
             modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
+            modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
+            modelBuilder.Entity<Fase>().ToTable(nameof(Fase));
+            modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
+            modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
         }
 
 
@@ -133,7 +143,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
         public DbSet<Evolucion> Evoluciones { get; set; }
-        public DbSet<EvolucionProcedenciaDestino> EvolucionesProcedenciaDestinos { get; set; }
+        public DbSet<RegistroProcedenciaDestino> RegistroProcedenciasDestinos { get; set; }
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
         public DbSet<TitularidadMedio> TitularidadMedios { get; set; }
@@ -144,6 +154,10 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<TipoPlan> TipoPlanes { get; set; }
         public DbSet<ActivacionPlanEmergencia> ActivacionPlanesEmergencias { get; set; }
         public DbSet<DireccionCoordinacionEmergencia>  DireccionCoordinacionEmergencias { get; set; }
+        public DbSet<Direccion> Direccions { get; set; }
+        public DbSet<CoordinacionCecopi> CoordinacionCecopis { get; set; }
+        public DbSet<CoordinacionPMA> CoordinacionPMAs { get; set; }
+
         public DbSet<ValidacionImpactoClasificado> ValidacionImpactoClasificados { get; set; }
 
         public DbSet<TipoDanio> TipoDanios { get; set; }
@@ -153,6 +167,17 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<DetalleOtraInformacion_ProcedenciaDestino> DetallesOtraInformacion_ProcedenciaDestinos { get; set; }
 
         public DbSet<SucesoRelacionado> SucesosRelacionados { get; set; }
+        public DbSet<Fase> Fases { get; set; }
+        public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
+
+        public DbSet<Registro> Registros { get; set; }
+
+        public DbSet<Parametro> Parametro { get; set; }
+        public DbSet<DatoPrincipal> DatoPrincipal { get; set; }
+
+        public DbSet<TipoDocumento> TipoDocumentos { get; set; }
+        public DbSet<Documentacion> Documentaciones { get; set; }
+        public DbSet<DocumentacionProcedenciaDestino> DocumentacionProcedenciaDestinos { get; set; }
 
     }
 }

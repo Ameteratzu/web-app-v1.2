@@ -33,7 +33,7 @@ public class GetIncendioDetallesListQueryHandler : IRequestHandler<GetIncendioDe
             .Select(d => new IncendioDetalleVm
             {
                 FechaRegistro = d.FechaCreacion,
-                Registro = d.EntradaSalida.Descripcion,
+                //Registro = d.EntradaSalida.Descripcion, //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
                 Origen = "",
                 TipoRegistro = "Datos de evolución",
             })
