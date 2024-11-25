@@ -74,7 +74,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 var evolucionSpec = new EvolucionSpecificationParams() { Id= request.IdEvolucion};
                     evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(new EvolucionSpecification(evolucionSpec));
 
-                if (evolucion is null || evolucion.Borrado)
+                if (evolucion is null)
                 {
                     _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");
                     throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
@@ -109,7 +109,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 throw new Exception("No se pudo insertar la Evolución");
             }
 
-            _logger.LogInformation(nameof(CreateEvolucionResponse) + " - END");
+            _logger.LogInformation(nameof(CreateEvolucionCommandHandler) + " - END");
             return new CreateEvolucionResponse {Id = idEvolucion };
 
         }
@@ -160,15 +160,6 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.CreateEvolucio
                 }
             }
 
-            if (request.IdFase != null)
-            {
-                var fase = await _unitOfWork.Repository<Fase>().GetByIdAsync((int)request.IdFase);
-                if (fase is null)
-                {
-                    _logger.LogWarning($"request.IdFase: {request.IdFase}, no encontrado");
-                    throw new NotFoundException(nameof(Fase), request.IdFase);
-                }
-            }
 
             if (request.IdSituacionOperativa != null)
             {
