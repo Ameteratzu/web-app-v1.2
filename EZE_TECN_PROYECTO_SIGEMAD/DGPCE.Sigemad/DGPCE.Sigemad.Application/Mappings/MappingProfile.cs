@@ -21,6 +21,7 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
+using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
@@ -176,6 +177,7 @@ public class MappingProfile : Profile
         CreateMap<CreateParametroCommand, Parametro>();
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
+        CreateMap<Documentacion, DocumentacionVm>();
 
 
     }
