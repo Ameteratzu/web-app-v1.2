@@ -1,13 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { MessageService } from 'primeng/api';
-import { CalendarModule } from 'primeng/calendar';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 
 //import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 
@@ -18,6 +11,7 @@ import { FireService } from '../../../services/fire.service';
 import { MenuItemActiveService } from '../../../services/menu-item-active.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
+import { MatCardModule } from '@angular/material/card';
 
 import {
   FormControl,
@@ -28,7 +22,6 @@ import {
 import moment from 'moment';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
-import { ToastModule } from 'primeng/toast';
 import { Event } from '../../../types/event.type';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireStatus } from '../../../types/fire-status.type';
@@ -36,10 +29,19 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { EventStatus } from '../../../types/eventStatus.type';
-import { FireDirectionCoordinationComponent } from '../components/fire-direction-coordination/fire-direction-coordination.component';
-import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
-import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+// import { FireDirectionCoordinationComponent } from '../components/fire-direction-coordination/fire-direction-coordination.component';
+// import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+// import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+  
 
 @Component({
   selector: 'app-fire-edit',
@@ -48,23 +50,25 @@ import { FormFieldComponent } from '../../../shared/Inputs/field.component';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    InputTextModule,
-    DropdownModule,
-    CalendarModule,
-    InputTextareaModule,
-    ToastModule,
-    FormFieldComponent
+    FormFieldComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatGridListModule,
+    FlexLayoutModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatDialogModule
   ],
-  providers: [MessageService],
+  providers: [],
   templateUrl: './fire-edit.component.html',
-  styleUrl: './fire-edit.component.css',
+  styleUrl: './fire-edit.component.scss',
 })
 export class FireEditComponent {
   featuresCoords: Feature<Geometry>[] = [];
 
   classValidate = signal<string>('needs-validation');
 
-  public messageService = inject(MessageService);
 
   public router = inject(Router);
 
@@ -89,7 +93,7 @@ export class FireEditComponent {
   public fireStatus = signal<FireStatus[]>([]);
   public logs = signal<FireDetail[]>([]);
 
-  public formData: FormGroup;
+  public formData!: FormGroup;
 
   public error: boolean = false;
 
@@ -148,19 +152,23 @@ export class FireEditComponent {
 
     this.formData = new FormGroup({
       id: new FormControl(),
-      denomination: new FormControl(),
+      denomination: new FormControl({ value: '', disabled: true }), 
       territory: new FormControl(),
       province: new FormControl(),
       municipality: new FormControl(),
-      startDate: new FormControl(),
+      startDate: new FormControl({  value: '', disabled: true }),  
       event: new FormControl(),
       generalNote: new FormControl(),
       idEstado: new FormControl(),
+      ubicaciones: new FormControl({  value: '', disabled: true }),
+      suceso: new FormControl({  value: '', disabled: true }),
+      estado: new FormControl({  value: '', disabled: true }),    
     });
 
     const fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
     const fire = await this.fireService.getById(fire_id);
+    console.log("🚀 ~ FireEditComponent ~ ngOnInit ~ fire:", fire)
     this.fire = fire;
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
@@ -187,12 +195,16 @@ export class FireEditComponent {
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
-      municipality: this.fire.idMunicipio,
+      municipality: this.fire.id ,
       startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
       idEstado: this.fire.idEstadoSuceso,
+      ubicacion: this.fire.ubicacion,
+      suceso: this.fire.claseSuceso?.descripcion,
+      estado: this.fire.estadoSuceso?.descripcion,
     });
+   
     //this.openModalEvolution()
   }
 
@@ -229,11 +241,11 @@ export class FireEditComponent {
     await this.fireService
       .update(data)
       .then((response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Modificado',
-          detail: 'Incendio modificado correctamente',
-        });
+        // this.messageService.add({
+        //   severity: 'success',
+        //   summary: 'Modificado',
+        //   detail: 'Incendio modificado correctamente',
+        // });
 
         new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
           this.router.navigate([`/fire`])
@@ -251,11 +263,11 @@ export class FireEditComponent {
       await this.fireService
         .delete(fire_id)
         .then((response) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Eliminado',
-            detail: 'Incendio eliminado correctamente',
-          });
+          // this.messageService.add({
+          //   severity: 'success',
+          //   summary: 'Eliminado',
+          //   detail: 'Incendio eliminado correctamente',
+          // });
           new Promise((resolve) => setTimeout(resolve, 2000)).then(
             () => (window.location.href = '/fire')
           );
@@ -266,51 +278,51 @@ export class FireEditComponent {
     }
   }
 
-  openModalMapEdit() {
-    const municipio = this.municipalities().find(
-      (item) => item.id === this.formData.value.municipality
-    );
+  // openModalMapEdit() {
+  //   const municipio = this.municipalities().find(
+  //     (item) => item.id === this.formData.value.municipality
+  //   );
 
-    const dialogRef = this.matDialog.open(MapCreateComponent, {
-      width: '780px',
-      maxWidth: '780px',
-      height: '780px',
-      maxHeight: '780px',
-      data: { municipio: municipio, listaMunicipios: this.municipalities() },
-    });
+  //   const dialogRef = this.matDialog.open(MapCreateComponent, {
+  //     width: '780px',
+  //     maxWidth: '780px',
+  //     height: '780px',
+  //     maxHeight: '780px',
+  //     data: { municipio: municipio, listaMunicipios: this.municipalities() },
+  //   });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        this.featuresCoords = features;
-        console.info('this.featuresCoords', this.featuresCoords);
-      }
-    );
-  }
+  //   dialogRef.componentInstance.save.subscribe(
+  //     (features: Feature<Geometry>[]) => {
+  //       this.featuresCoords = features;
+  //       console.info('this.featuresCoords', this.featuresCoords);
+  //     }
+  //   );
+  // }
 
-  openModalEvolution() {
-    let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
-      width: '1220px',
-      maxWidth: '1220px',
-      height: '720px',
-      disableClose: true,
-    });
+  // openModalEvolution() {
+  //   let evolutionModalRef = this.matDialog.open(FireEvolutionCreateComponent, {
+  //     width: '1220px',
+  //     maxWidth: '1220px',
+  //     height: '720px',
+  //     disableClose: true,
+  //   });
 
-    evolutionModalRef.componentInstance.fire_id = Number(
-      this.route.snapshot.paramMap.get('id')
-    );
-  }
+  //   evolutionModalRef.componentInstance.fire_id = Number(
+  //     this.route.snapshot.paramMap.get('id')
+  //   );
+  // }
 
-  openModalDireccion() {
-    let evolutionModalRef = this.matDialog.open(FireDirectionCoordinationComponent, {
-      width: '1220px',
-      maxWidth: '1220px',
-      height: '720px',
-      disableClose: true,
-    });
+  // openModalDireccion() {
+  //   let evolutionModalRef = this.matDialog.open(FireDirectionCoordinationComponent, {
+  //     width: '1220px',
+  //     maxWidth: '1220px',
+  //     height: '720px',
+  //     disableClose: true,
+  //   });
 
     
     
-  }
+  //}
 
   showTable(table: string) {
     this.showUpdateLog = false;
@@ -339,5 +351,22 @@ export class FireEditComponent {
 
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
+  }
+
+  goModal() {
+    const dialogRef = this.matDialog.open(FireCreateComponent, {
+      width: '90vw', 
+      height: '90vh', 
+      maxWidth: 'none', 
+      data: {
+        title: 'Nuevo - Datos Evolución', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
   }
 }

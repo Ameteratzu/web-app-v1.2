@@ -21,4 +21,8 @@ export type Fire = {
   municipio?: {
     descripcion: string;
   };
+  ubicacion: string;
+  claseSuceso?: {
+    descripcion: string;
+  };
 };

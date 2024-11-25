@@ -1,400 +1,140 @@
-<div class="d-flex justify-content-between">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-6">
-        <h1 class="text-info font-weight-bold font-size-32 calibri">
-          Sistema de Gestión de Emergencia <br />
-          y Apoyo a la Decisión
-        </h1>
-      </div>
-      <div class="col-6">
-        <div class="text-right">
-          <h1 class="text-blue font-weight-bold calibri font-size-24 mt-18">
-            Incendios forestales
-          </h1>
+<div fxLayout="column" fxLayoutGap="16px" class="filter-container">
+  <!-- Primera fila con inputs -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch">
+    <mat-form-field appearance="fill" fxFlex="20">
+      <mat-label>Denominación</mat-label>
+      <input matInput [formControl]="getForm('denomination')" />
+    </mat-form-field>
 
-          <h2 class="text-green calibri font-size-20 font-weight-500">
-            Búsqueda de sucesos
-          </h2>
-        </div>
-      </div>
+    <mat-form-field appearance="fill" fxFlex="20">
+      <mat-label>Ubicación</mat-label>
+      <input matInput [formControl]="getForm('ubicaciones')" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" fxFlex="20">
+      <mat-label>Clase de suceso</mat-label>
+      <input matInput [formControl]="getForm('suceso')" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" fxFlex="20">
+      <mat-label>Inicio</mat-label>
+      <input matInput [formControl]="getForm('startDate')" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" fxFlex="20">
+      <mat-label>Estado</mat-label>
+      <input matInput [formControl]="getForm('estado')" />
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <button mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+
+    <div fxLayout="row" fxLayoutGap="16px">
+      <button mat-flat-button color="primary">Guardar</button>
+      <button mat-flat-button color="warn">Eliminar</button>
+      <button mat-flat-button color="accent">Cancelar</button>
     </div>
   </div>
 </div>
-
-<p-toast />
-
-<form
-  (ngSubmit)="onSubmit()"
-  [formGroup]="formData"
-  class="px-4 py-2"
->
-  <div class="row">
-    <div class="col">
-      <sg-field
-        label="Denominación"
-        type="text"
-        [formControl]="getForm('denomination')"
-        [isRequired]="true"
-      >
-      </sg-field>
-    </div>
-    <div class="col">
-      <sg-field
-        label="Inicio"
-        type="date"
-        [formControl]="getForm('startDate')"
-        [isRequired]="true"
-      >
-      </sg-field>
-    </div>
-
-    <div class="col">
-      <sg-field
-        label="Tipo de Suceco"
-        type="select"
-        [options]="events()"
-        [formControl]="getForm('event')"
-        [isRequired]="true"
-      >
-      </sg-field>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-4">
-      <sg-field
-        label="Estado de suceso"
-        type="select"
-        [options]="eventsStatus()"
-        [formControl]="getForm('idEstado')"
-        [isRequired]="true"
-      >
-      </sg-field>
-    </div>
-    <div class="col-4">
-      <sg-field
-        label="Provincia"
-        type="select"
-        [options]="provinces()"
-        [formControl]="getForm('province')"
-        [isRequired]="true"
-        (change)="loadMunicipalities($event)"
-      >
-      </sg-field>
-    </div>
-    <div class="col-3">
-      <sg-field
-        label="Municipio"
-        type="select"
-        [options]="municipalities()"
-        [formControl]="getForm('municipality')"
-        [isRequired]="true"
-      >
-      </sg-field>
-    </div>
-    <div class="col-1 d-flex justify-content-center align-items-center mb-3">
-      <img
-        (click)="openModalMapEdit()"
-        style="cursor: pointer; width: 32px; height: 32px"
-        src="/assets/img/location-btn.svg"
-        alt="location-btn"
-      />
-    </div>
-  </div>
-  <div class="row"></div>
-  <div class="row">
-    <div class="col-8">
-      <div class="form-floating mb-3">
-        <textarea
-          formControlName="generalNote"
-          class="form-control"
-          placeholder="Nota general"
-          id="floatingTextarea"
-        ></textarea>
-        <label for="floatingSelect">Nota General</label>
-      </div>
-    </div>
-
-    <div class="col-4">
-      <div class="d-flex justify-content-end gap-2">
-        <button type="submit" class="btn btn-primary">
-          <img src="/assets/img/check.svg" alt="check" />
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-secondary"
-          style="background-color: white"
-        >
-          <img src="/assets/img/list-btn.svg" alt="list-btn" />
-        </button>
-
-        <button
-          (click)="confirmDelete()"
-          type="button"
-          class="btn btn-secondary"
-          style="background-color: white"
-        >
-          <img src="/assets/img/close.svg" alt="close" />
-        </button>
-
-        <button
-          (click)="ngOnInit()"
-          type="button"
-          class="btn btn-secondary"
-          style="background-color: white"
-        >
-          <img src="/assets/img/refresh.svg" alt="refresh" />
-        </button>
-
-        <button
-          type="button"
-          (click)="back()"
-          class="btn btn-secondary"
-          style="background-color: white"
-        >
-          <img src="/assets/img/back.svg" alt="back" />
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
-
-<div class="px-4 py-2">
+<br>
+<div fxLayout="column" fxLayoutGap="16px" class="filter-container">
   <img class="w-100" src="/assets/img/graph.svg" alt="graph" />
 </div>
+<br>
 
-<div class="row g-3 px-4 py-2">
-  <div class="col-3 border p-2">
-    <div class="row p-0">
-      <div class="col-10">
-        <span class="fw-bold text-blue font-20">Datos consolidados</span>
-        <span class="font-12"> (Act: 19/08/2024 19:45) </span>
-      </div>
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="16px" style="height: 100%;">
+  <!-- Lado izquierdo: Información -->
+  <div fxFlex="30" class="info-section">
+    <mat-card>
+      <mat-card-title>Datos consolidados</mat-card-title>
+      <mat-card-content>
+        <p><strong>Inicio de incendio:</strong> 19/08/2024 19:45</p>
+        <p><strong>Estado:</strong> Activo</p>
+        <p><strong>Nivel de gravedad:</strong> Activo</p>
+        <mat-divider></mat-divider>
 
-      <div class="col-2">
-        <img src="/assets/img/doc-btn.svg" alt="doc-btn" />
-      </div>
-    </div>
+        <h4>Hechos relevantes</h4>
+        <ul>
+          <li>Activado plan nacional XX (18/08/2024 10:00)</li>
+          <li>Activado Copernico (18/08/2024 12:00)</li>
+          <li>CECOPI (19/08/2024 18:15)</li>
+        </ul>
+        <mat-divider></mat-divider>
 
-    <div class="mt-4">
-      <span class="fw-bold font-size-16">Inicio de incendio</span>
-      <span class="font-12">
-        {{ fire.fechaInicio }}
-      </span>
-    </div>
+        <h4>Consecuencias</h4>
+        <p>Heridos: 2</p>
+        <p>Evacuados: 134 (Santa María - 18/08/2024 19:45)</p>
+        <p>Área afectada: Santa María de Guía de Gran Canaria</p>
+        <p>Viabilidad: Corte CN-21 PK 2,300-3,100</p>
+        <mat-divider></mat-divider>
 
-    <div class="mt-2">
-      <span class="fw-bold font-size-16">Estado</span>
-      <span class="font-12"> {{ getEstadoDesc(fire) }}</span>
-    </div>
-
-    <div class="mt-2">
-      <span class="fw-bold font-size-16">Nivel de gravedad</span>
-      <span class="font-12"> Activo </span>
-    </div>
-
-    <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16">Hechos relevantes</span>
-      <span class="line ms-1"> </span>
-    </div>
-    <div class="ms-4">
-      <div class="font-12 ms-2 mt-2">
-        Activado plan nacional XX (18/08/2024 10:00)
-      </div>
-      <div class="font-12 ms-2 mt-2">
-        Activado Coppernico (18/08/2024 12:00)
-      </div>
-      <div class="font-12 ms-2 mt-2">CECOPI (19/08/2024 18:15)</div>
-    </div>
-
-    <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16">Consecuencias</span>
-      <span class="line ms-1"> </span>
-    </div>
-
-    <div class="ms-4">
-      <div class="font-12 ms-2 mt-2">Heridos: 2</div>
-      <div class="font-12 ms-2 mt-2">
-        Evacuados: 134 (Santa María - 18/08/2024 19:45)
-      </div>
-      <div class="font-12 ms-2 mt-2">
-        Area afectada: Santa María de Guía de Gran Canaria
-      </div>
-      <div class="font-12 ms-2 mt-2">
-        Viabilidad: Corte CN-21 PK 2,300-3,100
-      </div>
-    </div>
-
-    <div class="mt-4 ms-4 d-flex align-items-center">
-      <span class="fw-bold font-size-16">Medios intervinientes</span>
-      <span class="line ms-1"> </span>
-    </div>
-
-    <div class="ms-4 mb-3">
-      <div class="font-12 ms-2 mt-2">
-        Ordinarios: BRIF/A - Tineo (18/08/2024 12:40)
-      </div>
-      <div class="font-12 ms-2 mt-2">
-        Ordinarios: FOCA - Torrejon (18/08/2024 16:35)
-      </div>
-      <div class="font-12 ms-2 mt-2">
-        Extraordinarios: UME - Aprobación (19/08/2024 19:15)
-      </div>
-    </div>
+        <h4>Medios intervinientes</h4>
+        <ul>
+          <li>BRIF/A - Tineo (18/08/2024 12:40)</li>
+          <li>FOCA - Torrejón (18/08/2024 16:35)</li>
+          <li>UME - Aprobación (19/08/2024 19:45)</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div class="col-9 border p-2">
-    <div *ngIf="showUpdateLog">
-      <div class="row pb-2">
-        <div class="col-8">
-          <img
-            (click)="showTable('showDetailsUpdate')"
-            class=""
-            src="/assets/img/doc-btn.svg"
-            alt="doc-btn"
-          />
-          <span class="fw-bold text-blue font-20"
-            >Registro de actualizaciones</span
-          >
-          <span class="font-10">
-            (Cantidad: 10 - Orden Fecha y hora desc.)
-          </span>
-        </div>
 
-        <div class="col-4 px-5">
-          <div
-            class="row d-flex flex-nowrap justify-content-center align-items-center gap-2"
-          >
-            <button
-              class="col text-blue font btn fw-bold border border-radius"
-              (click)="openModalEvolution()"
-            >
-              E
-            </button>
-            <button
-              (click)="openModalDireccion()"
-              class="col text-blue font btn fw-bold border border-radius"
-            >
-              C
-            </button>
-            <button class="col text-blue font btn fw-bold border border-radius">
-              R
-            </button>
-            <button class="col text-blue font btn fw-bold border border-radius">
-              D
-            </button>
-            <button class="col text-blue font btn fw-bold border border-radius">
-              O
-            </button>
-            <button class="col text-blue font btn fw-bold border border-radius">
-              S
-            </button>
-            <button class="col text-blue font btn fw-bold border border-radius">
-              <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
-            </button>
-          </div>
+  <!-- Lado derecho: Tabla -->
+  <div fxFlex="70" class="table-section">
+    <mat-card>
+      <!-- <mat-card-title>Registro de actualizaciones</mat-card-title> -->
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+        <!-- Texto alineado a la izquierda -->
+        <mat-card-title>Registro de actualizaciones</mat-card-title>
+      
+        <!-- Botones alineados a la derecha -->
+        <div fxLayout="row" fxLayoutGap="8px" class="btn-container">
+          <button mat-button class="circle-button" (click)="goModal()">E</button>
+          <button mat-button class="circle-button">C</button>
+          <button mat-button class="circle-button">R</button>
+          <button mat-button class="circle-button">D</button>
+          <button mat-button class="circle-button">O</button>
+          <button mat-button class="circle-button">S</button>
         </div>
       </div>
+      <!-- <mat-card-content>
+        <table mat-table  class="mat-elevation-z8" style="width: 100%;">
+          <ng-container matColumnDef="numero">
+            <th mat-header-cell *matHeaderCellDef> Nº </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-      <table class="table table-striped">
-        <thead class="table-secondary">
-          <tr>
-            <th class="fw-bold font-size-16">
-              N° <img src="/assets/img/orderIcon.svg" />
-            </th>
-            <th class="fw-bold font-size-16">Fecha / hora</th>
-            <th class="fw-bold font-size-16">Registro</th>
-            <th class="fw-bold font-size-16">Origen</th>
-            <th class="fw-bold font-size-16">Tipo de re-gistro</th>
-            <th class="fw-bold font-size-16">Técnico</th>
-            <th></th>
-          </tr>
-        </thead>
+          <ng-container matColumnDef="fechaHora">
+            <th mat-header-cell *matHeaderCellDef> Fecha / Hora </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-        <tbody>
-          <tr *ngFor="let log of logs().splice(0, 10); let no = index">
-            <td class="font-12">{{ no + 1 }}</td>
-            <td class="font-12">{{ log.fechaRegistro }}</td>
-            <td class="font-12">{{ log.registro }}</td>
-            <td class="font-12">{{ log.origen }}</td>
-            <td class="font-12">{{ log.tipoRegistro }}</td>
-            <td class="font-12">{{ log.tecnico }}</td>
+          <ng-container matColumnDef="registro">
+            <th mat-header-cell *matHeaderCellDef> Registro </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-            <td>
-              <a class="">
-                <img
-                  src="/assets/img/options.png"
-                  width="30px"
-                  alt="option-btn"
-                />
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          <ng-container matColumnDef="origen">
+            <th mat-header-cell *matHeaderCellDef> Origen </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-    <div *ngIf="showDetailsUpdate">
-      <div class="row">
-        <div class="col-8">
-          <img
-            (click)="showTable('showUpdateLog')"
-            class="cursor-pointer"
-            src="/assets/img/doc-btn.svg"
-            alt="doc-btn"
-          />
-          <span class="font-size-20 text-blue fw-bold"
-            >Detalle de las actualizaciones</span
-          >
-          (Cantidad: 10 - Orden Fecha/hora desc.)
-        </div>
+          <ng-container matColumnDef="tipoRegistro">
+            <th mat-header-cell *matHeaderCellDef> Tipo de registro </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-        <div class="col-4">
-          <a class="">E</a>
-          <a class="">C</a>
-          <a class="">R</a>
-          <a class="">D</a>
-          <a class="">O</a>
-          <a class="">S</a>
+          <ng-container matColumnDef="tecnico">
+            <th mat-header-cell *matHeaderCellDef> Técnico </th>
+            <td mat-cell *matCellDef="let element"> </td>
+          </ng-container>
 
-          <a class="">
-            <img src="/assets/img/doc-btn.svg" height="20px" alt="doc-btn" />
-          </a>
-        </div>
-      </div>
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Reg</th>
-            <th>Fecha y hora</th>
-            <th>Ámbito</th>
-            <th>Tipo</th>
-            <th>Implicación</th>
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let detail of details">
-            <td>{{ detail.reg }}</td>
-            <td>{{ detail.datetime }}</td>
-            <td>{{ detail.scope }}</td>
-            <td>{{ detail.type }}</td>
-            <td>{{ detail.implication }}</td>
-
-            <td>
-              <a class="">
-                <img
-                  src="/assets/img/options.png"
-                  width="30px"
-                  alt="option-btn"
-                />
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          <tr mat-header-row *matHeaderRowDef="['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico'];"></tr>
+        </table>
+      </mat-card-content> -->
+    </mat-card>
   </div>
 </div>
+
+

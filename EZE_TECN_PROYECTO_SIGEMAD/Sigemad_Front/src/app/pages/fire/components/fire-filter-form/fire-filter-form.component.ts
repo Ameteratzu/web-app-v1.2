@@ -11,14 +11,31 @@ import {
 } from '@angular/core';
 
 import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  NativeDateAdapter,
+} from '@angular/material/core';
+
+import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
+  FormBuilder
 } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
-
 import moment from 'moment';
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
 import { CountryService } from '../../../../services/country.service';
@@ -47,6 +64,18 @@ import { Territory } from '../../../../types/territory.type';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 
+const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL', 
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @Component({
   selector: 'app-fire-filter-form',
   standalone: true,
@@ -54,13 +83,26 @@ import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    FormFieldComponent
+    FormFieldComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    FlexLayoutModule,
+    MatExpansionModule,
+    MatDatepickerModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './fire-filter-form.component.html',
-  styleUrl: './fire-filter-form.component.css',
+  styleUrl: './fire-filter-form.component.scss',
 })
 export class FireFilterFormComponent implements OnInit {
-  @Input() fires: ApiResponse<Fire[]>;
+  @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
 
@@ -106,11 +148,25 @@ export class FireFilterFormComponent implements OnInit {
   public disabledAutonomousCommunity = signal<boolean>(false);
   public disabledProvince = signal<boolean>(false);
 
-  public filterCountries = signal<any[]>([]);
+  public filteredCountries = signal<Countries[]>([]);
+  public formData!: FormGroup;
 
-  public formData: FormGroup;
+  myForm!: FormGroup; 
+  options = [
+    { label: 'Opción 1', value: 'option1' },
+    { label: 'Opción 2', value: 'option2' },
+    { label: 'Opción 3', value: 'option3' }
+  ];
+
+  showFilters = false;
 
   async ngOnInit() {
+    const fb = new FormBuilder(); 
+    this.myForm = fb.group({
+      selectField: ['', Validators.required],
+      inputField1: ['', Validators.required],
+      inputField2: ['', Validators.required]
+    });
     const {
       severityLevel,
       name,
@@ -128,7 +184,9 @@ export class FireFilterFormComponent implements OnInit {
       end,
       municipality,
       episode,
-      provincia
+      provincia,
+      fechaInicio,
+      fechaFin
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -143,15 +201,27 @@ export class FireFilterFormComponent implements OnInit {
       severityLevel: new FormControl(severityLevel ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
       move: new FormControl(move ?? ''),
-      //enter: new FormControl(?? ''),
       start: new FormControl(start ?? ''),
       end: new FormControl(end ?? ''),
       between: new FormControl(between ?? ''),
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
+      fechaInicio: new FormControl(fechaInicio ?? ''),
+      fechaFin: new FormControl(fechaFin ?? ''),
     });
 
+    const countries = await this.countryService.get();
+    this.countries.set(countries);
+
+    this.formData.get('country')?.valueChanges.subscribe((value) => {
+      
+      this.updateFilteredCountries(value || '');
+
+    });
+
+    this.updateFilteredCountries('');
+    
     this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
@@ -171,8 +241,8 @@ export class FireFilterFormComponent implements OnInit {
     const eventStatus = await this.eventStatusService.get();
     this.eventStatus.set(eventStatus);
 
-    const countries = await this.countryService.get();
-    this.countries.set(countries);
+    const countries2 = await this.countryService.get();
+    this.countries.set(countries2);
 
     const moves = await this.moveService.get();
     this.moves.set(moves);
@@ -186,12 +256,24 @@ export class FireFilterFormComponent implements OnInit {
     this.onSubmit()
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (changes['filtros']) {
-  //     console.log('El filtro ha cambiado:', changes['filtro'].currentValue);
-      
-  //   }
-  // }
+  toggleAccordion(panel: MatExpansionPanel) {
+    panel.toggle(); 
+  }
+
+   private updateFilteredCountries(value: string) {
+    
+    const filterValue = value.toLowerCase();
+    const allCountries = this.countries();
+    this.filteredCountries.set(
+      allCountries.filter((country) =>
+        country.descripcion.toLowerCase().includes(filterValue)
+      )
+    );
+  }
+
+  filteredCountriesList() {
+    return this.filteredCountries();
+  }
 
   getCountryByTerritory (country: any, territory: any ){
     if(territory == 1){
@@ -205,14 +287,15 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async changeTerritory(event: any) {
+    console.log("🚀 ~ FireFilterFormComponent ~ changeTerritory ~ event:", event)
     this.formData.patchValue({
-      country: event.target.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
 
-    if (event.target.value == 1) {
+    if (event.value == 1) {
       const countries = await this.countryService.get();
       this.countries.set(countries);
       this.loadCommunities();
@@ -223,7 +306,7 @@ export class FireFilterFormComponent implements OnInit {
         country: this.COUNTRIES_ID.SPAIN,
       });
     }
-    if (event.target.value == 2) {
+    if (event.value == 2) {
       const countries = await this.countryService.get();
       this.countries.set(countries);
       //this.loadCommunities();
@@ -235,7 +318,7 @@ export class FireFilterFormComponent implements OnInit {
         country: '',
       });
     }
-    if (event.target.value == 3) {
+    if (event.value == 3) {
       this.disabledCountry.set(true);
       this.disabledAutonomousCommunity.set(true);
       this.disabledProvince.set(true);
@@ -252,9 +335,9 @@ export class FireFilterFormComponent implements OnInit {
   getCountriesByTerritory() {
     let original = [...this.countries()];
     let newCountries = [...this.countries()];
-
+    
     if (this.formData.value.territory != 2) {
-      this.filterCountries.set(newCountries);
+      this.filteredCountries.set(newCountries); 
     }
     if (this.formData.value.territory == 2) {
       const indexSpain = newCountries.findIndex(
@@ -284,7 +367,7 @@ export class FireFilterFormComponent implements OnInit {
         newCountries.unshift(portugal);
       }
 
-      this.filterCountries.set(newCountries);
+      this.filteredCountries.set(newCountries);
     }
   }
 
@@ -297,7 +380,7 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async loadProvinces(event: any) {
-    const ac_id = event.target.value;
+    const ac_id = event.value;
     const provinces = await this.provinceService.get(ac_id);
     this.provinces.set(provinces);
   }
@@ -348,8 +431,8 @@ export class FireFilterFormComponent implements OnInit {
     this.formData.patchValue({
       between: 1,
       move: 1,
-      territory: 1, //pre seleccionamos Nacional
-      country: this.COUNTRIES_ID.SPAIN, // pre seleccionamos España
+      territory: 1, 
+      country: "",
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
       autonomousCommunity: '',

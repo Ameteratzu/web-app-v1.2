@@ -1,842 +1,171 @@
-<div>
-  <p-toast />
-  <form (submit)="submit()" [formGroup]="formGroup">
-    <div class="d-flex justify-content-between mx-4 p-4">
-      <div class="flex-fill text-start text-red font-20 fw-bold col-4">
-        Nuevo
-      </div>
-      <div class="flex-fill text-center text-green font-20 fw-bold col-5">
-        Datos evolución
-      </div>
-      <div class="flex-fill text-end col-3">
-        <div class="d-flex justify-content-end gap-2">
-          <button type="submit" class="btn btn-primary">
-            <img src="/assets/img/check.svg" alt="check" />
-          </button>
-
-          <button
-            (click)="closeModal()"
-            type="button"
-            class="btn btn-secondary"
-            style="background-color: white"
-          >
-            <img src="/assets/img/close.svg" alt="close" />
-          </button>
-
-          <button
-            (click)="closeModal()"
-            type="button"
-            class="btn btn-secondary"
-            style="background-color: white"
-          >
-            <img src="/assets/img/back.svg" alt="back" />
-          </button>
-        </div>
-      </div>
+<div class="modal-header">
+    <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+  </div>
+  
+  <div class="container">
+    <div class="side-menu">
+      <mat-chip-listbox>
+        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" class="full-width-chip">
+          {{ sec }}
+        </mat-chip-option>
+      </mat-chip-listbox>
     </div>
+  
+    <div class="form-container">
+      <form *ngIf="formData" [formGroup]="formData">
+        <!-- REGISTRO -->
+        <div>
+          <h3 class="title">REGISTRO</h3>
+          <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
 
-    <div class="d-flex mx-4 p-4 gap-2">
-      <div
-        class="flex-shrink-0 d-flex gap-2 flex-column"
-        style="flex-basis: 20%; max-width: 20%"
-      >
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionRegistro')"
-        >
-          Registro
-        </div>
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionDatosPersonales')"
-        >
-          Datos principales
-        </div>
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionParametros')"
-        >
-          Parámetros
-        </div>
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionAreaAfectada')"
-        >
-          Área afectada
-        </div>
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionConsecuenciasActuaciones')"
-        >
-          Consecuencias/Actuac.
-        </div>
-        <div
-          class="cursor-pointer font-16 border rounded p-2"
-          (click)="scrollToSection('sectionIntervencionMedios')"
-        >
-          Intervención de medios
-        </div>
-      </div>
+            <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
+              <mat-label>Fecha y Hora</mat-label>
+              <input matInput [matDatepicker]="picker1" [formControl]="getForm('startDate')" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="25%">
+              <mat-label>Entrada / salida</mat-label>
+              <mat-select formControlName="inputOutput">
+                <mat-option *ngFor="let option of inputOutputs()" [value]="option.id">
+                  {{ option.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field class="input spaced-input" fxFlex="25%">
+              <mat-label>Medio</mat-label>
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let medio of medias()" [value]="medio.id">
+                  {{ medio.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-      <div class="flex-grow-1" style="flex-basis: 80%">
-        <form
-          (submit)="submit()"
-          [formGroup]="formGroup"
-          
-        >
-          <div
-            class="content border border-radius-2 "
-            style="width: 920px; height: 520px; overflow-y: scroll"
-          >
-            <div>
-              <div id="validation-evolution-error"></div>
-              <div *ngIf="errorAreaAfectada" class="bg-red">
-                Debe seleccionar datos en el mapa de área afectada
-              </div>
+            <mat-form-field class="input spaced-input" fxFlex="25%">
+              <mat-label>Procedencia / Destino </mat-label>
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let origen of originDestinations()" [value]="origen.id">
+                  {{ origen.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-              <div class="d-flex justify-content-between" *ngIf="!isCreate">
-                <div class="font-size-16">
-                  <b>Alta:</b> sguijarro (SACOP) - 24/08/2024 17:24
-                </div>
-
-                <div class="font-size-16">
-                  <b>Ult. modificación:</b> sguijarro (SACOP) - 24/08/2024 17:24
-                </div>
-              </div>
-              <div class="p-4">
-                <!-- Registro -->
-                <div>
-                  <div id="sectionRegistro" class="font-20 fw-bold text-orange">
-                    REGISTRO
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Fecha y hora"
-                        type="datetime-local"
-                        [formControl]="getForm('startDate')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Entrada / salida"
-                        type="select"
-                        [options]="inputOutputs()"
-                        [formControl]="getForm('inputOutput')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <p-multiSelect
-                        required
-                        id="originDestination"
-                        formControlName="originDestination"
-                        [options]="originDestinations()"
-                        optionLabel="descripcion"
-                        placeholder=""
-                        optionValue="id"
-                        [style]="{
-                          width: '100%',
-                          height: '58px'
-                        }"
-                      />
-                      <div class="invalid-feedback">Campo requerido</div>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Medio"
-                        type="select"
-                        [options]="medias()"
-                        [formControl]="getForm('media')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Datos principales -->
-                <div>
-                  <div
-                    id="sectionDatosPersonales"
-                    class="font-20 fw-bold text-orange"
-                  >
-                    DATOS PRINCIPALES
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Fecha y hora de actualización"
-                        type="datetime-local"
-                        [formControl]="getForm('datetimeUpdate')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Tipo de Registro"
-                        type="select"
-                        [options]="recordTypes()"
-                        [formControl]="getForm('recordType')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Observaciones"
-                        type="textArea"
-                        [formControl]="getForm('observations_1')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Previsión"
-                        type="textArea"
-                        [formControl]="getForm('forecast')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Parametros -->
-                <div>
-                  <div
-                    id="sectionParametros"
-                    class="font-20 fw-bold text-orange"
-                  >
-                    PARAMETROS
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Estado"
-                        type="select"
-                        [options]="status()"
-                        [formControl]="getForm('status')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                    <div class="col">
-                      <sg-field
-                        label="Plan de emergencia activado"
-                        type="text"
-                        [formControl]="getForm('emergencyPlanActivated')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Situación operativa"
-                        type="select"
-                        [options]="status()"
-                        [formControl]="getForm('operativeStatus')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Fecha final"
-                        type="date"
-                        [formControl]="getForm('end_date')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Superficie afec. (Ha)"
-                        type="text"
-                        [formControl]="getForm('affectedSurface')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- area afectada-->
-                <form
-                  
-                  (submit)="saveAreaAffected()"
-                  [formGroup]="formGroupAreaAfectada"
-                >
-                  <div
-                    id="sectionAreaAfectada"
-                    class="font-20 fw-bold text-orange"
-                  >
-                    AREA AFECTADA
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Fecha y hora"
-                        type="date"
-                        [formControl]="getFormAreaAfectada('startAreaAffected')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Provincia"
-                        type="select"
-                        [options]="provinces()"
-                        [formControl]="getFormAreaAfectada('province_1')"
-                        (change)="loadMunicipalities($event, '1')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Municipio"
-                        type="select"
-                        [options]="municipalities()"
-                        [formControl]="getFormAreaAfectada('municipality_1')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Entidad menor"
-                        type="select"
-                        [options]="minorEntities()"
-                        [formControl]="getFormAreaAfectada('minorEntity')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row align-items-center">
-                    <div class="col-6">
-                      <sg-field
-                        label="Observaciones"
-                        type="textArea"
-                        [formControl]="
-                          getFormAreaAfectada('observationsAreaAffected')
-                        "
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col-3 d-flex justify-content-center mb-3">
-                      <div class="form-floating">
-                        <b class="">Localización</b>
-                        <img
-                          src="/assets/img/location-btn.svg"
-                          height="20px"
-                          alt="location"
-                          class="cursor-pointer"
-                          (click)="openModalMapCreate('AreaAfectada')"
-                        />
-                      </div>
-                    </div>
-
-                    <div class="col-3 d-flex justify-content-center">
-                      <button type="submit" class="btn-blue">
-                        <img
-                          class="btn btn-primary"
-                          src="/assets/img/plus.svg"
-                          alt="check"
-                        />
-                      </button>
-                    </div>
-                  </div>
-
-                  <table class="table table-striped">
-                    <thead class="table-secondary">
-                      <tr>
-                        <th>Fecha y hora</th>
-                        <th>Provincia</th>
-                        <th>Municipio</th>
-                        <th>Entidad menor</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr *ngFor="let area of areasAffected; let i = index">
-                        <td>{{ area.startAreaAffected }}</td>
-                        <td>{{ getProvincia(area.province_1) }}</td>
-                        <td>
-                          {{ getMunicipio(area.municipality_1) }}
-                        </td>
-                        <td>{{ getEntidadMenor(area.minorEntity) }}</td>
-
-                        <td>
-                          <button
-                            type="button"
-                            (click)="showAreaAffectedDataInForm(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/edit-btn.svg"
-                              alt="edit-btn"
-                            />
-                          </button>
-
-                          <button
-                            type="button"
-                            (click)="deleteAreaAffected(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/close.svg"
-                              alt="close"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </form>
-
-                <!-- consecuencias actuaciones -->
-                <form
-                  
-                  (submit)="saveConsequenceAction()"
-                  [formGroup]="formGroupConsecuenciasActuaciones"
-                >
-                  <div
-                    id="sectionConsecuenciasActuaciones"
-                    class="font-20 fw-bold text-orange"
-                  >
-                    CONSECUENCIAS / ACTUACIONES
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <div class="form-floating mb-3 position-relative">
-                        <select
-                          class="form-select"
-                          id="impactType"
-                          (change)="setType($event)"
-                          formControlName="impactType"
-                          aria-label="Floating label select example"
-                        >
-                          <option value="" selected>
-                            Seleccione una opción
-                          </option>
-                          <option
-                            *ngFor="let option of impactTypes"
-                            [value]="option"
-                          >
-                            {{ option }}
-                          </option>
-                        </select>
-                        <label for="floatingSelect">Tipo</label>
-                      </div>
-                    </div>
-
-                    <div class="col">
-                      <div class="form-floating mb-3 position-relative">
-                        <select
-                          class="form-select"
-                          id="impactGroup"
-                          (change)="setGroup($event)"
-                          formControlName="impactGroup"
-                          aria-label="Floating label select example"
-                        >
-                          <option value="" selected>
-                            Seleccione una opción
-                          </option>
-                          <option
-                            *ngFor="let option of impactGroups"
-                            [value]="option"
-                          >
-                            {{ option }}
-                          </option>
-                        </select>
-                        <label for="floatingSelect">Grupo</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Denominación"
-                        type="select"
-                        [options]="denominations"
-                        [formControl]="getFormConsecuencias('name')"
-                        (change)="changeDenomination($event)"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Denominación"
-                        type="number"
-                        [formControl]="getFormConsecuencias('number')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row align-items-center">
-                    <div class="col d-flex justify-content-center mb-3">
-                      <div class="form-floating">
-                        <b class="">Localización</b>
-                        <img
-                          src="/assets/img/location-btn.svg"
-                          height="20px"
-                          alt="location"
-                          class="cursor-pointer"
-                          (click)="
-                            openModalMapCreate('ConsecuenciasActuaciones')
-                          "
-                        />
-                      </div>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Observaciones"
-                        type="textArea"
-                        [formControl]="getFormConsecuencias('observations_2')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="">Datos complementarios</div>
-
-                  <app-campo-dinamico
-                    [campos]="fieldCampos()"
-                    (formData)="getDataForConsecuenciasActuaciones($event)"
-                  >
-                  </app-campo-dinamico>
-                  <div class="row mb-3">
-                    <div class="col-5 d-flex justify-content-center"></div>
-                    <div class="col-2 d-flex justify-content-center">
-                      <button type="submit" class="btn-blue">
-                        <img
-                          class="btn btn-primary"
-                          src="/assets/img/plus.svg"
-                          alt="check"
-                        />
-                      </button>
-                    </div>
-                  </div>
-
-                  <table class="table table-striped">
-                    <thead class="table-secondary">
-                      <tr>
-                        <th>Tipo</th>
-                        <th>Grupo</th>
-                        <th>Descripción</th>
-                        <th>Número</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr
-                        *ngFor="
-                          let consequenceAction of consequencesActions;
-                          let i = index
-                        "
-                      >
-                        <td>{{ consequenceAction.impactType }}</td>
-                        <td>{{ consequenceAction.impactGroup }}</td>
-                        <td>
-                          {{
-                            getDenominationName(
-                              consequenceAction.impactType,
-                              consequenceAction.impactGroup,
-                              consequenceAction.name
-                            )
-                          }}
-                        </td>
-                        <td>{{ consequenceAction.number }}</td>
-
-                        <td>
-                          <button
-                            type="button"
-                            (click)="showConsequenceDataInForm(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/edit-btn.svg"
-                              alt="edit-btn"
-                            />
-                          </button>
-
-                          <button
-                            type="button"
-                            (click)="deleteConsequence(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/close.svg"
-                              alt="close"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </form>
-
-                <!-- INTERVENCIÓN DE MEDIOS -->
-                <form
-                  
-                  (submit)="saveInterveningMedia()"
-                  [formGroup]="formGroupIntervecionMedios"
-                >
-                  <div
-                    id="sectionParametros"
-                    class="font-20 fw-bold text-orange"
-                  >
-                    INTERVENCIÓN DE MEDIOS
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Tipo de Medio"
-                        type="select"
-                        [options]="mediaTypes()"
-                        [formControl]="getFormIntervencionsMedio('mediaType')"
-                        (change)="changeMediaTypes($event)"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Cantidad"
-                        type="number"
-                        [formControl]="getFormIntervencionsMedio('quantity')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Unidad"
-                        type="number"
-                        [formControl]="getFormIntervencionsMedio('unit')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col">
-                      <sg-field
-                        label="Clasificación"
-                        type="select"
-                        [options]="mediaClassifications()"
-                        [formControl]="
-                          getFormIntervencionsMedio('classification')
-                        "
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Titularidad"
-                        type="select"
-                        [options]="mediaOwnerships()"
-                        [formControl]="getFormIntervencionsMedio('ownership_1')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Titularidad"
-                        type="text"
-                        [formControl]="getFormIntervencionsMedio('ownership_2')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                  </div>
-
-                  <div class="row align-items-center">
-                    <div class="col">
-                      <sg-field
-                        label="Provincia"
-                        type="select"
-                        [options]="provinces()"
-                        [formControl]="getFormIntervencionsMedio('province_2')"
-                        (change)="loadMunicipalities($event, '2')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col">
-                      <sg-field
-                        label="Municipio"
-                        type="select"
-                        [options]="municipalities2()"
-                        [formControl]="getFormIntervencionsMedio('municipality_2')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-
-                    <div class="col d-flex justify-content-center mb-3">
-                      <div class="form-floating">
-                        <b class="">Localización</b>
-                        <img
-                          src="/assets/img/location-btn.svg"
-                          height="20px"
-                          alt="location"
-                          class="cursor-pointer"
-                          (click)="openModalMapCreate('IntervencionMedios')"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row align-items-center">
-                    <div class="col-8">
-                      <sg-field
-                        label="Observaciones"
-                        type="textArea"
-                        [formControl]="getFormIntervencionsMedio('observations_3')"
-                        [isRequired]="true"
-                      >
-                      </sg-field>
-                    </div>
-                    <div class="col-4 d-flex justify-content-center mb-3">
-                      <button type="submit" class="btn-blue">
-                        <img
-                          class="btn btn-primary"
-                          src="/assets/img/plus.svg"
-                          alt="check"
-                        />
-                      </button>
-                    </div>
-                  </div>
-
-                  <table class="table table-striped">
-                    <thead class="table-secondary">
-                      <tr>
-                        <th>Medio</th>
-                        <th>Cantidad</th>
-                        <th>Unidad</th>
-                        <th>Clasificación</th>
-                        <th>Titularidad</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      <tr
-                        *ngFor="
-                          let interveningMedia of interveningMedias;
-                          let i = index
-                        "
-                      >
-                        <td>
-                          {{
-                            getMediaTypeDescription(interveningMedia.mediaType)
-                          }}
-                        </td>
-                        <td>{{ interveningMedia.quantity }}</td>
-                        <td>{{ interveningMedia.unit }}</td>
-                        <td>
-                          {{
-                            getClassificationDescription(
-                              interveningMedia.classification
-                            )
-                          }}
-                        </td>
-                        <td>
-                          {{
-                            getOwnershipDescription(
-                              interveningMedia.ownership_1
-                            )
-                          }}
-                        </td>
-
-                        <td>
-                          <button
-                            type="button"
-                            (click)="showInterveningMediaDataInForm(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/edit-btn.svg"
-                              alt="edit-btn"
-                            />
-                          </button>
-
-                          <button
-                            type="button"
-                            (click)="deleteInterveningMedia(i)"
-                            class="btn-white"
-                          >
-                            <img
-                              class="w-20 h-20"
-                              src="/assets/img/close.svg"
-                              alt="close"
-                            />
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </form>
-              </div>
-            </div>
           </div>
-        </form>
-      </div>
+        </div>
+  
+        <!-- DATOS PRINCIPALES -->
+        <div>
+          <h3 class="title">DATOS PRINCIPALES</h3>
+  
+          <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+      
+            <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
+              <mat-label>Fecha y hora de actualización</mat-label>
+              <input matInput [matDatepicker]="picker2" [formControl]="getForm('datetimeUpdate')" />
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="input spaced-input" fxFlex="75%">
+              <mat-label>Observaciones</mat-label>
+              <textarea matInput [formControl]="getForm('observations_1')"> </textarea>
+            </mat-form-field>
+          </div>
+  
+          <div class="row" fxLayout="row" fxLayoutAlign="start center">
+
+            <mat-form-field class="input full-width-input" fxFlex="99%">
+              <mat-label>Previsión</mat-label>
+              <textarea matInput [formControl]="getForm('forecast')"> </textarea>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- PARÁMETROS -->
+        <div>
+          <h3 class="title">PARÁMETROS</h3>
+          <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+  
+            <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Estado del incendio </mat-label>
+              <mat-select formControlName="media">
+                <mat-option *ngFor="let op of status()" [value]="op.id">
+                  {{ op.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Fecha final</mat-label>
+              <input matInput [matDatepicker]="picker3" [formControl]="getForm('end_date')" />
+              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="input spaced-input" fxFlex="60%">
+              <mat-label>Plan de emergencias activado</mat-label>
+              <input matInput [formControl]="getForm('emergencyPlanActivated')" placeholder="Ingresa texto" required />
+            </mat-form-field>
+  
+            <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="picker" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field> -->
+  
+            <!-- <mat-form-field class="input spaced-input" fxFlex="60%">
+              <mat-label>Selecciona otro</mat-label>
+              <mat-select>
+                <mat-option *ngFor="let option of anotherSelectOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+          </div>
+        </div>
+  
+        <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 1</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+  
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 2</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+  
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Campo 3</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let option of selectOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+  
+          <!-- <mat-form-field class="input spaced-input" fxFlex="20%">
+            <mat-label>Texto</mat-label>
+            <input matInput />
+          </mat-form-field> -->
+        </div>
+      </form>  
+      <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center">
+        <button mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+        
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <button mat-flat-button color="accent" style="margin-right: 10px;">Volver</button>
+            <button mat-raised-button color="secondary" style="margin-right: 10px;">Foto</button>
+            <button mat-flat-button color="primary" style="margin-right: 10px;">Guardar</button>
+          </div>
+        </div>
     </div>
-  </form>
-</div>
+    
+  </div>
+
+
+  
+ 

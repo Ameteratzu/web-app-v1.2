@@ -1,36 +1,65 @@
-<app-fire-table-toolbar [fires]="fires"></app-fire-table-toolbar>
-<table width="100%" class="table table-striped mt-3">
-  <thead class="table-secondary">
-    <tr>
-      <th align="left" class="fw-bold font-size-16">Denominación</th>
-      <th align="left" class="fw-bold font-size-16">Fecha inicio</th>
-      <th align="left" class="fw-bold font-size-16">Estado</th>
-      <th align="left" class="fw-bold font-size-16">NGP</th>
-      <th align="left" class="fw-bold font-size-16">Max. NGP</th>
-      <th align="left" class="fw-bold font-size-16">Ubicación</th>
-      <th align="left" class="fw-bold font-size-16">Último registro</th>
-      <th align="left" class="fw-bold font-size-16">Opciones</th>
-    </tr>
-  </thead>
+<div class="mat-elevation-z8 table-container">
+  <table mat-table [dataSource]="fires" matSort class="mat-table">
+    <!-- Denominación Column -->
+    <ng-container matColumnDef="denominacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Denominación </th>
+      <td mat-cell *matCellDef="let fire"> {{ fire.denominacion }} </td>
+    </ng-container>
 
-  <tbody>
-    <tr *ngFor="let fire of fires.data">
-      <td>{{ fire.denominacion }}</td>
-      <td>{{ fire.fechaInicio }}</td>
-      <td>{{ fire.estadoSuceso.descripcion }}</td>
-      <td>-</td>
-      <td>-</td>
-      <td>{{ getUbicacion(fire) }}</td>
-      <td>{{ getLastUpdated(fire) }}</td>
-      <td>
+    <!-- Fecha inicio Column -->
+    <ng-container matColumnDef="fechaInicio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha inicio </th>
+      <td mat-cell *matCellDef="let fire"> {{ fire.fechaInicio }} </td>
+    </ng-container>
+
+    <!-- Estado Column -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+      <td mat-cell *matCellDef="let fire"> {{ fire.estadoSuceso.descripcion }} </td>
+    </ng-container>
+
+    <!-- NGP Column -->
+    <ng-container matColumnDef="ngp">
+      <th mat-header-cell *matHeaderCellDef> NGP </th>
+      <td mat-cell *matCellDef="let fire"> - </td>
+    </ng-container>
+
+    <!-- Max NGP Column -->
+    <ng-container matColumnDef="maxNgp">
+      <th mat-header-cell *matHeaderCellDef> Max. NGP </th>
+      <td mat-cell *matCellDef="let fire"> - </td>
+    </ng-container>
+
+    <!-- Ubicación Column -->
+    <ng-container matColumnDef="ubicacion">
+      <th mat-header-cell *matHeaderCellDef> Ubicación </th>
+      <td mat-cell *matCellDef="let fire"> {{ getUbicacion(fire) }} </td>
+    </ng-container>
+
+    <!-- Último registro Column -->
+    <ng-container matColumnDef="ultimoRegistro">
+      <th mat-header-cell *matHeaderCellDef> Último registro </th>
+      <td mat-cell *matCellDef="let fire"> {{ getLastUpdated(fire) }} </td>
+    </ng-container>
+
+    <!-- Opciones Column -->
+    <ng-container matColumnDef="opciones">
+      <th mat-header-cell *matHeaderCellDef> Opciones </th>
+      <td mat-cell *matCellDef="let fire" class="text-center">
         <a (click)="goToEdit(fire)">
-          <img src="/assets/img/edit-btn.svg" alt="edit-btn" />
+          <img src="/assets/img/edit-btn.svg" alt="Editar" />
         </a>
-
         <a href="">
-          <img src="/assets/img/doc-btn.svg" alt="doc-btn" />
+          <img src="/assets/img/doc-btn.svg" alt="Documentos" />
         </a>
       </td>
-    </tr>
-  </tbody>
-</table>
+    </ng-container>
+
+    <!-- Header and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Paginator -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

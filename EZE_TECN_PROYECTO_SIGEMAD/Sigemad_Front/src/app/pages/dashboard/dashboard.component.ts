@@ -9,22 +9,28 @@ import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { get } from 'ol/proj';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';   
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatFormFieldModule, MatGridListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 
-  public chart: Chart;
+  public chart!: Chart;
 
-  public draw: Draw;
-  public source: VectorSource;
-  public map: Map;
-  public snap: Snap;
+  public draw!: Draw;
+  public source!: VectorSource;
+  public map!: Map;
+  public snap!: Snap;
 
   public menuItemActiveService = inject(MenuItemActiveService);
 
