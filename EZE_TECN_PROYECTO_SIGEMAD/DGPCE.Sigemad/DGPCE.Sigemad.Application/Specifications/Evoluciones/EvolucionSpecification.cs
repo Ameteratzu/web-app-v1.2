@@ -13,7 +13,10 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
         (Evolucion.Borrado == false)
        )
         {
-            //AddInclude(i => i.EvolucionProcedenciaDestinos);
+            AddInclude(i => i.Parametro);
+            AddInclude(i => i.Registro);
+            AddInclude(i => i.DatoPrincipal);
+            AddInclude(i => i.RegistroProcedenciasDestinos);
         }
 
     }
