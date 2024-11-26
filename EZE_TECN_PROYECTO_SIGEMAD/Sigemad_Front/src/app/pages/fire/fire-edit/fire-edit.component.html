@@ -1,5 +1,4 @@
 <div fxLayout="column" fxLayoutGap="16px" class="filter-container">
-  <!-- Primera fila con inputs -->
   <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch">
     <mat-form-field appearance="fill" fxFlex="20">
       <mat-label>Denominación</mat-label>
@@ -44,56 +43,47 @@
 <br>
 
 <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="16px" style="height: 100%;">
-  <!-- Lado izquierdo: Información -->
   <div fxFlex="30" class="info-section">
     <mat-card>
-      <mat-card-title>Datos consolidados</mat-card-title>
+      <mat-card-title>Situación Evolutiva</mat-card-title>
       <mat-card-content>
         <p><strong>Inicio de incendio:</strong> 19/08/2024 19:45</p>
         <p><strong>Estado:</strong> Activo</p>
         <p><strong>Nivel de gravedad:</strong> Activo</p>
         <mat-divider></mat-divider>
-
+      
         <h4>Hechos relevantes</h4>
-        <ul>
-          <li>Activado plan nacional XX (18/08/2024 10:00)</li>
-          <li>Activado Copernico (18/08/2024 12:00)</li>
-          <li>CECOPI (19/08/2024 18:15)</li>
-        </ul>
+        <p>Activado plan nacional XX (18/08/2024 10:00)</p>
+        <p>Activado Copernico (18/08/2024 12:00)</p>
+        <p>CECOPI (19/08/2024 18:15)</p>
         <mat-divider></mat-divider>
-
+      
         <h4>Consecuencias</h4>
         <p>Heridos: 2</p>
         <p>Evacuados: 134 (Santa María - 18/08/2024 19:45)</p>
         <p>Área afectada: Santa María de Guía de Gran Canaria</p>
         <p>Viabilidad: Corte CN-21 PK 2,300-3,100</p>
         <mat-divider></mat-divider>
-
+      
         <h4>Medios intervinientes</h4>
-        <ul>
-          <li>BRIF/A - Tineo (18/08/2024 12:40)</li>
-          <li>FOCA - Torrejón (18/08/2024 16:35)</li>
-          <li>UME - Aprobación (19/08/2024 19:45)</li>
-        </ul>
+        <p>BRIF/A - Tineo (18/08/2024 12:40)</p>
+        <p>FOCA - Torrejón (18/08/2024 16:35)</p>
+        <p>UME - Aprobación (19/08/2024 19:45)</p>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <!-- Lado derecho: Tabla -->
   <div fxFlex="70" class="table-section">
     <mat-card>
-      <!-- <mat-card-title>Registro de actualizaciones</mat-card-title> -->
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
-        <!-- Texto alineado a la izquierda -->
         <mat-card-title>Registro de actualizaciones</mat-card-title>
       
-        <!-- Botones alineados a la derecha -->
         <div fxLayout="row" fxLayoutGap="8px" class="btn-container">
-          <button mat-button class="circle-button" (click)="goModal()">E</button>
-          <button mat-button class="circle-button">C</button>
+          <button mat-button class="circle-button" (click)="goModalEvolution()">E</button>
+          <button mat-button class="circle-button" (click)="goModalCoordination()">C</button>
           <button mat-button class="circle-button">R</button>
-          <button mat-button class="circle-button">D</button>
-          <button mat-button class="circle-button">O</button>
+          <button mat-button class="circle-button" (click)="goModalDocumentation()">D</button>
+          <button mat-button class="circle-button" (click)="goModalOtherInformation()">O</button>
           <button mat-button class="circle-button">S</button>
         </div>
       </div>

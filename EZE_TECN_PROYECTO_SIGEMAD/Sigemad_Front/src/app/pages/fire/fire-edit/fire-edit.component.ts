@@ -1,8 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+
+
 import { ActivatedRoute, Router } from '@angular/router';
 
-//import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FlexLayoutModule } from '@angular/flex-layout'; 
+
+
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+
 
 import { EventService } from '../../../services/event.service';
 import { EventStatusService } from '../../../services/eventStatus.service';
@@ -11,17 +30,8 @@ import { FireService } from '../../../services/fire.service';
 import { MenuItemActiveService } from '../../../services/menu-item-active.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
-import { MatCardModule } from '@angular/material/card';
 
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import moment from 'moment';
-import Feature from 'ol/Feature';
-import { Geometry } from 'ol/geom';
+
 import { Event } from '../../../types/event.type';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireStatus } from '../../../types/fire-status.type';
@@ -29,19 +39,23 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { EventStatus } from '../../../types/eventStatus.type';
+
+
+import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
+import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
+import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
+import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
+
+
+import moment from 'moment';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+
 // import { FireDirectionCoordinationComponent } from '../components/fire-direction-coordination/fire-direction-coordination.component';
 // import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
 // import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
-import { FormFieldComponent } from '../../../shared/Inputs/field.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatGridListModule } from '@angular/material/grid-list'; 
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-  
+//import { FireEvolutionCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -353,13 +367,66 @@ export class FireEditComponent {
     return this.formData.controls[atributo];
   }
 
-  goModal() {
+  goModalEvolution() {
     const dialogRef = this.matDialog.open(FireCreateComponent, {
       width: '90vw', 
       height: '90vh', 
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos Evolución', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
+  }
+
+  goModalCoordination() {
+    const dialogRef = this.matDialog.open(FireCoordinationData, {
+      width: '90vw', 
+      height: '90vh', 
+      maxWidth: 'none', 
+      data: {
+        title: 'Nuevo - Datos de dirección y coordinación de la emergencia', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
+  }
+
+  
+
+  goModalOtherInformation() {
+    const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
+      width: '90vw', 
+      maxWidth: 'none', 
+      //height: '90vh', 
+      data: {
+        title: 'Nuevo - Otra Información', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
+  }
+
+  goModalDocumentation() {
+    const dialogRef = this.matDialog.open(FireDocumentation, {
+      width: '90vw', 
+      maxWidth: 'none', 
+      //height: '90vh', 
+      data: {
+        title: 'Documentación', 
       },
     });
 
