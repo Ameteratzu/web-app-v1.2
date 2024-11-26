@@ -7,41 +7,44 @@ import {
   OnInit,
   Output,
   signal,
-  SimpleChanges,
 } from '@angular/core';
 
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import {
+  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
-  FormBuilder
 } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MatExpansionModule,
+  MatExpansionPanel,
+} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 
-import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import moment from 'moment';
+import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
 import { CountryService } from '../../../../services/country.service';
 import { EventStatusService } from '../../../../services/eventStatus.service';
 import { FireStatusService } from '../../../../services/fire-status.service';
 import { FireService } from '../../../../services/fire.service';
+import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
 import { MoveService } from '../../../../services/move.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
@@ -49,6 +52,7 @@ import { ProvinceService } from '../../../../services/province.service';
 import { SeverityLevelService } from '../../../../services/severity-level.service';
 import { SuperficiesService } from '../../../../services/superficies.service';
 import { TerritoryService } from '../../../../services/territory.service';
+import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { AutonomousCommunity } from '../../../../types/autonomous-community.type';
 import { ComparativeDate } from '../../../../types/comparative-date.type';
@@ -61,15 +65,14 @@ import { Municipality } from '../../../../types/municipality.type';
 import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
-import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
-import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
+import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
 
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -92,7 +95,8 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     FlexLayoutModule,
     MatExpansionModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDialogModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -128,6 +132,7 @@ export class FireFilterFormComponent implements OnInit {
 
   public comparativeDateService = inject(ComparativeDateService);
   public moveService = inject(MoveService);
+  private dialog = inject(MatDialog);
 
   public superficiesFiltro = signal<any[]>([]);
   public territories = signal<Territory[]>([]);
@@ -151,21 +156,21 @@ export class FireFilterFormComponent implements OnInit {
   public filteredCountries = signal<Countries[]>([]);
   public formData!: FormGroup;
 
-  myForm!: FormGroup; 
+  myForm!: FormGroup;
   options = [
     { label: 'Opción 1', value: 'option1' },
     { label: 'Opción 2', value: 'option2' },
-    { label: 'Opción 3', value: 'option3' }
+    { label: 'Opción 3', value: 'option3' },
   ];
 
   showFilters = false;
 
   async ngOnInit() {
-    const fb = new FormBuilder(); 
+    const fb = new FormBuilder();
     this.myForm = fb.group({
       selectField: ['', Validators.required],
       inputField1: ['', Validators.required],
-      inputField2: ['', Validators.required]
+      inputField2: ['', Validators.required],
     });
     const {
       severityLevel,
@@ -185,8 +190,8 @@ export class FireFilterFormComponent implements OnInit {
       municipality,
       episode,
       provincia,
-      fechaInicio,
-      fechaFin
+      //fechaInicio,
+      //fechaFin
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -207,21 +212,19 @@ export class FireFilterFormComponent implements OnInit {
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
-      fechaInicio: new FormControl(fechaInicio ?? ''),
-      fechaFin: new FormControl(fechaFin ?? ''),
+      //fechaInicio: new FormControl(fechaInicio ?? ''),
+      //fechaFin: new FormControl(fechaFin ?? ''),
     });
 
     const countries = await this.countryService.get();
     this.countries.set(countries);
 
     this.formData.get('country')?.valueChanges.subscribe((value) => {
-      
       this.updateFilteredCountries(value || '');
-
     });
 
     this.updateFilteredCountries('');
-    
+
     this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
@@ -253,15 +256,14 @@ export class FireFilterFormComponent implements OnInit {
     this.loadCommunities();
     this.getCountriesByTerritory();
 
-    this.onSubmit()
+    this.onSubmit();
   }
 
   toggleAccordion(panel: MatExpansionPanel) {
-    panel.toggle(); 
+    panel.toggle();
   }
 
-   private updateFilteredCountries(value: string) {
-    
+  private updateFilteredCountries(value: string) {
     const filterValue = value.toLowerCase();
     const allCountries = this.countries();
     this.filteredCountries.set(
@@ -275,19 +277,22 @@ export class FireFilterFormComponent implements OnInit {
     return this.filteredCountries();
   }
 
-  getCountryByTerritory (country: any, territory: any ){
-    if(territory == 1){
-      return country
+  getCountryByTerritory(country: any, territory: any) {
+    if (territory == 1) {
+      return country;
     }
-    if(territory == 2){
-      if(country == this.COUNTRIES_ID.SPAIN){
-        return null
+    if (territory == 2) {
+      if (country == this.COUNTRIES_ID.SPAIN) {
+        return null;
       }
     }
   }
 
   async changeTerritory(event: any) {
-    console.log("🚀 ~ FireFilterFormComponent ~ changeTerritory ~ event:", event)
+    console.log(
+      '🚀 ~ FireFilterFormComponent ~ changeTerritory ~ event:',
+      event
+    );
     this.formData.patchValue({
       country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
@@ -335,9 +340,9 @@ export class FireFilterFormComponent implements OnInit {
   getCountriesByTerritory() {
     let original = [...this.countries()];
     let newCountries = [...this.countries()];
-    
+
     if (this.formData.value.territory != 2) {
-      this.filteredCountries.set(newCountries); 
+      this.filteredCountries.set(newCountries);
     }
     if (this.formData.value.territory == 2) {
       const indexSpain = newCountries.findIndex(
@@ -403,7 +408,7 @@ export class FireFilterFormComponent implements OnInit {
       between,
       start,
       end,
-      name
+      name,
     } = this.formData.value;
 
     const fires = await this.fireService.get({
@@ -419,20 +424,19 @@ export class FireFilterFormComponent implements OnInit {
       IdComparativoFecha: between,
       FechaInicio: moment(start).format('YYYY-MM-DD'),
       FechaFin: moment(end).format('YYYY-MM-DD'),
-      denominacion: name
+      denominacion: name,
     });
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
-    
   }
 
   clearFormFilter() {
     this.formData.patchValue({
       between: 1,
       move: 1,
-      territory: 1, 
-      country: "",
+      territory: 1,
+      country: '',
       start: moment().subtract(4, 'days').toDate(),
       end: moment().toDate(),
       autonomousCommunity: '',
@@ -449,5 +453,22 @@ export class FireFilterFormComponent implements OnInit {
 
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
+  }
+
+  goModal() {
+    const dialogRef = this.dialog.open(FireCreateEdit, {
+      width: '75vw',
+      maxWidth: 'none',
+      data: {
+        title: 'Nuevo - Datos Evolución',
+        fire: {},
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
   }
 }

@@ -1,5 +1,4 @@
-
-  
+<form (ngSubmit)="onSubmit()">
   <!-- Acordeón para Filtros -->
   <mat-accordion multi>
     <mat-expansion-panel #filterPanel>
@@ -7,19 +6,31 @@
         <mat-panel-title>Filtros</mat-panel-title>
       </mat-expansion-panel-header>
       <!-- Fila 1 -->
-      <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <div
+        fxLayout="row"
+        fxLayoutGap="16px"
+        fxLayoutAlign="start stretch"
+        class="filter-container"
+      >
         <mat-form-field appearance="fill" fxFlex="20">
           <mat-label>Denominación</mat-label>
-          <input matInput [formControl]="getForm('name')" placeholder="Ingresa texto" required />
-          <mat-error *ngIf="formData.get('name')?.hasError('required')">
-            Este campo es obligatorio.
-          </mat-error>
+          <input
+            matInput
+            [formControl]="getForm('name')"
+            placeholder="Ingresa texto"
+          />
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill" fxFlex="20">
           <mat-label>Territorio</mat-label>
-          <mat-select [formControl]="getForm('territory')" (selectionChange)="changeTerritory($event)">
-            <mat-option *ngFor="let option of territories()" [value]="option.id">
+          <mat-select
+            [formControl]="getForm('territory')"
+            (selectionChange)="changeTerritory($event)"
+          >
+            <mat-option
+              *ngFor="let option of territories()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
@@ -27,7 +38,7 @@
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill" fxFlex="20">
           <mat-label>Estado</mat-label>
           <input
@@ -37,7 +48,10 @@
             placeholder="Selecciona un estado"
           />
           <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredCountries()" [value]="option.descripcion">
+            <mat-option
+              *ngFor="let option of filteredCountries()"
+              [value]="option.descripcion"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-autocomplete>
@@ -45,15 +59,23 @@
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
-  
+
         <mat-form-field appearance="fill" fxFlex="20">
           <mat-label>CCAA</mat-label>
-          <mat-select [formControl]="getForm('autonomousCommunity')" (selectionChange)="loadProvinces($event)">
-            <mat-option *ngFor="let option of autonomousCommunities()" [value]="option.id">
+          <mat-select
+            [formControl]="getForm('autonomousCommunity')"
+            (selectionChange)="loadProvinces($event)"
+          >
+            <mat-option
+              *ngFor="let option of autonomousCommunities()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formData.get('autonomousCommunity')?.hasError('required')">
+          <mat-error
+            *ngIf="formData.get('autonomousCommunity')?.hasError('required')"
+          >
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
@@ -70,12 +92,20 @@
           </mat-error>
         </mat-form-field>
       </div>
-       <!-- Fila 2 -->
-      <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Fila 2 -->
+      <div
+        fxLayout="row"
+        fxLayoutGap="16px"
+        fxLayoutAlign="start stretch"
+        class="filter-container"
+      >
         <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Estado del suceso</mat-label>
           <mat-select [formControl]="getForm('eventStatus')">
-            <mat-option *ngFor="let option of eventStatus()" [value]="option.id">
+            <mat-option
+              *ngFor="let option of eventStatus()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
@@ -99,11 +129,16 @@
         <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Nivel/situación</mat-label>
           <mat-select [formControl]="getForm('severityLevel')">
-            <mat-option *ngFor="let option of severityLevels()" [value]="option.id">
+            <mat-option
+              *ngFor="let option of severityLevels()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formData.get('severityLevel')?.hasError('required')">
+          <mat-error
+            *ngIf="formData.get('severityLevel')?.hasError('required')"
+          >
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
@@ -111,7 +146,10 @@
         <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Superficies</mat-label>
           <mat-select [formControl]="getForm('affectedArea')">
-            <mat-option *ngFor="let option of superficiesFiltro()" [value]="option.id">
+            <mat-option
+              *ngFor="let option of superficiesFiltro()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
@@ -121,8 +159,13 @@
         </mat-form-field>
       </div>
 
-       <!-- Fila 3 -->
-       <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Fila 3 -->
+      <div
+        fxLayout="row"
+        fxLayoutGap="16px"
+        fxLayoutAlign="start stretch"
+        class="filter-container"
+      >
         <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Movimiento</mat-label>
           <mat-select [formControl]="getForm('move')">
@@ -137,8 +180,14 @@
 
         <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Entre</mat-label>
-          <mat-select [formControl]="getForm('between')" (selectionChange)="changeBetween($event)">
-            <mat-option *ngFor="let option of comparativeDates()" [value]="option.id">
+          <mat-select
+            [formControl]="getForm('between')"
+            (selectionChange)="changeBetween($event)"
+          >
+            <mat-option
+              *ngFor="let option of comparativeDates()"
+              [value]="option.id"
+            >
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
@@ -149,45 +198,98 @@
 
         <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
           <mat-label>Fecha de inicio</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaInicio')" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [formControl]="getForm('start')"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="formData.get('fechaInicio')?.hasError('required')">
+          <mat-error *ngIf="formData.get('start')?.hasError('required')">
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
           <mat-label>Fecha de fin</mat-label>
-          <input matInput [matDatepicker]="picker2" [formControl]="getForm('fechaFin')" />
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            [formControl]="getForm('end')"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
-          <mat-error *ngIf="formData.get('fechaFin')?.hasError('required')">
+          <mat-error *ngIf="formData.get('end')?.hasError('required')">
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
-  
-
       </div>
     </mat-expansion-panel>
   </mat-accordion>
 
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="width: 100%;" class="button-container">
-    <!-- Botón Buscar -->
-    <button mat-flat-button color="primary" aria-label="Buscar" class="custom-button">
-      <mat-icon>search</mat-icon>
-      Buscar
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayoutGap="16px"
+    style="width: 100%"
+    class="button-container"
+  >
+    <!-- Botón Crear (a la izquierda) -->
+    <button
+      mat-flat-button
+      color="accent"
+      aria-label="Crear"
+      class="custom-button"
+      (click)="goModal()"
+    >
+      <mat-icon>add</mat-icon>
+      Añadir
     </button>
-  
-    <!-- Botón Filtro -->
-    <button mat-flat-button color="primary" aria-label="Filtrar" class="custom-button" (click)="toggleAccordion(filterPanel)">
-      <mat-icon>filter_list</mat-icon>
-      Filtrar
-    </button>
-  
-    <!-- Botón Borrar -->
-    <button mat-flat-button color="primary" aria-label="Borrar" class="custom-button">
-      <mat-icon>delete</mat-icon>
-      Borrar
-    </button>
+
+    <!-- Botones a la derecha -->
+    <div fxLayout="row" fxLayoutGap="16px">
+      <!-- Botón Buscar -->
+      <button
+        mat-flat-button
+        color="primary"
+        aria-label="Buscar"
+        class="custom-button"
+        type="submit"
+      >
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
+
+      <!-- Botón Filtrar -->
+      <button
+        mat-flat-button
+        color="primary"
+        aria-label="Filtrar"
+        class="custom-button"
+        (click)="toggleAccordion(filterPanel)"
+        type="button"
+      >
+        <mat-icon>filter_list</mat-icon>
+        Filtrar
+      </button>
+
+      <!-- Botón Borrar -->
+      <button
+        mat-flat-button
+        color="primary"
+        aria-label="Borrar"
+        class="custom-button"
+        type="button"
+      >
+        <mat-icon>delete</mat-icon>
+        Borrar
+      </button>
+    </div>
   </div>
+</form>
