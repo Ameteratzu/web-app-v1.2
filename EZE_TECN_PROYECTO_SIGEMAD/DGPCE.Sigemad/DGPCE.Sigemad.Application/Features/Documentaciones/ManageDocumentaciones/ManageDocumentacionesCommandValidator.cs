@@ -11,34 +11,32 @@ public class ManageDocumentacionesCommandListValidator : AbstractValidator<Manag
     public ManageDocumentacionesCommandListValidator(IStringLocalizer<ValidationMessages> localizer)
     {
         RuleFor(x => x.IdIncendio)
-       .NotEmpty().WithMessage(localizer["IdIncendio is required."]);
+         .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
 
         RuleForEach(x => x.Documentaciones).SetValidator(new ManageDocumentacionesCommandValidator(localizer));
     }
 }
 
-
 public class ManageDocumentacionesCommandValidator : AbstractValidator<ManageDocumentacionesCommand>
 {
-
     public ManageDocumentacionesCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
 
         RuleFor(x => x.FechaHora)
-            .NotEmpty().WithMessage(localizer["FechaHora is required."]);
+            .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
 
         RuleFor(x => x.FechaHoraSolicitud)
-            .NotEmpty().WithMessage(localizer["FechaHoraSolicitud is required."]);
+            .NotEmpty().WithMessage(localizer["FechaHoraSolicitud"]);
 
         RuleFor(x => x.IdTipoDocumento)
-            .NotEmpty().WithMessage(localizer["IdTipoDocumento is required."]);
+            .GreaterThan(0).WithMessage(localizer["IdTipoDocumentoObligatorio"]);
 
         RuleFor(x => x.Descripcion)
-            .NotEmpty().WithMessage(localizer["Descripcion is required."])
-            .MaximumLength(255).WithMessage(localizer["Descripcion must not exceed 255 characters."]);
+            .NotEmpty().WithMessage(localizer["DescripcionObligatorio"])
+            .MaximumLength(255).WithMessage(localizer["DescripcionMaxLength"]);
 
         RuleFor(x => x.IdArchivo)
-            .NotEmpty().WithMessage(localizer["IdArchivo is required."]);
+            .NotEmpty().WithMessage(localizer["IdArchivoObligatorio"]);
     }
 
 }
