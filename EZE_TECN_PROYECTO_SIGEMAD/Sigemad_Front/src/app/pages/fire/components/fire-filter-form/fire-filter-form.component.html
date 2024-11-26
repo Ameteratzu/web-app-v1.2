@@ -172,22 +172,31 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="width: 100%;" class="button-container">
-    <!-- Botón Buscar -->
-    <button mat-flat-button color="primary" aria-label="Buscar" class="custom-button">
-      <mat-icon>search</mat-icon>
-      Buscar
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" style="width: 100%;" class="button-container">
+    <!-- Botón Crear (a la izquierda) -->
+    <button mat-flat-button color="accent" aria-label="Crear" class="custom-button" (click)="goModal()">
+      <mat-icon>add</mat-icon>
+      Añadir
     </button>
   
-    <!-- Botón Filtro -->
-    <button mat-flat-button color="primary" aria-label="Filtrar" class="custom-button" (click)="toggleAccordion(filterPanel)">
-      <mat-icon>filter_list</mat-icon>
-      Filtrar
-    </button>
+    <!-- Botones a la derecha -->
+    <div fxLayout="row" fxLayoutGap="16px">
+      <!-- Botón Buscar -->
+      <button mat-flat-button color="primary" aria-label="Buscar" class="custom-button">
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
   
-    <!-- Botón Borrar -->
-    <button mat-flat-button color="primary" aria-label="Borrar" class="custom-button">
-      <mat-icon>delete</mat-icon>
-      Borrar
-    </button>
+      <!-- Botón Filtrar -->
+      <button mat-flat-button color="primary" aria-label="Filtrar" class="custom-button" (click)="toggleAccordion(filterPanel)">
+        <mat-icon>filter_list</mat-icon>
+        Filtrar
+      </button>
+  
+      <!-- Botón Borrar -->
+      <button mat-flat-button color="primary" aria-label="Borrar" class="custom-button">
+        <mat-icon>delete</mat-icon>
+        Borrar
+      </button>
+    </div>
   </div>

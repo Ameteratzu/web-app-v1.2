@@ -63,6 +63,9 @@ import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
+import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -92,7 +95,8 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     FlexLayoutModule,
     MatExpansionModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDialogModule
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -128,6 +132,7 @@ export class FireFilterFormComponent implements OnInit {
 
   public comparativeDateService = inject(ComparativeDateService);
   public moveService = inject(MoveService);
+  private dialog = inject(MatDialog);
 
   public superficiesFiltro = signal<any[]>([]);
   public territories = signal<Territory[]>([]);
@@ -449,5 +454,22 @@ export class FireFilterFormComponent implements OnInit {
 
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
+  }
+
+  goModal() {
+    const dialogRef = this.dialog.open(FireCreateEdit, {
+      width: '90vw', 
+      height: '90vh', 
+      maxWidth: 'none', 
+      data: {
+        title: 'Nuevo - Datos Evolución', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
   }
 }

@@ -13,7 +13,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 
-import { DropdownModule } from 'primeng/dropdown';
 
 import Feature from 'ol/Feature';
 import Map from 'ol/Map';
@@ -34,7 +33,7 @@ import { Municipality } from '../../types/municipality.type';
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, DropdownModule],
+  imports: [CommonModule, MatDialogModule,],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
@@ -43,11 +42,11 @@ export class MapCreateComponent {
   @Input() listaMunicipios: any;
   @Output() save = new EventEmitter<Feature<Geometry>[]>();
 
-  public source: VectorSource;
-  public map: Map;
-  public draw: Draw;
-  public snap: Snap;
-  public vector: VectorLayer;
+  public source!: VectorSource;
+  public map!: Map;
+  public draw!: Draw;
+  public snap!: Snap;
+  public vector!: VectorLayer;
   public coords: any;
 
   public data = inject(MAT_DIALOG_DATA);
@@ -60,8 +59,8 @@ export class MapCreateComponent {
 
   public municipioSelected = signal(this.data?.municipio || {});
 
-  public length: number;
-  public latitude: number;
+  public length!: number;
+  public latitude!: number;
 
   public section: string = '';
 
