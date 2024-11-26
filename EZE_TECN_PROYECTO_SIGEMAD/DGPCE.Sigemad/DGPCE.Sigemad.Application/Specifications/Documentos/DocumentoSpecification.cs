@@ -14,5 +14,7 @@ internal class DocumentoSpecification : BaseSpecification<Documentacion>
         (documento.Borrado != true)
         )
         {
+
+        AddInclude(d => d.DocumentacionProcedenciaDestinos);
        }
 }

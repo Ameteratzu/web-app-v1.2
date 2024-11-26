@@ -21,6 +21,7 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
+using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
@@ -178,7 +179,8 @@ public class MappingProfile : Profile
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
         CreateMap<Documentacion, DocumentacionVm>();
-
+        CreateMap<ManageDocumentacionesCommand, Documentacion>()
+           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
     }
 

@@ -115,7 +115,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvolucio
 
             if (result <= 0)
             {
-                throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datops de la evolución");
+                throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datos de la evolución");
             }
 
             _logger.LogInformation(nameof(ManageEvolucionCommandHandler) + " - END");

@@ -17,4 +17,6 @@ public class Documentacion : BaseDomainModel<int>
     public TipoDocumento TipoDocumento { get; set; }
     public Incendio Incendio { get; set; }
     public Archivo Archivo { get; set; }
+
+    public ICollection<DocumentacionProcedenciaDestino>? DocumentacionProcedenciaDestinos { get; set; } = null;
 }
