@@ -98,7 +98,6 @@ const MY_DATE_FORMATS = {
   styleUrl: './fire-create-edit-form.component.scss',
 })
 export class FireCreateEdit implements OnInit {
-  //featuresCoords: Feature<Geometry>[] = [];
 
   constructor(
     private filtrosIncendioService: LocalFiltrosIncendio,
@@ -115,17 +114,11 @@ export class FireCreateEdit implements OnInit {
     private router: Router,
 
     @Inject(MAT_DIALOG_DATA) public data: { fire: any }
-  ) {
-    console.info('constructor');
-    console.info('data', this.data);
-
-    console.info('constructor');
-  }
+  ) {}
 
   //public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
   public showInputForeign: boolean = false;
-  public classValidate = signal<string>('needs-validation');
 
   public territories = signal<Territory[]>([]);
   public provinces = signal<Province[]>([]);
@@ -164,7 +157,7 @@ export class FireCreateEdit implements OnInit {
       limitSpain: new FormControl(false),
     });
 
-    if (!this.data.fire.id) {
+    if (!this.data.fire?.id) {
       this.formData.get('territory')?.disable();
       this.formData.patchValue({
         territory: 1,
@@ -175,7 +168,7 @@ export class FireCreateEdit implements OnInit {
       this.formData.get('municipality')?.disable();
     }
 
-    if (this.data.fire.id) {
+    if (this.data.fire?.id) {
       this.loadMunicipalities({ value: this.data.fire.idProvincia });
 
       this.formData.patchValue({
@@ -245,8 +238,7 @@ export class FireCreateEdit implements OnInit {
         ],
       };
 
-      if (this.data.fire.id) {
-        console.info('data', data);
+      if (this.data.fire?.id) {
         data.id = this.data.fire.id;
         await this.fireService
           .update(data)

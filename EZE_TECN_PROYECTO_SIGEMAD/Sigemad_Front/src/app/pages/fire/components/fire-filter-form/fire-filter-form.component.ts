@@ -458,11 +458,11 @@ export class FireFilterFormComponent implements OnInit {
 
   goModal() {
     const dialogRef = this.dialog.open(FireCreateEdit, {
-      width: '90vw', 
-      height: '90vh', 
+      width: '75vw',
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos Evolución', 
+        fire: {}
       },
     });
 
