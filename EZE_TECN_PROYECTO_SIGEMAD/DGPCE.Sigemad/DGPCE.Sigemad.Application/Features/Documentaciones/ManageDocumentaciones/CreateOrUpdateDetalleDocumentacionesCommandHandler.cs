@@ -6,6 +6,8 @@ using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
+using DGPCE.Sigemad.Application.Specifications.DetalleOtraInformaciones;
+using DGPCE.Sigemad.Application.Specifications.DetallesDocumentacion;
 using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -88,7 +90,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
 
         var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones.SelectMany(d => d.DocumentacionProcedenciasDestinos).Distinct();
         var documentacionProcedenciaDestinosExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(ic => idsDocumentacionProcedenciaDestinos.Contains(ic.Id));
-        
+
         if (documentacionProcedenciaDestinosExistentes.Count() != idsDocumentacionProcedenciaDestinos.Count())
         {
             var idsDocumentacionProcedenciaDestinosExistentes = documentacionProcedenciaDestinosExistentes.Select(ic => ic.Id).ToList();
@@ -99,7 +101,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 _logger.LogWarning($"Los siguientes Id's de procedencia destino: {string.Join(", ", idsDocumentacionProcedenciaDestinosInvalidos)}, no se encontraron");
                 throw new NotFoundException(nameof(ProcedenciaDestino), string.Join(", ", idsDocumentacionProcedenciaDestinosInvalidos));
             }
-            
+
         }
 
 
@@ -110,7 +112,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
             {
                 var detalleDocumentacion = documentacion.DetalleDocumentaciones.FirstOrDefault(c => c.Id == detalleDocumentoDto.Id.Value);
 
-                var documentacionProcedenciasDestinos = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(i => i.)
+                if (detalleDocumentacion != null)
                 {
                     // Actualizar datos existentes
                     _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
@@ -129,48 +131,100 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 // Crear nuevo detalle de documentacionionn
                 var nuevoDetalleDocumentacion = _mapper.Map<DetalleDocumentacion>(detalleDocumentoDto);
                 nuevoDetalleDocumentacion.Id = 0;
-                    documentacion.DetalleDocumentaciones.Add(nuevoDetalleDocumentacion);
+                documentacion.DetalleDocumentaciones.Add(nuevoDetalleDocumentacion);
             }
         }
 
 
-            // Eliminar lógicamente las coordinaciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
-            if (request.IdDocumento.HasValue)
-            {
-                // Solo las coordinaciones con Id existente (no nuevas)
-                var idsEnRequest = request.DetallesDocumentaciones
-                    .Where(c => c.Id.HasValue && c.Id > 0)
-                    .Select(c => c.Id)
-                    .ToList();
+        // Eliminar lógicamente las coordinaciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
+        if (request.IdDocumento.HasValue)
+        {
+            // Solo las coordinaciones con Id existente (no nuevas)
+            var idsEnRequest = request.DetallesDocumentaciones
+                .Where(c => c.Id.HasValue && c.Id > 0)
+                .Select(c => c.Id)
+                .ToList();
 
-                var detallesDocumentacionParaEliminar = documentacion.DetalleDocumentaciones
-                    .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
-                    .ToList();
-                foreach (var coordinacion in detallesDocumentacionParaEliminar)
+            var detallesDocumentacionParaEliminar = documentacion.DetalleDocumentaciones
+                .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
+                .ToList();
+            foreach (var coordinacion in detallesDocumentacionParaEliminar)
+            {
+                _unitOfWork.Repository<DetalleDocumentacion>().DeleteEntity(coordinacion);
+            }
+        }
+
+
+
+        if (request.IdDocumento.HasValue)
+        {
+            _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
+        }
+        else
+        {
+            _unitOfWork.Repository<Documentacion>().AddEntity(documentacion);
+        }
+
+        var result = await _unitOfWork.Complete();
+        if (result <= 0)
+        {
+            throw new Exception("No se pudo insertar/actualizar los detalles de la documentacion");
+        }
+
+        _logger.LogInformation($"{nameof(CreateOrUpdateDetalleDocumentacionesCommandHandler)} - END");
+        return new CreateOrUpdateDocumentacionResponse { IdDocumentacion = documentacion.Id };
+
+    }
+
+
+
+    private async Task UpdateProcedenciaDestinoAsync(DetalleDocumentacion detalle,List<int> procedenciasDestinos)
+    {
+        // 1. Asegúrate de que las relaciones actuales están cargadas
+        await _unitOfWork.Repository<DetalleDocumentacion>()
+            .GetByIdWithSpec(new DetalleDocumentacionSpecification(detalle.Id));
+
+        // 2. Obtener los IDs actuales en la base de datos
+        var procedenciasActuales = detalle.DocumentacionProcedenciaDestinos
+            .Select(p => p.IdProcedenciaDestino)
+            .ToList();
+
+
+        // 3. Identificar relaciones a eliminar
+        var idsAEliminar = procedenciasActuales.Except(procedenciasDestinos).ToList();
+        var procedenciasAEliminar = detalle.DocumentacionProcedenciaDestinos
+            .Where(p => idsAEliminar.Contains(p.IdProcedenciaDestino))
+            .ToList();
+
+        foreach (var procedencia in procedenciasAEliminar)
+        {
+            detalle.DocumentacionProcedenciaDestinos.Remove(procedencia);
+        }
+
+        // 3. Identifica relaciones a agregar o reactivar
+        foreach (var idProcedenciaDestino in procedenciasDestinos)
+        {
+            var procedenciaExistente = detalle.DocumentacionProcedenciaDestinos
+                .FirstOrDefault(p => p.IdProcedenciaDestino == idProcedenciaDestino);
+
+            if (procedenciaExistente == null) // Nueva relación
+            {
+                detalle.DocumentacionProcedenciaDestinos.Add(new DocumentacionProcedenciaDestino
                 {
-                    _unitOfWork.Repository<DetalleDocumentacion>().DeleteEntity(coordinacion);
-                }
+                    IdDetalleDocumentacion = detalle.Id,
+                    IdProcedenciaDestino = idProcedenciaDestino,
+                });
             }
-
-
-
-            if (request.IdDocumento.HasValue)
+            else if (procedenciaExistente.Borrado) // Reactivar relación existente
             {
-                _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
+                procedenciaExistente.Borrado = false;
             }
-            else
-            {
-                _unitOfWork.Repository<Documentacion>().AddEntity(documentacion);
-            }
-
-            var result = await _unitOfWork.Complete();
-            if (result <= 0)
-            {
-                throw new Exception("No se pudo insertar/actualizar los detalles de la documentacion");
-            }
-
-            _logger.LogInformation($"{nameof(CreateOrUpdateDetalleDocumentacionesCommandHandler)} - END");
-            return new CreateOrUpdateDocumentacionResponse { IdDocumentacion = documentacion.Id };
-
         }
+
+        // 4. Actualizar el objeto principal (se reflejarán los cambios en las relaciones)
+        //_unitOfWork.Repository<DetalleOtraInformacion>().UpdateEntity(detalle);
+    }
+
+
+
 }
