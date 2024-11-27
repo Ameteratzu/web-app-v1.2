@@ -1,5 +1,7 @@
-﻿using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
+﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtrasInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.UpdateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
 using MediatR;
@@ -67,5 +69,15 @@ public class OtraInformacionController : ControllerBase
     {
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpPost("lista")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Crear lista otra información")]
+    public async Task<ActionResult<ManageOtraInformacionResponse>> CreateLista([FromBody] ManageOtraInformacionCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
     }
 }
