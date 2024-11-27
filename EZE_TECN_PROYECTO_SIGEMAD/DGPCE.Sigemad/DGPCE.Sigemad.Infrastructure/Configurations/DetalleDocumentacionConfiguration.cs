@@ -9,15 +9,23 @@ using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations
 {
-    public class DocumentacionConfiguration : IEntityTypeConfiguration<Documentacion>
+    public class DetalleDocumentacionConfiguration : IEntityTypeConfiguration<DetalleDocumentacion>
     {
-        public void Configure(EntityTypeBuilder<Documentacion> builder)
+        public void Configure(EntityTypeBuilder<DetalleDocumentacion> builder)
         {
-            builder.ToTable("Documentacion");
+            builder.ToTable("DetalleDocumentacion");
 
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.IdIncendio).IsRequired();
+            builder.Property(e => e.FechaHora)
+                   .IsRequired();
+
+            builder.Property(e => e.FechaHoraSolicitud)
+                   .IsRequired();
+
+            builder.Property(e => e.Descripcion)
+                   .IsRequired()
+                   .HasMaxLength(255);
 
             builder.Property(e => e.FechaCreacion)
               .HasColumnType("datetime");
@@ -40,10 +48,18 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .HasMaxLength(500)
             .IsUnicode(false);
 
-            builder.HasOne(d => d.Incendio)
-            .WithMany()
-            .HasForeignKey(d => d.IdIncendio)
-            .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(d => d.TipoDocumento)
+                   .WithMany()
+                   .HasForeignKey(d => d.IdTipoDocumento);
+
+            builder.HasOne(d => d.Archivo)
+                   .WithMany()
+                   .HasForeignKey(d => d.IdArchivo);
+
+            builder.HasOne(e => e.Documentacion)
+             .WithMany(e => e.DetalleDocumentaciones)
+            .HasForeignKey(e => e.IdDocumentacion)
+            .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

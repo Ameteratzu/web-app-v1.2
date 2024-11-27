@@ -1,4 +1,5 @@
 ﻿
+using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using MediatR;
@@ -26,7 +27,7 @@ namespace DGPCE.Sigemad.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerOperation(Summary = "Crea la documentacion asociada a un incendio")]
-        public async Task<ActionResult<ManageImpactoResponse>> CreateImpactos([FromBody] ManageDocumentacionesCommandList command)
+        public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> CreateImpactos([FromBody] ManageDocumentacionesCommand command)
         {
             var response = await _mediator.Send(command);
             return NoContent();

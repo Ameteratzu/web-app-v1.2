@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Resources;
+﻿using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
+using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
@@ -6,18 +7,18 @@ using Microsoft.Extensions.Localization;
 namespace DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 
 
-public class ManageDocumentacionesCommandListValidator : AbstractValidator<ManageDocumentacionesCommandList>
+public class ManageDocumentacionesCommandListValidator : AbstractValidator<ManageDocumentacionesCommand>
 {
     public ManageDocumentacionesCommandListValidator(IStringLocalizer<ValidationMessages> localizer)
     {
         RuleFor(x => x.IdIncendio)
          .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
 
-        RuleForEach(x => x.Documentaciones).SetValidator(new ManageDocumentacionesCommandValidator(localizer));
+        RuleForEach(x => x.DetallesDocumentaciones).SetValidator(new ManageDocumentacionesCommandValidator(localizer));
     }
 }
 
-public class ManageDocumentacionesCommandValidator : AbstractValidator<ManageDocumentacionesCommand>
+public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDocumentacionDto>
 {
     public ManageDocumentacionesCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
