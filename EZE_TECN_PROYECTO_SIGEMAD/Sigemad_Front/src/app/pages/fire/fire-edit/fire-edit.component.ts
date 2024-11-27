@@ -391,6 +391,7 @@ export class FireEditComponent {
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia', 
+        idIncendio:  Number(this.route.snapshot.paramMap.get('id')), // Pasar datos existentes al modal
       },
     });
 
