@@ -13,7 +13,7 @@ public class DetalleOtraInformacion : BaseDomainModel<int>
     public string Asunto { get; set; }
     public string Observaciones { get; set; }
 
-    public ICollection<DetalleOtraInformacion_ProcedenciaDestino> ProcedenciasDestinos { get; set; }
+    public List<DetalleOtraInformacion_ProcedenciaDestino> ProcedenciasDestinos { get; set; }
 
     public virtual OtraInformacion OtraInformacion { get; set; }
     public virtual Medio Medio { get; set; }
