@@ -45,11 +45,14 @@ using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
+using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
+using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -181,6 +184,15 @@ public class MappingProfile : Profile
         CreateMap<Documentacion, DocumentacionVm>();
         CreateMap<ManageDocumentacionesCommand, Documentacion>()
            .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+
+        CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
+             .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
+
+        CreateMap<Incendio, SucesosBusquedaVm>()
+            .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaInicio))
+            .ForMember(dest => dest.TipoSuceso, opt => opt.MapFrom(src => src.Suceso.TipoSuceso.Descripcion))
+            .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
+            .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
     }
 

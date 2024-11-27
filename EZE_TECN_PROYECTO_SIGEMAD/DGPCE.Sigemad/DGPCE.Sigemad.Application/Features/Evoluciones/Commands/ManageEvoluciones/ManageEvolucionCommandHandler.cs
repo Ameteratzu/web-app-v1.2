@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
-using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;

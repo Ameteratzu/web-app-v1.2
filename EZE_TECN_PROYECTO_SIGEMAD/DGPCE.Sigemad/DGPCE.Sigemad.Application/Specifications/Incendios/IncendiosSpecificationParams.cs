@@ -1,4 +1,6 @@
-﻿namespace DGPCE.Sigemad.Application.Specifications.Incendios;
+﻿using System.Text.Json.Serialization;
+
+namespace DGPCE.Sigemad.Application.Specifications.Incendios;
 
 public class IncendiosSpecificationParams: SpecificationParams
 {
@@ -9,11 +11,14 @@ public class IncendiosSpecificationParams: SpecificationParams
     public int? IdProvincia { get; set; }
     public int? IdMunicipio { get; set; }
     public int? IdEstadoSuceso { get; set; }
+    public int? IdClaseSuceso { get; set; }
     public int? IdEstadoIncendio { get; set; }
     public int? IdNivelGravedad { get; set; }
     public int? IdSuperficieAfectada { get; set; }
     public int? IdMovimiento { get; set; }
     public int? IdComparativoFecha { get; set; }
+
+    public bool? busquedaSucesos { get; set; }
     public DateOnly? FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }
 
