@@ -8,6 +8,7 @@ using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
+using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
@@ -160,6 +161,7 @@ public class MappingProfile : Profile
         CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
         CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
 
+        // Otra informacion
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
@@ -171,6 +173,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Asunto, opt => opt.MapFrom(src => src.Asunto))
             .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
             .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
+
+        CreateMap<CreateDetalleOtraInformacionDto, DetalleOtraInformacion>();
 
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
