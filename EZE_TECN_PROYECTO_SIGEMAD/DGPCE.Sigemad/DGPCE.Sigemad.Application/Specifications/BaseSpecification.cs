@@ -13,6 +13,7 @@ namespace DGPCE.Sigemad.Application.Specifications
         public Expression<Func<T, bool>> Criteria { get; private set; }
 
         public List<Expression<Func<T, object>>> Includes { get; private set; } = new List<Expression<Func<T, object>>>();
+        public List<string> IncludeStrings { get; } = new(); // Para soportar Includes por string
 
         public Expression<Func<T, object>> OrderBy { get; private set; }
 
@@ -64,6 +65,12 @@ namespace DGPCE.Sigemad.Application.Specifications
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
+        }
+
+        // Método para agregar Includes por string
+        protected void AddInclude(string includeString)
+        {
+            IncludeStrings.Add(includeString);
         }
 
         public ISpecification<T> And(ISpecification<T> other)

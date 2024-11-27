@@ -1,6 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Common;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DGPCE.Sigemad.Infrastructure.Specification
 {
@@ -29,6 +30,10 @@ namespace DGPCE.Sigemad.Infrastructure.Specification
             }
 
             inputQuery = spec.Includes.Aggregate(inputQuery, (current, include) => current.Include(include));
+
+            // Aplicar Includes basados en strings
+            inputQuery = spec.IncludeStrings.Aggregate(inputQuery, (current, include) => current.Include(include));
+
 
             return inputQuery;
         }

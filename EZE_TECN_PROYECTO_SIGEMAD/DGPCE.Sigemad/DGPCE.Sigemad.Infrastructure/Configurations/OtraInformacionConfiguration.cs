@@ -39,7 +39,7 @@ internal class OtraInformacionConfiguration :IEntityTypeConfiguration<OtraInform
             .HasConstraintName("FK_DetalleOtraInformacion_OtraInformacion");
 
         builder.HasOne(e => e.Incendio)
-        .WithMany()
+        .WithMany(i => i.OtraInformaciones)
         .HasForeignKey(e => e.IdIncendio)
         .OnDelete(DeleteBehavior.Restrict)
         .HasConstraintName("FK_OtraInformacion_Incendio");

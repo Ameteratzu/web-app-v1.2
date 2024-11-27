@@ -38,6 +38,9 @@ public class Incendio : BaseDomainModel<int>
     public virtual Provincia Provincia { get; set; } = null!;
     public virtual Municipio Municipio { get; set; } = null!;
 
-    public virtual ICollection<Evolucion> Evoluciones { get; set; }
+    public virtual List<Evolucion> Evoluciones { get; set; }
+    public virtual List<DireccionCoordinacionEmergencia> DireccionCoordinacionEmergencias { get; set; }
+    public virtual List<Documentacion> Documentaciones { get; set; }
+    public virtual List<OtraInformacion> OtraInformaciones { get; set; }
 
 }

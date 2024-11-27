@@ -1,19 +1,12 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
-using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
-using DGPCE.Sigemad.Application.Specifications.DetalleOtraInformaciones;
 using DGPCE.Sigemad.Application.Specifications.DetallesDocumentacion;
-using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 
 
@@ -178,7 +171,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
 
 
 
-    private async Task UpdateProcedenciaDestinoAsync(DetalleDocumentacion detalle,List<int> procedenciasDestinos)
+    private async Task UpdateProcedenciaDestinoAsync(DetalleDocumentacion detalle, List<int> procedenciasDestinos)
     {
         // 1. Asegúrate de que las relaciones actuales están cargadas
         await _unitOfWork.Repository<DetalleDocumentacion>()

@@ -41,7 +41,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .IsUnicode(false);
 
             builder.HasOne(d => d.Incendio)
-            .WithMany()
+            .WithMany(i => i.Documentaciones)
             .HasForeignKey(d => d.IdIncendio)
             .OnDelete(DeleteBehavior.Restrict);
         }
