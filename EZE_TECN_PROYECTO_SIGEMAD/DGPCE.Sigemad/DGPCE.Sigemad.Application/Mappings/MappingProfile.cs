@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
+using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
@@ -185,8 +186,10 @@ public class MappingProfile : Profile
         CreateMap<CreateParametroCommand, Parametro>();
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
-        CreateMap<Documentacion, DocumentacionVm>();
-        CreateMap<ManageDocumentacionesCommand, Documentacion>()
+        CreateMap<Documentacion, DocumentacionVm>()
+           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetalleDocumentaciones));
+
+        CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
            .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()

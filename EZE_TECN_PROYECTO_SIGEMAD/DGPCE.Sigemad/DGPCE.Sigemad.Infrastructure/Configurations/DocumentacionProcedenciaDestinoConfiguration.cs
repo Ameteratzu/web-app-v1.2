@@ -11,9 +11,9 @@ public class DocumentacionProcedenciaDestinoConfiguration: IEntityTypeConfigurat
         builder.ToTable("Documentacion_ProcedenciaDestino");
         builder.HasKey(e => e.Id);
 
-        builder.HasOne(e => e.Documentacion)
+        builder.HasOne(e => e.DetalleDocumentacion)
                      .WithMany(e => e.DocumentacionProcedenciaDestinos)
-                    .HasForeignKey(e => e.IdDocumentacion)
+                    .HasForeignKey(e => e.IdDetalleDocumentacion)
                     .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.HasOne(d => d.ProcedenciaDestino)
