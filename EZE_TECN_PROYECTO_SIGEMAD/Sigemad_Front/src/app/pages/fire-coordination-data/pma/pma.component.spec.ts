@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FireCoordinationData } from './fire-coordination-data.component';
+import { PmaComponent } from './pma.component';
 
-describe('FireCoordinationDataComponent', () => {
-  let component: FireCoordinationData;
-  let fixture: ComponentFixture<FireCoordinationData>;
+describe('PmaComponent', () => {
+  let component: PmaComponent;
+  let fixture: ComponentFixture<PmaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCoordinationData]
+      imports: [PmaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FireCoordinationData);
+    fixture = TestBed.createComponent(PmaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

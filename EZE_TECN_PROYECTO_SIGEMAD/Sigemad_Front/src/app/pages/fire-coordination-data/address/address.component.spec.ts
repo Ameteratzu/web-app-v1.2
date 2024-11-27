@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FireCoordinationData } from './fire-coordination-data.component';
+import { AddressComponent } from './address.component';
 
-describe('FireCoordinationDataComponent', () => {
-  let component: FireCoordinationData;
-  let fixture: ComponentFixture<FireCoordinationData>;
+describe('AddressComponent', () => {
+  let component: AddressComponent;
+  let fixture: ComponentFixture<AddressComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCoordinationData]
+      imports: [AddressComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FireCoordinationData);
+    fixture = TestBed.createComponent(AddressComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

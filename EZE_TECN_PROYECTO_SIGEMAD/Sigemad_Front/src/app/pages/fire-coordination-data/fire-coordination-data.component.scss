@@ -8,7 +8,7 @@
   }
   
   .side-menu {
-    width: 200px;
+    width: 250px;
   }
   
   .mat-chip {
@@ -16,17 +16,6 @@
     display: block;
   }
   
-  .form-container {
-    flex: 1;
-    background: #ececec;
-    border-radius: 20px;
-    padding: 20px;
-  }
-  
-  .input {
-    flex: 1 1 calc(50% - 20px);
-    min-width: 200px;
-  }
 
   .full-width-chip {
     width: 100%;
@@ -41,22 +30,9 @@
     display: flex;
     width: 100%;
   }
-  
-  .spaced-input {
-    margin-right: 15px; 
-  }
 
   .modal-header {
     text-align: center;
-  }
-
-  .modal-footer {
-    padding: 20px;
-    border-top: 1px solid #ccc;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .title{
@@ -67,12 +43,16 @@
     background: #e7e7e7;
   }
 
-  .table-container {
-      border-radius: 8px; 
-      overflow: hidden; 
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  .component-container {
+    width: 100%; /* Asegura que el ancho sea consistente */
+    min-height: 300px; /* Define una altura mínima para evitar saltos */
+    position: relative; /* Hace que el contenido sea relativo al contenedor */
+    overflow: hidden; /* Evita que el contenido desborde durante la transición */
   }
   
+  .component-width {
+    width: 100%;
+  }
 
   
 

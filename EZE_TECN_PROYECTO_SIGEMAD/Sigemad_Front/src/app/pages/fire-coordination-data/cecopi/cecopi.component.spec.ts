@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FireCoordinationData } from './fire-coordination-data.component';
+import { CecopiComponent } from './cecopi.component';
 
-describe('FireCoordinationDataComponent', () => {
-  let component: FireCoordinationData;
-  let fixture: ComponentFixture<FireCoordinationData>;
+describe('CecopiComponent', () => {
+  let component: CecopiComponent;
+  let fixture: ComponentFixture<CecopiComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCoordinationData]
+      imports: [CecopiComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FireCoordinationData);
+    fixture = TestBed.createComponent(CecopiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

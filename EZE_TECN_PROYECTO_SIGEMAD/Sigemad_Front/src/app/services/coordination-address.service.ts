@@ -28,4 +28,35 @@ export class CoordinationAddressService {
       )
     );
   }
+
+  postCecopi(body: any) {
+    const endpoint = `/direcciones-coordinaciones-emergencias/coordinaciones-cecopi`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
+  postPma(body: any) {
+    const endpoint = `/direcciones-coordinaciones-emergencias/coordinaciones-pma`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+  
 }
