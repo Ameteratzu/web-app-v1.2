@@ -2,11 +2,14 @@
 using DGPCE.Sigemad.Application.Features.Superficies.Queries.GetSuperficiesList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
+
+[Authorize]
 [Route("api/v1/superficies-filtros")]
 [ApiController]
 public class SuperficieFiltrosController : ControllerBase

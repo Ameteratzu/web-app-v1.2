@@ -1,10 +1,12 @@
 ﻿using DGPCE.Sigemad.Application.Constants;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1/[controller]")]
 [ApiController]
 public class ArchivosController : ControllerBase

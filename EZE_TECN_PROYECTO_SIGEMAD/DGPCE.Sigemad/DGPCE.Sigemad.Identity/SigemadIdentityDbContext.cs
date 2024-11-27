@@ -42,7 +42,7 @@ namespace DGPCE.Sigemad.Identity
         }
 
         public virtual DbSet<RefreshToken>? RefreshTokens { get; set; }
-        public virtual DbSet<ApplicationUser>? ApplicationUsers { get; set; }
+        public virtual DbSet<DGPCE.Sigemad.Domain.Modelos.ApplicationUser>? ApplicationUsers { get; set; }
 
     }
 }

@@ -3,12 +3,14 @@ using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosCrear
 using DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosList;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1/")]
 [ApiController]
 public class TerritoriosController : ControllerBase

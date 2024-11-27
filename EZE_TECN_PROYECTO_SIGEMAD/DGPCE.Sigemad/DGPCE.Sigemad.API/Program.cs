@@ -70,6 +70,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseMiddleware<AuthenticatedUserMiddleware>();
+
 app.UseCors("CorsPolicy");
 
 app.UseSerilogRequestLogging();

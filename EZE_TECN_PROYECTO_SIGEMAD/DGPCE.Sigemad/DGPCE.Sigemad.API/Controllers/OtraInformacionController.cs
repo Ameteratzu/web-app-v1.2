@@ -5,10 +5,13 @@ using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraI
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.UpdateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DGPCE.Sigemad.API.Controllers;
+
+[Authorize]
 [Route("api/v1/otras-informaciones")]
 [ApiController]
 public class OtraInformacionController : ControllerBase

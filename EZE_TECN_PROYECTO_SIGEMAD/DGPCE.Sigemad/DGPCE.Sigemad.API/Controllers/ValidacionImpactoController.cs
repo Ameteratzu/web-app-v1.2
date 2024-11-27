@@ -2,12 +2,14 @@
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Queries.GetCamposImpactosById;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1")]
 public class ValidacionImpactoController : ControllerBase
 {

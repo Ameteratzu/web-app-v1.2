@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Domain.Common;
+﻿using DGPCE.Sigemad.Application.Contracts.Identity;
+using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -8,8 +9,11 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 {
     public class SigemadDbContext : DbContext
     {
-        public SigemadDbContext(DbContextOptions<SigemadDbContext> options) : base(options)
+        private readonly IAuthService _authService;
+
+        public SigemadDbContext(DbContextOptions<SigemadDbContext> options, IAuthService authService) : base(options)
         {
+            _authService = authService;
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -20,18 +24,18 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                 {
                     case EntityState.Added:
                         entry.Entity.FechaCreacion = DateTime.Now;
-                        //entry.Entity.CreadoPor = "system";
+                        entry.Entity.CreadoPor = _authService.GetCurrentUserId();
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.FechaModificacion = DateTime.Now;
-                        //entry.Entity.ModificadoPor = "system";
+                        entry.Entity.ModificadoPor = _authService.GetCurrentUserId();
                         break;
                     case EntityState.Deleted:
                         entry.State = EntityState.Modified;
                         entry.Entity.Borrado = true;
                         entry.Entity.FechaEliminacion = DateTime.Now;
-                        //entry.Entity.ModificadoPor = "system";
+                        entry.Entity.ModificadoPor = _authService.GetCurrentUserId();
                         break;
                 }
             }

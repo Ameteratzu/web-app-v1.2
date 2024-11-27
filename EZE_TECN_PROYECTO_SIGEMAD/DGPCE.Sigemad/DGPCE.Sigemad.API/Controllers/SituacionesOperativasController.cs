@@ -2,12 +2,14 @@
 using DGPCE.Sigemad.Application.Features.SituacionesOperativas.Queries.GetSituacionesOperativasList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1/situaciones-operativas")]
 [ApiController]
 public class SituacionesOperativasController : ControllerBase

@@ -4,12 +4,14 @@ using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetGruposI
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetTiposImpactosList;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1")]
 public class ImpactoClasificadoController : ControllerBase
 {
