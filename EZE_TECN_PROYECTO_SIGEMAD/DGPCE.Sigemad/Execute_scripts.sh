@@ -4,7 +4,7 @@
 DB_SERVER=sqlserver.ns-sigemad.svc.cluster.local,1433
 DB_NAME=Sigemad
 DB_USER=sa
-DB_PASSWORD=SQLtest1
+DB_PASSWORD='P@s$w0rd'
 DLL_FOLDER=/app/DLL
 DATOS_FOLDER=/app/Datos
 
