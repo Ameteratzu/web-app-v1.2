@@ -57,7 +57,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
                    .HasForeignKey(d => d.IdArchivo);
 
             builder.HasOne(e => e.Documentacion)
-             .WithMany(e => e.DetalleDocumentaciones)
+             .WithMany(e => e.DetallesDocumentacion)
             .HasForeignKey(e => e.IdDocumentacion)
             .OnDelete(DeleteBehavior.ClientCascade);
         }

@@ -79,9 +79,9 @@ CREATE TABLE dbo.Parametro (
     FechaFinal DATETIME2(7) NULL,
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     PlanEmergenciaActivado NVARCHAR(255) NULL,
-    IdFase INT NOT NULL FOREIGN KEY REFERENCES Fase(Id),
-    IdSituacionOperativa int NOT NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
-    IdSituacionEquivalente INT NOT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
+    IdFase INT NULL FOREIGN KEY REFERENCES Fase(Id),
+    IdSituacionOperativa int NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
+    IdSituacionEquivalente INT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,

@@ -11,5 +11,5 @@ public class Documentacion : BaseDomainModel<int>
     public int IdIncendio { get; set; }
 
     public Incendio Incendio { get; set; }
-    public List<DetalleDocumentacion> DetalleDocumentaciones { get; set; } = null;
+    public List<DetalleDocumentacion> DetallesDocumentacion { get; set; } = null;
 }

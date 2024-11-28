@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DGPCE.Sigemad.Domain.Modelos;
 
-namespace DGPCE.Sigemad.Domain.Modelos
+public class Medio
 {
-    public class Medio
-    {
-        public Medio() { }
-        public int Id { get; set; }
+    public Medio() { }
+    public int Id { get; set; }
 
-        public string? Descripcion { get; set; }
-    }
+    public string? Descripcion { get; set; }
 }
