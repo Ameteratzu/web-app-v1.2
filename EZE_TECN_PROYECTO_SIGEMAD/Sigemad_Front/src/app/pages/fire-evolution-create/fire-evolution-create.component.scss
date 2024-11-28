@@ -15,18 +15,6 @@
     margin: 5px 0;
     display: block;
   }
-  
-  .form-container {
-    flex: 1;
-    background: #ececec;
-    border-radius: 20px;
-    padding: 20px;
-  }
-  
-  .input {
-    flex: 1 1 calc(50% - 20px);
-    min-width: 200px;
-  }
 
   .full-width-chip {
     width: 100%;
@@ -42,25 +30,16 @@
     width: 100%;
   }
   
-  .spaced-input {
-    margin-right: 15px; 
-  }
-
   .modal-header {
     text-align: center;
   }
 
-  .modal-footer {
-    padding: 20px;
-    border-top: 1px solid #ccc;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .title{
     color: var(--fire-color);
+  }
+
+  .component-width {
+    width: 100%;
   }
 
   
