@@ -1,19 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 
-
 import { ActivatedRoute, Router } from '@angular/router';
 
-
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
-
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatInputModule } from '@angular/material/input';
 
 import {
   FormControl,
@@ -21,7 +18,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-
 
 import { EventService } from '../../../services/event.service';
 import { EventStatusService } from '../../../services/eventStatus.service';
@@ -31,22 +27,19 @@ import { MenuItemActiveService } from '../../../services/menu-item-active.servic
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 
-
 import { Event } from '../../../types/event.type';
+import { EventStatus } from '../../../types/eventStatus.type';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
-import { EventStatus } from '../../../types/eventStatus.type';
-
 
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
+import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
-import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
-import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
-
 
 import moment from 'moment';
 import Feature from 'ol/Feature';
@@ -72,7 +65,7 @@ import { Geometry } from 'ol/geom';
     MatButtonModule,
     MatCardModule,
     MatDividerModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [],
   templateUrl: './fire-edit.component.html',
@@ -82,7 +75,6 @@ export class FireEditComponent {
   featuresCoords: Feature<Geometry>[] = [];
 
   classValidate = signal<string>('needs-validation');
-
 
   public router = inject(Router);
 
@@ -96,7 +88,7 @@ export class FireEditComponent {
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
   public eventStatusService = inject(EventStatusService);
-  
+
   public fireStatusService = inject(FireStatusService);
 
   public fire = <Fire>{};
@@ -166,23 +158,23 @@ export class FireEditComponent {
 
     this.formData = new FormGroup({
       id: new FormControl(),
-      denomination: new FormControl({ value: '', disabled: true }), 
+      denomination: new FormControl({ value: '', disabled: true }),
       territory: new FormControl(),
       province: new FormControl(),
       municipality: new FormControl(),
-      startDate: new FormControl({  value: '', disabled: true }),  
+      startDate: new FormControl({ value: '', disabled: true }),
       event: new FormControl(),
       generalNote: new FormControl(),
       idEstado: new FormControl(),
-      ubicaciones: new FormControl({  value: '', disabled: true }),
-      suceso: new FormControl({  value: '', disabled: true }),
-      estado: new FormControl({  value: '', disabled: true }),    
+      ubicaciones: new FormControl({ value: '', disabled: true }),
+      suceso: new FormControl({ value: '', disabled: true }),
+      estado: new FormControl({ value: '', disabled: true }),
     });
 
     const fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
     const fire = await this.fireService.getById(fire_id);
-    console.log("🚀 ~ FireEditComponent ~ ngOnInit ~ fire:", fire)
+    console.log('🚀 ~ FireEditComponent ~ ngOnInit ~ fire:', fire);
     this.fire = fire;
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
@@ -209,7 +201,7 @@ export class FireEditComponent {
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
-      municipality: this.fire.id ,
+      municipality: this.fire.id,
       startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
@@ -218,7 +210,7 @@ export class FireEditComponent {
       suceso: this.fire.claseSuceso?.descripcion,
       estado: this.fire.estadoSuceso?.descripcion,
     });
-   
+
     //this.openModalEvolution()
   }
 
@@ -231,13 +223,11 @@ export class FireEditComponent {
   async onSubmit() {
     if (this.formData.invalid) {
       this.formData.markAllAsTouched();
-      return 
+      return;
     }
-    
+
     this.error = false;
     const data = this.formData.value;
-
-    
 
     if (this.featuresCoords.length) {
       data.coordinates = this.featuresCoords;
@@ -334,8 +324,6 @@ export class FireEditComponent {
   //     disableClose: true,
   //   });
 
-    
-    
   //}
 
   showTable(table: string) {
@@ -369,11 +357,11 @@ export class FireEditComponent {
 
   goModalEvolution() {
     const dialogRef = this.matDialog.open(FireCreateComponent, {
-      width: '90vw', 
-      height: '90vh', 
-      maxWidth: 'none', 
+      width: '90vw',
+      height: '90vh',
+      maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos Evolución', 
+        title: 'Nuevo - Datos Evolución',
       },
     });
 
@@ -386,11 +374,11 @@ export class FireEditComponent {
 
   goModalCoordination() {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
-      width: '90vw', 
-      height: '90vh', 
-      maxWidth: 'none', 
+      width: '90vw',
+      height: '90vh',
+      maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos de dirección y coordinación de la emergencia', 
+        title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
       },
     });
 
@@ -401,15 +389,14 @@ export class FireEditComponent {
     });
   }
 
-  
-
   goModalOtherInformation() {
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
-      width: '90vw', 
-      maxWidth: 'none', 
-      //height: '90vh', 
+      width: '90vw',
+      maxWidth: 'none',
+      //height: '90vh',
       data: {
-        title: 'Nuevo - Otra Información', 
+        title: 'Nuevo - Otra Información',
+        fire: this.fire,
       },
     });
 
@@ -422,11 +409,11 @@ export class FireEditComponent {
 
   goModalDocumentation() {
     const dialogRef = this.matDialog.open(FireDocumentation, {
-      width: '90vw', 
-      maxWidth: 'none', 
-      //height: '90vh', 
+      width: '90vw',
+      maxWidth: 'none',
+      //height: '90vh',
       data: {
-        title: 'Documentación', 
+        title: 'Documentación',
       },
     });
 
