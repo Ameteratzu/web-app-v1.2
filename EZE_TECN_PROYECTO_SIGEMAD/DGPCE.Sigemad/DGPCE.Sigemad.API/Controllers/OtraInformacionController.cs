@@ -1,10 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
-using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
-using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtrasInformaciones;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtraInformacion;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
-using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.UpdateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
-using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +46,18 @@ public class OtraInformacionController : ControllerBase
             return NotFound();
         }
         return Ok(otraInformacion);
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Eliminar un detalle de otra información mediante Id")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var command = new DeleteOtraInformationQuery(id);
+        await _mediator.Send(command);
+        return NoContent();
     }
 
     //[HttpDelete("detalles/{idDetalleOtraInformacion}")]
