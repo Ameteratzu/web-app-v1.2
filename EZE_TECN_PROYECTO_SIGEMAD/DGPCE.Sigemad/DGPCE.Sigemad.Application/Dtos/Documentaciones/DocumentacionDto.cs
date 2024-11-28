@@ -1,6 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
+using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
