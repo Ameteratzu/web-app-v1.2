@@ -7,13 +7,16 @@ import { LayoutBaseComponent } from './shared/layouts/layout-base.component';
 import { FireEditComponent } from './pages/fire/fire-edit/fire-edit.component';
 
 export const routes: Routes = [
-    { path: 'login', component: Login },
+  { path: 'login', component: Login }, 
   {
-    path: '', // Rutas con el layout base
+    path: '',
+    redirectTo: 'login', 
+    pathMatch: 'full', 
+  },
+  {
+    path: '', 
     component: LayoutBaseComponent,
     children: [
-      { path: '*', redirectTo: 'dashboard', pathMatch: 'full' }, // Ruta predeterminada
-      //{ path: 'login', component: Login },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'fire', component: FireComponent },
       { path: 'earthquakes', component: CommentsComponent },
@@ -35,6 +38,7 @@ export const routes: Routes = [
       { path: 'fire-national-edit/:id', component: FireEditComponent },
     ],
   },
+  { path: '**', redirectTo: 'login' }, 
 ];
 
 
