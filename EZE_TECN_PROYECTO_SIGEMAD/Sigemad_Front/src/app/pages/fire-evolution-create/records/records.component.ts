@@ -5,10 +5,14 @@ import { MediaService } from '../../../services/media.service';
 import { OriginDestinationService } from '../../../services/origin-destination.service';
 import { FireStatusService } from '../../../services/fire-status.service';
 import { EvolutionService } from '../../../services/evolution.service';
+import { PhasesService } from '../../../services/phases.service';
+import { SituationsEquivalentService } from '../../../services/situations-equivalent.service';
 import { InputOutput } from '../../../types/input-output.type';
 import { Media } from '../../../types/media.type';
 import { OriginDestination } from '../../../types/origin-destination.type';
 import { FireStatus } from '../../../types/fire-status.type';
+import { Phases } from '../../../types/phases.type';
+import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -32,6 +36,7 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EvolucionIncendio } from '../../../types/evolution-record.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -75,13 +80,16 @@ export class RecordsComponent implements OnInit {
 
   @Output() save = new EventEmitter<void>();
   private fb = inject(FormBuilder); 
-  data = inject(MAT_DIALOG_DATA) as { title: string };
+  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   public matDialog = inject(MatDialog);
   public inputOutputService = inject(InputOutputService);
   public mediaService = inject(MediaService);
   public originDestinationService = inject(OriginDestinationService);
   public fireStatusService = inject(FireStatusService);
   public evolutionSevice = inject(EvolutionService);
+  public phasesService = inject(PhasesService);
+  public situationEquivalentService = inject(SituationsEquivalentService);
+
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
   
@@ -90,6 +98,8 @@ export class RecordsComponent implements OnInit {
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
   public status = signal<FireStatus[]>([]);
+  public phases = signal<Phases[]>([]);
+  public situationEquivalent = signal<SituationsEquivalent[]>([]);
   public isCreate = signal<number>(-1);
 
   async ngOnInit() {
@@ -105,7 +115,11 @@ export class RecordsComponent implements OnInit {
     const status = await this.fireStatusService.get();
     this.status.set(status);
 
-    
+    const phases = await this.phasesService.get();
+    this.phases.set(phases);
+
+    const situationsEquivalent = await this.situationEquivalentService.get();
+    this.situationEquivalent.set(situationsEquivalent);
 
     this.formData = this.fb.group({
       inputOutput : ['', Validators.required],
@@ -117,23 +131,66 @@ export class RecordsComponent implements OnInit {
       forecast: ['', Validators.required],
       status: ['', Validators.required],
       end_date: [new Date(), Validators.required],
-      emergencyPlanActivated: ['', Validators.required],
-
-      
+      emergencyPlanActivated: [''],
+      phases: [''],
+      nivel: [''],
+      operativa: [''],
+      afectada: [null, Validators.required],
     });
+
+    this.formData.get('emergencyPlanActivated')?.disable();
+    this.formData.get('phases')?.disable();
+    this.formData.get('nivel')?.disable();
+    this.formData.get('operativa')?.disable();
   }
 
   async sendDataToEndpoint() {
-    if (this.evolutionSevice.dataRecords().length > 0) {
-      this.save.emit(); 
-    }else{
-      this.spinner.show();
-      this.showToast();
+    this.spinner.show();
+    if (this.formData.valid) {
+      const formValues = this.formData.value;
+  
+      const newRecord: EvolucionIncendio = {
+        idIncendio:  this.data.idIncendio,
+        registro: {
+          fechaHoraEvolucion: formValues.startDate.toISOString(),
+          idEntradaSalida: formValues.inputOutput,
+          idMedio: formValues.media
+        },
+        datoPrincipal: {
+          fechaHora: formValues.datetimeUpdate.toISOString(),
+          observaciones: formValues.observations_1,
+          prevision: formValues.forecast
+        },
+        parametro: {
+          idEstadoIncendio: formValues.status,
+          fechaFinal: formValues.end_date.toISOString(),
+          superficieAfectadaHectarea:  formValues.afectada, 
+          planEmergenciaActivado: "",
+          idFase: 1,
+          idSituacionOperativa: 1, 
+          idSituacionEquivalente: 1 
+        },
+        registroProcedenciasDestinos: [] 
+      };
+  
+      this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
+  
+      this.save.emit();
+    } else {
+      this.formData.markAllAsTouched();
+      this.spinner.hide();
     }
   }
 
   getFormatdate(date: any){
     return moment(date).format('DD/MM/YY')
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   }
 
   showToast() {

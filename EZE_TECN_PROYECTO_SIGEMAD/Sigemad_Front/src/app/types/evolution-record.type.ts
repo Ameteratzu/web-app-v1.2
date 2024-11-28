@@ -1,6 +1,5 @@
 export interface EvolucionIncendio {
 	idIncendio: number;
-	idEvolucion: number;
 	registro: Registro;
 	datoPrincipal: DatoPrincipal;
 	parametro: Parametro;
