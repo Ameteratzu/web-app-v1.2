@@ -9,6 +9,10 @@ import { InterventionComponent } from './intervention/intervention.component';
 import { AreaComponent } from './area/area.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EvolutionService } from '../../services/evolution.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-fire-create',
@@ -23,7 +27,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     RecordsComponent,
     ConsequencesComponent,
     InterventionComponent,
-    AreaComponent
+    AreaComponent,
+    NgxSpinnerModule
   ],
   animations: [
     trigger('fadeInOut', [
@@ -37,14 +42,16 @@ export class FireCreateComponent implements OnInit {
 
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  public evolutionSevice = inject(EvolutionService);
+  public matDialog = inject(MatDialog);
+  public toast = inject(MatSnackBar);
+  private spinner = inject(NgxSpinnerService);
   
   readonly sections = [
-    { id: 1, label: 'Registro' },
-    { id: 2, label: 'Datos principales' },
-    { id: 3, label: 'Parámetros' },
-    { id: 4, label: 'Área afectada' },
-    { id: 5, label: 'Consecuencias/Actuac.' },
-    { id: 6, label: 'Intervención de medios' },
+    { id: 1, label: 'Registro / Parámetros' },
+    { id: 2, label: 'Área afectada' },
+    { id: 3, label: 'Consecuencias / Actuac.' },
+    { id: 4, label: 'Intervención de medios' },
   ];
 
 
@@ -53,8 +60,15 @@ export class FireCreateComponent implements OnInit {
 
   async onSaveFromChild() {
     console.log(`Guardar desde el componente:`);
+    console.log("🚀 ~ FireCreateComponent ~ onSaveFromChild ~ this.coordinationServices.dataCoordinationAddress():", this.evolutionSevice.dataRecords())
+    const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
+    this.evolutionSevice.clearData();
+    this.closeModal();
+    this.spinner.hide();
+    this.showToast();
 
     // if (this.coordinationServices.dataCoordinationAddress().length > 0){
+   
     //   for (const item of this.coordinationServices.dataCoordinationAddress()) {
     //     const body = await this.getFormattedDataAdress(item)
     //     const result = await this.coordinationServices.postAddress(body);
@@ -90,6 +104,19 @@ export class FireCreateComponent implements OnInit {
 
   onSelectionChange(event: MatChipListboxChange): void {
     this.selectedOption = event;
+  }
+
+  closeModal(){
+    this.matDialog.closeAll();
+  }
+
+  
+  showToast() {
+    this.toast.open('Guardado correctamente', 'Cerrar', {
+      duration: 3000, 
+      horizontalPosition: 'right', 
+      verticalPosition: 'top', 
+    });
   }
 
 }

@@ -71,5 +71,20 @@ export class EvolutionService {
     this.dataRecords.set([]); 
   }
 
+  postData(body: any) {
+    const endpoint = `/Evoluciones/Datos`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
 
 }
