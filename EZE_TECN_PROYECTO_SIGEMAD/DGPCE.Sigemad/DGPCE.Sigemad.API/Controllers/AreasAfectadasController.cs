@@ -6,13 +6,14 @@ using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfec
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-
+[Authorize]
 [Route("api/v1/areas-afectadas")]
 [ApiController]
 public class AreasAfectadasController : ControllerBase

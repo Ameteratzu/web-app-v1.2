@@ -17,15 +17,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
 
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.FechaHora)
-                   .IsRequired();
-
-            builder.Property(e => e.FechaHoraSolicitud)
-                   .IsRequired();
-
-            builder.Property(e => e.Descripcion)
-                   .IsRequired()
-                   .HasMaxLength(255);
+            builder.Property(e => e.IdIncendio).IsRequired();
 
             builder.Property(e => e.FechaCreacion)
               .HasColumnType("datetime");
@@ -48,17 +40,10 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .HasMaxLength(500)
             .IsUnicode(false);
 
-            builder.HasOne(d => d.TipoDocumento)
-                   .WithMany()
-                   .HasForeignKey(d => d.IdTipoDocumento);
-
             builder.HasOne(d => d.Incendio)
-                   .WithMany()
-                   .HasForeignKey(d => d.IdIncendio);
-
-            builder.HasOne(d => d.Archivo)
-                   .WithMany()
-                   .HasForeignKey(d => d.IdArchivo);
+            .WithMany(i => i.Documentaciones)
+            .HasForeignKey(d => d.IdIncendio)
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

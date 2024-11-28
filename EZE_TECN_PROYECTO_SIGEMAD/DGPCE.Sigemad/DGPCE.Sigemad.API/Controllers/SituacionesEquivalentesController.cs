@@ -2,13 +2,14 @@
 using DGPCE.Sigemad.Application.Features.SituacionesEquivalentes.Queries;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-
+[Authorize]
 [ApiController]
 [Route("/api/v1/situaciones-equivalentes")]
 public class SituacionesEquivalentesController : Controller

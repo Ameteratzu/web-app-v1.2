@@ -6,10 +6,13 @@ using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Queries.GetImpactos
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Queries.GetImpactosEvolucionesList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DGPCE.Sigemad.API.Controllers;
+
+[Authorize]
 [Route("api/v1/impactos-evoluciones")]
 [ApiController]
 public class ImpactosEvolucionesController : ControllerBase

@@ -10,7 +10,7 @@ public class OtraInformacion : BaseDomainModel<int>
 
     public int IdIncendio { get; set; }
 
-    public ICollection<DetalleOtraInformacion> DetallesOtraInformacion { get; set; }
+    public List<DetalleOtraInformacion> DetallesOtraInformacion { get; set; }
 
     public virtual Incendio Incendio { get; set; }
 }

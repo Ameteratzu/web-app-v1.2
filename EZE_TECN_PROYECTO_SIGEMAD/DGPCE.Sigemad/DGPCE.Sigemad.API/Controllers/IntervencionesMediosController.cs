@@ -5,10 +5,13 @@ using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Queries.GetInterve
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Queries.GetIntervencionesByEvolucionIdList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DGPCE.Sigemad.API.Controllers;
+
+[Authorize]
 [Route("api/v1/intervenciones-medios")]
 [ApiController]
 public class IntervencionMediosController : ControllerBase

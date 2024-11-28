@@ -15,7 +15,7 @@ public class DireccionCoordinacionEmergenciaConfiguration : IEntityTypeConfigura
         builder.HasKey(d => d.Id);
 
         builder.HasOne(d => d.Incendio)
-            .WithMany()
+            .WithMany(i => i.DireccionCoordinacionEmergencias)
             .HasForeignKey(d => d.IdIncendio)
             .OnDelete(DeleteBehavior.Restrict);
     }

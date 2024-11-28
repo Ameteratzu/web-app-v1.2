@@ -1,5 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Constants;
 using DGPCE.Sigemad.Domain.Modelos;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DGPCE.Sigemad.Application.Specifications.Incendios;
 
@@ -14,6 +15,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         (!request.IdCcaa.HasValue || incendio.Provincia.IdCcaa == request.IdCcaa) &&
         (!request.IdProvincia.HasValue || incendio.IdProvincia == request.IdProvincia) &&
         (!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
+        (!request.IdClaseSuceso.HasValue || incendio.IdClaseSuceso == request.IdClaseSuceso) &&
         (!request.IdEstadoSuceso.HasValue || incendio.IdEstadoSuceso == request.IdEstadoSuceso) &&
         (incendio.Borrado != true)
         )
@@ -27,6 +29,20 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             //AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
 
+        if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
+        {
+            AddInclude(i => i.Suceso.TipoSuceso);
+        }
+        else
+        {
+            AddInclude(i => i.Territorio);
+            AddInclude(i => i.Municipio);
+            AddInclude(i => i.Provincia);
+            AddInclude(i => i.ClaseSuceso);
+            AddInclude(i => i.Suceso);
+        }
+
+        AddInclude(i => i.EstadoSuceso);
 
         if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)
         {
@@ -141,12 +157,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         }
         
 
-        AddInclude(i => i.Territorio);
-        AddInclude(i => i.Suceso);
-        AddInclude(i => i.Municipio);
-        AddInclude(i => i.Provincia);
-        AddInclude(i => i.ClaseSuceso);
-        AddInclude(i => i.EstadoSuceso);
+
 
         ApplyPaging(request);
 

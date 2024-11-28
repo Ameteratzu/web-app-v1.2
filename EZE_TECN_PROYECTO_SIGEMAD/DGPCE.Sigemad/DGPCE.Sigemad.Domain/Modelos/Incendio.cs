@@ -5,7 +5,13 @@ namespace DGPCE.Sigemad.Domain.Modelos;
 
 public class Incendio : BaseDomainModel<int>
 {
-    public Incendio() { }
+    public Incendio() 
+    {
+        Evoluciones = new();
+        DireccionCoordinacionEmergencias = new();
+        Documentaciones = new();
+        OtraInformaciones = new();
+    }
 
     public int IdSuceso { get; set; }
     public int IdTerritorio { get; set; }
@@ -38,6 +44,9 @@ public class Incendio : BaseDomainModel<int>
     public virtual Provincia Provincia { get; set; } = null!;
     public virtual Municipio Municipio { get; set; } = null!;
 
-    public virtual ICollection<Evolucion> Evoluciones { get; set; }
+    public virtual List<Evolucion> Evoluciones { get; set; }
+    public virtual List<DireccionCoordinacionEmergencia> DireccionCoordinacionEmergencias { get; set; }
+    public virtual List<Documentacion> Documentaciones { get; set; }
+    public virtual List<OtraInformacion> OtraInformaciones { get; set; }
 
 }

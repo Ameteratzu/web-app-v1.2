@@ -2,11 +2,13 @@
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
+using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
+using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
@@ -21,6 +23,7 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
+using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
@@ -44,11 +47,14 @@ using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
+using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
+using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -155,6 +161,7 @@ public class MappingProfile : Profile
         CreateMap<CreateDireccionCoordinacionEmergenciasCommand, DireccionCoordinacionEmergencia>();
         CreateMap<UpdateDireccionCoordinacionEmergenciaCommand, DireccionCoordinacionEmergencia>();
 
+        // Otra informacion
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
@@ -167,6 +174,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
             .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
+        CreateMap<CreateDetalleOtraInformacionDto, DetalleOtraInformacion>();
+
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
@@ -177,8 +186,20 @@ public class MappingProfile : Profile
         CreateMap<CreateParametroCommand, Parametro>();
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
-        CreateMap<Documentacion, DocumentacionVm>();
+        CreateMap<Documentacion, DocumentacionVm>()
+           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetalleDocumentaciones));
 
+        CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
+           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+
+        CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
+             .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
+
+        CreateMap<Incendio, SucesosBusquedaVm>()
+            .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaInicio))
+            .ForMember(dest => dest.TipoSuceso, opt => opt.MapFrom(src => src.Suceso.TipoSuceso.Descripcion))
+            .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
+            .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
     }
 

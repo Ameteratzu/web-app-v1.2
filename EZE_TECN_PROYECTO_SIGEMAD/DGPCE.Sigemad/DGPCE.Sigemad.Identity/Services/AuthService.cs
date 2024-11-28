@@ -1,6 +1,8 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Identity;
+﻿using DGPCE.Sigemad.Application.Constants;
+using DGPCE.Sigemad.Application.Contracts.Identity;
 using DGPCE.Sigemad.Application.Models.Identity;
 using DGPCE.Sigemad.Identity.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -18,6 +20,8 @@ namespace DGPCE.Sigemad.Identity.Services
         private readonly JwtSettings _jwtSettings;
         private readonly SigemadIdentityDbContext _context;
         private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly Guid SystemUserId = Guid.Parse("00000000-0000-0000-0000-000000000001");
 
 
         public AuthService(
@@ -25,7 +29,8 @@ namespace DGPCE.Sigemad.Identity.Services
             SignInManager<IdentityUser> signInManager,
             IOptions<JwtSettings> jwtSettings,
             SigemadIdentityDbContext cleanArchitectureDbContext,
-            TokenValidationParameters tokenValidationParameters
+            TokenValidationParameters tokenValidationParameters,
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _userManager = userManager;
@@ -33,6 +38,7 @@ namespace DGPCE.Sigemad.Identity.Services
             _jwtSettings = jwtSettings.Value;
             _context = cleanArchitectureDbContext;
             _tokenValidationParameters = tokenValidationParameters;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<AuthResponse> Login(AuthRequest request)
@@ -263,7 +269,7 @@ namespace DGPCE.Sigemad.Identity.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                var applicationUser = new ApplicationUser
+                var applicationUser = new DGPCE.Sigemad.Domain.Modelos.ApplicationUser
                 {
                     IdentityId = new Guid(user.Id),
                     Nombre = request.Nombre,
@@ -308,11 +314,14 @@ namespace DGPCE.Sigemad.Identity.Services
                 roleClaims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            var appUser = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.IdentityId == Guid.Parse(user.Id));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                     {
-                    new Claim("Id", user.Id),
+                    new Claim(CustomClaimTypes.Id, user.Id),
+                    new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -348,6 +357,11 @@ namespace DGPCE.Sigemad.Identity.Services
             return new string(Enumerable.Repeat(chars, length).Select(x => x[random.Next(x.Length)]).ToArray());
         }
 
+        public Guid GetCurrentUserId()
+        {
+            var userId = _httpContextAccessor.HttpContext?.Items[HttpContextItems.UserId]?.ToString();
 
+            return string.IsNullOrWhiteSpace(userId) ? SystemUserId : Guid.Parse(userId);
+        }
     }
 }

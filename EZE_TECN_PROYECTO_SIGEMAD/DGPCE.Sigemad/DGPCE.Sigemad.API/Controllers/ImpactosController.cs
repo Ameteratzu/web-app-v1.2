@@ -4,11 +4,13 @@ using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpa
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateListaImpactos;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Queries.GetImpactosByEvolucionIdList;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1/[controller]")]
 [ApiController]
 public class ImpactosController : ControllerBase

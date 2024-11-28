@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.UpdateEvoluciones;
-using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
@@ -115,7 +113,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvolucio
 
             if (result <= 0)
             {
-                throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datops de la evolución");
+                throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datos de la evolución");
             }
 
             _logger.LogInformation(nameof(ManageEvolucionCommandHandler) + " - END");

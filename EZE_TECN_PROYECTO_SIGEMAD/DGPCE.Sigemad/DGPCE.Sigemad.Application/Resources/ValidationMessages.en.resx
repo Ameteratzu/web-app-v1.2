@@ -300,4 +300,22 @@
   <data name="CoordinacionesObligatorio" xml:space="preserve">
     <value>The coordination list is mandatory</value>
   </data>
+  <data name="FechaHoraSolicitudObligatorio" xml:space="preserve">
+    <value>DateTimeRequest is Mandatory</value>
+  </data>
+  <data name="IdTipoDocumentoObligatorio" xml:space="preserve">
+    <value>IdDocumentType is mandatory</value>
+  </data>
+  <data name="IdTipoDocumentoInvalido" xml:space="preserve">
+    <value>IdDocumentType is invalid</value>
+  </data>
+  <data name="DescripcionObligatorio" xml:space="preserve">
+    <value>Description is mandatory</value>
+  </data>
+  <data name="DescripcionMaxLength" xml:space="preserve">
+    <value>Description cannot exceed 255 characters</value>
+  </data>
+  <data name="IdArchivoObligatorio" xml:space="preserve">
+    <value>IdFile is mandatory</value>
+  </data>
 </root>

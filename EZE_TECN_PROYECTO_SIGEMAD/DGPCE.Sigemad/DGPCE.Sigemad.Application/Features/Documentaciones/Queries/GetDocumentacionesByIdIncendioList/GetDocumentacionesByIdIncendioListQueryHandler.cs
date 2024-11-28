@@ -22,13 +22,7 @@ namespace DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDocument
         }
         public async Task<IReadOnlyList<DocumentacionVm>> Handle(GetDocumentacionesByIdIncendioListQuery request, CancellationToken cancellationToken)
         {
-
-            var documentosParams = new DocumentoSpecificationParams
-            {
-                IdIncendio = request.IdIncendio
-            };
-
-            var spec = new DocumentoSpecification(documentosParams);
+            var spec = new DocumentacionSpecificationByIdIncendio(request.IdIncendio);
             var documentaciones = await _unitOfWork.Repository<Documentacion>()
             .GetAllWithSpec(spec);
 

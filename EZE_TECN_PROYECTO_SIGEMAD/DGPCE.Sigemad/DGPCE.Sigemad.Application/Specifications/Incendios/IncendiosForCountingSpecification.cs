@@ -14,6 +14,7 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         (!request.IdCcaa.HasValue || incendio.Provincia.IdCcaa == request.IdCcaa) &&
         (!request.IdProvincia.HasValue || incendio.IdProvincia == request.IdProvincia) &&
         (!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
+        (!request.IdClaseSuceso.HasValue || incendio.IdClaseSuceso == request.IdClaseSuceso) &&
         (!request.IdEstadoSuceso.HasValue || incendio.IdEstadoSuceso == request.IdEstadoSuceso) &&
         (incendio.Borrado != true)
         )

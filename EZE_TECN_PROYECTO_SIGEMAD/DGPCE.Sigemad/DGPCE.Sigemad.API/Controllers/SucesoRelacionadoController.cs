@@ -4,11 +4,13 @@ using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.UpdateSuce
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesoRelacionadoById;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesosRelacionadosByIdSucesoPrincipal;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
+[Authorize]
 [Route("api/v1/sucesos")]
 [ApiController]
 public class SucesoRelacionadoController : ControllerBase

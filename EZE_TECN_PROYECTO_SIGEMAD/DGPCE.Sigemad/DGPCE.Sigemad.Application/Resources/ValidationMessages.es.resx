@@ -190,7 +190,7 @@
     <value>Incendio es obligatorio</value>
   </data>
   <data name="IncendioInvalido" xml:space="preserve">
-    <value>Fire es invalido</value>
+    <value>Incendio es invalido</value>
   </data>
   <data name="TipoDireccionEmergenciaObligatorio" xml:space="preserve">
     <value>Tipo dirección emergencia es obligatorio</value>
@@ -299,5 +299,23 @@
   </data>
   <data name="CoordinacionesObligatorio" xml:space="preserve">
     <value>La lista de coordinaciones es obligatorio</value>
+  </data>
+  <data name="FechaHoraSolicitudObligatorio" xml:space="preserve">
+    <value>FechaHoraSolicitud es obligatoria</value>
+  </data>
+  <data name="IdTipoDocumentoObligatorio" xml:space="preserve">
+    <value>IdTipoDocumento es obligatorio</value>
+  </data>
+  <data name="IdTipoDocumentoInvalido" xml:space="preserve">
+    <value>IdTipoDocumento es invalido</value>
+  </data>
+  <data name="DescripcionObligatorio" xml:space="preserve">
+    <value>Descripcion es obligatorio</value>
+  </data>
+  <data name="DescripcionMaxLength" xml:space="preserve">
+    <value>Descripcion no puede exceder los 255 caracteres</value>
+  </data>
+  <data name="IdArchivoObligatorio" xml:space="preserve">
+    <value>IdArchivo es obligatorio</value>
   </data>
 </root>
