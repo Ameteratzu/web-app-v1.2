@@ -62,18 +62,20 @@ export class FireCreateComponent implements OnInit {
     console.log(`Guardar desde el componente:`);
     console.log("🚀 ~ FireCreateComponent ~ onSaveFromChild ~ this.coordinationServices.dataCoordinationAddress():", this.evolutionSevice.dataRecords())
     const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
+
+
+    if (this.evolutionSevice.dataAffectedArea().length > 0){
+   
+      for (const item of this.evolutionSevice.dataAffectedArea()) {
+        const body = await this.getFormattedDataAreas(item)
+        const result = await this.evolutionSevice.postAreas(body);
+      }
+    }
+
     this.evolutionSevice.clearData();
     this.closeModal();
     this.spinner.hide();
     this.showToast();
-
-    // if (this.coordinationServices.dataCoordinationAddress().length > 0){
-   
-    //   for (const item of this.coordinationServices.dataCoordinationAddress()) {
-    //     const body = await this.getFormattedDataAdress(item)
-    //     const result = await this.coordinationServices.postAddress(body);
-    //   }
-    // }
 
     // if (this.coordinationServices.dataCecopi().length > 0){
     //   for (const item of this.coordinationServices.dataCecopi()) {
@@ -96,6 +98,29 @@ export class FireCreateComponent implements OnInit {
     // this.showToast();
 
 
+  }
+
+  getFormattedDataAreas(data: any): any {
+    return {
+      idIncendio: this.data.idIncendio, 
+      areasAfectadas: [{
+        fechaHora: this.formatDate(data.fechaFin),
+        idProvincia: data.idProvincia,
+        idMunicipio: data.idMunicipio,
+        idEntidadMenor: data.idEntidadMenor,
+        observaciones: data.observaciones,
+        GeoPosicion:{"type":"Point","coordinates":[null,null]}
+      }],
+    };
+
+  }
+
+  formatDate(date: Date | string): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   trackByFn(index: number, item: any): number {
