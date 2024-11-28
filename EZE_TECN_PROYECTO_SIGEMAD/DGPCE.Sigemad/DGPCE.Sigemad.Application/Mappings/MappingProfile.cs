@@ -169,6 +169,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
 
+        CreateMap<OtraInformacion, OtraInformacionDto>()
+            .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
+
+        CreateMap<DetalleOtraInformacion, DetalleOtraInformacionDto>()
+            .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.ProcedenciaDestino)));
+
+
         CreateMap<DetalleOtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaHora))
             .ForMember(dest => dest.IdMedio, opt => opt.MapFrom(src => src.IdMedio))

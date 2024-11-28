@@ -1,8 +1,8 @@
-﻿using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
+﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
-public class GetOtraInformacionByIdQuery : IRequest<List<OtraInformacionVm>> 
+public class GetOtraInformacionByIdQuery : IRequest<OtraInformacionDto>
 {
     public int Id { get; set; }
 
