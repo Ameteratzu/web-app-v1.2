@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FireCreateComponent } from './fire-evolution-create.component';
+import { InterventionComponent } from './intervention.component';
 
-describe('FireEvolutionCreateComponent', () => {
-  let component: FireCreateComponent;
-  let fixture: ComponentFixture<FireCreateComponent>;
+describe('InterventionComponent', () => {
+  let component: InterventionComponent;
+  let fixture: ComponentFixture<InterventionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCreateComponent]
+      imports: [InterventionComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FireCreateComponent);
+    fixture = TestBed.createComponent(InterventionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,7 +9,6 @@ import {
   MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout'; 
@@ -44,15 +43,6 @@ const MY_DATE_FORMATS = {
   },
 };
 
-interface FormTypePma{
-  id?: string,
-  autoridadQueDirige: string,
-  idIncendio?: number
-  fechaInicio: Date,
-  fechaFin: Date,
-  idTipoDireccionEmergencia: number,
-}
-
 @Component({
   selector: 'app-pma',
   standalone: true,
@@ -82,11 +72,11 @@ export class PmaComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-
+  @Output() save = new EventEmitter<void>();
+  
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
-  
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
@@ -104,7 +94,6 @@ export class PmaComponent {
   formData!: FormGroup;
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
-  public dataPma = signal<FormTypePma[]>([]);
   public isCreate = signal<number>(-1);
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
@@ -136,7 +125,7 @@ export class PmaComponent {
       const data = this.formData.value;
       if(this.isCreate() == -1){
         
-        this.dataPma.set([data, ...this.dataPma()]);  
+        this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);  
       }else{
         this.editarItem(this.isCreate())
       }
@@ -148,12 +137,15 @@ export class PmaComponent {
   }
 
   async sendDataToEndpoint() {
+    console.log("🚀 ~ PmaComponent ~ sendDataToEndpoint ~ this.coordinationServices:", this.coordinationServices.dataPma())
     this.spinner.show();
-    const transformedData = this.getFormattedData();
-    const result = await this.coordinationServices.postPma(transformedData);
-    this.closeModal();
-    this.showToast();
-    this.spinner.hide();
+    if (this.coordinationServices.dataPma().length > 0) {
+    
+      this.save.emit(); 
+    }else{
+      this.spinner.show();
+      this.showToast();
+    }
   }
 
   showToast() {
@@ -164,19 +156,6 @@ export class PmaComponent {
     });
   }
 
-  getFormattedData(): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      coordinaciones: this.dataPma().map((item: any) => ({
-        idProvincia: Number(item.idProvincia.id),
-        idMunicipio: Number(item.idMunicipio.id),
-        fechaInicio: this.formatDate(item.fechaInicio),
-        lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
-        GeoPosicion:{"type":"Point","coordinates":[null,null]}
-      })),
-    };
-  }
 
   formatDate(date: Date | string): string {
     const d = new Date(date);
@@ -195,7 +174,7 @@ export class PmaComponent {
 
   editarItem(index: number) {
     const dataEditada = this.formData.value;
-    this.dataPma.update((data) => {
+    this.coordinationServices.dataPma.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
@@ -204,7 +183,7 @@ export class PmaComponent {
   }
 
   eliminarItem(index: number) {
-    this.dataPma.update((data) => {
+    this.coordinationServices.dataPma.update((data) => {
       data.splice(index, 1); 
       return [...data]; 
     });
@@ -212,7 +191,7 @@ export class PmaComponent {
 
   seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.dataPma()[index]);
+    this.formData.patchValue(this.coordinationServices.dataPma()[index]);
   }
 
   getFormatdate(date: any){

@@ -41,8 +41,8 @@
       </div>
     </form>
     <br>
-    <div class="mat-elevation-z8 table-container" *ngIf="dataCoordinationAddress().length > 0">
-      <table mat-table [dataSource]="dataCoordinationAddress()" matSort class="mat-table" style="width: 100%">
+    <div class="mat-elevation-z8 table-container" *ngIf="coordinationServices.dataCoordinationAddress().length > 0">
+      <table mat-table [dataSource]="coordinationServices.dataCoordinationAddress()" matSort class="mat-table" style="width: 100%">
         <ng-container matColumnDef="fechaHora">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Fecha inicio

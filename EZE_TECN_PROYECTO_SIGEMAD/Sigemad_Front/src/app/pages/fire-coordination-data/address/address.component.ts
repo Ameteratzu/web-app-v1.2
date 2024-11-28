@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,15 +39,6 @@ const MY_DATE_FORMATS = {
   },
 };
 
-interface FormTypeAddress {
-  id?: string,
-  autoridadQueDirige: string,
-  idIncendio?: number
-  fechaInicio: Date,
-  fechaFin: Date,
-  idTipoDireccionEmergencia: number,
-}
-
 @Component({
   selector: 'app-address',
   standalone: true,
@@ -77,7 +68,7 @@ export class AddressComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-
+  @Output() save = new EventEmitter<void>();
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -97,7 +88,6 @@ export class AddressComponent {
   formData!: FormGroup;
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
-  public dataCoordinationAddress = signal<FormTypeAddress[]>([]);
   public isCreate = signal<number>(-1);
   public dataSource = new MatTableDataSource<any>([]);
 
@@ -118,7 +108,7 @@ export class AddressComponent {
       const data = this.formData.value;
       if(this.isCreate() == -1){
         
-        this.dataCoordinationAddress.set([data, ...this.dataCoordinationAddress()]);  
+        this.coordinationServices.dataCoordinationAddress.set([data, ...this.coordinationServices.dataCoordinationAddress()]);  
       }else{
         this.editarItem(this.isCreate())
       }
@@ -131,12 +121,12 @@ export class AddressComponent {
 
 
   async sendDataToEndpoint() {
-    this.spinner.show();
-    const transformedData = this.getFormattedData();
-    const result = await this.coordinationServices.postAddress(transformedData);
-    this.closeModal();
-    this.showToast();
-    this.spinner.hide();
+    if (this.coordinationServices.dataCoordinationAddress().length > 0) {
+      this.save.emit(); 
+    }else{
+      this.spinner.show();
+      this.showToast();
+    }
   }
 
   showToast() {
@@ -147,31 +137,9 @@ export class AddressComponent {
     });
   }
 
-  getFormattedData(): any {
-    return {
-      // idDireccionCoordinacionEmergencia: 0, 
-      idIncendio: this.data.idIncendio, 
-      direcciones: this.dataCoordinationAddress().map((item: any) => ({
-        // id: item.id || 0, 
-        idTipoDireccionEmergencia: Number(item.idTipoDireccionEmergencia.id),
-        autoridadQueDirige: item.autoridadQueDirige,
-        fechaInicio: this.formatDate(item.fechaInicio),
-        fechaFin: this.formatDate(item.fechaFin),
-      })),
-    };
-  }
-
-  formatDate(date: Date | string): string {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   editarItem(index: number) {
     const dataEditada = this.formData.value;
-    this.dataCoordinationAddress.update((data) => {
+    this.coordinationServices.dataCoordinationAddress.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
@@ -181,7 +149,7 @@ export class AddressComponent {
   }
 
   eliminarItem(index: number) {
-    this.dataCoordinationAddress.update((data) => {
+    this.coordinationServices.dataCoordinationAddress.update((data) => {
       data.splice(index, 1); 
       return [...data]; 
     });
@@ -189,7 +157,7 @@ export class AddressComponent {
 
   seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.dataCoordinationAddress()[index]);
+    this.formData.patchValue(this.coordinationServices.dataCoordinationAddress()[index]);
   }
 
   getFormatdate(date: any){

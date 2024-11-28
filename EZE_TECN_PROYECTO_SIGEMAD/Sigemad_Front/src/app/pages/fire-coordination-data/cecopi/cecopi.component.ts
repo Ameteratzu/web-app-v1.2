@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,7 +9,6 @@ import {
   MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout'; 
@@ -43,25 +42,6 @@ const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-interface FormTypeCecopi {
-  id?: string,
-  idIncendio?: number
-  fechaInicio: Date,
-  fechaFin: Date,
-  idProvincia?: number
-  idMunicipio?: number
-  lugar?: string,
-  observaciones?: string,
-}
-
-interface FormTypePma{
-  id?: string,
-  autoridadQueDirige: string,
-  idIncendio?: number
-  fechaInicio: Date,
-  fechaFin: Date,
-  idTipoDireccionEmergencia: number,
-}
 
 @Component({
   selector: 'app-cecopi',
@@ -91,6 +71,7 @@ interface FormTypePma{
 export class CecopiComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
+  @Output() save = new EventEmitter<void>();
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public direcionesServices = inject(DireccionesService);
@@ -114,8 +95,6 @@ export class CecopiComponent {
   formDataCecopi!: FormGroup;
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
-  public dataCecopi = signal<FormTypeCecopi[]>([]);
-  public dataPma = signal<FormTypePma[]>([]);
   public isCreate = signal<number>(-1);
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
@@ -123,6 +102,7 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
+    console.log("🚀 ~ CecopiComponent ~ dataCecopi:", this.coordinationServices.dataCecopi())
     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
@@ -147,11 +127,11 @@ export class CecopiComponent {
       const data = this.formDataCecopi.value;
       if(this.isCreate() == -1){
         
-        this.dataCecopi.set([data, ...this.dataCecopi()]);  
+        this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);  
       }else{
         this.editarItemCecopi(this.isCreate())
       }
-      
+    
       this.formDataCecopi.reset()
     }else {
       this.formDataCecopi.markAllAsTouched();
@@ -159,12 +139,14 @@ export class CecopiComponent {
   }
 
   async sendDataToEndpoint() {
+
     this.spinner.show();
-    const transformedData = this.getFormattedData();
-    const result = await this.coordinationServices.postCecopi(transformedData);
-    this.closeModal();
-    this.showToast();
-    this.spinner.hide();
+    if (this.coordinationServices.dataCecopi().length > 0) {
+      this.save.emit(); 
+    }else{
+      this.spinner.show();
+      this.showToast();
+    }
   }
 
   showToast() {
@@ -173,28 +155,6 @@ export class CecopiComponent {
       horizontalPosition: 'right', 
       verticalPosition: 'top', 
     });
-  }
-
-  getFormattedData(): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      coordinaciones: this.dataCecopi().map((item: any) => ({
-        idProvincia: Number(item.idProvincia.id),
-        idMunicipio: Number(item.idMunicipio.id),
-        fechaInicio: this.formatDate(item.fechaInicio),
-        lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
-        GeoPosicion:{"type":"Point","coordinates":[null,null]}
-      })),
-    };
-  }
-
-  formatDate(date: Date | string): string {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const day = d.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
   }
 
   async loadMunicipalities(event: any) {
@@ -206,7 +166,7 @@ export class CecopiComponent {
 
   editarItemCecopi(index: number) {
     const dataEditada = this.formDataCecopi.value;
-    this.dataCecopi.update((data) => {
+    this.coordinationServices.dataCecopi.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
@@ -215,7 +175,7 @@ export class CecopiComponent {
   }
 
   eliminarItemCecopi(index: number) {
-    this.dataCecopi.update((data) => {
+    this.coordinationServices.dataCecopi.update((data) => {
       data.splice(index, 1); 
       return [...data]; 
     });
@@ -223,7 +183,7 @@ export class CecopiComponent {
 
   seleccionarItemCecopi(index: number){
     this.isCreate.set(index)
-    this.formDataCecopi.patchValue(this.dataCecopi()[index]);
+    this.formDataCecopi.patchValue(this.coordinationServices.dataCecopi()[index]);
   }
 
   getFormatdate(date: any){

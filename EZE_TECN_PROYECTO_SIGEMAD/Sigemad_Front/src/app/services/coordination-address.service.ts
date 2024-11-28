@@ -1,18 +1,48 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
+
+interface FormTypeCecopi {
+  id?: string,
+  idIncendio?: number
+  fechaInicio: Date,
+  fechaFin: Date,
+  idProvincia?: number
+  idMunicipio?: number
+  lugar?: string,
+  observaciones?: string,
+}
+
+interface FormTypeAddress {
+  id?: string,
+  autoridadQueDirige: string,
+  idIncendio?: number
+  fechaInicio: Date,
+  fechaFin: Date,
+  idTipoDireccionEmergencia: number,
+}
+
+interface FormTypePma{
+  id?: string,
+  autoridadQueDirige: string,
+  idIncendio?: number
+  fechaInicio: Date,
+  fechaFin: Date,
+  idTipoDireccionEmergencia: number,
+}
 
 @Injectable({ providedIn: 'root' })
 export class CoordinationAddressService {
   private http = inject(HttpClient);
+  public dataCecopi = signal<FormTypeCecopi[]>([]); 
+  public dataCoordinationAddress = signal<FormTypeAddress[]>([]); 
+  public dataPma = signal<FormTypePma[]>([]); 
 
-  // getByEvolution(id: Number) {
-  //   let endpoint = `/areas-afectadas/evolucion/${id}`;
-
-  //   return firstValueFrom(
-  //     this.http.get<any[]>(endpoint).pipe((response) => response)
-  //   );
-  // }
+  clearData(): void {
+    this.dataCecopi.set([]); 
+    this.dataCoordinationAddress.set([]);
+    this.dataPma.set([]);
+  }
 
   postAddress(body: any) {
     const endpoint = `/direcciones-coordinaciones-emergencias/direcciones`;

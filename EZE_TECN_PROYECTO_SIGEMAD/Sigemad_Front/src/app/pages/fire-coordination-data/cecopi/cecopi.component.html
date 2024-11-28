@@ -71,8 +71,8 @@
 
     <br>
 
-    <div class="mat-elevation-z8 table-container" *ngIf="dataCecopi().length > 0">
-      <table mat-table [dataSource]="dataCecopi()" matSort class="mat-table" style="width: 100%">
+    <div class="mat-elevation-z8 table-container" *ngIf="coordinationServices.dataCecopi().length > 0">
+      <table mat-table [dataSource]="coordinationServices.dataCecopi()" matSort class="mat-table" style="width: 100%">
         <ng-container matColumnDef="fechaHora">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Fecha inicio
