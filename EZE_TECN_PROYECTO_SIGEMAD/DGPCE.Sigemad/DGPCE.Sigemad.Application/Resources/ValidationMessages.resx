@@ -319,4 +319,10 @@
   <data name="IdArchivoObligatorio" xml:space="preserve">
     <value>IdArchivo es obligatorio</value>
   </data>
+  <data name="ListaOtraInformacion" xml:space="preserve">
+    <value>Lista de Otra información es obligatorio</value>
+  </data>
+  <data name="ObservacionObligatorio" xml:space="preserve">
+    <value>Observación es obligatorio</value>
+  </data>
 </root>

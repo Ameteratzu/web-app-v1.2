@@ -7,5 +7,8 @@ public class OtraInformacionActiveByIdSpecification : BaseSpecification<OtraInfo
         : base(i => i.Id == id && i.Borrado == false)
     {
         AddInclude(i => i.DetallesOtraInformacion);
+        AddInclude("DetallesOtraInformacion.Medio");
+        AddInclude("DetallesOtraInformacion.ProcedenciasDestinos");
+        AddInclude("DetallesOtraInformacion.ProcedenciasDestinos.ProcedenciaDestino");
     }
 }

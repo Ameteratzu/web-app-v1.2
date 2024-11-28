@@ -7,7 +7,7 @@ internal class DocumentacionSpecification : BaseSpecification<Documentacion>
     public DocumentacionSpecification(int id)
         : base(d => d.Id == id && d.Borrado == false)
     {
-        AddInclude(d => d.DetalleDocumentaciones);
+        AddInclude(d => d.DetallesDocumentacion);
 
     }
 }

@@ -13,7 +13,5 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvolucio
         public CreateRegistroCommand? Registro { get; set; }
         public CreateDatoPrincipalCommand? DatoPrincipal { get; set; }
         public CreateParametroCommand? Parametro { get; set; }
-
-        public ICollection<int>? RegistroProcedenciasDestinos { get; set; }
     }
 }

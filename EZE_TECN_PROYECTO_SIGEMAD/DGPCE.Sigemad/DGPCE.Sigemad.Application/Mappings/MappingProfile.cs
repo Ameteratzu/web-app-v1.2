@@ -5,10 +5,13 @@ using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
+using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
+using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
+using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
@@ -64,21 +67,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        //CreateMap<Video, VideosVm>();
-
-        //CreateMap<Video, VideosWithIncludesVm>()
-        //    .ForMember(p => p.DirectorNombreCompleto, x => x.MapFrom(a => a.Director!.NombreCompleto))
-        //    .ForMember(p => p.StreamerNombre, x => x.MapFrom(a => a.Streamer!.Nombre))
-        //    .ForMember(p => p.Actores, x => x.MapFrom(a => a.Actores));
-
-
-        //CreateMap<Actor, ActorVm>();
-        //CreateMap<Director, DirectorVm>();
-        //CreateMap<Streamer, StreamersVm>();
-        //CreateMap<CreateStreamerCommand, Streamer>();
-        //CreateMap<UpdateStreamerCommand, Streamer>();
-        //CreateMap<CreateDirectorCommand, Director>();
-
         CreateMap<CreateAlertaCommand, Alerta>();
         CreateMap<UpdateAlertaCommand, Alerta>();
         CreateMap<CreateEstadoAlertaCommand, EstadoAlerta>();
@@ -107,14 +95,28 @@ public class MappingProfile : Profile
            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<Incendio, IncendioVm>();
+
+        // EVOLUCION
         CreateMap<Evolucion, EvolucionVm>();
+        CreateMap<Evolucion, EvolucionDto>();
+        CreateMap<Registro, RegistroEvolucionDto>()
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.ProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
+        CreateMap<ProcedenciaDestino, ProcedenciaDto>();
+        CreateMap<DatoPrincipal, DatoPrincipalEvolucionDto>();
+        CreateMap<Parametro, ParametroEvolucionDto>();
+
 
         //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
         //CreateMap<UpdateEvolucionCommand, Evolucion>()
         //  .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
 
-        CreateMap<ManageEvolucionCommand, Evolucion>()
-            .ForMember(dest => dest.RegistroProcedenciasDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.RegistroProcedenciasDestinos)));
+
+        CreateMap<ManageEvolucionCommand, Evolucion>();
+        CreateMap<CreateRegistroCommand, Registro>()
+            .ForMember(dest => dest.ProcedenciaDestinos,
+            opt => opt.MapFrom(src => src.RegistroProcedenciasDestinos.Select(p => new RegistroProcedenciaDestino { IdProcedenciaDestino = p })));
+
+        
 
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -122,6 +124,7 @@ public class MappingProfile : Profile
         CreateMap<ManageImpactoDto, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionCommand, ImpactoEvolucion>();
         CreateMap<UpdateImpactoEvolucionDto, ImpactoEvolucion>();
+        CreateMap<ImpactoEvolucion, ImpactoEvolucionDto>();
         CreateMap<ImpactoClasificado, ImpactoClasificadoDescripcionVm>();
 
         CreateMap<TipoIntervencionMedio, TipoIntervencionMedioVm>();
@@ -167,6 +170,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
 
+        CreateMap<OtraInformacion, OtraInformacionDto>()
+            .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
+
+        CreateMap<DetalleOtraInformacion, DetalleOtraInformacionDto>()
+            .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.ProcedenciaDestino)));
+
+
         CreateMap<DetalleOtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaHora))
             .ForMember(dest => dest.IdMedio, opt => opt.MapFrom(src => src.IdMedio))
@@ -187,10 +197,16 @@ public class MappingProfile : Profile
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
         CreateMap<Documentacion, DocumentacionVm>()
-           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetalleDocumentaciones));
+           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetallesDocumentacion));
+
+        CreateMap<Documentacion, DocumentacionDto>()
+             .ForMember(dest => dest.DetallesDocumentacion, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
            .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+
+        CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
+                .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
@@ -203,6 +219,7 @@ public class MappingProfile : Profile
 
     }
 
+    /*
     private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
     {
         if (source == null)
@@ -212,4 +229,5 @@ public class MappingProfile : Profile
 
         return source.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
     }
+    */
 }
