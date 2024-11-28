@@ -5,7 +5,13 @@ namespace DGPCE.Sigemad.Domain.Modelos;
 
 public class Incendio : BaseDomainModel<int>
 {
-    public Incendio() { }
+    public Incendio() 
+    {
+        Evoluciones = new();
+        DireccionCoordinacionEmergencias = new();
+        Documentaciones = new();
+        OtraInformaciones = new();
+    }
 
     public int IdSuceso { get; set; }
     public int IdTerritorio { get; set; }

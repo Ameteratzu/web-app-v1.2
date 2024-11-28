@@ -33,6 +33,17 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             throw new NotFoundException(nameof(Incendio), request.IdIncendio);
         }
 
+        //Obtener listado de usuarios
+        var guidsUsuarios = new HashSet<Guid?>();
+
+        guidsUsuarios.UnionWith(incendio.Evoluciones.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(incendio.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(incendio.OtraInformaciones.Select(o => o.CreadoPor));
+        guidsUsuarios.UnionWith(incendio.Documentaciones.Select(d => d.CreadoPor));
+
+        // 3. Obtener nombres de usuarios
+        var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
+
         // Crear el listado consolidado
         var registros = new List<RegistroActualizacionDto>();
 
@@ -44,7 +55,7 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Datos de evolución",
-            Tecnico = ""
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
         }));
 
         // Procesar Otra Información
@@ -55,7 +66,7 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Otra Información",
-            Tecnico = ""
+            Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
         }));
 
         // Procesar Direcciones y Coordinación
@@ -66,11 +77,37 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Dirección y coordinación",
-            Tecnico = ""
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
         }));
 
         // Ordenar por FechaHora descendente
         return registros.OrderByDescending(r => r.FechaHora).ToList();
     }
+
+    /// <summary>
+    /// Método para obtener los nombres de los usuarios a partir de sus GUIDs.
+    /// </summary>
+    private async Task<Dictionary<Guid, string>> ObtenerNombresUsuariosAsync(IEnumerable<Guid?> guidsUsuarios)
+    {
+        // 1. Filtrar valores nulos y duplicados
+        var guidsFiltrados = guidsUsuarios.Where(g => g.HasValue).Select(g => g.Value).Distinct().ToList();
+
+        if (!guidsFiltrados.Any())
+        {
+            return new Dictionary<Guid, string>();
+        }
+
+        // 2. Consultar la tabla ApplicationUser
+        var usuarios = await _unitOfWork.Repository<ApplicationUser>()
+            .GetAsync(u => guidsFiltrados.Contains(u.Id));
+
+        // 3. Crear un diccionario para facilitar el acceso a los nombres
+        return usuarios.ToDictionary(
+            u => u.Id, // Clave: GUID del usuario
+            u => u.Nombre ?? "Desconocido" // Valor: Nombre del usuario
+        );
+    }
+
+
 }
 
