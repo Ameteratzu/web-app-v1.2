@@ -108,8 +108,10 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 if (detalleDocumentacion != null)
                 {
                     // Actualizar datos existentes
-                    _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
+                   // _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
                     detalleDocumentacion.Borrado = false;
+                    await UpdateProcedenciaDestinoAsync(detalleDocumentacion, detalleDocumentoDto.DocumentacionProcedenciasDestinos);
+
                 }
                 else
                 {
@@ -174,7 +176,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
     private async Task UpdateProcedenciaDestinoAsync(DetalleDocumentacion detalle, List<int> procedenciasDestinos)
     {
         // 1. Asegúrate de que las relaciones actuales están cargadas
-        await _unitOfWork.Repository<DetalleDocumentacion>()
+         await _unitOfWork.Repository<DetalleDocumentacion>()
             .GetByIdWithSpec(new DetalleDocumentacionSpecification(detalle.Id));
 
         // 2. Obtener los IDs actuales en la base de datos
@@ -215,7 +217,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         }
 
         // 4. Actualizar el objeto principal (se reflejarán los cambios en las relaciones)
-        //_unitOfWork.Repository<DetalleOtraInformacion>().UpdateEntity(detalle);
+       //_unitOfWork.Repository<DetalleDocumentacion>().UpdateEntity(detalle);
     }
 
 

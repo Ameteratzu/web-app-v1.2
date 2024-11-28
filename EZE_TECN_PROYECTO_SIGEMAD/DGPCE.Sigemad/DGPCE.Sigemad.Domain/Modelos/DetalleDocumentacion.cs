@@ -15,7 +15,7 @@ public class DetalleDocumentacion : BaseDomainModel<int>
     public string Descripcion { get; set; }
     public Guid? IdArchivo { get; set; }
     public TipoDocumento TipoDocumento { get; set; }
-    public Archivo Archivo { get; set; }
+    public Archivo? Archivo { get; set; }
     public Documentacion Documentacion { get; set; }
 
     public ICollection<DocumentacionProcedenciaDestino>? DocumentacionProcedenciaDestinos { get; set; } = null;

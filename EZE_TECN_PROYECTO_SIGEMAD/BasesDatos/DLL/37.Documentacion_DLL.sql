@@ -1,3 +1,8 @@
+CREATE TABLE dbo.TipoDocumento (
+	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Descripcion NVARCHAR(255) NOT NULL,
+);
+
 CREATE TABLE Documentacion (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdIncendio INT NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
