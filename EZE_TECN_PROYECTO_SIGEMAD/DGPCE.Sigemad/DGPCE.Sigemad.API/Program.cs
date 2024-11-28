@@ -2,6 +2,7 @@ using DGPCE.Sigemad.API.Middleware;
 using DGPCE.Sigemad.Application;
 using DGPCE.Sigemad.Identity;
 using DGPCE.Sigemad.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using NetTopologySuite.IO.Converters;
 using Serilog;
 
@@ -46,6 +47,14 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.AddSupportedUICultures(supportedCultures);
 });
 
+// Configura la política predeterminada para permitir a todos
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+        .RequireAssertion(_ => true) // Permitir a todos
+        .Build();
+});
+
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
@@ -69,6 +78,7 @@ app.UseHttpsRedirection();
 //app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.UseMiddleware<AuthenticatedUserMiddleware>();
 
