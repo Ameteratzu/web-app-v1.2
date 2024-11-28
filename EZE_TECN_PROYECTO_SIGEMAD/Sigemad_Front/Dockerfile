@@ -2,6 +2,9 @@
 FROM node:18 AS build
 WORKDIR /app
 
+# Actualizar npm a la última versión
+RUN npm install -g npm@latest
+
 # Copiar los archivos necesarios para instalar dependencias
 COPY package.json package-lock.json ./
 RUN npm install
