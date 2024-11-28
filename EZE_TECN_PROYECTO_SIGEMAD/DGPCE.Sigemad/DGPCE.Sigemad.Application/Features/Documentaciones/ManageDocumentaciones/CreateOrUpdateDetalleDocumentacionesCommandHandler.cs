@@ -103,7 +103,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         {
             if (detalleDocumentoDto.Id.HasValue && detalleDocumentoDto.Id > 0)
             {
-                var detalleDocumentacion = documentacion.DetalleDocumentaciones.FirstOrDefault(c => c.Id == detalleDocumentoDto.Id.Value);
+                var detalleDocumentacion = documentacion.DetallesDocumentacion.FirstOrDefault(c => c.Id == detalleDocumentoDto.Id.Value);
 
                 if (detalleDocumentacion != null)
                 {
@@ -116,7 +116,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                     // Crear nuevo detalle de documentacion
                     var nuevoDetalleDocumentacion = _mapper.Map<DetalleDocumentacion>(detalleDocumentoDto);
                     nuevoDetalleDocumentacion.Id = 0;
-                    documentacion.DetalleDocumentaciones.Add(nuevoDetalleDocumentacion);
+                    documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
                 }
             }
             else
@@ -124,7 +124,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 // Crear nuevo detalle de documentacionionn
                 var nuevoDetalleDocumentacion = _mapper.Map<DetalleDocumentacion>(detalleDocumentoDto);
                 nuevoDetalleDocumentacion.Id = 0;
-                documentacion.DetalleDocumentaciones.Add(nuevoDetalleDocumentacion);
+                documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
             }
         }
 
@@ -138,7 +138,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 .Select(c => c.Id)
                 .ToList();
 
-            var detallesDocumentacionParaEliminar = documentacion.DetalleDocumentaciones
+            var detallesDocumentacionParaEliminar = documentacion.DetallesDocumentacion
                 .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
                 .ToList();
             foreach (var coordinacion in detallesDocumentacionParaEliminar)

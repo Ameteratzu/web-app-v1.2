@@ -5,6 +5,7 @@ using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
+using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
@@ -189,10 +190,16 @@ public class MappingProfile : Profile
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
         CreateMap<Documentacion, DocumentacionVm>()
-           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetalleDocumentaciones));
+           .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetallesDocumentacion));
+
+        CreateMap<Documentacion, DocumentacionDto>()
+             .ForMember(dest => dest.DetallesDocumentacion, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
            .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+
+        CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
+                .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));

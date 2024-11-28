@@ -11,6 +11,6 @@ internal class DocumentacionSpecificationByIdIncendio : BaseSpecification<Docume
     public DocumentacionSpecificationByIdIncendio(int idIncendio)
     : base(d => d.IdIncendio == idIncendio && d.Borrado == false)
     {
-        AddInclude(d => d.DetalleDocumentaciones);
+        AddInclude(d => d.DetallesDocumentacion);
     }
 }
