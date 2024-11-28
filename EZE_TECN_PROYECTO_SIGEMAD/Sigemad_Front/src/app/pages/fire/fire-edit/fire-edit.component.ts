@@ -374,6 +374,7 @@ export class FireEditComponent {
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos Evolución', 
+        idIncendio:  Number(this.route.snapshot.paramMap.get('id')),
       },
     });
 
@@ -391,6 +392,7 @@ export class FireEditComponent {
       maxWidth: 'none', 
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia', 
+        idIncendio:  Number(this.route.snapshot.paramMap.get('id')),
       },
     });
 

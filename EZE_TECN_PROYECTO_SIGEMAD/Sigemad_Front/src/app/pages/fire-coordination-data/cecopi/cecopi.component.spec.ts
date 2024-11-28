@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FireCreateComponent } from './fire-evolution-create.component';
+import { CecopiComponent } from './cecopi.component';
 
-describe('FireEvolutionCreateComponent', () => {
-  let component: FireCreateComponent;
-  let fixture: ComponentFixture<FireCreateComponent>;
+describe('CecopiComponent', () => {
+  let component: CecopiComponent;
+  let fixture: ComponentFixture<CecopiComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCreateComponent]
+      imports: [CecopiComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FireCreateComponent);
+    fixture = TestBed.createComponent(CecopiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

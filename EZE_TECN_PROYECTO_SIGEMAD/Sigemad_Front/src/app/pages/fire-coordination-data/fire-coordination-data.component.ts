@@ -1,92 +1,175 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout'; 
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButtonModule } from '@angular/material/button';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL', 
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MatSort } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { AddressComponent } from './address/address.component';
+import { CecopiComponent } from './cecopi/cecopi.component';
+import { PmaComponent } from './pma/pma.component';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { CoordinationAddressService } from '../../services/coordination-address.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-coordination-data',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
     MatChipsModule,
     CommonModule,
-    MatInputModule,
     FlexLayoutModule,
     MatGridListModule,
-    MatButtonModule
+    MatIconModule,
+    NgxSpinnerModule,
+    AddressComponent,
+    CecopiComponent,
+    PmaComponent
   ],
   templateUrl: './fire-coordination-data.component.html',
   styleUrl: './fire-coordination-data.component.scss',
-  providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-  ],
+  animations: [
+    trigger('fadeInOut', [
+      state('void', style({ opacity: 0, transform: 'translateY(20px)' })), 
+      transition(':enter', [animate('900ms ease-out')]), 
+      transition(':leave', [animate('0ms ease-in')])   
+    ])
+  ]
 })
-export class FireCoordinationData implements OnInit {
+export class FireCoordinationData {
 
-  data = inject(MAT_DIALOG_DATA) as { title: string };
-  readonly sections: string[] = [
-    'Registro',
-    'Datos principales',
-    'Parámetros',
-    'Área afectada',
-    'Consecuencias/Actuac.',
-    'Intervención de medios',
+  @ViewChild(MatSort) sort!: MatSort;
+  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+
+  public matDialog = inject(MatDialog);
+  private spinner = inject(NgxSpinnerService);
+  public coordinationServices = inject(CoordinationAddressService);
+  public toast = inject(MatSnackBar);
+
+  
+  readonly sections = [
+    { id: 1, label: 'Dirección' },
+    { id: 2, label: 'Coordinación CECOPI' },
+    { id: 3, label: 'Coordinación PMA' },
   ];
-  formData!: FormGroup;
-  private fb = inject(FormBuilder); 
 
-  async ngOnInit() {
+  selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
 
-    this.formData = this.fb.group({
-      inputOutput : ['', Validators.required],
-      startDate: [new Date(), Validators.required],
-      media: ['', Validators.required],
-      originDestination: ['', Validators.required],
-      datetimeUpdate: ['', Validators.required],
-      observations_1: ['', Validators.required],
-      forecast: ['', Validators.required],
-      status: ['', Validators.required],
-      end_date: [new Date(), Validators.required],
-      emergencyPlanActivated: ['', Validators.required],
+  public displayedColumns: string[] = [
+    'fechaHora',
+    'procendenciaDestino',
+    'descripcion',
+    'fichero',
+    'opciones',
+  ]; 
+
+  onSelectionChange(event: MatChipListboxChange): void {
+    this.selectedOption = event;
+  }
+
+  async onSaveFromChild() {
+    console.log(`Guardar desde el componente:`);
+
+    if (this.coordinationServices.dataCoordinationAddress().length > 0){
+      for (const item of this.coordinationServices.dataCoordinationAddress()) {
+        const body = await this.getFormattedDataAdress(item)
+        const result = await this.coordinationServices.postAddress(body);
+      }
+    }
+
+    if (this.coordinationServices.dataCecopi().length > 0){
+      for (const item of this.coordinationServices.dataCecopi()) {
+        const body = await this.getFormattedDataCecopi(item)
+        const result = await this.coordinationServices.postCecopi(body);
+      }
+    }
+    console.log("🚀 ~ FireCoordinationData ~ onSaveFromChild ~ this.coordinationServices.dataPma():", this.coordinationServices.dataPma())
+    if (this.coordinationServices.dataPma().length > 0){
+      
+      for (const item of this.coordinationServices.dataPma()) {
+        const body = await this.getFormattedDataPma(item)
+        const result = await this.coordinationServices.postPma(body);
+      }
+    }
+
+    this.coordinationServices.clearData();
+    this.closeModal();
+    this.spinner.hide();
+    this.showToast();
+
+
+  }
+
+  getFormattedDataAdress(data: any): any {
+    return {
+      idIncendio: this.data.idIncendio, 
+      direcciones: [{
+        idTipoDireccionEmergencia: Number(data.idTipoDireccionEmergencia.id),
+        autoridadQueDirige: data.autoridadQueDirige,
+        fechaInicio: this.formatDate(data.fechaInicio),
+        fechaFin: this.formatDate(data.fechaFin),
+      }],
+    };
+  }
+
+
+  getFormattedDataCecopi(data: any): any {
+    return {
+      idIncendio: this.data.idIncendio, 
+      coordinaciones:[{
+        idProvincia: Number(data.idProvincia.id),
+        idMunicipio: Number(data.idMunicipio.id),
+        fechaInicio: this.formatDate(data.fechaInicio),
+        lugar: String(data.lugar),
+        fechaFin: this.formatDate(data.fechaFin),
+        GeoPosicion:{"type":"Point","coordinates":[null,null]}
+      }],
+    };
+  }
+
+  getFormattedDataPma(data: any): any {
+    return {
+      idIncendio: this.data.idIncendio, 
+      coordinaciones: [{
+        idProvincia: Number(data.idProvincia.id),
+        idMunicipio: Number(data.idMunicipio.id),
+        fechaInicio: this.formatDate(data.fechaInicio),
+        lugar: String(data.lugar),
+        fechaFin: this.formatDate(data.fechaFin),
+        GeoPosicion:{"type":"Point","coordinates":[null,null]}
+      }],
+    };
+  }
+
+ 
+  
+
+  formatDate(date: Date | string): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+    
+
+  trackByFn(index: number, item: any): number {
+    return item.id;
+  }
+
+  closeModal(){
+    this.matDialog.closeAll();
+  }
+
+  showToast() {
+    this.toast.open('Guardado correctamente', 'Cerrar', {
+      duration: 3000, 
+      horizontalPosition: 'right', 
+      verticalPosition: 'top', 
     });
-
-  }
-
-  getForm(atributo: string): any {
-    return this.formData.controls[atributo];
-  }
-
-  trackByFn(index: number, item: string): string {
-    return item;
   }
 
 }
