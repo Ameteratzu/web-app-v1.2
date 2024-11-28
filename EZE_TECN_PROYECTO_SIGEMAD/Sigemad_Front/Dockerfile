@@ -1,18 +1,18 @@
 # Etapa 1: Construcción de la aplicación Angular
-FROM node:18 AS build
+FROM node:16 AS build
 WORKDIR /app
 
 # Actualizar npm a la última versión
 RUN npm install -g npm@latest
 
-# Copiar únicamente package.json
-COPY package.json ./
+# Copiar package.json y package-lock.json
+COPY package.json package-lock.json ./
 
 # Limpiar caché y eliminar node_modules (por si acaso)
 RUN npm cache clean --force
 
-# Instalar dependencias sin dependencias opcionales
-RUN npm install --no-optional
+# Instalar dependencias usando npm ci
+RUN npm ci
 
 # Copiar el resto del código fuente al contenedor
 COPY ./ ./
