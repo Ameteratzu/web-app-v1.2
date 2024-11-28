@@ -43,7 +43,7 @@ public class GetIncendioDetallesListQueryHandlerTests
             }
         };
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionSpecification>()))
+        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionByIdSpecification>()))
             .ReturnsAsync(detallesEvolucion);
 
         // Act
@@ -66,7 +66,7 @@ public class GetIncendioDetallesListQueryHandlerTests
         var request = new GetIncendioDetallesListQuery(idIncendio);
         var detallesEvolucion = new List<Evolucion>();
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionSpecification>()))
+        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionByIdSpecification>()))
             .ReturnsAsync(detallesEvolucion);
 
         // Act
@@ -84,7 +84,7 @@ public class GetIncendioDetallesListQueryHandlerTests
         var idIncendio = 1;
         var request = new GetIncendioDetallesListQuery(idIncendio);
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionSpecification>()))
+        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetAllWithSpec(It.IsAny<DetalleEvolucionByIdSpecification>()))
             .ReturnsAsync((IReadOnlyList<Evolucion>)null);
 
         // Act

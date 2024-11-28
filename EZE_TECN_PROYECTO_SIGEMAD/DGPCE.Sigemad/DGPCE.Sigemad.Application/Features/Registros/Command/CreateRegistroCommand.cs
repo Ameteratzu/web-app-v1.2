@@ -6,4 +6,5 @@ public class CreateRegistroCommand
     public DateTime? FechaHoraEvolucion { get; set; }
     public int? IdEntradaSalida { get; set; }
     public int? IdMedio { get; set; }
+    public List<int> RegistroProcedenciasDestinos { get; set; } = new();
 }
