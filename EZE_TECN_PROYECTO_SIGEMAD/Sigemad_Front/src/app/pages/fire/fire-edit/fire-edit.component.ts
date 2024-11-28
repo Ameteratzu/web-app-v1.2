@@ -144,6 +144,7 @@ export class FireEditComponent implements OnInit {
     this.fireStatus.set(fireStatus);
 
     const details = await this.fireService.details(Number(fire_id));
+    console.info('details', details);
     this.dataSource.data = details;
 
     this.formData.patchValue({
@@ -219,6 +220,7 @@ export class FireEditComponent implements OnInit {
       //height: '90vh',
       data: {
         title: 'Nuevo - Otra Información',
+        fire: this.fire,
       },
     });
 

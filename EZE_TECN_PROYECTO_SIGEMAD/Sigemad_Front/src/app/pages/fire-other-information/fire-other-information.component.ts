@@ -160,9 +160,12 @@ export class FireOtherInformationComponent implements OnInit {
     }
   }
 
-  //Funcion para guardar en base de datos
+  //Función para guardar en base de datos
   async saveList() {
-    console.info('this.dataOtherInformation', this.dataOtherInformation());
+    if (this.dataOtherInformation().length <= 0) {
+      alert('Debe meter data en la tabla');
+      return;
+    }
 
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
@@ -187,6 +190,9 @@ export class FireOtherInformationComponent implements OnInit {
         await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
         alert('Se ha guardado la lista');
+        window.location.href = `fire-national-edit/${
+          this.dataProps?.fire?.id ?? 1
+        }`;
       } else {
         alert('Ha ocurrido un error al guardar la lista');
       }

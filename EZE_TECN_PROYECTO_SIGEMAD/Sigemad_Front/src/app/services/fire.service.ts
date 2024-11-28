@@ -44,7 +44,7 @@ export class FireService {
   }
 
   details(fire_id: number) {
-    const endpoint = `/Incendios/${fire_id}`;
+    const endpoint = `/Incendios/${fire_id}/registros`;
 
     return firstValueFrom(
       this.http.get<FireDetail[]>(endpoint).pipe((response) => response)
