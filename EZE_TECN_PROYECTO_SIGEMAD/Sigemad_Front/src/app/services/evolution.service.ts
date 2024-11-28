@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
 import { Evolution } from '../types/evolution.type';
+import { EvolucionIncendio, Registro,  } from '../types/evolution-record.type';
 
 @Injectable({ providedIn: 'root' })
 export class EvolutionService {
   private http = inject(HttpClient);
+  public dataRecords = signal<EvolucionIncendio[]>([]); 
 
   get(fire_id: any) {
     const endpoint = `/Evoluciones/${fire_id}`;
@@ -64,4 +66,25 @@ export class EvolutionService {
       )
     );
   }
+
+  clearData(): void {
+    this.dataRecords.set([]); 
+  }
+
+  postData(body: any) {
+    const endpoint = `/Evoluciones/Datos`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
+
 }

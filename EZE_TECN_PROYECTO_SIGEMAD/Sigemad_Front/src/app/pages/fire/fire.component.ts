@@ -13,12 +13,18 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
   standalone: true,
   imports: [CommonModule, FireFilterFormComponent, FireTableComponent],
   templateUrl: './fire.component.html',
-  styleUrl: './fire.component.css',
+  styleUrl: './fire.component.scss',
 })
 export class FireComponent implements OnInit {
   public filtros = signal<any>({});
 
-  public fires = <ApiResponse<Fire[]>>{};
+  public fires: ApiResponse<Fire[]> = {
+    count: 0,
+    page: 1,
+    pageSize: 10,
+    data: [],
+    pageCount: 0,
+  };
 
   public fireService = inject(FireService);
   public filtrosIncendioService = inject(LocalFiltrosIncendio);

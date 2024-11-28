@@ -1,31 +1,73 @@
-import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-} from '@angular/core';
+import { Component, Input, ViewChild, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { Fire } from '../../../../types/fire.type';
 import { Router } from '@angular/router';
 import moment from 'moment';
-import { ApiResponse } from '../../../../types/api-response.type';
-import { Fire } from '../../../../types/fire.type';
-import { FireTableToolbarComponent } from '../fire-table-toolbar/fire-table-toolbar.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { FireCreateComponent } from '../../../fire-evolution-create/fire-evolution-create.component';
 
 @Component({
   selector: 'app-fire-table',
   standalone: true,
-  imports: [CommonModule, FireTableToolbarComponent],
   templateUrl: './fire-table.component.html',
-  styleUrl: './fire-table.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./fire-table.component.scss'],
+  imports: [MatPaginatorModule, MatTableModule, MatDialogModule],
 })
-export class FireTableComponent {
-  @Input() fires: ApiResponse<Fire[]>;
+export class FireTableComponent implements OnChanges {
+  @Input() fires: Fire[] = []; 
 
+  public dataSource = new MatTableDataSource<Fire>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   public router = inject(Router);
+  private dialog = inject(MatDialog);
+
+  public displayedColumns: string[] = [
+    'denominacion',
+    'fechaInicio',
+    'estado',
+    'ngp',
+    'maxNgp',
+    'ubicacion',
+    'ultimoRegistro',
+    'opciones',
+  ]; 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fires'] && this.fires) {
+      this.dataSource.data = this.fires; 
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
 
   goToEdit(fire: Fire) {
     this.router.navigate([`/fire-national-edit/${fire.id}`]);
+  }
+
+
+  goModal() {
+    const dialogRef = this.dialog.open(FireCreateComponent, {
+      width: '90vw', 
+      height: '90vh', 
+      maxWidth: 'none', 
+      data: {
+        title: 'Nuevo - Datos Evolución', 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
   }
 
   getUbicacion(fire: Fire) {

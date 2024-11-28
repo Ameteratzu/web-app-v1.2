@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+</div>
+
+<div class="container" >
+  <div class="side-menu">
+    <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
+      <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip">
+        {{ sec.label }}
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+  
+  <app-address (save)="onSaveFromChild()" *ngIf="selectedOption.value === 1" class="component-width" @fadeInOut></app-address>
+  <app-cecopi (save)="onSaveFromChild()" *ngIf="selectedOption.value === 2" class="component-width" @fadeInOut></app-cecopi>
+  <app-pma (save)="onSaveFromChild()" *ngIf="selectedOption.value === 3" class="component-width" @fadeInOut></app-pma>
+
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white"> Cargando... </p>
+</ngx-spinner>

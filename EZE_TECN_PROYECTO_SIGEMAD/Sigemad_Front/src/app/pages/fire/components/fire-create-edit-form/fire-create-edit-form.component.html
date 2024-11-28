@@ -1,0 +1,199 @@
+<h2 mat-dialog-title class="dialog-title">{{data.fire?.id ? 'Modificar' : 'Crear'}} Incendio</h2>
+
+<form [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div
+      fxLayout="row"
+      fxLayoutGap="16px"
+      fxLayoutAlign="start stretch"
+      class="filter-container"
+    >
+      <!-- Terriotorio -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Territorio</mat-label>
+        <mat-select
+          [formControl]="getForm('territory')"
+          (selectionChange)="changeTerritory($event)"
+        >
+          <mat-option *ngFor="let option of territories()" [value]="option.id">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('territory')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Clase de suceso -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Clase de suceso</mat-label>
+        <mat-select [formControl]="getForm('classEvent')">
+          <mat-option
+            *ngFor="let option of listClassEvent()"
+            [value]="option.id"
+          >
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('classEvent')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Fecha inicio -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Fecha de inicio</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="startDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="formData.get('startDate')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutGap="16px"
+      fxLayoutAlign="start stretch"
+      class="filter-container"
+    >
+      <!-- Provincia -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Provincia</mat-label>
+        <mat-select
+          [formControl]="getForm('province')"
+          (selectionChange)="loadMunicipalities($event)"
+        >
+          <mat-option *ngFor="let option of provinces()" [value]="option.id">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('province')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Municipio -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Municipio</mat-label>
+        <mat-select
+          [formControl]="getForm('municipality')"
+          (selectionChange)="setMunicipalityId($event)"
+        >
+          <mat-option
+            *ngFor="let option of municipalities()"
+            [value]="option.id"
+          >
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error *ngIf="formData.get('municipality')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+
+      <img
+        (click)="openModalMap()"
+        matSuffix
+        src="/assets/img/location-btn.svg"
+        alt="location-btn"
+        class="pin-location"
+      />
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutGap="16px"
+      fxLayoutAlign="start stretch"
+      class="filter-container"
+    >
+      <!-- Denominacion -->
+      <mat-form-field appearance="fill" fxFlex="100" class="mb-3">
+        <mat-label>Denominación</mat-label>
+        <input
+          matInput
+          placeholder="Denominación"
+          formControlName="denomination"
+        />
+        <mat-error *ngIf="formData.get('denomination')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutGap="16px"
+      fxLayoutAlign="start stretch"
+      class="filter-container"
+    >
+      <!-- Nota General -->
+      <mat-form-field appearance="fill" fxFlex="100" class="mb-3">
+        <mat-label>Nota general</mat-label>
+        <textarea
+          matInput
+          placeholder="Nota general"
+          formControlName="generalNote"
+          rows="3"
+        ></textarea>
+        <mat-error *ngIf="formData.get('generalNote')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutGap="16px"
+      fxLayoutAlign="start stretch"
+      class="filter-container"
+    >
+      <!-- Estado de suceco -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Estado de suceso</mat-label>
+        <mat-select [formControl]="getForm('eventStatus')">
+          <mat-option
+            *ngFor="let option of listEventStatus()"
+            [value]="option.id"
+          >
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('eventStatus')?.hasError('required')">
+          Este campo es obligatorio.
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="16px"
+    style="width: 100%"
+    class="button-container"
+  >
+    <!-- Botón Buscar -->
+    <button
+      mat-raised-button
+      (click)="closeModal()"
+      color="primary"
+      aria-label="Buscar"
+      class="custom-button"
+    >
+      Cancelar
+    </button>
+
+    <!-- Botón Filtro -->
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      aria-label="Guardar"
+      class="custom-button"
+    >
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</form>

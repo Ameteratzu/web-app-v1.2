@@ -1,63 +1,29 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarComponent } from './shared/sidebar/sidebar.component';
-
-import { PrimeNGConfig } from 'primeng/api';
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { CustomSidenavComponent } from './components/custom-sidenav/custom-sidenav.component'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, SidebarComponent],
+  imports: [
+    RouterOutlet, 
+    MatToolbarModule, 
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    CustomSidenavComponent
+  ],
+    
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  public primengConfig = inject(PrimeNGConfig);
-  ngOnInit() {
-    this.primengConfig.setTranslation({
-      firstDayOfWeek: 1,
-      dayNames: [
-        'domingo',
-        'lunes',
-        'martes',
-        'miércoles',
-        'jueves',
-        'viernes',
-        'sábado',
-      ],
-      dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
-      dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
-      monthNames: [
-        'enero',
-        'febrero',
-        'marzo',
-        'abril',
-        'mayo',
-        'junio',
-        'julio',
-        'agosto',
-        'septiembre',
-        'octubre',
-        'noviembre',
-        'diciembre',
-      ],
-      monthNamesShort: [
-        'ene',
-        'feb',
-        'mar',
-        'abr',
-        'may',
-        'jun',
-        'jul',
-        'ago',
-        'sep',
-        'oct',
-        'nov',
-        'dic',
-      ],
-      today: 'Hoy',
-      clear: 'Limpiar',
-    });
-  }
+  title = 'sigemad';
+
+  collapsed = signal(false);
+  sidenavWidth = computed (() => this.collapsed() ? '65px' : '300px');
 }

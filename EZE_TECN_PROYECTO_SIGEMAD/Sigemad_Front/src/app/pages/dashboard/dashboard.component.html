@@ -1,72 +1,71 @@
-<h1 class="text-info text-center font-weight-bold font-size-32 calibri">
-  Sistema de gestión de emergencia y apoyo a la decisión
-</h1>
-
-<div class="d-flex row">
-  <div class="col-9">
-    <div class="font-size-20 inter">
-      Situación actual [13/06/2024 11:00]
-      <img src="/assets/img/refresh.svg" alt="refresh" />
-    </div>
-
-    <div id="map" class="map w-full mt-20"></div>
-
-    <div class="d-flex gap-4  align-items-center justify-content-center pt-4">
-      <button class="btn btn-secondary">TODO</button>
-      <button class="btn btn-secondary">Incendios</button>
-      <button class="btn btn-primary">Terremotos</button>
-      <button class="btn btn-secondary">Meteorología</button>
-      <button class="btn btn-secondary">Otros sucesos</button>
-    </div>
-  </div>
-
-  <div class="col-3">
-    <div class="font-size-20">
-      <div class="d-flex justify-content-between">
-        <div class="inter">Sucesos reseñables</div>
-
-        <div>
-          <img src="/assets/img/wrench.svg" alt="wrench" />
+<mat-card class="content-card">
+    <mat-grid-list cols="10" rowHeight="900px" class="container-grid">
+      <mat-grid-tile [colspan]="8">
+        <div class="map-header">
+          <h2 class="panel-title">Situación actual [13/06/2024 11:00]</h2>
+          <mat-icon class="refresh-icon">refresh</mat-icon>
         </div>
-      </div>
-    </div>
 
-    <div
-      class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20"
-    >
-      <div *ngFor="let event of events">
-        <div class="event">
-          <div class="d-flex justify-content-between">
-            <div class="text-secondary font-weight-bold calibri">
-              {{ event.date }}
+        <div class="map-buttons">
+          <button mat-flat-button color="primary" class="filter-button">
+            <mat-icon>fireplace</mat-icon> Incendios
+          </button>
+          <button mat-flat-button color="primary" class="filter-button">
+            <mat-icon>public</mat-icon> Terremotos
+          </button>
+          <button mat-flat-button color="primary" class="filter-button">
+            <mat-icon>cloud</mat-icon> Meteorología
+          </button>
+          <button mat-flat-button color="primary" class="filter-button">
+            <mat-icon>category</mat-icon> Otros Sucesos
+          </button>
+        </div>
+      
+        <div id="map" class="map"></div>
+      </mat-grid-tile>
+  
+      <mat-grid-tile [colspan]="2" class="tile-align-top">
+        <div class="info-container">
+          <div class="panel-header">
+            <h2 class="panel-title">Sucesos reseñables</h2>
+            <mat-icon class="settings-icon">settings</mat-icon>
+          </div>
+          <mat-divider></mat-divider>
+  
+          <div class="info-panel">
+            <div class="info-item">
+              <mat-label class="info-date">13/06/2024 05:50</mat-label>
+              <div class="info-detail">
+                <p class="info-title">Terremoto</p>
+                <p>ALBORÁN SUR. Magnitud: 3 mblg</p>
+              </div>
             </div>
-
-            <div class="text-secondary font-weight-bold calibri">
-              {{ event.type }}
+  
+            <div class="info-item">
+              <mat-label class="info-date">12/06/2024 10:25</mat-label>
+              <div class="info-detail">
+                <p class="info-title">Incendio forestal</p>
+                <p>Vilanova (Orense). </p>
+              </div>
+            </div>
+  
+            <div class="info-item">
+              <mat-label class="info-date">12/06/2024 09:15</mat-label>
+              <div class="info-detail">
+                <p class="info-title">Incendio forestal</p>
+                <p>Estado: Extinguido</p>
+              </div>
+            </div>
+  
+            <div class="info-item">
+              <mat-label class="info-date">10/06/2024 15:45</mat-label>
+              <div class="info-detail">
+                <p class="info-title">Terremoto</p>
+                <p>S TETUAN.MAC. Magnitud: 3.6 mblg</p>
+              </div>
             </div>
           </div>
-
-          <div class="font-weight-bold calibri">
-            {{ event.description }}
-          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="font-size-20 mt-50">
-      <div class="d-flex justify-content-between">
-        <div class="inter">Últimos 7 días</div>
-
-        <div>
-          <img src="/assets/img/wrench.svg" alt="wrench" />
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="border-secondary w-full font-size-14 border-radius-15 p-20 mt-20"
-    >
-      <canvas id="chart">{{ chart }}</canvas>
-    </div>
-  </div>
-</div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card>

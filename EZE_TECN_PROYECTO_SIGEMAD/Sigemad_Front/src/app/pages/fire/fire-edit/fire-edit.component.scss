@@ -1,0 +1,68 @@
+.filter-container {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.info-section mat-card {
+    height: 100%;
+    padding-top: 16px;
+    background: white;
+}
+  
+.table-section mat-card {
+    height: 100%;
+    padding-top: 16px;
+    background: white;
+}
+
+mat-card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    padding: 0 16px;
+}
+
+mat-divider {
+    margin: 8px 0;
+}
+
+ul {
+    padding-left: 16px;
+}
+
+  .mdc-button {
+    min-width: 0px;
+  }
+
+  .circle-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 20%;
+    border: 2px solid #cccccc;
+    background-color: white;
+    color: #0d47a1;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+  }
+  
+  .circle-button:hover {
+    background-color: #e3f2fd;
+    border-color: #0d47a1;
+  }
+  
+  .circle-button:focus {
+    outline: none;
+  }
+
+  .btn-container{
+      padding-right: 20px;
+  }
+
+  p {
+    margin: 0;
+  }

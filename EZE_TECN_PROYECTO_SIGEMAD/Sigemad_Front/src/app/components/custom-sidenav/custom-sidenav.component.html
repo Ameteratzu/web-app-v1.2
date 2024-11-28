@@ -1,0 +1,50 @@
+<div class="sidenav-header">
+    <img
+        [src]="logoSrc()"
+        [style.width]="logoSize().width"
+        [style.height]="logoSize().height"
+        alt="Logo"
+    />
+</div>
+
+<mat-nav-list>
+    <ng-container *ngFor="let item of menuBack()">
+      <a
+      mat-list-item
+    class="menu-item"
+    (click)="toggleSubmenu(item)"
+    [routerLink]="item.ruta || null"
+    [ngStyle]="getActiveStyle(item, rla.isActive)" 
+    routerLinkActive="selected-menu-item"
+    #rla="routerLinkActive"
+    [activated]="rla.isActive"
+      >
+      <mat-icon *ngIf="iconMap[item.ruta]" matListItemIcon [svgIcon]="iconMap[item.ruta]"></mat-icon>
+        
+        <span matListItemTitle>{{ item.nombre }}</span>
+        <mat-icon *ngIf="item.subItems?.length" matListItemIcon>
+          {{ item.isOpen ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </a>
+  
+      <div *ngIf="item.subItems?.length && expandedMenuId === item.id" class="submenu">
+        <a
+          mat-list-item
+          class="submenu-item"
+          *ngFor="let subItem of item.subItems"
+          [routerLink]="subItem.ruta"
+          [ngStyle]="getActiveStyle(subItem, subRla.isActive)" 
+          routerLinkActive="selected-submenu-item"
+          #subRla="routerLinkActive"
+          [activated]="subRla.isActive"
+        >
+        <mat-icon *ngIf="iconMap[subItem.ruta]" matListItemIcon [svgIcon]="iconMap[subItem.ruta]"></mat-icon>
+  
+        <span matListItemTitle>{{ subItem.nombre }}</span>
+
+        </a>
+      </div>
+    </ng-container>
+  </mat-nav-list>
+
+  <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-atom" [fullScreen] = "true"><p style="color: white" > Cargando... </p></ngx-spinner>
