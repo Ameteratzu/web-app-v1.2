@@ -35,6 +35,7 @@ public class GetDetalleDocumentacionesByIdQueryHandler : IRequestHandler<GetDeta
             throw new NotFoundException(nameof(Documentacion), request.Id);
         }
 
+
         var documentacionDto = _mapper.Map<Documentacion, DocumentacionDto>(documentacion);
         return documentacionDto;
     }
