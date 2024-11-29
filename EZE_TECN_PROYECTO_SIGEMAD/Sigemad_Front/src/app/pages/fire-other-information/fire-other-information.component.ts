@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
@@ -67,6 +68,7 @@ interface FormType {
     MatNativeDateModule,
     MatButtonModule,
     MatTableModule,
+    MatIconModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -88,7 +90,12 @@ export class FireOtherInformationComponent implements OnInit {
 
   formData!: FormGroup;
 
-  readonly sections: string[] = ['Otra información'];
+  readonly sections = [{ id: 1, label: 'Otra información' }];
+  selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
+
+  onSelectionChange(event: MatChipListboxChange): void {
+    this.selectedOption = event;
+  }
 
   ////////////////////////////////
   public listadoProcedenciaDestino = signal<OriginDestination[]>([]);
@@ -140,8 +147,8 @@ export class FireOtherInformationComponent implements OnInit {
     this.listadoMedios.set(medios);
   }
 
-  trackByFn(index: number, item: string): string {
-    return item;
+  trackByFn(index: number, item: any): number {
+    return item.id;
   }
 
   onSubmit() {
@@ -229,5 +236,9 @@ export class FireOtherInformationComponent implements OnInit {
 
   closeModal() {
     this.dialogRef.close();
+  }
+
+  getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
+    return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
   }
 }

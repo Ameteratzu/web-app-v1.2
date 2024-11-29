@@ -413,6 +413,8 @@ export class FireFilterFormComponent implements OnInit {
       name,
     } = this.formData.value;
 
+    console.info('this.formData.value', this.formData.value);
+
     const fires = await this.fireService.get({
       IdTerritorio: territory,
       IdPais: country,
