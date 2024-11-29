@@ -70,64 +70,81 @@ export class FireCoordinationData {
     this.selectedOption = event;
   }
 
-  async onSaveFromChild() {
-    console.log(`Guardar desde el componente:`);
+  async onSaveFromChild(value: boolean) {
+    if(value){
 
-    if (this.coordinationServices.dataCoordinationAddress().length > 0){
-      for (const item of this.coordinationServices.dataCoordinationAddress()) {
-        const body = await this.getFormattedDataAdress(item)
-        const result = await this.coordinationServices.postAddress(body);
-      }
+      await this.processData();
+
+      this.coordinationServices.clearData();
+      this.closeModal();
+      this.spinner.hide();
+      this.showToast();
+
+    }else{
+      this.coordinationServices.clearData();
+      this.closeModal();
     }
-
-    if (this.coordinationServices.dataCecopi().length > 0){
-      for (const item of this.coordinationServices.dataCecopi()) {
-        const body = await this.getFormattedDataCecopi(item)
-        const result = await this.coordinationServices.postCecopi(body);
-      }
-    }
-    console.log("🚀 ~ FireCoordinationData ~ onSaveFromChild ~ this.coordinationServices.dataPma():", this.coordinationServices.dataPma())
-    if (this.coordinationServices.dataPma().length > 0){
-      
-      for (const item of this.coordinationServices.dataPma()) {
-        const body = await this.getFormattedDataPma(item)
-        const result = await this.coordinationServices.postPma(body);
-      }
-    }
-
-    this.coordinationServices.clearData();
-    this.closeModal();
-    this.spinner.hide();
-    this.showToast();
-
 
   }
 
-  getFormattedDataAdress(data: any): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      direcciones: [{
-        idTipoDireccionEmergencia: Number(data.idTipoDireccionEmergencia.id),
-        autoridadQueDirige: data.autoridadQueDirige,
-        fechaInicio: this.formatDate(data.fechaInicio),
-        fechaFin: this.formatDate(data.fechaFin),
-      }],
-    };
+  async processData(): Promise<void> {
+    await this.handleDataProcessing(
+      this.coordinationServices.dataCoordinationAddress(),
+      (item) => ({
+        idTipoDireccionEmergencia: Number(item.idTipoDireccionEmergencia.id),
+        autoridadQueDirige: item.autoridadQueDirige,
+        fechaInicio: this.formatDate(item.fechaInicio),
+        fechaFin: this.formatDate(item.fechaFin),
+      }),
+      this.coordinationServices.postAddress.bind(this.coordinationServices),
+      'direcciones'
+    );
+  
+    await this.handleDataProcessing(
+      this.coordinationServices.dataCecopi(),
+      (item) => ({
+        idProvincia: Number(item.idProvincia.id),
+        idMunicipio: Number(item.idMunicipio.id),
+        fechaInicio: this.formatDate(item.fechaInicio),
+        lugar: String(item.lugar),
+        fechaFin: this.formatDate(item.fechaFin),
+        GeoPosicion: { type: 'Point', coordinates: [null, null] },
+      }),
+      this.coordinationServices.postCecopi.bind(this.coordinationServices),
+      'coordinaciones'
+    );
+  
+    await this.handleDataProcessing(
+      this.coordinationServices.dataPma(),
+      (item) => ({
+        idProvincia: Number(item.idProvincia.id),
+        idMunicipio: Number(item.idMunicipio.id),
+        fechaInicio: this.formatDate(item.fechaInicio),
+        lugar: String(item.lugar),
+        fechaFin: this.formatDate(item.fechaFin),
+        GeoPosicion: { type: 'Point', coordinates: [null, null] },
+      }),
+      this.coordinationServices.postPma.bind(this.coordinationServices),
+      'coordinaciones'
+    );
   }
 
-
-  getFormattedDataCecopi(data: any): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      coordinaciones:[{
-        idProvincia: Number(data.idProvincia.id),
-        idMunicipio: Number(data.idMunicipio.id),
-        fechaInicio: this.formatDate(data.fechaInicio),
-        lugar: String(data.lugar),
-        fechaFin: this.formatDate(data.fechaFin),
-        GeoPosicion:{"type":"Point","coordinates":[null,null]}
-      }],
-    };
+  async handleDataProcessing<T>(
+    data: T[],
+    formatter: (item: T) => any,
+    postService: (body: any) => Promise<any>,
+    key: string
+  ): Promise<void> {
+    if (data.length > 0) {
+      const formattedData = data.map(formatter);
+  
+      const body = {
+        idIncendio: this.data.idIncendio,
+        [key]: formattedData, 
+      };
+  
+      const result = await postService(body);
+    }
   }
 
   getFormattedDataPma(data: any): any {

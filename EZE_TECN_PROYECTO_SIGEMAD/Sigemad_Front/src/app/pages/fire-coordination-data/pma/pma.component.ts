@@ -72,7 +72,7 @@ export class PmaComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<boolean>();
   
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
@@ -141,7 +141,7 @@ export class PmaComponent {
     this.spinner.show();
     if (this.coordinationServices.dataPma().length > 0) {
     
-      this.save.emit(); 
+      this.save.emit(true); 
     }else{
       this.spinner.show();
       this.showToast();
@@ -207,7 +207,7 @@ export class PmaComponent {
   }
 
   closeModal(){
-    this.matDialog.closeAll();
+    this.save.emit(false); 
   }
 
 }

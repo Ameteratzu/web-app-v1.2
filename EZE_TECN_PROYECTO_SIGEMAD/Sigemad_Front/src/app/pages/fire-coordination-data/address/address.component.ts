@@ -68,7 +68,7 @@ export class AddressComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<boolean>();
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -122,7 +122,7 @@ export class AddressComponent {
 
   async sendDataToEndpoint() {
     if (this.coordinationServices.dataCoordinationAddress().length > 0) {
-      this.save.emit(); 
+      this.save.emit(true); 
     }else{
       this.spinner.show();
       this.showToast();
@@ -173,7 +173,7 @@ export class AddressComponent {
   }
 
   closeModal(){
-    this.matDialog.closeAll();
+    this.save.emit(false); 
   }
 
 }
