@@ -182,6 +182,7 @@ export class FireEditComponent implements OnInit {
       width: '90vw',
       height: '90vh',
       maxWidth: 'none',
+      disableClose: true,
       data: {
         title: 'Nuevo - Datos Evolución',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
@@ -198,8 +199,9 @@ export class FireEditComponent implements OnInit {
   goModalCoordination() {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
-      height: '90vh',
       maxWidth: 'none',
+      height: '90vh',
+      disableClose: true,
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
@@ -217,7 +219,8 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '90vh',
+      disableClose: true,
       data: {
         title: 'Nuevo - Otra Información',
         fire: this.fire,
@@ -235,7 +238,8 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireDocumentation, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '90vh',
+      disableClose: true,
       data: {
         title: 'Documentación',
       },
