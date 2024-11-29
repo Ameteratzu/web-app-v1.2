@@ -84,7 +84,6 @@ export class FireEditComponent implements OnInit {
   public fireStatusService = inject(FireStatusService);
   public route = inject(ActivatedRoute);
 
-
   public fire = <Fire>{};
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
@@ -95,7 +94,6 @@ export class FireEditComponent implements OnInit {
   public formData!: FormGroup;
 
   public dataSource = new MatTableDataSource<any>([]);
-
 
   public displayedColumns: string[] = [
     'numero',
@@ -126,9 +124,7 @@ export class FireEditComponent implements OnInit {
 
     this.dataSource.data = [];
 
-
     const fire = await this.fireService.getById(fire_id);
-
     this.fire = fire;
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
@@ -148,6 +144,7 @@ export class FireEditComponent implements OnInit {
     this.fireStatus.set(fireStatus);
 
     const details = await this.fireService.details(Number(fire_id));
+    console.info('details', details);
     this.dataSource.data = details;
 
     this.formData.patchValue({
@@ -185,9 +182,10 @@ export class FireEditComponent implements OnInit {
       width: '90vw',
       height: '90vh',
       maxWidth: 'none',
+      disableClose: true,
       data: {
-        title: 'Nuevo - Datos Evolución', 
-        idIncendio:  Number(this.route.snapshot.paramMap.get('id')),
+        title: 'Nuevo - Datos Evolución',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
       },
     });
 
@@ -201,11 +199,12 @@ export class FireEditComponent implements OnInit {
   goModalCoordination() {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
-      height: '90vh',
       maxWidth: 'none',
+      height: '90vh',
+      disableClose: true,
       data: {
-        title: 'Nuevo - Datos de dirección y coordinación de la emergencia', 
-        idIncendio:  Number(this.route.snapshot.paramMap.get('id')),
+        title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
       },
     });
 
@@ -220,9 +219,11 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '90vh',
+      disableClose: true,
       data: {
         title: 'Nuevo - Otra Información',
+        fire: this.fire,
       },
     });
 
@@ -237,7 +238,8 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireDocumentation, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '90vh',
+      disableClose: true,
       data: {
         title: 'Documentación',
       },

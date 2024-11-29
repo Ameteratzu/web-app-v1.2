@@ -12,6 +12,8 @@
     </div>
   
     <app-records (save)="onSaveFromChild()" *ngIf="selectedOption.value === 1" class="component-width" @fadeInOut></app-records>
+    <app-area (save)="onSaveFromChild()" *ngIf="selectedOption.value === 2" class="component-width" @fadeInOut></app-area>
+    <app-intervention (save)="onSaveFromChild()" *ngIf="selectedOption.value === 4" class="component-width" @fadeInOut></app-intervention>
     
   </div>
 

@@ -71,7 +71,7 @@ const MY_DATE_FORMATS = {
 export class CecopiComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<boolean>();
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public direcionesServices = inject(DireccionesService);
@@ -142,7 +142,7 @@ export class CecopiComponent {
 
     this.spinner.show();
     if (this.coordinationServices.dataCecopi().length > 0) {
-      this.save.emit(); 
+      this.save.emit(true); 
     }else{
       this.spinner.show();
       this.showToast();
@@ -199,7 +199,7 @@ export class CecopiComponent {
   }
 
   closeModal(){
-    this.matDialog.closeAll();
+    this.save.emit(false); 
   }
 
 }

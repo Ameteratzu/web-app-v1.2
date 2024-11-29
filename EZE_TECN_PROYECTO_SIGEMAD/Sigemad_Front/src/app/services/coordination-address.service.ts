@@ -7,8 +7,8 @@ interface FormTypeCecopi {
   idIncendio?: number
   fechaInicio: Date,
   fechaFin: Date,
-  idProvincia?: number
-  idMunicipio?: number
+  idProvincia: { id: number, descripcion: string };
+  idMunicipio: { id: number, descripcion: string };
   lugar?: string,
   observaciones?: string,
 }
@@ -19,7 +19,7 @@ interface FormTypeAddress {
   idIncendio?: number
   fechaInicio: Date,
   fechaFin: Date,
-  idTipoDireccionEmergencia: number,
+  idTipoDireccionEmergencia: { id: number, descripcion: string };
 }
 
 interface FormTypePma{
@@ -29,6 +29,9 @@ interface FormTypePma{
   fechaInicio: Date,
   fechaFin: Date,
   idTipoDireccionEmergencia: number,
+  idProvincia: { id: number, descripcion: string };
+  idMunicipio: { id: number, descripcion: string };
+  lugar?: string,
 }
 
 @Injectable({ providedIn: 'root' })
