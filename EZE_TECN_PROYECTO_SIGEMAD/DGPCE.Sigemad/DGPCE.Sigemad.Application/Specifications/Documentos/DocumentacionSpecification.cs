@@ -8,6 +8,8 @@ internal class DocumentacionSpecification : BaseSpecification<Documentacion>
         : base(d => d.Id == id && d.Borrado == false)
     {
         AddInclude(d => d.DetallesDocumentacion);
+        AddInclude("DetallesDocumentacion.DocumentacionProcedenciaDestinos.ProcedenciaDestino");
+        AddInclude("DetallesDocumentacion.TipoDocumento");
 
     }
 }

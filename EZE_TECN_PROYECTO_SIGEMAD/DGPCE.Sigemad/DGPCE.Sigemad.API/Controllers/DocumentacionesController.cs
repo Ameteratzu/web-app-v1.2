@@ -31,10 +31,10 @@ public class DocumentacionesController : ControllerBase
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerOperation(Summary = "Crea la documentacion asociada a un incendio")]
-        public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> CreateImpactos([FromBody] ManageDocumentacionesCommand command)
+        public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> Create([FromBody] ManageDocumentacionesCommand command)
         {
             var response = await _mediator.Send(command);
-            return NoContent();
+            return Ok(response);
         }
 
     [HttpGet("{id}")]

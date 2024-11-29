@@ -36,8 +36,8 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
             .NotEmpty().WithMessage(localizer["DescripcionObligatorio"])
             .MaximumLength(255).WithMessage(localizer["DescripcionMaxLength"]);
 
-        RuleFor(x => x.IdArchivo)
-            .NotEmpty().WithMessage(localizer["IdArchivoObligatorio"]);
+        //RuleFor(x => x.IdArchivo)
+        //    .NotEmpty().WithMessage(localizer["IdArchivoObligatorio"]);
     }
 
 }
