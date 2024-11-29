@@ -1,32 +1,30 @@
-# Etapa 1: Construcción de la aplicación Angular
-FROM node:18 AS build
+# Stage 1: Build the Angular application
+FROM docker-registry.ns-sigemad-pipeline.svc.cluster.local:5000/node:18-alpine AS build
 WORKDIR /app
 
-# Copiar los archivos necesarios para instalar dependencias
+# Copy package files and install all dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
-# Copiar el resto del código fuente al contenedor
-COPY ./ ./ 
+# Copy the rest of the source code into the container
+COPY . . 
 
-# Ejecutar el build en modo producción
+# Build the application in production mode
 RUN npm run build --prod
 
-# Etapa 2: Servir la aplicación con Nginx
-FROM nginx:latest
+# Stage 2: Serve the application with Nginx
+FROM docker-registry.ns-sigemad-pipeline.svc.cluster.local:5000/nginx:1.21.6
 WORKDIR /usr/share/nginx/html
 
-# Eliminar archivos predeterminados de Nginx
+# Remove default Nginx index.html and copy compiled files
 RUN rm -rf ./*
-
-# Copiar los archivos compilados desde la etapa de construcción
 COPY --from=build /app/dist/sigemad/browser/ .
 
-# Copiar configuración personalizada para Nginx (solo el bloque server)
+# Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Exponer el puerto necesario para Kubernetes
+# Expose the necessary port for Kubernetes
 EXPOSE 80
 
-# Comando por defecto para iniciar Nginx
+# Default command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]

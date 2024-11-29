@@ -1,5 +1,5 @@
 # Etapa 1: Construcción
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM docker-registry.ns-sigemad-pipeline.svc.cluster.local:5000/mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copiar los archivos de solución y de proyecto
@@ -21,7 +21,7 @@ COPY . .
 RUN dotnet publish DGPCE.Sigemad.API/DGPCE.Sigemad.API.csproj -c Release -o out
 
 # Etapa 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM docker-registry.ns-sigemad-pipeline.svc.cluster.local:5000/mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 # Instalar sqlcmd y sus dependencias
