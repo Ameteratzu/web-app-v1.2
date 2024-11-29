@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList
 
         public async Task<IReadOnlyList<Pais>> Handle(GetPaisesListQuery request, CancellationToken cancellationToken)
         {
-            var specification = new PaisesSpecification(request.ExcluirNacional);
+            var specification = new PaisesSpecification(request.MostrarNacional);
             var paises = await _unitOfWork.Repository<Pais>().GetAllWithSpec(specification);
             return paises;
         }
