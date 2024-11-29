@@ -1,38 +1,45 @@
+@use "../../../../../styles.scss" as theme;
+
+.title {
+  color: var(--title-color-green);
+  text-align: center;
+}
+
 .form-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-   
-  .submit-button {
-    margin-top: 24px;
-    align-self: flex-start;
-  }
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  .button-container {
-    margin-top: 16px;
-  }
-  
-  .custom-button {
-    font-size: 16px;
-    text-transform: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  mat-icon {
-    font-size: 24px;
-  }
+.submit-button {
+  margin-top: 24px;
+  align-self: flex-start;
+}
 
-  .mb-3{
-    margin-bottom: 12px;
-  }
+.button-container {
+  margin-top: 16px;
+}
 
-  .pin-location{
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    margin-top: 12px;
-  }
+.custom-button {
+  font-size: 16px;
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+mat-icon {
+  font-size: 24px;
+}
+
+.mb-3 {
+  margin-bottom: 12px;
+}
+
+.pin-location {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  margin-top: 12px;
+}
