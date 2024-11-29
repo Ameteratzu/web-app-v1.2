@@ -9,7 +9,12 @@ public class PaisesSpecification : BaseSpecification<Pais>
                     (!mostrarNacional && p.Id != (int)PaisesEnum.Espana))
     {
         if (!mostrarNacional)
-        AddOrderBy(i => i.Descripcion);
+        {
+            AddOrderBy(p => p.Id == (int)PaisesEnum.Portugal ? 0 :
+                             p.Id == (int)PaisesEnum.Francia ? 1 : 2);
+            AddOrderBy(p => p.Id != (int)PaisesEnum.Portugal && p.Id != (int)PaisesEnum.Francia ? p.Descripcion : null);
+        }
+          
     }
 
 }
