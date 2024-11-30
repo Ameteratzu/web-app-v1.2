@@ -5,5 +5,5 @@ namespace DGPCE.Sigemad.Application.Features.Paises.Queries.GetPaisesList;
 
 public class GetPaisesListQuery : IRequest<IReadOnlyList<Pais>>
 {
-    public bool ExcluirNacional { get; set; }
+    public bool MostrarNacional { get; set; }
 }

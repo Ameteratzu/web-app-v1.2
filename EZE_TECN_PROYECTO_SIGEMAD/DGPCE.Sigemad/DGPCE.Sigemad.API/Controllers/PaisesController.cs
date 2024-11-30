@@ -27,9 +27,9 @@ public class PaisesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de paises")]
-    public async Task<ActionResult<IReadOnlyList<Pais>>> GetAll([FromQuery] bool excluirNacional = false)
+    public async Task<ActionResult<IReadOnlyList<Pais>>> GetAll([FromQuery] bool mostrarNacional = false)
     {
-        var query = new GetPaisesListQuery { ExcluirNacional = excluirNacional };
+        var query = new GetPaisesListQuery { MostrarNacional = mostrarNacional };
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }
