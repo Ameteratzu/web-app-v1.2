@@ -34,16 +34,4 @@ public class EntidadesMenoresController : ControllerBase
         return Ok(listado);
     }
 
-    [HttpGet("{IdMunicipio}")]
-    [ProducesResponseType(typeof(IReadOnlyList<EntidadMenorVm>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todas la lista general de tipos de entidad menor por Id de municipio")]
-
-    public async Task<IReadOnlyList<EntidadMenorVm>> GetEntidadesMenoresByIdMunicipio(int IdMunicipio)
-    {
-        var query = new GetEntidadMenorByIdMunicipioListQuery(IdMunicipio);
-        var result = await _mediator.Send(query);
-        return result;
-    }
 }

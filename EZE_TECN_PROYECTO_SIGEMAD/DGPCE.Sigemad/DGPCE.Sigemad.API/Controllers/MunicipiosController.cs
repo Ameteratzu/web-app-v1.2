@@ -1,4 +1,6 @@
 ﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.EntidadesMenores.Quereis.GetEntidadMenorByIdMunicipioList;
+using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Queries.GetMunicipioByIdProvincia;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -37,5 +39,18 @@ public class MunicipiosController : ControllerBase
             return NotFound();
 
         return Ok(listado);
+    }
+
+    [HttpGet("{IdMunicipio}/entidades-menores")]
+    [ProducesResponseType(typeof(IReadOnlyList<EntidadMenorVm>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todas la lista general de tipos de entidad menor por Id de municipio")]
+
+    public async Task<IReadOnlyList<EntidadMenorVm>> GetEntidadesMenoresByIdMunicipio(int IdMunicipio)
+    {
+        var query = new GetEntidadMenorByIdMunicipioListQuery(IdMunicipio);
+        var result = await _mediator.Send(query);
+        return result;
     }
 }
