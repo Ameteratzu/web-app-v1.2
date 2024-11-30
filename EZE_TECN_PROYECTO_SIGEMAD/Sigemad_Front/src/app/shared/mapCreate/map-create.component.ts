@@ -13,15 +13,14 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 
-
 import Feature from 'ol/Feature';
-import Map from 'ol/Map';
-import View from 'ol/View';
 import Point from 'ol/geom/Point';
 import { Draw, Snap } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import Map from 'ol/Map';
 import { OSM, Vector as VectorSource } from 'ol/source';
+import View from 'ol/View';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
@@ -30,10 +29,13 @@ import { Geometry } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { Municipality } from '../../types/municipality.type';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule,],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
@@ -91,10 +93,11 @@ export class MapCreateComponent {
         this.vector,
       ],
       target: 'map',
+      controls: [],
       view: new View({
         center: fromLonLat([
-          municipio.geoPosicion.coordinates[1],
           municipio.geoPosicion.coordinates[0],
+          municipio.geoPosicion.coordinates[1],
         ]),
         //center: fromLonLat([-2.9704191830794, 43.0277066101594]),
         zoom: 12,
@@ -103,8 +106,8 @@ export class MapCreateComponent {
     });
 
     const point = new Point([
-      municipio.geoPosicion.coordinates[1],
       municipio.geoPosicion.coordinates[0],
+      municipio.geoPosicion.coordinates[1],
     ]);
 
     const feature = new Feature({
