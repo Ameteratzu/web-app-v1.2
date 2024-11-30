@@ -3,6 +3,9 @@
 DROP TABLE IF EXISTS Documentacion_ProcedenciaDestino
 GO
 
+DROP TABLE IF EXISTS DetalleDocumentacion
+GO
+
 DROP TABLE IF EXISTS Documentacion
 GO
 
