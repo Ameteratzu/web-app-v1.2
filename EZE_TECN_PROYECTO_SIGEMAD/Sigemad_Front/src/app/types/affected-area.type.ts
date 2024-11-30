@@ -1,14 +1,9 @@
 export interface AffectedArea {
-	idEvolucion: number;
-	idIncendio: number;
-	areasAfectadas: Lista[];
-  }
-  
-  export interface Lista {
 	id: number;
 	fechaHora: string; 
-	idProvincia: number;
-	idMunicipio: number;
-	idEntidadMenor: number;
+	idProvincia: { id: number, descripcion: string };
+	idMunicipio: { id: number, descripcion: string };
+	idEntidadMenor:{ id: number, descripcion: string };
 	observaciones: string;
   }
+  
