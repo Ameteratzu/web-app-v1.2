@@ -2,54 +2,59 @@
   <table mat-table [dataSource]="fires" matSort class="mat-table">
     <!-- Denominación Column -->
     <ng-container matColumnDef="denominacion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Denominación </th>
-      <td mat-cell *matCellDef="let fire"> {{ fire.denominacion }} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Denominación</th>
+      <td mat-cell *matCellDef="let fire">{{ fire.denominacion }}</td>
     </ng-container>
 
     <!-- Fecha inicio Column -->
     <ng-container matColumnDef="fechaInicio">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha inicio </th>
-      <td mat-cell *matCellDef="let fire"> {{ fire.fechaInicio }} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio</th>
+      <td mat-cell *matCellDef="let fire">{{ fire.fechaInicio }}</td>
     </ng-container>
 
     <!-- Estado Column -->
     <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-      <td mat-cell *matCellDef="let fire"> {{ fire.estadoSuceso.descripcion }} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+      <td mat-cell *matCellDef="let fire">
+        {{ fire.estadoSuceso.descripcion }}
+      </td>
     </ng-container>
 
     <!-- NGP Column -->
     <ng-container matColumnDef="ngp">
-      <th mat-header-cell *matHeaderCellDef> NGP </th>
-      <td mat-cell *matCellDef="let fire"> - </td>
+      <th mat-header-cell *matHeaderCellDef>NGP</th>
+      <td mat-cell *matCellDef="let fire">-</td>
     </ng-container>
 
     <!-- Max NGP Column -->
     <ng-container matColumnDef="maxNgp">
-      <th mat-header-cell *matHeaderCellDef> Max. NGP </th>
-      <td mat-cell *matCellDef="let fire"> - </td>
+      <th mat-header-cell *matHeaderCellDef>Max. NGP</th>
+      <td mat-cell *matCellDef="let fire">-</td>
     </ng-container>
 
     <!-- Ubicación Column -->
     <ng-container matColumnDef="ubicacion">
-      <th mat-header-cell *matHeaderCellDef> Ubicación </th>
-      <td mat-cell *matCellDef="let fire"> {{ getUbicacion(fire) }} </td>
+      <th mat-header-cell *matHeaderCellDef>Ubicación</th>
+      <td mat-cell *matCellDef="let fire">{{ getUbicacion(fire) }}</td>
     </ng-container>
 
     <!-- Último registro Column -->
     <ng-container matColumnDef="ultimoRegistro">
-      <th mat-header-cell *matHeaderCellDef> Último registro </th>
-      <td mat-cell *matCellDef="let fire"> {{ getLastUpdated(fire) }} </td>
+      <th mat-header-cell *matHeaderCellDef>Último registro</th>
+      <td mat-cell *matCellDef="let fire">{{ getLastUpdated(fire) }}</td>
     </ng-container>
 
     <!-- Opciones Column -->
     <ng-container matColumnDef="opciones">
-      <th mat-header-cell *matHeaderCellDef> Opciones </th>
+      <th mat-header-cell *matHeaderCellDef>Opciones</th>
       <td mat-cell *matCellDef="let fire" class="text-center">
-        <a (click)="goToEdit(fire)">
-          <img src="/assets/img/edit-btn.svg" alt="Editar" />
+        <a (click)="goModalEdit(fire)">
+          <img src="/assets/img/edit.svg" alt="Editar" />
         </a>
-        <a href="">
+        <a (click)="goToEdit(fire)">
+          <img src="/assets/img/complement.svg" alt="Editar" />
+        </a>
+        <a>
           <img src="/assets/img/doc-btn.svg" alt="Documentos" />
         </a>
       </td>
@@ -57,9 +62,12 @@
 
     <!-- Header and Rows -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
   <!-- Paginator -->
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+  ></mat-paginator>
 </div>

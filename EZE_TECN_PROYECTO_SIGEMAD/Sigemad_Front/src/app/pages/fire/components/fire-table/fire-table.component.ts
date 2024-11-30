@@ -1,13 +1,20 @@
-import { Component, Input, ViewChild, OnChanges, SimpleChanges, inject } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Fire } from '../../../../types/fire.type';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import moment from 'moment';
-import { MatTableModule } from '@angular/material/table';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Fire } from '../../../../types/fire.type';
 import { FireCreateComponent } from '../../../fire-evolution-create/fire-evolution-create.component';
+import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.component';
 
 @Component({
   selector: 'app-fire-table',
@@ -17,7 +24,7 @@ import { FireCreateComponent } from '../../../fire-evolution-create/fire-evoluti
   imports: [MatPaginatorModule, MatTableModule, MatDialogModule],
 })
 export class FireTableComponent implements OnChanges {
-  @Input() fires: Fire[] = []; 
+  @Input() fires: Fire[] = [];
 
   public dataSource = new MatTableDataSource<Fire>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -34,11 +41,11 @@ export class FireTableComponent implements OnChanges {
     'ubicacion',
     'ultimoRegistro',
     'opciones',
-  ]; 
+  ];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fires'] && this.fires) {
-      this.dataSource.data = this.fires; 
+      this.dataSource.data = this.fires;
     }
   }
 
@@ -47,19 +54,19 @@ export class FireTableComponent implements OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-
   goToEdit(fire: Fire) {
     this.router.navigate([`/fire-national-edit/${fire.id}`]);
   }
 
+  goToEditFire(fire: Fire) {}
 
   goModal() {
     const dialogRef = this.dialog.open(FireCreateComponent, {
-      width: '90vw', 
-      height: '90vh', 
-      maxWidth: 'none', 
+      width: '90vw',
+      height: '90vh',
+      maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos Evolución', 
+        title: 'Nuevo - Datos Evolución',
       },
     });
 
@@ -94,5 +101,22 @@ export class FireTableComponent implements OnChanges {
     return fechaModificacion
       ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm')
       : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+  }
+
+  goModalEdit(fire: Fire) {
+    const dialogRef = this.dialog.open(FireCreateEdit, {
+      width: '75vw',
+      maxWidth: 'none',
+      data: {
+        title: 'Modificar - Incendio.',
+        fire: fire,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Modal result:', result);
+      }
+    });
   }
 }
