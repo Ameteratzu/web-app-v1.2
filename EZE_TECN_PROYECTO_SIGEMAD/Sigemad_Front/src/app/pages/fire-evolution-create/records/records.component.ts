@@ -78,7 +78,7 @@ const MY_DATE_FORMATS = {
 })
 export class RecordsComponent implements OnInit {
 
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<boolean>();
   private fb = inject(FormBuilder); 
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   public matDialog = inject(MatDialog);

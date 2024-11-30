@@ -5,7 +5,7 @@ import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { Evolution } from '../types/evolution.type';
 import { EvolucionIncendio  } from '../types/evolution-record.type';
 import { AffectedArea  } from '../types/affected-area.type';
-
+import { Consequences  } from '../types/consequences.type';
 
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +13,7 @@ export class EvolutionService {
   private http = inject(HttpClient);
   public dataRecords = signal<EvolucionIncendio[]>([]); 
   public dataAffectedArea = signal<AffectedArea[]>([]); 
+  public dataConse = signal<Consequences[]>([]); 
 
   get(fire_id: any) {
     const endpoint = `/Evoluciones/${fire_id}`;

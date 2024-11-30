@@ -73,7 +73,7 @@ export class AreaComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<void>();
+  @Output() save = new EventEmitter<boolean>();
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
   private provinceService = inject(ProvinceService);
@@ -146,10 +146,11 @@ export class AreaComponent {
 
 
   async sendDataToEndpoint() {
+    this.spinner.show();
     if (this.evolutionService.dataAffectedArea().length > 0) {
-      this.save.emit(); 
+      this.save.emit(true); 
     }else{
-      this.spinner.show();
+      this.spinner.hide();
       this.showToast();
     }
   }
@@ -198,7 +199,7 @@ export class AreaComponent {
   }
 
   closeModal(){
-    this.matDialog.closeAll();
+    this.save.emit(false); 
   }
 
 }

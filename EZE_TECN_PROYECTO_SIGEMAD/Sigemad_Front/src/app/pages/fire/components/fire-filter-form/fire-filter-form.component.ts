@@ -215,6 +215,8 @@ export class FireFilterFormComponent implements OnInit {
       fechaInicio: new FormControl(fechaInicio ?? ''),
       fechaFin: new FormControl(fechaFin ?? ''),
     });
+    this.formData.get('severityLevel')?.disable();
+    
 
     const countries = await this.countryService.get();
     this.countries.set(countries);

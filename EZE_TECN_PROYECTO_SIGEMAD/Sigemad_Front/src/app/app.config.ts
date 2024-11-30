@@ -10,6 +10,8 @@ import { apiUrlInterceptor } from './interceptors/api-url.interceptor';
 import { importProvidersFrom } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getSpanishPaginatorIntl } from './shared/config/custom-paginator-intl';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,5 +22,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     importProvidersFrom(MatButtonModule, MatDialogModule),
     provideHttpClient(withInterceptors([apiUrlInterceptor])),
+    { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
   ]
 };

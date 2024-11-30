@@ -5,15 +5,16 @@
   <div class="container">
     <div class="side-menu">
       <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
-        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip">
+        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip"  [disabled]="sec.id === 4">
           {{ sec.label }}
         </mat-chip-option>
       </mat-chip-listbox>
     </div>
   
-    <app-records (save)="onSaveFromChild()" *ngIf="selectedOption.value === 1" class="component-width" @fadeInOut></app-records>
-    <app-area (save)="onSaveFromChild()" *ngIf="selectedOption.value === 2" class="component-width" @fadeInOut></app-area>
-    <app-intervention (save)="onSaveFromChild()" *ngIf="selectedOption.value === 4" class="component-width" @fadeInOut></app-intervention>
+    <app-records (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 1" class="component-width" @fadeInOut></app-records>
+    <app-area (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 2" class="component-width" @fadeInOut></app-area>
+    <app-consequences (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 3" class="component-width" @fadeInOut></app-consequences>
+
     
   </div>
 

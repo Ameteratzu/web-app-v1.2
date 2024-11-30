@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  urlBase: '/api/v1',
+  urlBase: 'http://10.11.148.56:8081/api/v1',
 };
