@@ -80,6 +80,17 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
         }));
 
+        // Procesar Documentacion
+        registros.AddRange(incendio.Documentaciones.Select(d => new RegistroActualizacionDto
+        {
+            Id = d.Id,
+            FechaHora = d.FechaCreacion,
+            Registro = "",
+            Origen = "",
+            TipoRegistro = "Documentación",
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
+        }));
+
         // Ordenar por FechaHora descendente
         return registros.OrderByDescending(r => r.FechaHora).ToList();
     }

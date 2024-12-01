@@ -138,7 +138,10 @@ export class FireFilterFormComponent implements OnInit {
   public territories = signal<Territory[]>([]);
   public autonomousCommunities = signal<AutonomousCommunity[]>([]);
   public provinces = signal<Province[]>([]);
-  public countries = signal<Countries[]>([]);
+  //public countries = signal<Countries[]>([]);
+  public listaPaisesExtranjeros = signal<Countries[]>([]);
+  public listaPaisesNacionales = signal<Countries[]>([]);
+
   public eventStatus = signal<EventStatus[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
@@ -149,19 +152,10 @@ export class FireFilterFormComponent implements OnInit {
   public moves = signal<Move[]>([]);
   public comparativeDates = signal<ComparativeDate[]>([]);
 
-  public disabledCountry = signal<boolean>(false);
-  public disabledAutonomousCommunity = signal<boolean>(false);
-  public disabledProvince = signal<boolean>(false);
-
   public filteredCountries = signal<Countries[]>([]);
   public formData!: FormGroup;
 
   myForm!: FormGroup;
-  options = [
-    { label: 'Opción 1', value: 'option1' },
-    { label: 'Opción 2', value: 'option2' },
-    { label: 'Opción 3', value: 'option3' },
-  ];
 
   showFilters = false;
 
@@ -196,38 +190,37 @@ export class FireFilterFormComponent implements OnInit {
 
     this.formData = new FormGroup({
       name: new FormControl(name ?? ''),
-      territory: new FormControl(territory ?? ''),
+      territory: new FormControl(territory ?? 1),
       autonomousCommunity: new FormControl(autonomousCommunity ?? ''),
       province: new FormControl(province ?? ''),
-      country: new FormControl(country ?? ''),
+      country: new FormControl(country ?? this.COUNTRIES_ID.SPAIN),
       municipality: new FormControl(municipality ?? ''),
       fireStatus: new FormControl(initFireStatus ?? ''),
       episode: new FormControl(episode ?? ''),
       severityLevel: new FormControl(severityLevel ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
-      move: new FormControl(move ?? ''),
+      move: new FormControl(move ?? 1),
       //start: new FormControl(start ?? ''),
       //end: new FormControl(end ?? ''),
-      between: new FormControl(between ?? ''),
+      between: new FormControl(between ?? 1),
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
-      fechaInicio: new FormControl(fechaInicio ?? ''),
-      fechaFin: new FormControl(fechaFin ?? ''),
+      fechaInicio: new FormControl(
+        fechaInicio ?? moment().subtract(4, 'days').toDate()
+      ),
+      fechaFin: new FormControl(fechaFin ?? moment().toDate()),
     });
     this.formData.get('severityLevel')?.disable();
-    
 
-    const countries = await this.countryService.get();
-    this.countries.set(countries);
+    const countriesExtranjeros = await this.countryService.getExtranjeros();
+    this.listaPaisesExtranjeros.set(countriesExtranjeros);
+    const countriesNacionales = await this.countryService.getNacionales();
+    this.listaPaisesNacionales.set(countriesNacionales);
 
-    this.formData.get('country')?.valueChanges.subscribe((value) => {
-      this.updateFilteredCountries(value || '');
-    });
+    this.filteredCountries.set(countriesNacionales);
 
-    this.updateFilteredCountries('');
-
-    this.clearFormFilter();
+    //this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
     const superficiesFiltro =
@@ -246,9 +239,6 @@ export class FireFilterFormComponent implements OnInit {
     const eventStatus = await this.eventStatusService.get();
     this.eventStatus.set(eventStatus);
 
-    const countries2 = await this.countryService.get();
-    this.countries.set(countries2);
-
     const moves = await this.moveService.get();
     this.moves.set(moves);
 
@@ -256,27 +246,12 @@ export class FireFilterFormComponent implements OnInit {
     this.comparativeDates.set(comparativeDates);
 
     this.loadCommunities();
-    this.getCountriesByTerritory();
 
     this.onSubmit();
   }
 
   toggleAccordion(panel: MatExpansionPanel) {
     panel.toggle();
-  }
-
-  private updateFilteredCountries(value: string) {
-    const filterValue = value.toLowerCase();
-    const allCountries = this.countries();
-    this.filteredCountries.set(
-      allCountries.filter((country) =>
-        country.descripcion.toLowerCase().includes(filterValue)
-      )
-    );
-  }
-
-  filteredCountriesList() {
-    return this.filteredCountries();
   }
 
   getCountryByTerritory(country: any, territory: any) {
@@ -291,97 +266,32 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async changeTerritory(event: any) {
-    console.log(
-      '🚀 ~ FireFilterFormComponent ~ changeTerritory ~ event:',
-      event
-    );
     this.formData.patchValue({
       country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
-
+    this.loadCommunities(event.value == 1 ? this.COUNTRIES_ID.SPAIN : '9999');
     if (event.value == 1) {
-      const countries = await this.countryService.get();
-      this.countries.set(countries);
-      this.loadCommunities();
-      this.disabledCountry.set(true);
-      this.disabledAutonomousCommunity.set(false);
-      this.disabledProvince.set(false);
-      this.formData.patchValue({
-        country: this.COUNTRIES_ID.SPAIN,
-      });
+      this.filteredCountries.set(this.listaPaisesNacionales());
     }
     if (event.value == 2) {
-      const countries = await this.countryService.get();
-      this.countries.set(countries);
-      //this.loadCommunities();
-      this.autonomousCommunities.set([]);
-      this.disabledCountry.set(false);
-      this.disabledAutonomousCommunity.set(false);
-      this.disabledProvince.set(false);
-      this.formData.patchValue({
-        country: '',
-      });
+      this.filteredCountries.set(this.listaPaisesExtranjeros());
     }
     if (event.value == 3) {
-      this.disabledCountry.set(true);
-      this.disabledAutonomousCommunity.set(true);
-      this.disabledProvince.set(true);
-      this.countries.set([]);
-      this.formData.patchValue({
-        country: '',
-      });
-    }
-
-    this.provinces.set([]);
-    this.getCountriesByTerritory();
-  }
-
-  getCountriesByTerritory() {
-    let original = [...this.countries()];
-    let newCountries = [...this.countries()];
-
-    if (this.formData.value.territory != 2) {
-      this.filteredCountries.set(newCountries);
-    }
-    if (this.formData.value.territory == 2) {
-      const indexSpain = newCountries.findIndex(
-        (country) => country.id == this.COUNTRIES_ID.SPAIN
-      );
-      newCountries.splice(indexSpain, 1);
-      const indexPortugal = newCountries.findIndex(
-        (country) => country.id == this.COUNTRIES_ID.PORTUGAL
-      );
-      newCountries.splice(indexPortugal, 1);
-      const indexFrance = newCountries.findIndex(
-        (country) => country.id == this.COUNTRIES_ID.FRANCE
-      );
-      newCountries.splice(indexFrance, 1);
-
-      const portugal = original.find(
-        (country) => country.id === this.COUNTRIES_ID.PORTUGAL
-      );
-      const france = original.find(
-        (country) => country.id === this.COUNTRIES_ID.FRANCE
-      );
-
-      if (france) {
-        newCountries.unshift(france);
-      }
-      if (portugal) {
-        newCountries.unshift(portugal);
-      }
-
-      this.filteredCountries.set(newCountries);
+      this.filteredCountries.set([]);
     }
   }
 
-  async loadCommunities() {
+  async loadCommunities(country?: any) {
+    if (country === '9999') {
+      this.autonomousCommunities.set([]);
+      return;
+    }
     const autonomousCommunities =
       await this.autonomousCommunityService.getByCountry(
-        this.formData.value.country
+        country ?? this.formData.value.country
       );
     this.autonomousCommunities.set(autonomousCommunities);
   }
@@ -453,7 +363,6 @@ export class FireFilterFormComponent implements OnInit {
       severityLevel: '',
       name: '',
     });
-    this.getCountriesByTerritory();
   }
 
   getForm(atributo: string): any {
