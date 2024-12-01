@@ -1,22 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  Validators,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 import {
   DateAdapter,
@@ -24,11 +22,12 @@ import {
   MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { OriginDestinationService } from '../../services/origin-destination.service';
-import { OriginDestination } from '../../types/origin-destination.type';
-import { MediaService } from '../../services/media.service';
-import { Media } from '../../types/media.type';
 import moment from 'moment';
+import { FireDocumentationService } from '../../services/fire-documentation.service';
+import { OriginDestinationService } from '../../services/origin-destination.service';
+import { TipoDocumentoService } from '../../services/tipo-documento.service';
+import { Media } from '../../types/media.type';
+import { OriginDestination } from '../../types/origin-destination.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -43,15 +42,13 @@ const MY_DATE_FORMATS = {
 };
 
 interface FormType {
-  id?: string
-  fechaHora: Date,
-  tipoDocumento: string,
-  fechaHoraSolicitud: Date,
-  fichero: any,
-  procendenciaDestino: string,
-  medio: string,
-  asunto: string,
-  observaciones: string,
+  id?: string;
+  fechaHora: Date;
+  procendenciaDestino: any;
+  fechaHoraSolicitud: Date;
+  tipoDocumento: { id: string; descripcion: string };
+  descripcion: string;
+  fichero?: any;
 }
 
 @Component({
@@ -69,39 +66,38 @@ interface FormType {
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-  ]
+  ],
 })
 export class FireDocumentation implements OnInit {
-
   constructor(
     private originDestinationService: OriginDestinationService,
-    private mediaService: MediaService,
-    private dialogRef: MatDialogRef<FireDocumentation>
-  ){}
+    private tipoDocumento: TipoDocumentoService,
+    private dialogRef: MatDialogRef<FireDocumentation>,
+    private fireDocumentationService: FireDocumentationService
+  ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
-  
+
+  file: File | null = null;
+
   private fb = inject(FormBuilder);
-  data = inject(MAT_DIALOG_DATA) as { title: string };
+  dataProps = inject(MAT_DIALOG_DATA) as { title: string; fire: any };
 
   formData!: FormGroup;
 
-  entradaSalidaOptions = ['Entrada', 'Salida'];
+  readonly sections = [{ id: 1, label: 'Documentación' }];
 
-  tipoRegistroOptions = ['Tipo 1', 'Tipo 2'];
-  estadoOptions = ['Estado 1', 'Estado 2'];
-  planEmergenciaOptions = ['Sí', 'No'];
-  readonly sections: string[] = ['Documentación'];
+  selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
 
-  selectOptions = ['Opción 1', 'Opción 2', 'Opción 3'];
-  anotherSelectOptions = ['Otro 1', 'Otro 2', 'Otro 3'];
+  onSelectionChange(event: MatChipListboxChange): void {
+    this.selectedOption = event;
+  }
 
-  ////////////////////////////////
   public listadoProcedenciaDestino = signal<OriginDestination[]>([]);
   public listadoTipoDocumento = signal<OriginDestination[]>([]);
   public listadoMedios = signal<Media[]>([]);
@@ -116,7 +112,7 @@ export class FireDocumentation implements OnInit {
     'descripcion',
     'fichero',
     'opciones',
-  ]; 
+  ];
 
   async ngOnInit() {
     this.formData = this.fb.group({
@@ -124,59 +120,82 @@ export class FireDocumentation implements OnInit {
       fechaHoraSolicitud: ['', Validators.required],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
-      medio: ['', Validators.required],
-      asunto: ['', Validators.required],
-      observaciones: ['', Validators.required],
+      descripcion: ['', Validators.required],
     });
 
-    this.dataSource.data=[
-      {
-        fechaHora: 'fechaHora',
-        procendenciaDestino: 'procendenciaDestino',
-        medio: 'medio',
-        asunto: 'asunto',
-        observaciones: 'observaciones',
-      },
-      {
-        fechaHora: 'fechaHora',
-        procendenciaDestino: 'procendenciaDestino',
-        medio: 'medio',
-        asunto: 'asunto',
-        observaciones: 'observaciones',
-      },
-    ]
+    this.dataSource.data = [];
 
     const procedenciasDestino = await this.originDestinationService.get();
     this.listadoProcedenciaDestino.set(procedenciasDestino);
 
-    const medios = await this.mediaService.get();
-    this.listadoMedios.set(medios);
-    
+    const tipoDocumentos = await this.tipoDocumento.get();
+    this.listadoTipoDocumento.set(tipoDocumentos);
   }
 
-  trackByFn(index: number, item: string): string {
+  trackByFn(index: number, item: any): string {
     return item;
   }
 
-  onSubmit(){
-    console.info("submit")
+  onSubmit() {
+    console.info('submit');
     if (this.formData.valid) {
-
-      const data = this.formData.value;
-      if(this.isCreate() == -1){
-        this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);  
-      }else{
-        this.editarItem(this.isCreate())
+      const data = { file: this.file, ...this.formData.value };
+      if (this.isCreate() == -1) {
+        this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
+      } else {
+        this.editarItem(this.isCreate());
       }
-      
-      this.formData.reset()
-    }else {
+      this.formData.reset();
+    } else {
       this.formData.markAllAsTouched();
     }
   }
 
-  seleccionarItem(index: number){
-    this.isCreate.set(index)
+  //Función para guardar en base de datos
+  async saveList() {
+    if (this.dataOtherInformation().length <= 0) {
+      alert('Debe meter data en la tabla');
+      return;
+    }
+
+    const arrayToSave = this.dataOtherInformation().map((item) => {
+      return {
+        id: item.id ?? null,
+        fechaHora: item.fechaHora,
+        fechaHoraSolicitud: item.fechaHoraSolicitud,
+        idTipoDocumento: item.tipoDocumento?.id,
+        descripcion: item.descripcion,
+        idArchivo: null,
+        documentacionProcedenciasDestinos: item.procendenciaDestino.map(
+          (procendenciaDestino: any) => procendenciaDestino.id
+        ),
+      };
+    });
+    const objToSave = {
+      idDocumento: null,
+      idIncendio: this.dataProps?.fire?.id,
+      detallesDocumentaciones: arrayToSave,
+    };
+
+    try {
+      const resp: { idOtraInformacion: string | number } | any =
+        await this.fireDocumentationService.post(objToSave);
+      console.info('fireDocumentationServicerest', resp);
+      if (resp!.idDocumentacion > 0) {
+        alert('Se ha guardado la lista');
+        window.location.href = `fire-national-edit/${
+          this.dataProps?.fire?.id ?? 1
+        }`;
+      } else {
+        alert('Ha ocurrido un error al guardar la lista');
+      }
+    } catch (error) {
+      console.info({ error });
+    }
+  }
+
+  seleccionarItem(index: number) {
+    this.isCreate.set(index);
     this.formData.patchValue(this.dataOtherInformation()[index]);
   }
 
@@ -186,33 +205,32 @@ export class FireDocumentation implements OnInit {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formData.reset()
-    
+    this.isCreate.set(-1);
+    this.formData.reset();
   }
 
-  
   eliminarItem(index: number) {
     this.dataOtherInformation.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
-  closeModal(){
+  closeModal() {
     this.dialogRef.close();
   }
-
-  fileName: string | null = null;
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.fileName = input.files[0].name;
+      this.file = input.files[0];
     }
+  }
+  getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
+    return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
   }
 }
