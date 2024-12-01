@@ -238,10 +238,11 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireDocumentation, {
       width: '90vw',
       maxWidth: 'none',
-      height: '90vh',
+      //height: '90vh',
       disableClose: true,
       data: {
-        title: 'Documentación',
+        title: 'Nuevo - Documentación',
+        fire: this.fire,
       },
     });
 
