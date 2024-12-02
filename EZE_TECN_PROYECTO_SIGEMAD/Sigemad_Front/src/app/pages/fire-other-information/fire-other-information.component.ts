@@ -17,6 +17,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 import {
   DateAdapter,
@@ -24,6 +25,7 @@ import {
   MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
 import { MediaService } from '../../services/media.service';
@@ -71,6 +73,7 @@ interface FormType {
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    NgxSpinnerModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -82,10 +85,13 @@ export class FireOtherInformationComponent implements OnInit {
     private originDestinationService: OriginDestinationService,
     private mediaService: MediaService,
     private dialogRef: MatDialogRef<FireOtherInformationComponent>,
-    private otherInformationService: FireOtherInformationService
+    private otherInformationService: FireOtherInformationService,
+    private spinner: NgxSpinnerService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
+
+  public toast = inject(MatSnackBar);
 
   private fb = inject(FormBuilder);
   dataProps = inject(MAT_DIALOG_DATA) as {
@@ -108,6 +114,7 @@ export class FireOtherInformationComponent implements OnInit {
   public listadoMedios = signal<Media[]>([]);
   public dataOtherInformation = signal<FormType[]>([]);
   public isCreate = signal<number>(-1);
+  public isSaving = signal<boolean>(false);
 
   public dataSource = new MatTableDataSource<any>([]);
 
@@ -153,7 +160,7 @@ export class FireOtherInformationComponent implements OnInit {
       hora: moment(otraInformacion.fechaHora).format('HH:mm'),
       medio: otraInformacion.medio,
       observaciones: otraInformacion.observaciones,
-      procendenciaDestino: otraInformacion.procedenciaDestinos,
+      procendenciaDestino: otraInformacion.procedenciasDestinos,
     }));
 
     this.dataOtherInformation.set(newData);
@@ -164,7 +171,6 @@ export class FireOtherInformationComponent implements OnInit {
   }
 
   onSubmit() {
-    console.info('submit');
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -181,11 +187,16 @@ export class FireOtherInformationComponent implements OnInit {
 
   //Función para guardar en base de datos
   async saveList() {
-    if (this.dataOtherInformation().length <= 0) {
-      alert('Debe meter data en la tabla');
+    if (this.isSaving()) {
       return;
     }
-
+    this.isSaving.set(true);
+    if (this.dataOtherInformation().length <= 0) {
+      this.showToast({ title: 'Debe meter data en la lista' });
+      this.isSaving.set(false);
+      return;
+    }
+    //this.spinner.show();
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
@@ -199,7 +210,7 @@ export class FireOtherInformationComponent implements OnInit {
       };
     });
     const objToSave = {
-      idOtraInformacion: null,
+      idOtraInformacion: this.dataProps?.fireDetail?.id,
       idIncendio: this.dataProps?.fire?.id,
       lista: arrayToSave,
     };
@@ -208,12 +219,17 @@ export class FireOtherInformationComponent implements OnInit {
       const resp: { idOtraInformacion: string | number } | any =
         await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
-        alert('Se ha guardado la lista');
-        window.location.href = `fire-national-edit/${
-          this.dataProps?.fire?.id ?? 1
-        }`;
+        this.showToast({ title: 'Registro guardado' });
+
+        setTimeout(() => {
+          this.isSaving.set(false);
+          //this.spinner.show();
+          window.location.href = `fire-national-edit/${
+            this.dataProps?.fire?.id ?? 1
+          }`;
+        }, 2000);
       } else {
-        alert('Ha ocurrido un error al guardar la lista');
+        this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
       }
     } catch (error) {
       console.info({ error });
@@ -229,7 +245,6 @@ export class FireOtherInformationComponent implements OnInit {
           medio.id === Number(this.dataOtherInformation()[index].medio.id)
       );
 
-    /*
     const procedenciasSelecteds = () => {
       const idsABuscar = this.dataOtherInformation()[
         index
@@ -238,12 +253,11 @@ export class FireOtherInformationComponent implements OnInit {
         return idsABuscar.includes(Number(procedencia.id));
       });
     };
-      */
 
     this.formData.patchValue({
       ...this.dataOtherInformation()[index],
       medio: medioSelected(),
-      procendenciaDestino: [],
+      procendenciaDestino: procedenciasSelecteds(),
     });
 
     //this.formData.patchValue(this.dataOtherInformation()[index]);
@@ -285,5 +299,13 @@ export class FireOtherInformationComponent implements OnInit {
 
     return moment(fechaHora).format('MM/DD/YY HH:mm');
     //return fechaHora.toISOString();
+  }
+
+  showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
+    this.toast.open(title, txt, {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
   }
 }
