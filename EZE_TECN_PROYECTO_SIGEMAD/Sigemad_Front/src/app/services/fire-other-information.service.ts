@@ -7,30 +7,15 @@ import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 export class FireOtherInformationService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  //public endpoint = '/Incendios';
-  /*
-  generateUrlWitchParams({ url, params }: any) {
-    return Object.keys(params).reduce((prev: any, key: any, index: any) => {
-      if (!params[key]) {
-        return `${prev}`;
-      }
-      return `${prev}&${key}=${params[key]}`;
-    }, `${url}`);
-  }
 
-  get(query: any = '') {
-    const URLBASE = '/Incendios?Sort=desc&PageSize=15';
-
-    const endpoint = this.generateUrlWitchParams({
-      url: URLBASE,
-      params: query,
-    });
+  getById(id: Number) {
+    let endpoint = `/otras-informaciones/${id}`;
 
     return firstValueFrom(
-      this.http.get<ApiResponse<Fire[]>>(endpoint).pipe((response) => response)
+      this.http.get<any[]>(endpoint).pipe((response) => response)
     );
   }
-*/
+
   post(data: any) {
     const endpoint = '/otras-informaciones/lista';
 

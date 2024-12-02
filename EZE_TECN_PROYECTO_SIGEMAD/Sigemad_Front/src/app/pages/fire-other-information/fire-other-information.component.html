@@ -29,19 +29,21 @@
           fxLayoutGap="30px"
           fxLayoutAlign="start center"
         >
-          <mat-form-field class="input spaced-input" fxFlex="50%">
-            <mat-label>Fecha y hora</mat-label>
+          <mat-form-field class="input spaced-input" fxFlex="25%">
+            <mat-label>Fecha</mat-label>
 
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="fechaHora"
-            />
+            <input matInput [matDatepicker]="picker" formControlName="fecha" />
             <mat-datepicker-toggle
               matSuffix
               [for]="picker"
             ></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="input spaced-input" fxFlex="25%">
+            <mat-label>Hora</mat-label>
+
+            <input matInput formControlName="hora" type="time" />
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
@@ -117,12 +119,12 @@
         style="width: 100%"
       >
         <!-- Denominación Column -->
-        <ng-container matColumnDef="fechaHora">
+        <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Fecha y Hora
           </th>
           <td mat-cell *matCellDef="let otherInformation">
-            {{ getFormatdate(otherInformation.fechaHora) }}
+            {{ getFormatdate(otherInformation?.fecha) }}
           </td>
         </ng-container>
 
@@ -144,7 +146,7 @@
         <ng-container matColumnDef="medio">
           <th mat-header-cell *matHeaderCellDef>Medio</th>
           <td mat-cell *matCellDef="let otherInformation">
-            {{ otherInformation.medio.descripcion }}
+            {{ otherInformation?.medio?.descripcion }}
           </td>
         </ng-container>
 

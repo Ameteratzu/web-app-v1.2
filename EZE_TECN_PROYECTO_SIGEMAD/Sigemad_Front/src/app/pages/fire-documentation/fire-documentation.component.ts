@@ -16,6 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -26,6 +28,7 @@ import moment from 'moment';
 import { FireDocumentationService } from '../../services/fire-documentation.service';
 import { OriginDestinationService } from '../../services/origin-destination.service';
 import { TipoDocumentoService } from '../../services/tipo-documento.service';
+import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
 
@@ -43,9 +46,11 @@ const MY_DATE_FORMATS = {
 
 interface FormType {
   id?: string;
-  fechaHora: Date;
+  fecha: Date;
+  hora: any;
   procendenciaDestino: any;
-  fechaHoraSolicitud: Date;
+  fechaSolicitud: Date;
+  horaSolicitud: any;
   tipoDocumento: { id: string; descripcion: string };
   descripcion: string;
   fichero?: any;
@@ -86,7 +91,11 @@ export class FireDocumentation implements OnInit {
   file: File | null = null;
 
   private fb = inject(FormBuilder);
-  dataProps = inject(MAT_DIALOG_DATA) as { title: string; fire: any };
+  dataProps = inject(MAT_DIALOG_DATA) as {
+    title: string;
+    fire: any;
+    fireDetail: FireDetail;
+  };
 
   formData!: FormGroup;
 
@@ -114,10 +123,14 @@ export class FireDocumentation implements OnInit {
     'opciones',
   ];
 
+  public toast = inject(MatSnackBar);
+
   async ngOnInit() {
     this.formData = this.fb.group({
-      fechaHora: ['', Validators.required],
-      fechaHoraSolicitud: ['', Validators.required],
+      fecha: ['', Validators.required],
+      hora: ['', Validators.required],
+      fechaSolicitud: ['', Validators.required],
+      horaSolicitud: ['', Validators.required],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -130,6 +143,35 @@ export class FireDocumentation implements OnInit {
 
     const tipoDocumentos = await this.tipoDocumento.get();
     this.listadoTipoDocumento.set(tipoDocumentos);
+
+    this.isToEditDocumentation();
+  }
+
+  async isToEditDocumentation() {
+    if (!this.dataProps.fireDetail.id) {
+      return;
+    }
+    const dataDocumentacion: any = await this.fireDocumentationService.getById(
+      Number(this.dataProps.fireDetail.id)
+    );
+
+    const newData = dataDocumentacion?.detallesDocumentacion?.map(
+      (documento: any) => ({
+        id: documento.id,
+        descripcion: documento.descripcion,
+        fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
+        hora: moment(documento.fechaHora).format('HH:mm'),
+        fechaSolicitud: moment(documento.fechaHoraSolicitud).format(
+          'YYYY-MM-DD'
+        ),
+        horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+        procendenciaDestino: documento.procedenciaDestinos,
+        tipoDocumento: documento.tipoDocumento,
+        //idArchivo: documento.idArchivo,
+      })
+    );
+
+    this.dataOtherInformation.set(newData);
   }
 
   trackByFn(index: number, item: any): string {
@@ -137,15 +179,19 @@ export class FireDocumentation implements OnInit {
   }
 
   onSubmit() {
-    console.info('submit');
     if (this.formData.valid) {
       const data = { file: this.file, ...this.formData.value };
+
       if (this.isCreate() == -1) {
         this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
       } else {
         this.editarItem(this.isCreate());
       }
-      this.formData.reset();
+      this.formData.reset({
+        procendenciaDestino: [],
+        tipoDocumento: null,
+      });
+      this.file = null;
     } else {
       this.formData.markAllAsTouched();
     }
@@ -154,15 +200,18 @@ export class FireDocumentation implements OnInit {
   //Función para guardar en base de datos
   async saveList() {
     if (this.dataOtherInformation().length <= 0) {
-      alert('Debe meter data en la tabla');
+      this.showToast({ title: 'Debe meter data en la lista' });
       return;
     }
 
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
-        fechaHora: item.fechaHora,
-        fechaHoraSolicitud: item.fechaHoraSolicitud,
+        fechaHora: this.getFechaHora(item.fecha, item.hora),
+        fechaHoraSolicitud: this.getFechaHora(
+          item.fechaSolicitud,
+          item.horaSolicitud
+        ),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
         idArchivo: null,
@@ -180,14 +229,16 @@ export class FireDocumentation implements OnInit {
     try {
       const resp: { idOtraInformacion: string | number } | any =
         await this.fireDocumentationService.post(objToSave);
-      console.info('fireDocumentationServicerest', resp);
+
       if (resp!.idDocumentacion > 0) {
-        alert('Se ha guardado la lista');
-        window.location.href = `fire-national-edit/${
-          this.dataProps?.fire?.id ?? 1
-        }`;
+        this.showToast({ title: 'Registro guardado' });
+        setTimeout(() => {
+          window.location.href = `fire-national-edit/${
+            this.dataProps?.fire?.id ?? 1
+          }`;
+        }, 2000);
       } else {
-        alert('Ha ocurrido un error al guardar la lista');
+        this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
       }
     } catch (error) {
       console.info({ error });
@@ -196,7 +247,28 @@ export class FireDocumentation implements OnInit {
 
   seleccionarItem(index: number) {
     this.isCreate.set(index);
-    this.formData.patchValue(this.dataOtherInformation()[index]);
+
+    const documentoSelected = () =>
+      this.listadoTipoDocumento().find(
+        (documento) =>
+          documento.id ===
+          Number(this.dataOtherInformation()[index].tipoDocumento.id)
+      );
+
+    const procedenciasSelecteds = () => {
+      const idsABuscar = this.dataOtherInformation()[
+        index
+      ].procendenciaDestino.map((obj: any) => Number(obj.id));
+      return this.listadoProcedenciaDestino().filter((procedencia) => {
+        return idsABuscar.includes(Number(procedencia.id));
+      });
+    };
+
+    this.formData.patchValue({
+      ...this.dataOtherInformation()[index],
+      tipoDocumento: documentoSelected(),
+      procendenciaDestino: procedenciasSelecteds(),
+    });
   }
 
   editarItem(index: number) {
@@ -206,7 +278,11 @@ export class FireDocumentation implements OnInit {
       return [...data];
     });
     this.isCreate.set(-1);
-    this.formData.reset();
+    this.formData.reset({
+      procendenciaDestino: [],
+      tipoDocumento: null,
+    });
+    this.file = null;
   }
 
   eliminarItem(index: number) {
@@ -214,10 +290,6 @@ export class FireDocumentation implements OnInit {
       data.splice(index, 1);
       return [...data];
     });
-  }
-
-  getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YY');
   }
 
   closeModal() {
@@ -232,5 +304,26 @@ export class FireDocumentation implements OnInit {
   }
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
     return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
+  }
+
+  getFechaHora(fecha: Date, hora: string): string {
+    const [horas, minutos] = hora.split(':').map(Number);
+    const fechaHora = new Date(fecha);
+    fechaHora.setHours(horas, minutos, 0, 0);
+
+    return moment(fechaHora).format('MM/DD/YY HH:mm');
+    //return fechaHora.toISOString();
+  }
+
+  showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
+    this.toast.open(title, txt, {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
+  }
+
+  trackByIdDocumento(index: number, opcion: any): number {
+    return opcion.id;
   }
 }

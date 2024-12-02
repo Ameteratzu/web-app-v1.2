@@ -6,6 +6,13 @@ import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 export class FireDocumentationService {
   public http = inject(HttpClient);
 
+  getById(id: Number) {
+    let endpoint = `/Documentaciones/${id}`;
+
+    return firstValueFrom(
+      this.http.get<any[]>(endpoint).pipe((response) => response)
+    );
+  }
   post(data: any) {
     const endpoint = '/Documentaciones';
 
