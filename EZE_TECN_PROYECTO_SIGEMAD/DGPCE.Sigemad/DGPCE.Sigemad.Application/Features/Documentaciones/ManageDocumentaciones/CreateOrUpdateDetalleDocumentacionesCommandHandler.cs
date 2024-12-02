@@ -38,7 +38,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
 
 
         // Si el IdDireccionCoordinacionEmergencia es proporcionado, intentar actualizar, si no, crear nueva instancia
-        if (request.IdDocumento.HasValue)
+        if (request.IdDocumento.HasValue && request.IdDocumento.Value > 0)
         {
             var spec = new DocumentacionSpecification(request.IdDocumento.Value);
             documentacion = await _unitOfWork.Repository<Documentacion>().GetByIdWithSpec(spec);
@@ -172,7 +172,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
 
 
 
-        if (request.IdDocumento.HasValue)
+        if (request.IdDocumento.HasValue && request.IdDocumento.Value > 0)
         {
             _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
         }

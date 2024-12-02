@@ -137,7 +137,7 @@ public class ManageOtraInformacionCommandHandler : IRequestHandler<ManageOtraInf
             }
         }
 
-        if (request.IdOtraInformacion.HasValue)
+        if (request.IdOtraInformacion.HasValue && request.IdOtraInformacion.Value > 0)
         {
             _unitOfWork.Repository<OtraInformacion>().UpdateEntity(otraInformacion);
         }

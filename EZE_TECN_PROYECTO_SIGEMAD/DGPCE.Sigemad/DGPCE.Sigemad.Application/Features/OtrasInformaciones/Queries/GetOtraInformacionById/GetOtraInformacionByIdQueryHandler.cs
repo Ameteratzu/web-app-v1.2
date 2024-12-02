@@ -38,6 +38,17 @@ public class GetOtraInformacionByIdQueryHandler : IRequestHandler<GetOtraInforma
             throw new NotFoundException(nameof(OtraInformacion), request.Id);
         }
 
+        // Filtrar ProcedenciasDestinos que no están borrados
+        otraInformacion.DetallesOtraInformacion = otraInformacion.DetallesOtraInformacion
+            .Select(detalle =>
+            {
+                detalle.ProcedenciasDestinos = detalle.ProcedenciasDestinos
+                    .Where(pd => !pd.Borrado)
+                    .ToList();
+                return detalle;
+            })
+            .ToList();
+
         var otraInformacionDto = _mapper.Map<OtraInformacion, OtraInformacionDto>(otraInformacion);
 
         _logger.LogInformation($"{nameof(GetOtraInformacionByIdQueryHandler)} - END");

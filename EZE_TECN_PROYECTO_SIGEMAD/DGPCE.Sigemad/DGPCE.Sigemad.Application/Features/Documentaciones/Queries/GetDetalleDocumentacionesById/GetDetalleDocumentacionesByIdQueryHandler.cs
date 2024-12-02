@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -34,6 +35,18 @@ public class GetDetalleDocumentacionesByIdQueryHandler : IRequestHandler<GetDeta
             _logger.LogWarning($"No se encontro documentación con id: {request.Id}");
             throw new NotFoundException(nameof(Documentacion), request.Id);
         }
+
+
+        // Filtrar ProcedenciasDestinos que no están borrados
+        documentacion.DetallesDocumentacion = documentacion.DetallesDocumentacion
+            .Select(detalle =>
+            {
+                detalle.DocumentacionProcedenciaDestinos = detalle.DocumentacionProcedenciaDestinos
+                    .Where(pd => !pd.Borrado)
+                    .ToList();
+                return detalle;
+            })
+            .ToList();
 
 
         var documentacionDto = _mapper.Map<Documentacion, DocumentacionDto>(documentacion);

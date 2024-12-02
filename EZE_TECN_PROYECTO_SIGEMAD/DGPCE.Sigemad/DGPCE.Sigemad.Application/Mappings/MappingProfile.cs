@@ -184,7 +184,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
             .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
-        CreateMap<CreateDetalleOtraInformacionDto, DetalleOtraInformacion>();
+        CreateMap<CreateDetalleOtraInformacionDto, DetalleOtraInformacion>()
+            .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DetalleOtraInformacion_ProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
