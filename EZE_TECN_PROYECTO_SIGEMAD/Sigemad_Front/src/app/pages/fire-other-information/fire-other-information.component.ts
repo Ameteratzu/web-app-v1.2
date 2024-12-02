@@ -28,6 +28,7 @@ import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
 import { MediaService } from '../../services/media.service';
 import { OriginDestinationService } from '../../services/origin-destination.service';
+import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
 
@@ -45,7 +46,8 @@ const MY_DATE_FORMATS = {
 
 interface FormType {
   id?: string;
-  fechaHora: Date;
+  fecha: Date;
+  hora: any;
   procendenciaDestino: { id: string; descripcion: string }[];
   medio: { id: string; descripcion: string };
   asunto: string;
@@ -86,7 +88,11 @@ export class FireOtherInformationComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   private fb = inject(FormBuilder);
-  dataProps = inject(MAT_DIALOG_DATA) as { title: string; fire: any };
+  dataProps = inject(MAT_DIALOG_DATA) as {
+    title: string;
+    fire: any;
+    fireDetail: FireDetail;
+  };
 
   formData!: FormGroup;
 
@@ -106,7 +112,7 @@ export class FireOtherInformationComponent implements OnInit {
   public dataSource = new MatTableDataSource<any>([]);
 
   public displayedColumns: string[] = [
-    'fechaHora',
+    'fecha',
     'procendenciaDestino',
     'medio',
     'asunto',
@@ -115,36 +121,42 @@ export class FireOtherInformationComponent implements OnInit {
 
   async ngOnInit() {
     this.formData = this.fb.group({
-      fechaHora: ['', Validators.required],
+      fecha: ['', Validators.required],
+      hora: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
       asunto: ['', Validators.required],
       observaciones: ['', Validators.required],
     });
 
-    //cargar de DB lo q ya existe
-    this.dataSource.data = [
-      {
-        fechaHora: 'fechaHora',
-        procendenciaDestino: 'procendenciaDestino',
-        medio: 'medio',
-        asunto: 'asunto',
-        observaciones: 'observaciones',
-      },
-      {
-        fechaHora: 'fechaHora',
-        procendenciaDestino: 'procendenciaDestino',
-        medio: 'medio',
-        asunto: 'asunto',
-        observaciones: 'observaciones',
-      },
-    ];
-
     const procedenciasDestino = await this.originDestinationService.get();
     this.listadoProcedenciaDestino.set(procedenciasDestino);
 
     const medios = await this.mediaService.get();
     this.listadoMedios.set(medios);
+
+    this.isToEditDocumentation();
+  }
+
+  async isToEditDocumentation() {
+    if (!this.dataProps?.fireDetail?.id) {
+      return;
+    }
+    const dataOtraInformacion: any = await this.otherInformationService.getById(
+      Number(this.dataProps.fireDetail.id)
+    );
+
+    const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
+      id: otraInformacion.id,
+      asunto: otraInformacion.asunto,
+      fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
+      hora: moment(otraInformacion.fechaHora).format('HH:mm'),
+      medio: otraInformacion.medio,
+      observaciones: otraInformacion.observaciones,
+      procendenciaDestino: otraInformacion.procedenciaDestinos,
+    }));
+
+    this.dataOtherInformation.set(newData);
   }
 
   trackByFn(index: number, item: any): number {
@@ -177,7 +189,7 @@ export class FireOtherInformationComponent implements OnInit {
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
-        fechaHora: item.fechaHora,
+        fechaHora: this.getFechaHora(item.fecha, item.hora),
         idMedio: item.medio?.id ?? null,
         asunto: item.asunto,
         observaciones: item.observaciones,
@@ -210,7 +222,31 @@ export class FireOtherInformationComponent implements OnInit {
 
   seleccionarItem(index: number) {
     this.isCreate.set(index);
-    this.formData.patchValue(this.dataOtherInformation()[index]);
+
+    const medioSelected = () =>
+      this.listadoMedios().find(
+        (medio) =>
+          medio.id === Number(this.dataOtherInformation()[index].medio.id)
+      );
+
+    /*
+    const procedenciasSelecteds = () => {
+      const idsABuscar = this.dataOtherInformation()[
+        index
+      ].procendenciaDestino.map((obj: any) => Number(obj.id));
+      return this.listadoProcedenciaDestino().filter((procedencia) => {
+        return idsABuscar.includes(Number(procedencia.id));
+      });
+    };
+      */
+
+    this.formData.patchValue({
+      ...this.dataOtherInformation()[index],
+      medio: medioSelected(),
+      procendenciaDestino: [],
+    });
+
+    //this.formData.patchValue(this.dataOtherInformation()[index]);
   }
 
   editarItem(index: number) {
@@ -239,6 +275,15 @@ export class FireOtherInformationComponent implements OnInit {
   }
 
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
-    return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
+    return procedenciaDestino?.map((obj) => obj?.descripcion).join(', ');
+  }
+
+  getFechaHora(fecha: Date, hora: string): string {
+    const [horas, minutos] = hora.split(':').map(Number);
+    const fechaHora = new Date(fecha);
+    fechaHora.setHours(horas, minutos, 0, 0);
+
+    return moment(fechaHora).format('MM/DD/YY HH:mm');
+    //return fechaHora.toISOString();
   }
 }

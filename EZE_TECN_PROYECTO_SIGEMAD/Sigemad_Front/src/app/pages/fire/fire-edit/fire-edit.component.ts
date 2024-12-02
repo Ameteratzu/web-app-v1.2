@@ -41,6 +41,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { FireDetail } from '../../../types/fire-detail.type';
 import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
@@ -102,6 +103,7 @@ export class FireEditComponent implements OnInit {
     'origen',
     'tipoRegistro',
     'tecnico',
+    'opciones',
   ];
 
   async ngOnInit() {
@@ -215,15 +217,16 @@ export class FireEditComponent implements OnInit {
     });
   }
 
-  goModalOtherInformation() {
+  goModalOtherInformation(fireDetail?: FireDetail) {
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',
-      height: '90vh',
+      //height: '90vh',
       disableClose: true,
       data: {
         title: 'Nuevo - Otra Información',
         fire: this.fire,
+        fireDetail,
       },
     });
 
@@ -234,7 +237,7 @@ export class FireEditComponent implements OnInit {
     });
   }
 
-  goModalDocumentation() {
+  goModalDocumentation(fireDetail?: FireDetail) {
     const dialogRef = this.matDialog.open(FireDocumentation, {
       width: '90vw',
       maxWidth: 'none',
@@ -243,6 +246,7 @@ export class FireEditComponent implements OnInit {
       data: {
         title: 'Nuevo - Documentación',
         fire: this.fire,
+        fireDetail,
       },
     });
 
@@ -251,5 +255,21 @@ export class FireEditComponent implements OnInit {
         console.log('Modal result:', result);
       }
     });
+  }
+
+  goModalEdit(fireDetail: FireDetail) {
+    console.info('fireDetail', fireDetail);
+    if (fireDetail.tipoRegistro == 'Documentación') {
+      this.goModalDocumentation(fireDetail);
+      return;
+    }
+    if (fireDetail.tipoRegistro == 'Otra Información') {
+      this.goModalOtherInformation(fireDetail);
+      return;
+    }
+  }
+
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY HH:mm');
   }
 }

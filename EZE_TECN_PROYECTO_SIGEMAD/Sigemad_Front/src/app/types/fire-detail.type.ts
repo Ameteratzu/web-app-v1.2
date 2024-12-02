@@ -1,7 +1,8 @@
 export type FireDetail = {
-	registro: string;
-    origen: string;
-    tipoRegistro: string;
-    tecnico: string;
-    fechaRegistro: string;
+  fechaHora: string | Date;
+  id: number | string;
+  origen: string;
+  registro: string;
+  tecnico: string;
+  tipoRegistro: string;
 };

@@ -211,7 +211,12 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
+        <mat-form-field
+          appearance="fill"
+          fxFlex="25"
+          class="mb-3"
+          [ngStyle]="{ visibility: showDateEnd() ? 'visible' : 'hidden' }"
+        >
           <mat-label>Fecha de fin</mat-label>
           <input
             matInput
