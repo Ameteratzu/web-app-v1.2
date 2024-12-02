@@ -57,6 +57,7 @@ import { Router } from '@angular/router';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -89,6 +90,7 @@ const MY_DATE_FORMATS = {
     MatExpansionModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgxSpinnerModule
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -138,6 +140,7 @@ export class FireCreateEdit implements OnInit {
   //MAP
   public coordinates = signal<any>({});
   public polygon = signal<any>({});
+  private spinner = inject(NgxSpinnerService);
 
   async ngOnInit() {
     
@@ -222,7 +225,9 @@ export class FireCreateEdit implements OnInit {
   }
 
   async onSubmit() {
+    debugger
     if (this.formData.valid) {
+      this.spinner.show();
       const data = this.formData.value;
 
       const municipio = this.municipalities().find(
@@ -252,9 +257,12 @@ export class FireCreateEdit implements OnInit {
           });
           */
             new Promise((resolve) => setTimeout(resolve, 2000)).then(
-              () =>
-                //this.router.navigate([`/fire`])
-                (window.location.href = '/fire')
+              () => {
+                this.spinner.hide();
+                 //this.router.navigate([`/fire`])
+                 (window.location.href = '/fire')
+              }
+               
             );
           })
           .catch((error) => {
@@ -328,6 +336,7 @@ export class FireCreateEdit implements OnInit {
   }
 
   closeModal() {
+    debugger
     this.dialogRef.close();
   }
 
