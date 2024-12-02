@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Features.EstadosIncendio.Enumerations;
 using DGPCE.Sigemad.Application.Features.EstadosSucesos.Enumerations;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Services;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 
 using Microsoft.Extensions.Logging;
@@ -84,6 +85,18 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
             {
                 _logger.LogWarning($"La evolución con id:{request.Id}, no existe en la base de datos");
                 throw new NotFoundException(nameof(Evolucion), request.Id);
+            }
+
+
+            // Verificar si es el último registro por fecha de creación
+            var ultimoRegistro = await _unitOfWork.Repository<Evolucion>()
+                .GetAsync(d => d.FechaCreacion > evolucionToDelete.FechaCreacion && !d.Borrado);
+
+            if (ultimoRegistro.Any())
+            {
+                // No es el último registro
+                _logger.LogWarning($"El registro: {request.Id} de Evolucion no es el último");
+                throw new LastRegistrationException(nameof(Evolucion), request.Id);
             }
 
             if (evolucionToDelete.Borrado != null && !(bool)evolucionToDelete.Borrado)

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,18 @@ public class DeleteDireccionCoordinacionEmergenciaCommandHandler : IRequestHandl
         {
             _logger.LogWarning($"la DireccionCoordinacionEmergencia con id:{request.Id}, no existe en la base de datos");
             throw new NotFoundException(nameof(Incendio), request.Id);
+        }
+
+
+        // Verificar si es el último registro por fecha de creación
+        var ultimoRegistro = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>()
+            .GetAsync(d => d.FechaCreacion > direccionCoordinacionEmergenciaToDelete.FechaCreacion && !d.Borrado);
+
+        if (ultimoRegistro.Any())
+        {
+            // No es el último registro
+            _logger.LogWarning($"El registro: {request.Id} de DireccionCoordinacionEmergencia no es el último");
+            throw new LastRegistrationException(nameof(DireccionCoordinacionEmergencia), request.Id);
         }
 
         direccionCoordinacionEmergenciaToDelete.Borrado = true;
