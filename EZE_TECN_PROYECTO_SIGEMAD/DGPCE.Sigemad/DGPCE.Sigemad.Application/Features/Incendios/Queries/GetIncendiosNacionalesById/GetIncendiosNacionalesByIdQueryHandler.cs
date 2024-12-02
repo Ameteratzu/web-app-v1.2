@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -28,7 +29,18 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacio
             };
 
             var spec = new IncendiosSpecification(incendioParams);
-            return await _unitOfWork.Repository<Incendio>().GetByIdWithSpec(spec);
+            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdWithSpec(spec);
+            
+            if(incendio.IdTerritorio == (int)TipoTerritorio.Extranjero)
+            {
+                incendio.Ubicacion = $"{incendio.Pais.Descripcion}";
+            }
+            else
+            {
+                incendio.Ubicacion = $"{incendio.Municipio.Descripcion} ({incendio.Provincia.Descripcion})";
+            }
+            
+            return incendio;
         }
     }
 }

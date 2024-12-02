@@ -30,6 +30,9 @@ import { ProvinceService } from '../../../services/province.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { Province } from '../../../types/province.type';
 import { Municipality } from '../../../types/municipality.type';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { Geometry } from 'ol/geom';
+import Feature from 'ol/Feature';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -170,6 +173,37 @@ export class PmaComponent {
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
     this.formData.get('idMunicipio')?.enable();
+  }
+
+  openModalMap() {
+    if (!this.formData.value.idMunicipio) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find(
+      (item) => item.id == this.formData.value.idMunicipio.id
+    );
+
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      height: '780px',
+      maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        //this.featuresCoords = features;
+        console.info('features', features);
+      }
+    );
   }
 
   editarItem(index: number) {

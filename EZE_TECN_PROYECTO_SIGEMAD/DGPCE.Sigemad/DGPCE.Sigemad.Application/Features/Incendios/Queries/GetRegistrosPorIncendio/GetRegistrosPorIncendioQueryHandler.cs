@@ -33,7 +33,7 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             throw new NotFoundException(nameof(Incendio), request.IdIncendio);
         }
 
-        //Obtener listado de usuarios
+        // Obtener listado de usuarios
         var guidsUsuarios = new HashSet<Guid?>();
 
         guidsUsuarios.UnionWith(incendio.Evoluciones.Select(d => d.CreadoPor));
@@ -41,7 +41,7 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
         guidsUsuarios.UnionWith(incendio.OtraInformaciones.Select(o => o.CreadoPor));
         guidsUsuarios.UnionWith(incendio.Documentaciones.Select(d => d.CreadoPor));
 
-        // 3. Obtener nombres de usuarios
+        // Obtener nombres de usuarios
         var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
 
         // Crear el listado consolidado
@@ -55,7 +55,8 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Datos de evolución",
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == incendio.Evoluciones.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Otra Información
@@ -66,7 +67,8 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Otra Información",
-            Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
+            Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = o.FechaCreacion == incendio.OtraInformaciones.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Direcciones y Coordinación
@@ -77,7 +79,8 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Dirección y coordinación",
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == incendio.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Documentacion
@@ -88,7 +91,8 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Registro = "",
             Origen = "",
             TipoRegistro = "Documentación",
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido"
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == incendio.Documentaciones.Max(e => e.FechaCreacion)
         }));
 
         // Ordenar por FechaHora descendente

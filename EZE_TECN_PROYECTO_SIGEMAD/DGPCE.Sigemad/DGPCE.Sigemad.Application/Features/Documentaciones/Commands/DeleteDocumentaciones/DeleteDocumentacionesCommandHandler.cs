@@ -43,13 +43,25 @@ public class DeleteDocumentacionesCommandHandler : IRequestHandler<DeleteDocumen
         _logger.LogInformation($"{nameof(DeleteDocumentacionesCommandHandler)} - END");
 
         var documentacion = await _unitOfWork.Repository<Documentacion>()
-        .GetByIdWithSpec(new DetalleDocumentacionById(request.Id));
+            .GetByIdWithSpec(new DetalleDocumentacionById(request.Id));
 
         if (documentacion == null)
         {
-            _logger.LogWarning($"No se encontro documentación con id: {request.Id}");
+            _logger.LogWarning($"No se encontró documentación con id: {request.Id}");
             throw new NotFoundException(nameof(Documentacion), request.Id);
         }
+
+        // Verificar si es el último registro por fecha de creación
+        var ultimoRegistro = await _unitOfWork.Repository<Documentacion>()
+            .GetAsync(d => d.FechaCreacion > documentacion.FechaCreacion && !d.Borrado);
+
+        if (ultimoRegistro.Any())
+        {
+            // No es el último registro
+            _logger.LogWarning($"El registro: {request.Id} no es el último");
+            throw new LastRegistrationException(nameof(Documentacion), request.Id);
+        }
+        
 
         _unitOfWork.Repository<Documentacion>().DeleteEntity(documentacion);
         var result = await _unitOfWork.Complete();

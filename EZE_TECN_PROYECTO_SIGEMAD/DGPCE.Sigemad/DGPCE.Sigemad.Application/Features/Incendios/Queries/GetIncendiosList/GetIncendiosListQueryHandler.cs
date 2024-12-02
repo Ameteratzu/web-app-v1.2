@@ -1,7 +1,9 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -32,6 +34,20 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
 
         var specCount = new IncendiosForCountingSpecification(request);
         var totalIncendios = await _unitOfWork.Repository<Incendio>().CountAsync(specCount);
+
+        foreach (var item in incendios)
+        {
+            if (item.IdTerritorio == (int)TipoTerritorio.Extranjero)
+            {
+                item.Ubicacion = $"{item.Pais.Descripcion}";
+            }
+            else
+            {
+                item.Ubicacion = $"{item.Municipio.Descripcion} ({item.Provincia.Descripcion})";
+            }
+        }
+
+
 
         var rounded = Math.Ceiling(Convert.ToDecimal(totalIncendios) / Convert.ToDecimal(request.PageSize));
         var totalPages = Convert.ToInt32(rounded);

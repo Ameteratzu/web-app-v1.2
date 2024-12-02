@@ -106,7 +106,7 @@ public class IncendiosController : ControllerBase
     }
     */
 
-    [HttpGet("{IdIncendio}/registros")]
+    [HttpGet("{idIncendio}/registros")]
     [ProducesResponseType(typeof(IReadOnlyList<RegistroActualizacionDto>), (int)HttpStatusCode.OK)]
     public async Task<IReadOnlyList<RegistroActualizacionDto>> GetIncendioDetalles(int idIncendio)
     {
