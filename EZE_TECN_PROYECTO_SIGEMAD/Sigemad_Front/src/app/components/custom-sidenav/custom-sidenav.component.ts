@@ -131,21 +131,19 @@ export class CustomSidenavComponent {
   });
 
   async ngOnInit() {
-    this.registerIcons();
-    const toolbar = document.querySelector('mat-toolbar');
     this.spinner.show();
+    const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-
-    setTimeout(() => {
-      this.spinner.hide();
-      this.renderer.setStyle(toolbar, 'z-index', '5');
-    }, 3000);
+    this.registerIcons();
+   
     this.menuItemActiveService.set.subscribe((data: string) => {
       this.active = data;
     });
 
     const respMenu = await this.menuService.get();
     this.menuBack.set(respMenu);
+    this.spinner.hide();
+    this.renderer.setStyle(toolbar, 'z-index', '5');
   }
 
   redirectTo(itemSelected: Menu) {

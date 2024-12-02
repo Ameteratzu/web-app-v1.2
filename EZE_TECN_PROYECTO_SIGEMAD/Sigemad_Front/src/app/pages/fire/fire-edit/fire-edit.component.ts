@@ -268,4 +268,8 @@ export class FireEditComponent implements OnInit {
       return;
     }
   }
+
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY HH:mm');
+  }
 }

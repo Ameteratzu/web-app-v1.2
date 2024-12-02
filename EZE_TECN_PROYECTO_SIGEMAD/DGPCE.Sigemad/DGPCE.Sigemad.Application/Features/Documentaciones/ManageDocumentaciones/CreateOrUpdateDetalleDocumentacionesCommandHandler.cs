@@ -7,6 +7,7 @@ using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 
 
@@ -62,6 +63,26 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
             {
                 IdIncendio = request.IdIncendio
             };
+        }
+
+
+
+        // Validar los IdTipoDocumento y IdProcedenciaDestionos de los detallesCoordinacion en el listado
+        var idsArchivos = request.DetallesDocumentaciones.Select(c => c.IdArchivo).Distinct();
+        var archivosExistentes = await _unitOfWork.Repository<Archivo>().GetAsync(p => idsArchivos.Contains(p.Id));
+
+        if (archivosExistentes.Count() != idsArchivos.Count())
+        {
+            var idsArchivosExistentes = archivosExistentes.Select(p => p.Id).ToList();
+            var idsArchivosInvalidas = idsArchivos
+                 .Where(id => id.HasValue && !idsArchivosExistentes.Contains(id.Value))
+                 .ToList();
+
+            if (idsArchivosInvalidas.Any())
+            {
+                _logger.LogWarning($"Los siguientes Id's Archivos: {string.Join(", ", idsArchivosInvalidas)}, no se encontraron");
+                throw new NotFoundException(nameof(Archivo), string.Join(", ", idsArchivosInvalidas));
+            }
         }
 
 

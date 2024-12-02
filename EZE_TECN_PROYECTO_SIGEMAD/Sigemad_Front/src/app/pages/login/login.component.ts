@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -19,7 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
-
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+  
 @Component({
   selector: 'fire-create-edit',
   standalone: true,
@@ -33,6 +34,7 @@ import { AuthService } from '../../services/auth.service';
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,
+    NgxSpinnerModule
   ],
   providers: [],
   templateUrl: './login.component.html',
@@ -40,6 +42,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Login implements OnInit {
   public formData!: FormGroup;
+  private spinner = inject(NgxSpinnerService);
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -53,6 +56,7 @@ export class Login implements OnInit {
   async onSubmit() {
     this.formData.markAllAsTouched();
     if (this.formData.valid) {
+      this.spinner.show()
       const data = this.formData.value;
       const body = {
         email: data.usuario,
@@ -63,8 +67,10 @@ export class Login implements OnInit {
         .then((response) => {
           //TODO toast
           console.info('response', response);
-          new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
-            this.router.navigate([`/fire`])
+          new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+            this.spinner.hide()
+            this.router.navigate([`/dashboard`])
+          }
           );
         })
         .catch((error) => {
