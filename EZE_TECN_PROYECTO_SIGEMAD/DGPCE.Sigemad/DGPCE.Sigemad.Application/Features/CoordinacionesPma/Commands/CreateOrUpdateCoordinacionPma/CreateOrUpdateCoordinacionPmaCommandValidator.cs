@@ -30,10 +30,8 @@ public class CoordinacionPmaDtoValidator : AbstractValidator<CreateOrUpdateCoord
 
         RuleFor(d => d.FechaInicio)
             .NotEmpty().WithMessage(localizer["FechaInicioObligatorio"])
-            .LessThanOrEqualTo(d => d.FechaFin).WithMessage(localizer["FechaInicioDebeSerMenorQueFechaFin"]);
-
-        RuleFor(d => d.FechaFin)
-            .NotEmpty().WithMessage(localizer["FechaFinObligatorio"]);
+            .LessThanOrEqualTo(d => d.FechaFin).When(d => d.FechaFin.HasValue)
+            .WithMessage(localizer["FechaInicioDebeSerMenorQueFechaFin"]);
 
         RuleFor(p => p.IdProvincia)
            .NotNull().WithMessage(localizer["ProvinciaObligatorio"])
@@ -44,7 +42,8 @@ public class CoordinacionPmaDtoValidator : AbstractValidator<CreateOrUpdateCoord
             .GreaterThan(0).WithMessage(localizer["MunicipioInvalido"]);
 
         RuleFor(p => p.GeoPosicion)
-            .NotNull().When(p => p.GeoPosicion != null)
-            .Must(geometryValidator.IsGeometryValidAndInEPSG4326).WithMessage(localizer["GeoPosicionInvalida"]);
+            .Must(geometry => geometryValidator.IsGeometryValidAndInEPSG4326(geometry))
+            .When(p => p.GeoPosicion != null)
+            .WithMessage(localizer["GeoPosicionInvalida"]);
     }
 }

@@ -42,7 +42,7 @@ CREATE TABLE Direccion (
     IdTipoDireccionEmergencia INT NOT NULL FOREIGN KEY REFERENCES TipoDireccionEmergencia(Id),  -- Tipo de dirección, ejemplo: "Autonómica"
     AutoridadQueDirige NVARCHAR(255) NOT NULL,
     FechaInicio DATE NOT NULL,
-    FechaFin DATE NOT NULL,
+    FechaFin DATE NULL,
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
@@ -58,7 +58,7 @@ CREATE TABLE CoordinacionCecopi (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdDireccionCoordinacionEmergencia INT NOT NULL FOREIGN KEY REFERENCES DireccionCoordinacionEmergencia(Id),
     FechaInicio DATE NOT NULL,
-    FechaFin DATE NOT NULL,
+    FechaFin DATE NULL,
     IdProvincia INT NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
     IdMunicipio INT NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
     Lugar NVARCHAR(255) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE CoordinacionPMA (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdDireccionCoordinacionEmergencia INT NOT NULL FOREIGN KEY REFERENCES DireccionCoordinacionEmergencia(Id),
     FechaInicio DATE NOT NULL,
-    FechaFin DATE NOT NULL,
+    FechaFin DATE NULL,
     IdProvincia INT NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
     IdMunicipio INT NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
     Lugar NVARCHAR(255) NOT NULL,

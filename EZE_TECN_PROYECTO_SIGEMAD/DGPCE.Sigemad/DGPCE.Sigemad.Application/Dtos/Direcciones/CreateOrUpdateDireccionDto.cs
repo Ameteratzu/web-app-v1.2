@@ -5,5 +5,5 @@ public class CreateOrUpdateDireccionDto
     public int IdTipoDireccionEmergencia { get; set; }
     public string AutoridadQueDirige { get; set; }
     public DateOnly FechaInicio { get; set; }
-    public DateOnly FechaFin { get; set; }
+    public DateOnly? FechaFin { get; set; }
 }
