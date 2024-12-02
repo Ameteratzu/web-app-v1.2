@@ -124,12 +124,12 @@ export class RecordsComponent implements OnInit {
     this.formData = this.fb.group({
       inputOutput : ['', Validators.required],
       startDate: [new Date(), Validators.required],
-      media: ['', Validators.required],
+      media: [1, Validators.required],
       originDestination: ['', Validators.required],
-      datetimeUpdate: ['', Validators.required],
-      observations_1: ['', Validators.required],
-      forecast: ['', Validators.required],
-      status: ['', Validators.required],
+      datetimeUpdate: [new Date(), Validators.required],
+      observations_1: [''],
+      forecast: [''],
+      status: [1, Validators.required],
       end_date: [new Date(), Validators.required],
       emergencyPlanActivated: [''],
       phases: [''],
@@ -175,7 +175,7 @@ export class RecordsComponent implements OnInit {
   
       this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
   
-      this.save.emit();
+      this.save.emit(true);
     } else {
       this.formData.markAllAsTouched();
       this.spinner.hide();

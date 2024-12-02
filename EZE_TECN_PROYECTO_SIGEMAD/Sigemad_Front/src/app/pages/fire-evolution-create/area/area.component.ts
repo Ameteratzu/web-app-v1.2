@@ -112,8 +112,8 @@ export class AreaComponent {
       fechaHora: [new Date(), Validators.required],
       idProvincia: [null, Validators.required],
       idMunicipio: [null, Validators.required],
-      idEntidadMenor: [null, Validators.required],
-      observaciones: ['', Validators.required],
+      idEntidadMenor: [null],
+      observaciones: [''],
       fichero: ['', Validators.required],
     });
     this.formData.get('idMunicipio')?.disable();

@@ -14,6 +14,8 @@ import { PmaComponent } from './pma/pma.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CoordinationAddressService } from '../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FireDetail } from '../../types/fire-detail.type';
+import moment from 'moment';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -42,7 +44,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FireCoordinationData {
 
   @ViewChild(MatSort) sort!: MatSort;
-  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  data = inject(MAT_DIALOG_DATA) as { 
+    title: string; 
+    idIncendio: number;
+    fireDetail: FireDetail; 
+  };
 
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
@@ -65,6 +71,26 @@ export class FireCoordinationData {
     'fichero',
     'opciones',
   ]; 
+
+  editData: any;
+  isDataReady = false; 
+
+  async isToEditDocumentation() {
+    if (!this.data?.fireDetail?.id) {
+      this.isDataReady = true;
+      return;
+    }
+    const dataOtraInformacion: any = await this.coordinationServices.getById(
+      Number(this.data.fireDetail.id)
+    );
+
+    this.editData = dataOtraInformacion.direcciones;
+    this.isDataReady = true;
+  }
+
+  async ngOnInit() {
+    this.isToEditDocumentation();
+  }
 
   onSelectionChange(event: MatChipListboxChange): void {
     this.selectedOption = event;
@@ -93,7 +119,7 @@ export class FireCoordinationData {
       (item) => ({
         idTipoDireccionEmergencia: Number(item.idTipoDireccionEmergencia.id),
         autoridadQueDirige: item.autoridadQueDirige,
-        fechaInicio: this.formatDate(item.fechaInicio),
+        fechaInicio: item.fechaInicio ? this.formatDate(item.fechaInicio) : '',
         fechaFin: this.formatDate(item.fechaFin),
       }),
       this.coordinationServices.postAddress.bind(this.coordinationServices),
@@ -107,7 +133,7 @@ export class FireCoordinationData {
         idMunicipio: Number(item.idMunicipio.id),
         fechaInicio: this.formatDate(item.fechaInicio),
         lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
+        fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): '',
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
       this.coordinationServices.postCecopi.bind(this.coordinationServices),
@@ -121,7 +147,7 @@ export class FireCoordinationData {
         idMunicipio: Number(item.idMunicipio.id),
         fechaInicio: this.formatDate(item.fechaInicio),
         lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
+        fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): '',
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
       this.coordinationServices.postPma.bind(this.coordinationServices),

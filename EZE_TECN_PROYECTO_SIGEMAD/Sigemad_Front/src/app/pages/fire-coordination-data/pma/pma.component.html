@@ -87,7 +87,7 @@
             Fecha fin
           </th>
           <td mat-cell *matCellDef="let coordinacionData">
-            {{ getFormatdate(coordinacionData.fechaFin) }}
+            {{coordinacionData.fechaFin ? getFormatdate(coordinacionData.fechaFin): 'Sin fecha selecionada'}} 
           </td>
         </ng-container>
 

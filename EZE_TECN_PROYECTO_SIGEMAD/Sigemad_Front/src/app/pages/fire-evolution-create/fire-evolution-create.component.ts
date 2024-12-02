@@ -77,13 +77,17 @@ export class FireCreateComponent implements OnInit {
 
   async processData(): Promise<void> {
 
+    if(this.evolutionSevice.dataRecords().length > 0){
+      const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
+    }
+
     await this.handleDataProcessing(
       this.evolutionSevice.dataAffectedArea(),
       (item) => ({
         fechaHora: this.formatDate(item.fechaHora), // Formatea la fecha de cada área
         idProvincia: item.idProvincia.id,
         idMunicipio: item.idMunicipio.id,
-        idEntidadMenor: item.idEntidadMenor.id,
+        idEntidadMenor: item.idEntidadMenor ? item.idEntidadMenor : null,
         observaciones: item.observaciones,
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
@@ -149,21 +153,6 @@ export class FireCreateComponent implements OnInit {
     }
   }
 
-  getFormattedDataAreas(data: any): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      areasAfectadas: [{
-        fechaHora: this.formatDate(data.fechaFin),
-        idProvincia: data.idProvincia,
-        idMunicipio: data.idMunicipio,
-        idEntidadMenor: data.idEntidadMenor,
-        observaciones: data.observaciones,
-        GeoPosicion:{"type":"Point","coordinates":[null,null]}
-      }],
-    };
-
-  }
-
   formatDate(date: Date | string): string {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -191,7 +180,4 @@ export class FireCreateComponent implements OnInit {
       verticalPosition: 'top', 
     });
   }
-
-
-
 }

@@ -114,9 +114,9 @@ export class CecopiComponent {
       idProvincia : ['', Validators.required],
       idMunicipio : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date(), Validators.required],
+      fechaFin: [''],
       lugar : ['', Validators.required],
-      observaciones : ['', Validators.required],
+      observaciones : [''],
     });
 
     this.formDataCecopi.get('idMunicipio')?.disable();

@@ -112,9 +112,9 @@ export class PmaComponent {
       idProvincia : ['', Validators.required],
       idMunicipio : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date(), Validators.required],
+      fechaFin: [''],
       lugar : ['', Validators.required],
-      observaciones : ['', Validators.required],
+      observaciones : [''],
     });
 
     this.formData.get('idMunicipio')?.disable();

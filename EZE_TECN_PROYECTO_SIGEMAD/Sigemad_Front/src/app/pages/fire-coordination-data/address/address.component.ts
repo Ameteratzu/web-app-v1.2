@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -69,6 +69,8 @@ export class AddressComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
+  @Input() editData: any;
+  
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -86,6 +88,8 @@ export class AddressComponent {
   ]; 
 
   formData!: FormGroup;
+ 
+
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
@@ -98,10 +102,38 @@ export class AddressComponent {
     this.formData = this.fb.group({
       idTipoDireccionEmergencia : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date(), Validators.required],
+      fechaFin: [''],
       autoridadQueDirige: ['', Validators.required],
     });
+    console.log("🚀 ~ AddressComponent ~ ngOnInit ~ this.editData:", this.editData)
+    if (this.editData) {
+      
+      console.log('Información recibida en el hijo:', this.editData);
+      this.coordinationServices.dataCoordinationAddress.set(this.editData);
+
+      console.log("🚀 ~ AddressComponent ~ ngOnInit ~  this.coordinationServices.dataCoordinationAddress:",  this.coordinationServices.dataCoordinationAddress())
+      // const newData = this.coordinationServices.dataCoordinationAddress()?.map((address: any) => ({
+      //   id: address.id,
+      //   autoridadQueDirige: address.autoridadQueDirige,
+      //   fechaFin: moment(address.fechaFin).format('YYYY-MM-DD'),
+      //   fechaInicioora: moment(address.fechaInicio).format('YYYY-MM-DD')
+      // }));
+
+      // console.log("🚀 ~ AddressComponent ~ newData ~ newData:", newData)
+      // id?: string,
+      // autoridadQueDirige: string,
+      // idIncendio?: number
+      // fechaInicio: Date,
+      // fechaFin: Date,
+      // idTipoDireccionEmergencia: { id: number, descripcion: string };
+
+      // this.coordinationServices.dataCoordinationAddress.set([newData, ...this.coordinationServices.dataCoordinationAddress()]);  
+ 
+    }
+     
   }
+
+  
 
   onSubmit(){
     if (this.formData.valid) {
