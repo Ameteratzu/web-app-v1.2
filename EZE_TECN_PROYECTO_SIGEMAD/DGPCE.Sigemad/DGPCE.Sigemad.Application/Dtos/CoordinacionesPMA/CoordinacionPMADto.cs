@@ -7,7 +7,7 @@ public class CoordinacionPMADto
     public int Id { get; set; }
 
     public DateOnly FechaInicio { get; set; }
-    public DateOnly FechaFin { get; set; }
+    public DateOnly? FechaFin { get; set; }
     public Provincia Provincia { get; set; }
     public Municipio Municipio { get; set; }
     public string Lugar { get; set; }
