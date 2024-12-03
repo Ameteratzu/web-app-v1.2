@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-
   public chart!: Chart;
 
   public draw!: Draw;
@@ -32,6 +31,7 @@ export class DashboardComponent {
   public map!: Map;
   public snap!: Snap;
 
+  public currentDrawType: 'Polygon' | 'LineString' | 'Circle' = 'Polygon'; 
   public menuItemActiveService = inject(MenuItemActiveService);
 
   public events = [
@@ -48,8 +48,8 @@ export class DashboardComponent {
     const raster = new TileLayer({
       source: new XYZ({
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        maxZoom: 19
-      })
+        maxZoom: 19,
+      }),
     });
 
     this.source = new VectorSource();
@@ -81,15 +81,7 @@ export class DashboardComponent {
 
     // Graph
     const data = {
-      labels: [
-        'Día 6',
-        'Día 5',
-        'Día 4',
-        'Día 3',
-        'Día 2',
-        'Día 1',
-        'Hoy'
-      ],
+      labels: ['Día 6', 'Día 5', 'Día 4', 'Día 3', 'Día 2', 'Día 1', 'Hoy'],
       datasets: [
         {
           label: 'Periodo anterior',
@@ -128,24 +120,40 @@ export class DashboardComponent {
   }
 
   addInteractions() {
+    this.removeCurrentInteraction();
+
     this.draw = new Draw({
       source: this.source,
-      type: 'Polygon',
+      type: this.currentDrawType,
     });
 
-    this.draw.on('drawstart', (drawEvent:DrawEvent) => {
+    this.draw.on('drawstart', (drawEvent: DrawEvent) => {
       const features = this.source.getFeatures();
       const last = features[features.length - 1];
       this.source.removeFeature(last);
     });
 
-    this.draw.on('drawend', (drawEvent:DrawEvent) => {
-      console.log(this.map, this.draw);
+    this.draw.on('drawend', (drawEvent: DrawEvent) => {
+      console.log('Figura finalizada:', drawEvent.feature.getGeometry());
     });
 
     this.map.addInteraction(this.draw);
+
     this.snap = new Snap({ source: this.source });
     this.map.addInteraction(this.snap);
   }
 
+  changeDrawType(type: 'Polygon' | 'LineString' | 'Circle') {
+    this.currentDrawType = type;
+    this.addInteractions();
+  }
+
+  removeCurrentInteraction() {
+    if (this.draw) {
+      this.map.removeInteraction(this.draw);
+    }
+    if (this.snap) {
+      this.map.removeInteraction(this.snap);
+    }
+  }
 }
