@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -38,7 +39,7 @@ public class DeleteDireccionCoordinacionEmergenciaCommandHandler : IRequestHandl
 
         // Verificar si es el último registro por fecha de creación
         var ultimoRegistro = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>()
-            .GetAsync(d => d.FechaCreacion > direccionCoordinacionEmergenciaToDelete.FechaCreacion && !d.Borrado);
+            .GetAsync(d => d.FechaCreacion > direccionCoordinacionEmergenciaToDelete.FechaCreacion && d.Id != direccionCoordinacionEmergenciaToDelete.Id  && !d.Borrado);
 
         if (ultimoRegistro.Any())
         {
