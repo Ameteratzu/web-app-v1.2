@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -76,6 +76,7 @@ export class PmaComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
+  @Input() editData: any;
   
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
@@ -112,15 +113,22 @@ export class PmaComponent {
     
 
     this.formData = this.fb.group({
-      idProvincia : ['', Validators.required],
-      idMunicipio : ['', Validators.required],
+      provincia : ['', Validators.required],
+      municipio : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
       fechaFin: [''],
       lugar : ['', Validators.required],
       observaciones : [''],
     });
 
-    this.formData.get('idMunicipio')?.disable();
+    this.formData.get('municipio')?.disable();
+
+    if (this.editData) {
+      console.log('Información recibida en el hijo:', this.editData);
+      if(this.coordinationServices.dataPma().length === 0){
+        this.coordinationServices.dataPma.set(this.editData);
+      }
+    }
   }
 
   onSubmit(){
@@ -172,15 +180,15 @@ export class PmaComponent {
     const province_id = event.value.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
-    this.formData.get('idMunicipio')?.enable();
+    this.formData.get('municipio')?.enable();
   }
 
   openModalMap() {
-    if (!this.formData.value.idMunicipio) {
+    if (!this.formData.value.municipio) {
       return;
     }
     const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.idMunicipio.id
+      (item) => item.id == this.formData.value.municipio.id
     );
 
     if (!municipioSelected) {

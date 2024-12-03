@@ -33,6 +33,7 @@ import { OriginDestinationService } from '../../services/origin-destination.serv
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
+  
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -196,7 +197,7 @@ export class FireOtherInformationComponent implements OnInit {
       this.isSaving.set(false);
       return;
     }
-    //this.spinner.show();
+  
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
@@ -216,6 +217,7 @@ export class FireOtherInformationComponent implements OnInit {
     };
 
     try {
+      this.spinner.show();
       const resp: { idOtraInformacion: string | number } | any =
         await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
@@ -223,16 +225,18 @@ export class FireOtherInformationComponent implements OnInit {
 
         setTimeout(() => {
           this.isSaving.set(false);
-          //this.spinner.show();
+          this.spinner.hide();
           window.location.href = `fire-national-edit/${
             this.dataProps?.fire?.id ?? 1
           }`;
         }, 2000);
       } else {
         this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
+        this.spinner.hide();
       }
     } catch (error) {
       console.info({ error });
+      this.spinner.hide();
     }
   }
 

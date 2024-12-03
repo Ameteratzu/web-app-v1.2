@@ -31,6 +31,7 @@ import { TipoDocumentoService } from '../../services/tipo-documento.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -72,6 +73,7 @@ interface FormType {
     MatNativeDateModule,
     MatButtonModule,
     MatTableModule,
+    NgxSpinnerModule
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -83,7 +85,8 @@ export class FireDocumentation implements OnInit {
     private originDestinationService: OriginDestinationService,
     private tipoDocumento: TipoDocumentoService,
     private dialogRef: MatDialogRef<FireDocumentation>,
-    private fireDocumentationService: FireDocumentationService
+    private fireDocumentationService: FireDocumentationService,
+    private spinner: NgxSpinnerService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -227,21 +230,25 @@ export class FireDocumentation implements OnInit {
     };
 
     try {
+      this.spinner.show();
       const resp: { idOtraInformacion: string | number } | any =
         await this.fireDocumentationService.post(objToSave);
 
       if (resp!.idDocumentacion > 0) {
         this.showToast({ title: 'Registro guardado' });
         setTimeout(() => {
+          this.spinner.show();
           window.location.href = `fire-national-edit/${
             this.dataProps?.fire?.id ?? 1
           }`;
         }, 2000);
       } else {
         this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
+        this.spinner.hide();
       }
     } catch (error) {
       console.info({ error });
+      this.spinner.hide();
     }
   }
 

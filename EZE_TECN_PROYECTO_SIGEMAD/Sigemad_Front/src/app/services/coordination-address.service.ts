@@ -7,8 +7,8 @@ interface FormTypeCecopi {
   idIncendio?: number
   fechaInicio: Date,
   fechaFin: Date,
-  idProvincia: { id: number, descripcion: string };
-  idMunicipio: { id: number, descripcion: string };
+  provincia: { id: number, descripcion: string };
+  municipio: { id: number, descripcion: string };
   lugar?: string,
   observaciones?: string,
 }
@@ -19,7 +19,7 @@ interface FormTypeAddress {
   idIncendio?: number
   fechaInicio: Date,
   fechaFin: Date,
-  idTipoDireccionEmergencia: { id: number, descripcion: string };
+  tipoDireccionEmergencia: { id: number, descripcion: string };
 }
 
 interface FormTypePma{
@@ -28,9 +28,9 @@ interface FormTypePma{
   idIncendio?: number
   fechaInicio: Date,
   fechaFin: Date,
-  idTipoDireccionEmergencia: number,
-  idProvincia: { id: number, descripcion: string };
-  idMunicipio: { id: number, descripcion: string };
+  tipoDireccionEmergencia: number,
+  provincia: { id: number, descripcion: string };
+  municipio: { id: number, descripcion: string };
   lugar?: string,
 }
 

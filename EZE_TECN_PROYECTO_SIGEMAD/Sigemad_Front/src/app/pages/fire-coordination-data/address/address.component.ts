@@ -100,37 +100,18 @@ export class AddressComponent {
     this.coordinationAddress.set(coordinationAddress);
 
     this.formData = this.fb.group({
-      idTipoDireccionEmergencia : ['', Validators.required],
+      tipoDireccionEmergencia : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
       fechaFin: [''],
       autoridadQueDirige: ['', Validators.required],
     });
-    console.log("🚀 ~ AddressComponent ~ ngOnInit ~ this.editData:", this.editData)
+
     if (this.editData) {
-      
       console.log('Información recibida en el hijo:', this.editData);
-      this.coordinationServices.dataCoordinationAddress.set(this.editData);
-
-      console.log("🚀 ~ AddressComponent ~ ngOnInit ~  this.coordinationServices.dataCoordinationAddress:",  this.coordinationServices.dataCoordinationAddress())
-      // const newData = this.coordinationServices.dataCoordinationAddress()?.map((address: any) => ({
-      //   id: address.id,
-      //   autoridadQueDirige: address.autoridadQueDirige,
-      //   fechaFin: moment(address.fechaFin).format('YYYY-MM-DD'),
-      //   fechaInicioora: moment(address.fechaInicio).format('YYYY-MM-DD')
-      // }));
-
-      // console.log("🚀 ~ AddressComponent ~ newData ~ newData:", newData)
-      // id?: string,
-      // autoridadQueDirige: string,
-      // idIncendio?: number
-      // fechaInicio: Date,
-      // fechaFin: Date,
-      // idTipoDireccionEmergencia: { id: number, descripcion: string };
-
-      // this.coordinationServices.dataCoordinationAddress.set([newData, ...this.coordinationServices.dataCoordinationAddress()]);  
- 
+      if(this.coordinationServices.dataCoordinationAddress().length === 0){
+        this.coordinationServices.dataCoordinationAddress.set(this.editData);
+      }
     }
-     
   }
 
   
@@ -153,11 +134,12 @@ export class AddressComponent {
 
 
   async sendDataToEndpoint() {
+
     if (this.coordinationServices.dataCoordinationAddress().length > 0) {
       this.save.emit(true); 
     }else{
-      this.spinner.show();
-      this.showToast();
+ 
+      // this.showToast();
     }
   }
 

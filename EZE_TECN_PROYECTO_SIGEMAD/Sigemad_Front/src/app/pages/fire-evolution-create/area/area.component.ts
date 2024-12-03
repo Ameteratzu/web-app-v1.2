@@ -105,8 +105,8 @@ export class AreaComponent {
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
-    const minor = await this.minorService.get();
-    this.minors.set(minor);
+    // const minor = await this.minorService.get();
+    // this.minors.set(minor);
 
     this.formData = this.fb.group({
       fechaHora: [new Date(), Validators.required],
@@ -118,6 +118,7 @@ export class AreaComponent {
     });
     this.formData.get('idMunicipio')?.disable();
     this.formData.get('fichero')?.disable();
+    this.formData.get('idEntidadMenor')?.disable();
 
   }
 

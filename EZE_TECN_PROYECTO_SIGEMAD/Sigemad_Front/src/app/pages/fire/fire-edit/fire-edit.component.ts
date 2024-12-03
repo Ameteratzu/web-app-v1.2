@@ -121,7 +121,7 @@ export class FireEditComponent implements OnInit {
       event: new FormControl(),
       generalNote: new FormControl(),
       idEstado: new FormControl(),
-      ubicaciones: new FormControl({ value: '', disabled: true }),
+      ubicacion: new FormControl({ value: '', disabled: true }),
       suceso: new FormControl({ value: '', disabled: true }),
       estado: new FormControl({ value: '', disabled: true }),
     });

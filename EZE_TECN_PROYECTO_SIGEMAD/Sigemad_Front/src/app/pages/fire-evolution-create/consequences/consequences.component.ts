@@ -106,19 +106,20 @@ export class ConsequencesComponent {
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
-    const minor = await this.minorService.get();
-    this.minors.set(minor);
+    // const minor = await this.minorService.get();
+    // this.minors.set(minor);
 
     this.formData = this.fb.group({
       fechaHora: [new Date(), Validators.required],
       idProvincia: [null, Validators.required],
       idMunicipio: [null, Validators.required],
-      idEntidadMenor: [null, Validators.required],
+      idEntidadMenor: [null],
       observaciones: ['', Validators.required],
       fichero: ['', Validators.required],
     });
     this.formData.get('idMunicipio')?.disable();
     this.formData.get('fichero')?.disable();
+    this.formData.get('idEntidadMenor')?.disable();
 
   }
 

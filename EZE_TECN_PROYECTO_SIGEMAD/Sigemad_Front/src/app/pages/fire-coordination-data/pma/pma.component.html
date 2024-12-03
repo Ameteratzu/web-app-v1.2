@@ -30,7 +30,7 @@
           <!-- Provincia -->
           <mat-form-field appearance="fill" fxFlex="50%" >
             <mat-label>Provincia</mat-label>
-            <mat-select [formControl]="getForm('idProvincia')" (selectionChange)="loadMunicipalities($event)">
+            <mat-select [formControl]="getForm('provincia')" (selectionChange)="loadMunicipalities($event)">
               <mat-option *ngFor="let option of provinces()" [value]="option">
                 {{ option.descripcion }}
               </mat-option>
@@ -40,7 +40,7 @@
           <!-- Municipio -->
           <mat-form-field appearance="fill" fxFlex="50%">
             <mat-label>Municipio</mat-label>
-            <mat-select [formControl]="getForm('idMunicipio')">
+            <mat-select [formControl]="getForm('municipio')">
               <mat-option *ngFor="let option of municipalities()" [value]="option">
                 {{ option.descripcion }}
               </mat-option>
@@ -109,7 +109,7 @@
         <ng-container matColumnDef="fichero">
           <th mat-header-cell *matHeaderCellDef>Ubicación</th>
           <td mat-cell *matCellDef="let coordinacionData">
-            {{ coordinacionData.idProvincia.descripcion }} ({{ coordinacionData.idMunicipio.descripcion }})
+            {{ coordinacionData.provincia.descripcion }} ({{ coordinacionData.municipio.descripcion }})
           </td>
         </ng-container>
 
