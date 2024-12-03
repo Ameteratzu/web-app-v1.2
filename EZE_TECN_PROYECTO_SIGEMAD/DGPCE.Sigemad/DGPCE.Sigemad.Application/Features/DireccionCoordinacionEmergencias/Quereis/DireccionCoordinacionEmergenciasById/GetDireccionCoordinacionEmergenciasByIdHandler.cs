@@ -2,7 +2,6 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Queries.GetIntervencionById;
 using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -29,7 +28,7 @@ public class GetDireccionCoordinacionEmergenciasByIdHandler : IRequestHandler<Ge
 
         _logger.LogInformation($"{nameof(GetDireccionCoordinacionEmergenciasById)} - BEGIN");
 
-        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaActiveByIdSpecification(new DireccionCoordinacionEmergenciaSpecificationParams { Id = request.Id});
+        var direccionCoordinacionEmergenciaSpec = new DireccionCoordinacionEmergenciaActiveByIdSpecification(new DireccionCoordinacionEmergenciaSpecificationParams { Id = request.Id });
         var direccionCoordinacionEmergencia = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(direccionCoordinacionEmergenciaSpec);
         if (direccionCoordinacionEmergencia == null)
         {
