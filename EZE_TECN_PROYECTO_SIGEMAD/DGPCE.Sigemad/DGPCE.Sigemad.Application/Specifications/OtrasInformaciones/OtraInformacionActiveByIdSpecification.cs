@@ -6,7 +6,7 @@ public class OtraInformacionActiveByIdSpecification : BaseSpecification<OtraInfo
     public OtraInformacionActiveByIdSpecification(int id)
         : base(i => i.Id == id && i.Borrado == false)
     {
-        AddInclude(i => i.DetallesOtraInformacion);
+        AddInclude(i => i.DetallesOtraInformacion.Where(d => !d.Borrado));
         AddInclude("DetallesOtraInformacion.Medio");
         AddInclude("DetallesOtraInformacion.ProcedenciasDestinos");
         AddInclude("DetallesOtraInformacion.ProcedenciasDestinos.ProcedenciaDestino");

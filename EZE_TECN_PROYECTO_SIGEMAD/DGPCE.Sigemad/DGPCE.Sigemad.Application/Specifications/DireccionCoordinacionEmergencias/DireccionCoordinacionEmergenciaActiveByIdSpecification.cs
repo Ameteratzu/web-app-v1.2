@@ -12,14 +12,14 @@ public class DireccionCoordinacionEmergenciaActiveByIdSpecification : BaseSpecif
     {
         if (request.Id.HasValue)
         {
-            AddInclude(d => d.Direcciones);
+            AddInclude(d => d.Direcciones.Where(dir => !dir.Borrado));
             AddInclude("Direcciones.TipoDireccionEmergencia");
 
-            AddInclude(d => d.CoordinacionesCecopi);
+            AddInclude(d => d.CoordinacionesCecopi.Where(dir => !dir.Borrado));
             AddInclude("CoordinacionesCecopi.Provincia");
             AddInclude("CoordinacionesCecopi.Municipio");
 
-            AddInclude(d => d.CoordinacionesPMA);
+            AddInclude(d => d.CoordinacionesPMA.Where(dir => !dir.Borrado));
             AddInclude("CoordinacionesPMA.Provincia");
             AddInclude("CoordinacionesPMA.Municipio");
         }
