@@ -25,8 +25,8 @@ import View from 'ol/View';
 import { MunicipalityService } from '../../services/municipality.service';
 
 import { CommonModule } from '@angular/common';
-import { Geometry } from 'ol/geom';
-import { fromLonLat } from 'ol/proj';
+import { Geometry, Polygon } from 'ol/geom';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import { Municipality } from '../../types/municipality.type';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -67,14 +67,18 @@ export class MapCreateComponent {
   public section: string = '';
 
   async ngOnInit() {
-    // Map
-    //this.length = Number(localStorage.getItem('length'));
-    //this.latitude = Number(localStorage.getItem('latitude'));
+    const { municipio, listaMunicipios, defaultPolygon } = this.data;
 
-    const { municipio, listaMunicipios } = this.data;
-    //console.info('+++', municipio, listaMunicipios);
+    let defaultPolygonMercator;
+
+    if (defaultPolygon) {
+      defaultPolygonMercator = defaultPolygon.map((coord: any) =>
+        fromLonLat(coord)
+      );
+    }
 
     this.source = new VectorSource();
+
     this.vector = new VectorLayer({
       source: this.source,
       style: {
@@ -84,7 +88,6 @@ export class MapCreateComponent {
       },
     });
 
-    //console.info('----------', transform([-3, 40], 'EPSG:4326', 'EPSG:4326'));
     this.map = new Map({
       layers: [
         new TileLayer({
@@ -95,32 +98,33 @@ export class MapCreateComponent {
       target: 'map',
       controls: [],
       view: new View({
-        center: fromLonLat([
-          municipio.geoPosicion.coordinates[0],
-          municipio.geoPosicion.coordinates[1],
-        ]),
-        //center: fromLonLat([-2.9704191830794, 43.0277066101594]),
+        center: fromLonLat(municipio.geoPosicion.coordinates),
         zoom: 12,
-        //projection: 'EPSG:4326',
+        projection: 'EPSG:3857',
       }),
     });
 
-    const point = new Point([
-      municipio.geoPosicion.coordinates[0],
-      municipio.geoPosicion.coordinates[1],
-    ]);
+    const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
 
-    const feature = new Feature({
+    const pointFeature = new Feature({
       geometry: point,
     });
 
-    const vectorLayer = new VectorLayer({
+    if (defaultPolygon) {
+      const polygonFeature = new Feature({
+        geometry: new Polygon([defaultPolygonMercator]),
+      });
+
+      this.source.addFeature(polygonFeature);
+    }
+
+    const pointLayer = new VectorLayer({
       source: new VectorSource({
-        features: [feature],
+        features: [pointFeature],
       }),
     });
 
-    this.map.addLayer(vectorLayer);
+    this.map.addLayer(pointLayer);
 
     this.addInteractions();
   }
@@ -128,6 +132,7 @@ export class MapCreateComponent {
   changeMunicipio(event: any) {
     console.info('event', event);
   }
+
   addInteractions() {
     this.draw = new Draw({
       source: this.source,
@@ -145,12 +150,12 @@ export class MapCreateComponent {
       const coords = [];
 
       for (let coord of drawEvent.target.sketchCoords_[0]) {
-        coords.push(coord);
+        coords.push(toLonLat(coord));
       }
 
       coords.push(coords[0]);
 
-      this.coords = JSON.stringify(coords);
+      this.coords = coords;
     });
 
     this.map.addInteraction(this.draw);
