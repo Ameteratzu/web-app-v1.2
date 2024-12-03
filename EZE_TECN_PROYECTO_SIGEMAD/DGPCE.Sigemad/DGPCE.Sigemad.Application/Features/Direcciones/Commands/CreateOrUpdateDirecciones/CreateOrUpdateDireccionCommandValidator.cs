@@ -33,9 +33,7 @@ public class DireccionDtoValidator : AbstractValidator<CreateOrUpdateDireccionDt
 
         RuleFor(d => d.FechaInicio)
             .NotEmpty().WithMessage(localizer["FechaInicioObligatorio"])
-            .LessThanOrEqualTo(d => d.FechaFin).WithMessage(localizer["FechaInicioDebeSerMenorQueFechaFin"]);
-
-        RuleFor(d => d.FechaFin)
-            .NotEmpty().WithMessage(localizer["FechaFinObligatorio"]);
+            .LessThanOrEqualTo(d => d.FechaFin).When(d => d.FechaFin.HasValue)
+            .WithMessage(localizer["FechaInicioDebeSerMenorQueFechaFin"]);
     }
 }

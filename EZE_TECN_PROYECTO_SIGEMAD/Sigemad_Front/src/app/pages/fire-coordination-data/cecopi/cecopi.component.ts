@@ -30,6 +30,9 @@ import { ProvinceService } from '../../../services/province.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { Province } from '../../../types/province.type';
 import { Municipality } from '../../../types/municipality.type';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { Geometry } from 'ol/geom';
+import Feature from 'ol/Feature';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -114,9 +117,9 @@ export class CecopiComponent {
       idProvincia : ['', Validators.required],
       idMunicipio : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date(), Validators.required],
+      fechaFin: [new Date()],
       lugar : ['', Validators.required],
-      observaciones : ['', Validators.required],
+      observaciones : [''],
     });
 
     this.formDataCecopi.get('idMunicipio')?.disable();
@@ -163,6 +166,37 @@ export class CecopiComponent {
     this.municipalities.set(municipalities);
     this.formDataCecopi.get('idMunicipio')?.enable();
   }
+  
+  openModalMap() {
+    if (!this.formDataCecopi.value.idMunicipio) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find(
+      (item) => item.id == this.formDataCecopi.value.idMunicipio.id
+    );
+
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      height: '780px',
+      maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        //this.featuresCoords = features;
+        console.info('features', features);
+      }
+    );
+  }
 
   editarItemCecopi(index: number) {
     const dataEditada = this.formDataCecopi.value;
@@ -201,5 +235,7 @@ export class CecopiComponent {
   closeModal(){
     this.save.emit(false); 
   }
+
+  
 
 }

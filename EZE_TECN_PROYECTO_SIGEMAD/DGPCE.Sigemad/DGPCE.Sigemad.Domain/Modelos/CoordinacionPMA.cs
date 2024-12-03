@@ -8,7 +8,7 @@ public class CoordinacionPMA : BaseDomainModel<int>
     public virtual DireccionCoordinacionEmergencia DireccionCoordinacionEmergencia { get; set; }
 
     public DateOnly FechaInicio { get; set; }
-    public DateOnly FechaFin { get; set; }
+    public DateOnly? FechaFin { get; set; }
 
     public int IdProvincia { get; set; }
     public Provincia Provincia { get; set; }
