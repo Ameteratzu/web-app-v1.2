@@ -339,7 +339,7 @@ export class FireFilterFormComponent implements OnInit {
       FechaInicio: moment(fechaInicio).format('YYYY-MM-DD'),
       FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
       denominacion: name,
-      name: name,
+      search: name,
     });
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
@@ -347,11 +347,12 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   clearFormFilter() {
+    this.formData.reset();
     this.formData.patchValue({
       between: 1,
       move: 1,
       territory: 1,
-      country: '',
+      country: this.COUNTRIES_ID.SPAIN,
       fechaInicio: moment().subtract(4, 'days').toDate(),
       fechaFin: moment().toDate(),
       autonomousCommunity: '',
