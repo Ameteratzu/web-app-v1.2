@@ -7,7 +7,7 @@
 
     <mat-form-field appearance="fill" fxFlex="20">
       <mat-label>Ubicación</mat-label>
-      <input matInput [formControl]="getForm('ubicaciones')" />
+      <input matInput [formControl]="getForm('ubicacion')" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" fxFlex="20">
@@ -26,15 +26,9 @@
     </mat-form-field>
   </div>
 
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <button mat-flat-button [style.background-color]="'var(--fire-color)'">
-      Eliminar
-    </button>
-
+  <div fxLayout="row" fxLayoutAlign="end center">
     <div fxLayout="row" fxLayoutGap="16px">
-      <button mat-flat-button color="primary">Guardar</button>
-      <button mat-flat-button color="warn">Eliminar</button>
-      <button mat-flat-button color="accent">Cancelar</button>
+      <button mat-flat-button color="accent" (click)="volver()">Volver</button>
     </div>
   </div>
 </div>

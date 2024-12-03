@@ -65,8 +65,6 @@ export class CustomSidenavComponent {
     '/episodes': 'episodes'
   };
 
-
-
   registerIcons(): void {
     const icons = [
       { name: 'dashboard', path: '/assets/img/dashboard.svg' },
@@ -98,7 +96,6 @@ export class CustomSidenavComponent {
     });
   }
   
-
   toggleSubmenu(item: any): void {
     item.ruta ? this.redirectTo(item) : "";
     if (this.expandedMenuId === item.id) {

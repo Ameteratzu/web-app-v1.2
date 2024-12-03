@@ -46,6 +46,7 @@ import { FireCoordinationData } from '../../fire-coordination-data/fire-coordina
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fire-edit',
@@ -84,6 +85,7 @@ export class FireEditComponent implements OnInit {
   public eventStatusService = inject(EventStatusService);
   public fireStatusService = inject(FireStatusService);
   public route = inject(ActivatedRoute);
+  public routenav = inject(Router);
 
   public fire = <Fire>{};
   public provinces = signal<Province[]>([]);
@@ -119,7 +121,7 @@ export class FireEditComponent implements OnInit {
       event: new FormControl(),
       generalNote: new FormControl(),
       idEstado: new FormControl(),
-      ubicaciones: new FormControl({ value: '', disabled: true }),
+      ubicacion: new FormControl({ value: '', disabled: true }),
       suceso: new FormControl({ value: '', disabled: true }),
       estado: new FormControl({ value: '', disabled: true }),
     });
@@ -198,7 +200,7 @@ export class FireEditComponent implements OnInit {
     });
   }
 
-  goModalCoordination() {
+  goModalCoordination(fireDetail?: FireDetail) {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
       maxWidth: 'none',
@@ -207,6 +209,7 @@ export class FireEditComponent implements OnInit {
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fireDetail,
       },
     });
 
@@ -267,9 +270,17 @@ export class FireEditComponent implements OnInit {
       this.goModalOtherInformation(fireDetail);
       return;
     }
+    if (fireDetail.tipoRegistro == 'Dirección y coordinación') {
+      this.goModalCoordination(fireDetail);
+      return;
+    }
   }
 
   getFormatdate(date: any) {
     return moment(date).format('DD/MM/YY HH:mm');
+  }
+
+  volver(){
+    this.routenav.navigate([`/fire`])
   }
 }

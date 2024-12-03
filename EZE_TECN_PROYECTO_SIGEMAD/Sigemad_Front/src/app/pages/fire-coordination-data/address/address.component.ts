@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -69,6 +69,8 @@ export class AddressComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
+  @Input() editData: any;
+  
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -86,6 +88,8 @@ export class AddressComponent {
   ]; 
 
   formData!: FormGroup;
+ 
+
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
@@ -96,12 +100,21 @@ export class AddressComponent {
     this.coordinationAddress.set(coordinationAddress);
 
     this.formData = this.fb.group({
-      idTipoDireccionEmergencia : ['', Validators.required],
+      tipoDireccionEmergencia : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date(), Validators.required],
+      fechaFin: [''],
       autoridadQueDirige: ['', Validators.required],
     });
+
+    if (this.editData) {
+      console.log('Información recibida en el hijo:', this.editData);
+      if(this.coordinationServices.dataCoordinationAddress().length === 0){
+        this.coordinationServices.dataCoordinationAddress.set(this.editData);
+      }
+    }
   }
+
+  
 
   onSubmit(){
     if (this.formData.valid) {
@@ -121,11 +134,12 @@ export class AddressComponent {
 
 
   async sendDataToEndpoint() {
+
     if (this.coordinationServices.dataCoordinationAddress().length > 0) {
       this.save.emit(true); 
     }else{
-      this.spinner.show();
-      this.showToast();
+ 
+      // this.showToast();
     }
   }
 

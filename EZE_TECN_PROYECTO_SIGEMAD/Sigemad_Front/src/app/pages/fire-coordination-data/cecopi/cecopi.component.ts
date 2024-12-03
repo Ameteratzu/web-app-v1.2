@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -75,6 +75,7 @@ export class CecopiComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   @Output() save = new EventEmitter<boolean>();
+  @Input() editData: any;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public direcionesServices = inject(DireccionesService);
@@ -114,15 +115,22 @@ export class CecopiComponent {
     
 
     this.formDataCecopi = this.fb.group({
-      idProvincia : ['', Validators.required],
-      idMunicipio : ['', Validators.required],
+      provincia : ['', Validators.required],
+      municipio : ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [new Date()],
+      fechaFin: [''],
       lugar : ['', Validators.required],
       observaciones : [''],
     });
 
-    this.formDataCecopi.get('idMunicipio')?.disable();
+    this.formDataCecopi.get('municipio')?.disable();
+
+    if (this.editData) {
+      console.log('Información recibida en el hijo:', this.editData);
+      if(this.coordinationServices.dataCecopi().length === 0){
+        this.coordinationServices.dataCecopi.set(this.editData);
+      }
+    }
   }
 
   onSubmitCecopi(){
@@ -164,15 +172,15 @@ export class CecopiComponent {
     const province_id = event.value.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
-    this.formDataCecopi.get('idMunicipio')?.enable();
+    this.formDataCecopi.get('municipio')?.enable();
   }
   
   openModalMap() {
-    if (!this.formDataCecopi.value.idMunicipio) {
+    if (!this.formDataCecopi.value.municipio) {
       return;
     }
     const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formDataCecopi.value.idMunicipio.id
+      (item) => item.id == this.formDataCecopi.value.municipio.id
     );
 
     if (!municipioSelected) {

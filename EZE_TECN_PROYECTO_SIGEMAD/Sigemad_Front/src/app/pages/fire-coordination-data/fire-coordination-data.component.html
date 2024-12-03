@@ -11,9 +11,9 @@
     </mat-chip-listbox>
   </div>
   
-  <app-address (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 1" class="component-width" @fadeInOut></app-address>
-  <app-cecopi (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 2" class="component-width" @fadeInOut></app-cecopi>
-  <app-pma (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 3" class="component-width" @fadeInOut></app-pma>
+  <app-address [editData]="editDataDir" (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 1 && isDataReady" class="component-width" @fadeInOut></app-address>
+  <app-cecopi [editData]="editDataCecopi" (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 2 && isDataReady" class="component-width" @fadeInOut></app-cecopi>
+  <app-pma [editData]="editDataPma" (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 3 && isDataReady" class="component-width" @fadeInOut></app-pma>
 
 </div>
 

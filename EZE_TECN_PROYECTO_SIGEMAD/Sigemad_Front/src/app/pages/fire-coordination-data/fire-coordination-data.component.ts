@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, Renderer2, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,8 @@ import { PmaComponent } from './pma/pma.component';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CoordinationAddressService } from '../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FireDetail } from '../../types/fire-detail.type';
+import moment from 'moment';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -42,13 +44,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class FireCoordinationData {
 
   @ViewChild(MatSort) sort!: MatSort;
-  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  data = inject(MAT_DIALOG_DATA) as { 
+    title: string; 
+    idIncendio: number;
+    fireDetail: FireDetail; 
+  };
 
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
-
+  public renderer = inject(Renderer2);
   
   readonly sections = [
     { id: 1, label: 'Dirección' },
@@ -66,21 +72,59 @@ export class FireCoordinationData {
     'opciones',
   ]; 
 
+  editDataDir: any;
+  editDataCecopi: any;
+  editDataPma: any;
+  isDataReady = false; 
+  idReturn = null; 
+
+  async isToEditDocumentation() {
+    if (!this.data?.fireDetail?.id) {
+      this.isDataReady = true;
+      return;
+    }
+    const dataOtraInformacion: any = await this.coordinationServices.getById(
+      Number(this.data.fireDetail.id)
+    );
+
+    this.editDataDir = dataOtraInformacion.direcciones;
+    this.editDataCecopi = dataOtraInformacion.coordinacionesCecopi;
+    this.editDataPma = dataOtraInformacion.coordinacionesPMA;
+    this.isDataReady = true;
+  }
+
+  async ngOnInit() {
+    this.isToEditDocumentation();
+  }
+
   onSelectionChange(event: MatChipListboxChange): void {
     this.selectedOption = event;
   }
 
   async onSaveFromChild(value: boolean) {
+    this.spinner.show();
+    const toolbar = document.querySelector('mat-toolbar');
+    this.renderer.setStyle(toolbar, 'z-index', '1');
+
     if(value){
 
       await this.processData();
 
       this.coordinationServices.clearData();
       this.closeModal();
-      this.spinner.hide();
+     
       this.showToast();
+      setTimeout(() => {
+
+        window.location.href = `fire-national-edit/${
+          this.data?.idIncendio ?? 1
+        }`;
+        this.renderer.setStyle(toolbar, 'z-index', '5');
+        this.spinner.hide();
+      }, 2000);
 
     }else{
+      this.spinner.hide();
       this.coordinationServices.clearData();
       this.closeModal();
     }
@@ -91,10 +135,11 @@ export class FireCoordinationData {
     await this.handleDataProcessing(
       this.coordinationServices.dataCoordinationAddress(),
       (item) => ({
-        idTipoDireccionEmergencia: Number(item.idTipoDireccionEmergencia.id),
+        id : item.id ? item.id : 0,
+        idTipoDireccionEmergencia: Number(item.tipoDireccionEmergencia.id),
         autoridadQueDirige: item.autoridadQueDirige,
         fechaInicio: this.formatDate(item.fechaInicio),
-        fechaFin: this.formatDate(item.fechaFin),
+        fechaFin: item.fechaFin ? this.formatDate(item.fechaFin) : '',
       }),
       this.coordinationServices.postAddress.bind(this.coordinationServices),
       'direcciones'
@@ -103,11 +148,12 @@ export class FireCoordinationData {
     await this.handleDataProcessing(
       this.coordinationServices.dataCecopi(),
       (item) => ({
-        idProvincia: Number(item.idProvincia.id),
-        idMunicipio: Number(item.idMunicipio.id),
+        id : item.id ? item.id : 0,
+        idProvincia: Number(item.provincia.id),
+        idMunicipio: Number(item.municipio.id),
         fechaInicio: this.formatDate(item.fechaInicio),
         lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
+        fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): '',
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
       this.coordinationServices.postCecopi.bind(this.coordinationServices),
@@ -117,11 +163,12 @@ export class FireCoordinationData {
     await this.handleDataProcessing(
       this.coordinationServices.dataPma(),
       (item) => ({
-        idProvincia: Number(item.idProvincia.id),
-        idMunicipio: Number(item.idMunicipio.id),
+        id : item.id ? item.id : 0,
+        idProvincia: Number(item.provincia.id),
+        idMunicipio: Number(item.municipio.id),
         fechaInicio: this.formatDate(item.fechaInicio),
         lugar: String(item.lugar),
-        fechaFin: this.formatDate(item.fechaFin),
+        fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): '',
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
       this.coordinationServices.postPma.bind(this.coordinationServices),
@@ -137,32 +184,19 @@ export class FireCoordinationData {
   ): Promise<void> {
     if (data.length > 0) {
       const formattedData = data.map(formatter);
-  
+      
       const body = {
         idIncendio: this.data.idIncendio,
+        idDireccionCoordinacionEmergencia : this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData, 
       };
   
       const result = await postService(body);
+      this.idReturn = result.idDireccionCoordinacionEmergencia;
+    
+     
     }
   }
-
-  getFormattedDataPma(data: any): any {
-    return {
-      idIncendio: this.data.idIncendio, 
-      coordinaciones: [{
-        idProvincia: Number(data.idProvincia.id),
-        idMunicipio: Number(data.idMunicipio.id),
-        fechaInicio: this.formatDate(data.fechaInicio),
-        lugar: String(data.lugar),
-        fechaFin: this.formatDate(data.fechaFin),
-        GeoPosicion:{"type":"Point","coordinates":[null,null]}
-      }],
-    };
-  }
-
- 
-  
 
   formatDate(date: Date | string): string {
     const d = new Date(date);
@@ -172,7 +206,6 @@ export class FireCoordinationData {
     return `${year}-${month}-${day}`;
   }
     
-
   trackByFn(index: number, item: any): number {
     return item.id;
   }

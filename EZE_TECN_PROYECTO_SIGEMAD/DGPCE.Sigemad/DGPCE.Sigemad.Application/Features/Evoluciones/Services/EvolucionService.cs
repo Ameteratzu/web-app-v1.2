@@ -90,7 +90,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Helpers
 
             // Verificar si es el último registro por fecha de creación
             var ultimoRegistro = await _unitOfWork.Repository<Evolucion>()
-                .GetAsync(d => d.FechaCreacion > evolucionToDelete.FechaCreacion && !d.Borrado);
+                .GetAsync(d => d.FechaCreacion > evolucionToDelete.FechaCreacion && d.Id != evolucionToDelete.Id && !d.Borrado);
 
             if (ultimoRegistro.Any())
             {

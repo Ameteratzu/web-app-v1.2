@@ -21,6 +21,18 @@
           </button>
         </div>
       
+        <div class="toolbar">
+          <button mat-raised-button color="primary" (click)="changeDrawType('Polygon')">
+            <mat-icon>pentagon</mat-icon> Dibujar Polígono
+          </button>
+          <button mat-raised-button color="accent" (click)="changeDrawType('LineString')">
+            <mat-icon>show_chart</mat-icon> Dibujar Línea
+          </button>
+          <button mat-raised-button color="warn" (click)="changeDrawType('Circle')">
+            <mat-icon>circle</mat-icon> Dibujar Círculo
+          </button>
+          
+        </div>
         <div id="map" class="map"></div>
       </mat-grid-tile>
   
