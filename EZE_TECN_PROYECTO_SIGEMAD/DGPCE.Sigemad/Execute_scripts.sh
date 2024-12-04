@@ -35,18 +35,20 @@ else
     echo "Conexión al servidor de base de datos verificada correctamente."
 fi
 
-# Verificar si la base de datos existe
-DB_CHECK=$(/opt/mssql-tools18/bin/sqlcmd -S $DB_SERVER -U $DB_USER -P $DB_PASSWORD -Q "SELECT name FROM sys.databases WHERE name = '$DB_NAME'" -h -1 | tr -d ' \r')
+# Eliminar la base de datos si existe
+echo "Eliminando la base de datos $DB_NAME si existe..."
+/opt/mssql-tools18/bin/sqlcmd -S $DB_SERVER -U $DB_USER -P $DB_PASSWORD -Q "IF EXISTS (SELECT name FROM sys.databases WHERE name = '$DB_NAME') DROP DATABASE [$DB_NAME]" -C
+if [ $? -ne 0 ]; then
+    echo "Error al eliminar la base de datos $DB_NAME"
+    exit 1
+fi
 
-if [ -z "$DB_CHECK" ]; then
-    echo "La base de datos $DB_NAME no existe. Creándola..."
-    /opt/mssql-tools18/bin/sqlcmd -S $DB_SERVER -U $DB_USER -P $DB_PASSWORD -Q "CREATE DATABASE [$DB_NAME]" -C
-    if [ $? -ne 0 ]; then
-        echo "Error al crear la base de datos $DB_NAME"
-        exit 1
-    fi
-else
-    echo "La base de datos $DB_NAME ya existe."
+# Crear la base de datos
+echo "Creando la base de datos $DB_NAME..."
+/opt/mssql-tools18/bin/sqlcmd -S $DB_SERVER -U $DB_USER -P $DB_PASSWORD -Q "CREATE DATABASE [$DB_NAME]" -C
+if [ $? -ne 0 ]; then
+    echo "Error al crear la base de datos $DB_NAME"
+    exit 1
 fi
 
 # Ejecutar scripts en la carpeta DLL para la base de datos
@@ -56,5 +58,4 @@ execute_scripts_in_folder $DLL_FOLDER
 execute_scripts_in_folder $DATOS_FOLDER
 
 echo "Todos los scripts se ejecutaron correctamente para la base de datos $DB_NAME."
-
 echo "Proceso completado con éxito."
