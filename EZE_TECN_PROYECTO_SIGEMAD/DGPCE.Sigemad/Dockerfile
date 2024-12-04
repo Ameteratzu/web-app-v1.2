@@ -52,7 +52,7 @@ EXPOSE 8080
 
 # Establecer variables de entorno para producción
 ENV ASPNETCORE_URLS=http://+:8080
-ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 # Modificar el comando de inicio para ejecutar el script antes de iniciar la API
 CMD /app/Execute_scripts.sh && dotnet DGPCE.Sigemad.API.dll
