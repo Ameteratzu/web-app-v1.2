@@ -10,7 +10,7 @@ RUN npm ci
 COPY . . 
 
 # Build the application in production mode
-RUN npm run build --prod
+RUN npm run build:prod
 
 # Stage 2: Serve the application with Nginx
 FROM docker-registry.ns-sigemad-pipeline.svc.cluster.local:5000/nginx:1.21.6
