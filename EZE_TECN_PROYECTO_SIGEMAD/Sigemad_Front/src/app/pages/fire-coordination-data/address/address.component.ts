@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -11,7 +11,7 @@ import {
 } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { DireccionesService } from '../../../services/direcciones.service'
@@ -32,7 +32,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -43,10 +43,10 @@ const MY_DATE_FORMATS = {
   selector: 'app-address',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     MatInputModule,
     FlexLayoutModule,
@@ -70,26 +70,24 @@ export class AddressComponent {
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
   @Input() editData: any;
-  
+
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
-  
+
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
-  
- public displayedColumns: string[] = [
+
+  public displayedColumns: string[] = [
     'fechaHora',
     'procendenciaDestino',
     'descripcion',
     'fichero',
     'opciones',
-  ]; 
+  ];
 
   formData!: FormGroup;
- 
-
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
@@ -100,34 +98,34 @@ export class AddressComponent {
     this.coordinationAddress.set(coordinationAddress);
 
     this.formData = this.fb.group({
-      tipoDireccionEmergencia : ['', Validators.required],
+      tipoDireccionEmergencia: ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [''],
+      fechaFin: [null],
       autoridadQueDirige: ['', Validators.required],
     });
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
-      if(this.coordinationServices.dataCoordinationAddress().length === 0){
+      if (this.coordinationServices.dataCoordinationAddress().length === 0) {
         this.coordinationServices.dataCoordinationAddress.set(this.editData);
       }
     }
   }
 
-  
-
-  onSubmit(){
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
-      if(this.isCreate() == -1){
-        
-        this.coordinationServices.dataCoordinationAddress.set([data, ...this.coordinationServices.dataCoordinationAddress()]);  
-      }else{
+      if (this.isCreate() == -1) {
+
+        this.coordinationServices.dataCoordinationAddress.set([data, ...this.coordinationServices.dataCoordinationAddress()]);
+      } else {
         this.editarItem(this.isCreate())
       }
-      
-      this.formData.reset()
-    }else {
+
+      formDirective.resetForm();
+      this.formData.reset();
+
+    } else {
       this.formData.markAllAsTouched();
     }
   }
@@ -136,18 +134,18 @@ export class AddressComponent {
   async sendDataToEndpoint() {
 
     if (this.coordinationServices.dataCoordinationAddress().length > 0) {
-      this.save.emit(true); 
-    }else{
- 
+      this.save.emit(true);
+    } else {
+
       // this.showToast();
     }
   }
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -159,22 +157,28 @@ export class AddressComponent {
     });
     this.isCreate.set(-1)
     this.formData.reset()
-    
+
   }
 
   eliminarItem(index: number) {
     this.coordinationServices.dataCoordinationAddress.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  seleccionarItem(index: number){
-    this.isCreate.set(index)
-    this.formData.patchValue(this.coordinationServices.dataCoordinationAddress()[index]);
+  seleccionarItem(index: number) {
+    const selectedItem = this.coordinationServices.dataCoordinationAddress()[index];
+    this.isCreate.set(index);
+
+    this.formData.patchValue({
+      ...selectedItem,
+      tipoDireccionEmergencia: this.findOptionMatch(selectedItem.tipoDireccionEmergencia),
+    });
   }
 
-  getFormatdate(date: any){
+
+  getFormatdate(date: any) {
     return moment(date).format('DD/MM/YY')
   }
 
@@ -186,8 +190,12 @@ export class AddressComponent {
     return item.id;
   }
 
-  closeModal(){
-    this.save.emit(false); 
+  closeModal() {
+    this.save.emit(false);
+  }
+
+  findOptionMatch(option: any) {
+    return this.coordinationAddress().find((item) => item.id === option.id);
   }
 
 }

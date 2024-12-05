@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -106,7 +106,6 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    console.log("🚀 ~ CecopiComponent ~ dataCecopi:", this.coordinationServices.dataCecopi())
     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
@@ -133,7 +132,7 @@ export class CecopiComponent {
     }
   }
 
-  onSubmitCecopi(){
+  onSubmitCecopi(formDirective: FormGroupDirective): void{
     if (this.formDataCecopi.valid) {
       const data = this.formDataCecopi.value;
       if(this.isCreate() == -1){
@@ -142,8 +141,13 @@ export class CecopiComponent {
       }else{
         this.editarItemCecopi(this.isCreate())
       }
-    
-      this.formDataCecopi.reset()
+
+      formDirective.resetForm();
+      this.formDataCecopi.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formDataCecopi.get('municipio')?.disable();
     }else {
       this.formDataCecopi.markAllAsTouched();
     }
@@ -225,7 +229,17 @@ export class CecopiComponent {
 
   seleccionarItemCecopi(index: number){
     this.isCreate.set(index)
-    this.formDataCecopi.patchValue(this.coordinationServices.dataCecopi()[index]);
+    const selectedItem = this.coordinationServices.dataCecopi()[index];
+
+    // Actualizar los valores en el formulario
+    this.formDataCecopi.patchValue(selectedItem);
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formDataCecopi.get('municipio')?.enable();
+    } else {
+      this.formDataCecopi.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any){

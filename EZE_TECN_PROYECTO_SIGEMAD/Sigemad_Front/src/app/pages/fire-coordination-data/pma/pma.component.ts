@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -131,7 +131,7 @@ export class PmaComponent {
     }
   }
 
-  onSubmit(){
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if(this.isCreate() == -1){
@@ -141,7 +141,13 @@ export class PmaComponent {
         this.editarItem(this.isCreate())
       }
       
-      this.formData.reset()
+      formDirective.resetForm();
+      this.formData.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formData.get('municipio')?.disable();
+
     }else {
       this.formData.markAllAsTouched();
     }
@@ -230,10 +236,20 @@ export class PmaComponent {
       return [...data]; 
     });
   }
-
+  
   seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.coordinationServices.dataPma()[index]);
+    const selectedItem = this.coordinationServices.dataPma()[index];
+
+    // Actualizar los valores en el formulario
+    this.formData.patchValue(selectedItem);
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formData.get('municipio')?.enable();
+    } else {
+      this.formData.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any){
