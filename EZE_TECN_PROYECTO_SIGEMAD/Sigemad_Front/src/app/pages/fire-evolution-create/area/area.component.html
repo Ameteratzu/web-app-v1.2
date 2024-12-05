@@ -1,5 +1,5 @@
 <div class="form-container">
-    <form *ngIf="formData" [formGroup]="formData" (ngSubmit)="onSubmit()">
+    <form *ngIf="formData" #formDirective="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit(formDirective)">
       <div>
         <h3 class="title">DATOS PRINCIPALES</h3>
         <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
@@ -9,6 +9,9 @@
             <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaHora')" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">
+              Este campo es obligatorio.
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill" fxFlex="50%" >
@@ -18,6 +21,9 @@
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('idProvincia')?.hasError('required')">
+              Este campo es obligatorio.
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="fill" fxFlex="50%">
@@ -27,6 +33,9 @@
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('idMunicipio')?.hasError('required')">
+              Este campo es obligatorio.
+            </mat-error>
           </mat-form-field>
 
         </div>

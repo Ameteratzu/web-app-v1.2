@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -181,7 +182,7 @@ export class FireDocumentation implements OnInit {
     return item;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = { file: this.file, ...this.formData.value };
 
@@ -190,6 +191,8 @@ export class FireDocumentation implements OnInit {
       } else {
         this.editarItem(this.isCreate());
       }
+
+      formDirective.resetForm();
       this.formData.reset({
         procendenciaDestino: [],
         tipoDocumento: null,
