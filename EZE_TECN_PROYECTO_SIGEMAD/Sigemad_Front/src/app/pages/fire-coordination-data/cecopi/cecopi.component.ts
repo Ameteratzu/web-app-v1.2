@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -106,7 +106,6 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    console.log("🚀 ~ CecopiComponent ~ dataCecopi:", this.coordinationServices.dataCecopi())
     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
@@ -133,7 +132,7 @@ export class CecopiComponent {
     }
   }
 
-  onSubmitCecopi(){
+  onSubmitCecopi(formDirective: FormGroupDirective): void{
     if (this.formDataCecopi.valid) {
       const data = this.formDataCecopi.value;
       if(this.isCreate() == -1){
@@ -142,8 +141,12 @@ export class CecopiComponent {
       }else{
         this.editarItemCecopi(this.isCreate())
       }
-    
-      this.formDataCecopi.reset()
+
+      formDirective.resetForm();
+      this.formDataCecopi.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      })
     }else {
       this.formDataCecopi.markAllAsTouched();
     }

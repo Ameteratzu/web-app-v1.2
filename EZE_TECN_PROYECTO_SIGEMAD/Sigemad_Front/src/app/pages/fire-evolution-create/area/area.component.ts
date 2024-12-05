@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -129,7 +129,7 @@ export class AreaComponent {
     this.formData.get('idMunicipio')?.enable();
   }
 
-  onSubmit(){
+  onSubmit(formDirective: FormGroupDirective): void{
     if (this.formData.valid) {
       const data = this.formData.value;
       if(this.isCreate() == -1){
@@ -139,6 +139,9 @@ export class AreaComponent {
         this.editarItem(this.isCreate())
       }
       
+      formDirective.resetForm({
+        fechaHora: new Date(),
+      });
       this.formData.reset()
     }else {
       this.formData.markAllAsTouched();

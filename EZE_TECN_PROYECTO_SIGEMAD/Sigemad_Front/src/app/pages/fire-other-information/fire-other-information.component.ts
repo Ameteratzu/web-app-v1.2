@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -171,7 +172,7 @@ export class FireOtherInformationComponent implements OnInit {
     return item.id;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -180,6 +181,7 @@ export class FireOtherInformationComponent implements OnInit {
         this.editarItem(this.isCreate());
       }
 
+      formDirective.resetForm();
       this.formData.reset();
     } else {
       this.formData.markAllAsTouched();
