@@ -40,13 +40,13 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
+import { Router } from '@angular/router';
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fire-edit',
@@ -204,11 +204,12 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
       maxWidth: 'none',
-      height: '90vh',
+      //height: '90vh',
       disableClose: true,
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
         fireDetail,
       },
     });
@@ -261,7 +262,6 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-    console.info('fireDetail', fireDetail);
     if (fireDetail.tipoRegistro == 'Documentación') {
       this.goModalDocumentation(fireDetail);
       return;
@@ -280,7 +280,7 @@ export class FireEditComponent implements OnInit {
     return moment(date).format('DD/MM/YY HH:mm');
   }
 
-  volver(){
-    this.routenav.navigate([`/fire`])
+  volver() {
+    this.routenav.navigate([`/fire`]);
   }
 }
