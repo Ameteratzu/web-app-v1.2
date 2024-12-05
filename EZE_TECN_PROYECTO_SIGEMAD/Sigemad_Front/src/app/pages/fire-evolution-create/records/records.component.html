@@ -55,18 +55,17 @@
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field class="input spaced-input" fxFlex="75%">
-            <mat-label>Observaciones</mat-label>
-            <textarea matInput [formControl]="getForm('observations_1')"> </textarea>
+             <mat-form-field class="input spaced-input" fxFlex="75%">
+            <mat-label>Previsión</mat-label>
+            <input matInput [formControl]="getForm('forecast')"/>
           </mat-form-field>
         </div>
 
         <div class="row" fxLayout="row" fxLayoutAlign="start center">
-
-          <mat-form-field class="input full-width-input" fxFlex="99%">
-            <mat-label>Previsión</mat-label>
-            <textarea matInput [formControl]="getForm('forecast')"> </textarea>
-          </mat-form-field>
+          <mat-form-field class="input spaced-input" fxFlex="100%">
+            <mat-label>Observaciones</mat-label>
+            <textarea matInput [formControl]="getForm('observations_1')"> </textarea>
+          </mat-form-field>     
         </div>
       </div>
 
@@ -75,7 +74,7 @@
         <h3 class="title">PARÁMETROS</h3>
         <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
 
-          <mat-form-field class="input spaced-input" fxFlex="20%">
+          <mat-form-field class="input full-width-input " fxFlex="20%">
             <mat-label>Estado del incendio </mat-label>
             <mat-select formControlName="status">
               <mat-option *ngFor="let op of status()" [value]="op.id">
@@ -128,7 +127,7 @@
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Superficie afectada (Ha)</mat-label>
-            <input matInput [formControl]="getForm('afectada')" type="number" placeholder="Ingresa área" required  (keypress)="allowOnlyNumbers($event)"/>
+            <input matInput [formControl]="getForm('afectada')" type="number" placeholder="Ingresa área" required  (keypress)="allowOnlyNumbersAndDecimal($event)"/>
           </mat-form-field>
 
         </div>
