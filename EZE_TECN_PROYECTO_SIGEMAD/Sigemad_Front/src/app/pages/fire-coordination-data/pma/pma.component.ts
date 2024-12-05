@@ -145,7 +145,9 @@ export class PmaComponent {
       this.formData.reset({
         fechaInicio: new Date(),
         fechaFin: null,
-      })
+      });
+      this.formData.get('municipio')?.disable();
+
     }else {
       this.formData.markAllAsTouched();
     }
@@ -234,10 +236,20 @@ export class PmaComponent {
       return [...data]; 
     });
   }
-
+  
   seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.coordinationServices.dataPma()[index]);
+    const selectedItem = this.coordinationServices.dataPma()[index];
+
+    // Actualizar los valores en el formulario
+    this.formData.patchValue(selectedItem);
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formData.get('municipio')?.enable();
+    } else {
+      this.formData.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any){

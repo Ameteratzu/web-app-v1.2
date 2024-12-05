@@ -137,7 +137,7 @@ export class FireDocumentation implements OnInit {
       horaSolicitud: ['', Validators.required],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: [''],
     });
 
     this.dataSource.data = [];

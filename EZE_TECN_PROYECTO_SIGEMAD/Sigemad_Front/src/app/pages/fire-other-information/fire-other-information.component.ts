@@ -134,8 +134,8 @@ export class FireOtherInformationComponent implements OnInit {
       hora: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: ['', Validators.required],
-      observaciones: ['', Validators.required],
+      asunto: [''],
+      observaciones: [''],
     });
 
     const procedenciasDestino = await this.originDestinationService.get();

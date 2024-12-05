@@ -143,6 +143,7 @@ export class AreaComponent {
         fechaHora: new Date(),
       });
       this.formData.reset()
+      this.formData.get('idMunicipio')?.disable();
     }else {
       this.formData.markAllAsTouched();
     }
@@ -187,7 +188,23 @@ export class AreaComponent {
 
   seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.evolutionService.dataAffectedArea()[index]);
+    const selectedItem = this.evolutionService.dataAffectedArea()[index];
+
+    // Actualizar los valores en el formulario
+    this.formData.patchValue(selectedItem);
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.idMunicipio) {
+      this.formData.get('idMunicipio')?.enable();
+    } else {
+      this.formData.get('idMunicipio')?.disable();
+    }
+
+    if (selectedItem.idEntidadMenor) {
+      this.formData.get('idEntidadMenor')?.enable();
+    } else {
+      this.formData.get('idEntidadMenor')?.disable();
+    }
   }
 
   getFormatdate(date: any){

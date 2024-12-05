@@ -146,7 +146,8 @@ export class CecopiComponent {
       this.formDataCecopi.reset({
         fechaInicio: new Date(),
         fechaFin: null,
-      })
+      });
+      this.formDataCecopi.get('municipio')?.disable();
     }else {
       this.formDataCecopi.markAllAsTouched();
     }
@@ -228,7 +229,17 @@ export class CecopiComponent {
 
   seleccionarItemCecopi(index: number){
     this.isCreate.set(index)
-    this.formDataCecopi.patchValue(this.coordinationServices.dataCecopi()[index]);
+    const selectedItem = this.coordinationServices.dataCecopi()[index];
+
+    // Actualizar los valores en el formulario
+    this.formDataCecopi.patchValue(selectedItem);
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formDataCecopi.get('municipio')?.enable();
+    } else {
+      this.formDataCecopi.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any){
