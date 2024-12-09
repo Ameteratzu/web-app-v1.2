@@ -1,23 +1,20 @@
 <div class="form-container">
   <form *ngIf="formData" #formDirective="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit(formDirective)">
-    <div>
-      <h3 class="title">COORDINACION EN PMA</h3>
-      <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-        <mat-form-field appearance="fill" fxFlex="20%">
-          <mat-label>Fecha inicio</mat-label>
-          <input matInput [matDatepicker]="picker4" [formControl]="getForm('fechaInicio')" />
-          <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-          <mat-datepicker #picker4></mat-datepicker>
-          <mat-error *ngIf="formData.get('fechaInicio')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        </mat-form-field>
+    <h3 class="title">COORDINACION EN PMA</h3>
+    <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+      <mat-form-field appearance="fill" fxFlex="20%">
+        <mat-label>Fecha inicio</mat-label>
+        <input matInput [matDatepicker]="picker4" [formControl]="getForm('fechaInicio')" />
+        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+        <mat-datepicker #picker4></mat-datepicker>
+        <mat-error *ngIf="formData.get('fechaInicio')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="input" fxFlex="80%">
-          <mat-label>Lugar</mat-label>
-          <input matInput [formControl]="getForm('lugar')" placeholder="Ingresa texto" required />
-        </mat-form-field>
-      </div>
+      <mat-form-field class="input" fxFlex="80%">
+        <mat-label>Lugar</mat-label>
+        <input matInput [formControl]="getForm('lugar')" placeholder="Ingresa texto" required />
+      </mat-form-field>
     </div>
-  </form>
 
     <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
       <!-- Provincia -->
