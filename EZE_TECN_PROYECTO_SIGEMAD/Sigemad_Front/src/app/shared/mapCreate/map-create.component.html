@@ -3,14 +3,22 @@
 >
   <div id="map"></div>
 
-  <div class="p-flex mt-20">
+  <div class="p-flex mt-20" *ngIf="!data.onlyView">
     <div>
-      <button (click)="closeModal()" mat-flat-button color="secondary">
+      <button (click)="closeModal()" mat-raised-button color="secondary">
         Cancelar
       </button>
 
       <button (click)="savePolygon()" mat-flat-button color="primary">
         Guardar
+      </button>
+    </div>
+  </div>
+
+  <div class="p-flex mt-20" *ngIf="data.onlyView">
+    <div>
+      <button (click)="closeModal()" mat-flat-button color="secondary">
+        Cerrar
       </button>
     </div>
   </div>

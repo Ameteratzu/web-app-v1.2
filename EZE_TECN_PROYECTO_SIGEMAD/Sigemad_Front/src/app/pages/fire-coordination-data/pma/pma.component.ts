@@ -215,8 +215,6 @@ export class PmaComponent {
       return;
     }
 
-    console.info('this.polygon()', this.polygon());
-
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
@@ -271,10 +269,7 @@ export class PmaComponent {
           municipio.id ===
           Number(this.coordinationServices.dataPma()[index].municipio.id)
       );
-    console.info(
-      'this.coordinationServices.dataPma()[index]',
-      this.coordinationServices.dataPma()[index]
-    );
+
     this.formData.patchValue({
       ...this.coordinationServices.dataPma()[index],
       provincia: provinciaSeleccionada(),
