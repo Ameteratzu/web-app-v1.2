@@ -50,10 +50,6 @@ CREATE TABLE dbo.Registro (
 );
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
-
-);
-
-CREATE TABLE dbo.Registro_ProcedenciaDestino (
 	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	IdRegistro int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
 	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
