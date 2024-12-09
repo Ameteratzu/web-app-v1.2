@@ -9,7 +9,7 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
      : base(e => e.Id == id && e.Borrado == false)
     {
 
-        AddCriteria(i => i.Registro.Borrado == false);
+        AddCriteria(i => i.Registro != null ? i.Registro.Borrado == false : true);
         AddInclude(i => i.Registro);
         AddInclude(i => i.Registro.EntradaSalida);
         AddInclude(i => i.Registro.Medio);
@@ -19,7 +19,7 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
 
 
 
-        AddCriteria(i => i.Parametro.Borrado == false);
+        AddCriteria(i => i.DatoPrincipal != null ? i.Parametro.Borrado == false : true);
         AddInclude(i => i.Parametro);
         AddInclude(i => i.Parametro.EstadoIncendio);
         AddInclude(i => i.Parametro.Fase);
@@ -27,7 +27,7 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
         AddInclude(i => i.Parametro.SituacionOperativa);
 
 
-        AddCriteria(i => i.DatoPrincipal.Borrado == false);
+        AddCriteria(i => i.DatoPrincipal != null ? i.DatoPrincipal.Borrado == false : true);
         AddInclude(i => i.DatoPrincipal);
 
         AddInclude(i => i.AreaAfectadas.Where(a => !a.Borrado));
