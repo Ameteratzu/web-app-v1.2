@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +31,8 @@ import { MunicipalityService } from '../../../services/municipality.service';
 import { Municipality } from '../../../types/municipality.type';
 import { MinorEntityService } from '../../../services/minor-entity.service';
 import { MinorEntity } from '../../../types/minor-entity.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { ChangeDetectorRef } from '@angular/core';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -73,7 +75,10 @@ export class AreaComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
   private provinceService = inject(ProvinceService);
@@ -82,6 +87,7 @@ export class AreaComponent {
   private spinner = inject(NgxSpinnerService);
   private municipalityService = inject(MunicipalityService);
   private minorService = inject(MinorEntityService);
+  private cdr = inject(ChangeDetectorRef);
   
  public displayedColumns: string[] = [
     'fechaHora',
@@ -105,63 +111,67 @@ export class AreaComponent {
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
-    // const minor = await this.minorService.get();
-    // this.minors.set(minor);
-
     this.formData = this.fb.group({
       fechaHora: [new Date(), Validators.required],
-      idProvincia: [null, Validators.required],
-      idMunicipio: [null, Validators.required],
-      idEntidadMenor: [null],
+      provincia: [null, Validators.required],
+      municipio: [null, Validators.required],
+      entidadMenor: [null],
       observaciones: [''],
       fichero: ['', Validators.required],
     });
-    this.formData.get('idMunicipio')?.disable();
+    this.formData.get('municipio')?.disable();
     this.formData.get('fichero')?.disable();
-    this.formData.get('idEntidadMenor')?.disable();
+    this.formData.get('entidadMenor')?.disable();
 
+    if (this.editData) {
+      if(this.evolutionService.dataAffectedArea().length === 0){
+        this.evolutionService.dataAffectedArea.set(this.editData.areaAfectadas);
+      }
+    }
+    this.spinner.hide();
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value.id;
+    this.spinner.show();
+    const province_id = event.value;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
-    this.formData.get('idMunicipio')?.enable();
+    this.formData.get('municipio')?.enable();
+    this.spinner.hide();
   }
 
+  async loadMinor(event: any) {
+    this.spinner.show();
+    const muni_id = event.value;
+    const minor = await this.minorService.get(muni_id);
+    this.minors.set(minor);
+    this.formData.get('entidadMenor')?.enable();
+    this.spinner.hide();
+  }
+   
   onSubmit(){
+   
     if (this.formData.valid) {
       const data = this.formData.value;
       if(this.isCreate() == -1){
-        
         this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);  
       }else{
         this.editarItem(this.isCreate())
       }
-      
       this.formData.reset()
     }else {
       this.formData.markAllAsTouched();
     }
   }
 
-
   async sendDataToEndpoint() {
-    this.spinner.show();
-    if (this.evolutionService.dataAffectedArea().length > 0) {
-      this.save.emit(true); 
+    if (this.evolutionService.dataAffectedArea().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
     }else{
-      this.spinner.hide();
-      this.showToast();
+      if (this.editData){
+        this.save.emit({ save: false, delete: false, close: false, update: true  });
+      } 
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
   }
 
   editarItem(index: number) {
@@ -182,10 +192,29 @@ export class AreaComponent {
     });
   }
 
-  seleccionarItem(index: number){
+  async seleccionarItem(index: number){
     this.isCreate.set(index)
-    this.formData.patchValue(this.evolutionService.dataAffectedArea()[index]);
+    const data = this.evolutionService.dataAffectedArea()[index];
+    this.spinner.show();
+
+    if(data.provincia.id){
+      const municipalities = await this.municipalityService.get(data.provincia.id);
+      this.municipalities.set(municipalities);
+      
+    }
+    if(data.entidadMenor.id && data.municipio.id){
+      const minor = await this.minorService.get(data.municipio.id);
+      console.log("🚀 ~ AreaComponent ~ seleccionarItem ~ minor:", minor)
+      this.minors.set(minor);
+    }
+    this.formData.get('fechaHora')?.setValue(data.fechaHora);
+    this.formData.get('provincia')?.setValue(data.provincia.id);
+    this.formData.get('municipio')?.setValue(data.municipio.id);
+    this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+    this.formData.get('observaciones')?.setValue(data.observaciones);
+    this.spinner.hide();
   }
+   
 
   getFormatdate(date: any){
     return moment(date).format('DD/MM/YY')
@@ -200,7 +229,29 @@ export class AreaComponent {
   }
 
   closeModal(){
-    this.save.emit(false); 
+    this.save.emit({ save: false, delete: false, close: true, update: false  }); 
+  }
+
+  delete(){
+    this.save.emit({ save: false, delete: true, close: false, update: false  }); 
+  }
+
+  getProvincesById(id: number): string | null {
+    const data = this.provinces();
+    const found = data.find(item => item.id === id);
+    return found ? found.descripcion : null;
+  }
+
+  getMunicipalitiesById(id: number): string | null {
+    const data = this.municipalities();
+    const found = data.find(item => item.id === id);
+    return found ? found.descripcion : null;
+  }
+
+  getMinorById(id: number): string | null {
+    const data = this.minors();
+    const found = data.find(item => item.id === id);
+    return found ? found.descripcion : "Sin identidad menor";
   }
 
 }

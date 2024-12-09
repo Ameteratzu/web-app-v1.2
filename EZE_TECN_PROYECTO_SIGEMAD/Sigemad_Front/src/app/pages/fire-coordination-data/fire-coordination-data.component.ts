@@ -1,12 +1,11 @@
 import { Component, inject, Renderer2, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout'; 
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 import { AddressComponent } from './address/address.component';
 import { CecopiComponent } from './cecopi/cecopi.component';
@@ -15,7 +14,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CoordinationAddressService } from '../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireDetail } from '../../types/fire-detail.type';
-import moment from 'moment';
+import { Router } from '@angular/router';
+import { AlertService } from '../../shared/alert/alert.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -29,7 +30,8 @@ import moment from 'moment';
     NgxSpinnerModule,
     AddressComponent,
     CecopiComponent,
-    PmaComponent
+    PmaComponent,
+    MatButtonModule
   ],
   templateUrl: './fire-coordination-data.component.html',
   styleUrl: './fire-coordination-data.component.scss',
@@ -47,7 +49,7 @@ export class FireCoordinationData {
   data = inject(MAT_DIALOG_DATA) as { 
     title: string; 
     idIncendio: number;
-    fireDetail: FireDetail; 
+    fireDetail?: FireDetail; 
   };
 
   public matDialog = inject(MatDialog);
@@ -55,7 +57,10 @@ export class FireCoordinationData {
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
   public renderer = inject(Renderer2);
+  public router = inject(Router);
+  public alertService = inject(AlertService);
   
+  private dialogRef = inject(MatDialogRef<FireCoordinationData>);
   readonly sections = [
     { id: 1, label: 'Dirección' },
     { id: 2, label: 'Coordinación CECOPI' },
@@ -77,58 +82,135 @@ export class FireCoordinationData {
   editDataPma: any;
   isDataReady = false; 
   idReturn = null; 
+  isEdit = false;
 
   async isToEditDocumentation() {
     if (!this.data?.fireDetail?.id) {
       this.isDataReady = true;
       return;
     }
-    const dataOtraInformacion: any = await this.coordinationServices.getById(
+
+    const dataCordinacion: any = await this.coordinationServices.getById(
       Number(this.data.fireDetail.id)
     );
 
-    this.editDataDir = dataOtraInformacion.direcciones;
-    this.editDataCecopi = dataOtraInformacion.coordinacionesCecopi;
-    this.editDataPma = dataOtraInformacion.coordinacionesPMA;
+    this.editDataDir = dataCordinacion.direcciones;
+    this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
+    this.editDataPma = dataCordinacion.coordinacionesPMA;
     this.isDataReady = true;
   }
 
   async ngOnInit() {
+    this.spinner.show();
     this.isToEditDocumentation();
   }
 
   onSelectionChange(event: MatChipListboxChange): void {
+    this.spinner.show();
     this.selectedOption = event;
   }
 
-  async onSaveFromChild(value: boolean) {
+  async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean, update: boolean }) {
+    const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find(
+      key => value[key]
+    );
+    console.log("🚀 ~ FireCoordinationData ~ onSaveFromChild ~ keyWithTrue:", keyWithTrue)
+    this.isEdit = false;
+  
+    if (keyWithTrue) {
+      switch (keyWithTrue) {
+        case 'save':
+          this.save()
+          break;
+        case 'delete':
+          this.delete();
+          break;
+        case 'close':
+          this.spinner.hide();
+          this.coordinationServices.clearData();
+          this.closeModal(true);
+          break;
+        case 'update':
+          this.isEdit = true;
+            this.save()
+          break;
+        default:
+          console.error('Clave inesperada');
+      }
+    } else {
+      console.log('Ninguna clave tiene valor true');
+    }
+  }
+
+  async save() {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
+    await this.processData();
 
-    if(value){
-
-      await this.processData();
-
-      this.coordinationServices.clearData();
-      this.closeModal();
-     
-      this.showToast();
-      setTimeout(() => {
-
-        window.location.href = `fire-national-edit/${
-          this.data?.idIncendio ?? 1
-        }`;
+    this.coordinationServices.clearData();
+    
+    setTimeout(() => {
         this.renderer.setStyle(toolbar, 'z-index', '5');
-        this.spinner.hide();
+        this.alertService
+        .showAlert({
+          title: "Buen trabajo!",
+          text: "Registro subido correctamente!",
+          icon: "success",
+        })
+        .then(async (result) => {
+
+          this.isDataReady = false;
+          const dataCordinacion: any = await this.coordinationServices.getById(
+            Number(this.idReturn)
+          );
+      
+          this.editDataDir = dataCordinacion.direcciones;
+          this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
+          this.editDataPma = dataCordinacion.coordinacionesPMA;
+          this.isDataReady = true;
+          this.spinner.hide();
+
+        });
       }, 2000);
+  }
 
-    }else{
-      this.spinner.hide();
-      this.coordinationServices.clearData();
-      this.closeModal();
-    }
+  async delete(){
+    const toolbar = document.querySelector('mat-toolbar');
+    this.renderer.setStyle(toolbar, 'z-index', '1');
+    this.spinner.show();
 
+    this.alertService
+      .showAlert({
+        title: "¿Estás seguro?",
+        text: "¡No podrás revertir esto!",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        confirmButtonText: "¡Sí, eliminar!",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          console.log("🚀 ~ FireCoordinationData ~ .then ~ this.data?.fireDetail?.id:", this.data?.fireDetail?.id)
+          await this.coordinationServices.delete(Number(this.data?.fireDetail?.id));
+          this.coordinationServices.clearData();
+          setTimeout(() => {
+            this.renderer.setStyle(toolbar, 'z-index', '5');
+            this.spinner.hide();
+          }, 2000);
+
+          this.alertService.showAlert({
+            title: 'Eliminado!',
+            icon: 'success',
+          }).then((result) => {
+            this.closeModal(true);
+          });
+        }else{
+          this.spinner.hide();
+        }
+         
+      });
+    
   }
 
   async processData(): Promise<void> {
@@ -182,7 +264,9 @@ export class FireCoordinationData {
     postService: (body: any) => Promise<any>,
     key: string
   ): Promise<void> {
-    if (data.length > 0) {
+    //if (data.length > 0 || this.isEdit ) {
+    if (data.length > 0 ) {
+      
       const formattedData = data.map(formatter);
       
       const body = {
@@ -210,16 +294,7 @@ export class FireCoordinationData {
     return item.id;
   }
 
-  closeModal(){
-    this.matDialog.closeAll();
+  closeModal(value: boolean){
+    this.dialogRef.close(value);
   }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
-  }
-
 }

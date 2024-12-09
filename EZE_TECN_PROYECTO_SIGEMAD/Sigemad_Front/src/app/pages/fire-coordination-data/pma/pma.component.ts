@@ -33,6 +33,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
 import { Geometry } from 'ol/geom';
 import Feature from 'ol/Feature';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -75,8 +76,9 @@ export class PmaComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
   
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
@@ -129,6 +131,7 @@ export class PmaComponent {
         this.coordinationServices.dataPma.set(this.editData);
       }
     }
+    this.spinner.hide();
   }
 
   onSubmit(){
@@ -148,23 +151,13 @@ export class PmaComponent {
   }
 
   async sendDataToEndpoint() {
-    console.log("🚀 ~ PmaComponent ~ sendDataToEndpoint ~ this.coordinationServices:", this.coordinationServices.dataPma())
-    this.spinner.show();
-    if (this.coordinationServices.dataPma().length > 0) {
-    
-      this.save.emit(true); 
+    if (this.coordinationServices.dataPma().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
     }else{
-      this.spinner.show();
-      this.showToast();
+      if (this.editData){
+        this.save.emit({ save: false, delete: false, close: false, update: true  });
+      } 
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
   }
 
 
@@ -249,7 +242,11 @@ export class PmaComponent {
   }
 
   closeModal(){
-    this.save.emit(false); 
+    this.save.emit({ save: false, delete: false, close: true, update: false  });  
+  }
+
+  delete(){
+    this.save.emit({ save: true, delete: false, close: false, update: false  }); 
   }
 
 }

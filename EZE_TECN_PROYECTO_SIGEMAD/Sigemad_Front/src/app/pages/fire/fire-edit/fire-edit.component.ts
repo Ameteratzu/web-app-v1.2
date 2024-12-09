@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import {
   FormControl,
@@ -47,7 +48,10 @@ import { FireDocumentation } from '../../fire-documentation/fire-documentation.c
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
 import { Router } from '@angular/router';
-
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { AlertService } from '../../../shared/alert/alert.service';
+import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
+  
 @Component({
   selector: 'app-fire-edit',
   standalone: true,
@@ -67,6 +71,9 @@ import { Router } from '@angular/router';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    NgxSpinnerModule,
+    MatTooltipModule,
+    TooltipDirective
   ],
   providers: [],
   templateUrl: './fire-edit.component.html',
@@ -86,6 +93,9 @@ export class FireEditComponent implements OnInit {
   public fireStatusService = inject(FireStatusService);
   public route = inject(ActivatedRoute);
   public routenav = inject(Router);
+  private spinner = inject(NgxSpinnerService);
+  public alertService = inject(AlertService);
+  public renderer = inject(Renderer2);
 
   public fire = <Fire>{};
   public provinces = signal<Province[]>([]);
@@ -108,9 +118,10 @@ export class FireEditComponent implements OnInit {
     'opciones',
   ];
 
+  public fire_id = Number(this.route.snapshot.paramMap.get('id'));
+
   async ngOnInit() {
     this.menuItemActiveService.set.emit('/fire');
-    const fire_id = Number(this.route.snapshot.paramMap.get('id'));
     this.formData = new FormGroup({
       id: new FormControl(),
       denomination: new FormControl({ value: '', disabled: true }),
@@ -128,28 +139,10 @@ export class FireEditComponent implements OnInit {
 
     this.dataSource.data = [];
 
-    const fire = await this.fireService.getById(fire_id);
+    const fire = await this.fireService.getById(this.fire_id);
     this.fire = fire;
-    const provinces = await this.provinceService.get();
-    this.provinces.set(provinces);
 
-    const municipalities = await this.municipalityService.get(
-      this.fire.idProvincia
-    );
-    this.municipalities.set(municipalities);
-
-    const events = await this.eventService.get();
-    this.events.set(events);
-
-    const eventsStatus = await this.eventStatusService.get();
-    this.eventsStatus.set(eventsStatus);
-
-    const fireStatus = await this.fireStatusService.get();
-    this.fireStatus.set(fireStatus);
-
-    const details = await this.fireService.details(Number(fire_id));
-    console.info('details', details);
-    this.dataSource.data = details;
+    await this.cargarRegistros();
 
     this.formData.patchValue({
       id: this.fire.id,
@@ -171,6 +164,14 @@ export class FireEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  async cargarRegistros(){
+    this.spinner.show();
+    const details = await this.fireService.details(Number(this.fire_id));
+    this.dataSource.data = details;
+    this.spinner.hide();
+    return
+  }
+
   async loadMunicipalities(event: any) {
     const province_id = event.target.value;
     const municipalities = await this.municipalityService.get(province_id);
@@ -181,7 +182,7 @@ export class FireEditComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  goModalEvolution() {
+  goModalEvolution(fireDetail?: FireDetail) {
     const dialogRef = this.matDialog.open(FireCreateComponent, {
       width: '90vw',
       height: '90vh',
@@ -190,12 +191,13 @@ export class FireEditComponent implements OnInit {
       data: {
         title: 'Nuevo - Datos Evolución',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fireDetail,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Modal result:', result);
+          this.cargarRegistros();
       }
     });
   }
@@ -204,7 +206,7 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
       maxWidth: 'none',
-      height: '90vh',
+      height: '700px',
       disableClose: true,
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
@@ -215,7 +217,7 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Modal result:', result);
+          this.cargarRegistros();
       }
     });
   }
@@ -261,18 +263,17 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-    console.info('fireDetail', fireDetail);
-    if (fireDetail.tipoRegistro == 'Documentación') {
-      this.goModalDocumentation(fireDetail);
-      return;
-    }
-    if (fireDetail.tipoRegistro == 'Otra Información') {
-      this.goModalOtherInformation(fireDetail);
-      return;
-    }
-    if (fireDetail.tipoRegistro == 'Dirección y coordinación') {
-      this.goModalCoordination(fireDetail);
-      return;
+
+    const modalActions: { [key: string]: (detail: FireDetail) => void } = {
+      'Documentación': this.goModalDocumentation.bind(this),
+      'Otra Información': this.goModalOtherInformation.bind(this),
+      'Dirección y coordinación': this.goModalCoordination.bind(this),
+      'Datos de evolución': this.goModalEvolution.bind(this),
+    };
+  
+    const action = modalActions[fireDetail.tipoRegistro];
+    if (action) {
+      action(fireDetail);
     }
   }
 
@@ -282,5 +283,42 @@ export class FireEditComponent implements OnInit {
 
   volver(){
     this.routenav.navigate([`/fire`])
+  }
+
+  async deleteFire(){
+    this.alertService
+      .showAlert({
+        title: "¿Estás seguro?",
+        text: "¡No podrás revertir esto!",
+        icon: "warning",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        confirmButtonText: "¡Sí, eliminar!",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          this.spinner.show();
+          const toolbar = document.querySelector('mat-toolbar');
+          this.renderer.setStyle(toolbar, 'z-index', '1');
+
+          await this.fireService.delete(this.fire_id);
+          setTimeout(() => {
+            this.renderer.setStyle(toolbar, 'z-index', '5');
+            this.spinner.hide();
+            this.alertService.showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            }).then((result) => {
+              this.routenav.navigate([`/fire`])
+            });
+          }, 2000);
+
+          
+        }else{
+          this.spinner.hide();
+        }
+         
+      });
+
   }
 }

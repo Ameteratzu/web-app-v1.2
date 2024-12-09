@@ -33,6 +33,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
 import { Geometry } from 'ol/geom';
 import Feature from 'ol/Feature';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -74,8 +75,9 @@ const MY_DATE_FORMATS = {
 export class CecopiComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public direcionesServices = inject(DireccionesService);
@@ -106,14 +108,12 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    console.log("🚀 ~ CecopiComponent ~ dataCecopi:", this.coordinationServices.dataCecopi())
     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
     
-
     this.formDataCecopi = this.fb.group({
       provincia : ['', Validators.required],
       municipio : ['', Validators.required],
@@ -131,6 +131,7 @@ export class CecopiComponent {
         this.coordinationServices.dataCecopi.set(this.editData);
       }
     }
+    this.spinner.hide();
   }
 
   onSubmitCecopi(){
@@ -150,23 +151,15 @@ export class CecopiComponent {
   }
 
   async sendDataToEndpoint() {
-
-    this.spinner.show();
-    if (this.coordinationServices.dataCecopi().length > 0) {
-      this.save.emit(true); 
+    if (this.coordinationServices.dataCecopi().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
     }else{
-      this.spinner.show();
-      this.showToast();
+      if (this.editData){
+        this.save.emit({ save: false, delete: false, close: false, update: true  });
+      } 
     }
   }
 
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
-  }
 
   async loadMunicipalities(event: any) {
     const province_id = event.value.id;
@@ -241,9 +234,11 @@ export class CecopiComponent {
   }
 
   closeModal(){
-    this.save.emit(false); 
+    this.save.emit({ save: false, delete: false, close: true, update: false  }); 
   }
 
-  
+  delete(){
+    this.save.emit({ save: true, delete: false, close: false, update: false  }); 
+  }
 
 }

@@ -30,11 +30,23 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field class="input spaced-input" fxFlex="25%">
+          <!-- <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Procedencia / Destino </mat-label>
             <mat-select formControlName="originDestination">
               <mat-option *ngFor="let origen of originDestinations()" [value]="origen.id">
                 {{ origen.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+          <mat-form-field class="input spaced-input" fxFlex="50%">
+            <mat-label>Procedencia / Destino</mat-label>
+            <mat-select formControlName="originDestination" multiple>
+              <mat-option
+                *ngFor="let option of originDestinations()"
+                [value]="option"
+              >
+                {{ option.descripcion }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -137,13 +149,14 @@
 
  
     </form>  
-    <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center">
-        <button mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
-  
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-          <button mat-flat-button color="accent" style="margin-right: 10px;" (click)="closeModal()">Volver</button>
-          <button mat-flat-button color="primary" style="margin-right: 10px;"
-            (click)="sendDataToEndpoint()">Guardar</button>
+
+      <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <div *ngIf="esUltimo" fxFlex="none">
+          <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxFlex="auto">
+          <button mat-flat-button color="accent" (click)="closeModal()">Volver</button>
+          <button mat-flat-button color="primary" (click)="sendDataToEndpoint()">Guardar</button>
         </div>
       </div>
   </div>

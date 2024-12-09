@@ -16,6 +16,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { DireccionesService } from '../../../services/direcciones.service'
 import { CoordinationAddress } from '../../../types/coordination-address';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -27,6 +28,7 @@ import { CoordinationAddressService } from '../../../services/coordination-addre
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
+  
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -68,16 +70,18 @@ export class AddressComponent {
 
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
-  
+  @Input() esUltimo: boolean | undefined;
+
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
+  private spinner = inject(NgxSpinnerService);
   
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
-  private spinner = inject(NgxSpinnerService);
+  private static initialized = false;
   
  public displayedColumns: string[] = [
     'fechaHora',
@@ -89,13 +93,12 @@ export class AddressComponent {
 
   formData!: FormGroup;
  
-
-
   public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
+   
     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
@@ -112,43 +115,31 @@ export class AddressComponent {
         this.coordinationServices.dataCoordinationAddress.set(this.editData);
       }
     }
+    this.spinner.hide();
   }
-
-  
 
   onSubmit(){
     if (this.formData.valid) {
       const data = this.formData.value;
       if(this.isCreate() == -1){
-        
         this.coordinationServices.dataCoordinationAddress.set([data, ...this.coordinationServices.dataCoordinationAddress()]);  
       }else{
         this.editarItem(this.isCreate())
       }
-      
       this.formData.reset()
     }else {
       this.formData.markAllAsTouched();
     }
   }
 
-
   async sendDataToEndpoint() {
-
-    if (this.coordinationServices.dataCoordinationAddress().length > 0) {
-      this.save.emit(true); 
+    if (this.coordinationServices.dataCoordinationAddress().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
     }else{
- 
-      // this.showToast();
+      if (this.editData){
+        this.save.emit({ save: false, delete: false, close: false, update: true  });
+      } 
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
   }
 
   editarItem(index: number) {
@@ -187,7 +178,11 @@ export class AddressComponent {
   }
 
   closeModal(){
-    this.save.emit(false); 
+    this.save.emit({ save: false, delete: false, close: true, update: false }); 
+  }
+
+  delete(){
+    this.save.emit({ save: false, delete: true, close: false, update: false  }); 
   }
 
 }

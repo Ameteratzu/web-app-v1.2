@@ -144,3 +144,8 @@ table .mat-mdc-header-cell {
   font-family: $font-family !important;
 }
 
+.mat-mdc-tooltip-surface {
+  background-color:var(--primary-50) !important;
+  color: white !important; 
+}
+

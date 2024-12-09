@@ -107,5 +107,20 @@ export class EvolutionService {
     );
   }
 
+  getById(id: Number) {
+    let endpoint = `/Evoluciones/${id}`;
+    return firstValueFrom(
+      this.http.get<any[]>(endpoint).pipe((response) => response)
+    );
+  }
+
+  delete(id: number) {
+    const endpoint = `/Evoluciones/${id}`;
+
+    return firstValueFrom(
+      this.http.delete(endpoint).pipe((response) => response)
+    );
+  }
+
 
 }
