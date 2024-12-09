@@ -245,12 +245,35 @@ export class CecopiComponent {
     });
   }
 
-  seleccionarItemCecopi(index: number) {
+  async seleccionarItemCecopi(index: number) {
     this.isCreate.set(index);
-    const selectedItem = this.coordinationServices.dataCecopi()[index];
 
-    // Actualizar los valores en el formulario
-    this.formDataCecopi.patchValue(selectedItem);
+    const provinciaSeleccionada = () =>
+      this.provinces().find(
+        (provincia) =>
+          provincia.id ===
+          Number(this.coordinationServices.dataCecopi()[index].provincia.id)
+      );
+
+    await this.loadMunicipalities(provinciaSeleccionada());
+
+    const municipioSeleccionado = () =>
+      this.municipalities().find(
+        (municipio) =>
+          municipio.id ===
+          Number(this.coordinationServices.dataCecopi()[index].municipio.id)
+      );
+
+    this.formDataCecopi.patchValue({
+      ...this.coordinationServices.dataCecopi()[index],
+      provincia: provinciaSeleccionada(),
+      municipio: municipioSeleccionado(),
+    });
+    this.polygon.set(
+      this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]
+    );
+
+    const selectedItem = this.coordinationServices.dataCecopi()[index];
 
     // Habilitar los campos dependientes si tienen datos
     if (selectedItem.municipio) {

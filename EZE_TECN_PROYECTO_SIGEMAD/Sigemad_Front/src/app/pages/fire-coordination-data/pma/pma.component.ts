@@ -257,12 +257,34 @@ export class PmaComponent {
     });
   }
 
-  seleccionarItem(index: number) {
+  async seleccionarItem(index: number) {
     this.isCreate.set(index);
     const selectedItem = this.coordinationServices.dataPma()[index];
 
-    // Actualizar los valores en el formulario
-    this.formData.patchValue(selectedItem);
+    const provinciaSeleccionada = () =>
+      this.provinces().find(
+        (provincia) =>
+          provincia.id ===
+          Number(this.coordinationServices.dataPma()[index].provincia.id)
+      );
+
+    await this.loadMunicipalities(provinciaSeleccionada());
+
+    const municipioSeleccionado = () =>
+      this.municipalities().find(
+        (municipio) =>
+          municipio.id ===
+          Number(this.coordinationServices.dataPma()[index].municipio.id)
+      );
+
+    this.formData.patchValue({
+      ...this.coordinationServices.dataPma()[index],
+      provincia: provinciaSeleccionada(),
+      municipio: municipioSeleccionado(),
+    });
+    this.polygon.set(
+      this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]
+    );
 
     // Habilitar los campos dependientes si tienen datos
     if (selectedItem.municipio) {
