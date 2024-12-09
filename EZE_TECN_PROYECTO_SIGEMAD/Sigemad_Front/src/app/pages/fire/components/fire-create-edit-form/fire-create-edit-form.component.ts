@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
@@ -24,19 +18,9 @@ import { Territory } from '../../../../types/territory.type';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -142,9 +126,8 @@ export class FireCreateEdit implements OnInit {
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
       startDate: new FormControl('', Validators.required),
-      generalNote: new FormControl('', Validators.required),
       eventStatus: new FormControl('', Validators.required),
-
+      generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
       country: new FormControl(''),
       ubication: new FormControl(''),
@@ -223,9 +206,7 @@ export class FireCreateEdit implements OnInit {
       this.spinner.show();
       const data = this.formData.value;
 
-      const municipio = this.municipalities().find(
-        (item) => item.id === data.municipality
-      );
+      const municipio = this.municipalities().find((item) => item.id === data.municipality);
 
       data.geoposition = {
         type: 'Polygon',
@@ -295,9 +276,7 @@ export class FireCreateEdit implements OnInit {
     if (!this.formData.value.municipality) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipality
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality);
 
     if (!municipioSelected) {
       return;
@@ -315,13 +294,11 @@ export class FireCreateEdit implements OnInit {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.featuresCoords = features;
-        console.info('features', features);
-        this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.featuresCoords = features;
+      console.info('features', features);
+      this.polygon.set(features);
+    });
   }
 
   closeModal() {

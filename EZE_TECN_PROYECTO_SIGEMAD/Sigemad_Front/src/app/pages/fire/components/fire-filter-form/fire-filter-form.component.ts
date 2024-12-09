@@ -1,36 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MatExpansionModule,
-  MatExpansionPanel,
-} from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -206,9 +184,7 @@ export class FireFilterFormComponent implements OnInit {
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
-      fechaInicio: new FormControl(
-        fechaInicio ?? moment().subtract(4, 'days').toDate()
-      ),
+      fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
     });
     this.formData.get('severityLevel')?.disable();
@@ -223,8 +199,7 @@ export class FireFilterFormComponent implements OnInit {
     //this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
-    const superficiesFiltro =
-      await this.superficiesService.getSuperficiesFiltro();
+    const superficiesFiltro = await this.superficiesService.getSuperficiesFiltro();
     this.superficiesFiltro.set(superficiesFiltro);
 
     const territories = await this.territoryService.get();
@@ -289,10 +264,7 @@ export class FireFilterFormComponent implements OnInit {
       this.autonomousCommunities.set([]);
       return;
     }
-    const autonomousCommunities =
-      await this.autonomousCommunityService.getByCountry(
-        country ?? this.formData.value.country
-      );
+    const autonomousCommunities = await this.autonomousCommunityService.getByCountry(country ?? this.formData.value.country);
     this.autonomousCommunities.set(autonomousCommunities);
   }
 

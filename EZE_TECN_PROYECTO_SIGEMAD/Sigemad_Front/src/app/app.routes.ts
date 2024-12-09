@@ -7,14 +7,14 @@ import { LayoutBaseComponent } from './shared/layouts/layout-base.component';
 import { FireEditComponent } from './pages/fire/fire-edit/fire-edit.component';
 
 export const routes: Routes = [
-  { path: 'login', component: Login }, 
+  { path: 'login', component: Login },
   {
     path: '',
-    redirectTo: 'login', 
-    pathMatch: 'full', 
+    redirectTo: 'login',
+    pathMatch: 'full',
   },
   {
-    path: '', 
+    path: '',
     component: LayoutBaseComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
@@ -38,7 +38,5 @@ export const routes: Routes = [
       { path: 'fire-national-edit/:id', component: FireEditComponent },
     ],
   },
-  { path: '**', redirectTo: 'login' }, 
+  { path: '**', redirectTo: 'login' },
 ];
-
-

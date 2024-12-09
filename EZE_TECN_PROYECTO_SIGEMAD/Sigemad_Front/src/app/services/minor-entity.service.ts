@@ -10,8 +10,6 @@ export class MinorEntityService {
   get(muni_id: number | string) {
     const endpoint = `/Municipios/${muni_id}/entidades-menores`;
 
-    return firstValueFrom(
-      this.http.get<MinorEntity[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<MinorEntity[]>(endpoint).pipe((response) => response));
   }
 }

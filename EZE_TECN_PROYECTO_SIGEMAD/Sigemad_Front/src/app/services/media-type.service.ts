@@ -10,8 +10,6 @@ export class MediaTypeService {
   get() {
     const endpoint = '/tipo-intervencion-medios';
 
-    return firstValueFrom(
-      this.http.get<MediaType[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<MediaType[]>(endpoint).pipe((response) => response));
   }
 }

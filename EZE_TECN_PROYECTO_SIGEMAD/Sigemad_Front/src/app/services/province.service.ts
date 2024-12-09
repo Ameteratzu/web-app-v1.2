@@ -15,8 +15,6 @@ export class ProvinceService {
       endpoint = `/Provincias/${ac_id}`;
     }
 
-    return firstValueFrom(
-      this.http.get<Province[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Province[]>(endpoint).pipe((response) => response));
   }
 }

@@ -8,9 +8,8 @@ describe('FireFilterFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireFilterFormComponent]
-    })
-    .compileComponents();
+      imports: [FireFilterFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FireFilterFormComponent);
     component = fixture.componentInstance;

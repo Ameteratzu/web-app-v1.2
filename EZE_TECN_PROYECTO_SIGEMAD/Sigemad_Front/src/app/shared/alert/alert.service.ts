@@ -8,8 +8,8 @@ export class AlertService {
   showAlert(options: SweetAlertOptions): Promise<SweetAlertResult<any>> {
     const updatedOptions: SweetAlertOptions = {
       ...options,
-      allowOutsideClick: false, 
-      confirmButtonColor: "#186c93",
+      allowOutsideClick: false,
+      confirmButtonColor: '#186c93',
     };
 
     return Swal.fire(updatedOptions);

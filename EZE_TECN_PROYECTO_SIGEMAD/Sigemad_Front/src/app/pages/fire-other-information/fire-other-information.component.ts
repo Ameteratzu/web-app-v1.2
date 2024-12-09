@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,12 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
@@ -120,13 +110,7 @@ export class FireOtherInformationComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = [
-    'fecha',
-    'procendenciaDestino',
-    'medio',
-    'asunto',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fecha', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
 
   async ngOnInit() {
     this.formData = this.fb.group({
@@ -134,8 +118,8 @@ export class FireOtherInformationComponent implements OnInit {
       hora: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: ['', Validators.required],
-      observaciones: ['', Validators.required],
+      asunto: [''],
+      observaciones: [''],
     });
 
     const procedenciasDestino = await this.originDestinationService.get();
@@ -151,9 +135,7 @@ export class FireOtherInformationComponent implements OnInit {
     if (!this.dataProps?.fireDetail?.id) {
       return;
     }
-    const dataOtraInformacion: any = await this.otherInformationService.getById(
-      Number(this.dataProps.fireDetail.id)
-    );
+    const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fireDetail.id));
 
     const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
       id: otraInformacion.id,
@@ -172,7 +154,7 @@ export class FireOtherInformationComponent implements OnInit {
     return item.id;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -181,6 +163,7 @@ export class FireOtherInformationComponent implements OnInit {
         this.editarItem(this.isCreate());
       }
 
+      formDirective.resetForm();
       this.formData.reset();
     } else {
       this.formData.markAllAsTouched();
@@ -206,9 +189,7 @@ export class FireOtherInformationComponent implements OnInit {
         idMedio: item.medio?.id ?? null,
         asunto: item.asunto,
         observaciones: item.observaciones,
-        idsProcedenciasDestinos: item.procendenciaDestino.map(
-          (procendenciaDestino) => procendenciaDestino.id
-        ),
+        idsProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino) => procendenciaDestino.id),
       };
     });
     const objToSave = {
@@ -219,8 +200,7 @@ export class FireOtherInformationComponent implements OnInit {
 
     try {
       this.spinner.show();
-      const resp: { idOtraInformacion: string | number } | any =
-        await this.otherInformationService.post(objToSave);
+      const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
         this.isSaving.set(false);
         this.spinner.hide();
@@ -286,16 +266,10 @@ export class FireOtherInformationComponent implements OnInit {
   seleccionarItem(index: number) {
     this.isCreate.set(index);
 
-    const medioSelected = () =>
-      this.listadoMedios().find(
-        (medio) =>
-          medio.id === Number(this.dataOtherInformation()[index].medio.id)
-      );
+    const medioSelected = () => this.listadoMedios().find((medio) => medio.id === Number(this.dataOtherInformation()[index].medio.id));
 
     const procedenciasSelecteds = () => {
-      const idsABuscar = this.dataOtherInformation()[
-        index
-      ].procendenciaDestino.map((obj: any) => Number(obj.id));
+      const idsABuscar = this.dataOtherInformation()[index].procendenciaDestino.map((obj: any) => Number(obj.id));
       return this.listadoProcedenciaDestino().filter((procedencia) => {
         return idsABuscar.includes(Number(procedencia.id));
       });

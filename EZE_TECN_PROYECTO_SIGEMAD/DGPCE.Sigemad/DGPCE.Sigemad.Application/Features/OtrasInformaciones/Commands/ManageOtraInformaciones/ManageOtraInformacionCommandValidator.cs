@@ -13,11 +13,9 @@ public class ManageOtraInformacionCommandValidator : AbstractValidator<ManageOtr
         RuleFor(x => x.IdIncendio)
             .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
 
-        RuleFor(command => command.Lista)
-        .NotNull().WithMessage(localizer["ListaOtraInformacion"])
-            .NotEmpty().WithMessage(localizer["ListaOtraInformacion"]);
-
-        RuleForEach(x => x.Lista).SetValidator(new DetalleOtraInformacionDtoValidator(localizer));
+        RuleForEach(x => x.Lista)
+            .SetValidator(new DetalleOtraInformacionDtoValidator(localizer))
+            .When(d => d.Lista.Count > 0);
     }
 }
 

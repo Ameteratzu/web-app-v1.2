@@ -11,8 +11,6 @@ export class MunicipalityService {
   get(province_id: number | string) {
     const endpoint = `/Municipios/${province_id}`;
 
-    return firstValueFrom(
-      this.http.get<Municipality[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Municipality[]>(endpoint).pipe((response) => response));
   }
 }

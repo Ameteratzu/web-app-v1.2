@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -32,16 +25,7 @@ export class FireTableComponent implements OnChanges {
   public router = inject(Router);
   private dialog = inject(MatDialog);
 
-  public displayedColumns: string[] = [
-    'denominacion',
-    'fechaInicio',
-    'estado',
-    'ngp',
-    'maxNgp',
-    'ubicacion',
-    'ultimoRegistro',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['denominacion', 'fechaInicio', 'estado', 'ngp', 'maxNgp', 'ubicacion', 'ultimoRegistro', 'opciones'];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fires'] && this.fires) {
@@ -98,9 +82,7 @@ export class FireTableComponent implements OnChanges {
 
   getLastUpdated(fire: Fire) {
     const { fechaInicio, fechaModificacion } = fire;
-    return fechaModificacion
-      ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm')
-      : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+    return fechaModificacion ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm') : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
   }
 
   goModalEdit(fire: Fire) {

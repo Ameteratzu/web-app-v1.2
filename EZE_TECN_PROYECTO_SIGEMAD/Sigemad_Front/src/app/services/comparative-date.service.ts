@@ -10,8 +10,6 @@ export class ComparativeDateService {
   get() {
     let endpoint = '/comparativa-fechas';
 
-    return firstValueFrom(
-      this.http.get<ComparativeDate[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<ComparativeDate[]>(endpoint).pipe((response) => response));
   }
 }

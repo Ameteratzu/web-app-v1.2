@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -18,12 +13,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import moment from 'moment';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { FireDocumentationService } from '../../services/fire-documentation.service';
@@ -121,13 +111,7 @@ export class FireDocumentation implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   public toast = inject(MatSnackBar);
 
@@ -139,7 +123,7 @@ export class FireDocumentation implements OnInit {
       horaSolicitud: ['', Validators.required],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: [''],
     });
 
     this.dataSource.data = [];
@@ -157,25 +141,19 @@ export class FireDocumentation implements OnInit {
     if (!this.dataProps.fireDetail.id) {
       return;
     }
-    const dataDocumentacion: any = await this.fireDocumentationService.getById(
-      Number(this.dataProps.fireDetail.id)
-    );
+    const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
 
-    const newData = dataDocumentacion?.detallesDocumentacion?.map(
-      (documento: any) => ({
-        id: documento.id,
-        descripcion: documento.descripcion,
-        fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
-        hora: moment(documento.fechaHora).format('HH:mm'),
-        fechaSolicitud: moment(documento.fechaHoraSolicitud).format(
-          'YYYY-MM-DD'
-        ),
-        horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
-        procendenciaDestino: documento.procedenciaDestinos,
-        tipoDocumento: documento.tipoDocumento,
-        //idArchivo: documento.idArchivo,
-      })
-    );
+    const newData = dataDocumentacion?.detallesDocumentacion?.map((documento: any) => ({
+      id: documento.id,
+      descripcion: documento.descripcion,
+      fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
+      hora: moment(documento.fechaHora).format('HH:mm'),
+      fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
+      horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+      procendenciaDestino: documento.procedenciaDestinos,
+      tipoDocumento: documento.tipoDocumento,
+      //idArchivo: documento.idArchivo,
+    }));
 
     this.dataOtherInformation.set(newData);
   }
@@ -184,7 +162,7 @@ export class FireDocumentation implements OnInit {
     return item;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = { file: this.file, ...this.formData.value };
 
@@ -193,6 +171,8 @@ export class FireDocumentation implements OnInit {
       } else {
         this.editarItem(this.isCreate());
       }
+
+      formDirective.resetForm();
       this.formData.reset({
         procendenciaDestino: [],
         tipoDocumento: null,
@@ -219,16 +199,11 @@ export class FireDocumentation implements OnInit {
       return {
         id: item.id ?? null,
         fechaHora: this.getFechaHora(item.fecha, item.hora),
-        fechaHoraSolicitud: this.getFechaHora(
-          item.fechaSolicitud,
-          item.horaSolicitud
-        ),
+        fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
         idArchivo: null,
-        documentacionProcedenciasDestinos: item.procendenciaDestino.map(
-          (procendenciaDestino: any) => procendenciaDestino.id
-        ),
+        documentacionProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino: any) => procendenciaDestino.id),
       };
     });
     const objToSave = {
@@ -239,8 +214,7 @@ export class FireDocumentation implements OnInit {
 
     try {
       this.spinner.show();
-      const resp: { idOtraInformacion: string | number } | any =
-        await this.fireDocumentationService.post(objToSave);
+      const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(objToSave);
 
       if (resp!.idDocumentacion > 0) {
         this.isSaving.set(false);
@@ -308,16 +282,10 @@ export class FireDocumentation implements OnInit {
     this.isCreate.set(index);
 
     const documentoSelected = () =>
-      this.listadoTipoDocumento().find(
-        (documento) =>
-          documento.id ===
-          Number(this.dataOtherInformation()[index].tipoDocumento.id)
-      );
+      this.listadoTipoDocumento().find((documento) => documento.id === Number(this.dataOtherInformation()[index].tipoDocumento.id));
 
     const procedenciasSelecteds = () => {
-      const idsABuscar = this.dataOtherInformation()[
-        index
-      ].procendenciaDestino.map((obj: any) => Number(obj.id));
+      const idsABuscar = this.dataOtherInformation()[index].procendenciaDestino.map((obj: any) => Number(obj.id));
       return this.listadoProcedenciaDestino().filter((procedencia) => {
         return idsABuscar.includes(Number(procedencia.id));
       });

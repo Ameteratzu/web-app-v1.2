@@ -4,174 +4,102 @@
 
 <div class="container">
   <div class="side-menu">
-    <mat-chip-listbox
-      [value]="selectedOption.value"
-      (change)="onSelectionChange($event)"
-    >
-      <mat-chip-option
-        *ngFor="let sec of sections; trackBy: trackByFn"
-        [value]="sec.id"
-        class="full-width-chip"
-      >
+    <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
+      <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip">
         {{ sec.label }}
       </mat-chip-option>
     </mat-chip-listbox>
   </div>
 
   <div class="form-container">
-    <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+    <form [formGroup]="formData" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
       <!-- Documentación -->
       <div>
         <h3 class="title">Documentación</h3>
-        <div
-          class="row"
-          fxLayout="row"
-          fxLayoutGap="30px"
-          fxLayoutAlign="start center"
-        >
+        <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Fecha</mat-label>
 
             <input matInput [matDatepicker]="picker" formControlName="fecha" />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="formData.get('fecha')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora</mat-label>
 
             <input matInput formControlName="hora" type="time" />
+            <mat-error *ngIf="formData.get('hora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
             <mat-label>Procedencia / Destino</mat-label>
             <mat-select formControlName="procendenciaDestino" multiple>
-              <mat-option
-                *ngFor="let option of listadoProcedenciaDestino()"
-                [value]="option"
-              >
+              <mat-option *ngFor="let option of listadoProcedenciaDestino()" [value]="option">
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('procendenciaDestino')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
 
-        <div
-          class="row"
-          fxLayout="row"
-          fxLayoutGap="30px"
-          fxLayoutAlign="start center"
-        >
+        <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Fecha de solicitud</mat-label>
 
-            <input
-              matInput
-              [matDatepicker]="picker2"
-              formControlName="fechaSolicitud"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker2" formControlName="fechaSolicitud" />
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="formData.get('fechaSolicitud')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora de solicitud</mat-label>
 
             <input matInput formControlName="horaSolicitud" type="time" />
+            <mat-error *ngIf="formData.get('horaSolicitud')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
             <mat-label>Tipo de documento</mat-label>
             <mat-select formControlName="tipoDocumento">
-              <mat-option
-                *ngFor="
-                  let option of listadoTipoDocumento();
-                  trackBy: trackByIdDocumento
-                "
-                [value]="option"
-              >
+              <mat-option *ngFor="let option of listadoTipoDocumento(); trackBy: trackByIdDocumento" [value]="option">
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('tipoDocumento')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
       </div>
 
-      <div
-        class="row"
-        fxLayout="row"
-        fxLayoutGap="30px"
-        fxLayoutAlign="start center"
-        fxFlexAlign="center"
-      >
+      <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center" fxFlexAlign="center">
         <mat-form-field class="input spaced-input" fxFlex="80%">
           <mat-label>Descripción</mat-label>
           <textarea matInput formControlName="descripcion"></textarea>
+          <mat-error *ngIf="formData.get('descripcion')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
       </div>
 
-      <div
-        class="row fspace"
-        fxLayout="row"
-        fxLayoutGap="30px"
-        fxLayoutAlign="space-between center"
-      >
+      <div class="row fspace" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="space-between center">
         <div class="row">
           <!-- Input de tipo file, oculto visualmente -->
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileSelected($event)"
-            hidden
-          />
+          <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
           <!-- Botón para abrir el selector de archivos -->
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="fileInput.click()"
-            style="margin-bottom: 20px"
-            type="button"
-          >
-            Seleccionar Archivo
-          </button>
+          <button mat-raised-button color="primary" (click)="fileInput.click()" class="file-button" type="button">Seleccionar Archivo</button>
           <!-- Mostrar el nombre del archivo seleccionado -->
           <span *ngIf="file" class="file-name">{{ file.name }}</span>
         </div>
 
-        <button
-          type="submit"
-          mat-flat-button
-          color="primary"
-          fxFlex="20%"
-          style="margin-right: 10px"
-        >
-          Agregar
-        </button>
+        <button type="submit" mat-flat-button color="primary" fxFlex="20%" style="margin-right: 10px">Agregar</button>
       </div>
     </form>
 
-    <div
-      class="mat-elevation-z8 table-container"
-      *ngIf="dataOtherInformation().length > 0"
-    >
-      <table
-        mat-table
-        [dataSource]="dataOtherInformation()"
-        matSort
-        class="mat-table"
-        style="width: 100%"
-      >
+    <div class="mat-elevation-z8 table-container" *ngIf="dataOtherInformation().length > 0">
+      <table mat-table [dataSource]="dataOtherInformation()" matSort class="mat-table" style="width: 100%">
         <!-- Denominación Column -->
         <ng-container matColumnDef="fechaHora">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Fecha y Hora
-          </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha y Hora</th>
           <td mat-cell *matCellDef="let otherInformation">
             {{ getFechaHora(otherInformation.fecha, otherInformation.hora) }}
           </td>
@@ -179,15 +107,9 @@
 
         <!-- Procendencia / Destino Column -->
         <ng-container matColumnDef="procendenciaDestino">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Procendencia / Destino
-          </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Procendencia / Destino</th>
           <td mat-cell *matCellDef="let otherInformation">
-            {{
-              getDescripcionProcedenciaDestion(
-                otherInformation.procendenciaDestino
-              )
-            }}
+            {{ getDescripcionProcedenciaDestion(otherInformation.procendenciaDestino) }}
           </td>
         </ng-container>
 
@@ -211,17 +133,9 @@
         <ng-container matColumnDef="opciones">
           <th mat-header-cell *matHeaderCellDef>Opciones</th>
           <td mat-cell *matCellDef="let fire; let i = index">
-            <img
-              (click)="seleccionarItem(i)"
-              src="/assets/img/edit-btn.svg"
-              alt="edit-btn"
-            />
+            <img (click)="seleccionarItem(i)" src="/assets/img/edit-btn.svg" alt="edit-btn" />
 
-            <img
-              (click)="eliminarItem(i)"
-              src="/assets/img/close.svg"
-              alt="doc-btn"
-            />
+            <img (click)="eliminarItem(i)" src="/assets/img/close.svg" alt="doc-btn" />
           </td>
         </ng-container>
 
@@ -266,12 +180,6 @@
     </div>
   </div>
 </div>
-<ngx-spinner
-  bdColor="rgba(0, 0, 0, 0.8)"
-  size="medium"
-  color="#fff"
-  type="ball-atom"
-  [fullScreen]="true"
->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
   <p style="color: white">Cargando...</p>
 </ngx-spinner>

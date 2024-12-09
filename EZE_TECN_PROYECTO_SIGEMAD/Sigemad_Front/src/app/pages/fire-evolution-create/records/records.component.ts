@@ -16,14 +16,9 @@ import { SituationsEquivalent } from '../../../types/situations-equivalent.type'
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';
@@ -44,7 +39,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -68,7 +63,7 @@ const MY_DATE_FORMATS = {
     MatFormFieldModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './records.component.html',
   styleUrl: './records.component.scss',
@@ -78,7 +73,6 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
-
   formDataSignal = signal({
     inputOutput: '',
     startDate: new Date(),
@@ -101,7 +95,7 @@ export class RecordsComponent implements OnInit {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
 
-  private fb = inject(FormBuilder); 
+  private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   public inputOutputService = inject(InputOutputService);
   public mediaService = inject(MediaService);
@@ -113,10 +107,10 @@ export class RecordsComponent implements OnInit {
 
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
-  
+
   formData!: FormGroup;
   private environmentInjector = inject(EnvironmentInjector);
-  
+
   public inputOutputs = signal<InputOutput[]>([]);
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
@@ -179,7 +173,7 @@ export class RecordsComponent implements OnInit {
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
-      if(this.evolutionSevice.dataRecords().length === 0){
+      if (this.evolutionSevice.dataRecords().length === 0) {
         this.updateFormWithJson(this.editData);
       }
     }
@@ -209,59 +203,57 @@ export class RecordsComponent implements OnInit {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-  
+
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
-        idIncendio:  this.data.idIncendio,
+        idIncendio: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: formValues.startDate.toISOString(),
           idEntradaSalida: formValues.inputOutput,
           idMedio: formValues.media,
-          registroProcedenciasDestinos: formValues.originDestination.map(
-            (procendenciaDestino: any) => procendenciaDestino.id
-          ),
+          registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
         },
         datoPrincipal: {
           fechaHora: formValues.datetimeUpdate.toISOString(),
           observaciones: formValues.observations_1,
-          prevision: formValues.forecast
+          prevision: formValues.forecast,
         },
         parametro: {
           idEstadoIncendio: formValues.status,
           fechaFinal: formValues.end_date.toISOString(),
-          superficieAfectadaHectarea:  formValues.afectada, 
-          planEmergenciaActivado: "",
+          superficieAfectadaHectarea: formValues.afectada,
+          planEmergenciaActivado: '',
           idFase: 1,
-          idSituacionOperativa: 1, 
-          idSituacionEquivalente: 1 
+          idSituacionOperativa: 1,
+          idSituacionEquivalente: 1,
         },
       };
-  
+
       this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
-  
-      this.save.emit({ save: true, delete: false, close: false, update: false  });
+
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       this.formData.markAllAsTouched();
       this.spinner.hide();
     }
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
-  allowOnlyNumbers(event: KeyboardEvent): void {
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
+  allowOnlyNumbersAndDecimal(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
   }
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -269,12 +261,11 @@ export class RecordsComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  closeModal(){
-    this.save.emit({ save: false, delete: false, close: true, update: false  }); 
+  closeModal() {
+    this.save.emit({ save: false, delete: false, close: true, update: false });
   }
 
-  delete(){
-    this.save.emit({ save: false, delete: true, close: false, update: false  }); 
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
   }
-
 }

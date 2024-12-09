@@ -30,24 +30,23 @@ import { AlertService } from '../../shared/alert/alert.service';
     ConsequencesComponent,
     InterventionComponent,
     AreaComponent,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   animations: [
     trigger('fadeInOut', [
-      state('void', style({ opacity: 0, transform: 'translateY(20px)' })), 
-      transition(':enter', [animate('900ms ease-out')]), 
-      transition(':leave', [animate('0ms ease-in')])   
-    ])
-  ]
+      state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
+      transition(':enter', [animate('900ms ease-out')]),
+      transition(':leave', [animate('0ms ease-in')]),
+    ]),
+  ],
 })
 export class FireCreateComponent implements OnInit {
-
   private dialogRef = inject(MatDialogRef<FireCreateComponent>);
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
-  data = inject(MAT_DIALOG_DATA) as { 
-    title: string; 
+  data = inject(MAT_DIALOG_DATA) as {
+    title: string;
     idIncendio: number;
-    fireDetail?: FireDetail; 
+    fireDetail?: FireDetail;
   };
 
   public evolutionSevice = inject(EvolutionService);
@@ -56,7 +55,7 @@ export class FireCreateComponent implements OnInit {
   public renderer = inject(Renderer2);
   public router = inject(Router);
   public alertService = inject(AlertService);
-  
+
   readonly sections = [
     { id: 1, label: 'Registro / Parámetros' },
     { id: 2, label: 'Área afectada' },
@@ -65,8 +64,8 @@ export class FireCreateComponent implements OnInit {
   ];
 
   editData: any;
-  isDataReady = false; 
-  idReturn = null; 
+  isDataReady = false;
+  idReturn = null;
   isEdit = false;
 
   async isToEditDocumentation() {
@@ -75,11 +74,9 @@ export class FireCreateComponent implements OnInit {
       return;
     }
 
-    const dataCordinacion: any = await this.evolutionSevice.getById(
-      Number(this.data.fireDetail.id)
-    );
+    const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.fireDetail.id));
 
-    console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ dataCordinacion:", dataCordinacion)
+    console.log('🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ dataCordinacion:', dataCordinacion);
     this.editData = dataCordinacion;
     this.isDataReady = true;
   }
@@ -89,16 +86,14 @@ export class FireCreateComponent implements OnInit {
     this.isToEditDocumentation();
   }
 
-  async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean, update: boolean }) {
-    const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find(
-      key => value[key]
-    );
+  async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
+    const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find((key) => value[key]);
     this.isEdit = false;
-  
+
     if (keyWithTrue) {
       switch (keyWithTrue) {
         case 'save':
-          this.save()
+          this.save();
           break;
         case 'delete':
           this.delete();
@@ -110,7 +105,7 @@ export class FireCreateComponent implements OnInit {
           break;
         case 'update':
           this.isEdit = true;
-            this.save()
+          this.save();
           break;
         default:
           console.error('Clave inesperada');
@@ -127,44 +122,40 @@ export class FireCreateComponent implements OnInit {
     await this.processData();
 
     this.evolutionSevice.clearData();
-    
+
     setTimeout(() => {
-        this.renderer.setStyle(toolbar, 'z-index', '5');
-        this.alertService
+      this.renderer.setStyle(toolbar, 'z-index', '5');
+      this.alertService
         .showAlert({
-          title: "Buen trabajo!",
-          text: "Registro subido correctamente!",
-          icon: "success",
+          title: 'Buen trabajo!',
+          text: 'Registro subido correctamente!',
+          icon: 'success',
         })
         .then(async (result) => {
-
           this.isDataReady = false;
-          const dataCordinacion: any = await this.evolutionSevice.getById(
-            Number(this.idReturn)
-          );
+          const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
           this.editData = dataCordinacion;
           this.isDataReady = true;
           this.spinner.hide();
         });
-      }, 2000);
+    }, 2000);
   }
 
   async processData(): Promise<void> {
-
-    if(this.evolutionSevice.dataRecords().length > 0){
-      this.idReturn ? this.evolutionSevice.dataRecords()[0].idEvolucion = this.idReturn : 0;
-      const result: any  = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]) ;
+    if (this.evolutionSevice.dataRecords().length > 0) {
+      this.idReturn ? (this.evolutionSevice.dataRecords()[0].idEvolucion = this.idReturn) : 0;
+      const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
       this.idReturn = result.id;
     }
-
+    console.log('🚀 ~ processData ~  this.evolutionSevice.dataAffectedArea():', this.evolutionSevice.dataAffectedArea());
     await this.handleDataProcessing(
       this.evolutionSevice.dataAffectedArea(),
       (item) => ({
         id: item.id ?? 0,
-        fechaHora: this.formatDate(item.fechaHora), 
-        idProvincia: item.provincia,
-        idMunicipio: item.municipio,
-        idEntidadMenor: item.entidadMenor ?? null,
+        fechaHora: this.formatDate(item.fechaHora),
+        provincia: item.provincia,
+        municipio: item.municipio,
+        entidadMenor: item.entidadMenor ?? null,
         observaciones: item.observaciones,
         GeoPosicion: { type: 'Point', coordinates: [null, null] },
       }),
@@ -172,30 +163,22 @@ export class FireCreateComponent implements OnInit {
       'areasAfectadas'
     );
   }
-     
-  async handleDataProcessing<T>(
-    data: T[],
-    formatter: (item: T) => any,
-    postService: (body: any) => Promise<any>,
-    key: string
-  ): Promise<void> {
+
+  async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
     //if (data.length > 0 || this.isEdit ) {
-    if (data.length > 0 ) {
-      
+    if (data.length > 0) {
       const formattedData = data.map(formatter);
-      
+
       const body = {
         idIncendio: this.data.idIncendio,
-        idEvolucion : this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
-        [key]: formattedData, 
+        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        [key]: formattedData,
       };
-  
+
       const result = await postService(body);
-      console.log("🚀 ~ result:", result)
-      console.log("🚀 ~ result:", result)
+      console.log('🚀 ~ result:', result);
+      console.log('🚀 ~ result:', result);
       this.idReturn = result.idEvolucion;
-    
-     
     }
   }
 
@@ -216,23 +199,23 @@ export class FireCreateComponent implements OnInit {
     this.selectedOption = event;
   }
 
-  closeModal(value: boolean){
+  closeModal(value: boolean) {
     this.dialogRef.close(value);
   }
 
-  async delete(){
+  async delete() {
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     this.spinner.show();
 
     this.alertService
       .showAlert({
-        title: "¿Estás seguro?",
-        text: "¡No podrás revertir esto!",
-        icon: "warning",
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
         showCancelButton: true,
-        cancelButtonColor: "#d33",
-        confirmButtonText: "¡Sí, eliminar!",
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -243,17 +226,17 @@ export class FireCreateComponent implements OnInit {
             this.spinner.hide();
           }, 2000);
 
-          this.alertService.showAlert({
-            title: 'Eliminado!',
-            icon: 'success',
-          }).then((result) => {
-            this.closeModal(true);
-          });
-        }else{
+          this.alertService
+            .showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            })
+            .then((result) => {
+              this.closeModal(true);
+            });
+        } else {
           this.spinner.hide();
         }
-         
       });
   }
-
 }
