@@ -12,6 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   FormBuilder,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -144,7 +145,7 @@ export class PmaComponent {
     }
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -160,7 +161,12 @@ export class PmaComponent {
         this.editarItem(this.isCreate());
       }
 
-      this.formData.reset();
+      formDirective.resetForm();
+      this.formData.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formData.get('municipio')?.disable();
     } else {
       this.formData.markAllAsTouched();
     }
@@ -251,33 +257,19 @@ export class PmaComponent {
     });
   }
 
-  async seleccionarItem(index: number) {
+  seleccionarItem(index: number) {
     this.isCreate.set(index);
+    const selectedItem = this.coordinationServices.dataPma()[index];
 
-    const provinciaSeleccionada = () =>
-      this.provinces().find(
-        (provincia) =>
-          provincia.id ===
-          Number(this.coordinationServices.dataPma()[index].provincia.id)
-      );
+    // Actualizar los valores en el formulario
+    this.formData.patchValue(selectedItem);
 
-    await this.loadMunicipalities(provinciaSeleccionada());
-
-    const municipioSeleccionado = () =>
-      this.municipalities().find(
-        (municipio) =>
-          municipio.id ===
-          Number(this.coordinationServices.dataPma()[index].municipio.id)
-      );
-
-    this.formData.patchValue({
-      ...this.coordinationServices.dataPma()[index],
-      provincia: provinciaSeleccionada(),
-      municipio: municipioSeleccionado(),
-    });
-    this.polygon.set(
-      this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]
-    );
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formData.get('municipio')?.enable();
+    } else {
+      this.formData.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any) {

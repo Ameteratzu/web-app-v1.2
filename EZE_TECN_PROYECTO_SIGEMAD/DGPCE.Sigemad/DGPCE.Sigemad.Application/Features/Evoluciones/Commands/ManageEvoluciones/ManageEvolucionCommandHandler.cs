@@ -67,7 +67,7 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
 
 
         Evolucion evolucion = null;
-        if (request.IdEvolucion.HasValue)
+        if (request.IdEvolucion.HasValue && request.IdEvolucion.Value > 0)
         {
 
             var evolucionSpec = new EvolucionSpecificationParams() { Id = request.IdEvolucion };

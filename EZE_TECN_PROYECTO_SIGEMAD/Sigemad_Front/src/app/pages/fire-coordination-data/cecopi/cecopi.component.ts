@@ -12,6 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import {
   FormBuilder,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -44,7 +45,6 @@ import { MapCreateComponent } from '../../../shared/mapCreate/map-create.compone
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
-
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -118,10 +118,6 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    console.log(
-      '🚀 ~ CecopiComponent ~ dataCecopi:',
-      this.coordinationServices.dataCecopi()
-    );
     const coordinationAddress =
       await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
@@ -149,7 +145,7 @@ export class CecopiComponent {
     }
   }
 
-  onSubmitCecopi() {
+  onSubmitCecopi(formDirective: FormGroupDirective): void {
     if (this.formDataCecopi.valid) {
       const data = this.formDataCecopi.value;
       if (this.isCreate() == -1) {
@@ -165,7 +161,12 @@ export class CecopiComponent {
         this.editarItemCecopi(this.isCreate());
       }
 
-      this.formDataCecopi.reset();
+      formDirective.resetForm();
+      this.formDataCecopi.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formDataCecopi.get('municipio')?.disable();
     } else {
       this.formDataCecopi.markAllAsTouched();
     }
@@ -244,32 +245,19 @@ export class CecopiComponent {
     });
   }
 
-  async seleccionarItemCecopi(index: number) {
+  seleccionarItemCecopi(index: number) {
     this.isCreate.set(index);
-    const provinciaSeleccionada = () =>
-      this.provinces().find(
-        (provincia) =>
-          provincia.id ===
-          Number(this.coordinationServices.dataCecopi()[index].provincia.id)
-      );
+    const selectedItem = this.coordinationServices.dataCecopi()[index];
 
-    await this.loadMunicipalities(provinciaSeleccionada());
+    // Actualizar los valores en el formulario
+    this.formDataCecopi.patchValue(selectedItem);
 
-    const municipioSeleccionado = () =>
-      this.municipalities().find(
-        (municipio) =>
-          municipio.id ===
-          Number(this.coordinationServices.dataCecopi()[index].municipio.id)
-      );
-
-    this.formDataCecopi.patchValue({
-      ...this.coordinationServices.dataCecopi()[index],
-      provincia: provinciaSeleccionada(),
-      municipio: municipioSeleccionado(),
-    });
-    this.polygon.set(
-      this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]
-    );
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formDataCecopi.get('municipio')?.enable();
+    } else {
+      this.formDataCecopi.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any) {

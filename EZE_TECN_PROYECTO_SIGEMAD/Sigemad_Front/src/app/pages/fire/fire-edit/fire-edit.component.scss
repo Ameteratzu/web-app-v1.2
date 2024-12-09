@@ -54,8 +54,10 @@ ul {
     border-color: #0d47a1;
   }
   
+
   .circle-button:focus {
     outline: none;
+    box-shadow: none;
   }
 
   .btn-container{

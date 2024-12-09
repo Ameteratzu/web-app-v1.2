@@ -186,9 +186,9 @@ export class RecordsComponent implements OnInit {
     return moment(date).format('DD/MM/YY')
   }
 
-  allowOnlyNumbers(event: KeyboardEvent): void {
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
+  allowOnlyNumbersAndDecimal(event: KeyboardEvent) {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
   }

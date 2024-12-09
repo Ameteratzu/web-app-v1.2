@@ -51,6 +51,12 @@ h6 {
   margin-bottom: 0px;
 }
 
+h3 {
+  font-size: 19px;
+  color: rgb(202 102 2) !important; 
+  font-weight: bold;
+}
+
 h4 {
   font-family: $font-family;
   font-size: 18px;
@@ -100,6 +106,7 @@ mat-toolbar h1 {
 
 table .mat-mdc-header-cell {
   font-family: $font-family;
+  font-weight: bold !important;
 }
 
 .mat-mdc-cell {
@@ -143,4 +150,3 @@ table .mat-mdc-header-cell {
   .mdc-evolution-chip__text-label {
   font-family: $font-family !important;
 }
-

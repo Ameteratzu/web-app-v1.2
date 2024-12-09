@@ -1,4 +1,7 @@
 import { CommonModule } from '@angular/common';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import {
   Component,
   EventEmitter,
@@ -7,14 +10,16 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+
 import {
   FormBuilder,
   FormGroup,
+  FormGroupDirective,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -150,7 +155,7 @@ export class AreaComponent {
     this.formData.get('idMunicipio')?.enable();
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -166,7 +171,11 @@ export class AreaComponent {
         this.editarItem(this.isCreate());
       }
 
+      formDirective.resetForm({
+        fechaHora: new Date(),
+      });
       this.formData.reset();
+      this.formData.get('idMunicipio')?.disable();
     } else {
       this.formData.markAllAsTouched();
     }
@@ -207,34 +216,25 @@ export class AreaComponent {
     });
   }
 
-  async seleccionarItem(index: number) {
+  seleccionarItem(index: number) {
     this.isCreate.set(index);
+    const selectedItem = this.evolutionService.dataAffectedArea()[index];
 
-    const provinciaSeleccionada = () =>
-      this.provinces().find(
-        (provincia) =>
-          provincia.id ===
-          Number(this.evolutionService.dataAffectedArea()[index].idProvincia.id)
-      );
+    // Actualizar los valores en el formulario
+    this.formData.patchValue(selectedItem);
 
-    await this.loadMunicipalities(provinciaSeleccionada());
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.idMunicipio) {
+      this.formData.get('idMunicipio')?.enable();
+    } else {
+      this.formData.get('idMunicipio')?.disable();
+    }
 
-    const municipioSeleccionado = () =>
-      this.municipalities().find(
-        (municipio) =>
-          municipio.id ===
-          Number(this.evolutionService.dataAffectedArea()[index].idMunicipio.id)
-      );
-
-    this.formData.patchValue({
-      ...this.evolutionService.dataAffectedArea()[index],
-      idProvincia: provinciaSeleccionada(),
-      idMunicipio: municipioSeleccionado(),
-    });
-    this.polygon.set(
-      this.evolutionService.dataAffectedArea()[index]?.geoPosicion
-        ?.coordinates[0]
-    );
+    if (selectedItem.idEntidadMenor) {
+      this.formData.get('idEntidadMenor')?.enable();
+    } else {
+      this.formData.get('idEntidadMenor')?.disable();
+    }
   }
 
   getFormatdate(date: any) {

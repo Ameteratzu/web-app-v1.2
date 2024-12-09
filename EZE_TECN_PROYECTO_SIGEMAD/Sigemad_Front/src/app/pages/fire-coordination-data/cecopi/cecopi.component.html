@@ -1,8 +1,9 @@
 <div class="form-container">
   <form
     *ngIf="formDataCecopi"
+    #formDirective="ngForm"
     [formGroup]="formDataCecopi"
-    (ngSubmit)="onSubmitCecopi()"
+    (ngSubmit)="onSubmitCecopi(formDirective)"
   >
     <div>
       <h3 class="title">COORDINACION EN CECOPI / CECOD</h3>
@@ -24,6 +25,11 @@
             [for]="picker4"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker4></mat-datepicker>
+          <mat-error
+            *ngIf="formDataCecopi.get('fechaInicio')?.hasError('required')"
+          >
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20%">
@@ -48,6 +54,22 @@
             placeholder="Ingresa texto"
             required
           />
+          <mat-error *ngIf="formDataCecopi.get('lugar')?.hasError('required')">
+            Este campo es obligatorio.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Municipio -->
+        <mat-form-field appearance="fill" fxFlex="50%">
+          <mat-label>Municipio</mat-label>
+          <mat-select [formControl]="getFormCecopi('municipio')">
+            <mat-option
+              *ngFor="let option of municipalities()"
+              [value]="option"
+            >
+              {{ option.descripcion }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 
@@ -68,6 +90,11 @@
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
+          <mat-error
+            *ngIf="formDataCecopi.get('provincia')?.hasError('required')"
+          >
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
 
         <!-- Municipio -->
@@ -81,6 +108,11 @@
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
+          <mat-error
+            *ngIf="formDataCecopi.get('municipio')?.hasError('required')"
+          >
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
 
         <img

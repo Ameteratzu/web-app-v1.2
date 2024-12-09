@@ -40,6 +40,7 @@
 .row {
   display: flex;
   width: 100%;
+  align-items: center;
 }
 
 .spaced-input {
@@ -76,4 +77,12 @@
 .fspace {
   display: flex;
   justify-content: space-between;
+}
+
+.file-name .file-button {
+  margin-bottom: 1.25em;
+}
+
+.file-name {
+  margin-left: 0.8em;
 }

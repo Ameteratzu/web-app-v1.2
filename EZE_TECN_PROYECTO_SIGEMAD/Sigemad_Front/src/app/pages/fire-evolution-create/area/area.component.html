@@ -1,5 +1,10 @@
 <div class="form-container">
-  <form *ngIf="formData" [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <form
+    *ngIf="formData"
+    #formDirective="ngForm"
+    [formGroup]="formData"
+    (ngSubmit)="onSubmit(formDirective)"
+  >
     <div>
       <h3 class="title">DATOS PRINCIPALES</h3>
       <div
@@ -20,6 +25,9 @@
             [for]="picker"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="50%">
@@ -32,6 +40,9 @@
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="formData.get('idProvincia')?.hasError('required')">
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="50%">
@@ -44,15 +55,10 @@
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="formData.get('idMunicipio')?.hasError('required')">
+            Este campo es obligatorio.
+          </mat-error>
         </mat-form-field>
-
-        <img
-          (click)="openModalMap()"
-          matSuffix
-          src="/assets/img/location-btn.svg"
-          alt="location-btn"
-          class="pin-location"
-        />
       </div>
 
       <div
@@ -100,6 +106,51 @@
           Agregar
         </button>
       </div>
+    </div>
+
+    <div
+      class="row"
+      fxLayout="row"
+      fxLayoutGap="30px"
+      fxLayoutAlign="start center"
+    >
+      <mat-form-field appearance="fill" fxFlex="40%">
+        <mat-label>Entidad Menor</mat-label>
+        <mat-select [formControl]="getForm('idEntidadMenor')">
+          <mat-option *ngFor="let option of minors()" [value]="option">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="input" fxFlex="60%">
+        <mat-label>Fichero georeferenciado</mat-label>
+        <input
+          matInput
+          [formControl]="getForm('fichero')"
+          placeholder="Ingresa texto"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <div
+      class="row"
+      fxLayout="row"
+      fxLayoutGap="30px"
+      fxLayoutAlign="start center"
+    >
+      <mat-form-field class="input full-width-input" fxFlex="100%">
+        <mat-label>Observaciones</mat-label>
+        <textarea matInput [formControl]="getForm('observaciones')"> </textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="row add-button-row" fxLayout="row" fxLayoutAlign="end center">
+      <button mat-flat-button color="primary">
+        <mat-icon>add</mat-icon>
+        Agregar
+      </button>
     </div>
   </form>
   <br />
