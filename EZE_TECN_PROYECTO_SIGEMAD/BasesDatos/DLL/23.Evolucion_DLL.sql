@@ -50,9 +50,21 @@ CREATE TABLE dbo.Registro (
 );
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
+
+);
+
+CREATE TABLE dbo.Registro_ProcedenciaDestino (
 	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	IdRegistro int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
-	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id)
+	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
+    ---
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+    CreadoPor UNIQUEIDENTIFIER NULL,
+    FechaModificacion DATETIME2(7) NULL,
+    ModificadoPor UNIQUEIDENTIFIER NULL,
+    FechaEliminacion DATETIME2(7) NULL,
+    EliminadoPor UNIQUEIDENTIFIER NULL,
+    Borrado BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE dbo.DatoPrincipal (

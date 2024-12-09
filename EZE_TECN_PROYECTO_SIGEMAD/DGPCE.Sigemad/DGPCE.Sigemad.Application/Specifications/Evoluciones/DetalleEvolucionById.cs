@@ -14,10 +14,9 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
         AddInclude(i => i.Registro.EntradaSalida);
         AddInclude(i => i.Registro.Medio);
 
-        AddInclude(i => i.Registro.ProcedenciaDestinos);
+
+        AddInclude(i => i.Registro.ProcedenciaDestinos.Where(a => !a.Borrado));
         AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
-
-
 
         AddCriteria(i => i.DatoPrincipal != null ? i.Parametro.Borrado == false : true);
         AddInclude(i => i.Parametro);
