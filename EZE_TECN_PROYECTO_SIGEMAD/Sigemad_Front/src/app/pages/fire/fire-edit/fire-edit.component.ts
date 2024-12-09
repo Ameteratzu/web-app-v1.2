@@ -40,13 +40,17 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
+import { Router } from '@angular/router';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { ModalConfirmComponent } from '../../../shared/modalConfirm/modalConfirm.component';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fire-edit',
@@ -156,7 +160,7 @@ export class FireEditComponent implements OnInit {
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
-      municipality: this.fire.id,
+      municipality: this.fire.municipio,
       startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
@@ -204,11 +208,12 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireCoordinationData, {
       width: '90vw',
       maxWidth: 'none',
-      height: '90vh',
+      //height: '90vh',
       disableClose: true,
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
         fireDetail,
       },
     });
@@ -261,7 +266,6 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-    console.info('fireDetail', fireDetail);
     if (fireDetail.tipoRegistro == 'Documentación') {
       this.goModalDocumentation(fireDetail);
       return;
@@ -280,7 +284,52 @@ export class FireEditComponent implements OnInit {
     return moment(date).format('DD/MM/YY HH:mm');
   }
 
-  volver(){
-    this.routenav.navigate([`/fire`])
+  volver() {
+    this.routenav.navigate([`/fire`]);
+  }
+
+  openModalMap() {
+    console.info('this.formData', this.formData.value);
+    if (!this.formData.value.municipality) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find(
+      (item) => item.id == this.formData.value.municipality.id
+    );
+    console.info('municipioSelected', this.municipalities(), municipioSelected);
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      //height: '780px',
+      //maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+        defaultPolygon: null,
+        onlyView: true,
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        //this.polygon.set(features);
+      }
+    );
+  }
+
+  goModalConfirm(): void {
+    this.matDialog.open(ModalConfirmComponent, {
+      width: '30vw',
+      maxWidth: 'none',
+      //height: '90vh',
+      disableClose: true,
+      data: {
+        fireId: this.fire.id,
+      },
+    });
   }
 }

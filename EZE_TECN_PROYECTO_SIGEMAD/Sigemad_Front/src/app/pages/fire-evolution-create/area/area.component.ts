@@ -1,43 +1,61 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, FormGroupDirective } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { CommonModule } from '@angular/common';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatNativeDateModule,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButtonModule } from '@angular/material/button';
-import { CoordinationAddress } from '../../../types/coordination-address';
-import { MatSelectModule } from '@angular/material/select';
-import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { EvolutionService } from '../../../services/evolution.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
-import { ProvinceService } from '../../../services/province.service';
-import { Province } from '../../../types/province.type';
-import { MunicipalityService } from '../../../services/municipality.service';
-import { Municipality } from '../../../types/municipality.type';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import moment from 'moment';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import { EvolutionService } from '../../../services/evolution.service';
 import { MinorEntityService } from '../../../services/minor-entity.service';
+import { MunicipalityService } from '../../../services/municipality.service';
+import { ProvinceService } from '../../../services/province.service';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { CoordinationAddress } from '../../../types/coordination-address';
 import { MinorEntity } from '../../../types/minor-entity.type';
+import { Municipality } from '../../../types/municipality.type';
+import { Province } from '../../../types/province.type';
 
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -48,10 +66,10 @@ const MY_DATE_FORMATS = {
   selector: 'app-area',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     MatInputModule,
     FlexLayoutModule,
@@ -60,17 +78,16 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './area.component.html',
-  styleUrl: './area.component.scss'
+  styleUrl: './area.component.scss',
 })
 export class AreaComponent {
-
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
@@ -82,14 +99,16 @@ export class AreaComponent {
   private spinner = inject(NgxSpinnerService);
   private municipalityService = inject(MunicipalityService);
   private minorService = inject(MinorEntityService);
-  
- public displayedColumns: string[] = [
+
+  public polygon = signal<any>([]);
+
+  public displayedColumns: string[] = [
     'fechaHora',
     'procendenciaDestino',
     'descripcion',
     'fichero',
     'opciones',
-  ]; 
+  ];
 
   formData!: FormGroup;
 
@@ -101,7 +120,6 @@ export class AreaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
@@ -120,41 +138,54 @@ export class AreaComponent {
     this.formData.get('fichero')?.disable();
     this.formData.get('idEntidadMenor')?.disable();
 
+    /*
+    if (this.editData) {
+      if (this.coordinationServices.dataPma().length === 0) {
+        this.coordinationServices.dataPma.set(this.editData);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
+      }
+    }
+    */
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value.id;
+    const province_id = event?.value?.id ?? event.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
     this.formData.get('idMunicipio')?.enable();
   }
 
-  onSubmit(formDirective: FormGroupDirective): void{
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
-      if(this.isCreate() == -1){
-        
-        this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);  
-      }else{
-        this.editarItem(this.isCreate())
+      if (this.isCreate() == -1) {
+        data.geoPosicion = {
+          type: 'Polygon',
+          coordinates: [this.polygon()],
+        };
+        this.evolutionService.dataAffectedArea.set([
+          data,
+          ...this.evolutionService.dataAffectedArea(),
+        ]);
+      } else {
+        this.editarItem(this.isCreate());
       }
-      
+
       formDirective.resetForm({
         fechaHora: new Date(),
       });
-      this.formData.reset()
+      this.formData.reset();
       this.formData.get('idMunicipio')?.disable();
-    }else {
+    } else {
       this.formData.markAllAsTouched();
     }
   }
 
-
   async sendDataToEndpoint() {
     this.spinner.show();
     if (this.evolutionService.dataAffectedArea().length > 0) {
-      this.save.emit(true); 
-    }else{
+      this.save.emit(true);
+    } else {
       this.spinner.hide();
       this.showToast();
     }
@@ -162,9 +193,9 @@ export class AreaComponent {
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -174,20 +205,19 @@ export class AreaComponent {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formData.reset()
-    
+    this.isCreate.set(-1);
+    this.formData.reset();
   }
 
   eliminarItem(index: number) {
     this.evolutionService.dataAffectedArea.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  seleccionarItem(index: number){
-    this.isCreate.set(index)
+  seleccionarItem(index: number) {
+    this.isCreate.set(index);
     const selectedItem = this.evolutionService.dataAffectedArea()[index];
 
     // Actualizar los valores en el formulario
@@ -207,8 +237,8 @@ export class AreaComponent {
     }
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
   getForm(atributo: string): any {
@@ -219,8 +249,38 @@ export class AreaComponent {
     return item.id;
   }
 
-  closeModal(){
-    this.save.emit(false); 
+  closeModal() {
+    this.save.emit(false);
   }
 
+  openModalMap() {
+    if (!this.formData.value.idMunicipio) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find(
+      (item) => item.id == this.formData.value.idMunicipio.id
+    );
+
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      //height: '780px',
+      //maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+        defaultPolygon: this.polygon(),
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        this.polygon.set(features);
+      }
+    );
+  }
 }
