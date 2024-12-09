@@ -196,13 +196,12 @@ export class AreaComponent {
     }
     if (data.entidadMenor.id && data.municipio.id) {
       const minor = await this.minorService.get(data.municipio.id);
-      console.log('🚀 ~ AreaComponent ~ seleccionarItem ~ minor:', minor);
       this.minors.set(minor);
     }
     this.formData.get('fechaHora')?.setValue(data.fechaHora);
-    this.formData.get('provincia')?.setValue(data.provincia.id);
-    this.formData.get('municipio')?.setValue(data.municipio.id);
-    this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+    this.formData.get('provincia')?.setValue(data.provincia);
+    this.formData.get('municipio')?.setValue(data.municipio);
+    this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
     this.formData.get('observaciones')?.setValue(data.observaciones);
     this.spinner.hide();
   }

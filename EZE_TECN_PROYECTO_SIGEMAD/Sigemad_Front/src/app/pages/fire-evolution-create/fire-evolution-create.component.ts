@@ -76,7 +76,6 @@ export class FireCreateComponent implements OnInit {
 
     const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.fireDetail.id));
 
-    console.log('🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ dataCordinacion:', dataCordinacion);
     this.editData = dataCordinacion;
     this.isDataReady = true;
   }
@@ -143,11 +142,12 @@ export class FireCreateComponent implements OnInit {
 
   async processData(): Promise<void> {
     if (this.evolutionSevice.dataRecords().length > 0) {
+      this.editData ? (this.idReturn = this.editData.id) : 0;
       this.idReturn ? (this.evolutionSevice.dataRecords()[0].idEvolucion = this.idReturn) : 0;
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
       this.idReturn = result.id;
     }
-    console.log('🚀 ~ processData ~  this.evolutionSevice.dataAffectedArea():', this.evolutionSevice.dataAffectedArea());
+
     await this.handleDataProcessing(
       this.evolutionSevice.dataAffectedArea(),
       (item) => ({
@@ -165,7 +165,6 @@ export class FireCreateComponent implements OnInit {
   }
 
   async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
-    //if (data.length > 0 || this.isEdit ) {
     if (data.length > 0) {
       const formattedData = data.map(formatter);
 
