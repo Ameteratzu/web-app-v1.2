@@ -27,4 +27,13 @@ export class FireDocumentationService {
       )
     );
   }
+
+  //delete
+  delete(id: number) {
+    const endpoint = `/Documentaciones/${id}`;
+
+    return firstValueFrom(
+      this.http.delete(endpoint).pipe((response) => response)
+    );
+  }
 }

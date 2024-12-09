@@ -182,8 +182,21 @@
       </table>
     </div>
 
-    <div class="modal-footer" fxLayout="row" fxLayoutAlign="end center">
-      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div
+      class="modal-footer"
+      fxLayout="row"
+      fxLayoutGap="10px"
+      fxLayoutAlign="space-between center"
+    >
+      <button
+        (click)="delete()"
+        mat-flat-button
+        [style.background-color]="'var(--fire-color)'"
+      >
+        Eliminar
+      </button>
+
+      <div fxLayout="row" fxLayoutGap="10px" fxFlex="auto">
         <button
           (click)="closeModal()"
           mat-flat-button
@@ -193,10 +206,10 @@
           Volver
         </button>
         <button
-          (click)="saveList()"
           mat-flat-button
           color="primary"
           style="margin-right: 10px"
+          (click)="saveList()"
         >
           Guardar
         </button>
@@ -204,6 +217,12 @@
     </div>
   </div>
 </div>
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
-  <p style="color: white"> Cargando... </p>
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-atom"
+  [fullScreen]="true"
+>
+  <p style="color: white">Cargando...</p>
 </ngx-spinner>

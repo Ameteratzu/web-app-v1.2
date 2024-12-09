@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  Renderer2,
+  signal,
+  ViewChild,
+} from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -41,17 +48,17 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
+import { Router } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { AlertService } from '../../../shared/alert/alert.service';
+import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
-import { Router } from '@angular/router';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
-import { AlertService } from '../../../shared/alert/alert.service';
-import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
-  
+
 @Component({
   selector: 'app-fire-edit',
   standalone: true,
@@ -73,7 +80,7 @@ import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.dire
     MatSortModule,
     NgxSpinnerModule,
     MatTooltipModule,
-    TooltipDirective
+    TooltipDirective,
   ],
   providers: [],
   templateUrl: './fire-edit.component.html',
@@ -164,12 +171,12 @@ export class FireEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  async cargarRegistros(){
+  async cargarRegistros() {
     this.spinner.show();
     const details = await this.fireService.details(Number(this.fire_id));
     this.dataSource.data = details;
     this.spinner.hide();
-    return
+    return;
   }
 
   async loadMunicipalities(event: any) {
@@ -197,7 +204,7 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-          this.cargarRegistros();
+        this.cargarRegistros();
       }
     });
   }
@@ -217,7 +224,7 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-          this.cargarRegistros();
+        this.cargarRegistros();
       }
     });
   }
@@ -237,6 +244,9 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        if (result.refresh) {
+          this.cargarRegistros();
+        }
         console.log('Modal result:', result);
       }
     });
@@ -257,20 +267,22 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
+        if (result.refresh) {
+          this.cargarRegistros();
+        }
         console.log('Modal result:', result);
       }
     });
   }
 
   goModalEdit(fireDetail: FireDetail) {
-
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
-      'Documentación': this.goModalDocumentation.bind(this),
+      Documentación: this.goModalDocumentation.bind(this),
       'Otra Información': this.goModalOtherInformation.bind(this),
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
     };
-  
+
     const action = modalActions[fireDetail.tipoRegistro];
     if (action) {
       action(fireDetail);
@@ -281,19 +293,19 @@ export class FireEditComponent implements OnInit {
     return moment(date).format('DD/MM/YY HH:mm');
   }
 
-  volver(){
-    this.routenav.navigate([`/fire`])
+  volver() {
+    this.routenav.navigate([`/fire`]);
   }
 
-  async deleteFire(){
+  async deleteFire() {
     this.alertService
       .showAlert({
-        title: "¿Estás seguro?",
-        text: "¡No podrás revertir esto!",
-        icon: "warning",
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
         showCancelButton: true,
-        cancelButtonColor: "#d33",
-        confirmButtonText: "¡Sí, eliminar!",
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -305,20 +317,18 @@ export class FireEditComponent implements OnInit {
           setTimeout(() => {
             this.renderer.setStyle(toolbar, 'z-index', '5');
             this.spinner.hide();
-            this.alertService.showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            }).then((result) => {
-              this.routenav.navigate([`/fire`])
-            });
+            this.alertService
+              .showAlert({
+                title: 'Eliminado!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.routenav.navigate([`/fire`]);
+              });
           }, 2000);
-
-          
-        }else{
+        } else {
           this.spinner.hide();
         }
-         
       });
-
   }
 }

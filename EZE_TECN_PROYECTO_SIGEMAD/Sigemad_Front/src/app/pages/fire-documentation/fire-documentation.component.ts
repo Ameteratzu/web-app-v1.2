@@ -25,13 +25,14 @@ import {
   NativeDateAdapter,
 } from '@angular/material/core';
 import moment from 'moment';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { FireDocumentationService } from '../../services/fire-documentation.service';
 import { OriginDestinationService } from '../../services/origin-destination.service';
 import { TipoDocumentoService } from '../../services/tipo-documento.service';
+import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -73,7 +74,7 @@ interface FormType {
     MatNativeDateModule,
     MatButtonModule,
     MatTableModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -86,7 +87,8 @@ export class FireDocumentation implements OnInit {
     private tipoDocumento: TipoDocumentoService,
     private dialogRef: MatDialogRef<FireDocumentation>,
     private fireDocumentationService: FireDocumentationService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public alertService: AlertService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -115,6 +117,7 @@ export class FireDocumentation implements OnInit {
   public listadoMedios = signal<Media[]>([]);
   public dataOtherInformation = signal<FormType[]>([]);
   public isCreate = signal<number>(-1);
+  public isSaving = signal<boolean>(false);
 
   public dataSource = new MatTableDataSource<any>([]);
 
@@ -202,8 +205,13 @@ export class FireDocumentation implements OnInit {
 
   //Función para guardar en base de datos
   async saveList() {
+    if (this.isSaving()) {
+      return;
+    }
+    this.isSaving.set(true);
     if (this.dataOtherInformation().length <= 0) {
       this.showToast({ title: 'Debe meter data en la lista' });
+      this.isSaving.set(false);
       return;
     }
 
@@ -235,13 +243,18 @@ export class FireDocumentation implements OnInit {
         await this.fireDocumentationService.post(objToSave);
 
       if (resp!.idDocumentacion > 0) {
-        this.showToast({ title: 'Registro guardado' });
-        setTimeout(() => {
-          this.spinner.show();
-          window.location.href = `fire-national-edit/${
-            this.dataProps?.fire?.id ?? 1
-          }`;
-        }, 2000);
+        this.isSaving.set(false);
+        this.spinner.hide();
+
+        this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro subido correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal({ refresh: true });
+          });
       } else {
         this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
@@ -250,6 +263,45 @@ export class FireDocumentation implements OnInit {
       console.info({ error });
       this.spinner.hide();
     }
+  }
+
+  async delete() {
+    //const toolbar = document.querySelector('mat-toolbar');
+    //this.renderer.setStyle(toolbar, 'z-index', '1');
+    this.spinner.show();
+
+    this.alertService
+      .showAlert({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await this.fireDocumentationService.delete(
+            Number(this.dataProps?.fireDetail?.id)
+          );
+          //this.coordinationServices.clearData();
+          //setTimeout(() => {
+          //this.renderer.setStyle(toolbar, 'z-index', '5');
+          this.spinner.hide();
+          //}, 2000);
+
+          this.alertService
+            .showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            })
+            .then((result) => {
+              this.closeModal({ refresh: true });
+            });
+        } else {
+          this.spinner.hide();
+        }
+      });
   }
 
   seleccionarItem(index: number) {
@@ -299,8 +351,8 @@ export class FireDocumentation implements OnInit {
     });
   }
 
-  closeModal() {
-    this.dialogRef.close();
+  closeModal(params?: any) {
+    this.dialogRef.close(params);
   }
 
   onFileSelected(event: Event): void {
