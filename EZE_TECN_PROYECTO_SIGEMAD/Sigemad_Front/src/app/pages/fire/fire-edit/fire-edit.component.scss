@@ -78,9 +78,7 @@ p {
   padding-top: 20px;
 }
 
-::ng-deep
-  .mdc-text-field--filled.mdc-text-field--disabled
-  .mdc-text-field__input {
+::ng-deep .mdc-text-field--filled.mdc-text-field--disabled .mdc-text-field__input {
   color: black !important;
   opacity: 1 !important;
 }

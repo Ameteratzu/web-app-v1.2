@@ -10,8 +10,6 @@ export class MenuService {
   get() {
     const endpoint = '/Menus';
 
-    return firstValueFrom(
-      this.http.get<Menu[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Menu[]>(endpoint).pipe((response) => response));
   }
 }

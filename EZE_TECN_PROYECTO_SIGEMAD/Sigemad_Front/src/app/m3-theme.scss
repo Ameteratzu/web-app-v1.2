@@ -127,20 +127,21 @@ $palettes: (
   ),
 );
 
-
 $_rest: (
   secondary: map.get($palettes, secondary),
   neutral: map.get($palettes, neutral),
-  neutral-variant: map.get($palettes,  neutral-variant),
+  neutral-variant: map.get($palettes, neutral-variant),
   error: map.get($palettes, error),
 );
 $_primary: map.merge(map.get($palettes, primary), $_rest);
 $_tertiary: map.merge(map.get($palettes, tertiary), $_rest);
 
-$light-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: $_primary,
-    tertiary: $_tertiary,
-  ),
-));
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: $_primary,
+      tertiary: $_tertiary,
+    ),
+  )
+);

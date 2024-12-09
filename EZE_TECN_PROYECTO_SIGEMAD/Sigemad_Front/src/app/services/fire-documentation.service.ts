@@ -9,9 +9,7 @@ export class FireDocumentationService {
   getById(id: Number) {
     let endpoint = `/Documentaciones/${id}`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
   post(data: any) {
     const endpoint = '/Documentaciones';

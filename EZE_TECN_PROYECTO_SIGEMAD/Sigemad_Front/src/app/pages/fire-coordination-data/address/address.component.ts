@@ -3,18 +3,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
-import { DireccionesService } from '../../../services/direcciones.service'
+import { DireccionesService } from '../../../services/direcciones.service';
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
@@ -25,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CoordinationAddressService } from '../../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -55,7 +50,7 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   templateUrl: './address.component.html',
   styleUrl: './address.component.scss',
@@ -65,7 +60,6 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class AddressComponent {
-
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
@@ -79,13 +73,7 @@ export class AddressComponent {
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formData!: FormGroup;
 
@@ -116,27 +104,22 @@ export class AddressComponent {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
-
         this.coordinationServices.dataCoordinationAddress.set([data, ...this.coordinationServices.dataCoordinationAddress()]);
       } else {
-        this.editarItem(this.isCreate())
+        this.editarItem(this.isCreate());
       }
 
       formDirective.resetForm();
       this.formData.reset();
-
     } else {
       this.formData.markAllAsTouched();
     }
   }
 
-
   async sendDataToEndpoint() {
-
     if (this.coordinationServices.dataCoordinationAddress().length > 0) {
       this.save.emit(true);
     } else {
-
       // this.showToast();
     }
   }
@@ -155,9 +138,8 @@ export class AddressComponent {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formData.reset()
-
+    this.isCreate.set(-1);
+    this.formData.reset();
   }
 
   eliminarItem(index: number) {
@@ -177,9 +159,8 @@ export class AddressComponent {
     });
   }
 
-
   getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YY')
+    return moment(date).format('DD/MM/YY');
   }
 
   getForm(atributo: string): any {
@@ -197,5 +178,4 @@ export class AddressComponent {
   findOptionMatch(option: any) {
     return this.coordinationAddress().find((item) => item.id === option.id);
   }
-
 }

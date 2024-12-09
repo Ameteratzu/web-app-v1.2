@@ -15,12 +15,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import moment from 'moment';
 
@@ -102,15 +97,7 @@ export class FireEditComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = [
-    'numero',
-    'fechaHora',
-    'registro',
-    'origen',
-    'tipoRegistro',
-    'tecnico',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico', 'opciones'];
 
   async ngOnInit() {
     this.menuItemActiveService.set.emit('/fire');
@@ -137,9 +124,7 @@ export class FireEditComponent implements OnInit {
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
-    const municipalities = await this.municipalityService.get(
-      this.fire.idProvincia
-    );
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
     this.municipalities.set(municipalities);
 
     const events = await this.eventService.get();
@@ -293,9 +278,7 @@ export class FireEditComponent implements OnInit {
     if (!this.formData.value.municipality) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipality.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality.id);
     console.info('municipioSelected', this.municipalities(), municipioSelected);
     if (!municipioSelected) {
       return;
@@ -314,11 +297,9 @@ export class FireEditComponent implements OnInit {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.polygon.set(features);
+    });
   }
 
   goModalConfirm(): void {

@@ -2,30 +2,12 @@ import { CommonModule } from '@angular/common';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Output,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
-import {
-  FormBuilder,
-  FormGroup,
-  FormGroupDirective,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -102,13 +84,7 @@ export class AreaComponent {
 
   public polygon = signal<any>([]);
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formData!: FormGroup;
 
@@ -163,10 +139,7 @@ export class AreaComponent {
           type: 'Polygon',
           coordinates: [this.polygon()],
         };
-        this.evolutionService.dataAffectedArea.set([
-          data,
-          ...this.evolutionService.dataAffectedArea(),
-        ]);
+        this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
       } else {
         this.editarItem(this.isCreate());
       }
@@ -257,9 +230,7 @@ export class AreaComponent {
     if (!this.formData.value.idMunicipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.idMunicipio.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.idMunicipio.id);
 
     if (!municipioSelected) {
       return;
@@ -277,10 +248,8 @@ export class AreaComponent {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      this.polygon.set(features);
+    });
   }
 }

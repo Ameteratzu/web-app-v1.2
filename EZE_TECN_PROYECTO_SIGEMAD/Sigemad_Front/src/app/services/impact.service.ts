@@ -10,8 +10,6 @@ export class ImpactService {
   get() {
     const endpoint = '/impactos';
 
-    return firstValueFrom(
-      this.http.get<Impact[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Impact[]>(endpoint).pipe((response) => response));
   }
 }

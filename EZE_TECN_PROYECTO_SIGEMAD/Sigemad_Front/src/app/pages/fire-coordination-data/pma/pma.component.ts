@@ -1,28 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  FormBuilder,
-  FormGroup,
-  FormGroupDirective,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -100,13 +81,7 @@ export class PmaComponent {
   private provinceService = inject(ProvinceService);
   private municipalityService = inject(MunicipalityService);
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formData!: FormGroup;
 
@@ -118,8 +93,7 @@ export class PmaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress =
-      await this.direcionesServices.getAllDirecciones();
+    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
     const provinces = await this.provinceService.get();
@@ -153,10 +127,7 @@ export class PmaComponent {
           type: 'Polygon',
           coordinates: [this.polygon()],
         };
-        this.coordinationServices.dataPma.set([
-          data,
-          ...this.coordinationServices.dataPma(),
-        ]);
+        this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);
       } else {
         this.editarItem(this.isCreate());
       }
@@ -173,10 +144,7 @@ export class PmaComponent {
   }
 
   async sendDataToEndpoint() {
-    console.log(
-      '🚀 ~ PmaComponent ~ sendDataToEndpoint ~ this.coordinationServices:',
-      this.coordinationServices.dataPma()
-    );
+    console.log('🚀 ~ PmaComponent ~ sendDataToEndpoint ~ this.coordinationServices:', this.coordinationServices.dataPma());
     this.spinner.show();
     if (this.coordinationServices.dataPma().length > 0) {
       this.save.emit(true);
@@ -213,9 +181,7 @@ export class PmaComponent {
     if (!this.formData.value.municipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipio.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio.id);
 
     if (!municipioSelected) {
       return;
@@ -233,11 +199,9 @@ export class PmaComponent {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      this.polygon.set(features);
+    });
   }
 
   editarItem(index: number) {
@@ -262,29 +226,19 @@ export class PmaComponent {
     const selectedItem = this.coordinationServices.dataPma()[index];
 
     const provinciaSeleccionada = () =>
-      this.provinces().find(
-        (provincia) =>
-          provincia.id ===
-          Number(this.coordinationServices.dataPma()[index].provincia.id)
-      );
+      this.provinces().find((provincia) => provincia.id === Number(this.coordinationServices.dataPma()[index].provincia.id));
 
     await this.loadMunicipalities(provinciaSeleccionada());
 
     const municipioSeleccionado = () =>
-      this.municipalities().find(
-        (municipio) =>
-          municipio.id ===
-          Number(this.coordinationServices.dataPma()[index].municipio.id)
-      );
+      this.municipalities().find((municipio) => municipio.id === Number(this.coordinationServices.dataPma()[index].municipio.id));
 
     this.formData.patchValue({
       ...this.coordinationServices.dataPma()[index],
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
-    this.polygon.set(
-      this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]
-    );
+    this.polygon.set(this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]);
 
     // Habilitar los campos dependientes si tienen datos
     if (selectedItem.municipio) {

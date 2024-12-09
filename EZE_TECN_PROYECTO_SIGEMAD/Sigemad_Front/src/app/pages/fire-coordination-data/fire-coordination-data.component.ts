@@ -1,10 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component, inject, Renderer2, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -69,13 +63,7 @@ export class FireCoordinationData {
 
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   editDataDir: any;
   editDataCecopi: any;
@@ -88,9 +76,7 @@ export class FireCoordinationData {
       this.isDataReady = true;
       return;
     }
-    const dataOtraInformacion: any = await this.coordinationServices.getById(
-      Number(this.data.fireDetail.id)
-    );
+    const dataOtraInformacion: any = await this.coordinationServices.getById(Number(this.data.fireDetail.id));
 
     this.editDataDir = dataOtraInformacion.direcciones;
     this.editDataCecopi = dataOtraInformacion.coordinacionesCecopi;
@@ -120,9 +106,7 @@ export class FireCoordinationData {
 
       this.showToast();
       setTimeout(() => {
-        window.location.href = `fire-national-edit/${
-          this.data?.idIncendio ?? 1
-        }`;
+        window.location.href = `fire-national-edit/${this.data?.idIncendio ?? 1}`;
         this.renderer.setStyle(toolbar, 'z-index', '5');
         this.spinner.hide();
       }, 2000);
@@ -183,20 +167,13 @@ export class FireCoordinationData {
     );
   }
 
-  async handleDataProcessing<T>(
-    data: T[],
-    formatter: (item: T) => any,
-    postService: (body: any) => Promise<any>,
-    key: string
-  ): Promise<void> {
+  async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
     if (data.length > 0) {
       const formattedData = data.map(formatter);
 
       const body = {
         idIncendio: this.data.idIncendio,
-        idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id
-          ? this.data?.fireDetail?.id
-          : this.idReturn,
+        idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
       console.info('body', body);

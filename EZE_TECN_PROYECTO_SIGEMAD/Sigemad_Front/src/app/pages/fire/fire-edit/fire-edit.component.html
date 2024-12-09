@@ -10,13 +10,7 @@
       <input matInput [formControl]="getForm('ubicacion')" />
     </mat-form-field>
 
-    <img
-      (click)="openModalMap()"
-      matSuffix
-      src="/assets/img/location-btn.svg"
-      alt="location-btn"
-      class="pin-location"
-    />
+    <img (click)="openModalMap()" matSuffix src="/assets/img/location-btn.svg" alt="location-btn" class="pin-location" />
 
     <mat-form-field appearance="fill" fxFlex="20">
       <mat-label>Clase de suceso</mat-label>
@@ -35,13 +29,7 @@
   </div>
 
   <div fxLayout="row" fxLayoutAlign="space-between center">
-    <button
-      mat-flat-button
-      [style.background-color]="'var(--fire-color)'"
-      (click)="goModalConfirm()"
-    >
-      Eliminar
-    </button>
+    <button mat-flat-button [style.background-color]="'var(--fire-color)'" (click)="goModalConfirm()">Eliminar</button>
     <button mat-flat-button color="accent" (click)="volver()">Volver</button>
   </div>
 </div>
@@ -51,19 +39,23 @@
 </div>
 <br />
 
-<div
-  fxLayout="row"
-  fxLayoutAlign="start stretch"
-  fxLayoutGap="16px"
-  style="height: 100%"
->
+<div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="16px" style="height: 100%">
   <div fxFlex="30" class="info-section">
     <mat-card>
       <mat-card-title>Situación Evolutiva</mat-card-title>
       <mat-card-content>
-        <p><strong>Inicio de incendio:</strong> 19/08/2024 19:45</p>
-        <p><strong>Estado:</strong> Activo</p>
-        <p><strong>Nivel de gravedad:</strong> Activo</p>
+        <p>
+          <strong>Inicio de incendio:</strong>
+          19/08/2024 19:45
+        </p>
+        <p>
+          <strong>Estado:</strong>
+          Activo
+        </p>
+        <p>
+          <strong>Nivel de gravedad:</strong>
+          Activo
+        </p>
         <mat-divider></mat-divider>
 
         <h4>Hechos relevantes</h4>
@@ -89,126 +81,54 @@
 
   <div fxFlex="70" class="table-section">
     <mat-card>
-      <div
-        fxLayout="row"
-        fxLayoutAlign="space-between center"
-        fxLayoutGap="16px"
-      >
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
         <mat-card-title>Registro de actualizaciones</mat-card-title>
 
         <div fxLayout="row" fxLayoutGap="8px" class="btn-container">
-          <button mat-button class="circle-button" (click)="goModalEvolution()">
-            E
-          </button>
-          <button
-            mat-button
-            class="circle-button"
-            (click)="goModalCoordination()"
-          >
-            C
-          </button>
+          <button mat-button class="circle-button" (click)="goModalEvolution()">E</button>
+          <button mat-button class="circle-button" (click)="goModalCoordination()">C</button>
           <button mat-button class="circle-button">R</button>
-          <button
-            mat-button
-            class="circle-button"
-            (click)="goModalDocumentation()"
-          >
-            D
-          </button>
-          <button
-            mat-button
-            class="circle-button"
-            (click)="goModalOtherInformation()"
-          >
-            O
-          </button>
+          <button mat-button class="circle-button" (click)="goModalDocumentation()">D</button>
+          <button mat-button class="circle-button" (click)="goModalOtherInformation()">O</button>
           <button mat-button class="circle-button">S</button>
         </div>
       </div>
       <br />
       <mat-card-content>
-        <table
-          mat-table
-          [dataSource]="dataSource"
-          matSort
-          class="mat-elevation-z8"
-          style="width: 100%"
-        >
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 100%">
           <ng-container matColumnDef="numero">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              sortActionDescription="Sort by numero"
-            >
-              N°
-            </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by numero">N°</th>
             <td mat-cell *matCellDef="let element; let i = index">
               {{ i + 1 }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="fechaHora">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-              sortActionDescription="Sort by fechaHora"
-            >
-              Fecha / hora
-            </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by fechaHora">Fecha / hora</th>
             <td mat-cell *matCellDef="let element">
               {{ getFormatdate(element.fechaHora) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="registro">
-            <th
-              sortActionDescription="Sort by registro"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
-              Registro
-            </th>
+            <th sortActionDescription="Sort by registro" mat-header-cell *matHeaderCellDef mat-sort-header>Registro</th>
             <td mat-cell *matCellDef="let element">{{ element.registro }}</td>
           </ng-container>
 
           <ng-container matColumnDef="origen">
-            <th
-              sortActionDescription="Sort by origen"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
-              Origen
-            </th>
+            <th sortActionDescription="Sort by origen" mat-header-cell *matHeaderCellDef mat-sort-header>Origen</th>
             <td mat-cell *matCellDef="let element">{{ element.origen }}</td>
           </ng-container>
 
           <ng-container matColumnDef="tipoRegistro">
-            <th
-              sortActionDescription="Sort by tipoRegistro"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
-              Tipo de registro
-            </th>
+            <th sortActionDescription="Sort by tipoRegistro" mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de registro</th>
             <td mat-cell *matCellDef="let element">
               {{ element.tipoRegistro }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="tecnico">
-            <th
-              sortActionDescription="Sort by tecnico"
-              mat-header-cell
-              *matHeaderCellDef
-              mat-sort-header
-            >
-              Técnico
-            </th>
+            <th sortActionDescription="Sort by tecnico" mat-header-cell *matHeaderCellDef mat-sort-header>Técnico</th>
             <td mat-cell *matCellDef="let element">{{ element.tecnico }}</td>
           </ng-container>
 

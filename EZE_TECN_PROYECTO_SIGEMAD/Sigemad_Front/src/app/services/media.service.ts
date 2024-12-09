@@ -10,8 +10,6 @@ export class MediaService {
   get() {
     const endpoint = '/medios';
 
-    return firstValueFrom(
-      this.http.get<Media[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Media[]>(endpoint).pipe((response) => response));
   }
 }

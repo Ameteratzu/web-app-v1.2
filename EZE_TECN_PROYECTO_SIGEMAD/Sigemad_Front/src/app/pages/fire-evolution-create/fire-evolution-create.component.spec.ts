@@ -8,9 +8,8 @@ describe('FireEvolutionCreateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCreateComponent]
-    })
-    .compileComponents();
+      imports: [FireCreateComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FireCreateComponent);
     component = fixture.componentInstance;

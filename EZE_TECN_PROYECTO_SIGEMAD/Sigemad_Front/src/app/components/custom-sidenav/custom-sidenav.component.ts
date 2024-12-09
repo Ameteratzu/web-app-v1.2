@@ -1,7 +1,6 @@
-
-import { MatListModule } from '@angular/material/list'
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
-import { CommonModule } from '@angular/common'; 
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterModule } from '@angular/router';
 import { ChangeDetectorRef, Component, inject, signal, Input, computed, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,17 +8,16 @@ import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../types/menu.types';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-custom-sidenav',
   standalone: true,
   imports: [CommonModule, MatListModule, MatIconModule, RouterLink, RouterModule, NgxSpinnerModule],
   templateUrl: './custom-sidenav.component.html',
-  styleUrl: './custom-sidenav.component.scss'
+  styleUrl: './custom-sidenav.component.scss',
 })
 export class CustomSidenavComponent {
-
   public menuItemActiveService = inject(MenuItemActiveService);
   public menuService = inject(MenuService);
   public changeDetectorRef = inject(ChangeDetectorRef);
@@ -39,9 +37,9 @@ export class CustomSidenavComponent {
 
   expandedMenuId: number | null = null;
 
-  sideNavCollapsed = signal(false)
-  @Input() set collapsed (val: boolean) {
-    this. sideNavCollapsed.set(val);
+  sideNavCollapsed = signal(false);
+  @Input() set collapsed(val: boolean) {
+    this.sideNavCollapsed.set(val);
   }
 
   iconMap: { [key: string]: string } = {
@@ -62,7 +60,7 @@ export class CustomSidenavComponent {
     '/users': 'users',
     '/catalogs': 'catalogs',
     '/search': 'search',
-    '/episodes': 'episodes'
+    '/episodes': 'episodes',
   };
 
   registerIcons(): void {
@@ -87,17 +85,14 @@ export class CustomSidenavComponent {
       { name: 'users', path: '/assets/img/users.svg' },
       { name: 'catalogs', path: '/assets/img/catalogs.svg' },
     ];
-  
-    icons.forEach(icon => {
-      this.iconRegistry.addSvgIcon(
-        icon.name,
-        this.sanitizer.bypassSecurityTrustResourceUrl(icon.path)
-      );
+
+    icons.forEach((icon) => {
+      this.iconRegistry.addSvgIcon(icon.name, this.sanitizer.bypassSecurityTrustResourceUrl(icon.path));
     });
   }
-  
+
   toggleSubmenu(item: any): void {
-    item.ruta ? this.redirectTo(item) : "";
+    item.ruta ? this.redirectTo(item) : '';
     if (this.expandedMenuId === item.id) {
       this.expandedMenuId = null;
     } else {
@@ -116,15 +111,11 @@ export class CustomSidenavComponent {
   }
 
   logoSize = computed<{ width: string; height: string }>(() => {
-    return this.sideNavCollapsed()
-      ? { width: '50px', height: '72px' }
-      : { width: '213px', height: '67px' };
+    return this.sideNavCollapsed() ? { width: '50px', height: '72px' } : { width: '213px', height: '67px' };
   });
 
   logoSrc = computed(() => {
-    return this.sideNavCollapsed()
-      ? '/assets/img/logo2.png'
-      : '/assets/img/logo.svg';
+    return this.sideNavCollapsed() ? '/assets/img/logo2.png' : '/assets/img/logo.svg';
   });
 
   async ngOnInit() {
@@ -132,7 +123,7 @@ export class CustomSidenavComponent {
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     this.registerIcons();
-   
+
     this.menuItemActiveService.set.subscribe((data: string) => {
       this.active = data;
     });
@@ -144,6 +135,6 @@ export class CustomSidenavComponent {
   }
 
   redirectTo(itemSelected: Menu) {
-      this.router.navigate([`${itemSelected.ruta}`]);
+    this.router.navigate([`${itemSelected.ruta}`]);
   }
 }

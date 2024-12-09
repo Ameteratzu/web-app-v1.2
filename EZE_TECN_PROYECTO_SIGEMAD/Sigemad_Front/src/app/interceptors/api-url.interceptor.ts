@@ -5,7 +5,7 @@ export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const apiUrl = environment.urlBase;
 
   if (req.url.startsWith('/assets/')) {
-    return next(req); 
+    return next(req);
   }
 
   const withUrlReq = req.clone({

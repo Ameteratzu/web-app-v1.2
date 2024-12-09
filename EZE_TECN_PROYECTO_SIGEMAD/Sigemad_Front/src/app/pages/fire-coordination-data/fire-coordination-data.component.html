@@ -4,15 +4,8 @@
 
 <div class="container">
   <div class="side-menu">
-    <mat-chip-listbox
-      [value]="selectedOption.value"
-      (change)="onSelectionChange($event)"
-    >
-      <mat-chip-option
-        *ngFor="let sec of sections; trackBy: trackByFn"
-        [value]="sec.id"
-        class="full-width-chip"
-      >
+    <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
+      <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip">
         {{ sec.label }}
       </mat-chip-option>
     </mat-chip-listbox>
@@ -41,12 +34,6 @@
   ></app-pma>
 </div>
 
-<ngx-spinner
-  bdColor="rgba(0, 0, 0, 0.8)"
-  size="medium"
-  color="#fff"
-  type="ball-atom"
-  [fullScreen]="true"
->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
   <p style="color: white">Cargando...</p>
 </ngx-spinner>

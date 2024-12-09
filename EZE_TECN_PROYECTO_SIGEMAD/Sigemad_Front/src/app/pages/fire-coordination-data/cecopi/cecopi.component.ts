@@ -1,28 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  FormBuilder,
-  FormGroup,
-  FormGroupDirective,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -100,13 +81,7 @@ export class CecopiComponent {
   private provinceService = inject(ProvinceService);
   private municipalityService = inject(MunicipalityService);
 
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formDataCecopi!: FormGroup;
 
@@ -118,8 +93,7 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress =
-      await this.direcionesServices.getAllDirecciones();
+    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
     this.coordinationAddress.set(coordinationAddress);
 
     const provinces = await this.provinceService.get();
@@ -153,10 +127,7 @@ export class CecopiComponent {
           type: 'Polygon',
           coordinates: [this.polygon()],
         };
-        this.coordinationServices.dataCecopi.set([
-          data,
-          ...this.coordinationServices.dataCecopi(),
-        ]);
+        this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);
       } else {
         this.editarItemCecopi(this.isCreate());
       }
@@ -201,9 +172,7 @@ export class CecopiComponent {
     if (!this.formDataCecopi.value.municipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formDataCecopi.value.municipio.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formDataCecopi.value.municipio.id);
 
     if (!municipioSelected) {
       return;
@@ -221,11 +190,9 @@ export class CecopiComponent {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      this.polygon.set(features);
+    });
   }
 
   editarItemCecopi(index: number) {
@@ -249,29 +216,19 @@ export class CecopiComponent {
     this.isCreate.set(index);
 
     const provinciaSeleccionada = () =>
-      this.provinces().find(
-        (provincia) =>
-          provincia.id ===
-          Number(this.coordinationServices.dataCecopi()[index].provincia.id)
-      );
+      this.provinces().find((provincia) => provincia.id === Number(this.coordinationServices.dataCecopi()[index].provincia.id));
 
     await this.loadMunicipalities(provinciaSeleccionada());
 
     const municipioSeleccionado = () =>
-      this.municipalities().find(
-        (municipio) =>
-          municipio.id ===
-          Number(this.coordinationServices.dataCecopi()[index].municipio.id)
-      );
+      this.municipalities().find((municipio) => municipio.id === Number(this.coordinationServices.dataCecopi()[index].municipio.id));
 
     this.formDataCecopi.patchValue({
       ...this.coordinationServices.dataCecopi()[index],
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
-    this.polygon.set(
-      this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]
-    );
+    this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];
 

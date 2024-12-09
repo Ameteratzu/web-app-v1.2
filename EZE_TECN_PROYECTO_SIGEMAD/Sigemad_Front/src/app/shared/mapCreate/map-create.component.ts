@@ -1,17 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -74,9 +62,7 @@ export class MapCreateComponent {
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
-      defaultPolygonMercator = defaultPolygon.map((coord: any) =>
-        fromLonLat(coord)
-      );
+      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
 
     this.source = new VectorSource();

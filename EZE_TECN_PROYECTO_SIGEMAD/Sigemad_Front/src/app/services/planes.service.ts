@@ -8,10 +8,7 @@ export class PlanesService {
 
   getAllPlanes() {
     let endpoint = `/tipos-planes`;
-    
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
-  }
 
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
 }

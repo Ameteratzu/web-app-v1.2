@@ -11,8 +11,6 @@ export class EventService {
   get() {
     const endpoint = '/clase-sucesos';
 
-    return firstValueFrom(
-      this.http.get<Event[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Event[]>(endpoint).pipe((response) => response));
   }
 }

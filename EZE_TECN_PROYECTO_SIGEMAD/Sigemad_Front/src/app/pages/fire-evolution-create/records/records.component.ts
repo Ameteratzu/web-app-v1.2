@@ -16,14 +16,9 @@ import { SituationsEquivalent } from '../../../types/situations-equivalent.type'
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';
@@ -43,7 +38,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -67,7 +62,7 @@ const MY_DATE_FORMATS = {
     MatFormFieldModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './records.component.html',
   styleUrl: './records.component.scss',
@@ -77,9 +72,8 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
-
   @Output() save = new EventEmitter<boolean>();
-  private fb = inject(FormBuilder); 
+  private fb = inject(FormBuilder);
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   public matDialog = inject(MatDialog);
   public inputOutputService = inject(InputOutputService);
@@ -92,7 +86,7 @@ export class RecordsComponent implements OnInit {
 
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
-  
+
   formData!: FormGroup;
   public inputOutputs = signal<InputOutput[]>([]);
   public medias = signal<Media[]>([]);
@@ -122,7 +116,7 @@ export class RecordsComponent implements OnInit {
     this.situationEquivalent.set(situationsEquivalent);
 
     this.formData = this.fb.group({
-      inputOutput : ['', Validators.required],
+      inputOutput: ['', Validators.required],
       startDate: [new Date(), Validators.required],
       media: [1, Validators.required],
       originDestination: ['', Validators.required],
@@ -148,33 +142,33 @@ export class RecordsComponent implements OnInit {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-  
+
       const newRecord: EvolucionIncendio = {
-        idIncendio:  this.data.idIncendio,
+        idIncendio: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: formValues.startDate.toISOString(),
           idEntradaSalida: formValues.inputOutput,
-          idMedio: formValues.media
+          idMedio: formValues.media,
         },
         datoPrincipal: {
           fechaHora: formValues.datetimeUpdate.toISOString(),
           observaciones: formValues.observations_1,
-          prevision: formValues.forecast
+          prevision: formValues.forecast,
         },
         parametro: {
           idEstadoIncendio: formValues.status,
           fechaFinal: formValues.end_date.toISOString(),
-          superficieAfectadaHectarea:  formValues.afectada, 
-          planEmergenciaActivado: "",
+          superficieAfectadaHectarea: formValues.afectada,
+          planEmergenciaActivado: '',
           idFase: 1,
-          idSituacionOperativa: 1, 
-          idSituacionEquivalente: 1 
+          idSituacionOperativa: 1,
+          idSituacionEquivalente: 1,
         },
-        registroProcedenciasDestinos: [] 
+        registroProcedenciasDestinos: [],
       };
-  
+
       this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
-  
+
       this.save.emit(true);
     } else {
       this.formData.markAllAsTouched();
@@ -182,12 +176,12 @@ export class RecordsComponent implements OnInit {
     }
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
   allowOnlyNumbersAndDecimal(event: KeyboardEvent) {
-    const charCode = (event.which) ? event.which : event.keyCode;
+    const charCode = event.which ? event.which : event.keyCode;
     if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
@@ -195,9 +189,9 @@ export class RecordsComponent implements OnInit {
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -205,8 +199,7 @@ export class RecordsComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  closeModal(){
+  closeModal() {
     this.matDialog.closeAll();
   }
-
 }

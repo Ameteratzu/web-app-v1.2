@@ -16,8 +16,8 @@ import { CalendarConfigModule } from './shared/calendar/calendar-config.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
     provideAnimationsAsync(),
     DatePipe,
     provideAnimations(),
@@ -25,5 +25,5 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([apiUrlInterceptor])),
     { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
     importProvidersFrom(CalendarConfigModule), // Importa el módulo CalendarConfigModule aquí
-  ]
+  ],
 };

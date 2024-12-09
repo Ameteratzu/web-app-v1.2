@@ -10,8 +10,6 @@ export class MediaOwnershipService {
   get() {
     const endpoint = '/titular-medios';
 
-    return firstValueFrom(
-      this.http.get<MediaOwnership[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<MediaOwnership[]>(endpoint).pipe((response) => response));
   }
 }

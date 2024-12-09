@@ -10,8 +10,6 @@ export class MinorEntityService {
   get() {
     const endpoint = '/entidad-menor';
 
-    return firstValueFrom(
-      this.http.get<MinorEntity[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<MinorEntity[]>(endpoint).pipe((response) => response));
   }
 }

@@ -8,9 +8,8 @@ describe('FireEditComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireEditComponent]
-    })
-    .compileComponents();
+      imports: [FireEditComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FireEditComponent);
     component = fixture.componentInstance;

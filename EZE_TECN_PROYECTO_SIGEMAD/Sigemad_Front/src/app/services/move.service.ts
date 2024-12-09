@@ -10,8 +10,6 @@ export class MoveService {
   get() {
     let endpoint = '/tipos-movimientos';
 
-    return firstValueFrom(
-      this.http.get<Move[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Move[]>(endpoint).pipe((response) => response));
   }
 }

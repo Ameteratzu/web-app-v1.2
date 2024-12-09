@@ -1,25 +1,17 @@
-<div
-  class="container gap-4 flex-column align-items-center justify-content-center p-4"
->
+<div class="container gap-4 flex-column align-items-center justify-content-center p-4">
   <div id="map"></div>
 
   <div class="p-flex mt-20" *ngIf="!data.onlyView">
     <div>
-      <button (click)="closeModal()" mat-raised-button color="secondary">
-        Cancelar
-      </button>
+      <button (click)="closeModal()" mat-raised-button color="secondary">Cancelar</button>
 
-      <button (click)="savePolygon()" mat-flat-button color="primary">
-        Guardar
-      </button>
+      <button (click)="savePolygon()" mat-flat-button color="primary">Guardar</button>
     </div>
   </div>
 
   <div class="p-flex mt-20" *ngIf="data.onlyView">
     <div>
-      <button (click)="closeModal()" mat-flat-button color="secondary">
-        Cerrar
-      </button>
+      <button (click)="closeModal()" mat-flat-button color="secondary">Cerrar</button>
     </div>
   </div>
 </div>

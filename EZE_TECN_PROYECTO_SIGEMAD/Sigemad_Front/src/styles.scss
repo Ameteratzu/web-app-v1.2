@@ -1,9 +1,9 @@
-@use "@angular/material" as mat;
-@use "./app/m3-theme.scss" as theme;
+@use '@angular/material' as mat;
+@use './app/m3-theme.scss' as theme;
 
 @include mat.core();
 
-$font-family: "Nunito", sans-serif;
+$font-family: 'Nunito', sans-serif;
 
 :root {
   --primary-50: #186c93;
@@ -53,7 +53,7 @@ h6 {
 
 h3 {
   font-size: 19px;
-  color: rgb(202 102 2) !important; 
+  color: rgb(202 102 2) !important;
   font-weight: bold;
 }
 
@@ -90,8 +90,7 @@ mat-toolbar h1 {
   font-size: 24px !important;
 }
 
-.mat-mdc-form-field:not(.mat-form-field-disabled)
-  .mat-mdc-floating-label.mdc-floating-label {
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
   font-family: $font-family;
 }
 
@@ -126,27 +125,20 @@ table .mat-mdc-header-cell {
   color: var(--primary-50) !important;
 }
 
-.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(
-    .mdc-evolution-chip--disabled
-  ) {
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) {
   background-color: var(--primary-50) !important;
 }
 
-.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(
-    .mdc-evolution-chip--disabled
-  )
-  .mdc-evolution-chip__text-label {
+.mat-mdc-standard-chip.mdc-evolution-chip--selected:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
   color: white !important;
   font-family: $font-family !important;
   display: flex;
 }
 
-.mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic
-  .mdc-evolution-chip__graphic {
+.mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic .mdc-evolution-chip__graphic {
   color: white !important;
 }
 
-.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled)
-  .mdc-evolution-chip__text-label {
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) .mdc-evolution-chip__text-label {
   font-family: $font-family !important;
 }

@@ -28,25 +28,24 @@ import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
     ConsequencesComponent,
     InterventionComponent,
     AreaComponent,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   animations: [
     trigger('fadeInOut', [
-      state('void', style({ opacity: 0, transform: 'translateY(20px)' })), 
-      transition(':enter', [animate('900ms ease-out')]), 
-      transition(':leave', [animate('0ms ease-in')])   
-    ])
-  ]
+      state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
+      transition(':enter', [animate('900ms ease-out')]),
+      transition(':leave', [animate('0ms ease-in')]),
+    ]),
+  ],
 })
 export class FireCreateComponent implements OnInit {
-
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   public evolutionSevice = inject(EvolutionService);
   public matDialog = inject(MatDialog);
   public toast = inject(MatSnackBar);
   private spinner = inject(NgxSpinnerService);
-  
+
   readonly sections = [
     { id: 1, label: 'Registro / Parámetros' },
     { id: 2, label: 'Área afectada' },
@@ -54,30 +53,24 @@ export class FireCreateComponent implements OnInit {
     { id: 4, label: 'Intervención de medios' },
   ];
 
-
-  async ngOnInit() {
-  }
+  async ngOnInit() {}
 
   async onSaveFromChild(value: boolean) {
-    if(value){
-
+    if (value) {
       await this.processData();
 
       this.evolutionSevice.clearData();
       this.closeModal();
       this.spinner.hide();
       this.showToast();
-
-    }else{
+    } else {
       this.evolutionSevice.clearData();
       this.closeModal();
     }
-
   }
 
   async processData(): Promise<void> {
-
-    if(this.evolutionSevice.dataRecords().length > 0){
+    if (this.evolutionSevice.dataRecords().length > 0) {
       const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
     }
 
@@ -95,7 +88,6 @@ export class FireCreateComponent implements OnInit {
       'areasAfectadas'
     );
 
-  
     // await this.handleDataProcessing(
     //   this.coordinationServices.dataCecopi(),
     //   (item) => ({
@@ -109,20 +101,15 @@ export class FireCreateComponent implements OnInit {
     //   this.coordinationServices.postCecopi.bind(this.coordinationServices),
     //   'coordinaciones'
     // );
-  
-  
   }
-     
-
 
   // async onSaveFromChild() {
   //   console.log(`Guardar desde el componente:`);
   //   console.log("🚀 ~ FireCreateComponent ~ onSaveFromChild ~ this.coordinationServices.dataCoordinationAddress():", this.evolutionSevice.dataRecords())
   //   const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
 
-
   //   if (this.evolutionSevice.dataAffectedArea().length > 0){
-   
+
   //     for (const item of this.evolutionSevice.dataAffectedArea()) {
   //       const body = await this.getFormattedDataAreas(item)
   //       const result = await this.evolutionSevice.postAreas(body);
@@ -135,20 +122,15 @@ export class FireCreateComponent implements OnInit {
   //   this.showToast();
   // }
 
-  async handleDataProcessing<T>(
-    data: T[],
-    formatter: (item: T) => any,
-    postService: (body: any) => Promise<any>,
-    key: string
-  ): Promise<void> {
+  async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
     if (data.length > 0) {
       const formattedData = data.map(formatter);
-  
+
       const body = {
         idIncendio: this.data.idIncendio,
-        [key]: formattedData, 
+        [key]: formattedData,
       };
-  
+
       const result = await postService(body);
     }
   }
@@ -169,15 +151,15 @@ export class FireCreateComponent implements OnInit {
     this.selectedOption = event;
   }
 
-  closeModal(){
+  closeModal() {
     this.matDialog.closeAll();
   }
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 }
