@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
+using DGPCE.Sigemad.Application.Specifications.DetallesDocumentacion;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -83,18 +84,10 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             {
                 _unitOfWork.Repository<Evolucion>().DeleteEntity(evolucion);
             }
+
             else
             {
                 _mapper.Map(request, evolucion, typeof(CreateRegistroCommand), typeof(Evolucion));
-
-                // Reemplazar listas
-                if (request.Registro != null)
-                {
-                    evolucion.Registro.ProcedenciaDestinos.Clear();
-                    evolucion.Registro.ProcedenciaDestinos = request.Registro.RegistroProcedenciasDestinos
-                        .Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id })
-                        .ToList();
-                }
 
                 _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
             }
@@ -199,6 +192,5 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
 
 
     }
-
 
 }

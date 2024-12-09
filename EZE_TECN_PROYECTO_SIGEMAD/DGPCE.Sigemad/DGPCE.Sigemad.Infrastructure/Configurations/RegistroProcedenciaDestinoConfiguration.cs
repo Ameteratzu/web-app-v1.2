@@ -21,12 +21,11 @@ public class RegistroProcedenciaDestinoConfiguration : IEntityTypeConfiguration<
         builder.HasOne(rpd => rpd.Registro)
             .WithMany(r => r.ProcedenciaDestinos)
             .HasForeignKey(rpd => rpd.IdRegistro)
-            .OnDelete(DeleteBehavior.Restrict);
+             .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.HasOne(rpd => rpd.ProcedenciaDestino)
             .WithMany()
-            .HasForeignKey(rpd => rpd.IdProcedenciaDestino)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(rpd => rpd.IdProcedenciaDestino);
 
     }
 }
