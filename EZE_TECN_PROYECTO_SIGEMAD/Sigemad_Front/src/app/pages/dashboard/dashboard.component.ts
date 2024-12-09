@@ -4,13 +4,13 @@ import { Chart } from 'chart.js/auto';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { Draw, Modify, Snap } from 'ol/interaction';
-import { DrawEvent }  from 'ol/interaction/Draw';
+import { DrawEvent } from 'ol/interaction/Draw';
 import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import { get } from 'ol/proj';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';   
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, MatFormFieldModule, MatGridListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   public chart!: Chart;
@@ -31,7 +31,7 @@ export class DashboardComponent {
   public map!: Map;
   public snap!: Snap;
 
-  public currentDrawType: 'Polygon' | 'LineString' | 'Circle' = 'Polygon'; 
+  public currentDrawType: 'Polygon' | 'LineString' | 'Circle' = 'Polygon';
   public menuItemActiveService = inject(MenuItemActiveService);
 
   public events = [

@@ -15,13 +15,13 @@ import { getSpanishPaginatorIntl } from './shared/config/custom-paginator-intl';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
     provideAnimationsAsync(),
     DatePipe,
     provideAnimations(),
     importProvidersFrom(MatButtonModule, MatDialogModule),
     provideHttpClient(withInterceptors([apiUrlInterceptor])),
     { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
-  ]
+  ],
 };

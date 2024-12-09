@@ -30,25 +30,19 @@ export class FireService {
       params: query,
     });
 
-    return firstValueFrom(
-      this.http.get<ApiResponse<Fire[]>>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<ApiResponse<Fire[]>>(endpoint).pipe((response) => response));
   }
 
   getById(id: number) {
     let endpoint = `/Incendios/${id}`;
 
-    return firstValueFrom(
-      this.http.get<Fire>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Fire>(endpoint).pipe((response) => response));
   }
 
   details(fire_id: number) {
     const endpoint = `/Incendios/${fire_id}/registros`;
 
-    return firstValueFrom(
-      this.http.get<FireDetail[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<FireDetail[]>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {
@@ -56,10 +50,7 @@ export class FireService {
       IdTerritorio: data.territory ? data.territory : 1,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(
-        data.startDate,
-        'yyyy-MM-dd h:mm:ss'
-      ),
+      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,
@@ -88,10 +79,7 @@ export class FireService {
       IdTerritorio: data.territory,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(
-        data.startDate,
-        'yyyy-MM-dd h:mm:ss'
-      ),
+      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,
@@ -117,8 +105,6 @@ export class FireService {
   delete(id: number) {
     const endpoint = `/Incendios/${id}`;
 
-    return firstValueFrom(
-      this.http.delete(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
 }

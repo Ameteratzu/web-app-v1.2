@@ -3,18 +3,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
-import { DireccionesService } from '../../../services/direcciones.service'
+import { DireccionesService } from '../../../services/direcciones.service';
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
@@ -25,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CoordinationAddressService } from '../../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ProvinceService } from '../../../services/province.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { Province } from '../../../types/province.type';
@@ -40,7 +35,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -51,10 +46,10 @@ const MY_DATE_FORMATS = {
   selector: 'app-pma',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     MatInputModule,
     FlexLayoutModule,
@@ -63,7 +58,7 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   templateUrl: './pma.component.html',
   styleUrl: './pma.component.scss',
@@ -73,13 +68,12 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class PmaComponent {
-
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
-  
+
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -88,14 +82,8 @@ export class PmaComponent {
   private spinner = inject(NgxSpinnerService);
   private provinceService = inject(ProvinceService);
   private municipalityService = inject(MunicipalityService);
-  
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ]; 
+
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formData!: FormGroup;
 
@@ -112,54 +100,51 @@ export class PmaComponent {
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
-    
 
     this.formData = this.fb.group({
-      provincia : ['', Validators.required],
-      municipio : ['', Validators.required],
+      provincia: ['', Validators.required],
+      municipio: ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
       fechaFin: [''],
-      lugar : ['', Validators.required],
-      observaciones : [''],
+      lugar: ['', Validators.required],
+      observaciones: [''],
     });
 
     this.formData.get('municipio')?.disable();
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
-      if(this.coordinationServices.dataPma().length === 0){
+      if (this.coordinationServices.dataPma().length === 0) {
         this.coordinationServices.dataPma.set(this.editData);
       }
     }
     this.spinner.hide();
   }
 
-  onSubmit(){
+  onSubmit() {
     if (this.formData.valid) {
       const data = this.formData.value;
-      if(this.isCreate() == -1){
-        
-        this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);  
-      }else{
-        this.editarItem(this.isCreate())
+      if (this.isCreate() == -1) {
+        this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);
+      } else {
+        this.editarItem(this.isCreate());
       }
-      
-      this.formData.reset()
-    }else {
+
+      this.formData.reset();
+    } else {
       this.formData.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
     if (this.coordinationServices.dataPma().length > 0 && !this.editData) {
-      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
-    }else{
-      if (this.editData){
-        this.save.emit({ save: false, delete: false, close: false, update: true  });
-      } 
+      this.save.emit({ save: true, delete: false, close: false, update: false });
+    } else {
+      if (this.editData) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
   }
-
 
   formatDate(date: Date | string): string {
     const d = new Date(date);
@@ -180,9 +165,7 @@ export class PmaComponent {
     if (!this.formData.value.municipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipio.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio.id);
 
     if (!municipioSelected) {
       return;
@@ -199,12 +182,10 @@ export class PmaComponent {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.featuresCoords = features;
-        console.info('features', features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.featuresCoords = features;
+      console.info('features', features);
+    });
   }
 
   editarItem(index: number) {
@@ -213,24 +194,24 @@ export class PmaComponent {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formData.reset()
+    this.isCreate.set(-1);
+    this.formData.reset();
   }
 
   eliminarItem(index: number) {
     this.coordinationServices.dataPma.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  seleccionarItem(index: number){
-    this.isCreate.set(index)
+  seleccionarItem(index: number) {
+    this.isCreate.set(index);
     this.formData.patchValue(this.coordinationServices.dataPma()[index]);
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
   getForm(atributo: string): any {
@@ -241,12 +222,11 @@ export class PmaComponent {
     return item.id;
   }
 
-  closeModal(){
-    this.save.emit({ save: false, delete: false, close: true, update: false  });  
+  closeModal() {
+    this.save.emit({ save: false, delete: false, close: true, update: false });
   }
 
-  delete(){
-    this.save.emit({ save: true, delete: false, close: false, update: false  }); 
+  delete() {
+    this.save.emit({ save: true, delete: false, close: false, update: false });
   }
-
 }

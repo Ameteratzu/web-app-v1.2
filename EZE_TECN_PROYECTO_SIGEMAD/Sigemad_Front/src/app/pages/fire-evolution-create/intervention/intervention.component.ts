@@ -3,13 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-intervention',
   standalone: true,
-  imports: [
-
-  ],
+  imports: [],
   templateUrl: './intervention.component.html',
-  styleUrl: './intervention.component.scss'
+  styleUrl: './intervention.component.scss',
 })
-
-export class InterventionComponent {
-
-}
+export class InterventionComponent {}

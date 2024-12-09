@@ -11,20 +11,12 @@ export class AutonomousCommunityService {
   get() {
     const endpoint = '/ComunidadesAutonomas';
 
-    return firstValueFrom(
-      this.http
-        .get<AutonomousCommunity[]>(endpoint)
-        .pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<AutonomousCommunity[]>(endpoint).pipe((response) => response));
   }
 
   getByCountry(idCountry: string) {
     const endpoint = `/paises/${idCountry}/comunidades`;
 
-    return firstValueFrom(
-      this.http
-        .get<AutonomousCommunity[]>(endpoint)
-        .pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<AutonomousCommunity[]>(endpoint).pipe((response) => response));
   }
 }

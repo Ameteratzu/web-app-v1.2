@@ -1,24 +1,39 @@
 <div class="modal-header">
-    <h2 mat-dialog-title class="title">{{ data.title }}</h2>
-  </div>
-  
-  <div class="container">
-    <div class="side-menu">
-      <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
-        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip"  [disabled]="sec.id === 4 || sec.id === 3">
-          {{ sec.label }}
-        </mat-chip-option>
-      </mat-chip-listbox>
-    </div>
-  
-    <app-records [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false" [editData]="editData" (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 1  && isDataReady" class="component-width" @fadeInOut></app-records>
-   <app-area [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false" [editData]="editData" (save)="onSaveFromChild($event)" *ngIf="selectedOption.value === 2  && isDataReady" class="component-width" @fadeInOut></app-area>
+  <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+</div>
 
-    
+<div class="container">
+  <div class="side-menu">
+    <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
+      <mat-chip-option
+        *ngFor="let sec of sections; trackBy: trackByFn"
+        [value]="sec.id"
+        class="full-width-chip"
+        [disabled]="sec.id === 4 || sec.id === 3"
+      >
+        {{ sec.label }}
+      </mat-chip-option>
+    </mat-chip-listbox>
   </div>
 
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
-    <p style="color: white"> Cargando... </p>
-  </ngx-spinner>
-  
- 
+  <app-records
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+    [editData]="editData"
+    (save)="onSaveFromChild($event)"
+    *ngIf="selectedOption.value === 1 && isDataReady"
+    class="component-width"
+    @fadeInOut
+  ></app-records>
+  <app-area
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+    [editData]="editData"
+    (save)="onSaveFromChild($event)"
+    *ngIf="selectedOption.value === 2 && isDataReady"
+    class="component-width"
+    @fadeInOut
+  ></app-area>
+</div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

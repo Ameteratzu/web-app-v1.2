@@ -10,8 +10,6 @@ export class InputOutputService {
   get() {
     const endpoint = '/entradas-salidas';
 
-    return firstValueFrom(
-      this.http.get<InputOutput[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<InputOutput[]>(endpoint).pipe((response) => response));
   }
 }

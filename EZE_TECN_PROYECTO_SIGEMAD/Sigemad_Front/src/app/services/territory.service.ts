@@ -11,16 +11,12 @@ export class TerritoryService {
   get() {
     const endpoint = '/territorios';
 
-    return firstValueFrom(
-      this.http.get<Territory[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Territory[]>(endpoint).pipe((response) => response));
   }
 
   getForCreate() {
     const endpoint = '/territorios-crear';
 
-    return firstValueFrom(
-      this.http.get<Territory[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Territory[]>(endpoint).pipe((response) => response));
   }
 }

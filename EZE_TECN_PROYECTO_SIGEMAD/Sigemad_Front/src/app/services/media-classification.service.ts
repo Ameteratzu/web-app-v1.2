@@ -10,10 +10,6 @@ export class MediaClassificationService {
   get() {
     const endpoint = '/clasificacion-medios';
 
-    return firstValueFrom(
-      this.http
-        .get<MediaClassification[]>(endpoint)
-        .pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<MediaClassification[]>(endpoint).pipe((response) => response));
   }
 }

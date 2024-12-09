@@ -10,8 +10,6 @@ export class RecordTypeService {
   get() {
     const endpoint = '/tipos-registros';
 
-    return firstValueFrom(
-      this.http.get<RecordType[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<RecordType[]>(endpoint).pipe((response) => response));
   }
 }

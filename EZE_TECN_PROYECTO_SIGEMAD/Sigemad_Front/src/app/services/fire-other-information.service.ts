@@ -11,9 +11,7 @@ export class FireOtherInformationService {
   getById(id: Number) {
     let endpoint = `/otras-informaciones/${id}`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {

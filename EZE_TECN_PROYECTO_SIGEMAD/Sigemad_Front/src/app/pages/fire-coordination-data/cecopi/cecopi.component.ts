@@ -3,18 +3,13 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
-import { DireccionesService } from '../../../services/direcciones.service'
+import { DireccionesService } from '../../../services/direcciones.service';
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
@@ -25,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { CoordinationAddressService } from '../../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ProvinceService } from '../../../services/province.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { Province } from '../../../types/province.type';
@@ -40,7 +35,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -51,10 +46,10 @@ const MY_DATE_FORMATS = {
   selector: 'app-cecopi',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     MatInputModule,
     FlexLayoutModule,
@@ -63,7 +58,7 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   templateUrl: './cecopi.component.html',
   styleUrl: './cecopi.component.scss',
@@ -73,7 +68,6 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class CecopiComponent {
-
   @ViewChild(MatSort) sort!: MatSort;
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
@@ -83,20 +77,14 @@ export class CecopiComponent {
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
-  
+
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
   private provinceService = inject(ProvinceService);
   private municipalityService = inject(MunicipalityService);
-  
-  public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ]; 
+
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formDataCecopi!: FormGroup;
 
@@ -113,53 +101,51 @@ export class CecopiComponent {
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
-    
+
     this.formDataCecopi = this.fb.group({
-      provincia : ['', Validators.required],
-      municipio : ['', Validators.required],
+      provincia: ['', Validators.required],
+      municipio: ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
       fechaFin: [''],
-      lugar : ['', Validators.required],
-      observaciones : [''],
+      lugar: ['', Validators.required],
+      observaciones: [''],
     });
 
     this.formDataCecopi.get('municipio')?.disable();
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
-      if(this.coordinationServices.dataCecopi().length === 0){
+      if (this.coordinationServices.dataCecopi().length === 0) {
         this.coordinationServices.dataCecopi.set(this.editData);
       }
     }
     this.spinner.hide();
   }
 
-  onSubmitCecopi(){
+  onSubmitCecopi() {
     if (this.formDataCecopi.valid) {
       const data = this.formDataCecopi.value;
-      if(this.isCreate() == -1){
-        
-        this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);  
-      }else{
-        this.editarItemCecopi(this.isCreate())
+      if (this.isCreate() == -1) {
+        this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);
+      } else {
+        this.editarItemCecopi(this.isCreate());
       }
-    
-      this.formDataCecopi.reset()
-    }else {
+
+      this.formDataCecopi.reset();
+    } else {
       this.formDataCecopi.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
     if (this.coordinationServices.dataCecopi().length > 0 && !this.editData) {
-      this.save.emit({ save: true, delete: false, close: false, update: false  }); 
-    }else{
-      if (this.editData){
-        this.save.emit({ save: false, delete: false, close: false, update: true  });
-      } 
+      this.save.emit({ save: true, delete: false, close: false, update: false });
+    } else {
+      if (this.editData) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
   }
-
 
   async loadMunicipalities(event: any) {
     const province_id = event.value.id;
@@ -167,14 +153,12 @@ export class CecopiComponent {
     this.municipalities.set(municipalities);
     this.formDataCecopi.get('municipio')?.enable();
   }
-  
+
   openModalMap() {
     if (!this.formDataCecopi.value.municipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formDataCecopi.value.municipio.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formDataCecopi.value.municipio.id);
 
     if (!municipioSelected) {
       return;
@@ -191,12 +175,10 @@ export class CecopiComponent {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.featuresCoords = features;
-        console.info('features', features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.featuresCoords = features;
+      console.info('features', features);
+    });
   }
 
   editarItemCecopi(index: number) {
@@ -205,24 +187,24 @@ export class CecopiComponent {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formDataCecopi.reset()
+    this.isCreate.set(-1);
+    this.formDataCecopi.reset();
   }
 
   eliminarItemCecopi(index: number) {
     this.coordinationServices.dataCecopi.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  seleccionarItemCecopi(index: number){
-    this.isCreate.set(index)
+  seleccionarItemCecopi(index: number) {
+    this.isCreate.set(index);
     this.formDataCecopi.patchValue(this.coordinationServices.dataCecopi()[index]);
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
   getFormCecopi(atributo: string): any {
@@ -233,12 +215,11 @@ export class CecopiComponent {
     return item.id;
   }
 
-  closeModal(){
-    this.save.emit({ save: false, delete: false, close: true, update: false  }); 
+  closeModal() {
+    this.save.emit({ save: false, delete: false, close: true, update: false });
   }
 
-  delete(){
-    this.save.emit({ save: true, delete: false, close: false, update: false  }); 
+  delete() {
+    this.save.emit({ save: true, delete: false, close: false, update: false });
   }
-
 }

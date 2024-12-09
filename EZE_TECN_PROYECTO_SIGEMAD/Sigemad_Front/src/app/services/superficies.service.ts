@@ -9,8 +9,6 @@ export class SuperficiesService {
   getSuperficiesFiltro() {
     let endpoint = `/superficies-filtros`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 }

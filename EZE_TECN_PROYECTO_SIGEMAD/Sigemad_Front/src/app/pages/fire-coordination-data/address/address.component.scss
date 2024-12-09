@@ -1,43 +1,39 @@
 @use '../../../../styles.scss' as theme;
-  
-  .form-container {
-    flex: 1;
-    background: #ececec;
-    border-radius: 20px;
-    padding: 20px;
-  }
 
-  .spaced-input {
-    margin-right: 15px; 
-  }
+.form-container {
+  flex: 1;
+  background: #ececec;
+  border-radius: 20px;
+  padding: 20px;
+}
 
-  .modal-header {
-    text-align: center;
-  }
+.spaced-input {
+  margin-right: 15px;
+}
 
-  .modal-footer {
-    padding-top: 20px;
-    border-top: 1px solid #ccc;
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.modal-header {
+  text-align: center;
+}
 
-  .title{
-    color: var(--fire-color);
-  }
+.modal-footer {
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .mat-mdc-row:nth-child(odd) {
-    background: #e7e7e7;
-  }
+.title {
+  color: var(--fire-color);
+}
 
-  .table-container {
-      border-radius: 8px; 
-      overflow: hidden; 
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
-  }
-  
+.mat-mdc-row:nth-child(odd) {
+  background: #e7e7e7;
+}
 
-  
-
+.table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}

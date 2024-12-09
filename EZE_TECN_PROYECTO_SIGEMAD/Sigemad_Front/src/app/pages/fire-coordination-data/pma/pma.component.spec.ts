@@ -8,9 +8,8 @@ describe('PmaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PmaComponent]
-    })
-    .compileComponents();
+      imports: [PmaComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PmaComponent);
     component = fixture.componentInstance;
