@@ -12,12 +12,10 @@ public class CreateOrUpdateAreaAfectadaCommandValidator : AbstractValidator<Crea
         RuleFor(p => p.IdIncendio)
             .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
 
-        RuleFor(command => command.AreasAfectadas)
-            .NotNull().WithMessage(localizer["AreaAfectadaNoNulo"])
-            .NotEmpty().WithMessage(localizer["AreaAfectadaVacio"]);
-
         // Validación para cada elemento de la lista AreasAfectadas
-        RuleForEach(command => command.AreasAfectadas).SetValidator(new AreaAfectadaDtoValidator(localizer, geometryValidator));
+        RuleForEach(command => command.AreasAfectadas)
+            .SetValidator(new AreaAfectadaDtoValidator(localizer, geometryValidator))
+            .When(d => d.AreasAfectadas.Count > 0);
     }
 }
 
