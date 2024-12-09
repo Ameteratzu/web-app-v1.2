@@ -36,7 +36,11 @@ import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
 import { FormFieldComponent } from '../../../shared/Inputs/field.component';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { ModalConfirmComponent } from '../../../shared/modalConfirm/modalConfirm.component';
 import { FireDetail } from '../../../types/fire-detail.type';
 import { FireCoordinationData } from '../../fire-coordination-data/fire-coordination-data.component';
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
@@ -136,7 +140,7 @@ export class FireEditComponent implements OnInit {
       territory: this.fire.idTerritorio,
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
-      municipality: this.fire.id,
+      municipality: this.fire.municipio,
       startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
@@ -198,6 +202,7 @@ export class FireEditComponent implements OnInit {
       data: {
         title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
         fireDetail,
       },
     });
@@ -304,5 +309,46 @@ export class FireEditComponent implements OnInit {
           this.spinner.hide();
         }
       });
+  }
+
+  openModalMap() {
+    console.info('this.formData', this.formData.value);
+    if (!this.formData.value.municipality) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality.id);
+    console.info('municipioSelected', this.municipalities(), municipioSelected);
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      //height: '780px',
+      //maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+        defaultPolygon: null,
+        onlyView: true,
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.polygon.set(features);
+    });
+  }
+
+  goModalConfirm(): void {
+    this.matDialog.open(ModalConfirmComponent, {
+      width: '30vw',
+      maxWidth: 'none',
+      //height: '90vh',
+      disableClose: true,
+      data: {
+        fireId: this.fire.id,
+      },
+    });
   }
 }

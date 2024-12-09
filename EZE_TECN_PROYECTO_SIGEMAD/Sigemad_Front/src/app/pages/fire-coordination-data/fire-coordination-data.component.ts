@@ -1,22 +1,23 @@
-import { Component, inject, Renderer2, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatChipsModule, MatChipListboxChange } from '@angular/material/chips';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, inject, Renderer2, ViewChild } from '@angular/core';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatSort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { AddressComponent } from './address/address.component';
-import { CecopiComponent } from './cecopi/cecopi.component';
-import { PmaComponent } from './pma/pma.component';
-import { trigger, state, style, transition, animate } from '@angular/animations';
-import { CoordinationAddressService } from '../../services/coordination-address.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { FireDetail } from '../../types/fire-detail.type';
 import { Router } from '@angular/router';
 import { AlertService } from '../../shared/alert/alert.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { CoordinationAddressService } from '../../services/coordination-address.service';
+import { FireDetail } from '../../types/fire-detail.type';
+import { Fire } from '../../types/fire.type';
+import { AddressComponent } from './address/address.component';
+import { CecopiComponent } from './cecopi/cecopi.component';
+import { PmaComponent } from './pma/pma.component';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -49,6 +50,7 @@ export class FireCoordinationData {
     title: string;
     idIncendio: number;
     fireDetail?: FireDetail;
+    fire: Fire;
   };
 
   public matDialog = inject(MatDialog);
@@ -58,8 +60,8 @@ export class FireCoordinationData {
   public renderer = inject(Renderer2);
   public router = inject(Router);
   public alertService = inject(AlertService);
-
   private dialogRef = inject(MatDialogRef<FireCoordinationData>);
+
   readonly sections = [
     { id: 1, label: 'Dirección' },
     { id: 2, label: 'Coordinación CECOPI' },
@@ -236,7 +238,8 @@ export class FireCoordinationData {
         fechaInicio: this.formatDate(item.fechaInicio),
         lugar: String(item.lugar),
         fechaFin: item.fechaFin ? this.formatDate(item.fechaFin) : '',
-        GeoPosicion: { type: 'Point', coordinates: [null, null] },
+        GeoPosicion: item.geoPosicion,
+        observaciones: item.observaciones,
       }),
       this.coordinationServices.postPma.bind(this.coordinationServices),
       'coordinaciones'
@@ -253,7 +256,6 @@ export class FireCoordinationData {
         idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
-
       const result = await postService(body);
       this.idReturn = result.idDireccionCoordinacionEmergencia;
     }

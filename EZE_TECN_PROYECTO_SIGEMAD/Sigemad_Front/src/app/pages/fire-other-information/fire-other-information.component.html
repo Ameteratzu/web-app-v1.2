@@ -12,7 +12,7 @@
   </div>
 
   <div class="form-container">
-    <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+    <form [formGroup]="formData" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
       <!-- Otra informacion -->
       <div>
         <h3 class="title">Otra Información</h3>
@@ -23,12 +23,14 @@
             <input matInput [matDatepicker]="picker" formControlName="fecha" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="formData.get('fecha')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora</mat-label>
 
             <input matInput formControlName="hora" type="time" />
+            <mat-error *ngIf="formData.get('hora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
@@ -38,6 +40,7 @@
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('procendenciaDestino')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
 
@@ -49,11 +52,13 @@
                 {{ medio.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('medio')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="22%">
             <mat-label>Asunto</mat-label>
             <input matInput formControlName="asunto" />
+            <mat-error *ngIf="formData.get('asunto')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
 
@@ -61,6 +66,7 @@
           <mat-form-field class="input spaced-input">
             <mat-label>Observaciones</mat-label>
             <textarea matInput formControlName="observaciones"></textarea>
+            <mat-error *ngIf="formData.get('observaciones')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
 

@@ -29,15 +29,6 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- <mat-form-field class="input spaced-input" fxFlex="25%">
-            <mat-label>Procedencia / Destino </mat-label>
-            <mat-select formControlName="originDestination">
-              <mat-option *ngFor="let origen of originDestinations()" [value]="origen.id">
-                {{ origen.descripcion }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-
         <mat-form-field class="input spaced-input" fxFlex="50%">
           <mat-label>Procedencia / Destino</mat-label>
           <mat-select formControlName="originDestination" multiple>
@@ -137,7 +128,7 @@
             type="number"
             placeholder="Ingresa área"
             required
-            (keypress)="allowOnlyNumbers($event)"
+            (keypress)="allowOnlyNumbersAndDecimal($event)"
           />
         </mat-form-field>
       </div>

@@ -25,8 +25,10 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         {
             AddInclude(i => i.Evoluciones);
 
-            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
-            //AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
+            AddCriteria(i => !i.Borrado && i.Evoluciones
+                       .Where(e => !e.Borrado)
+                       .OrderByDescending(e => e.FechaCreacion)
+                       .Select(e => e.Parametro).FirstOrDefault(p => !p.Borrado).IdEstadoIncendio == request.IdEstadoIncendio.Value);
         }
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)

@@ -7,6 +7,7 @@ public class EvolucionByIdWithAreaAfectadaSpecification : BaseSpecification<Evol
      : base(e => e.Id == id && e.Borrado == false)
     {
         AddInclude(e => e.AreaAfectadas);
+        AddInclude(e => e.Impactos);
     }
 
 }

@@ -192,7 +192,8 @@ public class MappingProfile : Profile
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
         CreateMap<CreateFileCommand, Archivo>();
-        CreateMap<CreateRegistroCommand, Registro>();
+        CreateMap<CreateRegistroCommand, Registro>()
+         .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.RegistroProcedenciasDestinos.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<CreateParametroCommand, Parametro>();
 

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
@@ -9,22 +9,24 @@ import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
-import { CoordinationAddress } from '../../../types/coordination-address';
-import { MatSelectModule } from '@angular/material/select';
-import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { EvolutionService } from '../../../services/evolution.service';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { ProvinceService } from '../../../services/province.service';
 import { Province } from '../../../types/province.type';
-import { MunicipalityService } from '../../../services/municipality.service';
 import { Municipality } from '../../../types/municipality.type';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import moment from 'moment';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import { EvolutionService } from '../../../services/evolution.service';
 import { MinorEntityService } from '../../../services/minor-entity.service';
+import { MunicipalityService } from '../../../services/municipality.service';
+import { ProvinceService } from '../../../services/province.service';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { CoordinationAddress } from '../../../types/coordination-address';
 import { MinorEntity } from '../../../types/minor-entity.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { ChangeDetectorRef } from '@angular/core';
@@ -82,6 +84,7 @@ export class AreaComponent {
   private municipalityService = inject(MunicipalityService);
   private minorService = inject(MinorEntityService);
   private cdr = inject(ChangeDetectorRef);
+  public polygon = signal<any>([]);
 
   public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
@@ -136,7 +139,7 @@ export class AreaComponent {
     this.spinner.hide();
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -144,7 +147,12 @@ export class AreaComponent {
       } else {
         this.editarItem(this.isCreate());
       }
+
+      formDirective.resetForm({
+        fechaHora: new Date(),
+      });
       this.formData.reset();
+      this.formData.get('idMunicipio')?.disable();
     } else {
       this.formData.markAllAsTouched();
     }
@@ -235,5 +243,32 @@ export class AreaComponent {
     const data = this.minors();
     const found = data.find((item) => item.id === id);
     return found ? found.descripcion : 'Sin identidad menor';
+  }
+
+  openModalMap() {
+    if (!this.formData.value.idMunicipio) {
+      return;
+    }
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.idMunicipio.id);
+
+    if (!municipioSelected) {
+      return;
+    }
+
+    const dialogRef = this.matDialog.open(MapCreateComponent, {
+      width: '780px',
+      maxWidth: '780px',
+      //height: '780px',
+      //maxHeight: '780px',
+      data: {
+        municipio: municipioSelected,
+        listaMunicipios: this.municipalities(),
+        defaultPolygon: this.polygon(),
+      },
+    });
+
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      this.polygon.set(features);
+    });
   }
 }

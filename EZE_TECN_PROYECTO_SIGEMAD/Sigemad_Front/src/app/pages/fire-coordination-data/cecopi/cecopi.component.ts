@@ -1,34 +1,32 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
-import { DireccionesService } from '../../../services/direcciones.service';
-import { CoordinationAddress } from '../../../types/coordination-address';
-import { MatSelectModule } from '@angular/material/select';
-import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { CoordinationAddressService } from '../../../services/coordination-address.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { ProvinceService } from '../../../services/province.service';
-import { MunicipalityService } from '../../../services/municipality.service';
-import { Province } from '../../../types/province.type';
-import { Municipality } from '../../../types/municipality.type';
-import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
-import { Geometry } from 'ol/geom';
-import Feature from 'ol/Feature';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import moment from 'moment';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import Feature from 'ol/Feature';
+import { Geometry } from 'ol/geom';
+import { CoordinationAddressService } from '../../../services/coordination-address.service';
+import { DireccionesService } from '../../../services/direcciones.service';
+import { MunicipalityService } from '../../../services/municipality.service';
+import { ProvinceService } from '../../../services/province.service';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { CoordinationAddress } from '../../../types/coordination-address';
+import { Municipality } from '../../../types/municipality.type';
+import { Province } from '../../../types/province.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -74,6 +72,8 @@ export class CecopiComponent {
   @Input() esUltimo: boolean | undefined;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
+  public polygon = signal<any>([]);
+
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -117,21 +117,31 @@ export class CecopiComponent {
       console.log('Información recibida en el hijo:', this.editData);
       if (this.coordinationServices.dataCecopi().length === 0) {
         this.coordinationServices.dataCecopi.set(this.editData);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
   }
 
-  onSubmitCecopi() {
+  onSubmitCecopi(formDirective: FormGroupDirective): void {
     if (this.formDataCecopi.valid) {
       const data = this.formDataCecopi.value;
       if (this.isCreate() == -1) {
+        data.geoPosicion = {
+          type: 'Polygon',
+          coordinates: [this.polygon()],
+        };
         this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);
       } else {
         this.editarItemCecopi(this.isCreate());
       }
 
-      this.formDataCecopi.reset();
+      formDirective.resetForm();
+      this.formDataCecopi.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formDataCecopi.get('municipio')?.disable();
     } else {
       this.formDataCecopi.markAllAsTouched();
     }
@@ -148,7 +158,7 @@ export class CecopiComponent {
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value.id;
+    const province_id = event?.value?.id ?? event.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
     this.formDataCecopi.get('municipio')?.enable();
@@ -163,7 +173,7 @@ export class CecopiComponent {
     if (!municipioSelected) {
       return;
     }
-
+    console.info('this.polygon()', this.polygon());
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
@@ -172,12 +182,12 @@ export class CecopiComponent {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
+        defaultPolygon: this.polygon(),
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      //this.featuresCoords = features;
-      console.info('features', features);
+      this.polygon.set(features);
     });
   }
 
@@ -198,9 +208,32 @@ export class CecopiComponent {
     });
   }
 
-  seleccionarItemCecopi(index: number) {
+  async seleccionarItemCecopi(index: number) {
     this.isCreate.set(index);
-    this.formDataCecopi.patchValue(this.coordinationServices.dataCecopi()[index]);
+
+    const provinciaSeleccionada = () =>
+      this.provinces().find((provincia) => provincia.id === Number(this.coordinationServices.dataCecopi()[index].provincia.id));
+
+    await this.loadMunicipalities(provinciaSeleccionada());
+
+    const municipioSeleccionado = () =>
+      this.municipalities().find((municipio) => municipio.id === Number(this.coordinationServices.dataCecopi()[index].municipio.id));
+
+    this.formDataCecopi.patchValue({
+      ...this.coordinationServices.dataCecopi()[index],
+      provincia: provinciaSeleccionada(),
+      municipio: municipioSeleccionado(),
+    });
+    this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
+
+    const selectedItem = this.coordinationServices.dataCecopi()[index];
+
+    // Habilitar los campos dependientes si tienen datos
+    if (selectedItem.municipio) {
+      this.formDataCecopi.get('municipio')?.enable();
+    } else {
+      this.formDataCecopi.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any) {

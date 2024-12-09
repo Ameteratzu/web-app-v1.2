@@ -1,6 +1,6 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
@@ -91,7 +91,7 @@ export class AddressComponent {
     this.formData = this.fb.group({
       tipoDireccionEmergencia: ['', Validators.required],
       fechaInicio: [new Date(), Validators.required],
-      fechaFin: [''],
+      fechaFin: [null],
       autoridadQueDirige: ['', Validators.required],
     });
 
@@ -104,7 +104,7 @@ export class AddressComponent {
     this.spinner.hide();
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -112,6 +112,8 @@ export class AddressComponent {
       } else {
         this.editarItem(this.isCreate());
       }
+
+      formDirective.resetForm();
       this.formData.reset();
     } else {
       this.formData.markAllAsTouched();
@@ -146,8 +148,13 @@ export class AddressComponent {
   }
 
   seleccionarItem(index: number) {
+    const selectedItem = this.coordinationServices.dataCoordinationAddress()[index];
     this.isCreate.set(index);
-    this.formData.patchValue(this.coordinationServices.dataCoordinationAddress()[index]);
+
+    this.formData.patchValue({
+      ...selectedItem,
+      tipoDireccionEmergencia: this.findOptionMatch(selectedItem.tipoDireccionEmergencia),
+    });
   }
 
   getFormatdate(date: any) {
@@ -168,5 +175,9 @@ export class AddressComponent {
 
   delete() {
     this.save.emit({ save: false, delete: true, close: false, update: false });
+  }
+
+  findOptionMatch(option: any) {
+    return this.coordinationAddress().find((item) => item.id === option.id);
   }
 }

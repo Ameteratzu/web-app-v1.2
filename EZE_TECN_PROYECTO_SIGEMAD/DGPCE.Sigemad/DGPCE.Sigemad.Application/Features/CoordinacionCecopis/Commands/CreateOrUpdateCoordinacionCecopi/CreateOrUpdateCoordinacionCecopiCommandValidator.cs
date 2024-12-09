@@ -13,11 +13,9 @@ public class CreateOrUpdateCoordinacionCecopiCommandValidator : AbstractValidato
         RuleFor(x => x.IdIncendio)
             .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
 
-        RuleFor(command => command.Coordinaciones)
-            .NotNull().WithMessage(localizer["CoordinacionesObligatorio"])
-            .NotEmpty().WithMessage(localizer["CoordinacionesObligatorio"]);
-
-        RuleForEach(x => x.Coordinaciones).SetValidator(new CoordinacionCecopiDtoValidator(localizer, geometryValidator));
+        RuleForEach(x => x.Coordinaciones)
+            .SetValidator(new CoordinacionCecopiDtoValidator(localizer, geometryValidator))
+            .When(d => d.Coordinaciones.Count > 0);
     }
 }
 

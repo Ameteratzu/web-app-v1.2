@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getSpanishPaginatorIntl } from './shared/config/custom-paginator-intl';
+import { CalendarConfigModule } from './shared/calendar/calendar-config.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,5 +24,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(MatButtonModule, MatDialogModule),
     provideHttpClient(withInterceptors([apiUrlInterceptor])),
     { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
+    importProvidersFrom(CalendarConfigModule), // Importa el módulo CalendarConfigModule aquí
   ],
 };

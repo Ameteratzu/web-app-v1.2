@@ -9,7 +9,10 @@ public class ManageImpactosCommandValidator : AbstractValidator<ManageImpactosCo
     public ManageImpactosCommandValidator()
     {
         RuleFor(x => x.IdEvolucion).GreaterThan(0).WithMessage("El ID de Evolución es obligatorio.");
-        RuleForEach(x => x.Impactos).SetValidator(new ImpactoDtoValidator());
+        
+        RuleForEach(x => x.Impactos)
+            .SetValidator(new ImpactoDtoValidator())
+            .When(d => d.Impactos.Count > 0);
     }
 
     public class ImpactoDtoValidator : AbstractValidator<ManageImpactoDto>

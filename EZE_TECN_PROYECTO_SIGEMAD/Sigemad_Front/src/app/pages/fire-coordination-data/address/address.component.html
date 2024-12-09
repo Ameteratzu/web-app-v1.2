@@ -1,7 +1,7 @@
 <div class="form-container">
-  <form *ngIf="formData" [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <form *ngIf="formData" #formDirective="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit(formDirective)">
     <div>
-      <h3 class="title">DATOS PRINCIPALES</h3>
+      <h3 class="title">DIRECCIÓN</h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
         <mat-form-field class="input" fxFlex="20%">
           <mat-label>Dirección</mat-label>
@@ -10,11 +10,13 @@
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="formData.get('tipoDireccionEmergencia')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input" fxFlex="40%">
           <mat-label>Autoridad que dirige</mat-label>
           <input matInput [formControl]="getForm('autoridadQueDirige')" placeholder="Ingresa texto" required />
+          <mat-error *ngIf="formData.get('autoridadQueDirige')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
@@ -22,6 +24,7 @@
           <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaInicio')" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="formData.get('fechaInicio')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
@@ -33,7 +36,7 @@
       </div>
 
       <div class="row add-button-row" fxLayout="row" fxLayoutAlign="end center">
-        <button mat-flat-button color="primary">
+        <button mat-flat-button color="primary" type="submit">
           <mat-icon>add</mat-icon>
           Agregar
         </button>

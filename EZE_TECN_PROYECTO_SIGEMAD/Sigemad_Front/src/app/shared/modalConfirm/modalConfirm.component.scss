@@ -21,6 +21,7 @@
   background: #ececec;
   border-radius: 20px;
   padding: 20px;
+  margin-top: 10px;
 }
 
 .input {
@@ -40,7 +41,6 @@
 .row {
   display: flex;
   width: 100%;
-  align-items: center;
 }
 
 .spaced-input {
@@ -79,10 +79,6 @@
   justify-content: space-between;
 }
 
-.file-name .file-button {
-  margin-bottom: 1.25em;
-}
-
-.file-name {
-  margin-left: 0.8em;
+.text-center {
+  text-align: center;
 }

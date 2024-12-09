@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -120,7 +120,7 @@ export class FireDocumentation implements OnInit {
       horaSolicitud: ['', Validators.required],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: [''],
     });
 
     this.dataSource.data = [];
@@ -159,7 +159,7 @@ export class FireDocumentation implements OnInit {
     return item;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = { file: this.file, ...this.formData.value };
 
@@ -168,6 +168,8 @@ export class FireDocumentation implements OnInit {
       } else {
         this.editarItem(this.isCreate());
       }
+
+      formDirective.resetForm();
       this.formData.reset({
         procendenciaDestino: [],
         tipoDocumento: null,

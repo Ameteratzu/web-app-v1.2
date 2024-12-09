@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
@@ -13,12 +13,9 @@ import { DireccionesService } from '../../../services/direcciones.service';
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { CoordinationAddressService } from '../../../services/coordination-address.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ProvinceService } from '../../../services/province.service';
@@ -29,6 +26,7 @@ import { MapCreateComponent } from '../../../shared/mapCreate/map-create.compone
 import { Geometry } from 'ol/geom';
 import Feature from 'ol/Feature';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { CoordinationAddressService } from '../../../services/coordination-address.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -74,6 +72,8 @@ export class PmaComponent {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
 
+  public polygon = signal<any>([]);
+
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
@@ -116,21 +116,31 @@ export class PmaComponent {
       console.log('Información recibida en el hijo:', this.editData);
       if (this.coordinationServices.dataPma().length === 0) {
         this.coordinationServices.dataPma.set(this.editData);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
+        data.geoPosicion = {
+          type: 'Polygon',
+          coordinates: [this.polygon()],
+        };
         this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);
       } else {
         this.editarItem(this.isCreate());
       }
 
-      this.formData.reset();
+      formDirective.resetForm();
+      this.formData.reset({
+        fechaInicio: new Date(),
+        fechaFin: null,
+      });
+      this.formData.get('municipio')?.disable();
     } else {
       this.formData.markAllAsTouched();
     }
@@ -155,7 +165,7 @@ export class PmaComponent {
   }
 
   async loadMunicipalities(event: any) {
-    const province_id = event.value.id;
+    const province_id = event?.value?.id ?? event.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
     this.formData.get('municipio')?.enable();
@@ -174,17 +184,19 @@ export class PmaComponent {
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
-      height: '780px',
-      maxHeight: '780px',
+      //height: '780px',
+      //maxHeight: '780px',
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
+        defaultPolygon: this.polygon(),
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       //this.featuresCoords = features;
       console.info('features', features);
+      this.polygon.set(features);
     });
   }
 
@@ -205,9 +217,30 @@ export class PmaComponent {
     });
   }
 
-  seleccionarItem(index: number) {
+  async seleccionarItem(index: number) {
     this.isCreate.set(index);
-    this.formData.patchValue(this.coordinationServices.dataPma()[index]);
+    const selectedItem = this.coordinationServices.dataPma()[index];
+
+    const provinciaSeleccionada = () =>
+      this.provinces().find((provincia) => provincia.id === Number(this.coordinationServices.dataPma()[index].provincia.id));
+
+    await this.loadMunicipalities(provinciaSeleccionada());
+
+    const municipioSeleccionado = () =>
+      this.municipalities().find((municipio) => municipio.id === Number(this.coordinationServices.dataPma()[index].municipio.id));
+
+    this.formData.patchValue({
+      ...this.coordinationServices.dataPma()[index],
+      provincia: provinciaSeleccionada(),
+      municipio: municipioSeleccionado(),
+    });
+    this.polygon.set(this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]);
+
+    if (selectedItem.municipio) {
+      this.formData.get('municipio')?.enable();
+    } else {
+      this.formData.get('municipio')?.disable();
+    }
   }
 
   getFormatdate(date: any) {

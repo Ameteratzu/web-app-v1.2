@@ -11,6 +11,7 @@ interface FormTypeCecopi {
   municipio: { id: number; descripcion: string };
   lugar?: string;
   observaciones?: string;
+  geoPosicion?: any;
 }
 
 interface FormTypeAddress {
@@ -20,6 +21,8 @@ interface FormTypeAddress {
   fechaInicio: Date;
   fechaFin: Date;
   tipoDireccionEmergencia: { id: number; descripcion: string };
+  geoPosicion?: any;
+  observaciones?: any;
 }
 
 interface FormTypePma {
@@ -32,6 +35,8 @@ interface FormTypePma {
   provincia: { id: number; descripcion: string };
   municipio: { id: number; descripcion: string };
   lugar?: string;
+  geoPosicion?: any;
+  observaciones?: any;
 }
 
 @Injectable({ providedIn: 'root' })

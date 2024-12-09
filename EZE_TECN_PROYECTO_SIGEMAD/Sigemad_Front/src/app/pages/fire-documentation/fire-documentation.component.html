@@ -12,7 +12,7 @@
   </div>
 
   <div class="form-container">
-    <form [formGroup]="formData" (ngSubmit)="onSubmit()">
+    <form [formGroup]="formData" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
       <!-- Documentación -->
       <div>
         <h3 class="title">Documentación</h3>
@@ -23,12 +23,14 @@
             <input matInput [matDatepicker]="picker" formControlName="fecha" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="formData.get('fecha')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora</mat-label>
 
             <input matInput formControlName="hora" type="time" />
+            <mat-error *ngIf="formData.get('hora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
@@ -38,6 +40,7 @@
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('procendenciaDestino')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
 
@@ -48,12 +51,14 @@
             <input matInput [matDatepicker]="picker2" formControlName="fechaSolicitud" />
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="formData.get('fechaSolicitud')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora de solicitud</mat-label>
 
             <input matInput formControlName="horaSolicitud" type="time" />
+            <mat-error *ngIf="formData.get('horaSolicitud')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
           <mat-form-field class="input spaced-input" fxFlex="50%">
@@ -63,6 +68,7 @@
                 {{ option.descripcion }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="formData.get('tipoDocumento')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -71,6 +77,7 @@
         <mat-form-field class="input spaced-input" fxFlex="80%">
           <mat-label>Descripción</mat-label>
           <textarea matInput formControlName="descripcion"></textarea>
+          <mat-error *ngIf="formData.get('descripcion')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
       </div>
 
@@ -79,7 +86,7 @@
           <!-- Input de tipo file, oculto visualmente -->
           <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
           <!-- Botón para abrir el selector de archivos -->
-          <button mat-raised-button color="primary" (click)="fileInput.click()" style="margin-bottom: 20px" type="button">Seleccionar Archivo</button>
+          <button mat-raised-button color="primary" (click)="fileInput.click()" class="file-button" type="button">Seleccionar Archivo</button>
           <!-- Mostrar el nombre del archivo seleccionado -->
           <span *ngIf="file" class="file-name">{{ file.name }}</span>
         </div>

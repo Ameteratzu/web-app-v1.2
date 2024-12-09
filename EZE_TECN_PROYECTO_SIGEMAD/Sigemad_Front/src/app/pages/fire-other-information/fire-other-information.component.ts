@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -116,8 +116,8 @@ export class FireOtherInformationComponent implements OnInit {
       hora: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: ['', Validators.required],
-      observaciones: ['', Validators.required],
+      asunto: [''],
+      observaciones: [''],
     });
 
     const procedenciasDestino = await this.originDestinationService.get();
@@ -152,7 +152,7 @@ export class FireOtherInformationComponent implements OnInit {
     return item.id;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -161,6 +161,7 @@ export class FireOtherInformationComponent implements OnInit {
         this.editarItem(this.isCreate());
       }
 
+      formDirective.resetForm();
       this.formData.reset();
     } else {
       this.formData.markAllAsTouched();

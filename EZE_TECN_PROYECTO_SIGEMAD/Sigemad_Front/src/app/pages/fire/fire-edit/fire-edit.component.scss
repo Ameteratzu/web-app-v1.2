@@ -56,6 +56,7 @@ ul {
 
 .circle-button:focus {
   outline: none;
+  box-shadow: none;
 }
 
 .btn-container {
@@ -80,4 +81,12 @@ p {
 ::ng-deep .mdc-text-field--filled.mdc-text-field--disabled .mdc-text-field__input {
   color: black !important;
   opacity: 1 !important;
+}
+
+.pin-location {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  margin-top: 12px;
+  margin-bottom: 20px;
 }
