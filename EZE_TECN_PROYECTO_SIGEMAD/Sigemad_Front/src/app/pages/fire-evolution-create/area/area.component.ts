@@ -116,6 +116,7 @@ export class AreaComponent {
     if (this.editData) {
       if (this.evolutionService.dataAffectedArea().length === 0) {
         this.evolutionService.dataAffectedArea.set(this.editData.areaAfectadas);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
@@ -142,7 +143,17 @@ export class AreaComponent {
   onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
+      // if (this.isCreate() == -1) {
+      //   this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
+      // } else {
+      //   this.editarItem(this.isCreate());
+      // }
+
       if (this.isCreate() == -1) {
+        data.geoPosicion = {
+          type: 'Polygon',
+          coordinates: [this.polygon()],
+        };
         this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
       } else {
         this.editarItem(this.isCreate());
@@ -159,6 +170,7 @@ export class AreaComponent {
   }
 
   async sendDataToEndpoint() {
+    console.log('🚀 ~ AreaComponent ~ sendDataToEndpoint ~ this.evolutionService.dataAffectedArea():', this.evolutionService.dataAffectedArea());
     if (this.evolutionService.dataAffectedArea().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
@@ -245,12 +257,12 @@ export class AreaComponent {
   }
 
   openModalMap() {
-    console.info("this.formData.value.idMunicipio", this.formData.value)
+    console.info('this.formData.value.idMunicipio', this.formData.value);
     if (!this.formData.value.municipio) {
       return;
     }
     const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
-    console.info("municipioSelected", municipioSelected)
+    console.info('municipioSelected', municipioSelected);
 
     if (!municipioSelected) {
       return;

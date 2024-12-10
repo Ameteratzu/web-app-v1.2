@@ -153,11 +153,11 @@ export class FireCreateComponent implements OnInit {
       (item) => ({
         id: item.id ?? 0,
         fechaHora: this.formatDate(item.fechaHora),
-        provincia: item.provincia,
-        municipio: item.municipio,
+        idProvincia: item.provincia,
+        idMunicipio: item.municipio,
         entidadMenor: item.entidadMenor ?? null,
         observaciones: item.observaciones,
-        GeoPosicion: { type: 'Point', coordinates: [null, null] },
+        GeoPosicion: item.geoPosicion,
       }),
       this.evolutionSevice.postAreas.bind(this.evolutionSevice),
       'areasAfectadas'
