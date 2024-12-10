@@ -30,8 +30,8 @@ export class FireComponent implements OnInit {
   public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
   async ngOnInit() {
-    const fires = await this.fireService.get();
-    this.fires = fires;
+    //const fires = await this.fireService.get();
+    //this.fires = fires;
     this.filtros.set(this.filtrosIncendioService.getFilters());
   }
 }
