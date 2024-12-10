@@ -18,6 +18,8 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
 export class FireComponent implements OnInit {
   public filtros = signal<any>({});
 
+  public isLoading = true
+
   public fires: ApiResponse<Fire[]> = {
     count: 0,
     page: 1,
