@@ -215,6 +215,7 @@ export class AreaComponent {
     this.formData.get('municipio')?.setValue(data.municipio);
     this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
     this.formData.get('observaciones')?.setValue(data.observaciones);
+    this.polygon.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
     this.spinner.hide();
   }
 
