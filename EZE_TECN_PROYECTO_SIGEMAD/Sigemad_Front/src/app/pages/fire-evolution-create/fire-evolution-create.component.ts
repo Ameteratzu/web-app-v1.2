@@ -155,7 +155,7 @@ export class FireCreateComponent implements OnInit {
         fechaHora: this.formatDate(item.fechaHora),
         idProvincia: item.provincia,
         idMunicipio: item.municipio,
-        entidadMenor: item.entidadMenor ?? null,
+        idEntidadMenor: item.entidadMenor ?? null,
         observaciones: item.observaciones,
         GeoPosicion: item.geoPosicion,
       }),

@@ -211,11 +211,19 @@ export class AreaComponent {
       this.minors.set(minor);
     }
     this.formData.get('fechaHora')?.setValue(data.fechaHora);
-    this.formData.get('provincia')?.setValue(data.provincia);
-    this.formData.get('municipio')?.setValue(data.municipio);
-    this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
     this.formData.get('observaciones')?.setValue(data.observaciones);
     this.polygon.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
+
+    if (this.editData) {
+      this.formData.get('provincia')?.setValue(data.provincia.id);
+      this.formData.get('municipio')?.setValue(data.municipio.id);
+      this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+    } else {
+      this.formData.get('provincia')?.setValue(data.provincia);
+      this.formData.get('municipio')?.setValue(data.municipio);
+      this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
+    }
+
     this.spinner.hide();
   }
 
