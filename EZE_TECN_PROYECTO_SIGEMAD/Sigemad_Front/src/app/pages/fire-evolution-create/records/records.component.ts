@@ -77,7 +77,7 @@ export class RecordsComponent implements OnInit {
     inputOutput: '',
     startDate: new Date(),
     media: 1,
-    originDestination: [],
+    originDestination: <OriginDestination[]>[],
     datetimeUpdate: new Date(),
     observations_1: '',
     forecast: '',
@@ -181,11 +181,16 @@ export class RecordsComponent implements OnInit {
   }
 
   updateFormWithJson(json: any) {
+    const procedenciasSelecteds = () => {
+      const idsABuscar = json.registro?.procedenciaDestinos?.map((obj: any) => Number(obj.id)) || [];
+      return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
+    };
+
     this.formDataSignal.set({
       inputOutput: json.registro?.entradaSalida?.id || '',
       startDate: json.registro?.fechaHoraEvolucion ? new Date(json.registro.fechaHoraEvolucion) : new Date(),
       media: json.registro?.medio?.id || '',
-      originDestination: json.registro?.procedenciaDestinos?.join(', ') || '',
+      originDestination: procedenciasSelecteds(),
       datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
       observations_1: json.datoPrincipal?.observaciones || '',
       forecast: json.datoPrincipal?.prevision || '',
