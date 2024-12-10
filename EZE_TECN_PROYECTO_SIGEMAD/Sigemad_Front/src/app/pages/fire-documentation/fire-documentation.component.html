@@ -151,7 +151,9 @@
       fxLayoutGap="10px"
       fxLayoutAlign="space-between center"
     >
+    <div *ngIf="dataProps.fireDetail?.esUltimoRegistro !== true"></div>
       <button
+        *ngIf="dataProps.fireDetail?.esUltimoRegistro ?? false"
         (click)="delete()"
         mat-flat-button
         [style.background-color]="'var(--fire-color)'"
