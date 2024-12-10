@@ -1,20 +1,19 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, FormGroupDirective } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
+import { ChangeDetectorRef } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Province } from '../../../types/province.type';
-import { Municipality } from '../../../types/municipality.type';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import moment from 'moment';
@@ -28,8 +27,9 @@ import { ProvinceService } from '../../../services/province.service';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { MinorEntity } from '../../../types/minor-entity.type';
+import { Municipality } from '../../../types/municipality.type';
+import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
-import { ChangeDetectorRef } from '@angular/core';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -246,10 +246,12 @@ export class AreaComponent {
   }
 
   openModalMap() {
-    if (!this.formData.value.idMunicipio) {
+    console.info("this.formData.value.idMunicipio", this.formData.value)
+    if (!this.formData.value.municipio) {
       return;
     }
-    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.idMunicipio.id);
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
+    console.info("municipioSelected", municipioSelected)
 
     if (!municipioSelected) {
       return;

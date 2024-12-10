@@ -141,6 +141,11 @@ export class FireEditComponent implements OnInit {
     const fire = await this.fireService.getById(this.fire_id);
     this.fire = fire;
 
+    const municipalities = await this.municipalityService.get(
+      this.fire.idProvincia
+    );
+    this.municipalities.set(municipalities);
+
     await this.cargarRegistros();
 
     this.formData.patchValue({
@@ -326,12 +331,16 @@ export class FireEditComponent implements OnInit {
   }
 
   openModalMap() {
-    console.info('this.formData', this.formData.value);
+    console.info("this.formData", this.formData.value)
     if (!this.formData.value.municipality) {
       return;
     }
-    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality.id);
-    console.info('municipioSelected', this.municipalities(), municipioSelected);
+    console.info("this.formData.value.municipality", this.formData.value.municipality.id)
+    console.info("this.municipalities()",this.municipalities())
+    const municipioSelected = this.municipalities().find(
+      (item) => item.id == this.formData.value.municipality.id
+    );
+    console.info("municipioSelected", this.municipalities(), municipioSelected)
     if (!municipioSelected) {
       return;
     }
@@ -345,13 +354,15 @@ export class FireEditComponent implements OnInit {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
         defaultPolygon: null,
-        onlyView: true,
+        onlyView: true
       },
     });
 
-    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      //this.polygon.set(features);
-    });
+    dialogRef.componentInstance.save.subscribe(
+      (features: Feature<Geometry>[]) => {
+        //this.polygon.set(features);
+      }
+    );
   }
 
   goModalConfirm(): void {

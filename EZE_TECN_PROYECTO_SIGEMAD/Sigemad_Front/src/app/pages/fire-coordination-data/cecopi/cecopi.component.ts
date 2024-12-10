@@ -1,18 +1,17 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import moment from 'moment';
@@ -27,6 +26,7 @@ import { MapCreateComponent } from '../../../shared/mapCreate/map-create.compone
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -224,6 +224,7 @@ export class CecopiComponent {
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
+    console.info("this.coordinationServices.dataCecopi()[index]", this.coordinationServices.dataCecopi()[index])
     this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];
