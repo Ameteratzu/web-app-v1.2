@@ -18,6 +18,8 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
 export class FireComponent implements OnInit {
   public filtros = signal<any>({});
 
+  public isLoading = true
+
   public fires: ApiResponse<Fire[]> = {
     count: 0,
     page: 1,
@@ -30,8 +32,8 @@ export class FireComponent implements OnInit {
   public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
   async ngOnInit() {
-    const fires = await this.fireService.get();
-    this.fires = fires;
+    //const fires = await this.fireService.get();
+    //this.fires = fires;
     this.filtros.set(this.filtrosIncendioService.getFilters());
   }
 }

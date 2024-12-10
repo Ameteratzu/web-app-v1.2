@@ -7,8 +7,8 @@ import { MinorEntity } from '../types/minor-entity.type';
 export class MinorEntityService {
   private http = inject(HttpClient);
 
-  get() {
-    const endpoint = '/entidad-menor';
+  get(muni_id: number | string) {
+    const endpoint = `/Municipios/${muni_id}/entidades-menores`;
 
     return firstValueFrom(this.http.get<MinorEntity[]>(endpoint).pipe((response) => response));
   }

@@ -1,5 +1,7 @@
 <div class="mat-elevation-z8 table-container">
+
   <table mat-table [dataSource]="fires" matSort class="mat-table">
+
     <!-- Denominación Column -->
     <ng-container matColumnDef="denominacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Denominación</th>
@@ -60,7 +62,10 @@
     <!-- Header and Rows -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
   </table>
+
+  <mat-spinner *ngIf="isLoading" class="spinner"></mat-spinner>
 
   <!-- Paginator -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

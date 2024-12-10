@@ -20,6 +20,7 @@ import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
 import { MediaService } from '../../services/media.service';
 import { OriginDestinationService } from '../../services/origin-destination.service';
+import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
@@ -76,7 +77,8 @@ export class FireOtherInformationComponent implements OnInit {
     private mediaService: MediaService,
     private dialogRef: MatDialogRef<FireOtherInformationComponent>,
     private otherInformationService: FireOtherInformationService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public alertService: AlertService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -116,8 +118,8 @@ export class FireOtherInformationComponent implements OnInit {
       hora: ['', Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: [''],
-      observaciones: [''],
+      asunto: ['', Validators.required],
+      observaciones: ['', Validators.required],
     });
 
     const procedenciasDestino = await this.originDestinationService.get();
@@ -200,13 +202,18 @@ export class FireOtherInformationComponent implements OnInit {
       this.spinner.show();
       const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
-        this.showToast({ title: 'Registro guardado' });
+        this.isSaving.set(false);
+        this.spinner.hide();
 
-        setTimeout(() => {
-          this.isSaving.set(false);
-          this.spinner.hide();
-          window.location.href = `fire-national-edit/${this.dataProps?.fire?.id ?? 1}`;
-        }, 2000);
+        this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro subido correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal({ refresh: true });
+          });
       } else {
         this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
@@ -215,6 +222,45 @@ export class FireOtherInformationComponent implements OnInit {
       console.info({ error });
       this.spinner.hide();
     }
+  }
+
+  async delete() {
+    //const toolbar = document.querySelector('mat-toolbar');
+    //this.renderer.setStyle(toolbar, 'z-index', '1');
+    this.spinner.show();
+
+    this.alertService
+      .showAlert({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await this.otherInformationService.delete(
+            Number(this.dataProps?.fireDetail?.id)
+          );
+          //this.coordinationServices.clearData();
+          //setTimeout(() => {
+          //this.renderer.setStyle(toolbar, 'z-index', '5');
+          this.spinner.hide();
+          //}, 2000);
+
+          this.alertService
+            .showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            })
+            .then((result) => {
+              this.closeModal({ refresh: true });
+            });
+        } else {
+          this.spinner.hide();
+        }
+      });
   }
 
   seleccionarItem(index: number) {
@@ -259,8 +305,8 @@ export class FireOtherInformationComponent implements OnInit {
     return moment(date).format('DD/MM/YY');
   }
 
-  closeModal() {
-    this.dialogRef.close();
+  closeModal(params?: any) {
+    this.dialogRef.close(params);
   }
 
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {

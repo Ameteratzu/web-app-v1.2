@@ -1,31 +1,32 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormGroupDirective } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import moment from 'moment';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import Feature from 'ol/Feature';
-import { Geometry } from 'ol/geom';
-import { CoordinationAddressService } from '../../../services/coordination-address.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatButtonModule } from '@angular/material/button';
 import { DireccionesService } from '../../../services/direcciones.service';
-import { MunicipalityService } from '../../../services/municipality.service';
-import { ProvinceService } from '../../../services/province.service';
-import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
 import { CoordinationAddress } from '../../../types/coordination-address';
-import { Municipality } from '../../../types/municipality.type';
+import { MatSelectModule } from '@angular/material/select';
+import moment from 'moment';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { ProvinceService } from '../../../services/province.service';
+import { MunicipalityService } from '../../../services/municipality.service';
 import { Province } from '../../../types/province.type';
+import { Municipality } from '../../../types/municipality.type';
+import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
+import { Geometry } from 'ol/geom';
+import Feature from 'ol/Feature';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { CoordinationAddressService } from '../../../services/coordination-address.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -67,8 +68,9 @@ const MY_DATE_FORMATS = {
 export class PmaComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
 
   public polygon = signal<any>([]);
 
@@ -117,6 +119,7 @@ export class PmaComponent {
         this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
+    this.spinner.hide();
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
@@ -144,22 +147,13 @@ export class PmaComponent {
   }
 
   async sendDataToEndpoint() {
-    console.log('🚀 ~ PmaComponent ~ sendDataToEndpoint ~ this.coordinationServices:', this.coordinationServices.dataPma());
-    this.spinner.show();
-    if (this.coordinationServices.dataPma().length > 0) {
-      this.save.emit(true);
+    if (this.coordinationServices.dataPma().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
-      this.spinner.show();
-      this.showToast();
+      if (this.editData) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 
   formatDate(date: Date | string): string {
@@ -200,6 +194,8 @@ export class PmaComponent {
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.featuresCoords = features;
+      console.info('features', features);
       this.polygon.set(features);
     });
   }
@@ -240,7 +236,6 @@ export class PmaComponent {
     });
     this.polygon.set(this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]);
 
-    // Habilitar los campos dependientes si tienen datos
     if (selectedItem.municipio) {
       this.formData.get('municipio')?.enable();
     } else {
@@ -261,6 +256,10 @@ export class PmaComponent {
   }
 
   closeModal() {
-    this.save.emit(false);
+    this.save.emit({ save: false, delete: false, close: true, update: false });
+  }
+
+  delete() {
+    this.save.emit({ save: true, delete: false, close: false, update: false });
   }
 }

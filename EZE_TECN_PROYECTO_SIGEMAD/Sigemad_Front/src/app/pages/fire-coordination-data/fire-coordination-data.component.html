@@ -12,6 +12,7 @@
   </div>
 
   <app-address
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataDir"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 1 && isDataReady"
@@ -19,6 +20,7 @@
     @fadeInOut
   ></app-address>
   <app-cecopi
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataCecopi"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 2 && isDataReady"
@@ -26,6 +28,7 @@
     @fadeInOut
   ></app-cecopi>
   <app-pma
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataPma"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 3 && isDataReady"

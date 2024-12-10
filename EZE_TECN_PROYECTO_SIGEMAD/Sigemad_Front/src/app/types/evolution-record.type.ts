@@ -1,15 +1,18 @@
+import { OriginDestination } from './origin-destination.type';
+
 export interface EvolucionIncendio {
   idIncendio: number;
+  idEvolucion: any;
   registro: Registro;
   datoPrincipal: DatoPrincipal;
   parametro: Parametro;
-  registroProcedenciasDestinos: number[];
 }
 
 export interface Registro {
   fechaHoraEvolucion: string;
   idEntradaSalida: number;
   idMedio: number;
+  registroProcedenciasDestinos: OriginDestination[];
 }
 
 export interface DatoPrincipal {

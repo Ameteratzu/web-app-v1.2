@@ -26,6 +26,8 @@ import { MapCreateComponent } from '../../../shared/mapCreate/map-create.compone
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
+
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -65,8 +67,9 @@ const MY_DATE_FORMATS = {
 })
 export class CecopiComponent {
   @ViewChild(MatSort) sort!: MatSort;
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public polygon = signal<any>([]);
@@ -117,6 +120,7 @@ export class CecopiComponent {
         this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
+    this.spinner.hide();
   }
 
   onSubmitCecopi(formDirective: FormGroupDirective): void {
@@ -144,21 +148,13 @@ export class CecopiComponent {
   }
 
   async sendDataToEndpoint() {
-    this.spinner.show();
-    if (this.coordinationServices.dataCecopi().length > 0) {
-      this.save.emit(true);
+    if (this.coordinationServices.dataCecopi().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
-      this.spinner.show();
-      this.showToast();
+      if (this.editData) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 
   async loadMunicipalities(event: any) {
@@ -228,6 +224,7 @@ export class CecopiComponent {
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
+    console.info("this.coordinationServices.dataCecopi()[index]", this.coordinationServices.dataCecopi()[index])
     this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];
@@ -253,6 +250,10 @@ export class CecopiComponent {
   }
 
   closeModal() {
-    this.save.emit(false);
+    this.save.emit({ save: false, delete: false, close: true, update: false });
+  }
+
+  delete() {
+    this.save.emit({ save: true, delete: false, close: false, update: false });
   }
 }

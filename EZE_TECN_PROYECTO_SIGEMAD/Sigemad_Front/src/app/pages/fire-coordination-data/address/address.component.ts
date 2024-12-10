@@ -11,6 +11,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { DireccionesService } from '../../../services/direcciones.service';
 import { CoordinationAddress } from '../../../types/coordination-address';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { MatSelectModule } from '@angular/material/select';
 import moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -62,16 +63,18 @@ const MY_DATE_FORMATS = {
 export class AddressComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
 
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
+  private spinner = inject(NgxSpinnerService);
 
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
-  private spinner = inject(NgxSpinnerService);
+  private static initialized = false;
 
   public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
@@ -98,6 +101,7 @@ export class AddressComponent {
         this.coordinationServices.dataCoordinationAddress.set(this.editData);
       }
     }
+    this.spinner.hide();
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
@@ -117,19 +121,13 @@ export class AddressComponent {
   }
 
   async sendDataToEndpoint() {
-    if (this.coordinationServices.dataCoordinationAddress().length > 0) {
-      this.save.emit(true);
+    if (this.coordinationServices.dataCoordinationAddress().length > 0 && !this.editData) {
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
-      // this.showToast();
+      if (this.editData) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
-  }
-
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 
   editarItem(index: number) {
@@ -172,7 +170,11 @@ export class AddressComponent {
   }
 
   closeModal() {
-    this.save.emit(false);
+    this.save.emit({ save: false, delete: false, close: true, update: false });
+  }
+
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
   }
 
   findOptionMatch(option: any) {

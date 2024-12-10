@@ -1,6 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -14,10 +16,11 @@ import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.c
   standalone: true,
   templateUrl: './fire-table.component.html',
   styleUrls: ['./fire-table.component.scss'],
-  imports: [MatPaginatorModule, MatTableModule, MatDialogModule],
+  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule],
 })
 export class FireTableComponent implements OnChanges {
   @Input() fires: Fire[] = [];
+  @Input() isLoading: boolean = true;
 
   public dataSource = new MatTableDataSource<Fire>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;

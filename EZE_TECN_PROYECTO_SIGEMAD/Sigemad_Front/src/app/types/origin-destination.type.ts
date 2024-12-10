@@ -1,4 +1,4 @@
-export type OriginDestination = {
+export interface OriginDestination {
   id: number;
   descripcion: string;
-};
+}

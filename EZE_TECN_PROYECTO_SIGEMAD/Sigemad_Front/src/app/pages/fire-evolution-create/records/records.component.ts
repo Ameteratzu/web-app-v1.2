@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, OnInit, Output, runInInjectionContext, signal } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputOutputService } from '../../../services/input-output.service';
 import { MediaService } from '../../../services/media.service';
@@ -32,6 +32,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EvolucionIncendio } from '../../../types/evolution-record.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -72,9 +73,29 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
-  @Output() save = new EventEmitter<boolean>();
-  private fb = inject(FormBuilder);
+  formDataSignal = signal({
+    inputOutput: '',
+    startDate: new Date(),
+    media: 1,
+    originDestination: <OriginDestination[]>[],
+    datetimeUpdate: new Date(),
+    observations_1: '',
+    forecast: '',
+    status: 1,
+    end_date: new Date(),
+    emergencyPlanActivated: '',
+    phases: '',
+    nivel: '',
+    operativa: '',
+    afectada: null,
+  });
+
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  @Output() save = new EventEmitter<SavePayloadModal>();
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+
+  private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   public inputOutputService = inject(InputOutputService);
   public mediaService = inject(MediaService);
@@ -88,6 +109,8 @@ export class RecordsComponent implements OnInit {
   public toast = inject(MatSnackBar);
 
   formData!: FormGroup;
+  private environmentInjector = inject(EnvironmentInjector);
+
   public inputOutputs = signal<InputOutput[]>([]);
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
@@ -116,26 +139,69 @@ export class RecordsComponent implements OnInit {
     this.situationEquivalent.set(situationsEquivalent);
 
     this.formData = this.fb.group({
-      inputOutput: ['', Validators.required],
-      startDate: [new Date(), Validators.required],
-      media: [1, Validators.required],
-      originDestination: ['', Validators.required],
-      datetimeUpdate: [new Date(), Validators.required],
-      observations_1: [''],
-      forecast: [''],
-      status: [1, Validators.required],
-      end_date: [new Date(), Validators.required],
-      emergencyPlanActivated: [''],
-      phases: [''],
-      nivel: [''],
-      operativa: [''],
-      afectada: [null, Validators.required],
+      inputOutput: [this.formDataSignal().inputOutput, Validators.required],
+      startDate: [this.formDataSignal().startDate, Validators.required],
+      media: [this.formDataSignal().media, Validators.required],
+      originDestination: [this.formDataSignal().originDestination, Validators.required],
+      datetimeUpdate: [this.formDataSignal().datetimeUpdate, Validators.required],
+      observations_1: [this.formDataSignal().observations_1],
+      forecast: [this.formDataSignal().forecast],
+      status: [this.formDataSignal().status, Validators.required],
+      end_date: [this.formDataSignal().end_date, Validators.required],
+      emergencyPlanActivated: [this.formDataSignal().emergencyPlanActivated],
+      phases: [this.formDataSignal().phases],
+      nivel: [this.formDataSignal().nivel],
+      operativa: [this.formDataSignal().operativa],
+      afectada: [this.formDataSignal().afectada, Validators.required],
+    });
+
+    runInInjectionContext(this.environmentInjector, () => {
+      effect(() => {
+        const data = this.formDataSignal();
+        this.formData.patchValue(data, { emitEvent: false });
+      });
+
+      this.formData.valueChanges.subscribe((values) => {
+        this.formDataSignal.set({ ...this.formDataSignal(), ...values });
+      });
     });
 
     this.formData.get('emergencyPlanActivated')?.disable();
     this.formData.get('phases')?.disable();
     this.formData.get('nivel')?.disable();
     this.formData.get('operativa')?.disable();
+
+    if (this.editData) {
+      console.log('Información recibida en el hijo:', this.editData);
+      if (this.evolutionSevice.dataRecords().length === 0) {
+        this.updateFormWithJson(this.editData);
+      }
+    }
+    this.spinner.hide();
+  }
+
+  updateFormWithJson(json: any) {
+    const procedenciasSelecteds = () => {
+      const idsABuscar = json.registro?.procedenciaDestinos?.map((obj: any) => Number(obj.id)) || [];
+      return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
+    };
+
+    this.formDataSignal.set({
+      inputOutput: json.registro?.entradaSalida?.id || '',
+      startDate: json.registro?.fechaHoraEvolucion ? new Date(json.registro.fechaHoraEvolucion) : new Date(),
+      media: json.registro?.medio?.id || '',
+      originDestination: procedenciasSelecteds(),
+      datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
+      observations_1: json.datoPrincipal?.observaciones || '',
+      forecast: json.datoPrincipal?.prevision || '',
+      status: json.parametro?.estadoIncendio?.id || '',
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : new Date(),
+      emergencyPlanActivated: json.parametro?.planEmergenciaActivado || '',
+      phases: json.parametro?.fase?.id || '',
+      nivel: json.parametro?.situacionEquivalente?.id || '',
+      operativa: json.parametro?.situacionOperativa?.id || '',
+      afectada: json.parametro?.superficieAfectadaHectarea || null,
+    });
   }
 
   async sendDataToEndpoint() {
@@ -144,11 +210,13 @@ export class RecordsComponent implements OnInit {
       const formValues = this.formData.value;
 
       const newRecord: EvolucionIncendio = {
+        idEvolucion: null,
         idIncendio: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: formValues.startDate.toISOString(),
           idEntradaSalida: formValues.inputOutput,
           idMedio: formValues.media,
+          registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
         },
         datoPrincipal: {
           fechaHora: formValues.datetimeUpdate.toISOString(),
@@ -164,12 +232,11 @@ export class RecordsComponent implements OnInit {
           idSituacionOperativa: 1,
           idSituacionEquivalente: 1,
         },
-        registroProcedenciasDestinos: [],
       };
 
       this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
 
-      this.save.emit(true);
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       this.formData.markAllAsTouched();
       this.spinner.hide();
@@ -200,6 +267,10 @@ export class RecordsComponent implements OnInit {
   }
 
   closeModal() {
-    this.matDialog.closeAll();
+    this.save.emit({ save: false, delete: false, close: true, update: false });
+  }
+
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
   }
 }

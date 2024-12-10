@@ -1,2 +1,2 @@
-<app-fire-filter-form [filtros]="filtros" [(fires)]="fires"></app-fire-filter-form>
-<app-fire-table [fires]="fires.data" *ngIf="this.fires?.data"></app-fire-table>
+<app-fire-filter-form [(isLoading)]="isLoading" [filtros]="filtros" [(fires)]="fires"></app-fire-filter-form>
+<app-fire-table [isLoading]="isLoading" [fires]="fires.data" *ngIf="this.fires?.data"></app-fire-table>

@@ -28,4 +28,12 @@ export class FireOtherInformationService {
       )
     );
   }
+  //delete
+  delete(id: number) {
+    const endpoint = `/otras-informaciones/${id}`;
+
+    return firstValueFrom(
+      this.http.delete(endpoint).pipe((response) => response)
+    );
+  }
 }

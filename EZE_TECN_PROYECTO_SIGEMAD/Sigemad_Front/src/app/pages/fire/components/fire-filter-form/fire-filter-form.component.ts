@@ -86,7 +86,9 @@ const MY_DATE_FORMATS = {
 export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
+  @Input() isLoading: boolean = true;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
+  @Output() isLoadingChange = new EventEmitter<boolean>();
 
   COUNTRIES_ID = {
     PORTUGAL: 1,
@@ -279,6 +281,18 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+
+
+  this.firesChange.emit({
+    count: 0,
+    page: 1,
+    pageSize: 10,
+    data: [],
+    pageCount: 0,
+  })
+    this.isLoading = true
+    this.isLoadingChange.emit(true)
+
     const {
       territory,
       country,
@@ -316,6 +330,8 @@ export class FireFilterFormComponent implements OnInit {
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
+    this.isLoadingChange.emit(false)
+    this.isLoading = false
   }
 
   clearFormFilter() {

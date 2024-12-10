@@ -29,8 +29,13 @@
   </div>
 
   <div fxLayout="row" fxLayoutAlign="space-between center">
-    <button mat-flat-button [style.background-color]="'var(--fire-color)'" (click)="goModalConfirm()">Eliminar</button>
-    <button mat-flat-button color="accent" (click)="volver()">Volver</button>
+    <div>
+      <button (click)="deleteFire()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="16px">
+      <button mat-flat-button color="accent" (click)="volver()">Volver</button>
+    </div>
   </div>
 </div>
 <br />
@@ -85,16 +90,16 @@
         <mat-card-title>Registro de actualizaciones</mat-card-title>
 
         <div fxLayout="row" fxLayoutGap="8px" class="btn-container">
-          <button mat-button class="circle-button" (click)="goModalEvolution()">E</button>
-          <button mat-button class="circle-button" (click)="goModalCoordination()">C</button>
-          <button mat-button class="circle-button">R</button>
-          <button mat-button class="circle-button" (click)="goModalDocumentation()">D</button>
-          <button mat-button class="circle-button" (click)="goModalOtherInformation()">O</button>
-          <button mat-button class="circle-button">S</button>
+          <button mat-button class="circle-button" (click)="goModalEvolution()" appTooltip="Evolución">E</button>
+          <button mat-button class="circle-button" (click)="goModalCoordination()" appTooltip="Coordinación de la emergencia">C</button>
+          <button mat-button class="circle-button" appTooltip="Actuaciones relevantes">R</button>
+          <button mat-button class="circle-button" (click)="goModalDocumentation()" appTooltip="Documentación">D</button>
+          <button mat-button class="circle-button" (click)="goModalOtherInformation()" appTooltip="Otra información">O</button>
+          <button mat-button class="circle-button" appTooltip="Sucesos relacionados">S</button>
         </div>
       </div>
       <br />
-      <mat-card-content>
+      <mat-card-content *ngIf="dataSource.data.length > 0">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 100%">
           <ng-container matColumnDef="numero">
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by numero">N°</th>
@@ -148,3 +153,7 @@
     </mat-card>
   </div>
 </div>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

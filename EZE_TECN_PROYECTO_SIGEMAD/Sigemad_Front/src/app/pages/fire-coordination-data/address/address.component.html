@@ -89,8 +89,8 @@
   </div>
 
   <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <div *ngIf="editData" fxFlex="none">
-      <button mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+    <div *ngIf="esUltimo" fxFlex="none">
+      <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxFlex="auto">
       <button mat-flat-button color="accent" (click)="closeModal()">Volver</button>

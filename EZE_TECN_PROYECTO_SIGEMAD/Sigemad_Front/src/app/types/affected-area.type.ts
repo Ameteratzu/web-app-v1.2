@@ -1,9 +1,9 @@
 export interface AffectedArea {
   id: number;
   fechaHora: string;
-  idProvincia: { id: number; descripcion: string };
-  idMunicipio: { id: number; descripcion: string };
-  idEntidadMenor: { id: number; descripcion: string };
+  provincia: { id: number; descripcion: string };
+  municipio: { id: number; descripcion: string };
+  entidadMenor: { id: number; descripcion: string };
   observaciones: string;
   geoPosicion?: any;
 }

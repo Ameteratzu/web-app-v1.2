@@ -101,4 +101,10 @@ export class CoordinationAddressService {
     let endpoint = `/direcciones-coordinaciones-emergencias/${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
+
+  delete(id: number) {
+    const endpoint = `/direcciones-coordinaciones-emergencias/${id}`;
+
+    return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
+  }
 }
