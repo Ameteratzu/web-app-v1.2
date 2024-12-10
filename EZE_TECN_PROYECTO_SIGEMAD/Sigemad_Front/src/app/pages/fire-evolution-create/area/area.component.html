@@ -1,7 +1,7 @@
 <div class="form-container">
   <form *ngIf="formData" #formDirective="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit(formDirective)">
     <div>
-      <h3 class="title">DATOS PRINCIPALES</h3>
+      <h3 class="title">ÁREA AFECTADA</h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
         <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
           <mat-label>Fecha y hora</mat-label>
@@ -76,7 +76,7 @@
       </ng-container>
 
       <ng-container matColumnDef="procendenciaDestino">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia {{ editData }}</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
         <td mat-cell *matCellDef="let coordinacionData">
           {{ !coordinacionData.id ? getProvincesById(coordinacionData.provincia) : coordinacionData.provincia.descripcion }}
         </td>
