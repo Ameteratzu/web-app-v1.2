@@ -19,6 +19,7 @@ export class FireComponent implements OnInit {
   public filtros = signal<any>({});
 
   public isLoading = true
+  public refreshFilterForm = true
 
   public fires: ApiResponse<Fire[]> = {
     count: 0,

@@ -32,6 +32,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { EventStatusService } from '../../../../services/eventStatus.service';
+import { AlertService } from '../../../../shared/alert/alert.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import { EventStatus } from '../../../../types/eventStatus.type';
@@ -76,6 +77,7 @@ const MY_DATE_FORMATS = {
   templateUrl: './fire-create-edit-form.component.html',
   styleUrl: './fire-create-edit-form.component.scss',
 })
+
 export class FireCreateEdit implements OnInit {
   constructor(
     private filtrosIncendioService: LocalFiltrosIncendio,
@@ -88,7 +90,7 @@ export class FireCreateEdit implements OnInit {
     public eventStatusService: EventStatusService,
     public dialogRef: MatDialogRef<FireCreateEdit>,
     private matDialog: MatDialog,
-
+    public alertService: AlertService,
     private router: Router,
 
     @Inject(MAT_DIALOG_DATA) public data: { fire: any }
@@ -212,26 +214,22 @@ export class FireCreateEdit implements OnInit {
         type: 'Polygon',
         coordinates: [this.polygon()],
       };
-      //data.geoposition = this.polygon
-      console.info('data', data);
+
       if (this.data.fire?.id) {
         data.id = this.data.fire.id;
         await this.fireService
           .update(data)
           .then((response) => {
-            //TODO toast
-            /*
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Modificado',
-            detail: 'Incendio modificado correctamente',
+            this.spinner.hide();
+            this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro actualizado correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal({ refresh: true });
           });
-          */
-            new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-              this.spinner.hide();
-              //this.router.navigate([`/fire`])
-              window.location.href = '/fire';
-            });
           })
           .catch((error) => {
             console.error('Error', error);
@@ -242,11 +240,24 @@ export class FireCreateEdit implements OnInit {
           .then((response) => {
             console.info('response', response);
             //TODO toast
+
+            this.spinner.hide();
+            this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro subido correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal({ refresh: true });
+          });
+          /*
             this.filtrosIncendioService.setFilters({});
             new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
               //this.router.navigate([`/fire`])
               window.location.href = '/fire';
             });
+            */
           })
           .catch((error) => {
             console.log(error);
@@ -301,9 +312,8 @@ export class FireCreateEdit implements OnInit {
     });
   }
 
-  closeModal() {
-    //debugger
-    this.dialogRef.close();
+  closeModal(params?: any) {
+    this.dialogRef.close(params);
   }
 
   getForm(atributo: string): any {
