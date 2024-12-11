@@ -147,3 +147,7 @@ table .mat-mdc-header-cell {
   background-color: var(--primary-50) !important;
   color: white !important;
 }
+
+.mat-mdc-button-persistent-ripple::before {
+  opacity: 0 !important;
+}

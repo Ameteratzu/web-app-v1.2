@@ -153,11 +153,11 @@ export class FireCreateComponent implements OnInit {
       (item) => ({
         id: item.id ?? 0,
         fechaHora: this.formatDate(item.fechaHora),
-        idProvincia: item.provincia,
-        idMunicipio: item.municipio,
-        idEntidadMenor: item.entidadMenor ?? null,
+        idProvincia: item.provincia.id ?? item.provincia,
+        idMunicipio: item.municipio.id ?? item.municipio,
+        idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? 0,
         observaciones: item.observaciones,
-        GeoPosicion: item.geoPosicion,
+        GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
       }),
       this.evolutionSevice.postAreas.bind(this.evolutionSevice),
       'areasAfectadas'
@@ -179,6 +179,21 @@ export class FireCreateComponent implements OnInit {
       console.log('🚀 ~ result:', result);
       this.idReturn = result.idEvolucion;
     }
+  }
+
+  isGeoPosicionValid(data: any): boolean {
+    const geoPosicion = data?.geoPosicion;
+
+    if (!geoPosicion || geoPosicion.type !== 'Polygon' || !Array.isArray(geoPosicion.coordinates)) {
+      return false;
+    }
+
+    return geoPosicion.coordinates.every(
+      (polygon: any[]) =>
+        Array.isArray(polygon) &&
+        polygon.length > 0 &&
+        polygon.every((point) => Array.isArray(point) && point.length === 2 && point.every((coord) => typeof coord === 'number'))
+    );
   }
 
   formatDate(date: Date | string): string {
