@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 
 import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
@@ -87,8 +87,10 @@ export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
   @Input() isLoading: boolean = true;
+  @Input() refreshFilterForm: boolean = true;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
   @Output() isLoadingChange = new EventEmitter<boolean>();
+  @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
   COUNTRIES_ID = {
     PORTUGAL: 1,
@@ -227,6 +229,12 @@ export class FireFilterFormComponent implements OnInit {
     this.onSubmit();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('refreshFilterForm' in changes ) {
+      this.onSubmit()
+    }
+  }
+
   toggleAccordion(panel: MatExpansionPanel) {
     panel.toggle();
   }
@@ -281,8 +289,6 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-
-
   this.firesChange.emit({
     count: 0,
     page: 1,
@@ -371,6 +377,7 @@ export class FireFilterFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Modal result:', result);
+        this.onSubmit();
       }
     });
   }
