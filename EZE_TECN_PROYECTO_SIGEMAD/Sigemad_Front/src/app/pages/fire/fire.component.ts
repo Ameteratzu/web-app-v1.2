@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { FireService } from '../../services/fire.service';
 import { LocalFiltrosIncendio } from '../../services/local-filtro-incendio.service';
@@ -11,7 +12,7 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
 @Component({
   selector: 'app-fire',
   standalone: true,
-  imports: [CommonModule, FireFilterFormComponent, FireTableComponent],
+  imports: [CommonModule, FireFilterFormComponent, FireTableComponent, RouterOutlet],
   templateUrl: './fire.component.html',
   styleUrl: './fire.component.scss',
 })

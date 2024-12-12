@@ -45,7 +45,7 @@ export class FireTableComponent implements OnChanges {
   }
 
   goToEdit(fire: Fire) {
-    this.router.navigate([`/fire-national-edit/${fire.id}`]);
+    this.router.navigate([`fire/fire-national-edit/${fire.id}`]);
   }
 
   goToEditFire(fire: Fire) {}

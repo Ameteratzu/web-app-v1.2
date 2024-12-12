@@ -167,10 +167,6 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
             }
         }
 
-
-        //Guardar en base de datos
-        evolucion.AreaAfectadas = _mapper.Map<ICollection<AreaAfectada>>(request.AreasAfectadas);
-
         if (request.IdEvolucion.HasValue)
         {
             _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
