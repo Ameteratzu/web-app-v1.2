@@ -12,7 +12,7 @@
 
 
   <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()">
-    <nav>
+    <nav class="nav-miga-pan">
       <ol class="breadcrumb">
         <li *ngFor="let breadcrumb of breadcrumbs; let last = last" class="breadcrumb-item" [class.active]="last">
           <a *ngIf="!last" (click)="goToRoute(breadcrumb.url)">{{ breadcrumb.label }}</a>
