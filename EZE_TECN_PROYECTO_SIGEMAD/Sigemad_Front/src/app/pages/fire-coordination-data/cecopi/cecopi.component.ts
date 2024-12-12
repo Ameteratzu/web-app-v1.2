@@ -164,6 +164,10 @@ export class CecopiComponent {
     this.formDataCecopi.get('municipio')?.enable();
   }
 
+  onChangeMunicipio(event: any) {
+    this.polygon.set([]);
+  }
+
   openModalMap() {
     if (!this.formDataCecopi.value.municipio) {
       return;
@@ -173,7 +177,7 @@ export class CecopiComponent {
     if (!municipioSelected) {
       return;
     }
-    console.info('this.polygon()', this.polygon());
+
     const dialogRef = this.matDialog.open(MapCreateComponent, {
       width: '780px',
       maxWidth: '780px',
