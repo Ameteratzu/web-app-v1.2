@@ -260,6 +260,10 @@ export class AreaComponent {
     return found ? found.descripcion : 'Sin identidad menor';
   }
 
+  onChangeMunicipio(event: any) {
+    this.polygon.set([]);
+  }
+
   openModalMap() {
     console.info('this.formData.value.idMunicipio', this.formData.value);
     if (!this.formData.value.municipio) {

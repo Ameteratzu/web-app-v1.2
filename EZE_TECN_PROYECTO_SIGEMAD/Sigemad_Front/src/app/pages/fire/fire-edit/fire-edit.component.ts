@@ -139,6 +139,7 @@ export class FireEditComponent implements OnInit {
     this.dataSource.data = [];
 
     const fire = await this.fireService.getById(this.fire_id);
+
     this.fire = fire;
 
     const municipalities = await this.municipalityService.get(
@@ -331,16 +332,14 @@ export class FireEditComponent implements OnInit {
   }
 
   openModalMap() {
-    console.info("this.formData", this.formData.value)
     if (!this.formData.value.municipality) {
       return;
     }
-    console.info("this.formData.value.municipality", this.formData.value.municipality.id)
-    console.info("this.municipalities()",this.municipalities())
+
     const municipioSelected = this.municipalities().find(
       (item) => item.id == this.formData.value.municipality.id
     );
-    console.info("municipioSelected", this.municipalities(), municipioSelected)
+
     if (!municipioSelected) {
       return;
     }
@@ -353,7 +352,7 @@ export class FireEditComponent implements OnInit {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultPolygon: null,
+        defaultPolygon: this.fire.geoPosicion.coordinates[0],
         onlyView: true
       },
     });
