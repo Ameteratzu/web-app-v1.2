@@ -268,19 +268,8 @@ export class FireCreateEdit implements OnInit {
     }
   }
 
-  async setMunicipalityId(event: any) {
-    const municipality_id = event.value;
-    localStorage.setItem('municipality', municipality_id);
-
-    for (let municipality of this.municipalities()) {
-      if (municipality.id == Number(localStorage.getItem('municipality'))) {
-        this.municipalityName = municipality.descripcion;
-
-        this.formData.patchValue({
-          denomination: municipality.descripcion,
-        });
-      }
-    }
+  setMunicipalityId(event: any) {
+    this.polygon.set([]);
   }
 
   openModalMap() {

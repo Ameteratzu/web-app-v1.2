@@ -143,12 +143,6 @@ export class AreaComponent {
   onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
-      // if (this.isCreate() == -1) {
-      //   this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
-      // } else {
-      //   this.editarItem(this.isCreate());
-      // }
-
       if (this.isCreate() == -1) {
         data.geoPosicion = {
           type: 'Polygon',
@@ -163,14 +157,14 @@ export class AreaComponent {
         fechaHora: new Date(),
       });
       this.formData.reset();
-      this.formData.get('idMunicipio')?.disable();
+      this.formData.get('municipio')?.disable();
+      this.formData.get('entidadMenor')?.disable();
     } else {
       this.formData.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
-    console.log('🚀 ~ AreaComponent ~ sendDataToEndpoint ~ this.evolutionService.dataAffectedArea():', this.evolutionService.dataAffectedArea());
     if (this.evolutionService.dataAffectedArea().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
@@ -214,7 +208,7 @@ export class AreaComponent {
     this.formData.get('observaciones')?.setValue(data.observaciones);
     this.polygon.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
 
-    if (this.editData) {
+    if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
       this.formData.get('municipio')?.setValue(data.municipio.id);
       this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
@@ -223,6 +217,9 @@ export class AreaComponent {
       this.formData.get('municipio')?.setValue(data.municipio);
       this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
     }
+
+    this.formData.get('entidadMenor')?.enable();
+    this.formData.get('municipio')?.enable();
 
     this.spinner.hide();
   }
@@ -265,8 +262,11 @@ export class AreaComponent {
     return found ? found.descripcion : 'Sin identidad menor';
   }
 
+  onChangeMunicipio(event: any) {
+    this.polygon.set([]);
+  }
+
   openModalMap() {
-    console.info('this.formData.value.idMunicipio', this.formData.value);
     if (!this.formData.value.municipio) {
       return;
     }
@@ -292,5 +292,9 @@ export class AreaComponent {
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       this.polygon.set(features);
     });
+  }
+
+  isInteger(value: any): boolean {
+    return Number.isInteger(value);
   }
 }
