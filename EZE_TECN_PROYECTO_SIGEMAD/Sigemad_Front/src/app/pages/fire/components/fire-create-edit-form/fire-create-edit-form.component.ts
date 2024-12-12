@@ -267,7 +267,12 @@ export class FireCreateEdit implements OnInit {
     }
   }
 
-  setMunicipalityId(event: any) {
+  setMunicipalityId(event: any, op: any) {
+    const selectedItem = op.find((item: any) => item.id === event.value);
+
+    this.formData.patchValue({
+      denomination: selectedItem.descripcion,
+    });
     this.polygon.set([]);
   }
 
