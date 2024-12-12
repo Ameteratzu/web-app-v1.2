@@ -47,6 +47,7 @@ export class FireCreateComponent implements OnInit {
     title: string;
     idIncendio: number;
     fireDetail?: FireDetail;
+    valoresDefecto?: number;
   };
 
   public evolutionSevice = inject(EvolutionService);
@@ -67,9 +68,14 @@ export class FireCreateComponent implements OnInit {
   isDataReady = false;
   idReturn = null;
   isEdit = false;
+  estado: number | undefined;
 
   async isToEditDocumentation() {
     if (!this.data?.fireDetail?.id) {
+      if (this.data?.valoresDefecto) {
+        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
+        this.estado = dataCordinacion.parametro.estadoIncendio.id;
+      }
       this.isDataReady = true;
       return;
     }

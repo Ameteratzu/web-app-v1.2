@@ -73,8 +73,14 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
+  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  @Output() save = new EventEmitter<SavePayloadModal>();
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+  @Input() estadoIncendio: any;
+
   formDataSignal = signal({
-    inputOutput: '',
+    inputOutput: 1,
     startDate: new Date(),
     media: 1,
     originDestination: <OriginDestination[]>[],
@@ -89,11 +95,6 @@ export class RecordsComponent implements OnInit {
     operativa: '',
     afectada: null,
   });
-
-  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<SavePayloadModal>();
-  @Input() editData: any;
-  @Input() esUltimo: boolean | undefined;
 
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
@@ -137,6 +138,8 @@ export class RecordsComponent implements OnInit {
 
     const situationsEquivalent = await this.situationEquivalentService.get();
     this.situationEquivalent.set(situationsEquivalent);
+
+    this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
     this.formData = this.fb.group({
       inputOutput: [this.formDataSignal().inputOutput, Validators.required],

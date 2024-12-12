@@ -19,6 +19,7 @@
   <app-records
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editData"
+    [estadoIncendio]="estado"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 1 && isDataReady"
     class="component-width"
