@@ -78,21 +78,21 @@
       <ng-container matColumnDef="procendenciaDestino">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ !coordinacionData.id ? getProvincesById(coordinacionData.provincia) : coordinacionData.provincia.descripcion }}
+          {{ isInteger(coordinacionData.provincia) ? getProvincesById(coordinacionData.provincia) : coordinacionData.provincia?.descripcion }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="descripcion">
         <th mat-header-cell *matHeaderCellDef>Municipio</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ !coordinacionData.id ? getMunicipalitiesById(coordinacionData.municipio) : coordinacionData.municipio.descripcion }}
+          {{ isInteger(coordinacionData.municipio) ? getMunicipalitiesById(coordinacionData.municipio) : coordinacionData.municipio?.descripcion }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="fichero">
         <th mat-header-cell *matHeaderCellDef>Entidad menor</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ !coordinacionData.id ? getMinorById(coordinacionData.entidadMenor) : coordinacionData.entidadMenor?.descripcion }}
+          {{ isInteger(coordinacionData.entidadMenor) ? getMinorById(coordinacionData.entidadMenor) : coordinacionData.entidadMenor?.descripcion }}
         </td>
       </ng-container>
 
