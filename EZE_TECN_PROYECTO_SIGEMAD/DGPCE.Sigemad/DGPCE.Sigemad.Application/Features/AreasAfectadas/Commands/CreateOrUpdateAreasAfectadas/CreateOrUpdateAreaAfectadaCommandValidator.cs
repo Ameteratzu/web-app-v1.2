@@ -38,7 +38,7 @@ public class AreaAfectadaDtoValidator : AbstractValidator<CreateOrUpdateAreaAfec
                 .GreaterThan(0).WithMessage(localizer["EntidadMenorObligatorio"]);
 
         RuleFor(p => p.GeoPosicion)
-            .NotNull().When(p => p.GeoPosicion != null)
-            .Must(geometryValidator.IsGeometryValidAndInEPSG4326).WithMessage(localizer["GeoPosicionInvalida"]);
+            .Must(geometryValidator.IsGeometryValidAndInEPSG4326).When(p => p.GeoPosicion != null)
+            .WithMessage(localizer["GeoPosicionInvalida"]);
     }
 }
