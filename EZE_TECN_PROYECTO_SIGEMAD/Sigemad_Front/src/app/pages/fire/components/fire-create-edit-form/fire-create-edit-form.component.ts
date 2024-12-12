@@ -77,7 +77,6 @@ const MY_DATE_FORMATS = {
   templateUrl: './fire-create-edit-form.component.html',
   styleUrl: './fire-create-edit-form.component.scss',
 })
-
 export class FireCreateEdit implements OnInit {
   constructor(
     private filtrosIncendioService: LocalFiltrosIncendio,
@@ -127,7 +126,7 @@ export class FireCreateEdit implements OnInit {
       province: new FormControl('', Validators.required),
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
-      startDate: new FormControl('', Validators.required),
+      startDate: new FormControl(new Date(), Validators.required),
       eventStatus: new FormControl('', Validators.required),
       generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
@@ -222,14 +221,14 @@ export class FireCreateEdit implements OnInit {
           .then((response) => {
             this.spinner.hide();
             this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro actualizado correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal({ refresh: true });
-          });
+              .showAlert({
+                title: 'Buen trabajo!',
+                text: 'Registro actualizado correctamente!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.closeModal({ refresh: true });
+              });
           })
           .catch((error) => {
             console.error('Error', error);
@@ -243,15 +242,15 @@ export class FireCreateEdit implements OnInit {
 
             this.spinner.hide();
             this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro subido correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal({ refresh: true });
-          });
-          /*
+              .showAlert({
+                title: 'Buen trabajo!',
+                text: 'Registro subido correctamente!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.closeModal({ refresh: true });
+              });
+            /*
             this.filtrosIncendioService.setFilters({});
             new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
               //this.router.navigate([`/fire`])

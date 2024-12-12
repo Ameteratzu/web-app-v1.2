@@ -74,7 +74,7 @@ export class FireCreateComponent implements OnInit {
     if (!this.data?.fireDetail?.id) {
       if (this.data?.valoresDefecto) {
         const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
-        this.estado = dataCordinacion.parametro.estadoIncendio.id;
+        this.estado = dataCordinacion.parametro?.estadoIncendio.id;
       }
       this.isDataReady = true;
       return;
@@ -124,6 +124,18 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
+
+    if (this.evolutionSevice.dataRecords().length === 0) {
+      this.alertService.showAlert({
+        title: 'Falta información',
+        text: 'Debe ingresar datos en Registro/Párametros',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      this.spinner.hide();
+      return;
+    }
+
     await this.processData();
 
     this.evolutionSevice.clearData();

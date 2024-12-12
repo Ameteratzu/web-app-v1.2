@@ -186,7 +186,7 @@ export class FireEditComponent implements OnInit {
       maxWidth: 'none',
       disableClose: true,
       data: {
-        title: 'Nuevo - Datos Evolución',
+        title: fireDetail ? 'Editar - Datos Evolución' : 'Nuevo - Datos Evolución',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
         valoresDefecto: resultado ? resultado.id : null,
@@ -207,7 +207,9 @@ export class FireEditComponent implements OnInit {
       height: '700px',
       disableClose: true,
       data: {
-        title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
+        title: fireDetail
+          ? 'Editar - Datos de dirección y coordinación de la emergencia'
+          : 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fire: this.fire,
         fireDetail,
@@ -228,7 +230,7 @@ export class FireEditComponent implements OnInit {
       //height: '90vh',
       disableClose: true,
       data: {
-        title: 'Nuevo - Otra Información',
+        title: fireDetail ? 'Editar - Otra Información' : 'Nuevo - Otra Información',
         fire: this.fire,
         fireDetail,
       },
@@ -251,7 +253,7 @@ export class FireEditComponent implements OnInit {
       //height: '90vh',
       disableClose: true,
       data: {
-        title: 'Nuevo - Documentación',
+        title: fireDetail ? 'Editar - Documentación' : 'Nuevo - Documentación',
         fire: this.fire,
         fireDetail,
       },
