@@ -9,8 +9,6 @@ export class TipoDocumentoService {
   get() {
     let endpoint = `/tipo-documentos`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 }

@@ -10,8 +10,6 @@ export class CamposImpactoService {
   getFieldsById(idImpacto: string) {
     let endpoint = `/campos-impactos/${idImpacto}`;
 
-    return firstValueFrom(
-      this.http.get<Campo[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Campo[]>(endpoint).pipe((response) => response));
   }
 }

@@ -1,46 +1,43 @@
 @use '../../../styles.scss' as theme;
 
 .container {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    padding-top: 0;
-  }
-  
-  .side-menu {
-    width: 200px;
-  }
-  
-  .mat-chip {
-    margin: 5px 0;
-    display: block;
-  }
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  padding-top: 0;
+}
 
-  .full-width-chip {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center; 
-    box-sizing: border-box;
-  }
+.side-menu {
+  width: 200px;
+}
 
-  .row {
-    display: flex;
-    width: 100%;
-  }
-  
-  .modal-header {
-    text-align: center;
-  }
+.mat-chip {
+  margin: 5px 0;
+  display: block;
+}
 
-  .title{
-    color: var(--fire-color);
-  }
+.full-width-chip {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
 
-  .component-width {
-    width: 100%;
-  }
+.row {
+  display: flex;
+  width: 100%;
+}
 
-  
+.modal-header {
+  text-align: center;
+}
 
+.title {
+  color: var(--fire-color);
+}
+
+.component-width {
+  width: 100%;
+}

@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
@@ -24,19 +18,9 @@ import { Territory } from '../../../../types/territory.type';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,6 +32,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { EventStatusService } from '../../../../services/eventStatus.service';
+import { AlertService } from '../../../../shared/alert/alert.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import { EventStatus } from '../../../../types/eventStatus.type';
@@ -104,7 +89,7 @@ export class FireCreateEdit implements OnInit {
     public eventStatusService: EventStatusService,
     public dialogRef: MatDialogRef<FireCreateEdit>,
     private matDialog: MatDialog,
-
+    public alertService: AlertService,
     private router: Router,
 
     @Inject(MAT_DIALOG_DATA) public data: { fire: any }
@@ -141,10 +126,9 @@ export class FireCreateEdit implements OnInit {
       province: new FormControl('', Validators.required),
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
-      startDate: new FormControl('', Validators.required),
-      generalNote: new FormControl('', Validators.required),
+      startDate: new FormControl(new Date(), Validators.required),
       eventStatus: new FormControl('', Validators.required),
-
+      generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
       country: new FormControl(''),
       ubication: new FormControl(''),
@@ -223,34 +207,28 @@ export class FireCreateEdit implements OnInit {
       this.spinner.show();
       const data = this.formData.value;
 
-      const municipio = this.municipalities().find(
-        (item) => item.id === data.municipality
-      );
+      const municipio = this.municipalities().find((item) => item.id === data.municipality);
 
       data.geoposition = {
         type: 'Polygon',
         coordinates: [this.polygon()],
       };
-      //data.geoposition = this.polygon
-      console.info('data', data);
+
       if (this.data.fire?.id) {
         data.id = this.data.fire.id;
         await this.fireService
           .update(data)
           .then((response) => {
-            //TODO toast
-            /*
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Modificado',
-            detail: 'Incendio modificado correctamente',
-          });
-          */
-            new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-              this.spinner.hide();
-              //this.router.navigate([`/fire`])
-              window.location.href = '/fire';
-            });
+            this.spinner.hide();
+            this.alertService
+              .showAlert({
+                title: 'Buen trabajo!',
+                text: 'Registro actualizado correctamente!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.closeModal({ refresh: true });
+              });
           })
           .catch((error) => {
             console.error('Error', error);
@@ -261,11 +239,24 @@ export class FireCreateEdit implements OnInit {
           .then((response) => {
             console.info('response', response);
             //TODO toast
+
+            this.spinner.hide();
+            this.alertService
+              .showAlert({
+                title: 'Buen trabajo!',
+                text: 'Registro subido correctamente!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.closeModal({ refresh: true });
+              });
+            /*
             this.filtrosIncendioService.setFilters({});
             new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
               //this.router.navigate([`/fire`])
               window.location.href = '/fire';
             });
+            */
           })
           .catch((error) => {
             console.log(error);
@@ -276,28 +267,20 @@ export class FireCreateEdit implements OnInit {
     }
   }
 
-  async setMunicipalityId(event: any) {
-    const municipality_id = event.value;
-    localStorage.setItem('municipality', municipality_id);
+  setMunicipalityId(event: any, op: any) {
+    const selectedItem = op.find((item: any) => item.id === event.value);
 
-    for (let municipality of this.municipalities()) {
-      if (municipality.id == Number(localStorage.getItem('municipality'))) {
-        this.municipalityName = municipality.descripcion;
-
-        this.formData.patchValue({
-          denomination: municipality.descripcion,
-        });
-      }
-    }
+    this.formData.patchValue({
+      denomination: selectedItem.descripcion,
+    });
+    this.polygon.set([]);
   }
 
   openModalMap() {
     if (!this.formData.value.municipality) {
       return;
     }
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipality
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality);
 
     if (!municipioSelected) {
       return;
@@ -315,18 +298,15 @@ export class FireCreateEdit implements OnInit {
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.featuresCoords = features;
-        console.info('features', features);
-        this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.featuresCoords = features;
+      console.info('features', features);
+      this.polygon.set(features);
+    });
   }
 
-  closeModal() {
-    //debugger
-    this.dialogRef.close();
+  closeModal(params?: any) {
+    this.dialogRef.close(params);
   }
 
   getForm(atributo: string): any {

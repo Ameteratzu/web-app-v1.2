@@ -1,36 +1,14 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MatExpansionModule,
-  MatExpansionPanel,
-} from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -108,7 +86,11 @@ const MY_DATE_FORMATS = {
 export class FireFilterFormComponent implements OnInit {
   @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
+  @Input() isLoading: boolean = true;
+  @Input() refreshFilterForm: boolean = true;
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
+  @Output() isLoadingChange = new EventEmitter<boolean>();
+  @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
   COUNTRIES_ID = {
     PORTUGAL: 1,
@@ -206,9 +188,7 @@ export class FireFilterFormComponent implements OnInit {
       eventStatus: new FormControl(initEventStatus ?? ''),
       CCAA: new FormControl(CCAA ?? ''),
       provincia: new FormControl(provincia ?? ''),
-      fechaInicio: new FormControl(
-        fechaInicio ?? moment().subtract(4, 'days').toDate()
-      ),
+      fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
     });
     this.formData.get('severityLevel')?.disable();
@@ -223,8 +203,7 @@ export class FireFilterFormComponent implements OnInit {
     //this.clearFormFilter();
     this.menuItemActiveService.set.emit('/fire');
 
-    const superficiesFiltro =
-      await this.superficiesService.getSuperficiesFiltro();
+    const superficiesFiltro = await this.superficiesService.getSuperficiesFiltro();
     this.superficiesFiltro.set(superficiesFiltro);
 
     const territories = await this.territoryService.get();
@@ -248,6 +227,12 @@ export class FireFilterFormComponent implements OnInit {
     this.loadCommunities();
 
     this.onSubmit();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('refreshFilterForm' in changes ) {
+      this.onSubmit()
+    }
   }
 
   toggleAccordion(panel: MatExpansionPanel) {
@@ -289,10 +274,7 @@ export class FireFilterFormComponent implements OnInit {
       this.autonomousCommunities.set([]);
       return;
     }
-    const autonomousCommunities =
-      await this.autonomousCommunityService.getByCountry(
-        country ?? this.formData.value.country
-      );
+    const autonomousCommunities = await this.autonomousCommunityService.getByCountry(country ?? this.formData.value.country);
     this.autonomousCommunities.set(autonomousCommunities);
   }
 
@@ -307,6 +289,16 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+  this.firesChange.emit({
+    count: 0,
+    page: 1,
+    pageSize: 10,
+    data: [],
+    pageCount: 0,
+  })
+    this.isLoading = true
+    this.isLoadingChange.emit(true)
+
     const {
       territory,
       country,
@@ -344,6 +336,8 @@ export class FireFilterFormComponent implements OnInit {
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
+    this.isLoadingChange.emit(false)
+    this.isLoading = false
   }
 
   clearFormFilter() {
@@ -383,6 +377,7 @@ export class FireFilterFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Modal result:', result);
+        this.onSubmit();
       }
     });
   }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { FireService } from '../../services/fire.service';
 import { LocalFiltrosIncendio } from '../../services/local-filtro-incendio.service';
@@ -11,12 +12,15 @@ import { FireTableComponent } from './components/fire-table/fire-table.component
 @Component({
   selector: 'app-fire',
   standalone: true,
-  imports: [CommonModule, FireFilterFormComponent, FireTableComponent],
+  imports: [CommonModule, FireFilterFormComponent, FireTableComponent, RouterOutlet],
   templateUrl: './fire.component.html',
   styleUrl: './fire.component.scss',
 })
 export class FireComponent implements OnInit {
   public filtros = signal<any>({});
+
+  public isLoading = true
+  public refreshFilterForm = true
 
   public fires: ApiResponse<Fire[]> = {
     count: 0,
@@ -30,8 +34,8 @@ export class FireComponent implements OnInit {
   public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
   async ngOnInit() {
-    const fires = await this.fireService.get();
-    this.fires = fires;
+    //const fires = await this.fireService.get();
+    //this.fires = fires;
     this.filtros.set(this.filtrosIncendioService.getFilters());
   }
 }

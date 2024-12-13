@@ -9,9 +9,7 @@ export class AreasAffectedService {
   getByEvolution(id: Number) {
     let endpoint = `/areas-afectadas/evolucion/${id}`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
   post(body: any) {

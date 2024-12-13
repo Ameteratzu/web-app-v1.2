@@ -8,9 +8,8 @@ describe('CecopiComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CecopiComponent]
-    })
-    .compileComponents();
+      imports: [CecopiComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CecopiComponent);
     component = fixture.componentInstance;

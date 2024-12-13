@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, OnInit, Output, runInInjectionContext, signal } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InputOutputService } from '../../../services/input-output.service';
 import { MediaService } from '../../../services/media.service';
@@ -16,14 +16,9 @@ import { SituationsEquivalent } from '../../../types/situations-equivalent.type'
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';
@@ -37,13 +32,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EvolucionIncendio } from '../../../types/evolution-record.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -67,7 +63,7 @@ const MY_DATE_FORMATS = {
     MatFormFieldModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   templateUrl: './records.component.html',
   styleUrl: './records.component.scss',
@@ -77,10 +73,30 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
-
-  @Output() save = new EventEmitter<boolean>();
-  private fb = inject(FormBuilder); 
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  @Output() save = new EventEmitter<SavePayloadModal>();
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+  @Input() estadoIncendio: any;
+
+  formDataSignal = signal({
+    inputOutput: 1,
+    startDate: new Date(),
+    media: 1,
+    originDestination: <OriginDestination[]>[],
+    datetimeUpdate: new Date(),
+    observations_1: '',
+    forecast: '',
+    status: 1,
+    end_date: new Date(),
+    emergencyPlanActivated: '',
+    phases: '',
+    nivel: '',
+    operativa: '',
+    afectada: null,
+  });
+
+  private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   public inputOutputService = inject(InputOutputService);
   public mediaService = inject(MediaService);
@@ -92,8 +108,10 @@ export class RecordsComponent implements OnInit {
 
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
-  
+
   formData!: FormGroup;
+  private environmentInjector = inject(EnvironmentInjector);
+
   public inputOutputs = signal<InputOutput[]>([]);
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
@@ -121,83 +139,130 @@ export class RecordsComponent implements OnInit {
     const situationsEquivalent = await this.situationEquivalentService.get();
     this.situationEquivalent.set(situationsEquivalent);
 
+    this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
+
     this.formData = this.fb.group({
-      inputOutput : ['', Validators.required],
-      startDate: [new Date(), Validators.required],
-      media: [1, Validators.required],
-      originDestination: ['', Validators.required],
-      datetimeUpdate: [new Date(), Validators.required],
-      observations_1: [''],
-      forecast: [''],
-      status: [1, Validators.required],
-      end_date: [new Date(), Validators.required],
-      emergencyPlanActivated: [''],
-      phases: [''],
-      nivel: [''],
-      operativa: [''],
-      afectada: [null, Validators.required],
+      inputOutput: [this.formDataSignal().inputOutput, Validators.required],
+      startDate: [this.formDataSignal().startDate, Validators.required],
+      media: [this.formDataSignal().media, Validators.required],
+      originDestination: [this.formDataSignal().originDestination, Validators.required],
+      datetimeUpdate: [this.formDataSignal().datetimeUpdate, Validators.required],
+      observations_1: [this.formDataSignal().observations_1],
+      forecast: [this.formDataSignal().forecast],
+      status: [this.formDataSignal().status, Validators.required],
+      end_date: [this.formDataSignal().end_date],
+      emergencyPlanActivated: [this.formDataSignal().emergencyPlanActivated],
+      phases: [this.formDataSignal().phases],
+      nivel: [this.formDataSignal().nivel],
+      operativa: [this.formDataSignal().operativa],
+      afectada: [this.formDataSignal().afectada],
+    });
+
+    runInInjectionContext(this.environmentInjector, () => {
+      effect(() => {
+        const data = this.formDataSignal();
+        this.formData.patchValue(data, { emitEvent: false });
+      });
+
+      this.formData.valueChanges.subscribe((values) => {
+        this.formDataSignal.set({ ...this.formDataSignal(), ...values });
+      });
     });
 
     this.formData.get('emergencyPlanActivated')?.disable();
     this.formData.get('phases')?.disable();
     this.formData.get('nivel')?.disable();
     this.formData.get('operativa')?.disable();
+    this.formData.get('end_date')?.disable();
+
+    if (this.editData) {
+      console.log('Información recibida en el hijo:', this.editData);
+      if (this.evolutionSevice.dataRecords().length === 0) {
+        this.updateFormWithJson(this.editData);
+      }
+    }
+    this.spinner.hide();
+  }
+
+  updateFormWithJson(json: any) {
+    const procedenciasSelecteds = () => {
+      const idsABuscar = json.registro?.procedenciaDestinos?.map((obj: any) => Number(obj.id)) || [];
+      return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
+    };
+
+    this.formDataSignal.set({
+      inputOutput: json.registro?.entradaSalida?.id || '',
+      startDate: json.registro?.fechaHoraEvolucion ? new Date(json.registro.fechaHoraEvolucion) : new Date(),
+      media: json.registro?.medio?.id || '',
+      originDestination: procedenciasSelecteds(),
+      datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
+      observations_1: json.datoPrincipal?.observaciones || '',
+      forecast: json.datoPrincipal?.prevision || '',
+      status: json.parametro?.estadoIncendio?.id || '',
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : new Date(),
+      emergencyPlanActivated: json.parametro?.planEmergenciaActivado || '',
+      phases: json.parametro?.fase?.id || '',
+      nivel: json.parametro?.situacionEquivalente?.id || '',
+      operativa: json.parametro?.situacionOperativa?.id || '',
+      afectada: json.parametro?.superficieAfectadaHectarea || null,
+    });
   }
 
   async sendDataToEndpoint() {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-  
+      formValues.end_date;
       const newRecord: EvolucionIncendio = {
-        idIncendio:  this.data.idIncendio,
+        idEvolucion: null,
+        idIncendio: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: formValues.startDate.toISOString(),
           idEntradaSalida: formValues.inputOutput,
-          idMedio: formValues.media
+          idMedio: formValues.media,
+          registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
         },
         datoPrincipal: {
           fechaHora: formValues.datetimeUpdate.toISOString(),
           observaciones: formValues.observations_1,
-          prevision: formValues.forecast
+          prevision: formValues.forecast,
         },
         parametro: {
           idEstadoIncendio: formValues.status,
-          fechaFinal: formValues.end_date.toISOString(),
-          superficieAfectadaHectarea:  formValues.afectada, 
-          planEmergenciaActivado: "",
+          fechaFinal: formValues.end_date ? formValues.end_date.toISOString() : '',
+          superficieAfectadaHectarea: formValues.afectada,
+          planEmergenciaActivado: '',
           idFase: 1,
-          idSituacionOperativa: 1, 
-          idSituacionEquivalente: 1 
+          idSituacionOperativa: 1,
+          idSituacionEquivalente: 1,
         },
-        registroProcedenciasDestinos: [] 
       };
-  
+
       this.evolutionSevice.dataRecords.update((records) => [newRecord, ...records]);
-  
-      this.save.emit(true);
+
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       this.formData.markAllAsTouched();
       this.spinner.hide();
     }
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
-  allowOnlyNumbers(event: KeyboardEvent): void {
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
+  allowOnlyNumbersAndDecimal(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
   }
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -205,8 +270,11 @@ export class RecordsComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  closeModal(){
-    this.matDialog.closeAll();
+  closeModal() {
+    this.save.emit({ save: false, delete: false, close: true, update: false });
   }
 
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
+  }
 }

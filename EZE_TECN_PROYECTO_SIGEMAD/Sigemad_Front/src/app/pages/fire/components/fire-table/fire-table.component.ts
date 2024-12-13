@@ -1,13 +1,8 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -21,10 +16,14 @@ import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.c
   standalone: true,
   templateUrl: './fire-table.component.html',
   styleUrls: ['./fire-table.component.scss'],
-  imports: [MatPaginatorModule, MatTableModule, MatDialogModule],
+  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule],
 })
 export class FireTableComponent implements OnChanges {
   @Input() fires: Fire[] = [];
+  @Input() isLoading: boolean = true;
+  @Input() refreshFilterForm: boolean = true;
+
+  @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
   public dataSource = new MatTableDataSource<Fire>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -32,16 +31,7 @@ export class FireTableComponent implements OnChanges {
   public router = inject(Router);
   private dialog = inject(MatDialog);
 
-  public displayedColumns: string[] = [
-    'denominacion',
-    'fechaInicio',
-    'estado',
-    'ngp',
-    'maxNgp',
-    'ubicacion',
-    'ultimoRegistro',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['denominacion', 'fechaInicio', 'estado', 'ngp', 'maxNgp', 'ubicacion', 'ultimoRegistro', 'opciones'];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fires'] && this.fires) {
@@ -55,7 +45,7 @@ export class FireTableComponent implements OnChanges {
   }
 
   goToEdit(fire: Fire) {
-    this.router.navigate([`/fire-national-edit/${fire.id}`]);
+    this.router.navigate([`fire/fire-national-edit/${fire.id}`]);
   }
 
   goToEditFire(fire: Fire) {}
@@ -98,9 +88,7 @@ export class FireTableComponent implements OnChanges {
 
   getLastUpdated(fire: Fire) {
     const { fechaInicio, fechaModificacion } = fire;
-    return fechaModificacion
-      ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm')
-      : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+    return fechaModificacion ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm') : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
   }
 
   goModalEdit(fire: Fire) {
@@ -114,8 +102,8 @@ export class FireTableComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Modal result:', result);
+      if(result?.refresh){
+        this.refreshFilterFormChange.emit(!this.refreshFilterForm)
       }
     });
   }

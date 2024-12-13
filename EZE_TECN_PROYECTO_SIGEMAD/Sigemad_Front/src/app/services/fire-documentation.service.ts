@@ -9,9 +9,7 @@ export class FireDocumentationService {
   getById(id: Number) {
     let endpoint = `/Documentaciones/${id}`;
 
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
   post(data: any) {
     const endpoint = '/Documentaciones';
@@ -25,6 +23,15 @@ export class FireDocumentationService {
           return throwError(error.error);
         })
       )
+    );
+  }
+
+  //delete
+  delete(id: number) {
+    const endpoint = `/Documentaciones/${id}`;
+
+    return firstValueFrom(
+      this.http.delete(endpoint).pipe((response) => response)
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
@@ -8,11 +8,13 @@ import { ConsequencesComponent } from './consequences/consequences.component';
 import { InterventionComponent } from './intervention/intervention.component';
 import { AreaComponent } from './area/area.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EvolutionService } from '../../services/evolution.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
+import { FireDetail } from '../../types/fire-detail.type';
+import { Router } from '@angular/router';
+import { AlertService } from '../../shared/alert/alert.service';
 
 @Component({
   selector: 'app-fire-create',
@@ -28,25 +30,33 @@ import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
     ConsequencesComponent,
     InterventionComponent,
     AreaComponent,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   animations: [
     trigger('fadeInOut', [
-      state('void', style({ opacity: 0, transform: 'translateY(20px)' })), 
-      transition(':enter', [animate('900ms ease-out')]), 
-      transition(':leave', [animate('0ms ease-in')])   
-    ])
-  ]
+      state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
+      transition(':enter', [animate('900ms ease-out')]),
+      transition(':leave', [animate('0ms ease-in')]),
+    ]),
+  ],
 })
 export class FireCreateComponent implements OnInit {
-
+  private dialogRef = inject(MatDialogRef<FireCreateComponent>);
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
-  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  data = inject(MAT_DIALOG_DATA) as {
+    title: string;
+    idIncendio: number;
+    fireDetail?: FireDetail;
+    valoresDefecto?: number;
+  };
+
   public evolutionSevice = inject(EvolutionService);
   public matDialog = inject(MatDialog);
-  public toast = inject(MatSnackBar);
   private spinner = inject(NgxSpinnerService);
-  
+  public renderer = inject(Renderer2);
+  public router = inject(Router);
+  public alertService = inject(AlertService);
+
   readonly sections = [
     { id: 1, label: 'Registro / Parámetros' },
     { id: 2, label: 'Área afectada' },
@@ -54,103 +64,154 @@ export class FireCreateComponent implements OnInit {
     { id: 4, label: 'Intervención de medios' },
   ];
 
+  editData: any;
+  isDataReady = false;
+  idReturn = null;
+  isEdit = false;
+  estado: number | undefined;
 
-  async ngOnInit() {
-  }
-
-  async onSaveFromChild(value: boolean) {
-    if(value){
-
-      await this.processData();
-
-      this.evolutionSevice.clearData();
-      this.closeModal();
-      this.spinner.hide();
-      this.showToast();
-
-    }else{
-      this.evolutionSevice.clearData();
-      this.closeModal();
+  async isToEditDocumentation() {
+    if (!this.data?.fireDetail?.id) {
+      if (this.data?.valoresDefecto) {
+        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
+        this.estado = dataCordinacion.parametro?.estadoIncendio.id;
+      }
+      this.isDataReady = true;
+      return;
     }
 
+    const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.fireDetail.id));
+
+    this.editData = dataCordinacion;
+    this.isDataReady = true;
+  }
+
+  async ngOnInit() {
+    this.spinner.show();
+    this.isToEditDocumentation();
+  }
+
+  async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
+    const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find((key) => value[key]);
+    this.isEdit = false;
+
+    if (keyWithTrue) {
+      switch (keyWithTrue) {
+        case 'save':
+          this.save();
+          break;
+        case 'delete':
+          this.delete();
+          break;
+        case 'close':
+          this.spinner.hide();
+          this.evolutionSevice.clearData();
+          this.closeModal(true);
+          break;
+        case 'update':
+          this.isEdit = true;
+          this.save();
+          break;
+        default:
+          console.error('Clave inesperada');
+      }
+    } else {
+      console.log('Ninguna clave tiene valor true');
+    }
+  }
+
+  async save() {
+    this.spinner.show();
+    const toolbar = document.querySelector('mat-toolbar');
+    this.renderer.setStyle(toolbar, 'z-index', '1');
+
+    if (this.evolutionSevice.dataRecords().length === 0) {
+      this.alertService.showAlert({
+        title: 'Falta información',
+        text: 'Debe ingresar datos en Registro/Párametros',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+      });
+      this.spinner.hide();
+      return;
+    }
+
+    await this.processData();
+
+    this.evolutionSevice.clearData();
+
+    setTimeout(() => {
+      this.renderer.setStyle(toolbar, 'z-index', '5');
+      this.alertService
+        .showAlert({
+          title: 'Buen trabajo!',
+          text: 'Registro subido correctamente!',
+          icon: 'success',
+        })
+        .then(async (result) => {
+          this.isDataReady = false;
+          const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
+          this.editData = dataCordinacion;
+          this.isDataReady = true;
+          this.spinner.hide();
+        });
+    }, 2000);
   }
 
   async processData(): Promise<void> {
-
-    if(this.evolutionSevice.dataRecords().length > 0){
-      const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
+    if (this.evolutionSevice.dataRecords().length > 0) {
+      this.editData ? (this.idReturn = this.editData.id) : 0;
+      this.idReturn ? (this.evolutionSevice.dataRecords()[0].idEvolucion = this.idReturn) : 0;
+      const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
+      this.idReturn = result.id;
     }
 
     await this.handleDataProcessing(
       this.evolutionSevice.dataAffectedArea(),
       (item) => ({
-        fechaHora: this.formatDate(item.fechaHora), // Formatea la fecha de cada área
-        idProvincia: item.idProvincia.id,
-        idMunicipio: item.idMunicipio.id,
-        idEntidadMenor: item.idEntidadMenor ? item.idEntidadMenor : null,
+        id: item.id ?? 0,
+        fechaHora: this.formatDate(item.fechaHora),
+        idProvincia: item.provincia.id ?? item.provincia,
+        idMunicipio: item.municipio.id ?? item.municipio,
+        idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
         observaciones: item.observaciones,
-        GeoPosicion: { type: 'Point', coordinates: [null, null] },
+        GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
       }),
       this.evolutionSevice.postAreas.bind(this.evolutionSevice),
       'areasAfectadas'
     );
-
-  
-    // await this.handleDataProcessing(
-    //   this.coordinationServices.dataCecopi(),
-    //   (item) => ({
-    //     idProvincia: Number(item.idProvincia.id),
-    //     idMunicipio: Number(item.idMunicipio.id),
-    //     fechaInicio: this.formatDate(item.fechaInicio),
-    //     lugar: String(item.lugar),
-    //     fechaFin: this.formatDate(item.fechaFin),
-    //     GeoPosicion: { type: 'Point', coordinates: [null, null] },
-    //   }),
-    //   this.coordinationServices.postCecopi.bind(this.coordinationServices),
-    //   'coordinaciones'
-    // );
-  
-  
   }
-     
 
-
-  // async onSaveFromChild() {
-  //   console.log(`Guardar desde el componente:`);
-  //   console.log("🚀 ~ FireCreateComponent ~ onSaveFromChild ~ this.coordinationServices.dataCoordinationAddress():", this.evolutionSevice.dataRecords())
-  //   const result = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
-
-
-  //   if (this.evolutionSevice.dataAffectedArea().length > 0){
-   
-  //     for (const item of this.evolutionSevice.dataAffectedArea()) {
-  //       const body = await this.getFormattedDataAreas(item)
-  //       const result = await this.evolutionSevice.postAreas(body);
-  //     }
-  //   }
-
-  //   this.evolutionSevice.clearData();
-  //   this.closeModal();
-  //   this.spinner.hide();
-  //   this.showToast();
-  // }
-
-  async handleDataProcessing<T>(
-    data: T[],
-    formatter: (item: T) => any,
-    postService: (body: any) => Promise<any>,
-    key: string
-  ): Promise<void> {
+  async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
     if (data.length > 0) {
       const formattedData = data.map(formatter);
-  
+
       const body = {
         idIncendio: this.data.idIncendio,
-        [key]: formattedData, 
+        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        [key]: formattedData,
       };
-  
+
       const result = await postService(body);
+      console.log('🚀 ~ result:', result);
+      console.log('🚀 ~ result:', result);
+      this.idReturn = result.idEvolucion;
     }
+  }
+
+  isGeoPosicionValid(data: any): boolean {
+    const geoPosicion = data?.geoPosicion;
+
+    if (!geoPosicion || geoPosicion.type !== 'Polygon' || !Array.isArray(geoPosicion.coordinates)) {
+      return false;
+    }
+
+    return geoPosicion.coordinates.every(
+      (polygon: any[]) =>
+        Array.isArray(polygon) &&
+        polygon.length > 0 &&
+        polygon.every((point) => Array.isArray(point) && point.length === 2 && point.every((coord) => typeof coord === 'number'))
+    );
   }
 
   formatDate(date: Date | string): string {
@@ -166,18 +227,48 @@ export class FireCreateComponent implements OnInit {
   }
 
   onSelectionChange(event: MatChipListboxChange): void {
+    this.spinner.show();
     this.selectedOption = event;
   }
 
-  closeModal(){
-    this.matDialog.closeAll();
+  closeModal(value: boolean) {
+    this.dialogRef.close(value);
   }
 
-  showToast() {
-    this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
+  async delete() {
+    const toolbar = document.querySelector('mat-toolbar');
+    this.renderer.setStyle(toolbar, 'z-index', '1');
+    this.spinner.show();
+
+    this.alertService
+      .showAlert({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await this.evolutionSevice.delete(Number(this.data?.fireDetail?.id));
+          this.evolutionSevice.clearData();
+          setTimeout(() => {
+            this.renderer.setStyle(toolbar, 'z-index', '5');
+            this.spinner.hide();
+          }, 2000);
+
+          this.alertService
+            .showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            })
+            .then((result) => {
+              this.closeModal(true);
+            });
+        } else {
+          this.spinner.hide();
+        }
+      });
   }
 }

@@ -12,8 +12,6 @@ export class SituationsEquivalentService {
     //const endpoint = '/NivelGravedad'; ANTIGUO
     const endpoint = '/situaciones-equivalentes';
 
-    return firstValueFrom(
-      this.http.get<SituationsEquivalent[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<SituationsEquivalent[]>(endpoint).pipe((response) => response));
   }
 }

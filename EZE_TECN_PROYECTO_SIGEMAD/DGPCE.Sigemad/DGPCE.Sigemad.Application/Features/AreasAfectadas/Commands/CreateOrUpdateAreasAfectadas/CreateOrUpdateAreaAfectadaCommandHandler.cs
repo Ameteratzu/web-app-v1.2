@@ -44,7 +44,7 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
         if (request.IdEvolucion.HasValue)
         {
             var spec = new EvolucionByIdWithAreaAfectadaSpecification(request.IdEvolucion.Value);
-            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion.Value);
+            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(spec);
             if (evolucion is null)
             {
                 _logger.LogWarning($"idEvolucion: {request.IdEvolucion}, no encontrado");
@@ -166,10 +166,6 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
                 _unitOfWork.Repository<AreaAfectada>().DeleteEntity(area);
             }
         }
-
-
-        //Guardar en base de datos
-        evolucion.AreaAfectadas = _mapper.Map<ICollection<AreaAfectada>>(request.AreasAfectadas);
 
         if (request.IdEvolucion.HasValue)
         {

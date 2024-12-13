@@ -6,10 +6,11 @@ public class IncendioWithAllRegistrosSpecification : BaseSpecification<Incendio>
     public IncendioWithAllRegistrosSpecification(int idIncendio)
         : base(i => i.Id == idIncendio && i.Borrado == false)
     {
-        AddInclude(i => i.Evoluciones); // Incluir Datos de Evolución
-        AddInclude(i => i.Documentaciones);
-        AddInclude(i => i.OtraInformaciones); // Incluir Otra Información
-        AddInclude(i => i.DireccionCoordinacionEmergencias); // Incluir Dirección y Coordinación
+
+        AddInclude(i => i.Evoluciones.Where(dir => !dir.Borrado));
+        AddInclude(i => i.Documentaciones.Where(dir => !dir.Borrado));
+        AddInclude(i => i.OtraInformaciones.Where(dir => !dir.Borrado));
+        AddInclude(i => i.DireccionCoordinacionEmergencias.Where(dir => !dir.Borrado));
     }
 }
 

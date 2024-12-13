@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,21 +14,16 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
 import { MediaService } from '../../services/media.service';
 import { OriginDestinationService } from '../../services/origin-destination.service';
+import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
-  
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -87,7 +77,8 @@ export class FireOtherInformationComponent implements OnInit {
     private mediaService: MediaService,
     private dialogRef: MatDialogRef<FireOtherInformationComponent>,
     private otherInformationService: FireOtherInformationService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public alertService: AlertService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -119,13 +110,7 @@ export class FireOtherInformationComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = [
-    'fecha',
-    'procendenciaDestino',
-    'medio',
-    'asunto',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['fecha', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
 
   async ngOnInit() {
     this.formData = this.fb.group({
@@ -150,9 +135,7 @@ export class FireOtherInformationComponent implements OnInit {
     if (!this.dataProps?.fireDetail?.id) {
       return;
     }
-    const dataOtraInformacion: any = await this.otherInformationService.getById(
-      Number(this.dataProps.fireDetail.id)
-    );
+    const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fireDetail.id));
 
     const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
       id: otraInformacion.id,
@@ -171,7 +154,7 @@ export class FireOtherInformationComponent implements OnInit {
     return item.id;
   }
 
-  onSubmit() {
+  onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -180,6 +163,7 @@ export class FireOtherInformationComponent implements OnInit {
         this.editarItem(this.isCreate());
       }
 
+      formDirective.resetForm();
       this.formData.reset();
     } else {
       this.formData.markAllAsTouched();
@@ -197,7 +181,7 @@ export class FireOtherInformationComponent implements OnInit {
       this.isSaving.set(false);
       return;
     }
-  
+
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
@@ -205,9 +189,7 @@ export class FireOtherInformationComponent implements OnInit {
         idMedio: item.medio?.id ?? null,
         asunto: item.asunto,
         observaciones: item.observaciones,
-        idsProcedenciasDestinos: item.procendenciaDestino.map(
-          (procendenciaDestino) => procendenciaDestino.id
-        ),
+        idsProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino) => procendenciaDestino.id),
       };
     });
     const objToSave = {
@@ -218,18 +200,20 @@ export class FireOtherInformationComponent implements OnInit {
 
     try {
       this.spinner.show();
-      const resp: { idOtraInformacion: string | number } | any =
-        await this.otherInformationService.post(objToSave);
+      const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
-        this.showToast({ title: 'Registro guardado' });
+        this.isSaving.set(false);
+        this.spinner.hide();
 
-        setTimeout(() => {
-          this.isSaving.set(false);
-          this.spinner.hide();
-          window.location.href = `fire-national-edit/${
-            this.dataProps?.fire?.id ?? 1
-          }`;
-        }, 2000);
+        this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro subido correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal({ refresh: true });
+          });
       } else {
         this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
@@ -240,19 +224,52 @@ export class FireOtherInformationComponent implements OnInit {
     }
   }
 
+  async delete() {
+    //const toolbar = document.querySelector('mat-toolbar');
+    //this.renderer.setStyle(toolbar, 'z-index', '1');
+    this.spinner.show();
+
+    this.alertService
+      .showAlert({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await this.otherInformationService.delete(
+            Number(this.dataProps?.fireDetail?.id)
+          );
+          //this.coordinationServices.clearData();
+          //setTimeout(() => {
+          //this.renderer.setStyle(toolbar, 'z-index', '5');
+          this.spinner.hide();
+          //}, 2000);
+
+          this.alertService
+            .showAlert({
+              title: 'Eliminado!',
+              icon: 'success',
+            })
+            .then((result) => {
+              this.closeModal({ refresh: true });
+            });
+        } else {
+          this.spinner.hide();
+        }
+      });
+  }
+
   seleccionarItem(index: number) {
     this.isCreate.set(index);
 
-    const medioSelected = () =>
-      this.listadoMedios().find(
-        (medio) =>
-          medio.id === Number(this.dataOtherInformation()[index].medio.id)
-      );
+    const medioSelected = () => this.listadoMedios().find((medio) => medio.id === Number(this.dataOtherInformation()[index].medio.id));
 
     const procedenciasSelecteds = () => {
-      const idsABuscar = this.dataOtherInformation()[
-        index
-      ].procendenciaDestino.map((obj: any) => Number(obj.id));
+      const idsABuscar = this.dataOtherInformation()[index].procendenciaDestino.map((obj: any) => Number(obj.id));
       return this.listadoProcedenciaDestino().filter((procedencia) => {
         return idsABuscar.includes(Number(procedencia.id));
       });
@@ -288,8 +305,8 @@ export class FireOtherInformationComponent implements OnInit {
     return moment(date).format('DD/MM/YY');
   }
 
-  closeModal() {
-    this.dialogRef.close();
+  closeModal(params?: any) {
+    this.dialogRef.close(params);
   }
 
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {

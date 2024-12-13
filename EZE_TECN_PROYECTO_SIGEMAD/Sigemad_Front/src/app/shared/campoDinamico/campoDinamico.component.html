@@ -4,13 +4,7 @@
       <!-- Checkbox -->
 
       <div class="" *ngSwitchCase="'checkbox'">
-        <input
-          class="form-check-input"
-          [formControlName]="campo.campo"
-          type="checkbox"
-          id="flexCheckDefault"
-          [required]="campo.esObligatorio"
-        />
+        <input class="form-check-input" [formControlName]="campo.campo" type="checkbox" id="flexCheckDefault" [required]="campo.esObligatorio" />
         <label class="form-check-label" for="flexCheckDefault">
           {{ campo.campo }}
         </label>
@@ -55,13 +49,7 @@
       <!-- Geometry / MAP-->
       <div *ngSwitchCase="'map'">
         <b>{{ campo.campo }}</b>
-        <img
-          src="/assets/img/location-btn.svg"
-          height="20px"
-          alt="location"
-          class="cursor-pointer"
-          (click)="openModalMapCreate('campo.campo')"
-        />
+        <img src="/assets/img/location-btn.svg" height="20px" alt="location" class="cursor-pointer" (click)="openModalMapCreate('campo.campo')" />
       </div>
 
       <!-- Select -->
@@ -121,8 +109,6 @@
     </ng-container>
 
     <!-- Mensaje de error para campos obligatorios -->
-    <div *ngIf="form.get(campo.campo)?.hasError('required')">
-      Este campo es obligatorio.
-    </div>
+    <div *ngIf="form.get(campo.campo)?.hasError('required')">Este campo es obligatorio.</div>
   </div>
 </form>
