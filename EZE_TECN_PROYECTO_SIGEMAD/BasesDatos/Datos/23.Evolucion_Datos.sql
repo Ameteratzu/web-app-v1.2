@@ -55,6 +55,7 @@ values  (1, N'0'),
         (2, N'1'),
         (3, N'2'),
         (4, N'3'),
-        (5, N'4');
+        (5, N'E'),
+        (6, N'-');
 
 SET IDENTITY_INSERT dbo.SituacionEquivalente OFF;

@@ -1,4 +1,27 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
+DROP TABLE IF EXISTS ActivacionPlanEmergencia
+GO
+
+DROP TABLE IF EXISTS ActivacionPlanesEmergencia
+GO
+
+DROP TABLE IF EXISTS PlanEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS AmbitoPlan
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS TipoPlan
+GO
 
 DROP TABLE IF EXISTS Documentacion_ProcedenciaDestino
 GO
@@ -31,18 +54,6 @@ GO
 DROP TABLE IF EXISTS SuperficieFiltro
 GO
 
-DROP TABLE IF EXISTS ActivacionPlanEmergencia
-GO
-
-DROP TABLE IF EXISTS ActivacionPlanesEmergencia
-GO
-
-DROP TABLE IF EXISTS PlanEmergencia
-GO
-
-DROP TABLE IF EXISTS TipoPlanMapeo
-GO
-
 DROP TABLE IF EXISTS CoordinacionCecopi
 GO
 
@@ -53,15 +64,6 @@ DROP TABLE IF EXISTS Direccion
 GO
 
 DROP TABLE IF EXISTS DireccionCoordinacionEmergencia
-GO
-
-DROP TABLE IF EXISTS TipoRiesgo
-GO
-
-DROP TABLE IF EXISTS TipoPlanMapeo
-GO
-
-DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS TipoDireccionEmergencia
