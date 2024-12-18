@@ -48,6 +48,7 @@ using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
+using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
@@ -241,6 +242,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
             .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
+
+
+        CreateMap<PlanEmergencia, PlanEmergenciaVm>();
     }
 
     /*

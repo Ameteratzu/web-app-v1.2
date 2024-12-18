@@ -117,6 +117,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Fase>().ToTable(nameof(Fase));
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
+            modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
         }
 
 
@@ -185,6 +186,12 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<DetalleDocumentacion> DetalleDocumentaciones { get; set; }
         public DbSet<DocumentacionProcedenciaDestino> DocumentacionProcedenciaDestinos { get; set; }
+
+        public DbSet<AmbitoPlan> AmbitoPlanes { get; set; }
+
+        public DbSet<TipoRiesgo> TipoRiesgos { get; set; }
+
+        public DbSet<PlanEmergencia> PlanesEmergencias { get; set; }
 
     }
 }
