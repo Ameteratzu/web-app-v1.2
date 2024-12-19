@@ -155,6 +155,9 @@ GO
 DROP TABLE IF EXISTS Evolucion
 GO
 
+DROP TABLE IF EXISTS PlanSituacion
+GO
+
 DROP TABLE IF EXISTS FaseEmergencia
 GO
 
