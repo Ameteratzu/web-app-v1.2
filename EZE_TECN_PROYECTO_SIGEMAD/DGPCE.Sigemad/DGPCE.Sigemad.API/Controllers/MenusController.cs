@@ -7,7 +7,7 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-[Authorize]
+[Authorize(Policy = "RequiereAutorizacion")]
 [Route("api/v1/[controller]")]
 [ApiController]
 public class MenusController : ControllerBase

@@ -50,6 +50,9 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 // Configura la política predeterminada para permitir a todos
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("RequiereAutorizacion", policy =>
+        policy.RequireAuthenticatedUser()); // Requiere que el usuario esté autenticado
+
     options.DefaultPolicy = new AuthorizationPolicyBuilder()
         .RequireAssertion(_ => true) // Permitir a todos
         .Build();
@@ -74,8 +77,6 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
-
-//app.UseAuthentication();
 
 app.UseAuthorization();
 
