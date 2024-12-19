@@ -183,15 +183,12 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<TipoDocumento> TipoDocumentos { get; set; }
         public DbSet<Documentacion> Documentaciones { get; set; }
-
         public DbSet<DetalleDocumentacion> DetalleDocumentaciones { get; set; }
         public DbSet<DocumentacionProcedenciaDestino> DocumentacionProcedenciaDestinos { get; set; }
-
         public DbSet<AmbitoPlan> AmbitoPlanes { get; set; }
-
         public DbSet<TipoRiesgo> TipoRiesgos { get; set; }
-
         public DbSet<PlanEmergencia> PlanesEmergencias { get; set; }
+        public DbSet<ModoActivacion> ModosActivacion { get; set; }
 
     }
 }
