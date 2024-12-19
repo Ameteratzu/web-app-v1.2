@@ -48,6 +48,17 @@ CREATE TABLE FaseEmergencia (
     Descripcion NVARCHAR(255) NULL
 );
 
+CREATE TABLE PlanSituacion (
+    Id INT NOT NULL PRIMARY KEY,
+    IdPlanEmergencia INT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
+    IdFaseEmergencia INT NULL FOREIGN KEY REFERENCES FaseEmergencia(Id),
+    Orden INT NOT NULL,
+    Descripcion NVARCHAR(MAX) NULL,
+    Nivel NVARCHAR(150) NULL,
+    Situacion NVARCHAR(150) NULL,
+    SituacionEquivalente NVARCHAR(150) NULL
+);
+
 CREATE TABLE TipoSistemaEmergencia (
     Id INT NOT NULL PRIMARY KEY,
     Descripcion NVARCHAR(255) NULL
