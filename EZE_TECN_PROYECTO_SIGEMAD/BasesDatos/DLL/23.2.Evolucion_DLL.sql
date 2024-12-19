@@ -1,21 +1,4 @@
-DROP TABLE IF EXISTS dbo.Evolucion;
-GO
-
-DROP TABLE IF EXISTS dbo.SituacionOperativa;
-GO
-
-
 CREATE TABLE dbo.SituacionOperativa (
-	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-	Descripcion NVARCHAR(255) NOT NULL,
-);
-
-CREATE TABLE dbo.Fase (
-	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
-	Descripcion NVARCHAR(255) NOT NULL,
-);
-
-CREATE TABLE dbo.SituacionEquivalente (
 	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	Descripcion NVARCHAR(255) NOT NULL,
 );
@@ -87,9 +70,9 @@ CREATE TABLE dbo.Parametro (
     FechaFinal DATETIME2(7) NULL,
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     PlanEmergenciaActivado NVARCHAR(255) NULL,
-    IdFase INT NULL FOREIGN KEY REFERENCES Fase(Id),
-    IdSituacionOperativa int NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
-    IdSituacionEquivalente INT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
+    IdFaseEmergencia INT NULL FOREIGN KEY REFERENCES FaseEmergencia(Id),
+    --IdSituacionOperativa int NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
+    --IdSituacionEquivalente INT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
