@@ -714,3 +714,7 @@ INSERT INTO TipoSistemaEmergenciaTipoSuceso (Id,IdTipoSistemaEmergencia,IdTipoSu
 	 (5,5,15),
 	 (6,5,16),
 	 (7,6,12);
+
+INSERT INTO ModoActivacion (Id,Descripcion) VALUES
+	 (1,N'Rapid Mapping'),
+	 (2,N'Risk and Recovery');

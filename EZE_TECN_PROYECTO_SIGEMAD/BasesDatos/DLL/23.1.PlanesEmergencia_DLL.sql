@@ -72,7 +72,7 @@ CREATE TABLE ModoActivacion (
 -- Tabla principal para almacenar la información general de Actuaciones Relevantes
 CREATE TABLE ActuacionRelevanteDGPCE (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
+    IdSuceso INT NOT NULL FOREIGN KEY REFERENCES Suceso(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
@@ -156,7 +156,7 @@ CREATE TABLE ActivacionSistema (
     -- Copernicus
     IdModoActivacion INT NULL FOREIGN KEY REFERENCES ModoActivacion(Id),
     FechaActivacion DATE NULL,
-    Codigo NVARCHAR(50) NULL,
+    Codigo NVARCHAR(15) NULL,
     Nombre NVARCHAR(150) NULL,
     UrlAcceso NVARCHAR(MAX) NULL,
     -- Copernicus
@@ -193,8 +193,7 @@ CREATE TABLE DeclaracionZAGEP (
 
 
 CREATE TABLE EmergenciaNacional (
-    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdActuacionRelevanteDGPCE INT NOT NULL FOREIGN KEY REFERENCES ActuacionRelevanteDGPCE(Id),
+    Id INT PRIMARY KEY FOREIGN KEY REFERENCES ActuacionRelevanteDGPCE(Id),
     Autoridad NVARCHAR(255) NULL,
     DescripcionSolicitud NVARCHAR(255) NULL,
     FechaHoraSolicitud DATETIME2(7) NULL,
