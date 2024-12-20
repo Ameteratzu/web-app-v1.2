@@ -10,23 +10,23 @@ namespace DGPCE.Sigemad.API.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("/api/v1/fases")]
-public class FasesController : Controller
+[Route("/api/v1/fases-emergencia")]
+public class FasesEmergenciaController : Controller
 {
     private readonly IMediator _mediator;
 
-    public FasesController(IMediator mediator)
+    public FasesEmergenciaController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet()]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado completo de fases")]
-    public async Task<ActionResult<IReadOnlyList<Fase>>> GetAll()
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado de las fases de emergencia completas o filtradas por el plan de emergencia")]
+    public async Task<ActionResult<IReadOnlyList<FaseEmergencia>>> GetAll([FromQuery] int? idPlanEmergencia)
     {
-        var query = new GetFasesListQuery();
+        var query = new GetFasesEmergenciaListByIdPlanEmergenciaQuery(idPlanEmergencia);
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }

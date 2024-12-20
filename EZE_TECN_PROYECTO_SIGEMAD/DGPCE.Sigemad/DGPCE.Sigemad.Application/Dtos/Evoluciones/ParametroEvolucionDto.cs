@@ -16,7 +16,7 @@ public class ParametroEvolucionDto
 
     public EstadoIncendio EstadoIncendio { get; set; }
 
-    public Fase? Fase { get; set; }
+    public FaseEmergencia? Fase { get; set; }
 
     public SituacionOperativa? SituacionOperativa { get; set; }
 

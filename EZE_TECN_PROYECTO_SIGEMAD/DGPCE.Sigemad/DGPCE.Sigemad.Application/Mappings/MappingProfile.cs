@@ -35,6 +35,7 @@ using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
+using DGPCE.Sigemad.Application.Features.Fases.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
@@ -242,9 +243,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
             .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
-
-
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
+        CreateMap<FaseEmergencia, FaseEmergenciaVm>();
     }
 
     /*
