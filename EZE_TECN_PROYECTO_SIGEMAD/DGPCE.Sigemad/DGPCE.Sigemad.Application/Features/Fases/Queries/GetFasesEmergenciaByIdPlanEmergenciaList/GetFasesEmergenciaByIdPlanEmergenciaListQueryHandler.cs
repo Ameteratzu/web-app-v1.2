@@ -5,20 +5,20 @@ using DGPCE.Sigemad.Application.Specifications.FasesEmergencia;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Fases.Queries;
+namespace DGPCE.Sigemad.Application.Features.Fases.Queries.GetFasesEmergenciaListByIdPlanEmergencia;
 
-public class GetFasesEmergenciaListByIdPlanEmergenciaQueryHandler : IRequestHandler<GetFasesEmergenciaListByIdPlanEmergenciaQuery, IReadOnlyList<FaseEmergenciaVm>>
+public class GetFasesEmergenciaByIdPlanEmergenciaListQueryHandler : IRequestHandler<GetFasesEmergenciaByIdPlanEmergenciaListQuery, IReadOnlyList<FaseEmergenciaVm>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public GetFasesEmergenciaListByIdPlanEmergenciaQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetFasesEmergenciaByIdPlanEmergenciaListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<FaseEmergenciaVm>> Handle(GetFasesEmergenciaListByIdPlanEmergenciaQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<FaseEmergenciaVm>> Handle(GetFasesEmergenciaByIdPlanEmergenciaListQuery request, CancellationToken cancellationToken)
     {
 
         var faseEmergenciaParams = new FasesEmergenciaParams

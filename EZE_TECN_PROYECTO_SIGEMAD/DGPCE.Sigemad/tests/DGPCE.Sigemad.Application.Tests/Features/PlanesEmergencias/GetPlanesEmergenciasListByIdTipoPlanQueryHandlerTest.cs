@@ -2,16 +2,11 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Queries.GetPlanesEmergenciasByIdTipoPlan;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
-using DGPCE.Sigemad.Application.Features.TipoPlanes.Quereis.GetTipoPlanesList;
 using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DGPCE.Sigemad.Application.Tests.Features.PlanesEmergencias;
 public class GetPlanesEmergenciasListByIdTipoPlanQueryHandlerTest

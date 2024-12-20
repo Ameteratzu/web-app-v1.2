@@ -50,6 +50,7 @@ using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtras
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
+using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
@@ -245,6 +246,7 @@ public class MappingProfile : Profile
 
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
+        CreateMap<PlanSituacion, PlanSituacionVm>();
     }
 
     /*

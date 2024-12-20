@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Fases.Queries;
+using DGPCE.Sigemad.Application.Features.Fases.Queries.GetFasesEmergenciaListByIdPlanEmergencia;
 using DGPCE.Sigemad.Application.Features.Fases.Vms;
 using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -12,20 +12,20 @@ public class GetFasesEmergenciaListByIdPlanEmergenciaQueryHandlerTest
 {
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
-    private readonly GetFasesEmergenciaListByIdPlanEmergenciaQueryHandler _handler;
+    private readonly GetFasesEmergenciaByIdPlanEmergenciaListQueryHandler _handler;
 
     public GetFasesEmergenciaListByIdPlanEmergenciaQueryHandlerTest()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
-        _handler = new GetFasesEmergenciaListByIdPlanEmergenciaQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
+        _handler = new GetFasesEmergenciaByIdPlanEmergenciaListQueryHandler(_unitOfWorkMock.Object, _mapperMock.Object);
     }
 
     [Fact]
     public async Task Handle_ValidQuery_ShouldReturnListFaseEmergenciaVm()
     {
         // Arrange
-        var request = new GetFasesEmergenciaListByIdPlanEmergenciaQuery(1);
+        var request = new GetFasesEmergenciaByIdPlanEmergenciaListQuery(1);
 
         var fasesEmergencias = new List<FaseEmergencia>
         {
@@ -63,7 +63,7 @@ public class GetFasesEmergenciaListByIdPlanEmergenciaQueryHandlerTest
     public async Task Handle_WithNoFasesEmergencia_ShouldReturnEmptyList()
     {
         // Arrange
-        var query = new GetFasesEmergenciaListByIdPlanEmergenciaQuery(8);
+        var query = new GetFasesEmergenciaByIdPlanEmergenciaListQuery(8);
         var fasesEmergenciaList = new List<FaseEmergencia>();
 
         _unitOfWorkMock.Setup(m => m.Repository<FaseEmergencia>().GetAllWithSpec(It.IsAny<ISpecification<FaseEmergencia>>()))
@@ -84,7 +84,7 @@ public class GetFasesEmergenciaListByIdPlanEmergenciaQueryHandlerTest
     public async Task Handle_WithAllFasesEmergencia_ShouldReturnEmptyList()
     {
         // Arrange
-        var request = new GetFasesEmergenciaListByIdPlanEmergenciaQuery(null);
+        var request = new GetFasesEmergenciaByIdPlanEmergenciaListQuery(null);
         var fasesEmergencias = new List<FaseEmergencia>
         {
             new FaseEmergencia { Id = 1, Descripcion = "Fase A", IdPlanEmergencia = 1 },
