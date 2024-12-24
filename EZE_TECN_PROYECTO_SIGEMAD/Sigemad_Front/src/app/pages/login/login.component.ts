@@ -61,9 +61,10 @@ export class Login implements OnInit {
       };
       await this.authService
         .post(body)
-        .then((response) => {
+        .then((response: any) => {
           //TODO toast
           console.info('response', response);
+          sessionStorage.setItem('jwtToken', response.token)
           new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
             this.spinner.hide();
             this.router.navigate([`/dashboard`]);
