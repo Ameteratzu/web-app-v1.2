@@ -47,6 +47,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.AddSupportedUICultures(supportedCultures);
 });
 
+/*
 // Configura la política predeterminada para permitir a todos
 builder.Services.AddAuthorization(options =>
 {
@@ -57,7 +58,7 @@ builder.Services.AddAuthorization(options =>
         .RequireAssertion(_ => true) // Permitir a todos
         .Build();
 });
-
+*/
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
