@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Queries.GetPlanesEmergenciasByIdTipoPlan;
 using DGPCE.Sigemad.Application.Features.TipoPlanes.Quereis.GetTipoPlanesList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -28,6 +29,19 @@ public class TipoPlanesController : ControllerBase
     public async Task<ActionResult<IReadOnlyList<TipoPlan>>> GetAll()
     {
         var query = new GetTipoPlanesListQuery();
+        var listado = await _mediator.Send(query);
+        return Ok(listado);
+    }
+
+
+
+    [HttpGet("{idTipoPlan}/planes-emergencias")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene la lista de planes de emergencias asociado al tipo de plan")]
+    public async Task<ActionResult<IReadOnlyList<TipoPlan>>> GetPlanesEmergenciaByIdTipoPlan(int idTipoPlan)
+    {
+        var query = new GetPlanesEmergenciasListByIdTipoPlanQuery(idTipoPlan);
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }

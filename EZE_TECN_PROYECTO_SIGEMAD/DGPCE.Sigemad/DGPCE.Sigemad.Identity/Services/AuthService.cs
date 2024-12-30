@@ -340,7 +340,7 @@ namespace DGPCE.Sigemad.Identity.Services
                 IsRevoked = false,
                 UserId = user.Id,
                 CreatedDate = DateTime.UtcNow,
-                ExpireDate = DateTime.UtcNow.AddMonths(6),
+                ExpireDate = DateTime.UtcNow.AddMinutes(1),
                 Token = $"{GenerateRandomTokenCharacters(35)}{Guid.NewGuid()}"
             };
 

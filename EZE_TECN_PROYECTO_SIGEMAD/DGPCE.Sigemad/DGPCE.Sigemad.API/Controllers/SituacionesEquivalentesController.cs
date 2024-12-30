@@ -25,7 +25,7 @@ public class SituacionesEquivalentesController : Controller
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado completo de situaciones equivalentes")]
-    public async Task<ActionResult<IReadOnlyList<Fase>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<FaseEmergencia>>> GetAll()
     {
         var query = new GetSituacionesEquivalentesListQuery();
         var listado = await _mediator.Send(query);

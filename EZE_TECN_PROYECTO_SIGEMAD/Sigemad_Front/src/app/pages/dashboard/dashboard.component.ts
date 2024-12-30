@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Chart } from 'chart.js/auto';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { Draw, Modify, Snap } from 'ol/interaction';
@@ -24,8 +23,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  public chart!: Chart;
-
   public draw!: Draw;
   public source!: VectorSource;
   public map!: Map;
@@ -97,26 +94,6 @@ export class DashboardComponent {
         },
       ],
     };
-
-    this.chart = new Chart('chart', {
-      type: 'bar',
-      data,
-      options: {
-        plugins: {
-          legend: {
-            display: true,
-            align: 'center',
-            position: 'bottom',
-          },
-        },
-        scales: {
-          y: {
-            suggestedMin: 0,
-            suggestedMax: 7,
-          },
-        },
-      },
-    });
   }
 
   addInteractions() {

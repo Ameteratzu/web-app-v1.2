@@ -114,9 +114,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
             modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
             modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
-            modelBuilder.Entity<Fase>().ToTable(nameof(Fase));
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
+            modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
         }
 
 
@@ -172,7 +172,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<DetalleOtraInformacion_ProcedenciaDestino> DetallesOtraInformacion_ProcedenciaDestinos { get; set; }
 
         public DbSet<SucesoRelacionado> SucesosRelacionados { get; set; }
-        public DbSet<Fase> Fases { get; set; }
+        public DbSet<FaseEmergencia> FasesEmergencia { get; set; }
         public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
 
         public DbSet<Registro> Registros { get; set; }
@@ -182,9 +182,16 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<TipoDocumento> TipoDocumentos { get; set; }
         public DbSet<Documentacion> Documentaciones { get; set; }
-
         public DbSet<DetalleDocumentacion> DetalleDocumentaciones { get; set; }
         public DbSet<DocumentacionProcedenciaDestino> DocumentacionProcedenciaDestinos { get; set; }
+        public DbSet<AmbitoPlan> AmbitoPlanes { get; set; }
+        public DbSet<TipoRiesgo> TipoRiesgos { get; set; }
+        public DbSet<PlanEmergencia> PlanesEmergencias { get; set; }
+        public DbSet<ModoActivacion> ModosActivacion { get; set; }
+
+        public DbSet<TipoSistemaEmergencia> TiposSistemasEmergencias { get; set; }
+
+        public DbSet<PlanSituacion> PlanesSituaciones { get; set; }
 
     }
 }

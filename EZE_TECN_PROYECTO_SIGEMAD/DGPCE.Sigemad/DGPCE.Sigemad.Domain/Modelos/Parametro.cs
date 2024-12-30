@@ -21,7 +21,7 @@ public class Parametro : BaseDomainModel<int>
 
     public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
 
-    public virtual Fase Fase { get; set; } = null!;
+    public virtual FaseEmergencia Fase { get; set; } = null!;
 
     public virtual SituacionOperativa SituacionOperativa { get; set; } = null!;
 

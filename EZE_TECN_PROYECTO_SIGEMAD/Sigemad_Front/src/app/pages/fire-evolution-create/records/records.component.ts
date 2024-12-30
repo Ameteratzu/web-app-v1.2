@@ -73,8 +73,14 @@ const MY_DATE_FORMATS = {
   ],
 })
 export class RecordsComponent implements OnInit {
+  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
+  @Output() save = new EventEmitter<SavePayloadModal>();
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+  @Input() estadoIncendio: any;
+
   formDataSignal = signal({
-    inputOutput: '',
+    inputOutput: 1,
     startDate: new Date(),
     media: 1,
     originDestination: <OriginDestination[]>[],
@@ -89,11 +95,6 @@ export class RecordsComponent implements OnInit {
     operativa: '',
     afectada: null,
   });
-
-  data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
-  @Output() save = new EventEmitter<SavePayloadModal>();
-  @Input() editData: any;
-  @Input() esUltimo: boolean | undefined;
 
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
@@ -138,6 +139,8 @@ export class RecordsComponent implements OnInit {
     const situationsEquivalent = await this.situationEquivalentService.get();
     this.situationEquivalent.set(situationsEquivalent);
 
+    this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
+
     this.formData = this.fb.group({
       inputOutput: [this.formDataSignal().inputOutput, Validators.required],
       startDate: [this.formDataSignal().startDate, Validators.required],
@@ -147,12 +150,12 @@ export class RecordsComponent implements OnInit {
       observations_1: [this.formDataSignal().observations_1],
       forecast: [this.formDataSignal().forecast],
       status: [this.formDataSignal().status, Validators.required],
-      end_date: [this.formDataSignal().end_date, Validators.required],
+      end_date: [this.formDataSignal().end_date],
       emergencyPlanActivated: [this.formDataSignal().emergencyPlanActivated],
       phases: [this.formDataSignal().phases],
       nivel: [this.formDataSignal().nivel],
       operativa: [this.formDataSignal().operativa],
-      afectada: [this.formDataSignal().afectada, Validators.required],
+      afectada: [this.formDataSignal().afectada],
     });
 
     runInInjectionContext(this.environmentInjector, () => {
@@ -170,6 +173,7 @@ export class RecordsComponent implements OnInit {
     this.formData.get('phases')?.disable();
     this.formData.get('nivel')?.disable();
     this.formData.get('operativa')?.disable();
+    this.formData.get('end_date')?.disable();
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
@@ -208,7 +212,7 @@ export class RecordsComponent implements OnInit {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-
+      formValues.end_date;
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
         idIncendio: this.data.idIncendio,
@@ -225,7 +229,7 @@ export class RecordsComponent implements OnInit {
         },
         parametro: {
           idEstadoIncendio: formValues.status,
-          fechaFinal: formValues.end_date.toISOString(),
+          fechaFinal: formValues.end_date ? formValues.end_date.toISOString() : '',
           superficieAfectadaHectarea: formValues.afectada,
           planEmergenciaActivado: '',
           idFase: 1,

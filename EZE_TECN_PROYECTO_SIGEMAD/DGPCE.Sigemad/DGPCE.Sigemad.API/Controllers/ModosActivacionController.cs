@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.API.Constants;using DGPCE.Sigemad.Application.Features.Fases.Queries;
+﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Features.ModosActivacion.Queries.GetModosActivacionList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -9,13 +10,13 @@ using System.Net;
 namespace DGPCE.Sigemad.API.Controllers;
 
 [Authorize]
+[Route("api/v1/modos-activacion")]
 [ApiController]
-[Route("/api/v1/fases")]
-public class FasesController : Controller
+public class ModosActivacionController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public FasesController(IMediator mediator)
+    public ModosActivacionController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -23,10 +24,10 @@ public class FasesController : Controller
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene el listado completo de fases")]
-    public async Task<ActionResult<IReadOnlyList<Fase>>> GetAll()
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los modos de activacion")]
+    public async Task<ActionResult<IReadOnlyList<ModoActivacion>>> GetAll()
     {
-        var query = new GetFasesListQuery();
+        var query = new GetModosActivacionListQuery();
         var listado = await _mediator.Send(query);
         return Ok(listado);
     }

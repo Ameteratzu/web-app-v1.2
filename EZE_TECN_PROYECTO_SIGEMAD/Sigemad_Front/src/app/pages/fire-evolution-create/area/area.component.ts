@@ -143,7 +143,6 @@ export class AreaComponent {
   onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
-
       if (this.isCreate() == -1) {
         data.geoPosicion = {
           type: 'Polygon',
@@ -219,6 +218,9 @@ export class AreaComponent {
       this.formData.get('entidadMenor')?.setValue(data.entidadMenor);
     }
 
+    this.formData.get('entidadMenor')?.enable();
+    this.formData.get('municipio')?.enable();
+
     this.spinner.hide();
   }
 
@@ -265,7 +267,6 @@ export class AreaComponent {
   }
 
   openModalMap() {
-    console.info('this.formData.value.idMunicipio', this.formData.value);
     if (!this.formData.value.municipio) {
       return;
     }
@@ -291,5 +292,9 @@ export class AreaComponent {
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       this.polygon.set(features);
     });
+  }
+
+  isInteger(value: any): boolean {
+    return Number.isInteger(value);
   }
 }

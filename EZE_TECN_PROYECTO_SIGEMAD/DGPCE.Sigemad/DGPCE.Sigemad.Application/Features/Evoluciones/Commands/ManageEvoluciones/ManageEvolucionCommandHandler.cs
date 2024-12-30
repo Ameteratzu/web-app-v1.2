@@ -161,11 +161,11 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
 
         if (request.IdFase != null)
         {
-            var fase = await _unitOfWork.Repository<Fase>().GetByIdAsync((int)request.IdFase);
+            var fase = await _unitOfWork.Repository<FaseEmergencia>().GetByIdAsync((int)request.IdFase);
             if (fase is null)
             {
                 _logger.LogWarning($"request.IdFase: {request.IdFase}, no encontrado");
-                throw new NotFoundException(nameof(Fase), request.IdFase);
+                throw new NotFoundException(nameof(FaseEmergencia), request.IdFase);
             }
         }
 

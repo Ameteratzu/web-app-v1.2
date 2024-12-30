@@ -1,5 +1,45 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
 
+DROP TABLE IF EXISTS EmergenciaNacional
+GO
+
+DROP TABLE IF EXISTS DeclaracionZAGEP
+GO
+
+DROP TABLE IF EXISTS ActivacionSistema
+GO
+
+DROP TABLE IF EXISTS NotificacionEmergencia
+GO
+
+DROP TABLE IF EXISTS ActivacionPlanEmergencia
+GO
+
+DROP TABLE IF EXISTS ConvocatoriaCECOD
+GO
+
+DROP TABLE IF EXISTS ActuacionRelevanteDGPCE
+GO
+
+DROP TABLE IF EXISTS ModoActivacion
+GO
+
+
+DROP TABLE IF EXISTS ActivacionPlanEmergencia
+GO
+
+DROP TABLE IF EXISTS ActivacionPlanesEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoSistemaEmergenciaTipoSuceso
+GO
+
+DROP TABLE IF EXISTS TipoSistemaEmergencia
+GO
+
+DROP TABLE IF EXISTS TIpoSistemaEmergencia
+GO
+
 DROP TABLE IF EXISTS Documentacion_ProcedenciaDestino
 GO
 
@@ -31,18 +71,6 @@ GO
 DROP TABLE IF EXISTS SuperficieFiltro
 GO
 
-DROP TABLE IF EXISTS ActivacionPlanEmergencia
-GO
-
-DROP TABLE IF EXISTS ActivacionPlanesEmergencia
-GO
-
-DROP TABLE IF EXISTS PlanEmergencia
-GO
-
-DROP TABLE IF EXISTS TipoPlanMapeo
-GO
-
 DROP TABLE IF EXISTS CoordinacionCecopi
 GO
 
@@ -53,15 +81,6 @@ DROP TABLE IF EXISTS Direccion
 GO
 
 DROP TABLE IF EXISTS DireccionCoordinacionEmergencia
-GO
-
-DROP TABLE IF EXISTS TipoRiesgo
-GO
-
-DROP TABLE IF EXISTS TipoPlanMapeo
-GO
-
-DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS TipoDireccionEmergencia
@@ -100,10 +119,8 @@ GO
 DROP TABLE IF EXISTS AreaAfectada
 GO
 
-
 DROP TABLE IF EXISTS Parametro
 GO
-
 
 DROP TABLE IF EXISTS DatoPrincipal
 GO
@@ -123,10 +140,8 @@ GO
 DROP TABLE IF EXISTS Datoprincipal
 GO
 
-
 DROP TABLE IF EXISTS Registro
 GO
-
 
 DROP TABLE IF EXISTS Evolucion_ProcedenciaDestino
 GO
@@ -138,6 +153,30 @@ DROP TABLE IF EXISTS Parametro
 GO
 
 DROP TABLE IF EXISTS Evolucion
+GO
+
+DROP TABLE IF EXISTS PlanSituacion
+GO
+
+DROP TABLE IF EXISTS FaseEmergencia
+GO
+
+DROP TABLE IF EXISTS PlanEmergencia
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS AmbitoPlan
+GO
+
+DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS TipoPlanMapeo
+GO
+
+DROP TABLE IF EXISTS TipoPlan
 GO
 
 DROP TABLE IF EXISTS SituacionOperativa

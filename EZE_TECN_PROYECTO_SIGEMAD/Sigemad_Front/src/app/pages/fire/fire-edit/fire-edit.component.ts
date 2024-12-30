@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  inject,
-  OnInit,
-  Renderer2,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -42,7 +35,6 @@ import { FireStatus } from '../../../types/fire-status.type';
 import { Fire } from '../../../types/fire.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
-
 
 import { Router } from '@angular/router';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
@@ -142,9 +134,7 @@ export class FireEditComponent implements OnInit {
 
     this.fire = fire;
 
-    const municipalities = await this.municipalityService.get(
-      this.fire.idProvincia
-    );
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
     this.municipalities.set(municipalities);
 
     await this.cargarRegistros();
@@ -188,15 +178,18 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEvolution(fireDetail?: FireDetail) {
+    const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
+
     const dialogRef = this.matDialog.open(FireCreateComponent, {
       width: '90vw',
       height: '90vh',
       maxWidth: 'none',
       disableClose: true,
       data: {
-        title: 'Nuevo - Datos Evolución',
+        title: fireDetail ? 'Editar - Datos Evolución' : 'Nuevo - Datos Evolución',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
+        valoresDefecto: resultado ? resultado.id : null,
       },
     });
 
@@ -214,7 +207,9 @@ export class FireEditComponent implements OnInit {
       height: '700px',
       disableClose: true,
       data: {
-        title: 'Nuevo - Datos de dirección y coordinación de la emergencia',
+        title: fireDetail
+          ? 'Editar - Datos de dirección y coordinación de la emergencia'
+          : 'Nuevo - Datos de dirección y coordinación de la emergencia',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fire: this.fire,
         fireDetail,
@@ -235,7 +230,7 @@ export class FireEditComponent implements OnInit {
       //height: '90vh',
       disableClose: true,
       data: {
-        title: 'Nuevo - Otra Información',
+        title: fireDetail ? 'Editar - Otra Información' : 'Nuevo - Otra Información',
         fire: this.fire,
         fireDetail,
       },
@@ -258,7 +253,7 @@ export class FireEditComponent implements OnInit {
       //height: '90vh',
       disableClose: true,
       data: {
-        title: 'Nuevo - Documentación',
+        title: fireDetail ? 'Editar - Documentación' : 'Nuevo - Documentación',
         fire: this.fire,
         fireDetail,
       },
@@ -336,9 +331,7 @@ export class FireEditComponent implements OnInit {
       return;
     }
 
-    const municipioSelected = this.municipalities().find(
-      (item) => item.id == this.formData.value.municipality.id
-    );
+    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipality.id);
 
     if (!municipioSelected) {
       return;
@@ -353,15 +346,13 @@ export class FireEditComponent implements OnInit {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.fire.geoPosicion.coordinates[0],
-        onlyView: true
+        onlyView: true,
       },
     });
 
-    dialogRef.componentInstance.save.subscribe(
-      (features: Feature<Geometry>[]) => {
-        //this.polygon.set(features);
-      }
-    );
+    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
+      //this.polygon.set(features);
+    });
   }
 
   goModalConfirm(): void {
