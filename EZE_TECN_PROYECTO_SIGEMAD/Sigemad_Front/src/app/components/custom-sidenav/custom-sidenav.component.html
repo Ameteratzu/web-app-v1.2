@@ -44,3 +44,15 @@
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
   <p style="color: white">Cargando...</p>
 </ngx-spinner>
+
+<div class="user-label" *ngIf="!sideNavCollapsed()">
+
+  <div class="user-info">
+    <mat-icon matListItemIcon>account_circle</mat-icon>
+    <span>Usuario: {{ userName }}</span>
+    <div class="logout" (click)="logout()">
+      <mat-icon matListItemIcon (click)="logout()">logout</mat-icon>
+      <span (click)="logout()">Cerrar sesión</span>
+    </div>
+  </div>
+</div>
