@@ -11,8 +11,6 @@ export class FireStatusService {
   get() {
     const endpoint = '/estados-incendios';
 
-    return firstValueFrom(
-      this.http.get<FireStatus[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<FireStatus[]>(endpoint).pipe((response) => response));
   }
 }

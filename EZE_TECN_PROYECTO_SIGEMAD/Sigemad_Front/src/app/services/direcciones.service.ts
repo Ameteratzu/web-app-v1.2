@@ -8,10 +8,7 @@ export class DireccionesService {
 
   getAllDirecciones() {
     let endpoint = `/tipos-direcciones-emergencias`;
-    
-    return firstValueFrom(
-      this.http.get<any[]>(endpoint).pipe((response) => response)
-    );
-  }
 
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
 }

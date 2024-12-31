@@ -1,33 +1,66 @@
 @use '../../m3-theme.scss' as theme;
 @use '@angular/material' as mat;
 
-  .content {
-    padding: 24px;
-    background-color: rgb(234, 234, 234);
-  }
+.content {
+  padding: 24px;
+  background-color: rgb(234, 234, 234);
+}
 
-  mat-toolbar {
-    position: relative;
-    z-index: 5;
-  }
+.nav-miga-pan{
+  padding: 0px 12px 12px;
+}
 
-  mat-sidenav-container{
-    height: calc(100vh - 64px);
-  }
+mat-toolbar {
+  position: relative;
+  z-index: 5;
+}
 
-  .toolbar-title {
-    margin: 0 auto; 
-    text-align: center;
-    color: var( --primary-50);
-    font-weight: 500;
-  }
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
 
-  mat-sidenav, mat-sidenav-content {
-    transition: all 500ms ease-in-out;
-  }
+.toolbar-title {
+  margin: 0 auto;
+  text-align: center;
+  color: var(--primary-50);
+  font-weight: 500;
+}
 
-  ::ng-deep .mat-mdc-form-field-error-wrapper {
-    padding: 0 !important;
-  }
+mat-sidenav,
+mat-sidenav-content {
+  transition: all 500ms ease-in-out;
+}
 
-  
+::ng-deep .mat-mdc-form-field-error-wrapper {
+  padding: 0 !important;
+}
+
+
+.breadcrumb {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  margin-right: 5px;
+}
+
+.breadcrumb-item::after {
+  content: '/';
+  margin-left: 0.5rem;
+}
+.breadcrumb-item.active::after {
+  content: '';
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: var(--primary-50) !important;
+  cursor: pointer;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}

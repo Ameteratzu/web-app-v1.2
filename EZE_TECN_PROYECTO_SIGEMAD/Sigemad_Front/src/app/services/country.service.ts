@@ -9,24 +9,18 @@ export class CountryService {
 
   getExtranjeros() {
     const endpoint = '/paises?mostrarNacional=false';
-    return firstValueFrom(
-      this.http.get<Countries[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Countries[]>(endpoint).pipe((response) => response));
   }
 
   getNacionales() {
     const endpoint = '/paises?mostrarNacional=true';
 
-    return firstValueFrom(
-      this.http.get<Countries[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Countries[]>(endpoint).pipe((response) => response));
   }
 
   get() {
     let endpoint = '/paises';
 
-    return firstValueFrom(
-      this.http.get<Countries[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Countries[]>(endpoint).pipe((response) => response));
   }
 }

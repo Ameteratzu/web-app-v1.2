@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
@@ -17,12 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Campo } from '../../types/Campo.type';
 import { MapCreateComponent } from '../mapCreate/map-create.component';
@@ -68,10 +56,7 @@ export class CampoDinamico implements OnInit {
 
     this.campos.forEach((campo) => {
       const validators = campo.esObligatorio ? [Validators.required] : [];
-      this.form.addControl(
-        campo.campo,
-        new FormControl(campo?.initValue || null)
-      );
+      this.form.addControl(campo.campo, new FormControl(campo?.initValue || null));
     });
   }
 

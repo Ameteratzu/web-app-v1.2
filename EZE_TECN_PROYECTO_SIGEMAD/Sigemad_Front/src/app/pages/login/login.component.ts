@@ -3,13 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
-  
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+
 @Component({
   selector: 'fire-create-edit',
   standalone: true,
@@ -34,7 +28,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [],
   templateUrl: './login.component.html',
@@ -44,7 +38,10 @@ export class Login implements OnInit {
   public formData!: FormGroup;
   private spinner = inject(NgxSpinnerService);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     this.formData = new FormGroup({
@@ -56,7 +53,7 @@ export class Login implements OnInit {
   async onSubmit() {
     this.formData.markAllAsTouched();
     if (this.formData.valid) {
-      this.spinner.show()
+      this.spinner.show();
       const data = this.formData.value;
       const body = {
         email: data.usuario,
@@ -68,10 +65,9 @@ export class Login implements OnInit {
           //TODO toast
           console.info('response', response);
           new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-            this.spinner.hide()
-            this.router.navigate([`/dashboard`])
-          }
-          );
+            this.spinner.hide();
+            this.router.navigate([`/dashboard`]);
+          });
         })
         .catch((error) => {
           this.formData.reset();

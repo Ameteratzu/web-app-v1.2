@@ -50,6 +50,22 @@ VALUES (
     0  -- Sin fallos de acceso
 );
 
+-- Insert for Sigemad tempora
+INSERT INTO [AspNetUsers] ([Id], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount])
+VALUES (
+    '0C942A28-96D1-408D-BD5B-6185212B1B1B', 'sigemad', 'SIGEMAD', 'sigemad@sigemad.com', 'SIGEMAD@SIGEMAD.COM',
+    1, -- Email confirmado
+    'AQAAAAEAACcQAAAAECxCbHO2Bd0R9J7kBz6DH+ndUhHk0hifdcNQVg+btQUaV6jT5AuiQf61SPPoFEeb6w==', -- No necesita un hash de contraseña
+    'ED685813-F655-4FAC-85D1-A64FE9160355', -- SecurityStamp generado
+    'C80C76B7-55E9-4A65-B47A-0BD3BE6A7C14', -- ConcurrencyStamp generado
+    NULL, -- Sin teléfono
+    0, -- No se requiere confirmación de teléfono
+    0, -- Sin autenticación de dos factores
+    NULL, -- No hay fin de bloqueo
+    0, -- Bloqueo deshabilitado
+    0  -- Sin fallos de acceso
+);
+
 -- ============================
 -- Para tabla ApplicationUsers
 -- ============================
@@ -74,6 +90,20 @@ VALUES (
     'Usuario',
     'Del Sistema',
     'system@domain.com',
+    '', -- Sin teléfono
+    GETDATE(),
+    NULL, -- Este es el primer registro, por lo tanto CreadoPor puede ser NULL
+    0 -- No borrado
+);
+
+INSERT INTO [ApplicationUsers] ([Id], [IdentityId], [Nombre], [Apellidos], [Email], [Telefono], [FechaCreacion], [CreadoPor], [Borrado]
+)
+VALUES (
+    '0C942A28-96D1-408D-BD5B-6185212B1B1B',
+    '0C942A28-96D1-408D-BD5B-6185212B1B1B',
+    'sigemad',
+    'sigemad',
+    'sigemad@sigemad.com',
     '', -- Sin teléfono
     GETDATE(),
     NULL, -- Este es el primer registro, por lo tanto CreadoPor puede ser NULL

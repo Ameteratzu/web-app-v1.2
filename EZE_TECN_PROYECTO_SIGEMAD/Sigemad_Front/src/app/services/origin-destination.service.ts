@@ -10,8 +10,6 @@ export class OriginDestinationService {
   get() {
     const endpoint = '/procedencias-destinos';
 
-    return firstValueFrom(
-      this.http.get<OriginDestination[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<OriginDestination[]>(endpoint).pipe((response) => response));
   }
 }

@@ -3,15 +3,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  NativeDateAdapter,
-} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout'; 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { CoordinationAddress } from '../../../types/coordination-address';
@@ -24,7 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { EvolutionService } from '../../../services/evolution.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ProvinceService } from '../../../services/province.service';
 import { Province } from '../../../types/province.type';
 import { MunicipalityService } from '../../../services/municipality.service';
@@ -37,7 +32,7 @@ const MY_DATE_FORMATS = {
     dateInput: 'LL',
   },
   display: {
-    dateInput: 'LL', 
+    dateInput: 'LL',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -48,10 +43,10 @@ const MY_DATE_FORMATS = {
   selector: 'app-consequences',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
-    MatDatepickerModule, 
-    MatNativeDateModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
     MatInputModule,
     FlexLayoutModule,
@@ -60,18 +55,16 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     MatIconModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './consequences.component.html',
-  styleUrl: './consequences.component.scss'
+  styleUrl: './consequences.component.scss',
 })
-
 export class ConsequencesComponent {
-
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<boolean>();
@@ -83,14 +76,8 @@ export class ConsequencesComponent {
   private spinner = inject(NgxSpinnerService);
   private municipalityService = inject(MunicipalityService);
   private minorService = inject(MinorEntityService);
-  
- public displayedColumns: string[] = [
-    'fechaHora',
-    'procendenciaDestino',
-    'descripcion',
-    'fichero',
-    'opciones',
-  ]; 
+
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
   formData!: FormGroup;
 
@@ -102,7 +89,6 @@ export class ConsequencesComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
@@ -120,7 +106,6 @@ export class ConsequencesComponent {
     this.formData.get('idMunicipio')?.disable();
     this.formData.get('fichero')?.disable();
     this.formData.get('idEntidadMenor')?.disable();
-
   }
 
   async loadMunicipalities(event: any) {
@@ -130,28 +115,26 @@ export class ConsequencesComponent {
     this.formData.get('idMunicipio')?.enable();
   }
 
-  onSubmit(){
+  onSubmit() {
     if (this.formData.valid) {
       const data = this.formData.value;
-      if(this.isCreate() == -1){
-        
-        this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);  
-      }else{
-        this.editarItem(this.isCreate())
+      if (this.isCreate() == -1) {
+        this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
+      } else {
+        this.editarItem(this.isCreate());
       }
-      
-      this.formData.reset()
-    }else {
+
+      this.formData.reset();
+    } else {
       this.formData.markAllAsTouched();
     }
   }
 
-
   async sendDataToEndpoint() {
     this.spinner.show();
     if (this.evolutionService.dataAffectedArea().length > 0) {
-      this.save.emit(true); 
-    }else{
+      this.save.emit(true);
+    } else {
       this.spinner.hide();
       this.showToast();
     }
@@ -159,9 +142,9 @@ export class ConsequencesComponent {
 
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
-      duration: 3000, 
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
@@ -171,25 +154,24 @@ export class ConsequencesComponent {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
-    this.isCreate.set(-1)
-    this.formData.reset()
-    
+    this.isCreate.set(-1);
+    this.formData.reset();
   }
 
   eliminarItem(index: number) {
     this.evolutionService.dataAffectedArea.update((data) => {
-      data.splice(index, 1); 
-      return [...data]; 
+      data.splice(index, 1);
+      return [...data];
     });
   }
 
-  seleccionarItem(index: number){
-    this.isCreate.set(index)
+  seleccionarItem(index: number) {
+    this.isCreate.set(index);
     this.formData.patchValue(this.evolutionService.dataAffectedArea()[index]);
   }
 
-  getFormatdate(date: any){
-    return moment(date).format('DD/MM/YY')
+  getFormatdate(date: any) {
+    return moment(date).format('DD/MM/YY');
   }
 
   getForm(atributo: string): any {
@@ -200,8 +182,7 @@ export class ConsequencesComponent {
     return item.id;
   }
 
-  closeModal(){
-    this.save.emit(false); 
+  closeModal() {
+    this.save.emit(false);
   }
-
 }

@@ -14,7 +14,9 @@ public class ManageDocumentacionesCommandListValidator : AbstractValidator<Manag
         RuleFor(x => x.IdIncendio)
          .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
 
-        RuleForEach(x => x.DetallesDocumentaciones).SetValidator(new ManageDocumentacionesCommandValidator(localizer));
+        RuleForEach(x => x.DetallesDocumentaciones)
+            .SetValidator(new ManageDocumentacionesCommandValidator(localizer))
+            .When(d => d.DetallesDocumentaciones.Count > 0);
     }
 }
 

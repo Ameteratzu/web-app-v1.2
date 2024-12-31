@@ -1,5 +1,5 @@
-@use "@angular/material" as mat;
-@use "../../m3-theme.scss" as theme;
+@use '@angular/material' as mat;
+@use '../../m3-theme.scss' as theme;
 
 .container {
   display: flex;
@@ -59,7 +59,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: url("../../../assets/assets/img/login_fondo.png") no-repeat;
+  background: url('../../../assets/assets/img/login_fondo.png') no-repeat;
   background-size: cover;
   opacity: 0.9;
   border-radius: 0 16px 16px 0;

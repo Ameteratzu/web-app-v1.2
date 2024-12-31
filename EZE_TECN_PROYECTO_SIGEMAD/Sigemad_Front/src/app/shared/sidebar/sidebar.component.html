@@ -15,20 +15,11 @@
           class="cursor-pointer menu-item rounded mt-0 text-info"
           [style]="
             active == item.ruta
-              ? 'border: 2px solid rgb(' +
-                item.colorRgb +
-                '); background-color: rgb(' +
-                item.colorRgb +
-                ', 0.50); padding: 4px'
+              ? 'border: 2px solid rgb(' + item.colorRgb + '); background-color: rgb(' + item.colorRgb + ', 0.50); padding: 4px'
               : 'padding: 4px; border: 2px solid transparent'
           "
         >
-          <img
-            *ngIf="item.icono"
-            src="{{ item.icono }}"
-            alt="{{ item.nombre }}"
-            class="mr-5"
-          />
+          <img *ngIf="item.icono" src="{{ item.icono }}" alt="{{ item.nombre }}" class="mr-5" />
           {{ item.nombre }}
         </div>
         <div *ngIf="item.subItems && item.isOpen">
@@ -38,20 +29,11 @@
             class="cursor-pointer menu-item rounded mt-0"
             [style]="
               active == subItem.ruta
-                ? 'padding: 4px; border: 2px solid rgb(' +
-                  subItem.colorRgb +
-                  '); background-color: rgb(' +
-                  subItem.colorRgb +
-                  ', 0.50)'
+                ? 'padding: 4px; border: 2px solid rgb(' + subItem.colorRgb + '); background-color: rgb(' + subItem.colorRgb + ', 0.50)'
                 : 'border: 2px solid transparent; padding: 4px'
             "
           >
-            <img
-              *ngIf="subItem.icono"
-              src="{{ subItem.icono }}"
-              alt="{{ subItem.nombre }}"
-              class="mr-5"
-            />
+            <img *ngIf="subItem.icono" src="{{ subItem.icono }}" alt="{{ subItem.nombre }}" class="mr-5" />
             {{ subItem.nombre }}
           </div>
         </div>

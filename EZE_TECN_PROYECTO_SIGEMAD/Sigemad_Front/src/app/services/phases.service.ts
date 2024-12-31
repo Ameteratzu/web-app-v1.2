@@ -10,8 +10,6 @@ export class PhasesService {
   get() {
     const endpoint = '/fases';
 
-    return firstValueFrom(
-      this.http.get<Phases[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<Phases[]>(endpoint).pipe((response) => response));
   }
 }

@@ -11,8 +11,6 @@ export class EventStatusService {
   get() {
     let endpoint = '/estados-sucesos';
 
-    return firstValueFrom(
-      this.http.get<EventStatus[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<EventStatus[]>(endpoint).pipe((response) => response));
   }
 }

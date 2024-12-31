@@ -1,12 +1,5 @@
 import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit } from '@angular/core';
-import {
-  FormControl,
-  Validators,
-  ReactiveFormsModule,
-  AbstractControl,
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-} from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule, AbstractControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,11 +13,11 @@ import { CommonModule } from '@angular/common';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormFieldComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class FormFieldComponent implements OnInit, ControlValueAccessor  {
+export class FormFieldComponent implements OnInit, ControlValueAccessor {
   @Input() label!: string;
   @Input() type: string = 'text';
   @Input() isRequired: boolean = false;
@@ -41,7 +34,6 @@ export class FormFieldComponent implements OnInit, ControlValueAccessor  {
 
   value: string | null = null;
 
-  
   ngOnInit() {
     if (this.isRequired && this.formControl instanceof FormControl) {
       this.formControl.addValidators(Validators.required);
@@ -51,16 +43,13 @@ export class FormFieldComponent implements OnInit, ControlValueAccessor  {
 
   get showError(): boolean {
     if (this.formControl instanceof FormControl) {
-      return (
-        this.formControl.invalid &&
-        (this.formControl.dirty || this.formControl.touched)
-      );
+      return this.formControl.invalid && (this.formControl.dirty || this.formControl.touched);
     }
     return false;
   }
 
-   //ControlValueAccessor
-   writeValue(value: any): void {
+  //ControlValueAccessor
+  writeValue(value: any): void {
     if (value !== undefined) {
       this.value = value;
     }

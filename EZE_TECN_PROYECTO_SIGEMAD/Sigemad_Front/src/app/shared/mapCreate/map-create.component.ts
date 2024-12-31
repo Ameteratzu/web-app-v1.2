@@ -1,17 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
-} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -42,6 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class MapCreateComponent {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
+  @Input() onlyView: any = null;
+
   @Output() save = new EventEmitter<Feature<Geometry>[]>();
 
   public source!: VectorSource;
@@ -67,14 +57,12 @@ export class MapCreateComponent {
   public section: string = '';
 
   async ngOnInit() {
-    const { municipio, listaMunicipios, defaultPolygon } = this.data;
-
+    const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
+    console.info('init MAP-', onlyView);
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
-      defaultPolygonMercator = defaultPolygon.map((coord: any) =>
-        fromLonLat(coord)
-      );
+      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
 
     this.source = new VectorSource();
@@ -125,8 +113,9 @@ export class MapCreateComponent {
     });
 
     this.map.addLayer(pointLayer);
-
-    this.addInteractions();
+    if (!onlyView) {
+      this.addInteractions();
+    }
   }
 
   changeMunicipio(event: any) {

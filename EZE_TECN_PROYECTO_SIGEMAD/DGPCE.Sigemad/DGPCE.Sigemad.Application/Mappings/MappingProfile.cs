@@ -192,7 +192,30 @@ public class MappingProfile : Profile
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
         CreateMap<CreateFileCommand, Archivo>();
-        CreateMap<CreateRegistroCommand, Registro>();
+        CreateMap<CreateRegistroCommand, Registro>()
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.Ignore())
+            .AfterMap((src, dest) =>
+            {
+                var ids = src.RegistroProcedenciasDestinos.ToHashSet();
+
+                // Eliminar los registros que no están en la lista de IDs
+                dest.ProcedenciaDestinos.RemoveAll(pd => !ids.Contains(pd.IdProcedenciaDestino));
+
+                // Actualizar o agregar los registros
+                foreach (var id in ids)
+                {
+                    var existing = dest.ProcedenciaDestinos.FirstOrDefault(pd => pd.IdProcedenciaDestino == id);
+                    if (existing == null)
+                    {
+                        dest.ProcedenciaDestinos.Add(new RegistroProcedenciaDestino { IdProcedenciaDestino = id });
+                    }
+                    else if (existing.Borrado)
+                    {
+                        existing.Borrado = false;
+                    }
+                }
+            });
+
 
         CreateMap<CreateParametroCommand, Parametro>();
 

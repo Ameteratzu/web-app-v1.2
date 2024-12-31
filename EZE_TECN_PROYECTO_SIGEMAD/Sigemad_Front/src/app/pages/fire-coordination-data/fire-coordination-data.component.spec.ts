@@ -8,9 +8,8 @@ describe('FireCoordinationDataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FireCoordinationData]
-    })
-    .compileComponents();
+      imports: [FireCoordinationData],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FireCoordinationData);
     component = fixture.componentInstance;

@@ -147,6 +147,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
         public DbSet<Evolucion> Evoluciones { get; set; }
+        public DbSet<AreaAfectada> AreaAfectadas { get; set; }
         public DbSet<RegistroProcedenciaDestino> RegistroProcedenciasDestinos { get; set; }
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }

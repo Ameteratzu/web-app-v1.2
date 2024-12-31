@@ -1,4 +1,4 @@
 export type Territory = {
-	id: number;
-	descripcion: string;
-}
+  id: number;
+  descripcion: string;
+};

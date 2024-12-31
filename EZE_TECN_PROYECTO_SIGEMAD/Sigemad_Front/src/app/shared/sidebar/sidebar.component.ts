@@ -42,11 +42,7 @@ export class SidebarComponent {
 
   redirectTo(itemSelected: Menu) {
     if (itemSelected.subItems.length) {
-      this.menuBack.update((menuActual) =>
-        menuActual.map((item) =>
-          item.id === itemSelected.id ? { ...item, isOpen: !item.isOpen } : item
-        )
-      );
+      this.menuBack.update((menuActual) => menuActual.map((item) => (item.id === itemSelected.id ? { ...item, isOpen: !item.isOpen } : item)));
     } else {
       this.active = itemSelected.ruta;
       this.router.navigate([`${itemSelected.ruta}`]);

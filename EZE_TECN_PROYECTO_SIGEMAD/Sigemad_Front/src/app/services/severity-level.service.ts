@@ -12,8 +12,6 @@ export class SeverityLevelService {
     //const endpoint = '/NivelGravedad'; ANTIGUO
     const endpoint = '/situaciones-operativas';
 
-    return firstValueFrom(
-      this.http.get<SeverityLevel[]>(endpoint).pipe((response) => response)
-    );
+    return firstValueFrom(this.http.get<SeverityLevel[]>(endpoint).pipe((response) => response));
   }
 }
