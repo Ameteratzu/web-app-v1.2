@@ -50,6 +50,7 @@ import { FireCoordinationData } from '../../fire-coordination-data/fire-coordina
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
+import { FireRelatedEventComponent } from '../../fire-related-event/fire-related-event.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -175,6 +176,30 @@ export class FireEditComponent implements OnInit {
 
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
+  }
+
+  goModalRelatedEvent(fireDetail?: FireDetail) {
+    const dialogRef = this.matDialog.open(FireRelatedEventComponent, {
+      width: '90vw',
+      maxWidth: 'none',
+      //height: '700px',
+      disableClose: true,
+      data: {
+        title: fireDetail
+          ? 'Editar - Sucesos Relacionados'
+          : 'Nuevo - Sucesos Relacionados',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
+        fireDetail,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.info("result", result)
+      if (result) {
+        //this.cargarRegistros();
+      }
+    });
   }
 
   goModalEvolution(fireDetail?: FireDetail) {
