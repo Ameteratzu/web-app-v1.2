@@ -41,3 +41,12 @@ button {
 .mt-20 {
   margin-top: 20px;
 }
+
+#cursor-coordinates {
+  pointer-events: none;
+  transform: translate(10px, 10px);
+}
+.mapa-titulo {
+  padding-bottom: 20px;
+  font-size: 24px;
+}

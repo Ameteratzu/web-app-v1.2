@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import moment from 'moment';
+import { TooltipDirective } from '../../../../shared/directive/tooltip/tooltip.directive';
 import { Fire } from '../../../../types/fire.type';
 import { FireCreateComponent } from '../../../fire-evolution-create/fire-evolution-create.component';
 import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.component';
@@ -16,7 +17,7 @@ import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.c
   standalone: true,
   templateUrl: './fire-table.component.html',
   styleUrls: ['./fire-table.component.scss'],
-  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule],
+  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule, TooltipDirective],
 })
 export class FireTableComponent implements OnChanges {
   @Input() fires: Fire[] = [];
@@ -91,6 +92,10 @@ export class FireTableComponent implements OnChanges {
     return fechaModificacion ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm') : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
   }
 
+  getFechaInicio(fecha: any) {
+    return moment(fecha).format('DD/MM/yyyy hh:mm');
+  }
+
   goModalEdit(fire: Fire) {
     const dialogRef = this.dialog.open(FireCreateEdit, {
       width: '75vw',
@@ -102,8 +107,8 @@ export class FireTableComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if(result?.refresh){
-        this.refreshFilterFormChange.emit(!this.refreshFilterForm)
+      if (result?.refresh) {
+        this.refreshFilterFormChange.emit(!this.refreshFilterForm);
       }
     });
   }

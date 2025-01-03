@@ -19,6 +19,8 @@ import { Municipality } from '../../types/municipality.type';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
 
 @Component({
   selector: 'app-map-create',
@@ -56,9 +58,12 @@ export class MapCreateComponent {
 
   public section: string = '';
 
+  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000'; // Coordenadas iniciales
+  public cursorPosition = { x: 0, y: 0 }; // Posición del cursor
+
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
-    console.info('init MAP-', onlyView);
+
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
@@ -112,10 +117,38 @@ export class MapCreateComponent {
       }),
     });
 
+    pointLayer.setStyle(
+      new Style({
+        image: new Icon({
+          anchor: [1, 1],
+          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // URL del ícono que debemo cambiar
+          scale: 0.05,
+        }),
+      })
+    );
+
     this.map.addLayer(pointLayer);
+
     if (!onlyView) {
       this.addInteractions();
     }
+
+    this.map.on('pointermove', (event) => {
+      const coords = toLonLat(event.coordinate);
+      const [lon, lat] = [coords[0].toFixed(4), coords[1].toFixed(4)];
+
+      this.coordinates = `Lon: ${lon}, Lat: ${lat}`;
+
+      const pixel = this.map.getEventPixel(event.originalEvent);
+
+      //const mapViewport = this.map.getViewport();
+      //const rect = mapViewport.getBoundingClientRect();
+
+      this.cursorPosition = {
+        x: pixel[0],
+        y: pixel[1] + 40,
+      };
+    });
   }
 
   changeMunicipio(event: any) {
