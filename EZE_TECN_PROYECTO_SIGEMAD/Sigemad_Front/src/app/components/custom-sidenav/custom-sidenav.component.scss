@@ -49,3 +49,49 @@
 ngx-spinner {
   z-index: 1000 !important;
 }
+
+.user-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+}
+
+.user-label mat-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  color: black;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+  flex-wrap: wrap;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #f44336;
+}
+
+.logout mat-icon {
+  margin-right: 4px;
+  font-size: 18px;
+  color: #f44336;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}

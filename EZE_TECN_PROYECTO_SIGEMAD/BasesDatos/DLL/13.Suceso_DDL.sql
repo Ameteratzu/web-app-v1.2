@@ -1,12 +1,14 @@
--- dbo.Suceso definition
-
--- Drop table
-
--- DROP TABLE dbo.Suceso;
-
 CREATE TABLE dbo.Suceso (
 	Id int NOT NULL IDENTITY(1,1),
-	IdTipo int DEFAULT ((1)) NOT NULL,
+	IdTipo int NOT NULL,
 	CONSTRAINT Suceso_PK PRIMARY KEY (Id),
-	CONSTRAINT TipoSucesoSuceso FOREIGN KEY (IdTipo) REFERENCES dbo.TipoSuceso(Id)
+	CONSTRAINT TipoSucesoSuceso FOREIGN KEY (IdTipo) REFERENCES TipoSuceso(Id),
+	---
+    FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
+	CreadoPor UNIQUEIDENTIFIER NULL,
+	FechaModificacion DATETIME2(7) NULL,
+	ModificadoPor UNIQUEIDENTIFIER NULL,
+	FechaEliminacion DATETIME2(7) NULL,
+	EliminadoPor UNIQUEIDENTIFIER NULL,
+	Borrado BIT NOT NULL DEFAULT 0
 );

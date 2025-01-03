@@ -1,10 +1,12 @@
-﻿namespace DGPCE.Sigemad.Domain.Modelos;
+﻿using DGPCE.Sigemad.Domain.Common;
 
-public class Suceso
+namespace DGPCE.Sigemad.Domain.Modelos;
+
+public class Suceso: BaseDomainModel<int>
 {
-    public int Id { get; set; }
-
     public int IdTipo { get; set; }
 
     public virtual TipoSuceso TipoSuceso { get; set; } = null!;
+
+    public virtual List<Incendio> Incendios { get; set; } = new();
 }

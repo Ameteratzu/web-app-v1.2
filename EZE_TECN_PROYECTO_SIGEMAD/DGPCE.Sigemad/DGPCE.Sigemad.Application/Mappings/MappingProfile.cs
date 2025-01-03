@@ -26,7 +26,6 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
-using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
@@ -35,6 +34,7 @@ using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
+using DGPCE.Sigemad.Application.Features.Fases.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpactoEvoluciones;
@@ -48,17 +48,17 @@ using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
+using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
+using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
-using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
-using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings;
@@ -116,7 +116,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ProcedenciaDestinos,
             opt => opt.MapFrom(src => src.RegistroProcedenciasDestinos.Select(p => new RegistroProcedenciaDestino { IdProcedenciaDestino = p })));
 
-        
+
 
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -190,7 +190,6 @@ public class MappingProfile : Profile
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
-        CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
         CreateMap<CreateFileCommand, Archivo>();
         CreateMap<CreateRegistroCommand, Registro>()
             .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.Ignore())
@@ -241,6 +240,9 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
             .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
+        CreateMap<PlanEmergencia, PlanEmergenciaVm>();
+        CreateMap<FaseEmergencia, FaseEmergenciaVm>();
+        CreateMap<PlanSituacion, PlanSituacionVm>();
     }
 
     /*

@@ -1,10 +1,9 @@
-﻿namespace DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
-public class SucesoRelacionadoVm
+﻿using DGPCE.Sigemad.Application.Dtos.Common;
+using DGPCE.Sigemad.Application.Dtos.Sucesos;
+
+namespace DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
+public class SucesoRelacionadoVm: BaseDto<int>
 {
-    public int Id { get; set; }
-    public int IdSucesoPrincipal { get; set; }
-    public int IdSucesoAsociado { get; set; }
-    public string Observaciones { get; set; }
-    public DateTime? FechaCreacion { get; set; }    
-    public DateTime? FechaModificacion { get; set; }    
+    public int IdSuceso { get; set; }
+    public List<SucesoGridDto> SucesosAsociados { get; set; } = new();
 }

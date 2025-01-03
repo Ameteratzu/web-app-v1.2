@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
 
   post(body: any) {
     const endpoint = `/Account/Login`;
+   
 
     return firstValueFrom(
       this.http.post(endpoint, body).pipe(
@@ -19,5 +23,16 @@ export class AuthService {
         })
       )
     );
+  }
+
+  refreshToken(refreshToken: string): Observable<any> {
+    const endpointRefresh = `/Account/refresh-token`;
+    return this.http.post(endpointRefresh, { refreshToken });
+  }
+
+  logout() {
+    sessionStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('refreshToken');
+    this.router.navigate([`/login`]);
   }
 }

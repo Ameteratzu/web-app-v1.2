@@ -9,6 +9,7 @@ import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../types/menu.types';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-custom-sidenav',
@@ -26,6 +27,7 @@ export class CustomSidenavComponent {
   public sanitizer = inject(DomSanitizer);
   private spinner = inject(NgxSpinnerService);
   public router = inject(Router);
+  private authService = inject(AuthService);
   public title = 'sigemad';
   public active: string | undefined;
   public menuBack = signal<Menu[]>([]);
@@ -62,6 +64,8 @@ export class CustomSidenavComponent {
     '/search': 'search',
     '/episodes': 'episodes',
   };
+
+  userName = sessionStorage.getItem('username');
 
   registerIcons(): void {
     const icons = [
@@ -136,5 +140,10 @@ export class CustomSidenavComponent {
 
   redirectTo(itemSelected: Menu) {
     this.router.navigate([`${itemSelected.ruta}`]);
+  }
+  
+  logout(){
+    console.log("🚀 ~ CustomSidenavComponent ~ logout ~ logout:", "logout")
+    this.authService.logout();
   }
 }
