@@ -324,4 +324,7 @@
   <data name="ObservacionObligatorio" xml:space="preserve">
     <value>Observación es obligatorio</value>
   </data>
+  <data name="IdSucesoObligatorio" xml:space="preserve">
+    <value>Id Suceso es obligatorio</value>
+  </data>
 </root>

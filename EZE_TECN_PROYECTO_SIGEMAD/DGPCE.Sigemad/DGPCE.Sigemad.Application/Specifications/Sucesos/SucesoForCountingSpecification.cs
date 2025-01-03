@@ -2,9 +2,10 @@
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Specifications.Sucesos;
-public class SucesosSpecification : BaseSpecification<Suceso>
+
+public class SucesoForCountingSpecification : BaseSpecification<Suceso>
 {
-    public SucesosSpecification(SucesosSpecificationParams @params)
+    public SucesoForCountingSpecification(SucesosSpecificationParams @params)
     : base(suceso =>
     (suceso.Borrado != true) &&
     suceso.Incendios.Any(incendio =>
@@ -153,12 +154,5 @@ public class SucesosSpecification : BaseSpecification<Suceso>
                     throw new ArgumentException("Operador de comparar fechas no válido");
             }
         }
-
-        ApplyPaging(@params);
-
-        AddInclude(suceso => suceso.TipoSuceso);
-        AddInclude(suceso => suceso.Incendios);
-        
-        AddInclude("Incendios.EstadoSuceso");
     }
 }
