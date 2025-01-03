@@ -4,10 +4,12 @@ namespace DGPCE.Sigemad.Domain.Modelos;
 public class SucesoRelacionado :BaseDomainModel<int>
 {
     public SucesoRelacionado()
-    {     
+    {
+        DetalleSucesoRelacionados = new List<DetalleSucesoRelacionado>();
     }
 
     public int IdSucesoPrincipal { get; set; }
-    public int IdSucesoAsociado { get; set; }
-    public string Observaciones { get; set; }
+    public virtual Suceso SucesoPrincipal { get; set; }
+
+    public virtual List<DetalleSucesoRelacionado> DetalleSucesoRelacionados { get; set; }
 }

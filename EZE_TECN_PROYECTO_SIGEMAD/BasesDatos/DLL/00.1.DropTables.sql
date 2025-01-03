@@ -55,6 +55,9 @@ GO
 DROP TABLE IF EXISTS Archivo
 GO
 
+DROP TABLE IF EXISTS DetalleSucesoRelacionado
+GO
+
 DROP TABLE IF EXISTS SucesoRelacionado
 GO
 

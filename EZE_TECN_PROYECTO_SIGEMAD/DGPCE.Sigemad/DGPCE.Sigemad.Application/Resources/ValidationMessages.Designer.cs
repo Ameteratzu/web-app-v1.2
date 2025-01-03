@@ -376,6 +376,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id Suceso es obligatorio.
+        /// </summary>
+        public static string IdSucesoObligatorio {
+            get {
+                return ResourceManager.GetString("IdSucesoObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Id Suceso principal no puede ser vacio.
         /// </summary>
         public static string IdSucesoPrincipalNoVacio {

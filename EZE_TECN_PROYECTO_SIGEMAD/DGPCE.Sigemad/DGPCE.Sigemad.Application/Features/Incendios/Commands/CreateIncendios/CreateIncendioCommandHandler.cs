@@ -69,7 +69,7 @@ public class CreateIncendioCommandHandler : IRequestHandler<CreateIncendioComman
 
         var suceso = new Suceso
         {
-            IdTipo = 1
+            IdTipo = (int)TipoSucesoEnum.IncendioForestal,
         };
 
         var (utmX, utmY, huso) = _coordinateTransformationService.ConvertToUTM(request.GeoPosicion);

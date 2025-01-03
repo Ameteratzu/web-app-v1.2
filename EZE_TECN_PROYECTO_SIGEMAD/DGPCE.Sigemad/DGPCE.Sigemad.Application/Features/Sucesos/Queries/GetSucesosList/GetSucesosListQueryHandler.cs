@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Dtos.Sucesos;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Application.Specifications.Sucesos;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetSucesosList;
 
-public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, PaginationVm<SucesosBusquedaVm>>
+public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, PaginationVm<SucesoGridDto>>
 {
     private readonly ILogger<GetSucesosListQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -26,34 +30,59 @@ public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, P
         _mapper = mapper;
     }
 
-    public async Task<PaginationVm<SucesosBusquedaVm>> Handle(GetSucesosListQuery request, CancellationToken cancellationToken)
+    public async Task<PaginationVm<SucesoGridDto>> Handle(GetSucesosListQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(GetSucesosListQueryHandler)} - BEGIN");
 
-        //Versión inicial solo con incendios ya que no existen mas sucesos en la aplicacion
-        var incendiosParams = _mapper.Map<IncendiosSpecificationParams>(request);
-        incendiosParams.busquedaSucesos = true;
-        var spec = new IncendiosSpecification(incendiosParams);
-        var incendios = await _unitOfWork.Repository<Incendio>()
-        .GetAllWithSpec(spec);
+        var spec = new SucesosSpecification(request);
+        var sucesos = await _unitOfWork.Repository<Suceso>().GetAllWithSpec(spec);
 
-       var sucesosVm = _mapper.Map<IReadOnlyList<SucesosBusquedaVm>>(incendios);
-
-
-        var specCount = new IncendiosForCountingSpecification(incendiosParams);
-        var totalSucesos = await _unitOfWork.Repository<Incendio>().CountAsync(specCount);
+        var specCount = new SucesoForCountingSpecification(request);
+        var totalSucesos = await _unitOfWork.Repository<Suceso>().CountAsync(specCount);
 
         var rounded = Math.Ceiling(Convert.ToDecimal(totalSucesos) / Convert.ToDecimal(request.PageSize));
         var totalPages = Convert.ToInt32(rounded);
 
-        var pagination = new PaginationVm<SucesosBusquedaVm>
+        //-------------------------------------
+        var sucesosGrid = sucesos.Select(suceso =>
+        {
+            // Obtener la denominación desde la relación cargada
+            string? estado = suceso.IdTipo switch
+            {
+                (int)TipoSucesoEnum.IncendioForestal => suceso.Incendios?.FirstOrDefault()?.EstadoSuceso?.Descripcion,
+                _ => ""
+            };
+
+            string? denominacion = suceso.IdTipo switch
+            {
+                (int)TipoSucesoEnum.IncendioForestal => suceso.Incendios?.FirstOrDefault()?.Denominacion,
+                _ => ""
+            };
+
+            return new SucesoGridDto
+            {
+                Id = suceso.Id,
+                FechaCreacion = suceso.FechaCreacion,
+                FechaModificacion = suceso.FechaModificacion,
+                TipoSuceso = suceso.TipoSuceso.Descripcion,
+                Estado = estado ?? "",
+                Denominacion = denominacion ?? "",
+            };
+
+        }).ToList();
+
+
+        //-------------------------------------
+
+        var pagination = new PaginationVm<SucesoGridDto>
         {
             Count = totalSucesos,
-            Data = sucesosVm,
+            Data = sucesosGrid,
             PageCount = totalPages,
             Page = request.Page,
             PageSize = request.PageSize
         };
+
 
         _logger.LogInformation($"{nameof(GetSucesosListQueryHandler)} - END");
         return pagination;
