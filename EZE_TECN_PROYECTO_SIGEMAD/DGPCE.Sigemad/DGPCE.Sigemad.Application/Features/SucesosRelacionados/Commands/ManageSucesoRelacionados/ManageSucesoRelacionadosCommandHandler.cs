@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.SucesoRelacionados;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
-using DGPCE.Sigemad.Application.Specifications.OtrasInformaciones;
 using DGPCE.Sigemad.Application.Specifications.SucesosRelacionados;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -111,7 +108,7 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
 
         if (request.IdSucesoRelacionado.HasValue && request.IdSucesoRelacionado.Value > 0)
         {
-            if(request.IdsSucesosAsociados.Any())
+            if (request.IdsSucesosAsociados.Any())
             {
                 _unitOfWork.Repository<SucesoRelacionado>().UpdateEntity(sucesoRelacionado);
             }
