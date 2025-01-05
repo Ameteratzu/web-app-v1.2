@@ -5,8 +5,8 @@ namespace DGPCE.Sigemad.Domain.Modelos;
 
 public class Evolucion : BaseDomainModel<int>
 {
-    public int IdIncendio { get; set; }
-    public virtual Incendio Incendio { get; set; }
+    public int IdSuceso { get; set; }
+    public virtual Suceso Suceso { get; set; }
     public virtual Registro Registro { get; set; }
     
     public virtual DatoPrincipal DatoPrincipal { get; set; }

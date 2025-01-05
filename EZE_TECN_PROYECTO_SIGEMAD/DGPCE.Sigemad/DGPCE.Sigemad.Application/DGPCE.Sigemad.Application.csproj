@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Distritos\Quereis\" />
+    <Folder Include="Features\Documentaciones\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

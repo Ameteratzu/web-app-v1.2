@@ -7,7 +7,7 @@ CREATE TABLE TipoDireccionEmergencia (
 -- Tabla principal para almacenar la información general de la dirección y coordinación
 CREATE TABLE DireccionCoordinacionEmergencia (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
+    IdSuceso int NOT NULL FOREIGN KEY REFERENCES Suceso(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,

@@ -46,19 +46,19 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
             .HasForeignKey(d => d.IdEstadoIncendio)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(d => d.Fase)
+        builder.HasOne(d => d.PlanEmergencia)
             .WithMany()
-            .HasForeignKey(d => d.IdFase)
+            .HasForeignKey(d => d.IdPlanEmergencia)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(d => d.SituacionOperativa)
+        builder.HasOne(d => d.FaseEmergencia)
             .WithMany()
-            .HasForeignKey(d => d.IdSituacionOperativa)
+            .HasForeignKey(d => d.IdFaseEmergencia)
             .OnDelete(DeleteBehavior.Restrict);
 
-          builder.HasOne(d => d.SituacionEquivalente)
-          .WithMany()
-          .HasForeignKey(d => d.IdSituacionEquivalente)
-          .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(d => d.PlanSituacion)
+            .WithMany()
+            .HasForeignKey(d => d.IdPlanSituacion)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

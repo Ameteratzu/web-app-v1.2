@@ -7,9 +7,6 @@ using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-
-
 
 namespace DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandler<ManageDocumentacionesCommand, CreateOrUpdateDocumentacionResponse>
@@ -50,18 +47,18 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         }
         else
         {
-            // Validar si el IdIncendio es válido
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
-            if (incendio is null || incendio.Borrado)
+            // Validar si el IdSuceso es válido
+            var suceso = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdSuceso);
+            if (suceso is null || suceso.Borrado)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
+                throw new NotFoundException(nameof(Incendio), request.IdSuceso);
             }
 
             // Crear nueva Dirección y Coordinación de Emergencia
             documentacion = new Documentacion
             {
-                IdIncendio = request.IdIncendio
+                IdSuceso = request.IdSuceso
             };
         }
 

@@ -1,10 +1,8 @@
-﻿using DGPCE.Sigemad.Application.Dtos.Registros;
-using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
+﻿using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetRegistrosDeIncendio;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -82,38 +80,4 @@ public class IncendiosController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
-
-    /*
-    [HttpGet("{IdIncendio}/detalles")]
-    [ProducesResponseType(typeof(IReadOnlyList<IncendioDetalleVm>), (int)HttpStatusCode.OK)]
-    public async Task<IReadOnlyList<IncendioDetalleVm>> GetIncendioDetalles(int idIncendio)
-    {
-        var query = new GetIncendioDetallesListQuery(idIncendio);
-        var result = await _mediator.Send(query);
-        return result;
-    }
-
-    [HttpGet("{idIncendio}/documentaciones")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerOperation(Summary = "Listar toda la documentacion por Id de incendio")]
-    public async Task<IActionResult> GetImpactosByIdEvolucion(int idIncendio)
-    {
-        var query = new GetDocumentacionesByIdIncendioListQuery(idIncendio);
-        var listado = await _mediator.Send(query);
-        return Ok(listado);
-    }
-    */
-
-    [HttpGet("{idIncendio}/registros")]
-    [ProducesResponseType(typeof(IReadOnlyList<RegistroActualizacionDto>), (int)HttpStatusCode.OK)]
-    public async Task<IReadOnlyList<RegistroActualizacionDto>> GetIncendioDetalles(int idIncendio)
-    {
-        var query = new GetRegistrosPorIncendioQuery(idIncendio);
-        var result = await _mediator.Send(query);
-        return result;
-    }
-
-
 }

@@ -5,7 +5,7 @@ namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreas
 public class CreateOrUpdateAreaAfectadaCommand : IRequest<CreateOrUpdateAreaAfectadaResponse>
 {
     public int? IdEvolucion { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
     public List<CreateOrUpdateAreaAfectadaDto> AreasAfectadas { get; set; } = new();
 
 }

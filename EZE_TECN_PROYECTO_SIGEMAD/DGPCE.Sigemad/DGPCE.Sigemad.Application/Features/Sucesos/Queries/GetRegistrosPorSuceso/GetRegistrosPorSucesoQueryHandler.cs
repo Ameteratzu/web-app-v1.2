@@ -1,45 +1,46 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetRegistrosDeIncendio;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Incendios.Queries.GetRegistrosPorIncendio;
-public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosPorIncendioQuery, IReadOnlyList<RegistroActualizacionDto>>
+namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
+public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, IReadOnlyList<RegistroActualizacionDto>>
 {
-    private readonly ILogger<GetRegistrosPorIncendioQueryHandler> _logger;
+    private readonly ILogger<GetRegistrosPorSucesoQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetRegistrosPorIncendioQueryHandler(
-        ILogger<GetRegistrosPorIncendioQueryHandler> logger,
+    public GetRegistrosPorSucesoQueryHandler(
+        ILogger<GetRegistrosPorSucesoQueryHandler> logger,
         IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IReadOnlyList<RegistroActualizacionDto>> Handle(GetRegistrosPorIncendioQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<RegistroActualizacionDto>> Handle(GetRegistrosPorSucesoQuery request, CancellationToken cancellationToken)
     {
-        // Usar la especificación para obtener el incendio con todos los registros relacionados
-        var incendio = await _unitOfWork.Repository<Incendio>()
-            .GetByIdWithSpec(new IncendioWithAllRegistrosSpecification(request.IdIncendio));
+        // Usar la especificación para obtener el suceso con todos los registros relacionados
+        var suceso = await _unitOfWork.Repository<Suceso>()
+            .GetByIdWithSpec(new SucesoWithAllRegistrosSpecification(request.IdSuceso));
 
-        if (incendio == null)
+        if (suceso == null)
         {
-            _logger.LogWarning($"No se encontro incendio con id: {request.IdIncendio}");
-            throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+            _logger.LogWarning($"No se encontro suceso con id: {request.IdSuceso}");
+            throw new NotFoundException(nameof(Suceso), request.IdSuceso);
         }
 
         // Obtener listado de usuarios
         var guidsUsuarios = new HashSet<Guid?>();
 
-        guidsUsuarios.UnionWith(incendio.Evoluciones.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(incendio.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(incendio.OtraInformaciones.Select(o => o.CreadoPor));
-        guidsUsuarios.UnionWith(incendio.Documentaciones.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.Evoluciones.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.OtraInformaciones.Select(o => o.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.Documentaciones.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.SucesoRelacionados.Select(d => d.CreadoPor));
 
         // Obtener nombres de usuarios
         var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
@@ -48,7 +49,7 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
         var registros = new List<RegistroActualizacionDto>();
 
         // Procesar Datos de Evolución
-        registros.AddRange(incendio.Evoluciones.Select(d => new RegistroActualizacionDto
+        registros.AddRange(suceso.Evoluciones.Select(d => new RegistroActualizacionDto
         {
             Id = d.Id,
             FechaHora = d.FechaCreacion,
@@ -56,11 +57,11 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Origen = "",
             TipoRegistro = "Datos de evolución",
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == incendio.Evoluciones.Max(e => e.FechaCreacion)
+            EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Otra Información
-        registros.AddRange(incendio.OtraInformaciones.Select(o => new RegistroActualizacionDto
+        registros.AddRange(suceso.OtraInformaciones.Select(o => new RegistroActualizacionDto
         {
             Id = o.Id,
             FechaHora = o.FechaCreacion,
@@ -68,11 +69,11 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Origen = "",
             TipoRegistro = "Otra Información",
             Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = o.FechaCreacion == incendio.OtraInformaciones.Max(e => e.FechaCreacion)
+            EsUltimoRegistro = o.FechaCreacion == suceso.OtraInformaciones.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Direcciones y Coordinación
-        registros.AddRange(incendio.DireccionCoordinacionEmergencias.Select(d => new RegistroActualizacionDto
+        registros.AddRange(suceso.DireccionCoordinacionEmergencias.Select(d => new RegistroActualizacionDto
         {
             Id = d.Id,
             FechaHora = d.FechaCreacion,
@@ -80,11 +81,11 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Origen = "",
             TipoRegistro = "Dirección y coordinación",
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == incendio.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
+            EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
         }));
 
         // Procesar Documentacion
-        registros.AddRange(incendio.Documentaciones.Select(d => new RegistroActualizacionDto
+        registros.AddRange(suceso.Documentaciones.Select(d => new RegistroActualizacionDto
         {
             Id = d.Id,
             FechaHora = d.FechaCreacion,
@@ -92,7 +93,19 @@ public class GetRegistrosPorIncendioQueryHandler : IRequestHandler<GetRegistrosP
             Origen = "",
             TipoRegistro = "Documentación",
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == incendio.Documentaciones.Max(e => e.FechaCreacion)
+            EsUltimoRegistro = d.FechaCreacion == suceso.Documentaciones.Max(e => e.FechaCreacion)
+        }));
+
+        // Procesar Sucesos Relacionados
+        registros.AddRange(suceso.SucesoRelacionados.Select(d => new RegistroActualizacionDto
+        {
+            Id = d.Id,
+            FechaHora = d.FechaCreacion,
+            Registro = "",
+            Origen = "",
+            TipoRegistro = "Sucesos Relacionados",
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == suceso.SucesoRelacionados.Max(e => e.FechaCreacion)
         }));
 
         // Ordenar por FechaHora descendente

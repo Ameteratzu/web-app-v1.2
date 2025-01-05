@@ -1,5 +1,7 @@
 ﻿
+using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Features.Shared;
+using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
 using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetSucesosList;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
 using MediatR;
@@ -28,6 +30,15 @@ public class SucesosController : ControllerBase
     {
         var pagination = await _mediator.Send(query);
         return Ok(pagination);
+    }
+
+    [HttpGet("{id}/registros")]
+    [ProducesResponseType(typeof(IReadOnlyList<RegistroActualizacionDto>), (int)HttpStatusCode.OK)]
+    public async Task<IReadOnlyList<RegistroActualizacionDto>> GetIncendioDetalles(int id)
+    {
+        var query = new GetRegistrosPorSucesoQuery(id);
+        var result = await _mediator.Send(query);
+        return result;
     }
 
 }

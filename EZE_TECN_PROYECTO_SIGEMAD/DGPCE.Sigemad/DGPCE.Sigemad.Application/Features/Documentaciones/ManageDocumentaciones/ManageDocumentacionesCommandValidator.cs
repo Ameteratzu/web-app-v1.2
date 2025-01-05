@@ -11,8 +11,8 @@ public class ManageDocumentacionesCommandListValidator : AbstractValidator<Manag
 {
     public ManageDocumentacionesCommandListValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(x => x.IdIncendio)
-         .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
+        RuleFor(x => x.IdSuceso)
+         .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
         RuleForEach(x => x.DetallesDocumentaciones)
             .SetValidator(new ManageDocumentacionesCommandValidator(localizer))

@@ -168,7 +168,7 @@ public class MappingProfile : Profile
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
+            .ForMember(dest => dest.IdSuceso, opt => opt.MapFrom(src => src.IdSuceso));
 
         CreateMap<OtraInformacion, OtraInformacionDto>()
             .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
@@ -245,15 +245,4 @@ public class MappingProfile : Profile
         CreateMap<PlanSituacion, PlanSituacionVm>();
     }
 
-    /*
-    private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
-    {
-        if (source == null)
-        {
-            return new List<RegistroProcedenciaDestino>();
-        }
-
-        return source.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
-    }
-    */
 }

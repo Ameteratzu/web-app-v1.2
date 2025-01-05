@@ -3,14 +3,14 @@ using MediatR;
 
 
 namespace DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionCoordinacionEmergenciasByIdIncendioList;
-public class GetDCEByIdIncendioListQuery : IRequest<IReadOnlyList<DireccionCoordinacionEmergenciaVm>>
+public class GetDCEByIdSucesoListQuery : IRequest<IReadOnlyList<DireccionCoordinacionEmergenciaVm>>
 {
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
 
 
-    public GetDCEByIdIncendioListQuery(int id)
+    public GetDCEByIdSucesoListQuery(int id)
     {
-        IdIncendio = id;
+        IdSuceso = id;
     }
 }
 

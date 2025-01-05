@@ -21,10 +21,9 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
         AddCriteria(i => i.DatoPrincipal != null ? i.Parametro.Borrado == false : true);
         AddInclude(i => i.Parametro);
         AddInclude(i => i.Parametro.EstadoIncendio);
-        AddInclude(i => i.Parametro.Fase);
-        AddInclude(i => i.Parametro.SituacionEquivalente);
-        AddInclude(i => i.Parametro.SituacionOperativa);
-
+        AddInclude(i => i.Parametro.FaseEmergencia);
+        AddInclude(i => i.Parametro.PlanEmergencia);
+        AddInclude(i => i.Parametro.PlanSituacion);
 
         AddCriteria(i => i.DatoPrincipal != null ? i.DatoPrincipal.Borrado == false : true);
         AddInclude(i => i.DatoPrincipal);

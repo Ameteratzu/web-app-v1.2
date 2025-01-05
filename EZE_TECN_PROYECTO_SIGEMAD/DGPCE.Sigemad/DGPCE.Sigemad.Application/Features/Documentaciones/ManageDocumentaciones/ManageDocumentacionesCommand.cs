@@ -6,7 +6,7 @@ namespace DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentacion
 public class ManageDocumentacionesCommand : IRequest<CreateOrUpdateDocumentacionResponse>
 {
     public int? IdDocumento { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
 
     public List<DetalleDocumentacionDto> DetallesDocumentaciones { get; set; } = new();
 }

@@ -19,5 +19,10 @@ public class SucesoRelacionadoConfiguration : IEntityTypeConfiguration<SucesoRel
             .WithOne(dsr => dsr.SucesoRelacionado)
             .HasForeignKey(dsr => dsr.IdCabeceraSuceso)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.SucesoPrincipal)
+                .WithMany(i => i.SucesoRelacionados)
+                .HasForeignKey(d => d.IdSucesoPrincipal)
+                .OnDelete(DeleteBehavior.Restrict);
     }
 }

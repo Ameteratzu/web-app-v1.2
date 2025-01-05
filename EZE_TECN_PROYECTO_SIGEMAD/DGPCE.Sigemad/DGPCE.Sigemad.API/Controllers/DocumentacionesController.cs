@@ -1,7 +1,6 @@
 ﻿
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
-using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDetalleDocumentacionesById;
 using MediatR;
@@ -27,15 +26,15 @@ public class DocumentacionesController : ControllerBase
     }
 
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [SwaggerOperation(Summary = "Crea la documentacion asociada a un incendio")]
-        public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> Create([FromBody] ManageDocumentacionesCommand command)
-        {
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
+    [HttpPost("lista")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Crea la documentacion asociada a un incendio")]
+    public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> Create([FromBody] ManageDocumentacionesCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
 
     [HttpGet("{id}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -48,17 +47,6 @@ public class DocumentacionesController : ControllerBase
         var documentacionVm = await _mediator.Send(query);
 
         return Ok(documentacionVm);
-    }
-
-    [HttpDelete("{id:int}", Name = "DeleteDocumentacion")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> Delete(int id)
-    {
-        var command = new DeleteDocumentacionesCommand { Id = id };
-        await _mediator.Send(command);
-        return NoContent();
     }
 
 }
