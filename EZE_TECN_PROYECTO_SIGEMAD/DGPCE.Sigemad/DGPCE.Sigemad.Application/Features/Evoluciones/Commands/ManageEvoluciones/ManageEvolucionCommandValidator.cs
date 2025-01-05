@@ -33,7 +33,7 @@ public class CreateRegistroCommandValidator : AbstractValidator<CreateRegistroCo
     public CreateRegistroCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
         RuleFor(x => x.FechaHoraEvolucion)
-            .NotNull().WithMessage(localizer["FechaHoraEvolucionObligatorio"]);
+            .NotNull().WithMessage(localizer["FechaHoraObligatorio"]);
 
         RuleFor(x => x.IdEntradaSalida)
             .GreaterThan(0).WithMessage(localizer["IdEntradaSalidaObligatorio"]);
