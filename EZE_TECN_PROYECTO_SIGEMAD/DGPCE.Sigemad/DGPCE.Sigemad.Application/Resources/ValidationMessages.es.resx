@@ -327,4 +327,25 @@
   <data name="IdSucesoObligatorio" xml:space="preserve">
     <value>Id Suceso es obligatorio</value>
   </data>
+  <data name="RegistroObligatorio" xml:space="preserve">
+    <value>Datos de Registros son obligatorio</value>
+  </data>
+  <data name="DatoPrincipalObligatorio" xml:space="preserve">
+    <value>Datos Principal son obligatorios</value>
+  </data>
+  <data name="ParametroObligatorio" xml:space="preserve">
+    <value>Datos de parámetros son obligatorio</value>
+  </data>
+  <data name="IdEntradaSalidaObligatorio" xml:space="preserve">
+    <value>Id de lista Entrada/Salida es obligatorio</value>
+  </data>
+  <data name="IdMedioObligatorio" xml:space="preserve">
+    <value>Id de lista de medios es obligatorio</value>
+  </data>
+  <data name="ProcedenciasDestinosObligatorio" xml:space="preserve">
+    <value>Lista de procedencia/Destino es obligatorio</value>
+  </data>
+  <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
+    <value>Id de estado incendio es obligatorio</value>
+  </data>
 </root>

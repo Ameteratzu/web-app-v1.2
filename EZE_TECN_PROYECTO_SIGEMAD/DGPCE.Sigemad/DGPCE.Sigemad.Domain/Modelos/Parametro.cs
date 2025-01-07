@@ -9,21 +9,17 @@ public class Parametro : BaseDomainModel<int>
     public DateTime? FechaFinal { get; set; }
     public decimal? SuperficieAfectadaHectarea { get; set; }
 
-    public string? PlanEmergenciaActivado { get; set; }
+    public int? IdPlanEmergencia { get; set; }
+    public virtual PlanEmergencia PlanEmergencia { get; set; } = null!;
 
-    public int? IdFase { get; set; }
+    public int? IdFaseEmergencia { get; set; }
+    public virtual FaseEmergencia FaseEmergencia { get; set; } = null!;
 
-    public int? IdSituacionOperativa { get; set; }
+    public int? IdPlanSituacion { get; set; }
+    public virtual PlanSituacion PlanSituacion { get; set; } = null!;
 
-    public int? IdSituacionEquivalente { get; set; }
 
     public virtual Evolucion Evolucion { get; set; } = null!;
 
     public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;
-
-    public virtual FaseEmergencia Fase { get; set; } = null!;
-
-    public virtual SituacionOperativa SituacionOperativa { get; set; } = null!;
-
-    public virtual SituacionEquivalente SituacionEquivalente { get; set; } = null!;
 }

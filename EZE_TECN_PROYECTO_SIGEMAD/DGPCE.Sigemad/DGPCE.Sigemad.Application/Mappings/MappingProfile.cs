@@ -168,7 +168,7 @@ public class MappingProfile : Profile
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
+            .ForMember(dest => dest.IdSuceso, opt => opt.MapFrom(src => src.IdSuceso));
 
         CreateMap<OtraInformacion, OtraInformacionDto>()
             .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
@@ -223,13 +223,16 @@ public class MappingProfile : Profile
            .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<Documentacion, DocumentacionDto>()
-             .ForMember(dest => dest.DetallesDocumentacion, opt => opt.MapFrom(src => src.DetallesDocumentacion));
+             .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
-           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
                 .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
+
+        CreateMap<DetalleDocumentacion, ItemDocumentacionDto>()
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion})));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
@@ -245,15 +248,4 @@ public class MappingProfile : Profile
         CreateMap<PlanSituacion, PlanSituacionVm>();
     }
 
-    /*
-    private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
-    {
-        if (source == null)
-        {
-            return new List<RegistroProcedenciaDestino>();
-        }
-
-        return source.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
-    }
-    */
 }

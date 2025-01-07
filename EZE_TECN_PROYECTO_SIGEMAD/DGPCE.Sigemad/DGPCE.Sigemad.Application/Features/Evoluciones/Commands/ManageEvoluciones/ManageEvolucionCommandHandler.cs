@@ -3,13 +3,10 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
-using DGPCE.Sigemad.Application.Specifications.DetallesDocumentacion;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
-
-
 
 namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 
@@ -98,11 +95,11 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
         }
         else
         {
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
-            if (incendio is null || incendio.Borrado)
+            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
+            if (suceso is null || suceso.Borrado)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
+                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
             var evolucionEntity = _mapper.Map<Evolucion>(request);
@@ -159,38 +156,26 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
         }
 
-        if (request.IdFase != null)
+        if (request.IdFaseEmergencia != null)
         {
-            var fase = await _unitOfWork.Repository<FaseEmergencia>().GetByIdAsync((int)request.IdFase);
+            var fase = await _unitOfWork.Repository<FaseEmergencia>().GetByIdAsync(request.IdFaseEmergencia.Value);
             if (fase is null)
             {
-                _logger.LogWarning($"request.IdFase: {request.IdFase}, no encontrado");
-                throw new NotFoundException(nameof(FaseEmergencia), request.IdFase);
+                _logger.LogWarning($"request.IdFase: {request.IdFaseEmergencia}, no encontrado");
+                throw new NotFoundException(nameof(FaseEmergencia), request.IdFaseEmergencia);
             }
         }
 
 
-        if (request.IdSituacionOperativa != null)
+        if (request.IdPlanSituacion != null)
         {
-            var situacionOperativa = await _unitOfWork.Repository<SituacionOperativa>().GetByIdAsync((int)request.IdSituacionOperativa);
+            var situacionOperativa = await _unitOfWork.Repository<PlanSituacion>().GetByIdAsync(request.IdPlanSituacion.Value);
             if (situacionOperativa is null)
             {
-                _logger.LogWarning($"request.IdFase: {request.IdSituacionOperativa}, no encontrado");
-                throw new NotFoundException(nameof(SituacionOperativa), request.IdSituacionOperativa);
+                _logger.LogWarning($"request.IdPlanSituacion: {request.IdPlanSituacion}, no encontrado");
+                throw new NotFoundException(nameof(PlanSituacion), request.IdPlanSituacion);
             }
         }
-
-        if (request.IdSituacionEquivalente != null)
-        {
-            var situacionEquivalente = await _unitOfWork.Repository<SituacionOperativa>().GetByIdAsync((int)request.IdSituacionEquivalente);
-            if (situacionEquivalente is null)
-            {
-                _logger.LogWarning($"request.IdSituacionEquivalente: {request.IdSituacionEquivalente}, no encontrado");
-                throw new NotFoundException(nameof(SituacionOperativa), request.IdSituacionEquivalente);
-            }
-        }
-
-
     }
 
 }

@@ -10,9 +10,9 @@ public class UpdateDetalleOtraInformacionCommandValidator : AbstractValidator<Up
         RuleFor(p => p.Id)
                     .NotEmpty().WithMessage(localizer["IdNoVacio"])
                     .NotEqual(0).WithMessage(localizer["IdNoVacio"]);
-        RuleFor(p => p.IdIncendio)
-                    .NotEmpty().WithMessage(localizer["IncendioIdNoVacio"])
-                    .NotEqual(0).WithMessage(localizer["IncendioIdObligatorio"]);
+        RuleFor(p => p.IdSuceso)
+                    .NotEmpty().WithMessage(localizer["IdSucesoObligatorio"])
+                    .NotEqual(0).WithMessage(localizer["IdSucesoObligatorio"]);
         RuleFor(p => p.IdMedio)
             .NotEmpty().WithMessage(localizer["MedioIdNoVacio"])
             .NotEqual(0).WithMessage(localizer["MedioIdObligatorio"]);

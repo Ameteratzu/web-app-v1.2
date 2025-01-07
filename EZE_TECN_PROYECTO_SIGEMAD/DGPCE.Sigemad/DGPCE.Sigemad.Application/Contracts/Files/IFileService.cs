@@ -2,6 +2,7 @@
 public interface IFileService
 {
     Task<string> SaveFileAsync(Stream fileStream, string fileName, string fileCategory);
+    Task<string> SaveFileAsync(byte[] fileBytes, string fileName, string fileCategory);
     Task DeleteAsync(string filePath);
     Task<Stream> GetFileAsync(string filePath);
 }

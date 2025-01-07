@@ -9,8 +9,8 @@ internal class CreateOrUpdateCoordinacionPmaCommandValidator : AbstractValidator
 {
     public CreateOrUpdateCoordinacionPmaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
-        RuleFor(x => x.IdIncendio)
-            .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
+        RuleFor(x => x.IdSuceso)
+            .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
         RuleForEach(x => x.Coordinaciones)
             .SetValidator(new CoordinacionPmaDtoValidator(localizer, geometryValidator))

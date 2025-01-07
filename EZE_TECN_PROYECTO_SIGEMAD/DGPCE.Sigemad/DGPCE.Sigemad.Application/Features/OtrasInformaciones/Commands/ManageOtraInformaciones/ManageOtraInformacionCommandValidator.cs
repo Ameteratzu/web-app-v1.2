@@ -10,8 +10,8 @@ public class ManageOtraInformacionCommandValidator : AbstractValidator<ManageOtr
 {
     public ManageOtraInformacionCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(x => x.IdIncendio)
-            .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
+        RuleFor(x => x.IdSuceso)
+            .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
         RuleForEach(x => x.Lista)
             .SetValidator(new DetalleOtraInformacionDtoValidator(localizer))

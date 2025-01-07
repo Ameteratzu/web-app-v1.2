@@ -1,11 +1,6 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations
 {
@@ -17,7 +12,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
 
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.IdIncendio).IsRequired();
+            builder.Property(e => e.IdSuceso).IsRequired();
 
             builder.Property(e => e.FechaCreacion)
               .HasColumnType("datetime");
@@ -40,9 +35,9 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations
             .HasMaxLength(500)
             .IsUnicode(false);
 
-            builder.HasOne(d => d.Incendio)
+            builder.HasOne(d => d.Suceso)
             .WithMany(i => i.Documentaciones)
-            .HasForeignKey(d => d.IdIncendio)
+            .HasForeignKey(d => d.IdSuceso)
             .OnDelete(DeleteBehavior.Restrict);
         }
     }

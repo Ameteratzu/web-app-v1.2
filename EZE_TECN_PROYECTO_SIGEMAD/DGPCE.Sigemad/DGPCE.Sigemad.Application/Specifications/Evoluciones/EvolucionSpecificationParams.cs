@@ -4,7 +4,7 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones;
 public class EvolucionSpecificationParams : SpecificationParams
 {
     public int? Id { get; set; }
-    public int? IdIncendio { get; set; }
+    public int? IdSuceso { get; set; }
     public int? IdEntradaSalida { get; set; }
     public int? IdMedio { get; set; }
     public int? IdTipoRegistro { get; set; }

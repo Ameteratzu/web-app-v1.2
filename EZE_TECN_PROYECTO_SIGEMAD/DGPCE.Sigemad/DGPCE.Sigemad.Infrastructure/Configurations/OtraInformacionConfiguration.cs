@@ -14,7 +14,7 @@ internal class OtraInformacionConfiguration :IEntityTypeConfiguration<OtraInform
         builder.Property(e => e.Id)
             .UseIdentityColumn();
 
-        builder.Property(e => e.IdIncendio)
+        builder.Property(e => e.IdSuceso)
             .IsRequired();
 
         builder.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -38,9 +38,9 @@ internal class OtraInformacionConfiguration :IEntityTypeConfiguration<OtraInform
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_DetalleOtraInformacion_OtraInformacion");
 
-        builder.HasOne(e => e.Incendio)
+        builder.HasOne(e => e.Suceso)
         .WithMany(i => i.OtraInformaciones)
-        .HasForeignKey(e => e.IdIncendio)
+        .HasForeignKey(e => e.IdSuceso)
         .OnDelete(DeleteBehavior.Restrict)
         .HasConstraintName("FK_OtraInformacion_Incendio");
     }
