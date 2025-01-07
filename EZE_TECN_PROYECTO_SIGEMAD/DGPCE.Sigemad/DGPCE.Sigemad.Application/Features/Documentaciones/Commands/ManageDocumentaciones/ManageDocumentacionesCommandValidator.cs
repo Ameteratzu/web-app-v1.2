@@ -1,10 +1,10 @@
-﻿using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
+﻿using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
 
-namespace DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
+namespace DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
 
 
 public class ManageDocumentacionesCommandListValidator : AbstractValidator<ManageDocumentacionesCommand>

@@ -3,11 +3,11 @@ using MediatR;
 
 
 namespace DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDetalleDocumentacionesById;
-public class GetDetalleDocumentacionesByIdQuery : IRequest<DocumentacionDto>
+public class GetDocumentacionesByIdQuery : IRequest<DocumentacionDto>
 {
     public int Id { get; set; }
 
-    public GetDetalleDocumentacionesByIdQuery(int id)
+    public GetDocumentacionesByIdQuery(int id)
     {
         Id = id;
     }

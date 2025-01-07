@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Contracts.Files;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Exceptions;
@@ -8,28 +9,32 @@ using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
-public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandler<ManageDocumentacionesCommand, CreateOrUpdateDocumentacionResponse>
+namespace DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
+public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumentacionesCommand, CreateOrUpdateDocumentacionResponse>
 {
-    private readonly ILogger<CreateOrUpdateDetalleDocumentacionesCommandHandler> _logger;
+    private readonly ILogger<ManageDocumentacionesCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IFileService _fileService;
+    private const string ARCHIVOS_PATH = "documentacion";
 
-    public CreateOrUpdateDetalleDocumentacionesCommandHandler(
-        ILogger<CreateOrUpdateDetalleDocumentacionesCommandHandler> logger,
+    public ManageDocumentacionesCommandHandler(
+        ILogger<ManageDocumentacionesCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IFileService fileService
     )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _fileService = fileService;
     }
 
     public async Task<CreateOrUpdateDocumentacionResponse> Handle(ManageDocumentacionesCommand request, CancellationToken cancellationToken)
     {
 
-        _logger.LogInformation($"{nameof(CreateOrUpdateDetalleDocumentacionesCommandHandler)} - BEGIN");
+        _logger.LogInformation($"{nameof(ManageDocumentacionesCommandHandler)} - BEGIN");
 
         Documentacion documentacion;
 
@@ -48,11 +53,11 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         else
         {
             // Validar si el IdSuceso es válido
-            var suceso = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdSuceso);
+            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
             if (suceso is null || suceso.Borrado)
             {
                 _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdSuceso);
+                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
             // Crear nueva Dirección y Coordinación de Emergencia
@@ -63,7 +68,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         }
 
 
-
+        /*
         // Validar los IdTipoDocumento y IdProcedenciaDestionos de los detallesCoordinacion en el listado
         var idsArchivos = request.DetallesDocumentaciones.Select(c => c.IdArchivo).Distinct();
         var archivosExistentes = await _unitOfWork.Repository<Archivo>().GetAsync(p => idsArchivos.Contains(p.Id));
@@ -81,6 +86,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 throw new NotFoundException(nameof(Archivo), string.Join(", ", idsArchivosInvalidas));
             }
         }
+        */
 
 
         // Validar los IdTipoDocumento y IdProcedenciaDestionos de los detallesCoordinacion en el listado
@@ -99,7 +105,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
             }
         }
 
-        var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones.SelectMany(d => d.DocumentacionProcedenciasDestinos).Distinct();
+        var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones.SelectMany(d => d.IdsProcedenciasDestinos).Distinct();
         var documentacionProcedenciaDestinosExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(ic => idsDocumentacionProcedenciaDestinos.Contains(ic.Id));
 
         if (documentacionProcedenciaDestinosExistentes.Count() != idsDocumentacionProcedenciaDestinos.Count())
@@ -126,24 +132,84 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 if (detalleDocumentacion != null)
                 {
                     // Actualizar datos existentes
-                   // _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
+                    _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
                     detalleDocumentacion.Borrado = false;
-                    await UpdateProcedenciaDestinoAsync(detalleDocumentacion, detalleDocumentoDto.DocumentacionProcedenciasDestinos);
+                    await UpdateProcedenciaDestinoAsync(detalleDocumentacion, detalleDocumentoDto.IdsProcedenciasDestinos);
 
                 }
                 else
                 {
-                    // Crear nuevo detalle de documentacion
-                    var nuevoDetalleDocumentacion = _mapper.Map<DetalleDocumentacion>(detalleDocumentoDto);
-                    nuevoDetalleDocumentacion.Id = 0;
+                    // Crear nuevo detalle de documentacionion
+                    var nuevoDetalleDocumentacion = new DetalleDocumentacion
+                    {
+                        Descripcion = detalleDocumentoDto.Descripcion,
+                        DocumentacionProcedenciaDestinos = detalleDocumentoDto.IdsProcedenciasDestinos?
+                        .Select(id => new DocumentacionProcedenciaDestino
+                        {
+                            IdProcedenciaDestino = id
+                        }).ToList() ?? new List<DocumentacionProcedenciaDestino>(),
+                        FechaHora = detalleDocumentoDto.FechaHora,
+                        FechaHoraSolicitud = detalleDocumentoDto.FechaHoraSolicitud,
+                        IdTipoDocumento = detalleDocumentoDto.IdTipoDocumento,
+
+                    };
+
+                    // Agregar archivo - BEGIN
+                    //var id = Guid.NewGuid();
+                    var fileEntity = new Archivo
+                    {
+                        //Id = id,
+                        NombreOriginal = detalleDocumentoDto.Archivo.FileName,
+                        //NombreUnico = $"{id}{detalleDocumentoDto.Archivo.Extension}",
+                        NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo.FileName)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo.Extension}",
+                        Tipo = detalleDocumentoDto.Archivo.ContentType,
+                        Extension = detalleDocumentoDto.Archivo.Extension,
+                        PesoEnBytes = detalleDocumentoDto.Archivo.Length,
+                    };
+
+                    fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo.Content, fileEntity.NombreUnico, ARCHIVOS_PATH);
+                    fileEntity.FechaCreacion = DateTime.Now;
+                    nuevoDetalleDocumentacion.Archivo = fileEntity;
+                    // Agregar archivo - END
+
                     documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
                 }
             }
             else
             {
-                // Crear nuevo detalle de documentacionionn
-                var nuevoDetalleDocumentacion = _mapper.Map<DetalleDocumentacion>(detalleDocumentoDto);
-                nuevoDetalleDocumentacion.Id = 0;
+                // Crear nuevo detalle de documentacionion
+                var nuevoDetalleDocumentacion = new DetalleDocumentacion
+                {
+                    Descripcion = detalleDocumentoDto.Descripcion,
+                    DocumentacionProcedenciaDestinos = detalleDocumentoDto.IdsProcedenciasDestinos?
+                    .Select(id => new DocumentacionProcedenciaDestino
+                    {
+                        IdProcedenciaDestino = id
+                    }).ToList() ?? new List<DocumentacionProcedenciaDestino>(),
+                    FechaHora = detalleDocumentoDto.FechaHora,
+                    FechaHoraSolicitud = detalleDocumentoDto.FechaHoraSolicitud,
+                    IdTipoDocumento = detalleDocumentoDto.IdTipoDocumento,
+
+                };
+
+                // Agregar archivo - BEGIN
+                //var id = Guid.NewGuid();
+                var fileEntity = new Archivo
+                {
+                    //Id = id,
+                    NombreOriginal = detalleDocumentoDto.Archivo.FileName,
+                    //NombreUnico = $"{id}{detalleDocumentoDto.Archivo.Extension}",
+                    NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo.FileName)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo.Extension}",
+                    Tipo = detalleDocumentoDto.Archivo.ContentType,
+                    Extension = detalleDocumentoDto.Archivo.Extension,
+                    PesoEnBytes = detalleDocumentoDto.Archivo.Length,
+                };
+
+                fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo.Content, fileEntity.NombreUnico, ARCHIVOS_PATH);
+                fileEntity.FechaCreacion = DateTime.Now;
+                nuevoDetalleDocumentacion.Archivo = fileEntity;
+                // Agregar archivo - END
+
                 documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
             }
         }
@@ -159,11 +225,16 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
                 .ToList();
 
             var detallesDocumentacionParaEliminar = documentacion.DetallesDocumentacion
-                .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
+                .Where(c => c.Id > 0 && c.Borrado == false && !idsEnRequest.Contains(c.Id)) // Solo las coordinaciones que ya existen en la base de datos y no están en el request
                 .ToList();
-            foreach (var coordinacion in detallesDocumentacionParaEliminar)
+            foreach (var detalleAEliminar in detallesDocumentacionParaEliminar)
             {
-                _unitOfWork.Repository<DetalleDocumentacion>().DeleteEntity(coordinacion);
+                if (detalleAEliminar.IdArchivo.HasValue)
+                {
+                    _unitOfWork.Repository<Archivo>().DeleteEntity(detalleAEliminar.Archivo);
+                }
+
+                _unitOfWork.Repository<DetalleDocumentacion>().DeleteEntity(detalleAEliminar);
             }
         }
 
@@ -171,7 +242,14 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
 
         if (request.IdDocumento.HasValue && request.IdDocumento.Value > 0)
         {
-            _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
+            if (request.DetallesDocumentaciones.Any())
+            {
+                _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
+            }
+            else
+            {
+                _unitOfWork.Repository<Documentacion>().DeleteEntity(documentacion);
+            }
         }
         else
         {
@@ -184,7 +262,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
             throw new Exception("No se pudo insertar/actualizar los detalles de la documentacion");
         }
 
-        _logger.LogInformation($"{nameof(CreateOrUpdateDetalleDocumentacionesCommandHandler)} - END");
+        _logger.LogInformation($"{nameof(ManageDocumentacionesCommandHandler)} - END");
         return new CreateOrUpdateDocumentacionResponse { IdDocumentacion = documentacion.Id };
 
     }
@@ -194,8 +272,8 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
     private async Task UpdateProcedenciaDestinoAsync(DetalleDocumentacion detalle, List<int> procedenciasDestinos)
     {
         // 1. Asegúrate de que las relaciones actuales están cargadas
-         await _unitOfWork.Repository<DetalleDocumentacion>()
-            .GetByIdWithSpec(new DetalleDocumentacionSpecification(detalle.Id));
+        await _unitOfWork.Repository<DetalleDocumentacion>()
+           .GetByIdWithSpec(new DetalleDocumentacionSpecification(detalle.Id));
 
         // 2. Obtener los IDs actuales en la base de datos
         var procedenciasActuales = detalle.DocumentacionProcedenciaDestinos
@@ -235,7 +313,7 @@ public class CreateOrUpdateDetalleDocumentacionesCommandHandler : IRequestHandle
         }
 
         // 4. Actualizar el objeto principal (se reflejarán los cambios en las relaciones)
-       //_unitOfWork.Repository<DetalleDocumentacion>().UpdateEntity(detalle);
+        //_unitOfWork.Repository<DetalleDocumentacion>().UpdateEntity(detalle);
     }
 
 

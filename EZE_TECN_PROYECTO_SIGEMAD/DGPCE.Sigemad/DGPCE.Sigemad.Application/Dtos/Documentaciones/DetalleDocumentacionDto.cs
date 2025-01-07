@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DGPCE.Sigemad.Application.Dtos.Common;
+using DGPCE.Sigemad.Domain.Modelos;
 
-namespace DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
+namespace DGPCE.Sigemad.Application.Dtos.Documentaciones;
 public class DetalleDocumentacionDto
 {
     public int? Id { get; set; }
@@ -13,7 +10,8 @@ public class DetalleDocumentacionDto
     public int IdTipoDocumento { get; set; }
     public string Descripcion { get; set; }
     public Guid? IdArchivo { get; set; }
+    public FileDto? Archivo { get; set; }
 
-    public List<int>? DocumentacionProcedenciasDestinos { get; set; }= new ();
+    public List<int>? IdsProcedenciasDestinos { get; set; } = new();
 
 }
