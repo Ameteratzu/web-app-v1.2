@@ -14,6 +14,7 @@
   <app-address
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataDir"
+    [dataMaestros]="dataMaestros"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 1 && isDataReady"
     class="component-width"
@@ -22,6 +23,7 @@
   <app-cecopi
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataCecopi"
+    [dataMaestros]="dataMaestros"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 2 && isDataReady"
     class="component-width"
@@ -30,6 +32,7 @@
   <app-pma
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataPma"
+    [dataMaestros]="dataMaestros"
     (save)="onSaveFromChild($event)"
     *ngIf="selectedOption.value === 3 && isDataReady"
     class="component-width"
