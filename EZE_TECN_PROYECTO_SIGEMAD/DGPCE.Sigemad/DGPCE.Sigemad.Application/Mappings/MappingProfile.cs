@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
@@ -246,6 +247,8 @@ public class MappingProfile : Profile
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>();
+
+        CreateMap<Archivo, ArchivoDto>();
     }
 
 }

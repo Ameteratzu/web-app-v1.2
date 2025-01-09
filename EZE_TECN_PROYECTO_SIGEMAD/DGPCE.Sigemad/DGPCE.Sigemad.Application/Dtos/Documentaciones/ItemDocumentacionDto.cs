@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
+﻿using DGPCE.Sigemad.Application.Dtos.Archivos;
+using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Dtos.Documentaciones;
@@ -9,7 +10,7 @@ public class ItemDocumentacionDto
     public DateTime FechaHoraSolicitud { get; set; }
     public TipoDocumento TipoDocumento { get; set; }
     public string Descripcion { get; set; }
-    public Guid? IdArchivo { get; set; }
+    public ArchivoDto? Archivo { get; set; }
     public List<ProcedenciaDto> ProcedenciaDestinos { get; set; }
 
 }
