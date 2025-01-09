@@ -1,18 +1,9 @@
-﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
-using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
-using DGPCE.Sigemad.Application.Dtos.Evoluciones;
-using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DGPCE.Sigemad.Application.Dtos.Common;
 
 namespace DGPCE.Sigemad.Application.Dtos.Documentaciones;
-public class DocumentacionDto
+public class DocumentacionDto: BaseDto<int>
 {
-    public int Id { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
 
-    public List<DetalleDocumentacionBusquedaDto>? DetallesDocumentacion { get; set; }
+    public List<ItemDocumentacionDto> Detalles { get; set; } = new();
 }

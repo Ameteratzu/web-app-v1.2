@@ -1,6 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Constants;
 using DGPCE.Sigemad.Domain.Modelos;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DGPCE.Sigemad.Application.Specifications.Incendios;
 
@@ -23,12 +22,14 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
 
         if (request.IdEstadoIncendio.HasValue)
         {
+            /*
             AddInclude(i => i.Evoluciones);
 
             AddCriteria(i => !i.Borrado && i.Evoluciones
                        .Where(e => !e.Borrado)
                        .OrderByDescending(e => e.FechaCreacion)
                        .Select(e => e.Parametro).FirstOrDefault(p => !p.Borrado).IdEstadoIncendio == request.IdEstadoIncendio.Value);
+            */
         }
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)

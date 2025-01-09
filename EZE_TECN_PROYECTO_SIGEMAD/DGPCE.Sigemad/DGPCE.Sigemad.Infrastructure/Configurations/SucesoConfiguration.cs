@@ -8,7 +8,7 @@ public class SucesoConfiguration : IEntityTypeConfiguration<Suceso>
 {
     public void Configure(EntityTypeBuilder<Suceso> builder)
     {
-        builder.HasKey(e => e.Id).HasName("Suceso_PK");
+        builder.HasKey(e => e.Id);
 
         builder.ToTable("Suceso");
 
@@ -16,7 +16,6 @@ public class SucesoConfiguration : IEntityTypeConfiguration<Suceso>
 
         builder.HasOne(d => d.TipoSuceso).WithMany()
             .HasForeignKey(d => d.IdTipo)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("TipoSucesoSuceso");
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -9,8 +9,8 @@ public class CreateOrUpdateAreaAfectadaCommandValidator : AbstractValidator<Crea
 {
     public CreateOrUpdateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)
     {
-        RuleFor(p => p.IdIncendio)
-            .GreaterThan(0).WithMessage(localizer["IncendioIdObligatorio"]);
+        RuleFor(p => p.IdSuceso)
+            .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
         // Validación para cada elemento de la lista AreasAfectadas
         RuleForEach(command => command.AreasAfectadas)

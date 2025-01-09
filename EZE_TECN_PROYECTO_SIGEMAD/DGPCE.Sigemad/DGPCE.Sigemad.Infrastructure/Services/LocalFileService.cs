@@ -46,4 +46,25 @@ public class LocalFileService : IFileService
 
         return filePath;
     }
+
+    public async Task<string> SaveFileAsync(byte[] fileBytes, string fileName, string fileCategory)
+    {
+        // Generar la ruta de almacenamiento
+        string year = DateTime.UtcNow.Year.ToString();
+        string month = DateTime.UtcNow.Month.ToString("D2");
+
+        var folderPath = Path.Combine(_folderBase, fileCategory, year, month);
+        var filePath = Path.Combine(folderPath, fileName);
+
+        // Crear directorios si no existen
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        // Guardar el archivo
+        await File.WriteAllBytesAsync(filePath, fileBytes);
+
+        return filePath;
+    }
 }

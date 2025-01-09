@@ -6,6 +6,6 @@ namespace DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOr
 public class CreateOrUpdateCoordinacionPmaCommand: IRequest<CreateOrUpdateCoordinacionPmaResponse>
 {
     public int? IdDireccionCoordinacionEmergencia { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
     public List<CreateOrUpdateCoordinacionPmaDto> Coordinaciones { get; set; } = new();
 }

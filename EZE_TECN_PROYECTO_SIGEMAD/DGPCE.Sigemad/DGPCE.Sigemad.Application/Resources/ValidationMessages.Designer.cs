@@ -142,6 +142,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datos Principal son obligatorios.
+        /// </summary>
+        public static string DatoPrincipalObligatorio {
+            get {
+                return ResourceManager.GetString("DatoPrincipalObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Denominacion no puede exceder los 255 caracteres.
         /// </summary>
         public static string DenominacionMaxLength {
@@ -340,6 +349,33 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Id de lista Entrada/Salida es obligatorio.
+        /// </summary>
+        public static string IdEntradaSalidaObligatorio {
+            get {
+                return ResourceManager.GetString("IdEntradaSalidaObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id de estado incendio es obligatorio.
+        /// </summary>
+        public static string IdEstadoIncendioObligatorio {
+            get {
+                return ResourceManager.GetString("IdEstadoIncendioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id de lista de medios es obligatorio.
+        /// </summary>
+        public static string IdMedioObligatorio {
+            get {
+                return ResourceManager.GetString("IdMedioObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Id no puede ser vacio.
         /// </summary>
         public static string IdNoVacio {
@@ -372,6 +408,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string IdSucesoAsociadoObligatorio {
             get {
                 return ResourceManager.GetString("IdSucesoAsociadoObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id Suceso es obligatorio.
+        /// </summary>
+        public static string IdSucesoObligatorio {
+            get {
+                return ResourceManager.GetString("IdSucesoObligatorio", resourceCulture);
             }
         }
         
@@ -574,6 +619,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datos de parámetros son obligatorio.
+        /// </summary>
+        public static string ParametroObligatorio {
+            get {
+                return ResourceManager.GetString("ParametroObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lista de procedencia/Destino es obligatorio.
+        /// </summary>
+        public static string ProcedenciasDestinosObligatorio {
+            get {
+                return ResourceManager.GetString("ProcedenciasDestinosObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provincia CECOPI es invalido.
         /// </summary>
         public static string ProvinciaCECOPIInvalido {
@@ -624,6 +687,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string ProvinciaPMAObligatorio {
             get {
                 return ResourceManager.GetString("ProvinciaPMAObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datos de Registros son obligatorio.
+        /// </summary>
+        public static string RegistroObligatorio {
+            get {
+                return ResourceManager.GetString("RegistroObligatorio", resourceCulture);
             }
         }
         

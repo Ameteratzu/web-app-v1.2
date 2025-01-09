@@ -5,6 +5,6 @@ namespace DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.Create
 public class CreateOrUpdateCoordinacionCecopiCommand : IRequest<CreateOrUpdateCoordinacionCecopiResponse>
 {
     public int? IdDireccionCoordinacionEmergencia { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
     public List<CreateOrUpdateCoordinacionCecopiDto> Coordinaciones { get; set; } = new();
 }

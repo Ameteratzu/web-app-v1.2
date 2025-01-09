@@ -44,7 +44,8 @@ internal class IncendioConfiguration : IEntityTypeConfiguration<Incendio>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("ClaseSucesoIncendio");
 
-        builder.HasOne(d => d.Suceso).WithMany()
+        builder.HasOne(d => d.Suceso)
+            .WithMany(d => d.Incendios)
             .HasForeignKey(d => d.IdSuceso)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("SucesoIncendio");

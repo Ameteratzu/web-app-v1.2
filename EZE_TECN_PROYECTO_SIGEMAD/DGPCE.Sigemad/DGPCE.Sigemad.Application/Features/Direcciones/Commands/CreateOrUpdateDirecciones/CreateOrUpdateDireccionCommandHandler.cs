@@ -45,18 +45,18 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
         }
         else
         {
-            // Validar si el IdIncendio es válido
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
-            if (incendio is null || incendio.Borrado)
+            // Validar si el IdSuceso es válido
+            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
+            if (suceso is null || suceso.Borrado)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
+                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
             // Crear nueva Dirección y Coordinación de Emergencia
             direccionCoordinacionEmergencia = new DireccionCoordinacionEmergencia
             {
-                IdIncendio = request.IdIncendio
+                IdSuceso = request.IdSuceso
             };
         }
 

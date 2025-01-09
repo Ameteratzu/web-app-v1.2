@@ -7,9 +7,9 @@ public class CreateOtraInformacionCommandValidator : AbstractValidator<CreateOtr
 {
     public CreateOtraInformacionCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(p => p.IdIncendio)
-            .NotEmpty().WithMessage(localizer["IncendioIdNoVacio"])
-            .NotEqual(0).WithMessage(localizer["IncendioIdObligatorio"]);
+        RuleFor(p => p.IdSuceso)
+            .NotEmpty().WithMessage(localizer["IdSucesoObligatorio"])
+            .NotEqual(0).WithMessage(localizer["IdSucesoObligatorio"]);
         RuleFor(p => p.IdMedio)
             .NotEmpty().WithMessage(localizer["MedioIdNoVacio"])
             .NotEqual(0).WithMessage(localizer["MedioIdObligatorio"]);

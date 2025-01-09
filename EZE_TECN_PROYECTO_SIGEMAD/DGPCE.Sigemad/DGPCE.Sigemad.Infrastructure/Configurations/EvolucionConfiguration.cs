@@ -11,7 +11,7 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
 
         builder.ToTable("Evolucion");
 
-        builder.Property(e => e.IdIncendio)
+        builder.Property(e => e.IdSuceso)
          .IsRequired();
 
         builder.HasKey(e => e.Id);
@@ -43,6 +43,18 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .HasForeignKey<Registro>(r => r.Id) // El Id de Registro es también la clave foránea
             .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
 
+        // Configurar relación uno a uno con Parametro
+        builder.HasOne(e => e.Parametro)
+            .WithOne(r => r.Evolucion)
+            .HasForeignKey<Parametro>(r => r.Id) // El Id de Registro es también la clave foránea
+            .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
+
+        // Configurar relación uno a uno con Dato Principal
+        builder.HasOne(e => e.DatoPrincipal)
+            .WithOne(r => r.Evolucion)
+            .HasForeignKey<DatoPrincipal>(r => r.Id) // El Id de Registro es también la clave foránea
+            .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
+
 
         builder.HasMany(e => e.AreaAfectadas)
             .WithOne(r => r.Evolucion)
@@ -50,9 +62,9 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .OnDelete(DeleteBehavior.Restrict); // Configurar comportamiento de eliminación en cascada
 
 
-        builder.HasOne(d => d.Incendio)
+        builder.HasOne(d => d.Suceso)
                 .WithMany(i => i.Evoluciones)
-                .HasForeignKey(d => d.IdIncendio)
+                .HasForeignKey(d => d.IdSuceso)
                 .OnDelete(DeleteBehavior.Restrict);
 
     }

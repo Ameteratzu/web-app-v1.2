@@ -6,7 +6,7 @@ CREATE TABLE dbo.SituacionOperativa (
 
 CREATE TABLE dbo.Evolucion (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    IdIncendio int NOT NULL FOREIGN KEY REFERENCES Incendio(Id),
+    IdSuceso int NOT NULL FOREIGN KEY REFERENCES Suceso(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,
@@ -64,15 +64,13 @@ CREATE TABLE dbo.DatoPrincipal (
 
 
 CREATE TABLE dbo.Parametro (
-	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
     IdEstadoIncendio int NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
     FechaFinal DATETIME2(7) NULL,
-    SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
-    PlanEmergenciaActivado NVARCHAR(255) NULL,
+    IdPlanEmergencia INT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
     IdFaseEmergencia INT NULL FOREIGN KEY REFERENCES FaseEmergencia(Id),
-    --IdSituacionOperativa int NULL FOREIGN KEY REFERENCES SituacionOperativa(Id),
-    --IdSituacionEquivalente INT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
+    IdPlanSituacion INT NULL FOREIGN KEY REFERENCES PlanSituacion(Id),
+    SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,

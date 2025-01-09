@@ -8,7 +8,7 @@ namespace DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvolucio
 {
     public class ManageEvolucionCommand : IRequest<ManageEvolucionResponse>
     {
-        public int IdIncendio { get; set; }
+        public int IdSuceso { get; set; }
         public int? IdEvolucion { get; set; }
         public CreateRegistroCommand? Registro { get; set; }
         public CreateDatoPrincipalCommand? DatoPrincipal { get; set; }

@@ -21,7 +21,7 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
     {
         if (request.IdEstadoIncendio.HasValue)
         {
-            AddInclude(i => i.Evoluciones);
+            //AddInclude(i => i.Evoluciones);
 
             //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
             //AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));

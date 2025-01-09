@@ -7,7 +7,7 @@ public class DireccionCoordinacionEmergenciaActiveByIdSpecification : BaseSpecif
     public DireccionCoordinacionEmergenciaActiveByIdSpecification(DireccionCoordinacionEmergenciaSpecificationParams request)
        : base(DireccionCoordinacionEmergencia =>
          (!request.Id.HasValue || DireccionCoordinacionEmergencia.Id == request.Id) &&
-        (!request.IdIncendio.HasValue || DireccionCoordinacionEmergencia.IdIncendio == request.IdIncendio) &&
+        (!request.IdSuceso.HasValue || DireccionCoordinacionEmergencia.IdSuceso == request.IdSuceso) &&
         (DireccionCoordinacionEmergencia.Borrado == false))
     {
         if (request.Id.HasValue)

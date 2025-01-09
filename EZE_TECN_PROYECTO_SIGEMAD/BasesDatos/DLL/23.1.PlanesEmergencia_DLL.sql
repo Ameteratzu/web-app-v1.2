@@ -170,7 +170,7 @@ CREATE TABLE ActivacionSistema (
     Codigo NVARCHAR(15) NULL,
     Nombre NVARCHAR(150) NULL,
     UrlAcceso NVARCHAR(MAX) NULL,
-    -- Copernicus
+    -- UCPM
     FechaHoraPeticion DATETIME2(7) NULL,
     FechaAceptacion DATE NULL,
     Peticiones NVARCHAR(MAX) NULL,

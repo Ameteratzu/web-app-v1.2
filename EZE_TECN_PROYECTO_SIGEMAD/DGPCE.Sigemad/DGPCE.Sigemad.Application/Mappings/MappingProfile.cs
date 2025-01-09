@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
@@ -26,7 +27,6 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
-using DGPCE.Sigemad.Application.Features.Documentaciones.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
@@ -54,14 +54,12 @@ using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
-using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.CreateSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
-using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings;
@@ -119,7 +117,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ProcedenciaDestinos,
             opt => opt.MapFrom(src => src.RegistroProcedenciasDestinos.Select(p => new RegistroProcedenciaDestino { IdProcedenciaDestino = p })));
 
-        
+
 
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -171,7 +169,7 @@ public class MappingProfile : Profile
         CreateMap<CreateOtraInformacionCommand, OtraInformacion>();
         CreateMap<OtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.IdOtraInformacion, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.IdIncendio, opt => opt.MapFrom(src => src.IdIncendio));
+            .ForMember(dest => dest.IdSuceso, opt => opt.MapFrom(src => src.IdSuceso));
 
         CreateMap<OtraInformacion, OtraInformacionDto>()
             .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
@@ -193,7 +191,6 @@ public class MappingProfile : Profile
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
-        CreateMap<CreateSucesoRelacionadoCommand, SucesoRelacionado>();
         CreateMap<CreateFileCommand, Archivo>();
         CreateMap<CreateRegistroCommand, Registro>()
             .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.Ignore())
@@ -227,13 +224,16 @@ public class MappingProfile : Profile
            .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<Documentacion, DocumentacionDto>()
-             .ForMember(dest => dest.DetallesDocumentacion, opt => opt.MapFrom(src => src.DetallesDocumentacion));
+             .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
-           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
                 .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
+
+        CreateMap<DetalleDocumentacion, ItemDocumentacionDto>()
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion})));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
@@ -247,17 +247,8 @@ public class MappingProfile : Profile
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>();
+
+        CreateMap<Archivo, ArchivoDto>();
     }
 
-    /*
-    private ICollection<RegistroProcedenciaDestino> MapEvolucionProcedenciaDestinos(ICollection<int>? source)
-    {
-        if (source == null)
-        {
-            return new List<RegistroProcedenciaDestino>();
-        }
-
-        return source.Select(id => new RegistroProcedenciaDestino { IdProcedenciaDestino = id }).ToList();
-    }
-    */
 }

@@ -33,9 +33,9 @@ export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(modifiedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      sessionStorage.removeItem('jwtToken')
-      sessionStorage.removeItem('refreshToken');
-      router.navigate(['/login']);
+      // sessionStorage.removeItem('jwtToken')
+      // sessionStorage.removeItem('refreshToken');
+      // router.navigate(['/login']);
       if (error.status === 401 && !req.url.includes('/refresh-token')) {
         return handle401Error(modifiedReq, next, authService);
       }
