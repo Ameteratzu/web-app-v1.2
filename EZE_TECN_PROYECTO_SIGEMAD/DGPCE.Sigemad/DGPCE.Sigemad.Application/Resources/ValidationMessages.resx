@@ -349,4 +349,16 @@
   <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
     <value>Id de estado incendio es obligatorio</value>
   </data>
+  <data name="AutoridadSolicitanteObligatorio" xml:space="preserve">
+    <value>Autoridad Solicitante es obligatorio</value>
+  </data>
+  <data name="AutoridadSolicitanteMaxLength" xml:space="preserve">
+    <value>Autoridad solicitante no puede superar los 510 caracteres</value>
+  </data>
+  <data name="DescripcionSolicitudObligatorio" xml:space="preserve">
+    <value>Descripción Solicitud es obligatorio</value>
+  </data>
+  <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
+    <value>Descripción Solicitud no puede superar los 510 caracteres</value>
+  </data>
 </root>

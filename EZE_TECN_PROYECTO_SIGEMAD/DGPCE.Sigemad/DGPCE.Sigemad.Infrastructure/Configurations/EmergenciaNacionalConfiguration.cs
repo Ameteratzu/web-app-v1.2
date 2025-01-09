@@ -12,12 +12,14 @@ public class EmergenciaNacionalConfiguration : IEntityTypeConfiguration<Emergenc
         builder.HasKey(c => c.Id);
 
         builder.Property(e => e.Autoridad)
+                .IsRequired()
                .HasMaxLength(510);
 
         builder.Property(e => e.DescripcionSolicitud)
+                .IsRequired()
                .HasMaxLength(510);
 
-        builder.Property(e => e.FechaHoraSolicitud).HasColumnType("datetime");
+        builder.Property(e => e.FechaHoraSolicitud).IsRequired().HasColumnType("datetime");
 
         builder.Property(e => e.DescripcionDeclaracion)
                .HasMaxLength(510);
@@ -39,5 +41,6 @@ public class EmergenciaNacionalConfiguration : IEntityTypeConfiguration<Emergenc
         builder.Property(e => e.EliminadoPor)
             .HasMaxLength(500)
             .IsUnicode(false);
+
     }
 }

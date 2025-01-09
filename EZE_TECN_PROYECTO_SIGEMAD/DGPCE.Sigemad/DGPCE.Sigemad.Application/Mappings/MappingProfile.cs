@@ -6,6 +6,7 @@ using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
+using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
@@ -27,6 +28,7 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
+using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
@@ -188,6 +190,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DetalleOtraInformacion_ProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
 
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
+
+
+        CreateMap<ManageEmergenciasNacionalesCommand, ActuacionRelevanteDGPCE>()
+          .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
+
+        CreateMap<EmergenciaNacionalDto, EmergenciaNacional>();
+
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();

@@ -14,6 +14,7 @@ public class ActuacionRelevanteDGPCEConfiguration : IEntityTypeConfiguration<Act
         builder.HasOne(s => s.Suceso)
             .WithMany()
             .HasForeignKey(s => s.IdSuceso)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(e => e.CreadoPor)
@@ -30,5 +31,11 @@ public class ActuacionRelevanteDGPCEConfiguration : IEntityTypeConfiguration<Act
         builder.Property(e => e.EliminadoPor)
             .HasMaxLength(500)
             .IsUnicode(false);
+
+        // Configurar relación uno a uno con EmergenciaNacional
+        builder.HasOne(a => a.EmergenciaNacional)
+            .WithOne(e => e.actuacionRelevanteDGPCE)
+            .HasForeignKey<EmergenciaNacional>(r => r.Id) // El Id de EmergenciaNacional es también la clave foránea
+            .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
     }
 }
