@@ -23,7 +23,6 @@ import { DireccionesService } from '../../../services/direcciones.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
-import { CoordinationAddress } from '../../../types/coordination-address';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
@@ -70,6 +69,8 @@ export class CecopiComponent {
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
+  @Input() dataMaestros: any;
+
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public polygon = signal<any>([]);
@@ -88,7 +89,6 @@ export class CecopiComponent {
 
   formDataCecopi!: FormGroup;
 
-  public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
@@ -96,11 +96,8 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
-    this.coordinationAddress.set(coordinationAddress);
 
-    const provinces = await this.provinceService.get();
-    this.provinces.set(provinces);
+    this.provinces.set(this.dataMaestros.provinces);
 
     this.formDataCecopi = this.fb.group({
       provincia: ['', Validators.required],
