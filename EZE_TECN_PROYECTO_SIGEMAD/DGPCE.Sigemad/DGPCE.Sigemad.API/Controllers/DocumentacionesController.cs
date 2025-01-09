@@ -2,9 +2,9 @@
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
+using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDetalleDocumentacionesById;
-using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,18 +26,6 @@ public class DocumentacionesController : ControllerBase
         _mediator = mediator;
 
     }
-
-    /*
-    [HttpPost("lista")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Crea la documentacion asociada a un incendio")]
-    public async Task<ActionResult<CreateOrUpdateDocumentacionResponse>> Create([FromBody] ManageDocumentacionesCommand command)
-    {
-        var response = await _mediator.Send(command);
-        return Ok(response);
-    }
-    */
 
     [HttpPost("lista")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -67,17 +55,6 @@ public class DocumentacionesController : ControllerBase
 
             if (detalle.Archivo != null)
             {
-                /*
-                detalleDto.Archivo = new FileDto
-                {
-                    Extension = Path.GetExtension(detalle.Archivo.FileName),
-                    Length = detalle.Archivo.Length,
-                    FileName = detalle.Archivo.FileName,
-                    ContentType = detalle.Archivo.ContentType,
-                    Content = detalle.Archivo.OpenReadStream()
-                };
-                */
-
                 using (var memoryStream = new MemoryStream())
                 {
                     await detalle.Archivo.CopyToAsync(memoryStream); // Copia el contenido al MemoryStream
@@ -110,6 +87,17 @@ public class DocumentacionesController : ControllerBase
         var documentacionVm = await _mediator.Send(query);
 
         return Ok(documentacionVm);
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Elimina la documentacion por id")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var command = new DeleteDocumentacionCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
     }
 
 }

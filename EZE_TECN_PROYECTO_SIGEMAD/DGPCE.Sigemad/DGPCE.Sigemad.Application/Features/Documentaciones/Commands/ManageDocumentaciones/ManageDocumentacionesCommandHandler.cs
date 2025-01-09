@@ -105,7 +105,9 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
             }
         }
 
-        var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones.SelectMany(d => d.IdsProcedenciasDestinos).Distinct();
+        var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones
+            .SelectMany(d => d.IdsProcedenciasDestinos ?? new List<int>())
+            .Distinct();
         var documentacionProcedenciaDestinosExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(ic => idsDocumentacionProcedenciaDestinos.Contains(ic.Id));
 
         if (documentacionProcedenciaDestinosExistentes.Count() != idsDocumentacionProcedenciaDestinos.Count())
@@ -134,7 +136,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                     // Actualizar datos existentes
                     _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
                     detalleDocumentacion.Borrado = false;
-                    await UpdateProcedenciaDestinoAsync(detalleDocumentacion, detalleDocumentoDto.IdsProcedenciasDestinos);
+                    await UpdateProcedenciaDestinoAsync(detalleDocumentacion, detalleDocumentoDto.IdsProcedenciasDestinos ?? new List<int>());
 
                 }
                 else
@@ -159,15 +161,15 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                     var fileEntity = new Archivo
                     {
                         //Id = id,
-                        NombreOriginal = detalleDocumentoDto.Archivo.FileName,
+                        NombreOriginal = detalleDocumentoDto.Archivo?.FileName ?? string.Empty,
                         //NombreUnico = $"{id}{detalleDocumentoDto.Archivo.Extension}",
-                        NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo.FileName)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo.Extension}",
-                        Tipo = detalleDocumentoDto.Archivo.ContentType,
-                        Extension = detalleDocumentoDto.Archivo.Extension,
-                        PesoEnBytes = detalleDocumentoDto.Archivo.Length,
+                        NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo?.Extension ?? string.Empty}",
+                        Tipo = detalleDocumentoDto.Archivo?.ContentType ?? string.Empty,
+                        Extension = detalleDocumentoDto.Archivo?.Extension ?? string.Empty,
+                        PesoEnBytes = detalleDocumentoDto.Archivo?.Length ?? 0,
                     };
 
-                    fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo.Content, fileEntity.NombreUnico, ARCHIVOS_PATH);
+                    fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
                     fileEntity.FechaCreacion = DateTime.Now;
                     nuevoDetalleDocumentacion.Archivo = fileEntity;
                     // Agregar archivo - END
@@ -197,15 +199,15 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                 var fileEntity = new Archivo
                 {
                     //Id = id,
-                    NombreOriginal = detalleDocumentoDto.Archivo.FileName,
+                    NombreOriginal = detalleDocumentoDto.Archivo?.FileName ?? string.Empty,
                     //NombreUnico = $"{id}{detalleDocumentoDto.Archivo.Extension}",
-                    NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo.FileName)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo.Extension}",
-                    Tipo = detalleDocumentoDto.Archivo.ContentType,
-                    Extension = detalleDocumentoDto.Archivo.Extension,
-                    PesoEnBytes = detalleDocumentoDto.Archivo.Length,
+                    NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo?.Extension ?? string.Empty}",
+                    Tipo = detalleDocumentoDto.Archivo?.ContentType ?? string.Empty,
+                    Extension = detalleDocumentoDto.Archivo?.Extension ?? string.Empty,
+                    PesoEnBytes = detalleDocumentoDto.Archivo?.Length ?? 0,
                 };
 
-                fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo.Content, fileEntity.NombreUnico, ARCHIVOS_PATH);
+                fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
                 fileEntity.FechaCreacion = DateTime.Now;
                 nuevoDetalleDocumentacion.Archivo = fileEntity;
                 // Agregar archivo - END
@@ -276,9 +278,9 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
            .GetByIdWithSpec(new DetalleDocumentacionSpecification(detalle.Id));
 
         // 2. Obtener los IDs actuales en la base de datos
-        var procedenciasActuales = detalle.DocumentacionProcedenciaDestinos
+        var procedenciasActuales = detalle.DocumentacionProcedenciaDestinos?
             .Select(p => p.IdProcedenciaDestino)
-            .ToList();
+            .ToList() ?? new List<int>();
 
 
         // 3. Identificar relaciones a eliminar
@@ -312,8 +314,6 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
             }
         }
 
-        // 4. Actualizar el objeto principal (se reflejarán los cambios en las relaciones)
-        //_unitOfWork.Repository<DetalleDocumentacion>().UpdateEntity(detalle);
     }
 
 
