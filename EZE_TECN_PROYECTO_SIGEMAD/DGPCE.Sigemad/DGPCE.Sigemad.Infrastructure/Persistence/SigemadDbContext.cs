@@ -46,41 +46,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Streamer>()
-            //.HasMany(m => m.Videos)
-            //    .WithOne(m => m.Streamer)
-            //    .HasForeignKey(m => m.StreamerId)
-            //    .IsRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Director>()
-            //.HasMany(v => v.Videos)
-            //    .WithOne(d => d.Director)
-            //    .HasForeignKey(d => d.DirectorId)
-            //    .IsRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
-            //modelBuilder.Entity<Video>()
-            //    .HasMany(a => a.Actores)
-            //    .WithMany(v => v.Videos)
-            //    .UsingEntity<VideoActor>(
-            //         j => j
-            //           .HasOne(p => p.Actor)
-            //           .WithMany(p => p.VideoActors)
-            //           .HasForeignKey(p => p.ActorId),
-            //        j => j
-            //            .HasOne(p => p.Video)
-            //            .WithMany(p => p.VideoActors)
-            //            .HasForeignKey(p => p.VideoId),
-            //        j =>
-            //        {
-            //            j.HasKey(t => new { t.ActorId, t.VideoId });
-            //        }
-            //);
-
-            //modelBuilder.Entity<VideoActor>().Ignore(va => va.Id);
-
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
@@ -114,7 +79,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
             modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
             modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
-            modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
             modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
         }
@@ -173,8 +137,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<SucesoRelacionado> SucesosRelacionados { get; set; }
         public DbSet<FaseEmergencia> FasesEmergencia { get; set; }
-        public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
-
         public DbSet<Registro> Registros { get; set; }
 
         public DbSet<Parametro> Parametro { get; set; }
