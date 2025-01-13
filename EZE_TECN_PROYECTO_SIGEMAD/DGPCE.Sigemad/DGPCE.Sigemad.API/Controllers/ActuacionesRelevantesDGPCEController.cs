@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
+
 namespace DGPCE.Sigemad.API.Controllers
 {
+    [Authorize]
     [Route("api/v1/actuaciones-relevantes")]
     [ApiController]
     public class ActuacionesRelevantesDGPCEController : ControllerBase

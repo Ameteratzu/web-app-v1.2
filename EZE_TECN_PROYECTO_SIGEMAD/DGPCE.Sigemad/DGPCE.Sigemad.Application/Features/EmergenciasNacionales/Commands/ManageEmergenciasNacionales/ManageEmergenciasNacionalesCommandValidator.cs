@@ -24,7 +24,7 @@ public class ManageEmergenciasNacionalesCommandObjectValidator : AbstractValidat
     public ManageEmergenciasNacionalesCommandObjectValidator(IStringLocalizer<ValidationMessages> localizer)
     {
         RuleFor(x => x.FechaHoraSolicitud)
-          .NotEmpty().WithMessage(localizer["FechaHoraSolicitud"]);
+          .NotNull().NotEmpty().WithMessage(localizer["FechaHoraSolicitud"]);
 
         RuleFor(x => x.Autoridad)
          .NotEmpty().WithMessage(localizer["AutoridadSolicitanteObligatorio"])

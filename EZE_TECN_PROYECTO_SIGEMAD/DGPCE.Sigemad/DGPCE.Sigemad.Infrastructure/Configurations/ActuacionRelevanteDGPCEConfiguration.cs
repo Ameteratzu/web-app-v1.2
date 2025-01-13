@@ -34,7 +34,7 @@ public class ActuacionRelevanteDGPCEConfiguration : IEntityTypeConfiguration<Act
 
         // Configurar relación uno a uno con EmergenciaNacional
         builder.HasOne(a => a.EmergenciaNacional)
-            .WithOne(e => e.actuacionRelevanteDGPCE)
+            .WithOne(e => e.ActuacionRelevanteDGPCE)
             .HasForeignKey<EmergenciaNacional>(r => r.Id) // El Id de EmergenciaNacional es también la clave foránea
             .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
     }

@@ -8,7 +8,7 @@ public class EmergenciaNacionalConfiguration : IEntityTypeConfiguration<Emergenc
 {
     public void Configure(EntityTypeBuilder<EmergenciaNacional> builder)
     {
-        builder.ToTable(nameof(ActuacionRelevanteDGPCE));
+        builder.ToTable(nameof(EmergenciaNacional));
         builder.HasKey(c => c.Id);
 
         builder.Property(e => e.Autoridad)
@@ -41,6 +41,11 @@ public class EmergenciaNacionalConfiguration : IEntityTypeConfiguration<Emergenc
         builder.Property(e => e.EliminadoPor)
             .HasMaxLength(500)
             .IsUnicode(false);
+
+        // Relación uno a uno con ActuacionRelevanteDGPCEConfiguration        
+        builder.HasOne(r => r.ActuacionRelevanteDGPCE)
+            .WithOne(e => e.EmergenciaNacional)
+            .HasForeignKey<EmergenciaNacional>(r => r.Id); // El Id de EmergenciaNacional es también la clave foránea
 
     }
 }

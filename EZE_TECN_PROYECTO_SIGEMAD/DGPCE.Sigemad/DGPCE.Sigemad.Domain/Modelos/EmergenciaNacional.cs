@@ -12,6 +12,6 @@ public class EmergenciaNacional : BaseDomainModel<int>
     public DateTime? FechaHoraDireccion { get; set; }
     public string? Observaciones { get; set; }
 
-    public virtual ActuacionRelevanteDGPCE actuacionRelevanteDGPCE { get; set; }
+    public virtual ActuacionRelevanteDGPCE ActuacionRelevanteDGPCE { get; set; } = null!;
 
 }

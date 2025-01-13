@@ -5,6 +5,7 @@ using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
+using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.ActuacionesRelevantesDGPCE;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -63,23 +64,29 @@ public class ManageEmergenciasNacionalesCommandHandler : IRequestHandler<ManageE
             };
         }
 
-
-        if (actuacion.EmergenciaNacional != null && actuacion.EmergenciaNacional.Borrado! && request.EmergenciaNacional is null)
+        // Mapear la emergencia nacional
+        if (request.EmergenciaNacional != null)
         {
+            _mapper.Map(request, actuacion, typeof(ManageEmergenciasNacionalesCommand), typeof(ActuacionRelevanteDGPCE));
+            actuacion.EmergenciaNacional!.Borrado = false;
+            actuacion.EmergenciaNacional.FechaEliminacion = null;
+            actuacion.EmergenciaNacional.EliminadoPor = null;
+
+        }
+        else if (actuacion.EmergenciaNacional != null && !actuacion.EmergenciaNacional.Borrado)
+        {
+            // Eliminar lógicamente la emergencia nacional si no se envía en la solicitud
             _unitOfWork.Repository<EmergenciaNacional>().DeleteEntity(actuacion.EmergenciaNacional);
         }
 
-        
-        _mapper.Map(request, actuacion);
-
-       // Guardar la emergencia nacional
-       if (request.IdActuacionRelevante.HasValue)
+        // Guardar la actuación relevante
+        if (request.IdActuacionRelevante.HasValue)
         {
-          _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacion);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacion);
         }
-       else
+        else
         {
-          _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacion);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacion);
         }
 
         var saveResult = await _unitOfWork.Complete();
@@ -88,8 +95,8 @@ public class ManageEmergenciasNacionalesCommandHandler : IRequestHandler<ManageE
             throw new Exception("No se pudo insertar/actualizar nueva emergencia nacional");
         }
 
-        _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - END");
+        _logger.LogInformation($"{nameof(ManageEmergenciasNacionalesCommandHandler)} - END");
         return new ManageEmergenciaNacionalResponse { IdActuacionRelevante = actuacion.Id };
-
     }
+
 }

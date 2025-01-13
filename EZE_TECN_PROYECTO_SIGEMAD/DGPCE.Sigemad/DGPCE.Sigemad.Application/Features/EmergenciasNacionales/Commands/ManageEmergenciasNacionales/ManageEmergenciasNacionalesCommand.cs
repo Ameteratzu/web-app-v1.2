@@ -7,5 +7,5 @@ public class ManageEmergenciasNacionalesCommand : IRequest<ManageEmergenciaNacio
 {
     public int? IdActuacionRelevante { get; set; }
     public int IdSuceso { get; set; }
-    public EmergenciaNacionalDto EmergenciaNacional { get; set; } = null!;
+    public EmergenciaNacionalDto? EmergenciaNacional { get; set; } = null!;
 }
