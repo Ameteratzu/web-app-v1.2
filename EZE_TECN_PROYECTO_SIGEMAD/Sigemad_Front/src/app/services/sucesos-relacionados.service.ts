@@ -45,8 +45,8 @@ export class SucesosRelacionadosService {
     );
   }
 
-  delete({ idSucesoPrincipal, idSucesoAsociado }: { idSucesoPrincipal: number; idSucesoAsociado: number }) {
-    const endpoint = `/sucesos/${idSucesoPrincipal}/relacionados/${idSucesoAsociado}`;
+  delete(idSucesoPrincipal: number | string) {
+    const endpoint = `/sucesos-relacionados/${idSucesoPrincipal}`;
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
 }

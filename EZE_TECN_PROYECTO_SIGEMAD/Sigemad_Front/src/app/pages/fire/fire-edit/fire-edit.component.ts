@@ -193,7 +193,7 @@ export class FireEditComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.info('-----result', result);
+      console.info('close', result);
       if (result) {
         this.cargarRegistros();
       }

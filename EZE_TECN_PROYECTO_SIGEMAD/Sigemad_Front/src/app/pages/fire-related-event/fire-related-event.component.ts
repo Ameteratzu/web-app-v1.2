@@ -17,7 +17,8 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
-import { FireOtherInformationService } from '../../services/fire-other-information.service';
+
+import { SucesosRelacionadosService } from '../../services/sucesos-relacionados.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { FireRelatedEventForm } from './components/fire-related-event-form/fire-related-event-form.component';
@@ -33,16 +34,6 @@ const MY_DATE_FORMATS = {
     monthYearA11yLabel: 'MMMM YYYY',
   },
 };
-
-interface FormType {
-  id?: string;
-  fecha: Date;
-  hora: any;
-  procendenciaDestino: { id: string; descripcion: string }[];
-  medio: { id: string; descripcion: string };
-  asunto: string;
-  observaciones: string;
-}
 
 @Component({
   selector: 'app-fire-create',
@@ -72,16 +63,18 @@ interface FormType {
 export class FireRelatedEventComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<FireRelatedEventComponent>,
-    private otherInformationService: FireOtherInformationService,
     private spinner: NgxSpinnerService,
     public alertService: AlertService
   ) {}
 
   @ViewChild(MatSort) sort!: MatSort;
 
+  public sucesosRelacionadosService = inject(SucesosRelacionadosService);
+
   public toast = inject(MatSnackBar);
 
   private fb = inject(FormBuilder);
+
   dataProps = inject(MAT_DIALOG_DATA) as {
     title: string;
     fire: any;
@@ -147,8 +140,8 @@ export class FireRelatedEventComponent implements OnInit {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          this.closeModal();
-
+          //this.closeModal();
+          await this.sucesosRelacionadosService.delete(this.dataProps.fireDetail.id);
           this.spinner.hide();
 
           this.alertService
