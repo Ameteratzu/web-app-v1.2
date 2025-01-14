@@ -7,7 +7,7 @@ namespace DGPCE.Sigemad.Infrastructure.Configurations;
     {
         public void Configure(EntityTypeBuilder<TipoSistemaEmergencia> builder)
         {
-            builder.ToTable("tiposistemaEmergencia");
+            builder.ToTable(nameof(TipoSistemaEmergencia));
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Descripcion)
