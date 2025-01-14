@@ -159,5 +159,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<EmergenciaNacional> EmergenciasNacionales { get; set; }
 
+        public DbSet<DeclaracionZAGEP> DeclaracionesZAGEP { get; set; }
+
     }
 }
