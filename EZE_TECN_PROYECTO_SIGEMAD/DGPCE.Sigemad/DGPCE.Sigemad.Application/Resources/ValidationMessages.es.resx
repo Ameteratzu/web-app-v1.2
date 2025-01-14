@@ -310,10 +310,10 @@
     <value>IdTipoDocumento es invalido</value>
   </data>
   <data name="DescripcionObligatorio" xml:space="preserve">
-    <value>Descripcion es obligatorio</value>
+    <value>Descripción es obligatorio</value>
   </data>
   <data name="DescripcionMaxLength" xml:space="preserve">
-    <value>Descripcion no puede exceder los 255 caracteres</value>
+    <value>Descripción no puede exceder los 255 caracteres</value>
   </data>
   <data name="IdArchivoObligatorio" xml:space="preserve">
     <value>IdArchivo es obligatorio</value>
@@ -347,5 +347,17 @@
   </data>
   <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
     <value>Id de estado incendio es obligatorio</value>
+  </data>
+  <data name="AutoridadSolicitanteObligatorio" xml:space="preserve">
+    <value>Autoridad Solicitante es obligatorio</value>
+  </data>
+  <data name="AutoridadSolicitanteMaxLength" xml:space="preserve">
+    <value>Autoridad solicitante no puede superar los 510 caracteres</value>
+  </data>
+  <data name="DescripcionSolicitudObligatorio" xml:space="preserve">
+    <value>Descripción Solicitud es obligatorio</value>
+  </data>
+  <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
+    <value>Descripción Solicitud no puede superar los 510 caracteres</value>
   </data>
 </root>
