@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -114,7 +114,6 @@ export class FireRelatedEventComponent implements OnInit {
   public displayedColumns: string[] = ['fecha', 'Tipo de suceso', 'Estado', 'Denominación', 'opciones'];
 
   async ngOnInit() {
-    console.info("dataProps*/", this.dataProps.fire.idSuceso)
     this.formData = this.fb.group({
       fecha: ['', Validators.required],
       hora: ['', Validators.required],
@@ -128,106 +127,13 @@ export class FireRelatedEventComponent implements OnInit {
       municipio: ['', Validators.required],
       provincia: ['', Validators.required],
     });
-
-    this.isToEditDocumentation();
-  }
-
-  async isToEditDocumentation() {
-    if (!this.dataProps?.fireDetail?.id) {
-      return;
-    }
-    const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fireDetail.id));
-
-    const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
-      id: otraInformacion.id,
-      asunto: otraInformacion.asunto,
-      fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
-      hora: moment(otraInformacion.fechaHora).format('HH:mm'),
-      medio: otraInformacion.medio,
-      observaciones: otraInformacion.observaciones,
-      procendenciaDestino: otraInformacion.procedenciasDestinos,
-    }));
   }
 
   trackByFn(index: number, item: any): number {
     return item.id;
   }
 
-  onSubmit(formDirective: FormGroupDirective): void {
-    if (this.formData.valid) {
-      const data = this.formData.value;
-      if (this.isCreate() == -1) {
-        //this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
-      } else {
-        this.editarItem(this.isCreate());
-      }
-
-      formDirective.resetForm();
-      this.formData.reset();
-    } else {
-      this.formData.markAllAsTouched();
-    }
-  }
-
-  //Función para guardar en base de datos
-  async saveList() {
-    if (this.isSaving()) {
-      return;
-    }
-    this.isSaving.set(true);
-    /*
-    if (this.dataOtherInformation().length <= 0) {
-      this.showToast({ title: 'Debe meter data en la lista' });
-      this.isSaving.set(false);
-      return;
-    }
-
-
-    const arrayToSave = this.dataOtherInformation().map((item) => {
-      return {
-        id: item.id ?? null,
-        fechaHora: this.getFechaHora(item.fecha, item.hora),
-        idMedio: item.medio?.id ?? null,
-        asunto: item.asunto,
-        observaciones: item.observaciones,
-        idsProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino) => procendenciaDestino.id),
-      };
-    });
-    const objToSave = {
-      idOtraInformacion: this.dataProps?.fireDetail?.id,
-      idIncendio: this.dataProps?.fire?.id,
-      lista: arrayToSave,
-    };
-    */
-    try {
-      this.spinner.show();
-      const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post({});
-      if (resp!.idOtraInformacion > 0) {
-        this.isSaving.set(false);
-        this.spinner.hide();
-
-        this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro subido correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal({ refresh: true });
-          });
-      } else {
-        this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
-        this.spinner.hide();
-      }
-    } catch (error) {
-      console.info({ error });
-      this.spinner.hide();
-    }
-  }
-
   async delete() {
-    //const toolbar = document.querySelector('mat-toolbar');
-    //this.renderer.setStyle(toolbar, 'z-index', '1');
     this.spinner.show();
 
     this.alertService
@@ -241,12 +147,9 @@ export class FireRelatedEventComponent implements OnInit {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await this.otherInformationService.delete(Number(this.dataProps?.fireDetail?.id));
-          //this.coordinationServices.clearData();
-          //setTimeout(() => {
-          //this.renderer.setStyle(toolbar, 'z-index', '5');
+          this.closeModal();
+
           this.spinner.hide();
-          //}, 2000);
 
           this.alertService
             .showAlert({
@@ -264,23 +167,6 @@ export class FireRelatedEventComponent implements OnInit {
 
   seleccionarItem(index: number) {
     this.isCreate.set(index);
-    /*
-    const medioSelected = () => this.listadoMedios().find((medio) => medio.id === Number(this.dataOtherInformation()[index].medio.id));
-
-    const procedenciasSelecteds = () => {
-      const idsABuscar = this.dataOtherInformation()[index].procendenciaDestino.map((obj: any) => Number(obj.id));
-      return this.listadoProcedenciaDestino().filter((procedencia) => {
-        return idsABuscar.includes(Number(procedencia.id));
-      });
-    };
-
-    this.formData.patchValue({
-      ...this.dataOtherInformation()[index],
-      medio: medioSelected(),
-      procendenciaDestino: procedenciasSelecteds(),
-    });
-    */
-    //this.formData.patchValue(this.dataOtherInformation()[index]);
   }
 
   editarItem(index: number) {

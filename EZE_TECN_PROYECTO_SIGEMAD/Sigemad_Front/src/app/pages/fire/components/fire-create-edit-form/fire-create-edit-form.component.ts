@@ -237,9 +237,6 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .post(data)
           .then((response) => {
-            console.info('response', response);
-            //TODO toast
-
             this.spinner.hide();
             this.alertService
               .showAlert({
@@ -250,13 +247,6 @@ export class FireCreateEdit implements OnInit {
               .then((result) => {
                 this.closeModal({ refresh: true });
               });
-            /*
-            this.filtrosIncendioService.setFilters({});
-            new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-              //this.router.navigate([`/fire`])
-              window.location.href = '/fire';
-            });
-            */
           })
           .catch((error) => {
             console.log(error);
@@ -300,7 +290,6 @@ export class FireCreateEdit implements OnInit {
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       //this.featuresCoords = features;
-      console.info('features', features);
       this.polygon.set(features);
     });
   }

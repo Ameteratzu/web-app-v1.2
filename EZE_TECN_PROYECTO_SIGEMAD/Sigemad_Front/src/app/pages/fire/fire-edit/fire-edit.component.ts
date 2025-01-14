@@ -182,12 +182,10 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireRelatedEventComponent, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '700px',
+      maxHeight: '95vh',
       disableClose: true,
       data: {
-        title: fireDetail
-          ? 'Editar - Sucesos Relacionados'
-          : 'Nuevo - Sucesos Relacionados',
+        title: fireDetail ? 'Editar - Sucesos Relacionados' : 'Nuevo - Sucesos Relacionados',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fire: this.fire,
         fireDetail,
@@ -195,9 +193,9 @@ export class FireEditComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.info("result", result)
+      console.info('-----result', result);
       if (result) {
-        //this.cargarRegistros();
+        this.cargarRegistros();
       }
     });
   }
@@ -300,6 +298,7 @@ export class FireEditComponent implements OnInit {
       'Otra Información': this.goModalOtherInformation.bind(this),
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
+      'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro];

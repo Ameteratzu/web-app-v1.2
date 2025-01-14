@@ -58,7 +58,7 @@ export class MapCreateComponent {
 
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
-    console.info('init MAP-', onlyView);
+
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
@@ -119,7 +119,7 @@ export class MapCreateComponent {
   }
 
   changeMunicipio(event: any) {
-    console.info('event', event);
+    //console.info('event', event);
   }
 
   addInteractions() {

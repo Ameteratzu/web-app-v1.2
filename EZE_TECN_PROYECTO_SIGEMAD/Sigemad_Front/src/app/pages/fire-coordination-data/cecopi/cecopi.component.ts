@@ -96,7 +96,6 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     this.provinces.set(this.dataMaestros.provinces);
 
     this.formDataCecopi = this.fb.group({
@@ -225,7 +224,7 @@ export class CecopiComponent {
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
-    console.info("this.coordinationServices.dataCecopi()[index]", this.coordinationServices.dataCecopi()[index])
+
     this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];

@@ -26,13 +26,13 @@ export class SucesosRelacionadosService {
   }
 
   get(idSucesoPrincipal: string | number) {
-    const endpoint = `/sucesos/${idSucesoPrincipal}/relacionados`;
+    const endpoint = `/sucesos-relacionados/${idSucesoPrincipal}`;
 
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
-  post(idSucesoPrincipal: string | number, body: any) {
-    const endpoint = `/sucesos/${idSucesoPrincipal}/relacionados`;
+  post(body: any) {
+    const endpoint = `/sucesos-relacionados/lista`;
     return firstValueFrom(
       this.http.post(endpoint, body).pipe(
         map((response) => {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 
 import { DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
@@ -7,14 +7,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import moment from 'moment';
 import { AutonomousCommunityService } from '../../../../services/autonomous-community.service';
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
@@ -31,19 +32,12 @@ import { SeverityLevelService } from '../../../../services/severity-level.servic
 import { SuperficiesService } from '../../../../services/superficies.service';
 import { TerritoryService } from '../../../../services/territory.service';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
-import { ApiResponse } from '../../../../types/api-response.type';
-import { AutonomousCommunity } from '../../../../types/autonomous-community.type';
 import { ComparativeDate } from '../../../../types/comparative-date.type';
 import { Countries } from '../../../../types/country.type';
 import { EventStatus } from '../../../../types/eventStatus.type';
 import { FireStatus } from '../../../../types/fire-status.type';
-import { Fire } from '../../../../types/fire.type';
 import { Move } from '../../../../types/move.type';
-import { Municipality } from '../../../../types/municipality.type';
-import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
-import { Territory } from '../../../../types/territory.type';
-import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
 
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -51,6 +45,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { EventService } from '../../../../services/event.service';
 import { SucesosRelacionadosService } from '../../../../services/sucesos-relacionados.service';
 
+import { AlertService } from '../../../../shared/alert/alert.service';
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -82,6 +77,8 @@ const MY_DATE_FORMATS = {
     MatExpansionModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatCheckboxModule,
+    NgxSpinnerModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -92,15 +89,9 @@ const MY_DATE_FORMATS = {
 })
 export class FireRelatedEventForm implements OnInit {
   @Input() fire: any;
-  /*
-  @Input() fires: ApiResponse<Fire[]> | undefined;
-  @Input() filtros: any;
-  @Input() isLoading: boolean = true;
-  @Input() refreshFilterForm: boolean = true;
-  @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
-  @Output() isLoadingChange = new EventEmitter<boolean>();
-  @Output() refreshFilterFormChange = new EventEmitter<boolean>();
-  */
+  @Input() fireDetail: any;
+  @Output() closeModal = new EventEmitter<void>();
+
   @ViewChild(MatSort) sort!: MatSort;
 
   COUNTRIES_ID = {
@@ -108,6 +99,9 @@ export class FireRelatedEventForm implements OnInit {
     SPAIN: 60,
     FRANCE: 65,
   };
+
+  private spinner = inject(NgxSpinnerService);
+  private alertService = inject(AlertService);
 
   public autonomousCommunityService = inject(AutonomousCommunityService);
   public municipioService = inject(MunicipalityService);
@@ -153,7 +147,9 @@ export class FireRelatedEventForm implements OnInit {
   public dataSource = new MatTableDataSource<any>([]);
 
   public displayedColumns: string[] = ['fecha', 'eventType', 'status', 'denominacion', 'opciones'];
-  public displayedColumnsRelations: string[] = ['fechaCreacion', 'fechaModificacion', 'observaciones', 'idSucesoAsociado', 'opciones'];
+  public displayedColumnsRelations: string[] = ['fecha', 'eventType', 'status', 'denominacion', 'opciones'];
+
+  public isSaving = signal<boolean>(false);
 
   public formData!: FormGroup;
 
@@ -164,75 +160,76 @@ export class FireRelatedEventForm implements OnInit {
   public eventService = inject(EventService);
 
   async ngOnInit() {
-    const fb = new FormBuilder();
-    this.myForm = fb.group({
-      selectField: ['', Validators.required],
-      inputField1: ['', Validators.required],
-      inputField2: ['', Validators.required],
-    });
+    this.spinner.show();
+    try {
+      const fb = new FormBuilder();
+      this.myForm = fb.group({
+        selectField: ['', Validators.required],
+        inputField1: ['', Validators.required],
+        inputField2: ['', Validators.required],
+      });
 
-    this.formData = new FormGroup({
-      name: new FormControl(''),
-      claseSuceco: new FormControl(''),
-      territory: new FormControl(1),
-      country: new FormControl(this.COUNTRIES_ID.SPAIN),
-      CCAA: new FormControl(''),
-      province: new FormControl(''),
-      minicipality: new FormControl(''),
-      move: new FormControl(1),
-      between: new FormControl(1),
-      fechaInicio: new FormControl(moment().subtract(4, 'days').toDate()),
-      fechaFin: new FormControl(moment().toDate()),
-    });
+      this.formData = new FormGroup({
+        name: new FormControl(''),
+        claseSuceco: new FormControl(''),
+        territory: new FormControl(1),
+        country: new FormControl(this.COUNTRIES_ID.SPAIN),
+        CCAA: new FormControl(''),
+        province: new FormControl(''),
+        minicipality: new FormControl(''),
+        move: new FormControl(1),
+        between: new FormControl(1),
+        fechaInicio: new FormControl(moment().subtract(4, 'days').toDate()),
+        fechaFin: new FormControl(moment().toDate()),
+      });
 
-    const estadoSuceso = await this.eventService.get();
-    this.listadoClaseSuceso.set(estadoSuceso);
-    const countriesExtranjeros = await this.countryService.getExtranjeros();
-    this.listaPaisesExtranjeros.set(countriesExtranjeros);
-    const countriesNacionales = await this.countryService.getNacionales();
-    this.listaPaisesNacionales.set(countriesNacionales);
+      const estadoSuceso = await this.eventService.get();
+      this.listadoClaseSuceso.set(estadoSuceso);
+      const countriesExtranjeros = await this.countryService.getExtranjeros();
+      this.listaPaisesExtranjeros.set(countriesExtranjeros);
+      const countriesNacionales = await this.countryService.getNacionales();
+      this.listaPaisesNacionales.set(countriesNacionales);
 
-    this.filteredCountries.set(countriesNacionales);
+      this.filteredCountries.set(countriesNacionales);
 
-    this.menuItemActiveService.set.emit('/fire');
+      this.menuItemActiveService.set.emit('/fire');
 
-    const superficiesFiltro = await this.superficiesService.getSuperficiesFiltro();
-    this.superficiesFiltro.set(superficiesFiltro);
+      const superficiesFiltro = await this.superficiesService.getSuperficiesFiltro();
+      this.superficiesFiltro.set(superficiesFiltro);
 
-    const territories = await this.territoryService.get();
-    this.listadoTerritorio.set(territories);
+      const territories = await this.territoryService.get();
+      this.listadoTerritorio.set(territories);
 
-    const fireStatus = await this.fireStatusService.get();
-    this.fireStatus.set(fireStatus);
+      const fireStatus = await this.fireStatusService.get();
+      this.fireStatus.set(fireStatus);
 
-    const severityLevels = await this.severityLevelService.get();
-    this.severityLevels.set(severityLevels);
+      const severityLevels = await this.severityLevelService.get();
+      this.severityLevels.set(severityLevels);
 
-    const eventStatus = await this.eventStatusService.get();
-    this.eventStatus.set(eventStatus);
+      const eventStatus = await this.eventStatusService.get();
+      this.eventStatus.set(eventStatus);
 
-    const moves = await this.moveService.get();
-    this.moves.set(moves);
+      const moves = await this.moveService.get();
+      this.moves.set(moves);
 
-    const comparativeDates = await this.comparativeDateService.get();
-    this.comparativeDates.set(comparativeDates);
+      const comparativeDates = await this.comparativeDateService.get();
+      this.comparativeDates.set(comparativeDates);
 
-    const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(this.fire.idSuceso);
+      if (this.fireDetail) {
+        const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(this.fireDetail.id);
 
-    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+        this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+      }
 
-    this.loadCommunities();
+      await this.loadCommunities();
+      this.spinner.hide();
 
-    this.onSubmit();
-  }
-
-  /*
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('refreshFilterForm' in changes ) {
-      this.onSubmit()
+      await this.onSubmit();
+    } catch (error) {
+      console.error('error');
+      this.spinner.hide();
     }
   }
-  */
 
   getCountryByTerritory(country: any, territory: any) {
     if (territory == 1) {
@@ -290,6 +287,7 @@ export class FireRelatedEventForm implements OnInit {
   }
 
   async onSubmit() {
+    this.spinner.show();
     const { name, claseSuceco, territory, country, CCAA, province, minicipality, move, between, fechaInicio, fechaFin } = this.formData.value;
 
     const listadoSucesos: any = await this.sucesosRelacionadosService.getListaSuceso({
@@ -310,35 +308,74 @@ export class FireRelatedEventForm implements OnInit {
       //PageSize: 0,
       search: name,
     });
-    
+
     const dataFiltrada = listadoSucesos.data.filter(
-      (listadoSuceso: any) => !this.listaSucesosRelacionados().data.some((sucesoRelacionado: any) => sucesoRelacionado.idSucesoAsociado === listadoSuceso.idSuceso)
+      (listadoSuceso: any) =>
+        !this.listaSucesosRelacionados()?.data?.sucesosAsociados.some((sucesoRelacionado: any) => sucesoRelacionado.id === listadoSuceso.id)
     );
 
-    this.listaSucesos.set({data:dataFiltrada});
+    this.listaSucesos.set({ data: dataFiltrada });
+    this.spinner.hide();
+  }
+
+  async guardarAgregar() {
+    if (this.isSaving()) {
+      return;
+    }
+    this.isSaving.set(true);
+    const itemsSelected: any = this.listaSucesos()?.data?.filter((item: any) => item.selected);
+
+    const idsSucesosAsociados = itemsSelected.map((item: any) => item.id);
+
+    const resultAsociado = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
+
+    if (resultAsociado?.length > 0) {
+      idsSucesosAsociados.push(...resultAsociado);
+    }
+
+    const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
+      idsSucesosAsociados,
+      idSucesoRelacionado: this.fireDetail?.id ?? 0,
+      idSuceso: this.fire.idSuceso,
+    });
+
+    const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
+    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+
+    await this.onSubmit();
+
+    this.alertService
+      .showAlert({
+        title: 'Buen trabajo!',
+        text: 'Registro actualizado correctamente!',
+        icon: 'success',
+      })
+      .then((result) => {
+        this.closeModal.emit();
+        this.isSaving.set(false);
+      });
   }
 
   async agregarItem(i: any) {
-    await this.sucesosRelacionadosService.post(this.fire.idSuceso, {
-      idSucesoAsociado: this.listaSucesos()?.data[i]?.idSuceso,
-      observaciones: '',
-    });
-
-    const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(this.fire.idSuceso);
-    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-
-    this.onSubmit()
+    const newLista: any = this.listaSucesos();
+    newLista.data[i].selected = !newLista.data[i].selected;
+    this.listaSucesos.set(newLista);
   }
 
-  //seleccionarItem(i: any) {}
   async eliminarItem(i: any) {
-    await this.sucesosRelacionadosService.delete( {
-      idSucesoPrincipal: this.fire.idSuceso,
-      idSucesoAsociado: this.listaSucesosRelacionados()?.data[i]?.idSucesoAsociado,
+    const newListaSucesos = [...this.listaSucesos().data, { ...this.listaSucesosRelacionados().data.sucesosAsociados[i] }];
+    this.listaSucesos.set({ data: newListaSucesos });
+
+    const newAsociados: any = this.listaSucesosRelacionados().data.sucesosAsociados.filter(
+      (asociado: any) => asociado.id !== this.listaSucesosRelacionados().data.sucesosAsociados[i].id
+    );
+
+    this.listaSucesosRelacionados.set({
+      data: {
+        ...this.listaSucesosRelacionados().data,
+        sucesosAsociados: newAsociados,
+      },
     });
-    const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(this.fire.idSuceso);
-    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-    this.onSubmit()
   }
 
   clearFormFilter() {
