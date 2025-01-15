@@ -1,7 +1,8 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
+using DGPCE.Sigemad.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel;
+
 
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations;

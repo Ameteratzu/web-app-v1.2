@@ -6,6 +6,7 @@ using DGPCE.Sigemad.Application.Specifications.ActuacionesRelevantesDGPCE;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDeclaracionesZAGEPCommand, ManageDeclaracionZAGEPResponse>
@@ -61,6 +62,8 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
         // Mapear y actualizar/crear las declaraciones ZAGEP
         foreach (var declaracionZagepDto in request.Detalles!)
         {
+            bool crearNueva = true;
+
             if (declaracionZagepDto.Id.HasValue && declaracionZagepDto.Id > 0)
             {
                 var declaracionZagep = actuacion.DeclaracionesZAGEP!.FirstOrDefault(a => a.Id == declaracionZagepDto.Id.Value);
@@ -69,23 +72,21 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
                     // Actualizar datos existentes
                     _mapper.Map(declaracionZagepDto, declaracionZagep);
                     declaracionZagep.Borrado = false;
-                }
-                else
-                {
-                    // Crear nueva declaracion ZAGEP
-                    var nuevaDeclaracion = _mapper.Map<DeclaracionZAGEP>(declaracionZagepDto);
-                    nuevaDeclaracion.Id = 0;
-                    actuacion.DeclaracionesZAGEP!.Add(nuevaDeclaracion);
+                    crearNueva = false;
                 }
             }
-            else
+
+            if (crearNueva)
             {
                 // Crear nueva declaracion ZAGEP
                 var nuevaDeclaracion = _mapper.Map<DeclaracionZAGEP>(declaracionZagepDto);
                 nuevaDeclaracion.Id = 0;
-                actuacion.DeclaracionesZAGEP!.Add(nuevaDeclaracion);
+
+                actuacion.DeclaracionesZAGEP = actuacion.DeclaracionesZAGEP != null ? actuacion.DeclaracionesZAGEP : new List<DeclaracionZAGEP>();
+                actuacion.DeclaracionesZAGEP.Add(nuevaDeclaracion);
             }
         }
+
 
 
         // Eliminar lógicamente las áreas afectadas que no están presentes en el request
