@@ -19,5 +19,5 @@ INSERT INTO dbo.CCAA (Id,Descripcion,IdPais) VALUES
 	 (16,N'Región de Murcia',60),
 	 (17,N'Canarias',60),
 	 (18,N'Ceuta',60),
-	 (19,N'Melilla',60),
-	 (20,N'Portugal',60);
+	 (19,N'Melilla',60);--,
+	-- (20,N'Portugal',60);
