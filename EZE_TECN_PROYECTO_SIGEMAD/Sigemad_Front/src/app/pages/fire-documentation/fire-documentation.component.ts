@@ -17,12 +17,14 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import moment from 'moment';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { FireDocumentationService } from '../../services/fire-documentation.service';
-import { OriginDestinationService } from '../../services/origin-destination.service';
+import { MasterDataEvolutionsService } from '../../services/master-data-evolutions.service';
 import { TipoDocumentoService } from '../../services/tipo-documento.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
+import { NgxFileDropModule, NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { MatIconModule } from '@angular/material/icon';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -65,6 +67,8 @@ interface FormType {
     MatButtonModule,
     MatTableModule,
     NgxSpinnerModule,
+    NgxFileDropModule,
+    MatIconModule
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -73,7 +77,7 @@ interface FormType {
 })
 export class FireDocumentation implements OnInit {
   constructor(
-    private originDestinationService: OriginDestinationService,
+    private masterData: MasterDataEvolutionsService,
     private tipoDocumento: TipoDocumentoService,
     private dialogRef: MatDialogRef<FireDocumentation>,
     private fireDocumentationService: FireDocumentationService,
@@ -84,6 +88,8 @@ export class FireDocumentation implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   file: File | null = null;
+  public files: NgxFileDropEntry[] = [];
+  fileFlag: boolean = false;
 
   private fb = inject(FormBuilder);
   dataProps = inject(MAT_DIALOG_DATA) as {
@@ -128,7 +134,7 @@ export class FireDocumentation implements OnInit {
 
     this.dataSource.data = [];
 
-    const procedenciasDestino = await this.originDestinationService.get();
+    const procedenciasDestino = await this.masterData.getOriginDestination();
     this.listadoProcedenciaDestino.set(procedenciasDestino);
 
     const tipoDocumentos = await this.tipoDocumento.get();
@@ -143,7 +149,7 @@ export class FireDocumentation implements OnInit {
     }
     const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
 
-    const newData = dataDocumentacion?.detallesDocumentacion?.map((documento: any) => ({
+    const newData = dataDocumentacion?.detalles?.map((documento: any) => ({
       id: documento.id,
       descripcion: documento.descripcion,
       fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
@@ -152,10 +158,11 @@ export class FireDocumentation implements OnInit {
       horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
       procendenciaDestino: documento.procedenciaDestinos,
       tipoDocumento: documento.tipoDocumento,
-      //idArchivo: documento.idArchivo,
+      archivo: documento.archivo,
     }));
 
     this.dataOtherInformation.set(newData);
+    
   }
 
   trackByFn(index: number, item: any): string {
@@ -163,9 +170,11 @@ export class FireDocumentation implements OnInit {
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
-    if (this.formData.valid) {
+    this.fileFlag 
+    if (this.formData.valid && this.fileFlag) {
       const data = { file: this.file, ...this.formData.value };
 
+     
       if (this.isCreate() == -1) {
         this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
       } else {
@@ -177,8 +186,9 @@ export class FireDocumentation implements OnInit {
         procendenciaDestino: [],
         tipoDocumento: null,
       });
-      this.file = null;
+      //this.file = null;
     } else {
+      this.fileFlag = false;
       this.formData.markAllAsTouched();
     }
   }
@@ -195,26 +205,50 @@ export class FireDocumentation implements OnInit {
       return;
     }
 
-    const arrayToSave = this.dataOtherInformation().map((item) => {
+    const arrayToSave = this.dataOtherInformation().map((item, index) => {
+     
       return {
         id: item.id ?? null,
         fechaHora: this.getFechaHora(item.fecha, item.hora),
         fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
-        idArchivo: null,
+        archivo: index === 0 ? this.file : null, // Solo agrega el archivo en el índice 0
         documentacionProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino: any) => procendenciaDestino.id),
       };
     });
+         
     const objToSave = {
       idDocumento: null,
-      idIncendio: this.dataProps?.fire?.id,
+      idSuceso: this.dataProps?.fire?.id,
       detallesDocumentaciones: arrayToSave,
     };
+    
+    const formData = new FormData();
+    formData.append('idDocumento', objToSave.idDocumento ?? '0');
+    formData.append('idSuceso', objToSave.idSuceso ?? '');
+    
+    // Construir `detalles` incluyendo el archivo en `detalles[0].archivo`
+    objToSave.detallesDocumentaciones.forEach((detalle, index) => {
+      formData.append(`detalles[${index}].fechaHora`, this.getFechaHoraIso(detalle.fechaHora));
+      formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHoraSolicitud));
+      formData.append(`detalles[${index}].idTipoDocumento`, detalle.idTipoDocumento ?? '');
+      formData.append(`detalles[${index}].descripcion`, detalle.descripcion ?? '');
+      
+      detalle.documentacionProcedenciasDestinos.forEach((id: string | Blob, subIndex: any) => {
+        formData.append(`detalles[${index}].idsProcedenciasDestinos[${subIndex}]`, id);
+      });
+    
+      if (detalle.archivo) {
+        
+        formData.append(`detalles[${index}].archivo`, detalle.archivo);
+      }
+    });
 
     try {
       this.spinner.show();
-      const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(objToSave);
+      // const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(objToSave);
+      const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(formData);
 
       if (resp!.idDocumentacion > 0) {
         this.isSaving.set(false);
@@ -326,9 +360,34 @@ export class FireDocumentation implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.file = input.files[0];
+      this.file = input.files[0]; 
     }
   }
+
+  public dropped(files: NgxFileDropEntry[]) {
+    for (const droppedFile of files) {
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: any) => {
+          this.file = file;
+          this.fileFlag = true;
+        });
+      } else {
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+
+  public fileOver(event: any){
+    console.log(event);
+  }
+
+  public fileLeave(event: any){
+    console.log(event);
+  }
+
+  
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
     return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
   }
@@ -342,6 +401,21 @@ export class FireDocumentation implements OnInit {
     //return fechaHora.toISOString();
   }
 
+  getFechaHoraIso(fechaHora: string): string {
+    // Dividir la fecha y hora
+    const [fecha, hora] = fechaHora.split(' ');
+    
+    // Convertir la fecha de MM/DD/YY a YYYY-MM-DD
+    const [mes, dia, anio] = fecha.split('/');
+    const anioCompleto = `20${anio}`; // Suponiendo que el año es del siglo 2000
+    
+    // Crear una fecha en formato ISO 8601
+    const dateTime = new Date(`${anioCompleto}-${mes}-${dia}T${hora}:00.000Z`);
+    
+    // Devolver la fecha en formato ISO 8601
+    return dateTime.toISOString();
+  }
+
   showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
     this.toast.open(title, txt, {
       duration: 3000,
@@ -352,5 +426,27 @@ export class FireDocumentation implements OnInit {
 
   trackByIdDocumento(index: number, opcion: any): number {
     return opcion.id;
+  }
+
+  async onFileNameClick(data: any){
+    try {
+    const blob = await this.fireDocumentationService.getFile(data.id);
+
+    // Crear una URL para el Blob
+    const url = window.URL.createObjectURL(blob);
+
+    // Crear un enlace temporal para la descarga
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = data.nombreOriginal; // Nombre del archivo original
+    document.body.appendChild(a);
+    a.click();
+
+    // Limpia el objeto URL después de la descarga
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  } catch (error) {
+    console.error('Error al descargar el archivo:', error);
+  }
   }
 }

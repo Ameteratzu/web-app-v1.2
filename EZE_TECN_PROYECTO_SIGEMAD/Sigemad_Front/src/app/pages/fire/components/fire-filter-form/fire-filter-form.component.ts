@@ -20,7 +20,6 @@ import { AutonomousCommunityService } from '../../../../services/autonomous-comm
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
 import { CountryService } from '../../../../services/country.service';
 import { EventStatusService } from '../../../../services/eventStatus.service';
-import { FireStatusService } from '../../../../services/fire-status.service';
 import { FireService } from '../../../../services/fire.service';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
@@ -44,6 +43,7 @@ import { Province } from '../../../../types/province.type';
 import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
 import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
+import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -108,13 +108,12 @@ export class FireFilterFormComponent implements OnInit {
   public countryService = inject(CountryService);
   public eventStatusService = inject(EventStatusService);
   public municipalityService = inject(MunicipalityService);
-  public fireStatusService = inject(FireStatusService);
   public severityLevelService = inject(SeverityLevelService);
   public fireService = inject(FireService);
-
   public comparativeDateService = inject(ComparativeDateService);
   public moveService = inject(MoveService);
   private dialog = inject(MatDialog);
+  public masterData = inject(MasterDataEvolutionsService);
 
   public superficiesFiltro = signal<any[]>([]);
   public territories = signal<Territory[]>([]);
@@ -209,7 +208,7 @@ export class FireFilterFormComponent implements OnInit {
     const territories = await this.territoryService.get();
     this.territories.set(territories);
 
-    const fireStatus = await this.fireStatusService.get();
+    const fireStatus = await this.masterData.getFireStatus();
     this.fireStatus.set(fireStatus);
 
     const severityLevels = await this.severityLevelService.get();

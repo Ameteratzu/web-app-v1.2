@@ -12,8 +12,8 @@ export class FireDocumentationService {
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
   post(data: any) {
-    const endpoint = '/Documentaciones';
-
+    const endpoint = '/Documentaciones/lista';
+  
     return firstValueFrom(
       this.http.post(endpoint, data).pipe(
         map((response) => {
@@ -21,6 +21,21 @@ export class FireDocumentationService {
         }),
         catchError((error) => {
           return throwError(error.error);
+        })
+      )
+    );
+  }
+
+  getFile(id: string): Promise<Blob> {
+    const endpoint = `/Archivos/${id}/contenido`;
+  
+    return firstValueFrom(
+      this.http.get(endpoint, { responseType: 'blob' }).pipe(
+        map((response: Blob) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(() => error.error);
         })
       )
     );

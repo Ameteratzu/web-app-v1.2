@@ -187,13 +187,12 @@ export class FireCreateComponent implements OnInit {
       const formattedData = data.map(formatter);
 
       const body = {
-        idIncendio: this.data.idIncendio,
+        idSuceso: this.data.idIncendio,
         idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
 
       const result = await postService(body);
-      console.log('🚀 ~ result:', result);
       console.log('🚀 ~ result:', result);
       this.idReturn = result.idEvolucion;
     }

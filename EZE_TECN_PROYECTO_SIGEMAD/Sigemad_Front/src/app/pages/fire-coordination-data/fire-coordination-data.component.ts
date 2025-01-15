@@ -286,7 +286,7 @@ export class FireCoordinationData {
       const formattedData = data.map(formatter);
 
       const body = {
-        idIncendio: this.data.idIncendio,
+        IdSuceso: this.data.idIncendio,
         idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };

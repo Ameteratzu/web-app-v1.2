@@ -22,7 +22,6 @@ import moment from 'moment';
 
 import { EventService } from '../../../services/event.service';
 import { EventStatusService } from '../../../services/eventStatus.service';
-import { FireStatusService } from '../../../services/fire-status.service';
 import { FireService } from '../../../services/fire.service';
 import { MenuItemActiveService } from '../../../services/menu-item-active.service';
 import { MunicipalityService } from '../../../services/municipality.service';
@@ -89,7 +88,6 @@ export class FireEditComponent implements OnInit {
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
   public eventStatusService = inject(EventStatusService);
-  public fireStatusService = inject(FireStatusService);
   public route = inject(ActivatedRoute);
   public routenav = inject(Router);
   private spinner = inject(NgxSpinnerService);

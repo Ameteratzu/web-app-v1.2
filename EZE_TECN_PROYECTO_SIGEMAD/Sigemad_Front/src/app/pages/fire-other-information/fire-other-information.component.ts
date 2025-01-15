@@ -18,8 +18,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 import { FireOtherInformationService } from '../../services/fire-other-information.service';
-import { MediaService } from '../../services/media.service';
-import { OriginDestinationService } from '../../services/origin-destination.service';
+import { MasterDataEvolutionsService } from '../../services/master-data-evolutions.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
@@ -73,8 +72,7 @@ interface FormType {
 })
 export class FireOtherInformationComponent implements OnInit {
   constructor(
-    private originDestinationService: OriginDestinationService,
-    private mediaService: MediaService,
+    private masterData: MasterDataEvolutionsService,
     private dialogRef: MatDialogRef<FireOtherInformationComponent>,
     private otherInformationService: FireOtherInformationService,
     private spinner: NgxSpinnerService,
@@ -101,7 +99,6 @@ export class FireOtherInformationComponent implements OnInit {
     this.selectedOption = event;
   }
 
-  ////////////////////////////////
   public listadoProcedenciaDestino = signal<OriginDestination[]>([]);
   public listadoMedios = signal<Media[]>([]);
   public dataOtherInformation = signal<FormType[]>([]);
@@ -122,10 +119,10 @@ export class FireOtherInformationComponent implements OnInit {
       observaciones: ['', Validators.required],
     });
 
-    const procedenciasDestino = await this.originDestinationService.get();
+    const procedenciasDestino = await this.masterData.getOriginDestination();
     this.listadoProcedenciaDestino.set(procedenciasDestino);
 
-    const medios = await this.mediaService.get();
+    const medios = await this.masterData.getMedia();
     this.listadoMedios.set(medios);
 
     this.isToEditDocumentation();
@@ -194,7 +191,7 @@ export class FireOtherInformationComponent implements OnInit {
     });
     const objToSave = {
       idOtraInformacion: this.dataProps?.fireDetail?.id,
-      idIncendio: this.dataProps?.fire?.id,
+      IdSuceso: this.dataProps?.fire?.id,
       lista: arrayToSave,
     };
 
