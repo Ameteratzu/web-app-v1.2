@@ -22,15 +22,20 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
 
         if (request.IdEstadoIncendio.HasValue)
         {
-            /*
-            AddInclude(i => i.Evoluciones);
 
-            AddCriteria(i => !i.Borrado && i.Evoluciones
-                       .Where(e => !e.Borrado)
-                       .OrderByDescending(e => e.FechaCreacion)
-                       .Select(e => e.Parametro).FirstOrDefault(p => !p.Borrado).IdEstadoIncendio == request.IdEstadoIncendio.Value);
-            */
+            AddInclude(i => i.Suceso);
+            AddInclude(i => i.Suceso.Evoluciones);
+
+            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
+
+        if(request.IdSituacionEquivalente.HasValue)
+        {
+            AddInclude(i => i.Suceso);
+            AddInclude(i => i.Suceso.Evoluciones);
+            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
+        }
+
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
         {

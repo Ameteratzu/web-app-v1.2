@@ -18,6 +18,9 @@ public class Parametro : BaseDomainModel<int>
     public int? IdPlanSituacion { get; set; }
     public virtual PlanSituacion PlanSituacion { get; set; } = null!;
 
+    public int? IdSituacionEquivalente { get; set; }
+    public virtual SituacionEquivalente SituacionEquivalente { get; set; } = null!;
+
 
     public virtual Evolucion Evolucion { get; set; } = null!;
 

@@ -24,6 +24,7 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
         AddInclude(i => i.Parametro.FaseEmergencia);
         AddInclude(i => i.Parametro.PlanEmergencia);
         AddInclude(i => i.Parametro.PlanSituacion);
+        AddInclude(i => i.Parametro.SituacionEquivalente);
 
         AddCriteria(i => i.DatoPrincipal != null ? i.DatoPrincipal.Borrado == false : true);
         AddInclude(i => i.DatoPrincipal);

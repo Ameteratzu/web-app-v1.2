@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.Fases.Vms;
+﻿using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
+using DGPCE.Sigemad.Application.Features.Fases.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -16,4 +17,5 @@ public class ParametroEvolucionDto
 
     public FaseEmergenciaVm? FaseEmergencia { get; set; }
     public PlanSituacionVm? PlanSituacion { get; set; }
+    public SituacionEquivalenteDto? SituacionEquivalente { get; set; }
 }

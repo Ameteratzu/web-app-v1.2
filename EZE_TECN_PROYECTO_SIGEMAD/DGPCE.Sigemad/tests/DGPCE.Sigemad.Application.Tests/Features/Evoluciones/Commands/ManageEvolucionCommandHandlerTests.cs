@@ -336,5 +336,93 @@ public class ManageEvolucionCommandHandlerTests
         _unitOfWorkMock.Verify(uow => uow.Repository<Evolucion>().UpdateEntity(It.IsAny<Evolucion>()), Times.Once);
         _unitOfWorkMock.Verify(uow => uow.Complete(), Times.Once);
     }
+
+    [Fact]
+    public async Task Handle_ShouldValidateRegistro()
+    {
+        // Arrange
+        var command = new ManageEvolucionCommand
+        {
+            IdSuceso = 1,
+            Registro = new CreateRegistroCommand { IdMedio = 1, IdEntradaSalida = 1 }
+        };
+
+        var medio = new Medio { Id = 1 };
+        var entradaSalida = new EntradaSalida { Id = 1 };
+        var procedenciaDestino = new List<ProcedenciaDestino>
+            {
+                new ProcedenciaDestino { Id = 1 },
+                new ProcedenciaDestino { Id = 2 }
+            };
+        var suceso = new Suceso { Id = 1, Borrado = false };
+
+        _unitOfWorkMock.Setup(uow => uow.Repository<Medio>().GetByIdAsync(command.Registro.IdMedio.Value))
+            .ReturnsAsync(medio);
+        _unitOfWorkMock.Setup(uow => uow.Repository<EntradaSalida>().GetByIdAsync(command.Registro.IdEntradaSalida.Value))
+            .ReturnsAsync(entradaSalida);
+        _unitOfWorkMock.Setup(uow => uow.Repository<ProcedenciaDestino>().GetAsync(It.IsAny<Expression<Func<ProcedenciaDestino, bool>>>()))
+            .ReturnsAsync(procedenciaDestino);
+        _unitOfWorkMock.Setup(uow => uow.Repository<Suceso>().GetByIdAsync(command.IdSuceso))
+            .ReturnsAsync(suceso);
+        _unitOfWorkMock.Setup(uow => uow.Repository<Evolucion>().AddEntity(It.IsAny<Evolucion>()))
+        .Callback<Evolucion>(sr => sr.Id = 1); // Set the Id to a non-zero value
+        _unitOfWorkMock.Setup(uow => uow.Complete()).ReturnsAsync(1);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        _unitOfWorkMock.Verify(uow => uow.Repository<Medio>().GetByIdAsync(command.Registro.IdMedio.Value), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.Repository<EntradaSalida>().GetByIdAsync(command.Registro.IdEntradaSalida.Value), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldValidateParametros()
+    {
+        // Arrange
+        var command = new ManageEvolucionCommand
+        {
+            IdSuceso = 1,
+            Parametro = new CreateParametroCommand { IdEstadoIncendio = 1, IdFaseEmergencia = 1, IdPlanSituacion = 1, IdSituacionEquivalente = 1 }
+        };
+
+        var estadoIncendio = new EstadoIncendio { Id = 1, Obsoleto = false };
+        var faseEmergencia = new FaseEmergencia { Id = 1 };
+        var planSituacion = new PlanSituacion { Id = 1 };
+        var situacionEquivalente = new SituacionEquivalente { Id = 1, Obsoleto = false };
+        var procedenciaDestino = new List<ProcedenciaDestino>
+            {
+                new ProcedenciaDestino { Id = 1 },
+                new ProcedenciaDestino { Id = 2 }
+            };
+        var suceso = new Suceso { Id = 1, Borrado = false };
+
+        _unitOfWorkMock.Setup(uow => uow.Repository<EstadoIncendio>().GetByIdAsync(command.Parametro.IdEstadoIncendio))
+            .ReturnsAsync(estadoIncendio);
+        _unitOfWorkMock.Setup(uow => uow.Repository<FaseEmergencia>().GetByIdAsync(command.Parametro.IdFaseEmergencia.Value))
+            .ReturnsAsync(faseEmergencia);
+        _unitOfWorkMock.Setup(uow => uow.Repository<PlanSituacion>().GetByIdAsync(command.Parametro.IdPlanSituacion.Value))
+            .ReturnsAsync(planSituacion);
+        _unitOfWorkMock.Setup(uow => uow.Repository<SituacionEquivalente>().GetByIdAsync(command.Parametro.IdSituacionEquivalente.Value))
+            .ReturnsAsync(situacionEquivalente);
+        _unitOfWorkMock.Setup(uow => uow.Repository<ProcedenciaDestino>().GetAsync(It.IsAny<Expression<Func<ProcedenciaDestino, bool>>>()))
+            .ReturnsAsync(procedenciaDestino);
+        _unitOfWorkMock.Setup(uow => uow.Repository<Suceso>().GetByIdAsync(command.IdSuceso))
+            .ReturnsAsync(suceso);
+        _unitOfWorkMock.Setup(uow => uow.Repository<Evolucion>().AddEntity(It.IsAny<Evolucion>()))
+        .Callback<Evolucion>(sr => sr.Id = 1); // Set the Id to a non-zero value
+        _unitOfWorkMock.Setup(uow => uow.Complete()).ReturnsAsync(1);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        _unitOfWorkMock.Verify(uow => uow.Repository<EstadoIncendio>().GetByIdAsync(command.Parametro.IdEstadoIncendio), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.Repository<FaseEmergencia>().GetByIdAsync(command.Parametro.IdFaseEmergencia.Value), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.Repository<PlanSituacion>().GetByIdAsync(command.Parametro.IdPlanSituacion.Value), Times.Once);
+        _unitOfWorkMock.Verify(uow => uow.Repository<SituacionEquivalente>().GetByIdAsync(command.Parametro.IdSituacionEquivalente.Value), Times.Once);
+    }
 }
 

@@ -60,5 +60,10 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
             .WithMany()
             .HasForeignKey(d => d.IdPlanSituacion)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(d => d.SituacionEquivalente)
+            .WithMany()
+            .HasForeignKey(d => d.IdSituacionEquivalente)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
