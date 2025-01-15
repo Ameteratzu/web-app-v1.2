@@ -81,6 +81,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
             modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
+            modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
         }
 
 
@@ -158,6 +159,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<ActuacionRelevanteDGPCE> ActuacionesRelevantesDGPCE { get; set; }
 
         public DbSet<EmergenciaNacional> EmergenciasNacionales { get; set; }
+        public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
 
     }
 }

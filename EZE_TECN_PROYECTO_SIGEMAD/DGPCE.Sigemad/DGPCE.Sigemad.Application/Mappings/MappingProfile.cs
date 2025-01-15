@@ -15,6 +15,7 @@ using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
+using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
@@ -258,6 +259,8 @@ public class MappingProfile : Profile
         CreateMap<PlanSituacion, PlanSituacionVm>();
 
         CreateMap<Archivo, ArchivoDto>();
+
+        CreateMap<SituacionEquivalente, SituacionEquivalenteDto>();
     }
 
 }
