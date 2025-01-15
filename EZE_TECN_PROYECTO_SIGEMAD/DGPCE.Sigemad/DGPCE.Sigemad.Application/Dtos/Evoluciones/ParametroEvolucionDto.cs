@@ -1,9 +1,8 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
+using DGPCE.Sigemad.Application.Features.Fases.Vms;
+using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
+using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
+using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Dtos.Evoluciones;
 public class ParametroEvolucionDto
@@ -12,13 +11,11 @@ public class ParametroEvolucionDto
     public DateTime? FechaFinal { get; set; }
     public decimal? SuperficieAfectadaHectarea { get; set; }
 
-    public string? PlanEmergenciaActivado { get; set; }
+    public PlanEmergenciaVm? PlanEmergencia { get; set; }
 
     public EstadoIncendio EstadoIncendio { get; set; }
 
-    public FaseEmergencia? Fase { get; set; }
-
-    public SituacionOperativa? SituacionOperativa { get; set; }
-
-    public SituacionEquivalente? SituacionEquivalente { get; set; }
+    public FaseEmergenciaVm? FaseEmergencia { get; set; }
+    public PlanSituacionVm? PlanSituacion { get; set; }
+    public SituacionEquivalenteDto? SituacionEquivalente { get; set; }
 }

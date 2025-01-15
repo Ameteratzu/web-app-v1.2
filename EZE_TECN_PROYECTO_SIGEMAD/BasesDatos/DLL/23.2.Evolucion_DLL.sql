@@ -3,6 +3,12 @@ CREATE TABLE dbo.SituacionOperativa (
 	Descripcion NVARCHAR(255) NOT NULL,
 );
 
+CREATE TABLE SituacionEquivalente (
+	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Descripcion NVARCHAR(255) NOT NULL,
+    Obsoleto BIT NOT NULL
+);
+
 
 CREATE TABLE dbo.Evolucion (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
@@ -70,6 +76,7 @@ CREATE TABLE dbo.Parametro (
     IdPlanEmergencia INT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
     IdFaseEmergencia INT NULL FOREIGN KEY REFERENCES FaseEmergencia(Id),
     IdPlanSituacion INT NULL FOREIGN KEY REFERENCES PlanSituacion(Id),
+    IdSituacionEquivalente INT NULL FOREIGN KEY REFERENCES SituacionEquivalente(Id),
     SuperficieAfectadaHectarea DECIMAL(10, 2) NULL,
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),

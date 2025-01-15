@@ -271,7 +271,6 @@ export class AreaComponent {
       return;
     }
     const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
-    console.info('municipioSelected', municipioSelected);
 
     if (!municipioSelected) {
       return;

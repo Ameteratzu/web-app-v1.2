@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Specifications.ComunidadesAutonomas;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -35,7 +36,7 @@ public class GetCCAAByIdPaisListQueryHandler : IRequestHandler<GetCCAAByIdPaisLi
             throw new NotFoundException(nameof(Pais), request.IdPais);
         }
 
-        var lista = await _unitOfWork.Repository<Ccaa>().GetAsync( c => c.IdPais == request.IdPais );
+        var lista = await _unitOfWork.Repository<Ccaa>().GetAllWithSpec(new CCAAByIdPaisSpecification(request.IdPais));
 
         _logger.LogInformation($"{nameof(GetCCAAByIdPaisListQueryHandler)} - BEGIN");
 

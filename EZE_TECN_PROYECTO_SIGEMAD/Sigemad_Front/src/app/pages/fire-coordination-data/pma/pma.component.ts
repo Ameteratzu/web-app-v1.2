@@ -93,7 +93,6 @@ export class PmaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     this.provinces.set(this.dataMaestros.provinces);
 
     this.formData = this.fb.group({
@@ -192,8 +191,6 @@ export class PmaComponent {
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      //this.featuresCoords = features;
-      console.info('features', features);
       this.polygon.set(features);
     });
   }

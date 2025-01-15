@@ -43,7 +43,7 @@ interface FormType {
   fecha: Date;
   hora: any;
   procendenciaDestino: any;
-  fechaSolicitud: Date;
+  //fechaSolicitud: Date;
   horaSolicitud: any;
   tipoDocumento: { id: string; descripcion: string };
   descripcion: string;
@@ -125,10 +125,10 @@ export class FireDocumentation implements OnInit {
     this.formData = this.fb.group({
       fecha: ['', Validators.required],
       hora: ['', Validators.required],
-      fechaSolicitud: ['', Validators.required],
-      horaSolicitud: ['', Validators.required],
+      //fechaSolicitud: [''],
+      //horaSolicitud: [''],
       tipoDocumento: ['', Validators.required],
-      procendenciaDestino: ['', Validators.required],
+      procendenciaDestino: [''],
       descripcion: [''],
     });
 
@@ -154,8 +154,8 @@ export class FireDocumentation implements OnInit {
       descripcion: documento.descripcion,
       fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
       hora: moment(documento.fechaHora).format('HH:mm'),
-      fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
-      horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+      //fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
+      //horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
       procendenciaDestino: documento.procedenciaDestinos,
       tipoDocumento: documento.tipoDocumento,
       archivo: documento.archivo,
@@ -210,7 +210,7 @@ export class FireDocumentation implements OnInit {
       return {
         id: item.id ?? null,
         fechaHora: this.getFechaHora(item.fecha, item.hora),
-        fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
+        //fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
         archivo: index === 0 ? this.file : null, // Solo agrega el archivo en el índice 0
@@ -289,9 +289,7 @@ export class FireDocumentation implements OnInit {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await this.fireDocumentationService.delete(
-            Number(this.dataProps?.fireDetail?.id)
-          );
+          await this.fireDocumentationService.delete(Number(this.dataProps?.fireDetail?.id));
           //this.coordinationServices.clearData();
           //setTimeout(() => {
           //this.renderer.setStyle(toolbar, 'z-index', '5');

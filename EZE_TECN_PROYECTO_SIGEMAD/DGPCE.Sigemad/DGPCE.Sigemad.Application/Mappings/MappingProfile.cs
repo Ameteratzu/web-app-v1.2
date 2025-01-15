@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
@@ -6,6 +7,7 @@ using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
+using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
@@ -13,6 +15,7 @@ using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
+using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
@@ -27,6 +30,7 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
+using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
@@ -189,6 +193,13 @@ public class MappingProfile : Profile
 
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
+
+        CreateMap<ManageEmergenciasNacionalesCommand, ActuacionRelevanteDGPCE>()
+          .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
+
+        CreateMap<EmergenciaNacionalDto, EmergenciaNacional>();
+
+
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();
         CreateMap<CreateRegistroCommand, Registro>()
@@ -246,6 +257,10 @@ public class MappingProfile : Profile
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>();
+
+        CreateMap<Archivo, ArchivoDto>();
+
+        CreateMap<SituacionEquivalente, SituacionEquivalenteDto>();
     }
 
 }

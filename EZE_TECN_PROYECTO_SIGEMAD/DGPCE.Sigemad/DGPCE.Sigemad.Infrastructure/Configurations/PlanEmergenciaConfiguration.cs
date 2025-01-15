@@ -12,6 +12,8 @@ public class PlanEmergenciaConfiguration : IEntityTypeConfiguration<PlanEmergenc
 
         builder.ToTable("PlanEmergencia");
 
+        builder.Property(e => e.IdCcaa).HasColumnName("IdCCAA");
+
 
         builder.HasOne(d => d.Provincia).WithMany()
             .HasForeignKey(d => d.IdProvincia)

@@ -348,4 +348,16 @@
   <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
     <value>State Fire ID is mandatory</value>
   </data>
+  <data name="AutoridadSolicitanteObligatorio" xml:space="preserve">
+    <value>Requesting Authority is mandatory</value>
+  </data>
+  <data name="AutoridadSolicitanteMaxLength" xml:space="preserve">
+    <value>Requesting Authority cannot exceed 500 characters</value>
+  </data>
+  <data name="DescripcionSolicitudObligatorio" xml:space="preserve">
+    <value>Application Description is mandatory</value>
+  </data>
+  <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
+    <value>Application Description cannot exceed 510 characters</value>
+  </data>
 </root>

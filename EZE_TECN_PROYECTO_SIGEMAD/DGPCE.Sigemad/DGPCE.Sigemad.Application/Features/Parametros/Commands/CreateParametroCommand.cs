@@ -10,4 +10,5 @@ public class CreateParametroCommand
     public int? IdFaseEmergencia { get; set; }
 
     public int? IdPlanSituacion { get; set; }
+    public int? IdSituacionEquivalente { get; set; }
 }

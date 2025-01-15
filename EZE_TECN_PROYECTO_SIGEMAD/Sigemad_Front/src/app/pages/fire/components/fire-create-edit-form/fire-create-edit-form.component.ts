@@ -33,6 +33,7 @@ import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { EventStatusService } from '../../../../services/eventStatus.service';
 import { AlertService } from '../../../../shared/alert/alert.service';
+import { TooltipDirective } from '../../../../shared/directive/tooltip/tooltip.directive';
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import { EventStatus } from '../../../../types/eventStatus.type';
@@ -69,6 +70,7 @@ const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     NgxSpinnerModule,
+    TooltipDirective,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -127,6 +129,7 @@ export class FireCreateEdit implements OnInit {
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
       startDate: new FormControl(new Date(), Validators.required),
+      startTime: new FormControl(new Date(), Validators.required),
       eventStatus: new FormControl('', Validators.required),
       generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
@@ -156,6 +159,7 @@ export class FireCreateEdit implements OnInit {
         province: this.data.fire.idProvincia,
         municipality: this.data.fire.idMunicipio,
         startDate: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD'),
+        startTime: moment(this.data.fire.fechaInicio).format('HH:mm'),
         generalNote: this.data.fire.notaGeneral,
         classEvent: this.data.fire.idClaseSuceso,
         eventStatus: this.data.fire.idEstadoSuceso,
@@ -202,7 +206,6 @@ export class FireCreateEdit implements OnInit {
   }
 
   async onSubmit() {
-    //debugger
     if (this.formData.valid) {
       this.spinner.show();
       const data = this.formData.value;
@@ -237,9 +240,6 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .post(data)
           .then((response) => {
-            console.info('response', response);
-            //TODO toast
-
             this.spinner.hide();
             this.alertService
               .showAlert({
@@ -250,13 +250,6 @@ export class FireCreateEdit implements OnInit {
               .then((result) => {
                 this.closeModal({ refresh: true });
               });
-            /*
-            this.filtrosIncendioService.setFilters({});
-            new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-              //this.router.navigate([`/fire`])
-              window.location.href = '/fire';
-            });
-            */
           })
           .catch((error) => {
             console.log(error);
@@ -300,7 +293,6 @@ export class FireCreateEdit implements OnInit {
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       //this.featuresCoords = features;
-      console.info('features', features);
       this.polygon.set(features);
     });
   }

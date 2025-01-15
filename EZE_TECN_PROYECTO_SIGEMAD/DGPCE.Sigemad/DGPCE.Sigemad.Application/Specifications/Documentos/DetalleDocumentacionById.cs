@@ -9,6 +9,7 @@ public class DetalleDocumentacionById : BaseSpecification<Documentacion>
         AddInclude(i => i.DetallesDocumentacion.Where(d => !d.Borrado));
         AddInclude("DetallesDocumentacion.DocumentacionProcedenciaDestinos.ProcedenciaDestino");
         AddInclude("DetallesDocumentacion.TipoDocumento");
+        AddInclude("DetallesDocumentacion.Archivo");
 
     }
 }

@@ -49,6 +49,7 @@ import { FireCoordinationData } from '../../fire-coordination-data/fire-coordina
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
+import { FireRelatedEventComponent } from '../../fire-related-event/fire-related-event.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -175,6 +176,28 @@ export class FireEditComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
+  goModalRelatedEvent(fireDetail?: FireDetail) {
+    const dialogRef = this.matDialog.open(FireRelatedEventComponent, {
+      width: '90vw',
+      maxWidth: 'none',
+      maxHeight: '95vh',
+      disableClose: true,
+      data: {
+        title: fireDetail ? 'Editar - Sucesos Relacionados' : 'Nuevo - Sucesos Relacionados',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
+        fireDetail,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.info('close', result);
+      if (result) {
+        this.cargarRegistros();
+      }
+    });
+  }
+
   goModalEvolution(fireDetail?: FireDetail) {
     const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
 
@@ -273,6 +296,7 @@ export class FireEditComponent implements OnInit {
       'Otra Información': this.goModalOtherInformation.bind(this),
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
+      'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro];
