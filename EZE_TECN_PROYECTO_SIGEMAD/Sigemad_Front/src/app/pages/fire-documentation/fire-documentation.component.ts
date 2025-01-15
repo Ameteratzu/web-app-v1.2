@@ -43,7 +43,7 @@ interface FormType {
   fecha: Date;
   hora: any;
   procendenciaDestino: any;
-  //fechaSolicitud: Date;
+  fechaSolicitud: Date;
   horaSolicitud: any;
   tipoDocumento: { id: string; descripcion: string };
   descripcion: string;
@@ -125,8 +125,8 @@ export class FireDocumentation implements OnInit {
     this.formData = this.fb.group({
       fecha: ['', Validators.required],
       hora: ['', Validators.required],
-      //fechaSolicitud: [''],
-      //horaSolicitud: [''],
+      fechaSolicitud: [''],
+      horaSolicitud: [''],
       tipoDocumento: ['', Validators.required],
       procendenciaDestino: [''],
       descripcion: [''],
@@ -154,8 +154,8 @@ export class FireDocumentation implements OnInit {
       descripcion: documento.descripcion,
       fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
       hora: moment(documento.fechaHora).format('HH:mm'),
-      //fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
-      //horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+      fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
+      horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
       procendenciaDestino: documento.procedenciaDestinos,
       tipoDocumento: documento.tipoDocumento,
       archivo: documento.archivo,
@@ -170,7 +170,7 @@ export class FireDocumentation implements OnInit {
   }
 
   onSubmit(formDirective: FormGroupDirective): void {
-    this.fileFlag 
+   
     if (this.formData.valid && this.fileFlag) {
       const data = { file: this.file, ...this.formData.value };
 
@@ -206,11 +206,10 @@ export class FireDocumentation implements OnInit {
     }
 
     const arrayToSave = this.dataOtherInformation().map((item, index) => {
-     
       return {
         id: item.id ?? null,
         fechaHora: this.getFechaHora(item.fecha, item.hora),
-        //fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
+        fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
         archivo: index === 0 ? this.file : null, // Solo agrega el archivo en el índice 0
@@ -231,7 +230,7 @@ export class FireDocumentation implements OnInit {
     // Construir `detalles` incluyendo el archivo en `detalles[0].archivo`
     objToSave.detallesDocumentaciones.forEach((detalle, index) => {
       formData.append(`detalles[${index}].fechaHora`, this.getFechaHoraIso(detalle.fechaHora));
-      formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHoraSolicitud));
+      formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].idTipoDocumento`, detalle.idTipoDocumento ?? '');
       formData.append(`detalles[${index}].descripcion`, detalle.descripcion ?? '');
       
@@ -390,28 +389,28 @@ export class FireDocumentation implements OnInit {
     return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
   }
 
-  getFechaHora(fecha: Date, hora: string): string {
-    const [horas, minutos] = hora.split(':').map(Number);
-    const fechaHora = new Date(fecha);
-    fechaHora.setHours(horas, minutos, 0, 0);
-
-    return moment(fechaHora).format('MM/DD/YY HH:mm');
+  getFechaHora(fecha: Date, hora: string): any {
+    if (hora && fecha){
+      const [horas, minutos] = hora.split(':').map(Number);
+      const fechaHora = new Date(fecha);
+      fechaHora.setHours(horas, minutos, 0, 0);
+  
+      return moment(fechaHora).format('MM/DD/YY HH:mm');
+    }
+   
     //return fechaHora.toISOString();
   }
 
-  getFechaHoraIso(fechaHora: string): string {
-    // Dividir la fecha y hora
-    const [fecha, hora] = fechaHora.split(' ');
-    
-    // Convertir la fecha de MM/DD/YY a YYYY-MM-DD
-    const [mes, dia, anio] = fecha.split('/');
-    const anioCompleto = `20${anio}`; // Suponiendo que el año es del siglo 2000
-    
-    // Crear una fecha en formato ISO 8601
-    const dateTime = new Date(`${anioCompleto}-${mes}-${dia}T${hora}:00.000Z`);
-    
-    // Devolver la fecha en formato ISO 8601
-    return dateTime.toISOString();
+  getFechaHoraIso(fechaHora: string): any {
+    if(fechaHora){
+      const [fecha, hora] = fechaHora.split(' ');
+      const [mes, dia, anio] = fecha.split('/');
+      const anioCompleto = `20${anio}`; 
+      const dateTime = new Date(`${anioCompleto}-${mes}-${dia}T${hora}:00.000Z`);
+      
+      return dateTime.toISOString();
+    }
+ 
   }
 
   showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {

@@ -21,7 +21,7 @@ import { AutonomousCommunityService } from '../../../../services/autonomous-comm
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
 import { CountryService } from '../../../../services/country.service';
 import { EventStatusService } from '../../../../services/eventStatus.service';
-import { FireStatusService } from '../../../../services/fire-status.service';
+import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
 import { FireService } from '../../../../services/fire.service';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
@@ -109,7 +109,7 @@ export class FireRelatedEventForm implements OnInit {
   public menuItemActiveService = inject(MenuItemActiveService);
   public superficiesService = inject(SuperficiesService);
   public territoryService = inject(TerritoryService);
-  public fireStatusService = inject(FireStatusService);
+  public masterData = inject(MasterDataEvolutionsService);
   public severityLevelService = inject(SeverityLevelService);
   public fireService = inject(FireService);
   public eventStatusService = inject(EventStatusService);
@@ -200,7 +200,7 @@ export class FireRelatedEventForm implements OnInit {
       const territories = await this.territoryService.get();
       this.listadoTerritorio.set(territories);
 
-      const fireStatus = await this.fireStatusService.get();
+      const fireStatus = await this.masterData.getFireStatus();
       this.fireStatus.set(fireStatus);
 
       const severityLevels = await this.severityLevelService.get();
