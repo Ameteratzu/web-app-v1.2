@@ -37,9 +37,8 @@ public class ImpactoClasificadoController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene los grupos de impactos clasificados")]
-    public async Task<ActionResult<IReadOnlyList<string>>> GetGruposImpactos()
+    public async Task<ActionResult<IReadOnlyList<string>>> GetGruposImpactos(GetGruposImpactosListQuery query)
     {
-        var query = new GetGruposImpactosListQuery();
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -48,9 +47,8 @@ public class ImpactoClasificadoController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene lista general de los impactos clasificados")]
-    public async Task<ActionResult<IReadOnlyList<ImpactoClasificadoDescripcionVm>>> GetImpactos()
+    public async Task<ActionResult<IReadOnlyList<ImpactoClasificadoDescripcionVm>>> GetImpactos([FromQuery] GetDescripcionImpactosListQuery query)
     {
-        var query = new GetDescripcionImpactosListQuery();
         var result = await _mediator.Send(query);
         return Ok(result);
     }

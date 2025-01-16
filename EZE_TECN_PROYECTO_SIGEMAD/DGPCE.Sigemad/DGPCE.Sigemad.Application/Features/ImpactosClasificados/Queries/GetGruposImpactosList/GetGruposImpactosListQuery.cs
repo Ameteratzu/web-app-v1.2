@@ -1,11 +1,7 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetGruposImpactosList;
 public class GetGruposImpactosListQuery : IRequest<IReadOnlyList<string>>
 {
+    public string? Tipo { get; set; }
 }
