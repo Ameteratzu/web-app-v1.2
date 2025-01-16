@@ -3,26 +3,37 @@
     <div>
       <h3 class="title">DATOS PRINCIPALES</h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+        <!--
         <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
           <mat-label>Fecha y hora</mat-label>
           <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaHora')" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        -->
 
-        <mat-form-field appearance="fill" fxFlex="50%">
-          <mat-label>Provincia</mat-label>
-          <mat-select [formControl]="getForm('idProvincia')" (selectionChange)="loadMunicipalities($event)">
-            <mat-option *ngFor="let option of provinces()" [value]="option">
+        <mat-form-field appearance="fill" fxFlex="30%">
+          <mat-label>Tipo</mat-label>
+          <mat-select [formControl]="getForm('tipo')" (selectionChange)="loadGrupos($event)">
+            <mat-option *ngFor="let option of listadoTipoImpacto()" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex="30%">
+          <mat-label>Grupo</mat-label>
+          <mat-select [formControl]="getForm('grupo')" (selectionChange)="loadDenominacion($event)">
+            <mat-option *ngFor="let option of listadoGrupos()" [value]="option">
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" fxFlex="50%">
-          <mat-label>Municipio</mat-label>
-          <mat-select [formControl]="getForm('idMunicipio')">
-            <mat-option *ngFor="let option of municipalities()" [value]="option">
+        <mat-form-field appearance="fill" fxFlex="30%">
+          <mat-label>Denominación</mat-label>
+          <mat-select [formControl]="getForm('denominacion')">
+            <mat-option *ngFor="let option of listadoDenominaciones()" [value]="option">
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
@@ -30,27 +41,25 @@
       </div>
 
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-        <mat-form-field appearance="fill" fxFlex="40%">
-          <mat-label>Entidad Menor</mat-label>
-          <mat-select [formControl]="getForm('idEntidadMenor')">
-            <mat-option *ngFor="let option of minors()" [value]="option">
-              {{ option.descripcion }}
-            </mat-option>
-          </mat-select>
+        <mat-form-field class="input" fxFlex="20%">
+          <mat-label>Número</mat-label>
+          <input matInput [formControl]="getForm('numero')" type="number" required />
         </mat-form-field>
 
-        <mat-form-field class="input" fxFlex="60%">
-          <mat-label>Fichero georeferenciado</mat-label>
-          <input matInput [formControl]="getForm('fichero')" placeholder="Ingresa texto" required />
+        <mat-form-field class="input" fxFlex="35%">
+          <mat-label>Localizacion</mat-label>
+          <input matInput [formControl]="getForm('localizacion')" type="number" required />
         </mat-form-field>
-      </div>
+        <img (click)="openModalMap()" matSuffix src="/assets/img/location-btn.svg" alt="location-btn" class="pin-location" />
 
-      <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-        <mat-form-field class="input full-width-input" fxFlex="100%">
+        <mat-form-field class="input" fxFlex="35%">
           <mat-label>Observaciones</mat-label>
-          <textarea matInput [formControl]="getForm('observaciones')"></textarea>
+          <textarea matInput [formControl]="getForm('observacion')"></textarea>
         </mat-form-field>
       </div>
+
+      <div>Datos complementarios</div>
+      /*************/
 
       <div class="row add-button-row" fxLayout="row" fxLayoutAlign="end center">
         <button mat-flat-button color="primary">
@@ -61,41 +70,49 @@
     </div>
   </form>
   <br />
-  <div class="mat-elevation-z8 table-container" *ngIf="evolutionService.dataAffectedArea().length > 0">
-    <table mat-table [dataSource]="evolutionService.dataAffectedArea()" matSort class="mat-table" style="width: 100%">
+
+  <div class="mat-elevation-z8 table-container">
+    <table mat-table [dataSource]="evolutionService.dataConse()" matSort class="mat-table" style="width: 100%">
+      <!--
       <ng-container matColumnDef="fechaHora">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha y hora</th>
         <td mat-cell *matCellDef="let coordinacionData">
           {{ getFormatdate(coordinacionData.fechaHora) }}
         </td>
       </ng-container>
+      -->
 
-      <ng-container matColumnDef="procendenciaDestino">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
-        <td mat-cell *matCellDef="let coordinacionData">
-          {{ coordinacionData.idProvincia.descripcion }}
+      <ng-container matColumnDef="fechaHora">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha y hora</th>
+        <td mat-cell *matCellDef="let conse">
+          {{ conse.fechaHora }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="descripcion">
-        <th mat-header-cell *matHeaderCellDef>Municipio</th>
-        <td mat-cell *matCellDef="let coordinacionData">
-          {{ coordinacionData.idMunicipio.descripcion }}
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+        <td mat-cell *matCellDef="let conse">
+          {{ conse.tipo }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="fichero">
-        <th mat-header-cell *matHeaderCellDef>Entidad menor</th>
-        <td mat-cell *matCellDef="let coordinacionData">
-          {{ coordinacionData.idEntidadMenor.descripcion }}
+      <ng-container matColumnDef="denominacion">
+        <th mat-header-cell *matHeaderCellDef>Denominacion</th>
+        <td mat-cell *matCellDef="let conse">
+          {{ conse.denominacion }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numero">
+        <th mat-header-cell *matHeaderCellDef>Número</th>
+        <td mat-cell *matCellDef="let conse">
+          {{ conse.numero }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="opciones">
         <th mat-header-cell *matHeaderCellDef>Opciones</th>
         <td mat-cell *matCellDef="let fire; let i = index">
-          <img (click)="seleccionarItem(i)" src="/assets/img/edit-btn.svg" alt="edit-btn" />
-
           <img (click)="eliminarItem(i)" src="/assets/img/close.svg" alt="doc-btn" />
         </td>
       </ng-container>

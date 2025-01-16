@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
-import { Evolution } from '../types/evolution.type';
-import { EvolucionIncendio } from '../types/evolution-record.type';
 import { AffectedArea } from '../types/affected-area.type';
 import { Consequences } from '../types/consequences.type';
+import { EvolucionIncendio } from '../types/evolution-record.type';
+import { Evolution } from '../types/evolution.type';
 
 @Injectable({ providedIn: 'root' })
 export class EvolutionService {
@@ -72,6 +72,7 @@ export class EvolutionService {
   clearData(): void {
     this.dataRecords.set([]);
     this.dataAffectedArea.set([]);
+    this.dataConse.set([]);
   }
 
   postData(body: any) {
