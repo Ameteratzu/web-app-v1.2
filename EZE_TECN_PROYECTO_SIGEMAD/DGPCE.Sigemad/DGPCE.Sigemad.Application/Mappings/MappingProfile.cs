@@ -265,8 +265,11 @@ public class MappingProfile : Profile
         CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>()
-            .ForMember(dest => dest.NivelSituacion, opt => opt.MapFrom(src =>
-                (src.Nivel ?? string.Empty) + " / " + (src.Situacion ?? string.Empty)));
+          .ForMember(dest => dest.NivelSituacion, opt => opt.MapFrom(src =>
+              string.IsNullOrEmpty(src.Nivel) && string.IsNullOrEmpty(src.Situacion)
+                  ? " / "
+                  : (src.Nivel ?? string.Empty) + (src.Situacion ?? string.Empty)));
+
 
         CreateMap<Archivo, ArchivoDto>();
 
