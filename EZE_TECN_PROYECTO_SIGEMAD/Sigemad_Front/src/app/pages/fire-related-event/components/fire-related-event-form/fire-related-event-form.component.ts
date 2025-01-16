@@ -21,9 +21,9 @@ import { AutonomousCommunityService } from '../../../../services/autonomous-comm
 import { ComparativeDateService } from '../../../../services/comparative-date.service';
 import { CountryService } from '../../../../services/country.service';
 import { EventStatusService } from '../../../../services/eventStatus.service';
-import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
 import { FireService } from '../../../../services/fire.service';
 import { LocalFiltrosIncendio } from '../../../../services/local-filtro-incendio.service';
+import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
 import { MenuItemActiveService } from '../../../../services/menu-item-active.service';
 import { MoveService } from '../../../../services/move.service';
 import { MunicipalityService } from '../../../../services/municipality.service';
@@ -171,7 +171,7 @@ export class FireRelatedEventForm implements OnInit {
 
       this.formData = new FormGroup({
         name: new FormControl(''),
-        claseSuceco: new FormControl(''),
+        claseSuceco: new FormControl(1),
         territory: new FormControl(1),
         country: new FormControl(this.COUNTRIES_ID.SPAIN),
         CCAA: new FormControl(''),
@@ -244,19 +244,19 @@ export class FireRelatedEventForm implements OnInit {
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value.id == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
     this.loadCommunities(event.value.id == 1 ? this.COUNTRIES_ID.SPAIN : '9999');
-    if (event.value.id == 1) {
+    if (event.value == 1) {
       this.filteredCountries.set(this.listaPaisesNacionales());
     }
-    if (event.value.id == 2) {
+    if (event.value == 2) {
       this.filteredCountries.set(this.listaPaisesExtranjeros());
     }
-    if (event.value.id == 3) {
+    if (event.value == 3) {
       this.filteredCountries.set([]);
     }
   }

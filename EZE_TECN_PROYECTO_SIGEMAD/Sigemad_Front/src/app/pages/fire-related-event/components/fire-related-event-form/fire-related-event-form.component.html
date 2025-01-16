@@ -60,7 +60,7 @@
       <mat-form-field class="input spaced-input" fxFlex="25%">
         <mat-label>Clase de suceso</mat-label>
         <mat-select formControlName="claseSuceco">
-          <mat-option *ngFor="let option of listadoClaseSuceso()" [value]="option">
+          <mat-option *ngFor="let option of listadoClaseSuceso()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
@@ -70,7 +70,7 @@
       <mat-form-field class="input spaced-input" fxFlex="25%">
         <mat-label>Territorio</mat-label>
         <mat-select formControlName="territory" (selectionChange)="changeTerritory($event)">
-          <mat-option *ngFor="let option of listadoTerritorio()" [value]="option">
+          <mat-option *ngFor="let option of listadoTerritorio()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
@@ -80,7 +80,7 @@
       <mat-form-field class="input spaced-input" fxFlex="25%">
         <mat-label>País</mat-label>
         <mat-select formControlName="country">
-          <mat-option *ngFor="let option of filteredCountries()" [value]="option">
+          <mat-option *ngFor="let option of filteredCountries()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
