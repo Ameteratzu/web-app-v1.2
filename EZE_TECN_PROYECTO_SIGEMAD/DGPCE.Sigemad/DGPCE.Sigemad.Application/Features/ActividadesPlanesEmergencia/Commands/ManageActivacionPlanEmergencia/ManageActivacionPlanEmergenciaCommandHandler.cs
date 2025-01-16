@@ -34,22 +34,36 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
     {
         _logger.LogInformation($"{nameof(ManageActivacionPlanEmergenciaCommandHandler)} - BEGIN");
 
-        ActuacionRelevanteDGPCE actuacionRelevante;
+        var actuacionRelevante = await GetOrCreateActuacionRelevante(request);
 
-        // Si el IdActuacionRelevante es proporcionado, intentar actualizar, si no, crear nueva instancia
+        await ValidateTipoPlanes(request);
+        await ValidatePlanesEmergencias(request);
+
+        await MapAndSaveActivacionesPlanes(request, actuacionRelevante);
+
+        await DeleteLogicalActivaciones(request, actuacionRelevante);
+
+        await SaveActuacionRelevante(request, actuacionRelevante);
+
+        _logger.LogInformation($"{nameof(ManageActivacionPlanEmergenciaCommandHandler)} - END");
+        return new ManageActivacionPlanEmergenciaResponse { IdActuacionRelevante = actuacionRelevante.Id };
+    }
+
+    private async Task<ActuacionRelevanteDGPCE> GetOrCreateActuacionRelevante(ManageActivacionPlanEmergenciaCommand request)
+    {
         if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
         {
             var spec = new ActuacionRelevanteDGPCESpecification(request.IdActuacionRelevante.Value);
-            actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(spec);
+            var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(spec);
             if (actuacionRelevante is null || actuacionRelevante.Borrado)
             {
                 _logger.LogWarning($"request.IdActuacionRelevante: {request.IdActuacionRelevante}, no encontrado");
                 throw new NotFoundException(nameof(ActuacionRelevanteDGPCE), request.IdActuacionRelevante);
             }
+            return actuacionRelevante;
         }
         else
         {
-            // Validar si el IdSuceso es válido
             var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
             if (suceso is null || suceso.Borrado)
             {
@@ -57,14 +71,12 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
-            // Crear nueva ActuacionRelevanteDGPCE
-            actuacionRelevante = new ActuacionRelevanteDGPCE
-            {
-                IdSuceso = request.IdSuceso
-            };
+            return new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
         }
+    }
 
-        // Validar listas
+    private async Task ValidateTipoPlanes(ManageActivacionPlanEmergenciaCommand request)
+    {
         var idsTipoPlan = request.ActivacionesPlanes.Select(c => c.IdTipoPlan).Distinct();
         var tipoPlanesExistentes = await _unitOfWork.Repository<TipoPlan>().GetAsync(p => idsTipoPlan.Contains(p.Id));
 
@@ -79,14 +91,17 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 throw new NotFoundException(nameof(TipoPlan), string.Join(", ", idsTipoPlanesInvalidas));
             }
         }
+    }
 
+    private async Task ValidatePlanesEmergencias(ManageActivacionPlanEmergenciaCommand request)
+    {
         var idsPlanesEmergencias = request.ActivacionesPlanes.Select(c => c.IdPlanEmergencia).Distinct();
         var planesEmergenciasExistentes = await _unitOfWork.Repository<PlanEmergencia>().GetAsync(p => idsPlanesEmergencias.Contains(p.Id));
 
         if (planesEmergenciasExistentes.Count() != idsPlanesEmergencias.Count())
         {
             var idsPlanesEmergenciasExistentes = planesEmergenciasExistentes.Select(p => p.Id).Cast<int?>().ToList();
-            var idsPlanesEmergenciasInvalidas = idsTipoPlan.Except(idsPlanesEmergenciasExistentes).ToList();
+            var idsPlanesEmergenciasInvalidas = idsPlanesEmergencias.Except(idsPlanesEmergenciasExistentes).ToList();
 
             if (idsPlanesEmergenciasInvalidas.Any())
             {
@@ -94,11 +109,10 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 throw new NotFoundException(nameof(PlanEmergencia), string.Join(", ", idsPlanesEmergenciasInvalidas));
             }
         }
+    }
 
-
-
-
-        // Mapear y actualizar/crear los detalles del documento
+    private async Task MapAndSaveActivacionesPlanes(ManageActivacionPlanEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    {
         foreach (var activacionPlanDto in request.ActivacionesPlanes)
         {
             if (activacionPlanDto.Id.HasValue && activacionPlanDto.Id > 0)
@@ -107,92 +121,60 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
 
                 if (activacionPlanEntity != null)
                 {
-                    // Actualizar datos existentes
                     _mapper.Map(activacionPlanDto, activacionPlanEntity);
                     activacionPlanEntity.Borrado = false;
-
                 }
                 else
                 {
-                    // Crear nuevo 
-                    var nuevoActivacionPlan = new ActivacionPlanEmergencia
-                    {
-                        IdTipoPlan = activacionPlanDto.IdTipoPlan,
-                        IdPlanEmergencia = activacionPlanDto.IdPlanEmergencia,
-                        TipoPlanPersonalizado = activacionPlanDto.TipoPlanPersonalizado,
-                        PlanEmergenciaPersonalizado = activacionPlanDto.PlanEmergenciaPersonalizado,
-                        FechaInicio = activacionPlanDto.FechaInicio,
-                        FechaFin = activacionPlanDto.FechaFin,
-                        Autoridad = activacionPlanDto.Autoridad,
-                        Observaciones = activacionPlanDto.Observaciones,
-
-                    };
-
-
-                    // Agregar archivo - BEGIN
-                    if (activacionPlanDto.Archivo != null)
-                    {
-                        var fileEntity = new Archivo
-                        {
-                            NombreOriginal = activacionPlanDto.Archivo?.FileName ?? string.Empty,
-                            NombreUnico = $"{Path.GetFileNameWithoutExtension(activacionPlanDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{activacionPlanDto.Archivo?.Extension ?? string.Empty}",
-                            Tipo = activacionPlanDto.Archivo?.ContentType ?? string.Empty,
-                            Extension = activacionPlanDto.Archivo?.Extension ?? string.Empty,
-                            PesoEnBytes = activacionPlanDto.Archivo?.Length ?? 0,
-                        };
-
-                        fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(activacionPlanDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
-                        fileEntity.FechaCreacion = DateTime.Now;
-                        nuevoActivacionPlan.Archivo = fileEntity;
-                    }
-                    // Agregar archivo - END
-
+                    var nuevoActivacionPlan = CreateNewActivacionPlan(activacionPlanDto);
                     actuacionRelevante.ActivacionPlanEmergencias.Add(nuevoActivacionPlan);
                 }
             }
             else
             {
-                // Crear nuevo 
-                var nuevoActivacionPlan = new ActivacionPlanEmergencia
-                {
-                    IdTipoPlan = activacionPlanDto.IdTipoPlan,
-                    IdPlanEmergencia = activacionPlanDto.IdPlanEmergencia,
-                    TipoPlanPersonalizado = activacionPlanDto.TipoPlanPersonalizado,
-                    PlanEmergenciaPersonalizado = activacionPlanDto.PlanEmergenciaPersonalizado,
-                    FechaInicio = activacionPlanDto.FechaInicio,
-                    FechaFin = activacionPlanDto.FechaFin,
-                    Autoridad = activacionPlanDto.Autoridad,
-                    Observaciones = activacionPlanDto.Observaciones,
-
-                };
-
-                // Agregar archivo - BEGIN
-                if (activacionPlanDto.Archivo != null)
-                {
-                    var fileEntity = new Archivo
-                    {
-                        NombreOriginal = activacionPlanDto.Archivo?.FileName ?? string.Empty,
-                        NombreUnico = $"{Path.GetFileNameWithoutExtension(activacionPlanDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{activacionPlanDto.Archivo?.Extension ?? string.Empty}",
-                        Tipo = activacionPlanDto.Archivo?.ContentType ?? string.Empty,
-                        Extension = activacionPlanDto.Archivo?.Extension ?? string.Empty,
-                        PesoEnBytes = activacionPlanDto.Archivo?.Length ?? 0,
-                    };
-
-                    fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(activacionPlanDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
-                    fileEntity.FechaCreacion = DateTime.Now;
-                    nuevoActivacionPlan.Archivo = fileEntity;
-                }
-                // Agregar archivo - END
-
+                var nuevoActivacionPlan = CreateNewActivacionPlan(activacionPlanDto);
                 actuacionRelevante.ActivacionPlanEmergencias.Add(nuevoActivacionPlan);
             }
         }
+    }
 
-
-        // Eliminar lógicamente 
-        if (request.IdActuacionRelevante.HasValue)
+    private ActivacionPlanEmergencia CreateNewActivacionPlan(ManageActivacionPlanEmergenciaDto activacionPlanDto)
+    {
+        var nuevoActivacionPlan = new ActivacionPlanEmergencia
         {
-            // Solo las activaciones con Id existente (no nuevas)
+            IdTipoPlan = activacionPlanDto.IdTipoPlan,
+            IdPlanEmergencia = activacionPlanDto.IdPlanEmergencia,
+            TipoPlanPersonalizado = activacionPlanDto.TipoPlanPersonalizado,
+            PlanEmergenciaPersonalizado = activacionPlanDto.PlanEmergenciaPersonalizado,
+            FechaInicio = activacionPlanDto.FechaInicio,
+            FechaFin = activacionPlanDto.FechaFin,
+            Autoridad = activacionPlanDto.Autoridad,
+            Observaciones = activacionPlanDto.Observaciones,
+        };
+
+        if (activacionPlanDto.Archivo != null)
+        {
+            var fileEntity = new Archivo
+            {
+                NombreOriginal = activacionPlanDto.Archivo?.FileName ?? string.Empty,
+                NombreUnico = $"{Path.GetFileNameWithoutExtension(activacionPlanDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{activacionPlanDto.Archivo?.Extension ?? string.Empty}",
+                Tipo = activacionPlanDto.Archivo?.ContentType ?? string.Empty,
+                Extension = activacionPlanDto.Archivo?.Extension ?? string.Empty,
+                PesoEnBytes = activacionPlanDto.Archivo?.Length ?? 0,
+            };
+
+            fileEntity.RutaDeAlmacenamiento = _fileService.SaveFileAsync(activacionPlanDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH).Result;
+            fileEntity.FechaCreacion = DateTime.Now;
+            nuevoActivacionPlan.Archivo = fileEntity;
+        }
+
+        return nuevoActivacionPlan;
+    }
+
+    private async Task DeleteLogicalActivaciones(ManageActivacionPlanEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    {
+        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante > 0)
+        {
             var idsEnRequest = request.ActivacionesPlanes
                 .Where(c => c.Id.HasValue && c.Id > 0)
                 .Select(c => c.Id)
@@ -212,7 +194,10 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 _unitOfWork.Repository<ActivacionPlanEmergencia>().DeleteEntity(detalleAEliminar);
             }
         }
+    }
 
+    private async Task SaveActuacionRelevante(ManageActivacionPlanEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    {
         if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
         {
             _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacionRelevante);
@@ -227,9 +212,5 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
         {
             throw new Exception("No se pudo insertar/actualizar los detalles de la activacion planes");
         }
-
-
-        _logger.LogInformation($"{nameof(ManageActivacionPlanEmergenciaCommandHandler)} - END");
-        return new ManageActivacionPlanEmergenciaResponse { IdActuacionRelevante = actuacionRelevante.Id };
     }
 }
