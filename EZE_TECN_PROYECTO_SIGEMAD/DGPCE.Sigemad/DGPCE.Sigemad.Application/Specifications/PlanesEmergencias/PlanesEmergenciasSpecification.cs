@@ -10,8 +10,10 @@ public class PlanesEmergenciasSpecification : BaseSpecification<PlanEmergencia>
          (string.IsNullOrEmpty(request.Descripcion) || PlanEmergencia.Descripcion.Contains(request.Descripcion)) &&
         (!request.Id.HasValue || PlanEmergencia.Id == request.Id) &&
        // (!request.IdCcaa.HasValue || PlanEmergencia.IdCcaa == request.IdCcaa) &&
-       (!request.IdCcaa.HasValue || PlanEmergencia.IdCcaa == request.IdCcaa) &&
-        (request.IdCcaa.HasValue || (PlanEmergencia.IdCcaa == null && PlanEmergencia.IdTipoRiesgo == request.IdTipoRiesgo)) &&
+       (
+                    (request.IdCcaa.HasValue && (PlanEmergencia.IdCcaa == null || PlanEmergencia.IdCcaa == request.IdCcaa)) ||
+                    (!request.IdCcaa.HasValue && PlanEmergencia.IdCcaa == null)
+                ) &&
         (!request.IdProvincia.HasValue || PlanEmergencia.IdProvincia == request.IdProvincia) &&
         (!request.IdMunicipio.HasValue || PlanEmergencia.IdMunicipio == request.IdMunicipio) &&
         (!request.IdTipoPlan.HasValue || PlanEmergencia.IdTipoPlan == request.IdTipoPlan) &&
