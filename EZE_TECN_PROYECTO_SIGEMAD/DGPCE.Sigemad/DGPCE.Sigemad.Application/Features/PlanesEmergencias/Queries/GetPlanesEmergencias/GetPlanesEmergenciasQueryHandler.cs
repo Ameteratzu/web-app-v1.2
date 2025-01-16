@@ -21,7 +21,10 @@ public class GetPlanesEmergenciasQueryHandler : IRequestHandler<GetPlanesEmergen
         var spec = new PlanesEmergenciasSpecification(request);
         var planesEmergencias = await _unitOfWork.Repository<PlanEmergencia>().GetAllWithSpec(spec);
 
-        var planesEmergenciaVm = _mapper.Map<IReadOnlyList<PlanEmergencia>, IReadOnlyList<PlanEmergenciaVm>>(planesEmergencias);
+        var planesEmergenciaVm = _mapper.Map<IReadOnlyList<PlanEmergencia>, IReadOnlyList<PlanEmergenciaVm>>(planesEmergencias, opt =>
+        {
+            opt.Items["IsFullDescription"] = request.IsFullDescription;
+        });
         return planesEmergenciaVm;
     }
 }
