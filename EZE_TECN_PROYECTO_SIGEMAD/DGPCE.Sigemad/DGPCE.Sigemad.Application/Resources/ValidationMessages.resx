@@ -361,4 +361,10 @@
   <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
     <value>Descripción Solicitud no puede superar los 510 caracteres</value>
   </data>
+  <data name="FechaSolicitudObligatorio" xml:space="preserve">
+    <value>FechaSolicitud es obligatoria</value>
+  </data>
+  <data name="DenominacionZAGEPMaxLength" xml:space="preserve">
+    <value>Denominación no puede exceder los 510 caracteres</value>
+  </data>
 </root>

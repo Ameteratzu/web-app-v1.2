@@ -7,5 +7,6 @@ public class ActuacionRelevanteDGPCESpecification : BaseSpecification<ActuacionR
       : base(d => d.Id == id && d.Borrado == false)
     {
         AddInclude(d => d.EmergenciaNacional);
+        AddInclude(d => d.DeclaracionesZAGEP);
     }
 }
