@@ -9,7 +9,6 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("/api/v1/plan-situacion-emergencia")]
 public class PlanesSituacionesController : Controller

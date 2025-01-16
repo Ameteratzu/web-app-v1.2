@@ -1,19 +1,9 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Dtos.Registros;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
-using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.PlanesEmergencias;
-using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Features.PlanesEmergencias.Queries.GetPlanesEmergenciasByIdTipoPlan;
 
