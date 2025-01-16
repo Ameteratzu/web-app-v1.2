@@ -60,7 +60,7 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
         }
 
         // Mapear y actualizar/crear las declaraciones ZAGEP
-        foreach (var declaracionZagepDto in request.Detalles!)
+        foreach (var declaracionZagepDto in request.Detalles)
         {
             bool crearNueva = true;
 

@@ -63,8 +63,9 @@ public class ManageEmergenciasNacionalesCommandHandler : IRequestHandler<ManageE
         // Mapear la emergencia nacional
         if (request.EmergenciaNacional != null)
         {
-            _mapper.Map(request, actuacion, typeof(ManageEmergenciasNacionalesCommand), typeof(ActuacionRelevanteDGPCE));
-            actuacion.EmergenciaNacional!.Borrado = false;
+
+             _mapper.Map(request, actuacion);
+            actuacion.EmergenciaNacional.Borrado = false;
             actuacion.EmergenciaNacional.FechaEliminacion = null;
             actuacion.EmergenciaNacional.EliminadoPor = null;
 

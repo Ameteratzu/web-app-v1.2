@@ -6,5 +6,5 @@ public class ManageDeclaracionesZAGEPCommand : IRequest<ManageDeclaracionZAGEPRe
 {
     public int? IdActuacionRelevante { get; set; }
     public int IdSuceso { get; set; }
-    public List<DeclaracionZAGEPDto>? Detalles { get; set; } = null;
+    public List<DeclaracionZAGEPDto>? Detalles { get; set; } = new();
 }
