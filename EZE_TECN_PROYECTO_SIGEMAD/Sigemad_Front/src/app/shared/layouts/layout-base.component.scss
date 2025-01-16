@@ -6,7 +6,7 @@
   background-color: rgb(234, 234, 234);
 }
 
-.nav-miga-pan{
+.nav-miga-pan {
   padding: 0px 12px 12px;
 }
 
@@ -35,7 +35,6 @@ mat-sidenav-content {
   padding: 0 !important;
 }
 
-
 .breadcrumb {
   display: flex;
   list-style: none;
@@ -44,7 +43,9 @@ mat-sidenav-content {
 }
 
 .breadcrumb-item {
-  margin-right: 5px;
+  margin-right: 6px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .breadcrumb-item::after {
