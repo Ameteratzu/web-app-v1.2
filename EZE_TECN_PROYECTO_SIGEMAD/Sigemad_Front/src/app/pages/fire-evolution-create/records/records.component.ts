@@ -195,6 +195,8 @@ export class RecordsComponent implements OnInit {
       operativa: json.parametro?.situacionOperativa?.id || '',
       afectada: json.parametro?.superficieAfectadaHectarea || null,
     });
+
+    this.loadPhases(null, json.parametro?.planEmergencia?.id);
   }
 
   async sendDataToEndpoint() {
@@ -223,7 +225,7 @@ export class RecordsComponent implements OnInit {
           idPlanEmergencia: formValues.emergencyPlanActivated,
           idFaseEmergencia: formValues.phases,
           idSituacionOperativa: 1,
-          idSituacionEquivalente: 1,
+          idSituacionEquivalente: Number(5),
           idPlanSituacion: formValues.nivel,
         },
       };
@@ -237,13 +239,21 @@ export class RecordsComponent implements OnInit {
     }
   }
 
-  async loadPhases(event: any) {
+  async loadPhases(event: any, id?: string) {
+    let id_plan;
+    
+    if(!event){
+      id_plan = id; 
+    }else{
+      id_plan = event.value; 
+    }
+
     this.spinner.show();
-    const plan_id = event.value; 
-    const phases = await this.masterData.getPhases(plan_id);
+    const phases = await this.masterData.getPhases(id_plan);
     this.phases.set(phases);
     this.formData.get('phases')?.enable();
     this.spinner.hide();
+    return phases
   }
 
   async loadSituationPlans(event: any) {

@@ -112,7 +112,7 @@
           <mat-label>Nivel / Situación</mat-label>
           <mat-select formControlName="nivel">
             <mat-option *ngFor="let op of niveles()" [value]="op.id">
-              {{ op.descripcion }}
+              {{ op.nivelSituacion }}
             </mat-option>
           </mat-select>
         </mat-form-field>
