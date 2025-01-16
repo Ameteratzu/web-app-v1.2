@@ -122,9 +122,8 @@ export class FireDocumentation implements OnInit {
   public toast = inject(MatSnackBar);
 
   async ngOnInit() {
-    console.info('moment().toISOString()', moment().toISOString(), moment().format('HH:mm'));
     this.formData = this.fb.group({
-      fecha: [moment().toISOString(), Validators.required],
+      fecha: [moment().toDate(), Validators.required],
       hora: [moment().format('HH:mm'), Validators.required],
       fechaSolicitud: [''],
       horaSolicitud: [''],
@@ -153,7 +152,7 @@ export class FireDocumentation implements OnInit {
     const newData = dataDocumentacion?.detalles?.map((documento: any) => ({
       id: documento.id,
       descripcion: documento.descripcion,
-      fecha: moment(documento.fechaHora).format('YYYY-MM-DD'),
+      fecha: moment(documento.fechaHora).format('DD-MM-YYYY'),
       hora: moment(documento.fechaHora).format('HH:mm'),
       fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
       horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
@@ -181,7 +180,7 @@ export class FireDocumentation implements OnInit {
 
       formDirective.resetForm();
       this.formData.reset({
-        fecha: moment().format('YYYY-MM-DD'),
+        fecha: moment().toDate(),
         hora: moment().format('HH:mm'),
         procendenciaDestino: [],
         tipoDocumento: null,
@@ -387,13 +386,13 @@ export class FireDocumentation implements OnInit {
     return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
   }
 
-  getFechaHora(fecha: Date, hora: string): any {
+  getFechaHora(fecha: Date, hora: string, format: string = 'MM/DD/YY HH:mm'): any {
     if (hora && fecha) {
       const [horas, minutos] = hora.split(':').map(Number);
       const fechaHora = new Date(fecha);
       fechaHora.setHours(horas, minutos, 0, 0);
 
-      return moment(fechaHora).format('MM/DD/YYYY HH:mm');
+      return moment(fechaHora).format(format);
     }
 
     //return fechaHora.toISOString();
