@@ -118,8 +118,11 @@ CREATE TABLE ConvocatoriaCECOD (
 CREATE TABLE ActivacionPlanEmergencia (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdActuacionRelevanteDGPCE INT NOT NULL FOREIGN KEY REFERENCES ActuacionRelevanteDGPCE(Id),
-    IdTipoPlan INT NOT NULL FOREIGN KEY REFERENCES TipoPlan(Id),
-    IdPlanEmergencia INT NOT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
+    IdTipoPlan INT NULL FOREIGN KEY REFERENCES TipoPlan(Id),
+    IdPlanEmergencia INT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
+    -- Opciones personalizadas
+    TipoPlanPersonalizado NVARCHAR(255) NULL, -- Para guardar el texto personalizado
+    PlanEmergenciaPersonalizado NVARCHAR(255) NULL, -- Para guardar el texto personalizado
     FechaInicio DATE NOT NULL,
     FechaFin DATE NULL,
     Autoridad NVARCHAR(255) NOT NULL,

@@ -2,17 +2,24 @@
 
 
 namespace DGPCE.Sigemad.Domain.Modelos;
-public class ActivacionPlanEmergencia : BaseEntity
+public class ActivacionPlanEmergencia : BaseDomainModel<int>
 {
-    public int IdDireccionCoordinacionEmergencia { get; set; }
-    public int IdTipoPlan { get; set; }
-    public string NombrePlan { get; set; } = null!;
-    public string AutoridadQueLoActiva { get; set; } = null!;
-    public string? RutaDocumentoActivacion { get; set; }
-    public DateTime FechaInicio { get; set; }
-    public DateTime? FechaFin { get; set; }
+    public int IdActuacionRelevanteDGPCE { get; set; }
+    public virtual ActuacionRelevanteDGPCE ActuacionRelevanteDGPCE { get; set; } = null!;
+
+    public int? IdTipoPlan { get; set; }
+    public virtual TipoPlan TipoPlan { get; set; } = null!;
+
+    public int? IdPlanEmergencia { get; set; }
+    public virtual PlanEmergencia PlanEmergencia { get; set; } = null!;
+
+    public string? TipoPlanPersonalizado { get; set; } = null!;
+    public string? PlanEmergenciaPersonalizado { get; set; } = null!;
+    public DateOnly FechaInicio { get; set; }
+    public DateOnly? FechaFin { get; set; }
+    public string Autoridad { get; set; }
     public string? Observaciones { get; set; }
 
-    public virtual DireccionCoordinacionEmergencia DireccionCoordinacionEmergencia { get; set; } = null!;
-    public virtual TipoPlan TipoPlan { get; set; } = null!;
+    public Guid? IdArchivo { get; set; }
+    public Archivo? Archivo { get; set; }
 }
