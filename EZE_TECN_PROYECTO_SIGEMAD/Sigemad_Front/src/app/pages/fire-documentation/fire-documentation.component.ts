@@ -122,14 +122,15 @@ export class FireDocumentation implements OnInit {
   public toast = inject(MatSnackBar);
 
   async ngOnInit() {
+    this.spinner.show();
     this.formData = this.fb.group({
       fecha: [moment().toDate(), Validators.required],
       hora: [moment().format('HH:mm'), Validators.required],
       fechaSolicitud: [''],
       horaSolicitud: [''],
       tipoDocumento: ['', Validators.required],
-      procendenciaDestino: [''],
-      descripcion: [''],
+      procendenciaDestino: ['', Validators.required],
+      descripcion: ['', Validators.required],
     });
 
     this.dataSource.data = [];
@@ -144,9 +145,8 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
-    console.log("🚀 ~ FireDocumentation ~ isToEditDocumentation ~ this.dataProps:", this.dataProps)
     if (!this.dataProps?.fireDetail?.id) {
-     
+      this.spinner.hide();
       return;
     }
     const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
@@ -164,6 +164,7 @@ export class FireDocumentation implements OnInit {
     }));
 
     this.dataOtherInformation.set(newData);
+    this.spinner.hide();
   }
 
   trackByFn(index: number, item: any): string {
@@ -187,14 +188,11 @@ export class FireDocumentation implements OnInit {
         procendenciaDestino: [],
         tipoDocumento: null,
       });
-      //this.file = null;
     } else {
-      this.fileFlag = false;
       this.formData.markAllAsTouched();
     }
   }
 
-  //Función para guardar en base de datos
   async saveList() {
     if (this.isSaving()) {
       return;
@@ -213,8 +211,9 @@ export class FireDocumentation implements OnInit {
         fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
         descripcion: item.descripcion,
-        archivo: index === 0 ? this.file : null, // Solo agrega el archivo en el índice 0
-        documentacionProcedenciasDestinos: item.procendenciaDestino.map((procendenciaDestino: any) => procendenciaDestino.id),
+        archivo: index === 0 ? this.file : null,
+        documentacionProcedenciasDestinos:
+          item.procendenciaDestino.length > 0 ? item.procendenciaDestino.map((procendenciaDestino: any) => procendenciaDestino.id) : '',
       };
     });
 
@@ -228,16 +227,19 @@ export class FireDocumentation implements OnInit {
     formData.append('idDocumento', objToSave.idDocumento ?? '0');
     formData.append('idSuceso', objToSave.idSuceso ?? '');
 
-    // Construir `detalles` incluyendo el archivo en `detalles[0].archivo`
     objToSave.detallesDocumentaciones.forEach((detalle, index) => {
       formData.append(`detalles[${index}].fechaHora`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].idTipoDocumento`, detalle.idTipoDocumento ?? '');
       formData.append(`detalles[${index}].descripcion`, detalle.descripcion ?? '');
 
-      detalle.documentacionProcedenciasDestinos.forEach((id: string | Blob, subIndex: any) => {
-        formData.append(`detalles[${index}].idsProcedenciasDestinos[${subIndex}]`, id);
-      });
+      if (detalle.documentacionProcedenciasDestinos.length > 0) {
+        detalle.documentacionProcedenciasDestinos.forEach((id: string | Blob, subIndex: any) => {
+          formData.append(`detalles[${index}].idsProcedenciasDestinos[${subIndex}]`, id);
+        });
+      } else {
+        formData.append(`detalles[${index}].idsProcedenciasDestinos`, '');
+      }
 
       if (detalle.archivo) {
         formData.append(`detalles[${index}].archivo`, detalle.archivo);
@@ -246,7 +248,6 @@ export class FireDocumentation implements OnInit {
 
     try {
       this.spinner.show();
-      // const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(objToSave);
       const resp: { idOtraInformacion: string | number } | any = await this.fireDocumentationService.post(formData);
 
       if (resp!.idDocumentacion > 0) {
@@ -273,8 +274,6 @@ export class FireDocumentation implements OnInit {
   }
 
   async delete() {
-    //const toolbar = document.querySelector('mat-toolbar');
-    //this.renderer.setStyle(toolbar, 'z-index', '1');
     this.spinner.show();
 
     this.alertService
@@ -289,11 +288,7 @@ export class FireDocumentation implements OnInit {
       .then(async (result) => {
         if (result.isConfirmed) {
           await this.fireDocumentationService.delete(Number(this.dataProps?.fireDetail?.id));
-          //this.coordinationServices.clearData();
-          //setTimeout(() => {
-          //this.renderer.setStyle(toolbar, 'z-index', '5');
           this.spinner.hide();
-          //}, 2000);
 
           this.alertService
             .showAlert({
@@ -385,7 +380,11 @@ export class FireDocumentation implements OnInit {
   }
 
   getDescripcionProcedenciaDestion(procedenciaDestino: any[]) {
-    return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
+    if (procedenciaDestino.length === 0) {
+      return 'Sin información selecionada';
+    } else {
+      return procedenciaDestino.map((obj) => obj.descripcion).join(', ');
+    }
   }
 
   getFechaHora(fecha: Date, hora: string, format: string = 'MM/DD/YY HH:mm'): any {
