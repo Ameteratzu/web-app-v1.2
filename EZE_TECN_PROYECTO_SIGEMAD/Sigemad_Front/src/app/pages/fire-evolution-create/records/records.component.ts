@@ -112,6 +112,7 @@ export class RecordsComponent implements OnInit {
   public isCreate = signal<number>(-1);
   public phases = signal<Phases[]>([]);
   public niveles = signal<SituationPlan[]>([]);
+  public operativas = signal<SituationPlan[]>([]);
 
   async ngOnInit() {
 
@@ -130,6 +131,10 @@ export class RecordsComponent implements OnInit {
     const typesPlans = await this.masterData.getTypesPlans();
     this.typesPlans.set(typesPlans);
 
+    const situationEquivalente = await this.masterData.getSituationEquivalent();
+    this.situationEquivalent.set(situationEquivalente);
+
+    
     this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
     this.formData = this.fb.group({
@@ -155,9 +160,9 @@ export class RecordsComponent implements OnInit {
         this.formData.patchValue(data, { emitEvent: false });
       });
 
-      this.formData.valueChanges.subscribe((values) => {
-        this.formDataSignal.set({ ...this.formDataSignal(), ...values });
-      });
+      // this.formData.valueChanges.subscribe((values) => {
+      //   this.formDataSignal.set({ ...this.formDataSignal(), ...values });
+      // });
     });
 
     this.formData.get('phases')?.disable();
@@ -167,6 +172,7 @@ export class RecordsComponent implements OnInit {
 
     if (this.editData) {
       if (this.evolutionSevice.dataRecords().length === 0) {
+        // this.evolutionSevice.dataRecords.update((records) => [this.editData, ...records]);
         this.updateFormWithJson(this.editData);
       }
     }
@@ -192,9 +198,12 @@ export class RecordsComponent implements OnInit {
       emergencyPlanActivated: json.parametro?.planEmergencia?.id || '',
       phases: json.parametro?.faseEmergencia?.id || '',
       nivel: json.parametro?.planSituacion?.id || '',
-      operativa: json.parametro?.situacionOperativa?.id || '',
+      operativa: json.parametro?.situacionEquivalente?.id || '',
       afectada: json.parametro?.superficieAfectadaHectarea || null,
     });
+
+    this.loadPhases(null, json.parametro?.planEmergencia?.id);
+    this.loadLevels();
   }
 
   async sendDataToEndpoint() {
@@ -222,8 +231,7 @@ export class RecordsComponent implements OnInit {
           superficieAfectadaHectarea: formValues.afectada,
           idPlanEmergencia: formValues.emergencyPlanActivated,
           idFaseEmergencia: formValues.phases,
-          idSituacionOperativa: 1,
-          idSituacionEquivalente: 1,
+          idSituacionEquivalente: Number(formValues.operativa),
           idPlanSituacion: formValues.nivel,
         },
       };
@@ -237,13 +245,31 @@ export class RecordsComponent implements OnInit {
     }
   }
 
-  async loadPhases(event: any) {
+  async loadLevels(){
+ 
+      const phases_id = this.editData.parametro?.faseEmergencia?.id;
+        const plan_id = this.editData.parametro?.planEmergencia?.id
+        const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id );
+        this.niveles.set(situationsPlans);
+        this.formData.get('nivel')?.setValue(this.editData.parametro?.planSituacion?.id);
+      return true
+  }
+
+  async loadPhases(event: any, id?: string) {
+    let id_plan;
+    
+    if(!event){
+      id_plan = id; 
+    }else{
+      id_plan = event.value; 
+    }
+
     this.spinner.show();
-    const plan_id = event.value; 
-    const phases = await this.masterData.getPhases(plan_id);
+    const phases = await this.masterData.getPhases(id_plan);
     this.phases.set(phases);
     this.formData.get('phases')?.enable();
     this.spinner.hide();
+    return phases
   }
 
   async loadSituationPlans(event: any) {
@@ -258,6 +284,17 @@ export class RecordsComponent implements OnInit {
 
     this.spinner.hide();
   }
+
+  async loadSituacionEquivalente(event: any) {
+    this.spinner.show();
+    let arr: SituationPlan[] = [];
+    const nivelSelect = this.niveles().find(situacion => situacion.id === event.value);
+    const found = this.situationEquivalent().find(situacion => situacion.descripcion === String(nivelSelect?.situacionEquivalente));
+    
+    this.formData.get('operativa')?.setValue(found?.id);
+    this.spinner.hide();
+  }
+    
   
   getFormatdate(date: any) {
     return moment(date).format('DD/MM/YY');

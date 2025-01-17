@@ -48,6 +48,7 @@ export class FireCreateComponent implements OnInit {
     idIncendio: number;
     fireDetail?: FireDetail;
     valoresDefecto?: number;
+    fire?: any;
   };
 
   public evolutionSevice = inject(EvolutionService);
@@ -87,9 +88,11 @@ export class FireCreateComponent implements OnInit {
   }
 
   async ngOnInit() {
+    console.log("🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:", this.data.fire)
     this.spinner.show();
     this.isToEditDocumentation();
   }
+  
 
   async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
     const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find((key) => value[key]);
@@ -124,17 +127,17 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-
-    if (this.evolutionSevice.dataRecords().length === 0) {
-      this.alertService.showAlert({
-        title: 'Falta información',
-        text: 'Debe ingresar datos en Registro/Párametros',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-      });
-      this.spinner.hide();
-      return;
-    }
+    console.log("🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():", this.evolutionSevice.dataRecords())
+    // if (this.evolutionSevice.dataRecords().length === 0) {
+    //   this.alertService.showAlert({
+    //     title: 'Falta información',
+    //     text: 'Debe ingresar datos en Registro/Párametros',
+    //     icon: 'warning',
+    //     confirmButtonText: 'OK',
+    //   });
+    //   this.spinner.hide();
+    //   return;
+    // }
 
     await this.processData();
 

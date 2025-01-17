@@ -43,7 +43,7 @@ export class MasterDataEvolutionsService {
     }
 
     getTypesPlans() {
-      const endpoint = '/planes-emergencias';
+      const endpoint = '/planes-emergencias?IdCcaa=15';
       return firstValueFrom(this.http.get<TypesPlans[]>(endpoint).pipe((response) => response));
     }
 

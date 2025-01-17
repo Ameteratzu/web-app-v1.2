@@ -4,4 +4,5 @@ export type SituationPlan = {
   nivel: string | null; 
   situacion: string;
   situacionEquivalente: string;
+  nivelSituacion: string;
 };

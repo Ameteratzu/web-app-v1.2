@@ -22,6 +22,7 @@
   ></app-records>
 
   <app-area
+    [fire]="data.fire"
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editData"
     (save)="onSaveFromChild($event)"

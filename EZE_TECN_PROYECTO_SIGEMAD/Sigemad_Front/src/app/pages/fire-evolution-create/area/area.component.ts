@@ -74,6 +74,7 @@ export class AreaComponent {
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
+  @Input() fire: any;
 
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
@@ -98,6 +99,7 @@ export class AreaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
+
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
@@ -109,9 +111,17 @@ export class AreaComponent {
       observaciones: [''],
       fichero: ['', Validators.required],
     });
-    this.formData.get('municipio')?.disable();
     this.formData.get('fichero')?.disable();
     this.formData.get('entidadMenor')?.disable();
+
+    this.formData.get('provincia')?.setValue(this.fire.provincia.id);
+    const municipalities = await this.municipalityService.get(this.fire.provincia.id);
+    this.municipalities.set(municipalities);
+    this.formData.get('municipio')?.setValue(this.fire.municipio.id);
+
+    const minor = await this.minorService.get(this.fire.municipio.id);
+    this.minors.set(minor);
+    this.formData.get('entidadMenor')?.enable();
 
     if (this.editData) {
       if (this.evolutionService.dataAffectedArea().length === 0) {
@@ -121,7 +131,7 @@ export class AreaComponent {
     }
     this.spinner.hide();
   }
-
+   
   async loadMunicipalities(event: any) {
     this.spinner.show();
     const province_id = event.value;

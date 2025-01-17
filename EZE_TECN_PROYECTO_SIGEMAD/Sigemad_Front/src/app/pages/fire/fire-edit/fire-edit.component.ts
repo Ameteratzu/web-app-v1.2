@@ -211,6 +211,7 @@ export class FireEditComponent implements OnInit {
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
         valoresDefecto: resultado ? resultado.id : null,
+        fire: this.fire 
       },
     });
 

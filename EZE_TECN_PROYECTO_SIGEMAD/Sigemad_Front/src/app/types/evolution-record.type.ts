@@ -27,7 +27,6 @@ export interface Parametro {
   superficieAfectadaHectarea: number;
   idPlanEmergencia: number;
   idFaseEmergencia: number;
-  idSituacionOperativa: number;
   idSituacionEquivalente: number;
   idPlanSituacion: number;
 }
