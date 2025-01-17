@@ -18,10 +18,9 @@ import moment from 'moment';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
+import { ConsequenceService } from '../../../services/consequence.service';
 import { EvolutionService } from '../../../services/evolution.service';
 import { ImpactTypeService } from '../../../services/impact-type.service';
-import { ImpactService } from '../../../services/impact.service';
-import { MinorEntityService } from '../../../services/minor-entity.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
@@ -30,6 +29,7 @@ import { MinorEntity } from '../../../types/minor-entity.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
+import { CampoDinamico } from '../../../shared/campoDinamico/campoDinamico.component';
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -59,7 +59,12 @@ const MY_DATE_FORMATS = {
     MatTableModule,
     MatIconModule,
     NgxSpinnerModule,
+    CampoDinamico,
   ],
+  /*declarations: [
+    // otros componentes
+    CampoDinamico,
+  ],*/
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
@@ -71,7 +76,7 @@ export class ConsequencesComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number; municipio: any };
   @Output() save = new EventEmitter<any>();
-  @Input() municipio: any;
+  @Input() dataProp: any;
 
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
@@ -80,15 +85,15 @@ export class ConsequencesComponent {
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
   private municipalityService = inject(MunicipalityService);
-  private minorService = inject(MinorEntityService);
   private tiposImpactoService = inject(ImpactTypeService);
-  private impactosService = inject(ImpactService);
+  private consecuenciaService = inject(ConsequenceService);
 
   public polygon = signal<any>([]);
 
   public displayedColumns: string[] = ['fechaHora', 'tipo', 'denominacion', 'numero', 'opciones'];
 
   formData!: FormGroup;
+  formDataComplementarios!: FormGroup;
 
   public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
@@ -99,19 +104,15 @@ export class ConsequencesComponent {
   public minors = signal<MinorEntity[]>([]);
   public dataSource = new MatTableDataSource<any>([]);
 
-  //Array con toda la data indexada
-  public listadoData = signal<any[]>([]);
-
   public listadoGrupos = signal<any[]>([]);
   public listadoDenominaciones = signal<any[]>([]);
+  public listadoCamposComplementarios = signal<any[]>([]);
 
   async ngOnInit() {
+    const { fire } = this.dataProp;
+    const { municipio } = fire;
     const listadoTipoImpacto: any = await this.tiposImpactoService.get();
     this.listadoTipoImpacto.set(listadoTipoImpacto);
-
-    const dataIndexada: any = await this.impactosService.get();
-    console.info('dataIndexada', dataIndexada);
-    this.listadoData.set(dataIndexada);
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
@@ -121,18 +122,23 @@ export class ConsequencesComponent {
       grupo: [null, Validators.required],
       denominacion: [null, Validators.required],
       numero: [null, Validators.required],
-      localizacion: [null, Validators.required],
+      localizacion: [municipio.descripcion, Validators.required], //MUNICIPIO DEL INCENDIO
       observacion: [''],
     });
 
+    this.formData.get('localizacion')?.disable();
     this.formData.get('grupo')?.disable();
     this.formData.get('denominacion')?.disable();
 
     this.spinner.hide();
-    console.info('municipio', this.municipio);
+    console.info('dataProp', this.dataProp);
   }
 
-  async loadMunicipalities(event: any) {
+  onFormGroupChange(formCamposComplementario: any) {
+    this.formDataComplementarios = formCamposComplementario;
+  }
+
+  async cargarMunicipio(event: any) {
     const province_id = event.value.id;
     const municipalities = await this.municipalityService.get(province_id);
     this.municipalities.set(municipalities);
@@ -140,9 +146,9 @@ export class ConsequencesComponent {
   }
 
   async loadGrupos(event: any) {
-    const indexTipoImpacto = this.listadoTipoImpacto().findIndex((item: string) => item === event.value);
+    const dataGrupo: any = await this.consecuenciaService.getGrupo(event.value);
 
-    this.listadoGrupos.set(this.listadoData()[indexTipoImpacto].grupos);
+    this.listadoGrupos.set(dataGrupo);
     this.listadoDenominaciones.set([]);
 
     this.formData.get('grupo')?.enable();
@@ -150,18 +156,21 @@ export class ConsequencesComponent {
   }
 
   async loadDenominacion(event: any) {
-    console.info('loadGrupo-', event.value);
-    this.listadoDenominaciones.set(event.value.subgrupos);
+    const { tipo } = this.formData.value;
+    const dataDenominaciones: any = await this.consecuenciaService.getDenominaciones(tipo, event.value);
+    this.listadoDenominaciones.set(dataDenominaciones);
+    this.formData.patchValue({ denominacion: '' });
     this.formData.get('denominacion')?.enable();
   }
 
-  openModalMap() {
-    console.info('openmap');
-    if (!this.formData.value.municipio) {
-      return;
-    }
-    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
+  async loadCamposImpacto(event: any) {
+    const dataCamposComplementarios: any = await this.consecuenciaService.getCamposImpacto(event.value.id);
+    this.listadoCamposComplementarios.set(dataCamposComplementarios);
+    console.info('dataCamposComplementarios'), dataCamposComplementarios;
+  }
 
+  openModalMap() {
+    const municipioSelected = this.dataProp?.fire?.municipio;
     if (!municipioSelected) {
       return;
     }
@@ -183,13 +192,22 @@ export class ConsequencesComponent {
     });
   }
   onSubmit() {
-    if (this.formData.valid) {
-      const data = this.formData.value;
+    this.formDataComplementarios.markAllAsTouched();
+    if (this.formData.valid && this.formDataComplementarios?.valid) {
+      const data = {
+        IdImpactoClasificado: '1',
+        ...this.formData.value,
+        ...this.formDataComplementarios.value,
+      };
       if (this.isCreate() == -1) {
-        this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
+        this.evolutionService.dataConse.set([data, ...this.evolutionService.dataConse()]);
       } else {
         this.editarItem(this.isCreate());
       }
+
+      this.listadoCamposComplementarios.set([]);
+      this.listadoDenominaciones.set([]);
+      this.listadoGrupos.set([]);
 
       this.formData.reset();
     } else {
@@ -198,12 +216,12 @@ export class ConsequencesComponent {
   }
 
   async sendDataToEndpoint() {
-    this.spinner.show();
-    if (this.evolutionService.dataAffectedArea().length > 0) {
-      this.save.emit(true);
+    if (this.evolutionService.dataConse().length > 0 && this.isCreate() == 1) {
+      this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
-      this.spinner.hide();
-      this.showToast();
+      if (this.isCreate() == -1) {
+        this.save.emit({ save: false, delete: false, close: false, update: true });
+      }
     }
   }
 
@@ -216,8 +234,11 @@ export class ConsequencesComponent {
   }
 
   editarItem(index: number) {
-    const dataEditada = this.formData.value;
-    this.evolutionService.dataAffectedArea.update((data) => {
+    const dataEditada = {
+      ...this.formData.value,
+      ...this.formDataComplementarios.value,
+    };
+    this.evolutionService.dataConse.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
@@ -226,19 +247,30 @@ export class ConsequencesComponent {
   }
 
   eliminarItem(index: number) {
-    this.evolutionService.dataAffectedArea.update((data) => {
+    this.evolutionService.dataConse.update((data) => {
       data.splice(index, 1);
       return [...data];
     });
   }
 
-  seleccionarItem(index: number) {
+  async seleccionarItem(index: number) {
     this.isCreate.set(index);
-    this.formData.patchValue(this.evolutionService.dataAffectedArea()[index]);
+    const data = this.evolutionService.dataConse()[index];
+    console.info('data', data);
+    await this.loadGrupos({ value: data.tipo });
+    await this.loadDenominacion({ value: data.grupo });
+    await this.loadCamposImpacto({ value: data.denominacion });
+
+    const newData = this.listadoCamposComplementarios().map((item: any) => ({
+      ...item,
+      initValue: data[item.campo],
+    }));
+    this.listadoCamposComplementarios.set(newData);
+    this.formData.patchValue(data);
   }
 
   getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YY');
+    return moment(date).format('DD/MM/YYYY');
   }
 
   getForm(atributo: string): any {
@@ -250,6 +282,10 @@ export class ConsequencesComponent {
   }
 
   closeModal() {
-    this.save.emit(false);
+    this.save.emit({ save: false, delete: false, close: true, update: false });
+  }
+
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
   }
 }

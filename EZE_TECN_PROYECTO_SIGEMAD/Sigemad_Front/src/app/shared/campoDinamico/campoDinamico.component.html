@@ -1,114 +1,39 @@
-<form [formGroup]="form">
-  <div class="d-flex row align-items-center" *ngFor="let campo of campos">
-    <ng-container [ngSwitch]="getComponente(campo.tipoCampo)" class="col-6">
-      <!-- Checkbox -->
+<form [formGroup]="formGroup">
+  <div class="row" fxLayout="row wrap" fxLayoutGap="30px">
+    <ng-container *ngFor="let field of fields">
+      <div fxFlex="32%">
+        <!-- Campo tipo Text y Number -->
+        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Text' || field.tipoCampo === 'Number'">
+          <mat-label>{{ field.label }}</mat-label>
+          <input matInput [type]="field.tipoCampo === 'Number' ? 'number' : 'text'" [formControlName]="field.campo" />
+          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
+        </mat-form-field>
 
-      <div class="" *ngSwitchCase="'checkbox'">
-        <input class="form-check-input" [formControlName]="campo.campo" type="checkbox" id="flexCheckDefault" [required]="campo.esObligatorio" />
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ campo.campo }}
-        </label>
-      </div>
+        <!-- Campo tipo Date o DateTime -->
+        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Date' || field.tipoCampo === 'Datetime'">
+          <mat-label>{{ field.label }}</mat-label>
+          <input matInput [matDatepicker]="picker" [formControlName]="field.campo" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
+        </mat-form-field>
 
-      <!-- Text Input -->
-      <div class="" *ngSwitchCase="'text'">
-        <div class="mb-3">
-          <div class="form-floating">
-            <input
-              [formControlName]="campo.campo"
-              type="text"
-              class="form-control"
-              [id]="campo.campo"
-              [placeholder]="campo.campo"
-              [required]="campo.esObligatorio"
-            />
-            <label for="end_date">{{ campo.campo }}</label>
-            <div class="invalid-feedback">Campo requerido</div>
-          </div>
-        </div>
-      </div>
+        <!-- Campo tipo Checkbox -->
+        <mat-checkbox [formControlName]="field.campo" *ngIf="field.tipoCampo === 'Checkbox'">
+          {{ field.label }}
+        </mat-checkbox>
 
-      <!-- Number Input -->
-      <div class="" *ngSwitchCase="'number'">
-        <div class="mb-3">
-          <div class="form-floating">
-            <input
-              [formControlName]="campo.campo"
-              type="text"
-              class="form-control"
-              [id]="campo.campo"
-              [placeholder]="campo.campo"
-              [required]="campo.esObligatorio"
-            />
-            <label for="end_date">{{ campo.campo }}</label>
-            <div class="invalid-feedback">Campo requerido</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Geometry / MAP-->
-      <div *ngSwitchCase="'map'">
-        <b>{{ campo.campo }}</b>
-        <img src="/assets/img/location-btn.svg" height="20px" alt="location" class="cursor-pointer" (click)="openModalMapCreate('campo.campo')" />
-      </div>
-
-      <!-- Select -->
-      <div class="" *ngSwitchCase="'Select'">
-        <div class="form-floating mb-3 position-relative">
-          <select
-            class="form-select"
-            [id]="campo.campo"
-            [formControlName]="campo.campo"
-            aria-label="Floating label select example"
-            [required]="campo.esObligatorio"
-          >
-            <option selected value="">Seleccione una opción</option>
-            <option *ngFor="let option of campo.options" [value]="option.id">
-              {{ option.description }}
-            </option>
-          </select>
-          <label for="floatingSelect">{{ campo.campo }}</label>
-        </div>
-      </div>
-
-      <!-- Calendar Hour -->
-      <div class="" *ngSwitchCase="'calendarHour'">
-        <div class="mb-3">
-          <div class="form-floating">
-            <input
-              [formControlName]="campo.campo"
-              type="datetime-local"
-              class="form-control"
-              [id]="campo.campo"
-              [placeholder]="campo.campo"
-              [required]="campo.esObligatorio"
-            />
-            <label [for]="campo.campo">{{ campo.campo }}</label>
-            <div class="invalid-feedback">Campo requerido</div>
-          </div>
-        </div>
-      </div>
-      <!-- Calendar -->
-
-      <div class="" *ngSwitchCase="'calendar'">
-        <div class="mb-3">
-          <div class="form-floating">
-            <input
-              [formControlName]="campo.campo"
-              type="date"
-              class="form-control"
-              [id]="campo.campo"
-              [placeholder]="campo.campo"
-              [required]="campo.esObligatorio"
-            />
-            <label [for]="campo.campo">{{ campo.campo }}</label>
-            <div class="invalid-feedback">Campo requerido</div>
-          </div>
-        </div>
+        <!-- Campo tipo Select -->
+        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Select'">
+          <mat-label>{{ field.label }}</mat-label>
+          <mat-select [formControlName]="field.campo">
+            <mat-option *ngFor="let option of field.options" [value]="option.id">
+              {{ option.descripcion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
+        </mat-form-field>
       </div>
     </ng-container>
-
-    <!-- Mensaje de error para campos obligatorios -->
-    <div *ngIf="form.get(campo.campo)?.hasError('required')">Este campo es obligatorio.</div>
   </div>
 </form>

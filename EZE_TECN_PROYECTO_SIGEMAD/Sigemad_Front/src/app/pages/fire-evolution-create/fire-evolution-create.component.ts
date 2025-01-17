@@ -1,20 +1,19 @@
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RecordsComponent } from './records/records.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { EvolutionService } from '../../services/evolution.service';
+import { AlertService } from '../../shared/alert/alert.service';
+import { FireDetail } from '../../types/fire-detail.type';
+import { AreaComponent } from './area/area.component';
 import { ConsequencesComponent } from './consequences/consequences.component';
 import { InterventionComponent } from './intervention/intervention.component';
-import { AreaComponent } from './area/area.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EvolutionService } from '../../services/evolution.service';
-import { MatDialog } from '@angular/material/dialog';
-import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
-import { FireDetail } from '../../types/fire-detail.type';
-import { Router } from '@angular/router';
-import { AlertService } from '../../shared/alert/alert.service';
+import { RecordsComponent } from './records/records.component';
 
 @Component({
   selector: 'app-fire-create',
@@ -88,11 +87,10 @@ export class FireCreateComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log("🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:", this.data.fire)
+    console.log('🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:', this.data.fire);
     this.spinner.show();
     this.isToEditDocumentation();
   }
-  
 
   async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
     const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find((key) => value[key]);
@@ -127,7 +125,7 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-    console.log("🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():", this.evolutionSevice.dataRecords())
+    console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.evolutionSevice.dataRecords());
     // if (this.evolutionSevice.dataRecords().length === 0) {
     //   this.alertService.showAlert({
     //     title: 'Falta información',
@@ -152,10 +150,10 @@ export class FireCreateComponent implements OnInit {
           icon: 'success',
         })
         .then(async (result) => {
-          this.isDataReady = false;
-          const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
-          this.editData = dataCordinacion;
-          this.isDataReady = true;
+          //this.isDataReady = false;
+          //const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
+          //this.editData = dataCordinacion;
+          //this.isDataReady = true;
           this.spinner.hide();
         });
     }, 2000);
@@ -168,21 +166,48 @@ export class FireCreateComponent implements OnInit {
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
       this.idReturn = result.id;
     }
+    if (this.evolutionSevice.dataAffectedArea().length > 0) {
+      await this.handleDataProcessing(
+        this.evolutionSevice.dataAffectedArea(),
+        (item) => ({
+          id: item.id ?? 0,
+          fechaHora: this.formatDate(item.fechaHora),
+          idProvincia: item.provincia.id ?? item.provincia,
+          idMunicipio: item.municipio.id ?? item.municipio,
+          idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
+          observaciones: item.observaciones,
+          GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
+        }),
+        this.evolutionSevice.postAreas.bind(this.evolutionSevice),
+        'areasAfectadas'
+      );
+    }
 
-    await this.handleDataProcessing(
-      this.evolutionSevice.dataAffectedArea(),
-      (item) => ({
-        id: item.id ?? 0,
-        fechaHora: this.formatDate(item.fechaHora),
-        idProvincia: item.provincia.id ?? item.provincia,
-        idMunicipio: item.municipio.id ?? item.municipio,
-        idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
-        observaciones: item.observaciones,
-        GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
-      }),
-      this.evolutionSevice.postAreas.bind(this.evolutionSevice),
-      'areasAfectadas'
-    );
+    if (this.evolutionSevice.dataConse().length > 0) {
+      /*
+      await this.handleDataProcessing(
+        this.evolutionSevice.dataConse(),
+        (item) => ({
+          id: item.id ?? 0,
+          fechaHora: this.formatDate(item.fechaHora),
+          idProvincia: item.provincia.id ?? item.provincia,
+          idMunicipio: item.municipio.id ?? item.municipio,
+          idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
+          observaciones: item.observaciones,
+          GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
+        }),
+        this.evolutionSevice.postAreas.bind(this.evolutionSevice),
+        'areasAfectadas'
+      );
+      */
+
+      const dataSave = {
+        idSuceso: this.data.idIncendio,
+        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        Impactos: this.evolutionSevice.dataConse(),
+      };
+      this.evolutionSevice.postConse(dataSave);
+    }
   }
 
   async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {

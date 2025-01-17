@@ -1,19 +1,60 @@
+// Enum de tipos de campo
+enum TipoCampo {
+  Text = 'Text',
+  Number = 'Number',
+  Checkbox = 'Checkbox',
+  Date = 'Date',
+  DateTime = 'Datetime',
+  Select = 'Select',
+}
+
+// Modelo de campo
+interface Campo {
+  campo: string;
+  esObligatorio: boolean;
+  id: number;
+  idImpactoClasificado: number;
+  label: string;
+  options: { id: number; descripcion: string }[];
+  tipoCampo: TipoCampo;
+  initValue?: any;
+}
+
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { CalendarModule } from 'primeng/calendar';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { MultiSelectModule } from 'primeng/multiselect';
-
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { Campo } from '../../types/Campo.type';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+//import { Campo } from '../../types/Campo.type';
 import { MapCreateComponent } from '../mapCreate/map-create.component';
+
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+
+import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { NgxSpinnerModule } from 'ngx-spinner';
+
+const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-campo-dinamico',
@@ -21,50 +62,67 @@ import { MapCreateComponent } from '../mapCreate/map-create.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CalendarModule,
-    DropdownModule,
-    InputTextModule,
-    InputTextareaModule,
-    MultiSelectModule,
-    CheckboxModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatIconModule,
+    FlexLayoutModule,
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    NgxSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './campoDinamico.component.html',
   styleUrl: './campoDinamico.component.css',
 })
 export class CampoDinamico implements OnInit {
-  @Input() campos: Campo[] = [];
-  @Output() formData = new EventEmitter<any>();
+  @Input() fields: Campo[] = [];
+  @Output() formGroupChange = new EventEmitter<FormGroup>();
 
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
 
-  private formSubscription: Subscription;
+  formGroup: FormGroup = this.fb.group({});
 
-  form: FormGroup;
-  async ngOnInit() {}
+  constructor(
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnChanges(changes: any) {
-    this.form = new FormGroup({});
+  async ngOnInit(): Promise<void> {
+    await this.createForm();
+  }
 
-    if (this.formSubscription) {
-      this.formSubscription.unsubscribe();
-    }
-
-    this.formSubscription = this.form.valueChanges.subscribe((valores) => {
-      this.formData.emit(this.form.value);
+  async createForm() {
+    const group: { [key: string]: any } = {};
+    this.fields.forEach((field) => {
+      group[field.campo] = field.esObligatorio ? [field.initValue, Validators.required] : [null];
     });
+    this.formGroup = this.fb.group(group);
 
-    this.campos.forEach((campo) => {
-      const validators = campo.esObligatorio ? [Validators.required] : [];
-      this.form.addControl(campo.campo, new FormControl(campo?.initValue || null));
+    // Emitir cambios del formulario
+    this.formGroup.valueChanges.subscribe(() => {
+      this.formGroupChange.emit(this.formGroup);
     });
   }
 
-  ngOnDestroy() {
-    if (this.formSubscription) {
-      this.formSubscription.unsubscribe();
+  ngOnChanges(changes: any): void {
+    if (changes['fields']) {
+      this.createForm();
+      this.cdr.detectChanges(); // Forzar detección de cambios
     }
   }
+
+  ngOnDestroy() {}
 
   public openModalMapCreate(section: string = '') {
     let mapModalRef = this.matDialog.open(MapCreateComponent, {
@@ -73,30 +131,5 @@ export class CampoDinamico implements OnInit {
     });
 
     mapModalRef.componentInstance.section = section;
-  }
-
-  getComponente(tipoCampo: string) {
-    switch (tipoCampo) {
-      case 'Checkbox':
-        return 'checkbox';
-      case 'Text':
-        return 'text';
-      case 'Number':
-        return 'number';
-      case 'Date':
-        return 'calendar';
-      case 'Datetime':
-        return 'calendarHour';
-      case 'Select':
-        return 'Select';
-      case 'GEOMETRY':
-        return 'map';
-      default:
-        return 'text';
-    }
-  }
-
-  onChangeForm() {
-    this.formData.emit(this.form.value);
   }
 }

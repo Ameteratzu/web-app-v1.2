@@ -3,7 +3,6 @@ import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
 import { AffectedArea } from '../types/affected-area.type';
-import { Consequences } from '../types/consequences.type';
 import { EvolucionIncendio } from '../types/evolution-record.type';
 import { Evolution } from '../types/evolution.type';
 
@@ -12,7 +11,7 @@ export class EvolutionService {
   private http = inject(HttpClient);
   public dataRecords = signal<EvolucionIncendio[]>([]);
   public dataAffectedArea = signal<AffectedArea[]>([]);
-  public dataConse = signal<Consequences[]>([]);
+  public dataConse = signal<any[]>([]);
 
   get(fire_id: any) {
     const endpoint = `/Evoluciones/${fire_id}`;
@@ -92,6 +91,21 @@ export class EvolutionService {
 
   postAreas(body: any) {
     const endpoint = `/Evoluciones/areas-afectadas`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
+  postConse(body: any) {
+    const endpoint = `/evoluciones/impactos`;
 
     return firstValueFrom(
       this.http.post(endpoint, body).pipe(
