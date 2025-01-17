@@ -17,7 +17,7 @@ using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
-using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
+using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
@@ -262,7 +262,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
             .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
-        CreateMap<PlanEmergencia, PlanEmergenciaVm>();
+        CreateMap<PlanEmergencia, PlanEmergenciaVm>()
+            .ForMember(dest => dest.Descripcion, opt => opt.MapFrom((src, dest, destMember, context) =>
+            {
+                bool isFullDescription = (bool)context.Items["IsFullDescription"];
+                return (isFullDescription) ? $"{src.Codigo} - {src.Descripcion}" : src.Descripcion;
+            }));
+
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>()
           .ForMember(dest => dest.NivelSituacion, opt => opt.MapFrom(src =>

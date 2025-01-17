@@ -1,6 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using DGPCE.Sigemad.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations;
@@ -8,24 +9,56 @@ public class ActivacionPlanEmergenciaConfiguration : IEntityTypeConfiguration<Ac
 {
     public void Configure(EntityTypeBuilder<ActivacionPlanEmergencia> builder)
     {
-        builder.ToTable("ActivacionPlanesEmergencia");
+        builder.ToTable(nameof(ActivacionPlanEmergencia));
 
-        builder.HasKey(a => a.IdDireccionCoordinacionEmergencia);
+        builder.HasKey(a => a.Id);
 
-        builder.Property(a => a.NombrePlan)
-            .IsRequired()
-            .HasMaxLength(255);
+        // Configuración para `FechaInicio` con DateOnly
+        builder.Property(d => d.FechaInicio)
+            .HasConversion<DateOnlyConverter>()
+            .IsRequired();
 
-        builder.Property(a => a.AutoridadQueLoActiva)
-            .IsRequired()
-            .HasMaxLength(255);
+        // Configuración para `FechaFin` con DateOnly
+        builder.Property(d => d.FechaFin)
+            .HasConversion<DateOnlyConverter>()
+            .IsRequired(false);
 
-        builder.Property(a => a.RutaDocumentoActivacion)
-            .HasMaxLength(255);
+        builder.Property(a => a.TipoPlanPersonalizado)
+            .HasMaxLength(255)
+            .IsRequired(false);
+
+        builder.Property(a => a.PlanEmergenciaPersonalizado)
+            .HasMaxLength(255)
+            .IsRequired(false);
+
+        builder.Property(a => a.Autoridad)
+            .HasMaxLength(255)
+            .IsRequired();
+
+        builder.Property(a => a.Observaciones)
+            .IsRequired(false);
 
         builder.HasOne(a => a.TipoPlan)
             .WithMany()
             .HasForeignKey(a => a.IdTipoPlan)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
+        builder.HasOne(a => a.PlanEmergencia)
+            .WithMany()
+            .HasForeignKey(a => a.IdPlanEmergencia)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
+        builder.HasOne(a => a.Archivo)
+            .WithMany()
+            .HasForeignKey(a => a.IdArchivo)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
+        builder.HasOne(e => e.ActuacionRelevanteDGPCE)
+            .WithMany(e => e.ActivacionPlanEmergencias)
+            .HasForeignKey(e => e.IdActuacionRelevanteDGPCE)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

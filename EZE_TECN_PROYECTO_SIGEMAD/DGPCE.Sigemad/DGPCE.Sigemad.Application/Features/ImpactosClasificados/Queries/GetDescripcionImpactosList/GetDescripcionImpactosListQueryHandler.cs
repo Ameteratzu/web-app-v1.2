@@ -22,6 +22,11 @@ public class GetDescripcionImpactosListQueryHandler : IRequestHandler<GetDescrip
         var spec = new ImpactosClasificadosSpecification(request);
         var impactos = await _unitOfWork.Repository<ImpactoClasificado>().GetAllWithSpec(spec);
 
+        if (impactos == null)
+        {
+            return new List<ImpactoVm>();
+        }
+
         var lista = impactos.Select(i => new ImpactoVm
         {
             Id = i.Id,

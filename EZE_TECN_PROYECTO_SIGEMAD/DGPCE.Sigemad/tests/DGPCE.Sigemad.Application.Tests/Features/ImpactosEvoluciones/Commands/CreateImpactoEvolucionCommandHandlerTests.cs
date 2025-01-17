@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateImpactoEvoluciones;
 using DGPCE.Sigemad.Application.Mappings;
+using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,7 @@ public class CreateImpactoEvolucionCommandHandlerTests
         };
 
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion))
+        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetByIdWithSpec(It.IsAny<ISpecification<Evolucion>>()))
             .ReturnsAsync(evolucion);
 
         _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetByIdAsync(request.IdImpactoClasificado))
@@ -123,7 +124,7 @@ public class CreateImpactoEvolucionCommandHandlerTests
 
         var evolucion = new Evolucion { Id = 1 };
 
-        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetByIdAsync(request.IdEvolucion))
+        _unitOfWorkMock.Setup(u => u.Repository<Evolucion>().GetByIdWithSpec(It.IsAny<ISpecification<Evolucion>>()))
             .ReturnsAsync(evolucion);
 
         _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetByIdAsync(request.IdImpactoClasificado))
