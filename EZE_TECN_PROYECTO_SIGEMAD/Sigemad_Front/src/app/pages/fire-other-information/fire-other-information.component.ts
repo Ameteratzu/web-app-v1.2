@@ -111,12 +111,12 @@ export class FireOtherInformationComponent implements OnInit {
 
   async ngOnInit() {
     this.formData = this.fb.group({
-      fecha: ['', Validators.required],
-      hora: ['', Validators.required],
+      fecha: [moment().toDate(), Validators.required],
+      hora: [moment().format('HH:mm'), Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: ['', Validators.required],
-      observaciones: ['', Validators.required],
+      asunto: [''],
+      observaciones: [''],
     });
 
     const procedenciasDestino = await this.masterData.getOriginDestination();
@@ -161,7 +161,10 @@ export class FireOtherInformationComponent implements OnInit {
       }
 
       formDirective.resetForm();
-      this.formData.reset();
+      this.formData.reset({
+        fecha: moment().toDate(),
+        hora: moment().format('HH:mm'),
+      });
     } else {
       this.formData.markAllAsTouched();
     }
@@ -237,9 +240,7 @@ export class FireOtherInformationComponent implements OnInit {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await this.otherInformationService.delete(
-            Number(this.dataProps?.fireDetail?.id)
-          );
+          await this.otherInformationService.delete(Number(this.dataProps?.fireDetail?.id));
           //this.coordinationServices.clearData();
           //setTimeout(() => {
           //this.renderer.setStyle(toolbar, 'z-index', '5');

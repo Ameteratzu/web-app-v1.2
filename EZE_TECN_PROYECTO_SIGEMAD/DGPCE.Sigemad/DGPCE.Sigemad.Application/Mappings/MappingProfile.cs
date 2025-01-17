@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
+using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
@@ -25,6 +26,7 @@ using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
 using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
+using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Update;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
@@ -200,6 +202,12 @@ public class MappingProfile : Profile
         CreateMap<EmergenciaNacionalDto, EmergenciaNacional>();
 
 
+        CreateMap<ManageDeclaracionesZAGEPCommand, ActuacionRelevanteDGPCE>()
+       .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
+       .ForMember(dest => dest.DeclaracionesZAGEP, opt => opt.MapFrom(src => src.Detalles));
+
+        CreateMap<DeclaracionZAGEPDto, DeclaracionZAGEP>();
+
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();
         CreateMap<CreateRegistroCommand, Registro>()
@@ -262,7 +270,12 @@ public class MappingProfile : Profile
             }));
 
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
-        CreateMap<PlanSituacion, PlanSituacionVm>();
+        CreateMap<PlanSituacion, PlanSituacionVm>()
+          .ForMember(dest => dest.NivelSituacion, opt => opt.MapFrom(src =>
+              string.IsNullOrEmpty(src.Nivel) && string.IsNullOrEmpty(src.Situacion)
+                  ? " / "
+                  : (src.Nivel ?? string.Empty) + (src.Situacion ?? string.Empty)));
+
 
         CreateMap<Archivo, ArchivoDto>();
 

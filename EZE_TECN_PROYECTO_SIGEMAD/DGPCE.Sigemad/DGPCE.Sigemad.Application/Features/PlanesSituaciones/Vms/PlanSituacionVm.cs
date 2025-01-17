@@ -9,9 +9,6 @@ public class PlanSituacionVm
 {
     public int Id { get; set; }
     public string? Descripcion { get; set; }
-
-    public string? Nivel { get; set; }
-
-    public string? Situacion { get; set; }
+    public string? NivelSituacion { get; set; }
     public string? SituacionEquivalente { get; set; }
 }

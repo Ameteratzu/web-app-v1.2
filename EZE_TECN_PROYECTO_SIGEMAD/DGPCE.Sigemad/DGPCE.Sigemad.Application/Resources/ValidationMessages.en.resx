@@ -360,4 +360,10 @@
   <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
     <value>Application Description cannot exceed 510 characters</value>
   </data>
+  <data name="FechaSolicitudObligatorio" xml:space="preserve">
+    <value>DateRequest is Mandatory</value>
+  </data>
+  <data name="DenominacionZAGEPMaxLength" xml:space="preserve">
+    <value>Designation cannot exceed 510 characters</value>
+  </data>
 </root>

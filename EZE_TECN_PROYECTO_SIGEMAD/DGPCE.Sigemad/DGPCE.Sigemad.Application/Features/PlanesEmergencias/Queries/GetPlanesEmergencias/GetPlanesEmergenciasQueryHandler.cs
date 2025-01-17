@@ -17,7 +17,6 @@ public class GetPlanesEmergenciasQueryHandler : IRequestHandler<GetPlanesEmergen
     }
     public async Task<IReadOnlyList<PlanEmergenciaVm>> Handle(GetPlanesEmergenciasQuery request, CancellationToken cancellationToken)
     {
-
         var spec = new PlanesEmergenciasSpecification(request);
         var planesEmergencias = await _unitOfWork.Repository<PlanEmergencia>().GetAllWithSpec(spec);
 

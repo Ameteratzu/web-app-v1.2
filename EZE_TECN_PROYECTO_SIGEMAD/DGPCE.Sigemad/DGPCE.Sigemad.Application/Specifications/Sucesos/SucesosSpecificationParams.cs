@@ -12,5 +12,6 @@ public class SucesosSpecificationParams : SpecificationParams
     public int? IdComparativoFecha { get; set; }
     public DateOnly? FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }
+    public int? IdSuceso { get; set; }
 
 }

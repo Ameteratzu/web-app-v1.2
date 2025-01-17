@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Sucesos;
-using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
-using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -34,10 +31,19 @@ public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, P
     {
         _logger.LogInformation($"{nameof(GetSucesosListQueryHandler)} - BEGIN");
 
-        var spec = new SucesosSpecification(request);
+        List<int> idsRelacionados = null;
+        if (request.IdSuceso.HasValue)
+        {
+            // Precomputar los IDs relacionados
+            var sucesosRelacionados = await _unitOfWork.Repository<DetalleSucesoRelacionado>().GetAsync(dsr => dsr.SucesoRelacionado.IdSucesoPrincipal == request.IdSuceso);
+            idsRelacionados = sucesosRelacionados.Select(drs => drs.IdSucesoAsociado).ToList();
+        }
+
+
+        var spec = new SucesosSpecification(request, idsRelacionados);
         var sucesos = await _unitOfWork.Repository<Suceso>().GetAllWithSpec(spec);
 
-        var specCount = new SucesoForCountingSpecification(request);
+        var specCount = new SucesoForCountingSpecification(request, idsRelacionados);
         var totalSucesos = await _unitOfWork.Repository<Suceso>().CountAsync(specCount);
 
         var rounded = Math.Ceiling(Convert.ToDecimal(totalSucesos) / Convert.ToDecimal(request.PageSize));

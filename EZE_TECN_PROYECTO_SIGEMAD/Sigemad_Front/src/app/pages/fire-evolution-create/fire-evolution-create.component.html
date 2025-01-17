@@ -5,12 +5,7 @@
 <div class="container">
   <div class="side-menu">
     <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
-      <mat-chip-option
-        *ngFor="let sec of sections; trackBy: trackByFn"
-        [value]="sec.id"
-        class="full-width-chip"
-        [disabled]="sec.id === 4 || sec.id === 3"
-      >
+      <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip" [disabled]="sec.id === 4">
         {{ sec.label }}
       </mat-chip-option>
     </mat-chip-listbox>
@@ -25,6 +20,7 @@
     class="component-width"
     @fadeInOut
   ></app-records>
+
   <app-area
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editData"
@@ -33,6 +29,14 @@
     class="component-width"
     @fadeInOut
   ></app-area>
+
+  <app-consequences
+    *ngIf="selectedOption.value === 3 && isDataReady"
+    [municipio]="data"
+    (save)="onSaveFromChild($event)"
+    class="component-width"
+    @fadeInOut
+  ></app-consequences>
 </div>
 
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">

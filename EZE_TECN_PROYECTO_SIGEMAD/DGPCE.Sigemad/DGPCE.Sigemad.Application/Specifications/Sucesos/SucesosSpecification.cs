@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 namespace DGPCE.Sigemad.Application.Specifications.Sucesos;
 public class SucesosSpecification : BaseSpecification<Suceso>
 {
-    public SucesosSpecification(SucesosSpecificationParams @params)
+    public SucesosSpecification(SucesosSpecificationParams @params, List<int> idsRelacionados = null)
     : base(suceso =>
     (suceso.Borrado != true) &&
     suceso.Incendios.Any(incendio =>
@@ -154,11 +154,17 @@ public class SucesosSpecification : BaseSpecification<Suceso>
             }
         }
 
+        if (@params.IdSuceso.HasValue)
+        {
+            AddCriteria(suceso => suceso.Id != @params.IdSuceso &&
+            !idsRelacionados.Contains(suceso.Id));
+        }
+
         ApplyPaging(@params);
 
         AddInclude(suceso => suceso.TipoSuceso);
         AddInclude(suceso => suceso.Incendios);
-        
+
         AddInclude("Incendios.EstadoSuceso");
     }
 }

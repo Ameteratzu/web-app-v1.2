@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Specifications.PlanesEmergencias;
-public class PlanesEmegenciasParams : SpecificationParams
+public class PlanesEmegenciasParams
 {
 
     public int? Id { get; set; }

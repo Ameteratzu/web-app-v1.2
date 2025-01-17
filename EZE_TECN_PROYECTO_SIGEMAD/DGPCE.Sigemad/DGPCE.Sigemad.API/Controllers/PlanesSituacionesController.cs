@@ -8,7 +8,6 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
-
 [Authorize]
 [ApiController]
 [Route("/api/v1/plan-situacion-emergencia")]

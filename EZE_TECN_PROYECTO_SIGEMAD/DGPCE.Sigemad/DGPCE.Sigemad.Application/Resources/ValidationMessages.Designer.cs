@@ -196,6 +196,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Denominación no puede exceder los 510 caracteres.
+        /// </summary>
+        public static string DenominacionZAGEPMaxLength {
+            get {
+                return ResourceManager.GetString("DenominacionZAGEPMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Descripcion no puede exceder los 255 caracteres.
         /// </summary>
         public static string DescripcionMaxLength {
@@ -318,6 +327,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string FechaInicioPMAObligatorio {
             get {
                 return ResourceManager.GetString("FechaInicioPMAObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a FechaSolicitud es obligatoria.
+        /// </summary>
+        public static string FechaSolicitudObligatorio {
+            get {
+                return ResourceManager.GetString("FechaSolicitudObligatorio", resourceCulture);
             }
         }
         
