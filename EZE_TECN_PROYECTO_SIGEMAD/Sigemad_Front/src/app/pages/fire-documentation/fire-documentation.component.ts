@@ -144,7 +144,9 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
-    if (!this.dataProps.fireDetail.id) {
+    console.log("🚀 ~ FireDocumentation ~ isToEditDocumentation ~ this.dataProps:", this.dataProps)
+    if (!this.dataProps?.fireDetail?.id) {
+     
       return;
     }
     const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));

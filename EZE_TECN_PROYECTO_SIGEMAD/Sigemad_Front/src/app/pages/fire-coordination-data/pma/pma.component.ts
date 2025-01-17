@@ -71,6 +71,7 @@ export class PmaComponent {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
   @Input() dataMaestros: any;
+  @Input() fire: any;
 
   public polygon = signal<any>([]);
   public coordinationServices = inject(CoordinationAddressService);
@@ -104,7 +105,14 @@ export class PmaComponent {
       observaciones: [''],
     });
 
-    this.formData.get('municipio')?.disable();
+    const defaultProvincia = this.provinces().find((provincia) => provincia.id === this.fire.idProvincia);
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.fire:', this.fire);
+    this.formData.get('provincia')?.setValue(defaultProvincia);
+
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    this.municipalities.set(municipalities);
+    const defaultMuni = this.municipalities().find((muni) => muni.id === this.fire.idMunicipio);
+    this.formData.get('municipio')?.setValue(defaultMuni);
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);

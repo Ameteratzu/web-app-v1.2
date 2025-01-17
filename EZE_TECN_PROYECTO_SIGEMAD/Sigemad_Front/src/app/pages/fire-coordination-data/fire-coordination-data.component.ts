@@ -51,6 +51,7 @@ export class FireCoordinationData {
     title: string;
     idIncendio: number;
     fireDetail?: FireDetail;
+    fire?: FireDetail;
   };
 
   public matDialog = inject(MatDialog);
@@ -62,8 +63,8 @@ export class FireCoordinationData {
   public alertService = inject(AlertService);
   private dialogRef = inject(MatDialogRef<FireCoordinationData>);
   public direcionesServices = inject(DireccionesService);
-   private provinceService = inject(ProvinceService);
-  
+  private provinceService = inject(ProvinceService);
+
   readonly sections = [
     { id: 1, label: 'Dirección' },
     { id: 2, label: 'Coordinación CECOPI' },
@@ -97,22 +98,23 @@ export class FireCoordinationData {
     this.isDataReady = true;
   }
 
-  async loadData (){
-     const coordinationAddress = await this.direcionesServices.getAllDirecciones();
-     const provinces = await this.provinceService.get();
+  async loadData() {
+    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
+    const provinces = await this.provinceService.get();
 
-     this.dataMaestros = {
+    this.dataMaestros = {
       coordinationAddress,
-      provinces
+      provinces,
     };
-    console.log("🚀 ~ loadData ~ this.dataMaestros:", this.dataMaestros)
 
-    return this.dataMaestros
+    console.log('🚀 ~ loadData ~ this.dataMaestros:', this.dataMaestros);
+
+    return this.dataMaestros;
   }
 
   async ngOnInit() {
     this.spinner.show();
-    await this.loadData()
+    await this.loadData();
     this.isToEditDocumentation();
   }
 

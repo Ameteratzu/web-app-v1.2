@@ -70,6 +70,7 @@ export class CecopiComponent {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
   @Input() dataMaestros: any;
+  @Input() fire: any;
 
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
@@ -97,7 +98,7 @@ export class CecopiComponent {
 
   async ngOnInit() {
     this.provinces.set(this.dataMaestros.provinces);
-
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.dataMaestros.provinces:', this.dataMaestros.provinces);
     this.formDataCecopi = this.fb.group({
       provincia: ['', Validators.required],
       municipio: ['', Validators.required],
@@ -107,7 +108,14 @@ export class CecopiComponent {
       observaciones: [''],
     });
 
-    this.formDataCecopi.get('municipio')?.disable();
+    const defaultProvincia = this.provinces().find((provincia) => provincia.id === this.fire.idProvincia);
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.fire:', this.fire);
+    this.formDataCecopi.get('provincia')?.setValue(defaultProvincia);
+
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    this.municipalities.set(municipalities);
+    const defaultMuni = this.municipalities().find((muni) => muni.id === this.fire.idMunicipio);
+    this.formDataCecopi.get('municipio')?.setValue(defaultMuni);
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);

@@ -21,6 +21,7 @@
     @fadeInOut
   ></app-address>
   <app-cecopi
+    [fire]="data.fire"
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataCecopi"
     [dataMaestros]="dataMaestros"
@@ -30,6 +31,7 @@
     @fadeInOut
   ></app-cecopi>
   <app-pma
+    [fire]="data.fire"
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editDataPma"
     [dataMaestros]="dataMaestros"
