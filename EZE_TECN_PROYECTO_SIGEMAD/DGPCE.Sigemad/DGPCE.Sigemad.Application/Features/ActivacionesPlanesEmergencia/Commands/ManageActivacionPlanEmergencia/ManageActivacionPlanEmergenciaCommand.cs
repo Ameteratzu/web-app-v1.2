@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.ActivacionesPlanes;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+namespace DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 public class ManageActivacionPlanEmergenciaCommand: IRequest<ManageActivacionPlanEmergenciaResponse>
 {
     public int? IdActuacionRelevante { get; set; }

@@ -8,7 +8,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+namespace DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<ManageActivacionPlanEmergenciaCommand, ManageActivacionPlanEmergenciaResponse>
 {
     private readonly ILogger<ManageActivacionPlanEmergenciaCommandHandler> _logger;

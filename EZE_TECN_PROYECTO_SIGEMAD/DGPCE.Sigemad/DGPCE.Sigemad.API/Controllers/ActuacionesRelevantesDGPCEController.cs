@@ -3,7 +3,7 @@ using DGPCE.Sigemad.Application.Dtos.ActivacionesPlanes;
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
-using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using MediatR;

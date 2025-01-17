@@ -366,4 +366,10 @@
   <data name="DenominacionZAGEPMaxLength" xml:space="preserve">
     <value>Designation cannot exceed 510 characters</value>
   </data>
+  <data name="AutoridadObligatorio" xml:space="preserve">
+    <value>Authority is mandatory</value>
+  </data>
+  <data name="AutoridadMaxLength" xml:space="preserve">
+    <value>Authority cannot exceed 100 characters</value>
+  </data>
 </root>

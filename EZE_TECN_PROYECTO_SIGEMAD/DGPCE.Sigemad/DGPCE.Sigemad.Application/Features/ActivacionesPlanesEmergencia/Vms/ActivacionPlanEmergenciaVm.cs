@@ -1,5 +1,5 @@
 ﻿
-namespace DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
+namespace DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
 public class ActivacionPlanEmergenciaVm 
 {
     public int IdTipoPlan { get; set; }

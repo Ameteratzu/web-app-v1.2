@@ -19,7 +19,7 @@ public class GetTiposImpactosListQueryHandlerTest
     public async Task Handle_ValidQuery_ReturnsListOfTiposImpactos()
     {
         // Arrange
-        var request = new GetTiposImpactosListQuery();        
+        var request = new GetTiposImpactosListQuery();
 
         var impactoClasificadoList = new List<ImpactoClasificado>
         {
