@@ -75,6 +75,7 @@ export class RecordsComponent implements OnInit {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
   @Input() estadoIncendio: any;
+  @Input() fire: any;
 
   formDataSignal = signal({
     inputOutput: 1,
@@ -128,7 +129,7 @@ export class RecordsComponent implements OnInit {
     const status = await this.masterData.getFireStatus();
     this.status.set(status);
 
-    const typesPlans = await this.masterData.getTypesPlans();
+    const typesPlans = await this.masterData.getTypesPlans(this.fire.provincia.idCcaa);
     this.typesPlans.set(typesPlans);
 
     const situationEquivalente = await this.masterData.getSituationEquivalent();
