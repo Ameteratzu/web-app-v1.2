@@ -110,7 +110,7 @@
 
         <mat-form-field class="input spaced-input" fxFlex="25%">
           <mat-label>Nivel / Situación</mat-label>
-          <mat-select formControlName="nivel">
+          <mat-select formControlName="nivel" (selectionChange)="loadSituacionEquivalente($event)">
             <mat-option *ngFor="let op of niveles()" [value]="op.id">
               {{ op.nivelSituacion }}
             </mat-option>
@@ -120,8 +120,8 @@
         <mat-form-field class="input spaced-input" fxFlex="25%">
           <mat-label>Situación operativa equivalente</mat-label>
           <mat-select formControlName="operativa">
-            <mat-option *ngFor="let op of niveles()" [value]="op.situacionEquivalente">
-              {{ op.situacion }}
+            <mat-option *ngFor="let op of situationEquivalent()" [value]="op.id">
+              {{ op.descripcion }}
             </mat-option>
           </mat-select>
         </mat-form-field>
