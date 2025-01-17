@@ -340,7 +340,10 @@ export class FireEditComponent implements OnInit {
                 icon: 'success',
               })
               .then((result) => {
-                this.routenav.navigate([`/fire`]);
+                this.routenav.navigate(['/fire']).then(() => {
+                  window.location.href = '/fire';
+                });
+
               });
           }, 2000);
         } else {
