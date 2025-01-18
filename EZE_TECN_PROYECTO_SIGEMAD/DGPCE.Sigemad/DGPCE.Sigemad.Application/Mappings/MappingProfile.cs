@@ -262,13 +262,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.EstadoSuceso.Descripcion))
             .ForMember(dest => dest.Denominacion, opt => opt.MapFrom(src => src.Denominacion));
 
-        CreateMap<PlanEmergencia, PlanEmergenciaVm>()
-            .ForMember(dest => dest.Descripcion, opt => opt.MapFrom((src, dest, destMember, context) =>
-            {
-                bool isFullDescription = (bool)context.Items["IsFullDescription"];
-                return (isFullDescription) ? $"{src.Codigo} - {src.Descripcion}" : src.Descripcion;
-            }));
-
+        CreateMap<PlanEmergencia, PlanEmergenciaVm>();
         CreateMap<FaseEmergencia, FaseEmergenciaVm>();
         CreateMap<PlanSituacion, PlanSituacionVm>()
           .ForMember(dest => dest.NivelSituacion, opt => opt.MapFrom(src =>

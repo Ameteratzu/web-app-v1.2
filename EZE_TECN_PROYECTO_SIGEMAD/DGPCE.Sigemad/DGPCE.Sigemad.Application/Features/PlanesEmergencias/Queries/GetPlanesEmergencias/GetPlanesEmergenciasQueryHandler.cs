@@ -9,21 +9,22 @@ namespace DGPCE.Sigemad.Application.Features.PlanesEmergencias.Queries.GetPlanes
 public class GetPlanesEmergenciasQueryHandler : IRequestHandler<GetPlanesEmergenciasQuery, IReadOnlyList<PlanEmergenciaVm>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
+
     public GetPlanesEmergenciasQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
     public async Task<IReadOnlyList<PlanEmergenciaVm>> Handle(GetPlanesEmergenciasQuery request, CancellationToken cancellationToken)
     {
         var spec = new PlanesEmergenciasSpecification(request);
         var planesEmergencias = await _unitOfWork.Repository<PlanEmergencia>().GetAllWithSpec(spec);
 
-        var planesEmergenciaVm = _mapper.Map<IReadOnlyList<PlanEmergencia>, IReadOnlyList<PlanEmergenciaVm>>(planesEmergencias, opt =>
+        var lista = planesEmergencias.Select(p => new PlanEmergenciaVm
         {
-            opt.Items["IsFullDescription"] = request.IsFullDescription;
-        });
-        return planesEmergenciaVm;
+            Id = p.Id,
+            Descripcion = request.IsFullDescription ? $"{p.Codigo} - {p.Descripcion}" : p.Descripcion,
+        }).ToList();
+
+        return lista;
     }
 }
