@@ -70,7 +70,7 @@ export class FireCreateComponent implements OnInit {
   isEdit = false;
   estado: number | undefined;
 
-  async isToEditDocumentation() {    
+  async isToEditDocumentation() {
     if (!this.data?.fireDetail?.id) {
       if (this.data?.valoresDefecto) {
         const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
@@ -102,7 +102,7 @@ export class FireCreateComponent implements OnInit {
           this.save();
           break;
         case 'delete':
-          console.info("delete02")
+          console.info('delete02');
           this.delete();
           break;
         case 'close':
@@ -156,7 +156,7 @@ export class FireCreateComponent implements OnInit {
           //this.editData = dataCordinacion;
           //this.isDataReady = true;
           this.spinner.hide();
-          this.closeModal(true)
+          this.closeModal(true);
         });
     }, 2000);
   }
@@ -185,7 +185,7 @@ export class FireCreateComponent implements OnInit {
       );
     }
 
-    if (this.evolutionSevice.dataConse().length > 0) {
+    if (this.evolutionSevice.dataConse().length > -1) {
       /*
       await this.handleDataProcessing(
         this.evolutionSevice.dataConse(),
@@ -265,7 +265,7 @@ export class FireCreateComponent implements OnInit {
   }
 
   async delete() {
-    console.info("delete03")
+    console.info('delete03');
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     this.spinner.show();
@@ -282,13 +282,13 @@ export class FireCreateComponent implements OnInit {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));  
+            await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));
             this.evolutionSevice.clearData();
             setTimeout(() => {
               this.renderer.setStyle(toolbar, 'z-index', '5');
               this.spinner.hide();
             }, 2000);
-  
+
             this.alertService
               .showAlert({
                 title: 'Eliminado!',
@@ -307,11 +307,8 @@ export class FireCreateComponent implements OnInit {
                 this.closeModal(true);
               });
           }
-          
-          
-          
         } else {
-          console.info("delete0200")
+          console.info('delete0200');
           this.spinner.hide();
         }
       });

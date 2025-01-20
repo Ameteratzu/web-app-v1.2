@@ -15,7 +15,7 @@ interface Campo {
   id: number;
   idImpactoClasificado: number;
   label: string;
-  options: { id: number; descripcion: string }[];
+  options: { id: number; description: string }[];
   tipoCampo: TipoCampo;
   initValue?: any;
 }

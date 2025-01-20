@@ -135,8 +135,15 @@ export class ConsequencesComponent {
 
     if (this.editData) {
       if (this.evolutionService.dataConse().length === 0) {
-        const newData = this.editData.impactos.map((item: any) => ({
+        const impactos: any = this.editData.impactos?.map((impacto: any) => ({
+          ...impacto,
+          impactoClasificado: { ...impacto.impactoClasificado, impactoClasificado: impacto.impactoClasificado.id },
+        }));
+
+        const newData = impactos.map((item: any) => ({
           ...item,
+          //impactoClasificado: item.impactoClasificado.impactoClasificado((item: any) => ({ ...item, idImpactoClasificado: item.id })),
+          idImpactoClasificado: item.impactoClasificado?.id,
           tipo: item.impactoClasificado?.tipoImpacto,
           grupo: item.impactoClasificado?.grupoImpacto,
           denominacion: item.impactoClasificado?.descripcion,
@@ -174,7 +181,7 @@ export class ConsequencesComponent {
     const { tipo } = this.formData.value;
 
     const dataDenominaciones: any = await this.consecuenciaService.getDenominaciones(tipo, event.value);
-    console.info("dataDenominaciones", dataDenominaciones)
+
     this.listadoDenominaciones.set(dataDenominaciones);
     this.formData.patchValue({ denominacion: '' });
     this.formData.get('denominacion')?.enable();
@@ -211,7 +218,7 @@ export class ConsequencesComponent {
     this.formDataComplementarios.markAllAsTouched();
     if (this.formData.valid && this.formDataComplementarios?.valid) {
       const data = {
-        IdImpactoClasificado: '1',
+        IdImpactoClasificado: this.formData.value.denominacion.id,
         ...this.formData.value,
         ...this.formDataComplementarios.value,
       };
@@ -251,7 +258,7 @@ export class ConsequencesComponent {
 
   editarItem(index: number) {
     const dataEditada = {
-      IdImpactoClasificado: '1',
+      //IdImpactoClasificado: this.formData.value.denominacion.id,
       ...this.formData.value,
       ...this.formDataComplementarios.value,
     };
@@ -274,11 +281,10 @@ export class ConsequencesComponent {
     this.spinner.show();
     this.isCreate.set(index);
     const data = this.evolutionService.dataConse()[index];
-    
+
     this.loadGrupos({ value: data.tipo }).then(() => {
       this.loadDenominacion({ value: data.grupo }).then(async () => {
-        
-        const denominacion = await this.listadoDenominaciones().find(async (item: any) => item.descripcion === data.denominacion);
+        const denominacion = this.listadoDenominaciones().find((item: any) => item.descripcion == data.denominacion);
 
         if (denominacion) {
           await this.loadCamposImpacto({ value: denominacion });
@@ -318,7 +324,6 @@ export class ConsequencesComponent {
   }
 
   delete() {
-    console.info('delete01');
     this.save.emit({ save: false, delete: true, close: false, update: false });
   }
 }

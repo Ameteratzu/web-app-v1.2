@@ -130,7 +130,7 @@ export class EvolutionService {
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
   deleteConse(id: number) {
-    const endpoint = `/impactos-evoluciones/${id}`;
+    const endpoint = `/evoluciones/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
