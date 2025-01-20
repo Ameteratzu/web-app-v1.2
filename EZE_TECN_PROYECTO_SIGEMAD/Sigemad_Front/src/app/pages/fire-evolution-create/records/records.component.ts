@@ -1,35 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, OnInit, Output, runInInjectionContext, signal } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { EvolutionService } from '../../../services/evolution.service';
+import { MasterDataEvolutionsService } from '../../../services/master-data-evolutions.service';
+import { EvolucionIncendio } from '../../../types/evolution-record.type';
+import { FireStatus } from '../../../types/fire-status.type';
 import { InputOutput } from '../../../types/input-output.type';
 import { Media } from '../../../types/media.type';
 import { OriginDestination } from '../../../types/origin-destination.type';
-import { FireStatus } from '../../../types/fire-status.type';
-import { TypesPlans } from '../../../types/types-plans.type';
-import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButtonModule } from '@angular/material/button';
-import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { EvolucionIncendio } from '../../../types/evolution-record.type';
-import { SavePayloadModal } from '../../../types/save-payload-modal';
-import { MasterDataEvolutionsService } from '../../../services/master-data-evolutions.service';
 import { Phases } from '../../../types/phases.type';
+import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { SituationPlan } from '../../../types/situation-plan.type';
+import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
+import { TypesPlans } from '../../../types/types-plans.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -270,7 +268,10 @@ export class RecordsComponent implements OnInit {
   async loadLevels() {
     const phases_id = this.editData.parametro?.faseEmergencia?.id;
     const plan_id = this.editData.parametro?.planEmergencia?.id;
-    const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    let situationsPlans: any[] = [];
+    if (plan_id) {
+      situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    }
     this.niveles.set(situationsPlans);
     this.formData.get('nivel')?.setValue(this.editData.parametro?.planSituacion?.id);
     return true;
@@ -286,18 +287,24 @@ export class RecordsComponent implements OnInit {
     }
 
     this.spinner.show();
-    const phases = await this.masterData.getPhases(id_plan);
-    this.phases.set(phases);
-    this.formData.get('phases')?.enable();
-    this.spinner.hide();
-    return phases;
+    if (id_plan) {
+      const phases = await this.masterData.getPhases(id_plan);
+      this.phases.set(phases);
+      this.formData.get('phases')?.enable();
+      this.spinner.hide();
+      return phases;
+    }
+    return [];
   }
 
   async loadSituationPlans(event: any) {
     this.spinner.show();
     const phases_id = event.value;
     const plan_id = this.formData.get('emergencyPlanActivated')?.value;
-    const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    let situationsPlans: any = [];
+    if (plan_id) {
+      situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    }
 
     this.niveles.set(situationsPlans);
     this.formData.get('nivel')?.enable();
