@@ -86,7 +86,7 @@ export class RecordsComponent implements OnInit {
     observations_1: '',
     forecast: '',
     status: 1,
-    end_date: new Date(),
+    end_date: null as Date | null,
     emergencyPlanActivated: '',
     phases: '',
     nivel: '',
@@ -116,7 +116,6 @@ export class RecordsComponent implements OnInit {
   public operativas = signal<SituationPlan[]>([]);
 
   async ngOnInit() {
-
     const inputOutputs = await this.masterData.getInputOutput();
     this.inputOutputs.set(inputOutputs);
 
@@ -135,7 +134,6 @@ export class RecordsComponent implements OnInit {
     const situationEquivalente = await this.masterData.getSituationEquivalent();
     this.situationEquivalent.set(situationEquivalente);
 
-    
     this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
     this.formData = this.fb.group({
@@ -154,11 +152,12 @@ export class RecordsComponent implements OnInit {
       operativa: [this.formDataSignal().operativa],
       afectada: [this.formDataSignal().afectada],
     });
+    this.formData.get('end_date')?.disable();
 
     runInInjectionContext(this.environmentInjector, () => {
       effect(() => {
-        const data = this.formDataSignal();
-        this.formData.patchValue(data, { emitEvent: false });
+        const { end_date, ...rest } = this.formDataSignal();
+        this.formData.patchValue(rest, { emitEvent: false });
       });
 
       // this.formData.valueChanges.subscribe((values) => {
@@ -169,18 +168,19 @@ export class RecordsComponent implements OnInit {
     this.formData.get('phases')?.disable();
     this.formData.get('nivel')?.disable();
     this.formData.get('operativa')?.disable();
-    this.formData.get('end_date')?.disable();
 
     if (this.editData) {
       if (this.evolutionSevice.dataRecords().length === 0) {
         // this.evolutionSevice.dataRecords.update((records) => [this.editData, ...records]);
         this.updateFormWithJson(this.editData);
       }
+    } else {
+      this.updateEndDate(this.estadoIncendio);
     }
     this.spinner.hide();
   }
 
-  updateFormWithJson(json: any) {
+  async updateFormWithJson(json: any) {
     const procedenciasSelecteds = () => {
       const idsABuscar = json.registro?.procedenciaDestinos?.map((obj: any) => Number(obj.id)) || [];
       return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
@@ -195,7 +195,7 @@ export class RecordsComponent implements OnInit {
       observations_1: json.datoPrincipal?.observaciones || '',
       forecast: json.datoPrincipal?.prevision || '',
       status: json.parametro?.estadoIncendio?.id || '',
-      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : new Date(),
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : null,
       emergencyPlanActivated: json.parametro?.planEmergencia?.id || '',
       phases: json.parametro?.faseEmergencia?.id || '',
       nivel: json.parametro?.planSituacion?.id || '',
@@ -203,15 +203,36 @@ export class RecordsComponent implements OnInit {
       afectada: json.parametro?.superficieAfectadaHectarea || null,
     });
 
+    await this.updateEndDate(this.formDataSignal().status);
+    this.formData.patchValue({
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : null,
+    });
     this.loadPhases(null, json.parametro?.planEmergencia?.id);
     this.loadLevels();
+  }
+
+  updateEndDate(statusValue: number) {
+    const endDateControl = this.formData.get('end_date');
+    if (!endDateControl) return;
+
+    if (statusValue === 2) {
+      endDateControl.enable();
+      endDateControl.setValidators([Validators.required]);
+      endDateControl.patchValue(new Date());
+    } else {
+      endDateControl.disable();
+      endDateControl.clearValidators();
+      endDateControl.patchValue(null);
+    }
+    endDateControl.updateValueAndValidity();
+    return true;
   }
 
   async sendDataToEndpoint() {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-      formValues.end_date;
+      // formValues.end_date;
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
         idSuceso: this.data.idIncendio,
@@ -246,23 +267,22 @@ export class RecordsComponent implements OnInit {
     }
   }
 
-  async loadLevels(){
- 
-      const phases_id = this.editData.parametro?.faseEmergencia?.id;
-        const plan_id = this.editData.parametro?.planEmergencia?.id
-        const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id );
-        this.niveles.set(situationsPlans);
-        this.formData.get('nivel')?.setValue(this.editData.parametro?.planSituacion?.id);
-      return true
+  async loadLevels() {
+    const phases_id = this.editData.parametro?.faseEmergencia?.id;
+    const plan_id = this.editData.parametro?.planEmergencia?.id;
+    const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    this.niveles.set(situationsPlans);
+    this.formData.get('nivel')?.setValue(this.editData.parametro?.planSituacion?.id);
+    return true;
   }
 
   async loadPhases(event: any, id?: string) {
     let id_plan;
-    
-    if(!event){
-      id_plan = id; 
-    }else{
-      id_plan = event.value; 
+
+    if (!event) {
+      id_plan = id;
+    } else {
+      id_plan = event.value;
     }
 
     this.spinner.show();
@@ -270,14 +290,14 @@ export class RecordsComponent implements OnInit {
     this.phases.set(phases);
     this.formData.get('phases')?.enable();
     this.spinner.hide();
-    return phases
+    return phases;
   }
 
   async loadSituationPlans(event: any) {
     this.spinner.show();
     const phases_id = event.value;
     const plan_id = this.formData.get('emergencyPlanActivated')?.value;
-    const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id );
+    const situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
 
     this.niveles.set(situationsPlans);
     this.formData.get('nivel')?.enable();
@@ -286,17 +306,21 @@ export class RecordsComponent implements OnInit {
     this.spinner.hide();
   }
 
+  selectStatus(event: any) {
+    const status_id = event.value;
+    this.updateEndDate(status_id);
+  }
+
   async loadSituacionEquivalente(event: any) {
     this.spinner.show();
     let arr: SituationPlan[] = [];
-    const nivelSelect = this.niveles().find(situacion => situacion.id === event.value);
-    const found = this.situationEquivalent().find(situacion => situacion.descripcion === String(nivelSelect?.situacionEquivalente));
-    
+    const nivelSelect = this.niveles().find((situacion) => situacion.id === event.value);
+    const found = this.situationEquivalent().find((situacion) => situacion.descripcion === String(nivelSelect?.situacionEquivalente));
+
     this.formData.get('operativa')?.setValue(found?.id);
     this.spinner.hide();
   }
-    
-  
+
   getFormatdate(date: any) {
     return moment(date).format('DD/MM/YY');
   }
