@@ -266,7 +266,6 @@ export class RecordsComponent implements OnInit {
   }
 
   async loadLevels() {
-    console.info('loadLevels');
     const phases_id = this.editData.parametro?.faseEmergencia?.id;
     const plan_id = this.editData.parametro?.planEmergencia?.id;
     let situationsPlans: any[] = [];
@@ -295,11 +294,11 @@ export class RecordsComponent implements OnInit {
       this.spinner.hide();
       return phases;
     }
+    this.spinner.hide();
     return [];
   }
 
   async loadSituationPlans(event: any) {
-    console.info('loadSituationPlans');
     this.spinner.show();
     const phases_id = event.value;
     const plan_id = this.formData.get('emergencyPlanActivated')?.value;
