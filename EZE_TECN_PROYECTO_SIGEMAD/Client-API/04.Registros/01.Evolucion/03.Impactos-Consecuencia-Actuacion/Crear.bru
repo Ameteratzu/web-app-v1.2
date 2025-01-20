@@ -1,0 +1,68 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/evoluciones/impactos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "IdEvolucion": 0,
+    "IdSuceso": 1,
+    "Impactos": [
+      {
+        "idimpactoclasificado": 1,
+        "nuclear": true,
+        "VaLoRAD": 0,
+        "numero": 0,
+        "observaciones": "string",
+        "fecha": "2024-10-15T23:58:21.601Z",
+        "FeChAHoRa": "2024-10-15T23:58:21.601Z",
+        "FechaHoraInicio": "2024-10-15T23:58:21.601Z",
+        "fechaHoraFin": "2024-10-15T23:58:21.601Z",
+        "alteracionInterrupcion": "A",
+        "causa": "string",
+        "numeroGraves": 0,
+        "IdTipoDanio": 1,
+        "ZonaPlanificacion": null,
+        "numeroUsuarios": 0,
+        "numeroIntervinientes": 0,
+        "numeroServicios": 0,
+        "numeroLocalidades": 0
+      },
+      {
+        "idImpactoClasificado": 1,
+        "nuclear": true,
+        "valorAD": 0,
+        "numero": 0,
+        "observaciones": "string",
+        "fecha": "2024-10-15T23:58:21.601Z",
+        "fechaHora": "2024-10-15T23:58:21.601Z",
+        "fechaHoraInicio": "2024-10-15T23:58:21.601Z",
+        "fechaHoraFin": "2024-10-15T23:58:21.601Z",
+        "alteracionInterrupcion": "A",
+        "causa": "string",
+        "numeroGraves": 0,
+        "IdTipoDanio": 1,
+        "ZonaPlanificacion": null,
+        "numeroUsuarios": 0,
+        "numeroIntervinientes": 0,
+        "numeroServicios": 0,
+        "numeroLocalidades": 0
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdEvolucion: res.body.idEvolucion
+}
+
+assert {
+  res.status: eq 200
+}

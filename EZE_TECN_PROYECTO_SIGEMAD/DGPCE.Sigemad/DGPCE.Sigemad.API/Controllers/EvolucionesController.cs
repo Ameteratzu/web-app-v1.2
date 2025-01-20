@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Queries.GetEvolucionById;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateListaImpactoEvolucion;
@@ -69,4 +70,14 @@ public class EvolucionesController : ControllerBase
         return Ok(response);
     }
 
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Eliminar evolución por id")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var command = new DeleteEvolucionCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
+    }
 }
