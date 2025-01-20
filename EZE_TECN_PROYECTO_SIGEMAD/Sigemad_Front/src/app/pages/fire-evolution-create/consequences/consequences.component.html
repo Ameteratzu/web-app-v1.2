@@ -25,7 +25,7 @@
           <mat-label>Grupo</mat-label>
           <mat-select [formControl]="getForm('grupo')" (selectionChange)="loadDenominacion($event)">
             <mat-option *ngFor="let option of listadoGrupos()" [value]="option">
-              {{ option }}
+              {{ option?.descripcion || option }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -34,7 +34,7 @@
           <mat-label>Denominación</mat-label>
           <mat-select [formControl]="getForm('denominacion')" (selectionChange)="loadCamposImpacto($event)">
             <mat-option *ngFor="let option of listadoDenominaciones()" [value]="option">
-              {{ option.descripcion }}
+              {{ option?.descripcion || option }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -60,7 +60,7 @@
         </mat-form-field>
       </div>
 
-      <div>Datos complementarios</div>
+      <div *ngIf="listadoCamposComplementarios().length > 0">Datos complementarios</div>
 
       <app-campo-dinamico (formGroupChange)="onFormGroupChange($event)" [fields]="listadoCamposComplementarios()"></app-campo-dinamico>
 
@@ -93,7 +93,7 @@
       <ng-container matColumnDef="denominacion">
         <th mat-header-cell *matHeaderCellDef>Denominacion</th>
         <td mat-cell *matCellDef="let conse">
-          {{ conse.denominacion.descripcion }}
+          {{ conse?.denominacion?.descripcion || conse?.denominacion  }}
         </td>
       </ng-container>
 
@@ -117,12 +117,15 @@
     </table>
   </div>
 
-  <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center">
-    <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
-
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-      <button mat-flat-button color="accent" style="margin-right: 10px" (click)="closeModal()">Volver</button>
-      <button mat-flat-button color="primary" style="margin-right: 10px" (click)="sendDataToEndpoint()">Guardar</button>
+  <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div *ngIf="esUltimo" fxFlex="none">
+      <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxFlex="auto">
+      <button mat-flat-button color="accent" (click)="closeModal()">Volver</button>
+      <button mat-flat-button color="primary" (click)="sendDataToEndpoint()">Guardar</button>
     </div>
   </div>
+
+  
 </div>

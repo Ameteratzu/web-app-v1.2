@@ -38,6 +38,10 @@
     (save)="onSaveFromChild($event)"
     class="component-width"
     @fadeInOut
+  
+    [fire]="data.fire"
+    [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+    [editData]="editData"
   ></app-consequences>
 </div>
 

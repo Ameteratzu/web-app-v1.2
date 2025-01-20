@@ -1,21 +1,20 @@
 <form [formGroup]="formGroup">
-  <div class="row" fxLayout="row wrap" fxLayoutGap="30px">
+  <div class="row" fxLayout="row wrap" fxLayoutGap="1%" >
     <ng-container *ngFor="let field of fields">
-      <div fxFlex="32%">
+      <div fxFlex="32%" class="campo">
         <!-- Campo tipo Text y Number -->
-        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Text' || field.tipoCampo === 'Number'">
+        
+        <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Text' || field.tipoCampo === 'Number'">
           <mat-label>{{ field.label }}</mat-label>
           <input matInput [type]="field.tipoCampo === 'Number' ? 'number' : 'text'" [formControlName]="field.campo" />
-          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <!-- Campo tipo Date o DateTime -->
-        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Date' || field.tipoCampo === 'Datetime'">
+        <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Date' || field.tipoCampo === 'Datetime'">
           <mat-label>{{ field.label }}</mat-label>
           <input matInput [matDatepicker]="picker" [formControlName]="field.campo" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <!-- Campo tipo Checkbox -->
@@ -24,14 +23,13 @@
         </mat-checkbox>
 
         <!-- Campo tipo Select -->
-        <mat-form-field class="input spaced-input" *ngIf="field.tipoCampo === 'Select'">
+        <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Select'">
           <mat-label>{{ field.label }}</mat-label>
           <mat-select [formControlName]="field.campo">
             <mat-option *ngFor="let option of field.options" [value]="option.id">
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formGroup.get(field.campo)?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
       </div>
     </ng-container>

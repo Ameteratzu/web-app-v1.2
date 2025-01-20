@@ -77,6 +77,9 @@ export class ConsequencesComponent {
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number; municipio: any };
   @Output() save = new EventEmitter<any>();
   @Input() dataProp: any;
+  @Input() editData: any;
+  @Input() esUltimo: boolean | undefined;
+  @Input() fire: any;
 
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
@@ -130,8 +133,20 @@ export class ConsequencesComponent {
     this.formData.get('grupo')?.disable();
     this.formData.get('denominacion')?.disable();
 
+    if (this.editData) {
+      if (this.evolutionService.dataConse().length === 0) {
+        const newData = this.editData.impactos.map((item: any) => ({
+          ...item,
+          tipo: item.impactoClasificado?.tipoImpacto,
+          grupo: item.impactoClasificado?.grupoImpacto,
+          denominacion: item.impactoClasificado?.descripcion,
+          observacion: item.observaciones,
+        }));
+        this.evolutionService.dataConse.set(newData);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
+      }
+    }
     this.spinner.hide();
-    console.info('dataProp', this.dataProp);
   }
 
   onFormGroupChange(formCamposComplementario: any) {
@@ -157,7 +172,9 @@ export class ConsequencesComponent {
 
   async loadDenominacion(event: any) {
     const { tipo } = this.formData.value;
+
     const dataDenominaciones: any = await this.consecuenciaService.getDenominaciones(tipo, event.value);
+    console.info("dataDenominaciones", dataDenominaciones)
     this.listadoDenominaciones.set(dataDenominaciones);
     this.formData.patchValue({ denominacion: '' });
     this.formData.get('denominacion')?.enable();
@@ -166,7 +183,6 @@ export class ConsequencesComponent {
   async loadCamposImpacto(event: any) {
     const dataCamposComplementarios: any = await this.consecuenciaService.getCamposImpacto(event.value.id);
     this.listadoCamposComplementarios.set(dataCamposComplementarios);
-    console.info('dataCamposComplementarios'), dataCamposComplementarios;
   }
 
   openModalMap() {
@@ -235,6 +251,7 @@ export class ConsequencesComponent {
 
   editarItem(index: number) {
     const dataEditada = {
+      IdImpactoClasificado: '1',
       ...this.formData.value,
       ...this.formDataComplementarios.value,
     };
@@ -254,19 +271,34 @@ export class ConsequencesComponent {
   }
 
   async seleccionarItem(index: number) {
+    this.spinner.show();
     this.isCreate.set(index);
     const data = this.evolutionService.dataConse()[index];
-    console.info('data', data);
-    await this.loadGrupos({ value: data.tipo });
-    await this.loadDenominacion({ value: data.grupo });
-    await this.loadCamposImpacto({ value: data.denominacion });
+    
+    this.loadGrupos({ value: data.tipo }).then(() => {
+      this.loadDenominacion({ value: data.grupo }).then(async () => {
+        
+        const denominacion = await this.listadoDenominaciones().find(async (item: any) => item.descripcion === data.denominacion);
 
-    const newData = this.listadoCamposComplementarios().map((item: any) => ({
-      ...item,
-      initValue: data[item.campo],
-    }));
-    this.listadoCamposComplementarios.set(newData);
-    this.formData.patchValue(data);
+        if (denominacion) {
+          await this.loadCamposImpacto({ value: denominacion });
+        }
+
+        const newData = this.listadoCamposComplementarios().map((item: any) => ({
+          ...item,
+          initValue: data[`${item.campo}`.toLowerCase()],
+        }));
+
+        this.listadoCamposComplementarios.set(newData);
+
+        this.formData.patchValue({ ...data, denominacion });
+        this.spinner.hide();
+      });
+    });
+
+    this.formData.patchValue({ ...data });
+
+    setTimeout(async () => {}, 1500);
   }
 
   getFormatdate(date: any) {
@@ -286,6 +318,7 @@ export class ConsequencesComponent {
   }
 
   delete() {
+    console.info('delete01');
     this.save.emit({ save: false, delete: true, close: false, update: false });
   }
 }
