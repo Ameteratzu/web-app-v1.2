@@ -92,7 +92,12 @@
       <ng-container matColumnDef="fichero">
         <th mat-header-cell *matHeaderCellDef>Entidad menor</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ isInteger(coordinacionData.entidadMenor) ? getMinorById(coordinacionData.entidadMenor) : coordinacionData.entidadMenor?.descripcion }}
+          {{ coordinacionData.entidadMenor 
+            ? isInteger(coordinacionData.entidadMenor) 
+              ? getMinorById(coordinacionData.entidadMenor) 
+              : coordinacionData.entidadMenor.descripcion 
+            : 'Sin identidad menor' 
+          }}
         </td>
       </ng-container>
 
