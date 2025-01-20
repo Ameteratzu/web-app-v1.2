@@ -102,7 +102,6 @@ export class FireCreateComponent implements OnInit {
           this.save();
           break;
         case 'delete':
-          console.info('delete02');
           this.delete();
           break;
         case 'close':
@@ -127,16 +126,6 @@ export class FireCreateComponent implements OnInit {
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.evolutionSevice.dataRecords());
-    // if (this.evolutionSevice.dataRecords().length === 0) {
-    //   this.alertService.showAlert({
-    //     title: 'Falta información',
-    //     text: 'Debe ingresar datos en Registro/Párametros',
-    //     icon: 'warning',
-    //     confirmButtonText: 'OK',
-    //   });
-    //   this.spinner.hide();
-    //   return;
-    // }
 
     await this.processData();
 
@@ -151,12 +140,11 @@ export class FireCreateComponent implements OnInit {
           icon: 'success',
         })
         .then(async (result) => {
-          //this.isDataReady = false;
-          //const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
-          //this.editData = dataCordinacion;
-          //this.isDataReady = true;
+          this.isDataReady = false;
+          const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
+          this.editData = dataCordinacion;
+          this.isDataReady = true;
           this.spinner.hide();
-          this.closeModal(true);
         });
     }, 2000);
   }
@@ -186,29 +174,17 @@ export class FireCreateComponent implements OnInit {
     }
 
     if (this.evolutionSevice.dataConse().length > -1) {
-      /*
-      await this.handleDataProcessing(
-        this.evolutionSevice.dataConse(),
-        (item) => ({
-          id: item.id ?? 0,
-          fechaHora: this.formatDate(item.fechaHora),
-          idProvincia: item.provincia.id ?? item.provincia,
-          idMunicipio: item.municipio.id ?? item.municipio,
-          idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
-          observaciones: item.observaciones,
-          GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
-        }),
-        this.evolutionSevice.postAreas.bind(this.evolutionSevice),
-        'areasAfectadas'
-      );
-      */
+      this.editData ? (this.idReturn = this.editData.id) : 0;
+      this.idReturn ? (this.evolutionSevice.dataConse()[0].idEvolucion = this.idReturn) : 0;
 
       const dataSave = {
         idSuceso: this.data.idIncendio,
         idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         Impactos: this.evolutionSevice.dataConse(),
       };
-      this.evolutionSevice.postConse(dataSave);
+      const result: any = await this.evolutionSevice.postConse(dataSave);
+      console.info('result', result);
+      this.idReturn = result.idEvolucion;
     }
   }
 
@@ -260,12 +236,11 @@ export class FireCreateComponent implements OnInit {
     this.selectedOption = event;
   }
 
-  closeModal(value: boolean) {
+  closeModal(value?: any) {
     this.dialogRef.close(value);
   }
 
   async delete() {
-    console.info('delete03');
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     this.spinner.show();
@@ -295,7 +270,7 @@ export class FireCreateComponent implements OnInit {
                 icon: 'success',
               })
               .then((result) => {
-                this.closeModal(true);
+                this.closeModal();
               });
           } catch (error) {
             this.alertService
@@ -304,7 +279,7 @@ export class FireCreateComponent implements OnInit {
                 icon: 'error',
               })
               .then((result) => {
-                this.closeModal(true);
+                this.closeModal();
               });
           }
         } else {
