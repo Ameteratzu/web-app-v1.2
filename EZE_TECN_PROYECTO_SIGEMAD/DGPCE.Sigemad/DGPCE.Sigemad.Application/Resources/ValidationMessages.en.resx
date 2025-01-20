@@ -372,4 +372,13 @@
   <data name="AutoridadMaxLength" xml:space="preserve">
     <value>Authority cannot exceed 100 characters</value>
   </data>
+  <data name="LugarObligatorioMaxLength" xml:space="preserve">
+    <value>The location cannot exceed 510 characters</value>
+  </data>
+  <data name="ConvocadosObligatorio" xml:space="preserve">
+    <value>Summoned is mandatory</value>
+  </data>
+  <data name="ConvocadosMaxLength" xml:space="preserve">
+    <value>Summoned cannot exceed 510 characters</value>
+  </data>
 </root>
