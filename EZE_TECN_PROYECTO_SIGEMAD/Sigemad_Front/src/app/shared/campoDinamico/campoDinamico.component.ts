@@ -105,7 +105,7 @@ export class CampoDinamico implements OnInit {
   async createForm() {
     const group: { [key: string]: any } = {};
     this.fields.forEach((field) => {
-      group[field.campo] = field.esObligatorio ? [field.initValue, Validators.required] : [null];
+      group[field.campo] = field.esObligatorio ? [field.initValue, Validators.required] : [field.campo == TipoCampo.Checkbox ? false : null];
     });
     this.formGroup = this.fb.group(group);
 
