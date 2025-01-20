@@ -35,7 +35,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                         entry.State = EntityState.Modified;
                         entry.Entity.Borrado = true;
                         entry.Entity.FechaEliminacion = DateTime.Now;
-                        entry.Entity.ModificadoPor = _authService.GetCurrentUserId();
+                        entry.Entity.EliminadoPor = _authService.GetCurrentUserId();
                         break;
                 }
             }

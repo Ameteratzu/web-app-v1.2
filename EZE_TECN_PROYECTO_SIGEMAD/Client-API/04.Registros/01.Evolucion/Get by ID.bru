@@ -1,0 +1,11 @@
+meta {
+  name: Get by ID
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{Server}}/api/v1/evoluciones/{{IdEvolucion}}
+  body: none
+  auth: inherit
+}
