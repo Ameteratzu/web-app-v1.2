@@ -270,7 +270,7 @@ export class FireCreateComponent implements OnInit {
                 icon: 'success',
               })
               .then((result) => {
-                this.closeModal();
+                this.closeModal(true);
               });
           } catch (error) {
             this.alertService
@@ -283,7 +283,6 @@ export class FireCreateComponent implements OnInit {
               });
           }
         } else {
-          console.info('delete0200');
           this.spinner.hide();
         }
       });
