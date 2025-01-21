@@ -1,0 +1,43 @@
+meta {
+  name: Actualizar
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{Server}}/api/v1/evoluciones/areas-afectadas
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "IdSuceso": {{IdSuceso}},
+    "IdEvolucion": {{IdEvolucion}},
+    "AreasAfectadas": [
+      {
+        "Id":1,
+        "FechaHora": "2024-10-29T09:17:19",
+        "IdProvincia": 30,
+        "IdMunicipio": 1001,
+        "IdEntidadMenor": null,
+        "GeoPosicion": null
+      },
+      {
+        "FechaHora": "2024-10-29T09:17:19",
+        "IdProvincia": 30,
+        "IdMunicipio": 1001,
+        "IdEntidadMenor": 101,
+        "GeoPosicion": null
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdEvolucion: res.body.idEvolucion
+}
+
+assert {
+  res.status: eq 200
+}

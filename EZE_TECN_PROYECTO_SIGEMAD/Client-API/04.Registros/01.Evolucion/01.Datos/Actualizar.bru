@@ -1,0 +1,43 @@
+meta {
+  name: Actualizar
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{Server}}/api/v1/evoluciones/datos
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idSuceso": 1,
+    "idEvolucion": {{IdEvolucion}},
+    "registro": {
+      "fechaHoraEvolucion": "2024-11-28T03:22:24.857Z",
+      "idEntradaSalida": 1,
+      "idMedio": 1,
+      "registroProcedenciasDestinos": [
+        1
+      ]
+    },
+    "datoPrincipal": {
+      "fechaHora": "2024-11-28T03:22:24.857Z",
+      "observaciones": "observacion",
+      "prevision": "prevision"
+    },
+    "parametro": {
+      "idEstadoIncendio": 1,
+      "fechaFinal": "2024-11-28T03:22:24.857Z",
+      "idPlanEmergencia": 1,
+      "idFaseEmergencia": 1,
+      "idPlanSituacion": 2,
+      "superficieAfectadaHectarea": 4
+    }
+  }
+}
+
+vars:post-response {
+  IdEvolucion: res.body.id
+}

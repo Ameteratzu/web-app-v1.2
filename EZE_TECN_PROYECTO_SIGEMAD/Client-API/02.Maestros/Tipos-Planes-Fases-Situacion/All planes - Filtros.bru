@@ -1,0 +1,19 @@
+meta {
+  name: All planes - Filtros
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{Server}}/api/v1/planes-emergencias?IsFullDescription=true
+  body: none
+  auth: inherit
+}
+
+params:query {
+  IsFullDescription: true
+}
+
+assert {
+  res.status: eq 200
+}

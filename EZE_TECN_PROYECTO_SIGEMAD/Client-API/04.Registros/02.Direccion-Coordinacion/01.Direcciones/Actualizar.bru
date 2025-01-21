@@ -1,0 +1,35 @@
+meta {
+  name: Actualizar
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/direcciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idDireccionCoordinacionEmergencia": {{IdDireccionCoordinacionEmergencia}},
+    "idSuceso": {{IdSuceso}},
+    "direcciones": [
+      {
+        "id": 3,
+        "idTipoDireccionEmergencia": 1,
+        "autoridadQueDirige": "Autoridad #1 ***********",
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-25"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}
+
+assert {
+  res.status: eq 200
+}
