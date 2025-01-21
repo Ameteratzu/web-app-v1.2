@@ -40,6 +40,7 @@ const MY_DATE_FORMATS = {
 
 interface FormType {
   id?: string;
+  idDocumento?: string;
   fecha: Date;
   hora: any;
   procendenciaDestino: any;
@@ -146,6 +147,7 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
+    console.log("🚀 ~ FireDocumentation ~ isToEditDocumentation ~ this.dataProps.fire:", this.dataProps.fire)
     if (!this.dataProps?.fireDetail?.id) {
       this.spinner.hide();
       return;
@@ -159,6 +161,8 @@ export class FireDocumentation implements OnInit {
       return {
         id: documento.id,
         descripcion: documento.descripcion,
+        idSuceso: dataDocumentacion.idSuceso,
+        idDocumento: dataDocumentacion.id,
         fecha, 
         hora,  
         fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
@@ -174,6 +178,7 @@ export class FireDocumentation implements OnInit {
     this.dataOtherInformation.set(newData);
     this.spinner.hide();
   }
+   
 
   trackByFn(index: number, item: any): string {
     return item;
@@ -220,10 +225,12 @@ export class FireDocumentation implements OnInit {
       this.isSaving.set(false);
       return;
     }
-
+    console.log("🚀 ~ FireDocumentation ~ arrayToSave ~ this.dataOtherInformation():", this.dataOtherInformation())
     const arrayToSave = this.dataOtherInformation().map((item, index) => {
+     
       return {
         id: item.id ?? null,
+        idDocumento: item.idDocumento ?? null,
         fechaHora: this.getFechaHora(item.fecha, item.hora),
         fechaHoraSolicitud: this.getFechaHora(item.fechaSolicitud, item.horaSolicitud),
         idTipoDocumento: item.tipoDocumento?.id,
@@ -235,16 +242,16 @@ export class FireDocumentation implements OnInit {
     });
 
     const objToSave = {
-      idDocumento: null,
-      idSuceso: this.dataProps?.fire?.id,
       detallesDocumentaciones: arrayToSave,
     };
+    
 
     const formData = new FormData();
-    formData.append('idDocumento', objToSave.idDocumento ?? '0');
-    formData.append('idSuceso', objToSave.idSuceso ?? '');
-
+   
+    formData.append('idSuceso', this.dataProps.fire?.idSuceso.toString());
     objToSave.detallesDocumentaciones.forEach((detalle, index) => {
+      
+      formData.append('idDocumento', detalle.idDocumento ?? '0');
       formData.append(`detalles[${index}].fechaHora`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].idTipoDocumento`, detalle.idTipoDocumento ?? '');
@@ -257,8 +264,12 @@ export class FireDocumentation implements OnInit {
       } else {
         formData.append(`detalles[${index}].idsProcedenciasDestinos`, '');
       }
-
-      if (detalle.archivo) {
+      if (detalle.id) {
+        formData.append(`detalles[${index}].id`, detalle.id);
+      }
+      if (detalle.archivo.id) {
+        formData.append(`detalles[${index}].IdArchivo`, detalle.archivo.id);
+      }else{
         formData.append(`detalles[${index}].archivo`, detalle.archivo);
       }
     });
