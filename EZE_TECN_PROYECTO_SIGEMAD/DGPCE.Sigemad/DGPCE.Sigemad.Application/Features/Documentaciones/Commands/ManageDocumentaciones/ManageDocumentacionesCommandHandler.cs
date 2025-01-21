@@ -38,8 +38,8 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
 
         var documentacion = await GetOrCreateDocumentacionAsync(request);
         await ValidateIdsAsync(request);
-        MapAndManageDetallesDocumentacion(request, documentacion);
-        await SaveDocumentacionAsync(request, documentacion);
+        await MapAndManageDetallesDocumentacion(request, documentacion);
+        await PersistDocumentacionAsync(request, documentacion);
 
         _logger.LogInformation($"{nameof(ManageDocumentacionesCommandHandler)} - END");
         return new CreateOrUpdateDocumentacionResponse { IdDocumentacion = documentacion.Id };
@@ -74,37 +74,8 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
 
     private async Task ValidateIdsAsync(ManageDocumentacionesCommand request)
     {
-        await ValidateArchivosAsync(request);
         await ValidateTipoDocumentosAsync(request);
         await ValidateProcedenciasDestinosAsync(request);
-    }
-
-    private async Task ValidateArchivosAsync(ManageDocumentacionesCommand request)
-    {
-        var idsArchivos = request.DetallesDocumentaciones
-            .Select(c => c.IdArchivo)
-            .Where(id => id.HasValue)
-            .Distinct()
-            .ToList();
-
-        if (idsArchivos.Any())
-        {
-            var archivosExistentes = await _unitOfWork.Repository<Archivo>().GetAsync(p => idsArchivos.Contains(p.Id));
-
-            if (archivosExistentes.Count() != idsArchivos.Count())
-            {
-                var idsArchivosExistentes = archivosExistentes.Select(p => p.Id).ToList();
-                var idsArchivosInvalidas = idsArchivos
-                    .Where(id => !idsArchivosExistentes.Contains(id.Value))
-                    .ToList();
-
-                if (idsArchivosInvalidas.Any())
-                {
-                    _logger.LogWarning($"Los siguientes Id's Archivos: {string.Join(", ", idsArchivosInvalidas)}, no se encontraron");
-                    throw new NotFoundException(nameof(Archivo), string.Join(", ", idsArchivosInvalidas));
-                }
-            }
-        }
     }
 
     private async Task ValidateTipoDocumentosAsync(ManageDocumentacionesCommand request)
@@ -145,7 +116,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
         }
     }
 
-    private void MapAndManageDetallesDocumentacion(ManageDocumentacionesCommand request, Documentacion documentacion)
+    private async Task MapAndManageDetallesDocumentacion(ManageDocumentacionesCommand request, Documentacion documentacion)
     {
         foreach (var detalleDocumentoDto in request.DetallesDocumentaciones)
         {
@@ -157,16 +128,17 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                 {
                     _mapper.Map(detalleDocumentoDto, detalleDocumentacion);
                     detalleDocumentacion.Borrado = false;
+                    detalleDocumentacion.Archivo = await MapArchivo(detalleDocumentoDto, detalleDocumentacion.Archivo);
                 }
                 else
                 {
-                    var nuevoDetalleDocumentacion = CreateDetalleDocumentacion(detalleDocumentoDto);
+                    var nuevoDetalleDocumentacion = await CreateDetalleDocumentacion(detalleDocumentoDto);
                     documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
                 }
             }
             else
             {
-                var nuevoDetalleDocumentacion = CreateDetalleDocumentacion(detalleDocumentoDto);
+                var nuevoDetalleDocumentacion = await CreateDetalleDocumentacion(detalleDocumentoDto);
                 documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
             }
         }
@@ -194,7 +166,28 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
         }
     }
 
-    private DetalleDocumentacion CreateDetalleDocumentacion(DetalleDocumentacionDto detalleDocumentoDto)
+    private async Task<Archivo?> MapArchivo(DetalleDocumentacionDto detalleDocumentoDto, Archivo? archivoExistente)
+    {
+        if (detalleDocumentoDto.Archivo != null)
+        {
+            var fileEntity = new Archivo
+            {
+                NombreOriginal = detalleDocumentoDto.Archivo?.FileName ?? string.Empty,
+                NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo?.Extension ?? string.Empty}",
+                Tipo = detalleDocumentoDto.Archivo?.ContentType ?? string.Empty,
+                Extension = detalleDocumentoDto.Archivo?.Extension ?? string.Empty,
+                PesoEnBytes = detalleDocumentoDto.Archivo?.Length ?? 0,
+            };
+
+            fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(detalleDocumentoDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
+            fileEntity.FechaCreacion = DateTime.Now;
+            return fileEntity;
+        }
+
+        return archivoExistente;
+    }
+
+    private async Task<DetalleDocumentacion> CreateDetalleDocumentacion(DetalleDocumentacionDto detalleDocumentoDto)
     {
         var nuevoDetalleDocumentacion = new DetalleDocumentacion
         {
@@ -209,26 +202,12 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
             IdTipoDocumento = detalleDocumentoDto.IdTipoDocumento,
         };
 
-        if (detalleDocumentoDto.Archivo != null)
-        {
-            var fileEntity = new Archivo
-            {
-                NombreOriginal = detalleDocumentoDto.Archivo?.FileName ?? string.Empty,
-                NombreUnico = $"{Path.GetFileNameWithoutExtension(detalleDocumentoDto.Archivo?.FileName ?? string.Empty)}_{Guid.NewGuid()}{detalleDocumentoDto.Archivo?.Extension ?? string.Empty}",
-                Tipo = detalleDocumentoDto.Archivo?.ContentType ?? string.Empty,
-                Extension = detalleDocumentoDto.Archivo?.Extension ?? string.Empty,
-                PesoEnBytes = detalleDocumentoDto.Archivo?.Length ?? 0,
-            };
-
-            fileEntity.RutaDeAlmacenamiento = _fileService.SaveFileAsync(detalleDocumentoDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH).Result;
-            fileEntity.FechaCreacion = DateTime.Now;
-            nuevoDetalleDocumentacion.Archivo = fileEntity;
-        }
+        nuevoDetalleDocumentacion.Archivo = await MapArchivo(detalleDocumentoDto, null);
 
         return nuevoDetalleDocumentacion;
     }
 
-    private async Task SaveDocumentacionAsync(ManageDocumentacionesCommand request, Documentacion documentacion)
+    private async Task PersistDocumentacionAsync(ManageDocumentacionesCommand request, Documentacion documentacion)
     {
         if (request.IdDocumento.HasValue && request.IdDocumento.Value > 0)
         {

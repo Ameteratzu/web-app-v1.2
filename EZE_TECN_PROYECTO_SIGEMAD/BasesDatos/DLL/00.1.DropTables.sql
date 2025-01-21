@@ -167,6 +167,9 @@ GO
 DROP TABLE IF EXISTS PlanEmergencia
 GO
 
+DROP TABLE IF EXISTS TipoNotificacion
+GO
+
 DROP TABLE IF EXISTS TipoPlanMapeo
 GO
 
