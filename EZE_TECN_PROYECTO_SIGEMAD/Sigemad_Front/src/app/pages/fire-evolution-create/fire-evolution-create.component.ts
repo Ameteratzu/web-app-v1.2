@@ -125,10 +125,7 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-    console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.evolutionSevice.dataRecords());
-
     await this.processData();
-
     this.evolutionSevice.clearData();
 
     setTimeout(() => {
@@ -173,7 +170,7 @@ export class FireCreateComponent implements OnInit {
       );
     }
 
-    if (this.evolutionSevice.dataConse().length > -1) {
+    if (this.evolutionSevice.dataConse().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
       this.idReturn ? (this.evolutionSevice.dataConse()[0].idEvolucion = this.idReturn) : 0;
 
