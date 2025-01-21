@@ -372,4 +372,7 @@
   <data name="AutoridadMaxLength" xml:space="preserve">
     <value>Autoridad no puede exceder 100 caracteres</value>
   </data>
+  <data name="IdArchivoOrArchivo" xml:space="preserve">
+    <value>Debe proporcionar al menos un valor para IdArchivo o Archivo</value>
+  </data>
 </root>

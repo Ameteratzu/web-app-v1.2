@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.Common;
-using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Dtos.Documentaciones;
 public class DetalleDocumentacionDto

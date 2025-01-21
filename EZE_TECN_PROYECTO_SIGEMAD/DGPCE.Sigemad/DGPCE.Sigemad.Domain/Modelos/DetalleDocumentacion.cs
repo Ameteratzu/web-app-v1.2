@@ -3,6 +3,11 @@
 namespace DGPCE.Sigemad.Domain.Modelos;
 public class DetalleDocumentacion : BaseDomainModel<int>
 {
+    public DetalleDocumentacion()
+    {
+        DocumentacionProcedenciaDestinos = new();
+    }
+
     public int? IdDocumentacion { get; set; }
     public DateTime FechaHora { get; set; }
     public DateTime FechaHoraSolicitud { get; set; }
@@ -13,6 +18,6 @@ public class DetalleDocumentacion : BaseDomainModel<int>
     public Archivo? Archivo { get; set; }
     public Documentacion Documentacion { get; set; }
 
-    public List<DocumentacionProcedenciaDestino>? DocumentacionProcedenciaDestinos { get; set; } = null;
+    public List<DocumentacionProcedenciaDestino>? DocumentacionProcedenciaDestinos { get; set; }
 
 }

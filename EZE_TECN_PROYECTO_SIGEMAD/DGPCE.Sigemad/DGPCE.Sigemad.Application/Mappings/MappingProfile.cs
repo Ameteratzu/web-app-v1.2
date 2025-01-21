@@ -245,13 +245,45 @@ public class MappingProfile : Profile
              .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
-           .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DocumentacionProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+        .ForMember(dest => dest.DocumentacionProcedenciaDestinos, opt => opt.Ignore())
+        .AfterMap((src, dest, context) =>
+        {
+            var existingIds = dest.DocumentacionProcedenciaDestinos.Select(dpd => dpd.IdProcedenciaDestino).ToList();
+            var newIds = src.IdsProcedenciasDestinos ?? new List<int>();
+
+            // Eliminar los que no están en la nueva lista
+            var toRemove = dest.DocumentacionProcedenciaDestinos.Where(dpd => !newIds.Contains(dpd.IdProcedenciaDestino)).ToList();
+            foreach (var item in toRemove)
+            {
+                dest.DocumentacionProcedenciaDestinos.Remove(item);
+            }
+
+            // Agregar o reactivar los nuevos que no están en la lista existente
+            foreach (var id in newIds)
+            {
+                var existing = dest.DocumentacionProcedenciaDestinos.FirstOrDefault(dpd => dpd.IdProcedenciaDestino == id);
+                if (existing == null)
+                {
+                    dest.DocumentacionProcedenciaDestinos.Add(new DocumentacionProcedenciaDestino
+                    {
+                        IdProcedenciaDestino = id,
+                        IdDetalleDocumentacion = dest.Id
+                    });
+                }
+                else if (existing.Borrado)
+                {
+                    existing.Borrado = false;
+                }
+            }
+        });
+
+
 
         CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
                 .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
 
         CreateMap<DetalleDocumentacion, ItemDocumentacionDto>()
-            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion})));
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado == false).Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion })));
 
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));

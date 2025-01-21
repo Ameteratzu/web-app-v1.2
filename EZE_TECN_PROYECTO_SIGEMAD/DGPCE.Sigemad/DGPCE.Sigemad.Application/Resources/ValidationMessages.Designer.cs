@@ -421,6 +421,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debe proporcionar al menos un valor para IdArchivo o Archivo.
+        /// </summary>
+        public static string IdArchivoOrArchivo {
+            get {
+                return ResourceManager.GetString("IdArchivoOrArchivo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Id de lista Entrada/Salida es obligatorio.
         /// </summary>
         public static string IdEntradaSalidaObligatorio {

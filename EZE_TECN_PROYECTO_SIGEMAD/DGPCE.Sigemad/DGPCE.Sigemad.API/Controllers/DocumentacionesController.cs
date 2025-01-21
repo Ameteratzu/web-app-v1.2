@@ -51,6 +51,7 @@ public class DocumentacionesController : ControllerBase
                 IdTipoDocumento = detalle.IdTipoDocumento,
                 IdsProcedenciasDestinos = detalle.IdsProcedenciasDestinos,
                 Descripcion = detalle.Descripcion,
+                IdArchivo = detalle.IdArchivo,
             };
 
             if (detalle.Archivo != null)

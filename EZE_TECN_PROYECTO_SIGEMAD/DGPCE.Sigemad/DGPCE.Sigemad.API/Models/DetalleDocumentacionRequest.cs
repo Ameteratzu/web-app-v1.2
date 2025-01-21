@@ -19,8 +19,8 @@ public class DetalleDocumentacionRequest
     [MaxLength(500)]
     public string Descripcion { get; set; }
 
-    [Required]
-    public IFormFile Archivo { get; set; }
+    public Guid? IdArchivo { get; set; }
+    public IFormFile? Archivo { get; set; }
 
     public List<int>? IdsProcedenciasDestinos { get; set; } = new();
 }
