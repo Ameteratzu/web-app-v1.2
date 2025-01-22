@@ -169,6 +169,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Convocados no puede exceder los 510 caracteres.
+        /// </summary>
+        public static string ConvocadosMaxLength {
+            get {
+                return ResourceManager.GetString("ConvocadosMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Convocados es obligatorio.
+        /// </summary>
+        public static string ConvocadosObligatorio {
+            get {
+                return ResourceManager.GetString("ConvocadosObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a La lista de coordinaciones es obligatorio.
         /// </summary>
         public static string CoordinacionesObligatorio {
@@ -606,6 +624,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string LugarObligatorio {
             get {
                 return ResourceManager.GetString("LugarObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Lugar no puede exceder los 510 caracteres.
+        /// </summary>
+        public static string LugarObligatorioMaxLength {
+            get {
+                return ResourceManager.GetString("LugarObligatorioMaxLength", resourceCulture);
             }
         }
         

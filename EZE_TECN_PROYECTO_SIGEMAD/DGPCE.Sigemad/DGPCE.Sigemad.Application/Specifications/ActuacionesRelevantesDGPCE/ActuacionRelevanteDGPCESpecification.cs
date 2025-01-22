@@ -8,6 +8,7 @@ public class ActuacionRelevanteDGPCESpecification : BaseSpecification<ActuacionR
     {
         AddInclude(d => d.EmergenciaNacional);
         AddInclude(d => d.DeclaracionesZAGEP);
+        AddInclude(d => d.ConvocatoriaCECOD);
         AddInclude(d => d.ActivacionPlanEmergencias);
         AddInclude(d => d.ActivacionSistemas);
         AddInclude("ActivacionPlanEmergencias.TipoPlan");

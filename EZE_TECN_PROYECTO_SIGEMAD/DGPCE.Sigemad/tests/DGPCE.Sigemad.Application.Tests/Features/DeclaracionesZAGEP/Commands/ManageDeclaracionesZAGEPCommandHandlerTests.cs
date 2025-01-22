@@ -25,7 +25,7 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
         }
 
         [Fact]
-        public async Task Handle_WithValidRequestAndExistingActuacionRelevante_ShouldUpdateActuacionRelevante()
+        public async Task Handle_WithValidRequestAndExistingDeclaracionesZAGEP_ShouldUpdateDeclaracionesZAGEP()
         {
             // Arrange
             var command = new ManageDeclaracionesZAGEPCommand
@@ -79,7 +79,7 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
 
 
         [Fact]
-        public async Task Handle_WithValidRequestAndNewActuacionRelevante_ShouldAddActuacionRelevante()
+        public async Task Handle_WithValidRequestAndNewDeclaracionesZAGEP_ShouldAddDeclaracionesZAGEP()
         {
             // Arrange
             var command = new ManageDeclaracionesZAGEPCommand
