@@ -375,4 +375,7 @@
   <data name="IdArchivoOrArchivo" xml:space="preserve">
     <value>You must provide at least one value for FileID or Archive</value>
   </data>
+  <data name="IdTipoSistemaEmergencia" xml:space="preserve">
+    <value>Emergency System Type ID is mandatory</value>
+  </data>
 </root>
