@@ -376,4 +376,7 @@
   <data name="IdArchivoOrArchivo" xml:space="preserve">
     <value>Debe proporcionar al menos un valor para IdArchivo o Archivo</value>
   </data>
+  <data name="IdTipoSistemaEmergencia" xml:space="preserve">
+    <value>Id Tipo Sistema de Emergencia es obligatorio</value>
+  </data>
 </root>

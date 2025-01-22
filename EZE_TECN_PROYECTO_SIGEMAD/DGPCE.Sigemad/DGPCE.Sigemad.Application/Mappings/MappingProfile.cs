@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
 using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
@@ -18,6 +19,7 @@ using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
+using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
@@ -308,6 +310,12 @@ public class MappingProfile : Profile
         CreateMap<Archivo, ArchivoDto>();
 
         CreateMap<SituacionEquivalente, SituacionEquivalenteDto>();
+
+        CreateMap<ManageActivacionSistemaCommand, ActuacionRelevanteDGPCE>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
+            .ForMember(dest => dest.ActivacionSistemas, opt => opt.MapFrom(src => src.Detalles));
+
+        CreateMap<ManageActivacionSistemaDto, ActivacionSistema>();
     }
 
 }
