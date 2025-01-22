@@ -50,7 +50,7 @@ export class FireService {
       IdTerritorio: data.territory ? data.territory : 1,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
+      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd' + ' ' + data.startTime),
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,
