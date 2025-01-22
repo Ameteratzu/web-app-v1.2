@@ -221,6 +221,10 @@ export class ConsequencesComponent {
         IdImpactoClasificado: this.formData.value.denominacion.id,
         ...this.formData.value,
         ...this.formDataComplementarios.value,
+        zonaPlanificacion: {
+          type: 'Polygon',
+          coordinates: [this.polygon()],
+        },
       };
       if (this.isCreate() == -1) {
         this.evolutionService.dataConse.set([data, ...this.evolutionService.dataConse()]);
@@ -240,6 +244,7 @@ export class ConsequencesComponent {
         localizacion: [fire?.municipio?.descripcion, Validators.required], //MUNICIPIO DEL INCENDIO
         observacion: [''],
       });
+      this.polygon.set([]);
     } else {
       this.formData.markAllAsTouched();
     }
@@ -287,7 +292,7 @@ export class ConsequencesComponent {
   async seleccionarItem(index: number) {
     this.spinner.show();
     this.isCreate.set(index);
-    const data = this.evolutionService.dataConse()[index];
+    const data: any = this.evolutionService.dataConse()[index];
 
     this.loadGrupos({ value: data.tipo }).then(() => {
       this.loadDenominacion({ value: data.grupo }).then(async () => {
@@ -307,6 +312,8 @@ export class ConsequencesComponent {
         this.listadoCamposComplementarios.set(newData);
 
         this.formData.patchValue({ ...data, denominacion });
+
+        this.polygon.set(data.zonaPlanificacion?.coordinates[0]);
         this.spinner.hide();
       });
     });
