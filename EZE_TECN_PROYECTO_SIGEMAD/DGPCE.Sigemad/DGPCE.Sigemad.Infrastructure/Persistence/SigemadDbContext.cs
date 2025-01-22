@@ -163,5 +163,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<DeclaracionZAGEP> DeclaracionesZAGEP { get; set; }
 
+        public DbSet<ActivacionSistema> ActivacionesSistemas { get; set; }
+
+        public DbSet<ConvocatoriaCECOD> ConvocatoriasCECOD { get; set; }
+
     }
 }

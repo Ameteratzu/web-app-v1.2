@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
 using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
+using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
@@ -18,6 +20,7 @@ using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
+using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Features.Alertas.Vms;
@@ -25,6 +28,7 @@ using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Create;
@@ -308,6 +312,19 @@ public class MappingProfile : Profile
         CreateMap<Archivo, ArchivoDto>();
 
         CreateMap<SituacionEquivalente, SituacionEquivalenteDto>();
+
+
+        CreateMap<ManageConvocatoriaCECODCommand, ActuacionRelevanteDGPCE>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
+           .ForMember(dest => dest.ConvocatoriaCECOD, opt => opt.MapFrom(src => src.Detalles));
+
+        CreateMap<ConvocatoriaCECODDto, ConvocatoriaCECOD>();
+
+        CreateMap<ManageActivacionSistemaCommand, ActuacionRelevanteDGPCE>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
+            .ForMember(dest => dest.ActivacionSistemas, opt => opt.MapFrom(src => src.Detalles));
+
+        CreateMap<ManageActivacionSistemaDto, ActivacionSistema>();
     }
 
 }

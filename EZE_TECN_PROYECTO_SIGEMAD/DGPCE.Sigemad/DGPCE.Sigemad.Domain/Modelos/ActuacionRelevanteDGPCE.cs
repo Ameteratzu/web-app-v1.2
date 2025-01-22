@@ -8,6 +8,9 @@ public class ActuacionRelevanteDGPCE : BaseDomainModel<int>
     public virtual EmergenciaNacional? EmergenciaNacional { get; set; }
     public virtual List<ActivacionPlanEmergencia> ActivacionPlanEmergencias { get; set; } = new();
     public virtual List<DeclaracionZAGEP>? DeclaracionesZAGEP { get; set; } = null;
-    
+
+    public virtual List<ActivacionSistema>? ActivacionSistemas { get; set; } = null;
+
+    public virtual List<ConvocatoriaCECOD>? ConvocatoriaCECOD { get; set; } = null;
 
 }

@@ -1,9 +1,12 @@
 using DGPCE.Sigemad.API.Models.ActivacionesPlanes;
 using DGPCE.Sigemad.Application.Dtos.ActivacionesPlanes;
+using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
+using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using MediatR;
@@ -35,6 +38,8 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
         var response = await _mediator.Send(command);
         return Ok(response);
     }
+
+ 
 
     [HttpPost("activaciones-planes")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -92,6 +97,26 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<ActionResult<ManageDeclaracionZAGEPResponse>> CreateDeclaracionZAGEP([FromBody] ManageDeclaracionesZAGEPCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+
+    [HttpPost("activaciones-sistemas/lista")]
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<ActionResult<ManageActivacionSistemaResponse>> Create([FromBody] ManageActivacionSistemaCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+
+    [HttpPost("convocatoria-cecod/lista")]
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<ActionResult<ManageDeclaracionZAGEPResponse>> CreateConvocatoriaCECOD([FromBody] ManageConvocatoriaCECODCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);
