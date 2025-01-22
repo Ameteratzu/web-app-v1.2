@@ -11,7 +11,8 @@ public class ManageActivacionSistemaCommandValidator : AbstractValidator<ManageA
         RuleFor(x => x.IdSuceso)
             .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
-        RuleForEach(x => x.ActivacionSistemas).SetValidator(new ActivacionSistemaDtoValidator(localizer));
+        RuleForEach(x => x.Detalles).SetValidator(new ActivacionSistemaDtoValidator(localizer))
+                .When(d => d.Detalles != null && d.Detalles.Count > 0);
     }
 }
 
