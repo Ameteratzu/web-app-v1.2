@@ -301,7 +301,7 @@ export class ConsequencesComponent {
 
         const newData = this.listadoCamposComplementarios().map((item: any) => ({
           ...item,
-          initValue: data[`${item.campo}`.toLowerCase()],
+          initValue: data[`${item.campo}`],
         }));
 
         this.listadoCamposComplementarios.set(newData);

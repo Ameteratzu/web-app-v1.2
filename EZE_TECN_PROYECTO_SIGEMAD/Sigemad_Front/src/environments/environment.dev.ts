@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  urlBase: 'https://c63c1363d2bb.ngrok.app/api/v1',
+  urlBase: 'https://709d50d9d98f.ngrok.app/api/v1',
 };
