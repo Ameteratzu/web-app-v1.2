@@ -3,7 +3,7 @@
 -- DATOS MAESTROS
 -- =============================================
 CREATE TABLE TipoRiesgo (
-    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    Id INT NOT NULL PRIMARY KEY,
     Descripcion NVARCHAR(255) NOT NULL,
     IdTipoSuceso int NULL FOREIGN KEY REFERENCES TipoSuceso(Id),
     Codigo VARCHAR(5) NOT NULL
@@ -11,7 +11,7 @@ CREATE TABLE TipoRiesgo (
 
 
 CREATE TABLE TipoPlan (
-	Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Id INT NOT NULL PRIMARY KEY,
 	Descripcion NVARCHAR(255) NOT NULL,
     Codigo VARCHAR(5) NOT NULL
 );
@@ -22,7 +22,12 @@ CREATE TABLE TipoPlanMapeo (
 );
 
 CREATE TABLE AmbitoPlan (
-	Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	Id INT NOT NULL PRIMARY KEY,
+	Descripcion NVARCHAR(255) NOT NULL,
+);
+
+CREATE TABLE TipoNotificacion (
+	Id INT NOT NULL PRIMARY KEY,
 	Descripcion NVARCHAR(255) NOT NULL,
 );
 
@@ -141,13 +146,14 @@ CREATE TABLE ActivacionPlanEmergencia (
 CREATE TABLE NotificacionEmergencia (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdActuacionRelevanteDGPCE INT NOT NULL FOREIGN KEY REFERENCES ActuacionRelevanteDGPCE(Id),
-    IdTipoPlan INT NOT NULL FOREIGN KEY REFERENCES TipoPlan(Id),
-    IdPlanEmergencia INT NOT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
-    FechaInicio DATE NOT NULL,
-    FechaFin DATE NULL,
-    Autoridad NVARCHAR(255) NOT NULL,
+    IdTipoNotificacion INT NOT NULL FOREIGN KEY REFERENCES TipoNotificacion(Id),
+    FechaHoraNotificacion DATETIME2(7) NOT NULL,
+    OrganosNotificados NVARCHAR(255) NOT NULL,
+    -- Organos Extranjeros Notificados
+    UCPM NVARCHAR(255) NULL,
+    OrganismoInternacional NVARCHAR(255) NULL,
+    OtrosPaises NVARCHAR(255) NULL,
     Observaciones NVARCHAR(MAX) NULL,
-    IdArchivo UNIQUEIDENTIFIER NULL FOREIGN KEY REFERENCES Archivo(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
 	CreadoPor UNIQUEIDENTIFIER NULL,

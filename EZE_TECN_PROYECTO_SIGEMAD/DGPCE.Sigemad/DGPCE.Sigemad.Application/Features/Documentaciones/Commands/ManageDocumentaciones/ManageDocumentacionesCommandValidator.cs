@@ -24,10 +24,6 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
 {
     public ManageDocumentacionesCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(x => x)
-            .Must(HaveAtLeastOneFileProperty)
-            .WithMessage(localizer["IdArchivoOrArchivo"]);
-
         RuleFor(x => x.FechaHora)
             .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
 
@@ -42,10 +38,4 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
             .MaximumLength(255).WithMessage(localizer["DescripcionMaxLength"]);
 
     }
-
-    private bool HaveAtLeastOneFileProperty(DetalleDocumentacionDto dto)
-    {
-        return dto.IdArchivo.HasValue || dto.Archivo != null;
-    }
-
 }

@@ -2,8 +2,6 @@
 -- TIPO DE RIESGO
 -- =============================================
 
-SET IDENTITY_INSERT TipoRiesgo ON;
-
 INSERT INTO TipoRiesgo (Id,Descripcion, IdTipoSuceso, Codigo) VALUES
 	 (1, N'General', NULL, '00'),
 	 (2, N'Accidentes con sustancias biológicas', 8, '01'),
@@ -27,13 +25,9 @@ INSERT INTO TipoRiesgo (Id,Descripcion, IdTipoSuceso, Codigo) VALUES
 	 (20, N'Terremotos', 11, '19'),
 	 (21, N'Viento', 25, '20');
 
-SET IDENTITY_INSERT TipoRiesgo OFF;
-
 -- =============================================
 -- TIPO DE PLAN
 -- =============================================
-
-SET IDENTITY_INSERT dbo.TipoPlan ON;
 
 INSERT INTO dbo.TipoPlan (Id,Descripcion,Codigo) VALUES
 	(1	,'Estatal', '00'),
@@ -42,9 +36,6 @@ INSERT INTO dbo.TipoPlan (Id,Descripcion,Codigo) VALUES
     (4	,'Normativa Básica', '03'),
     (5	,'Autoprotección', '04'),
     (6	,'Otros', '05');
-
-SET IDENTITY_INSERT dbo.TipoPlan OFF;
-
 
 INSERT INTO TipoPlanMapeo (IdAntiguo, IdNuevo)
 VALUES 
@@ -59,14 +50,17 @@ VALUES
 -- AMBITO PLAN
 -- =============================================
 
-SET IDENTITY_INSERT dbo.AmbitoPlan ON;
-
 INSERT INTO dbo.AmbitoPlan (Id,Descripcion) VALUES
     (1, 'Estatal'),
     (2, 'Autonómico');
 
-SET IDENTITY_INSERT dbo.AmbitoPlan OFF;
+-- =============================================
+-- TIPO NOTIFICACION
+-- =============================================
 
+INSERT INTO TipoNotificacion (Id,Descripcion) VALUES
+    (1, 'Notificación 1'),
+    (2, 'Notificación 2');
 
 -- =============================================
 -- PLANES DE EMERGENCIA
