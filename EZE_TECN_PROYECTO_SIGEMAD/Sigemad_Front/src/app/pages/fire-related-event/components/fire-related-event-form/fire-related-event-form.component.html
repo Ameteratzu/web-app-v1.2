@@ -199,7 +199,7 @@
     <ng-container matColumnDef="opciones">
       <th mat-header-cell *matHeaderCellDef>Opciones</th>
       <td mat-cell *matCellDef="let event; let i = index">
-        <mat-checkbox (change)="agregarItem(i)"></mat-checkbox>
+        <mat-checkbox (change)="handleSeleccionarItem(i)"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -210,7 +210,7 @@
 
 <div>
   <div class="row add-button-row j-end mt-20" fxLayout="row" fxLayoutAlign="end center">
-    <button mat-flat-button color="primary" (click)="guardarAgregar()">
+    <button mat-flat-button color="primary" (click)="agregarItem()">
       <mat-icon>add</mat-icon>
       Agregar
     </button>

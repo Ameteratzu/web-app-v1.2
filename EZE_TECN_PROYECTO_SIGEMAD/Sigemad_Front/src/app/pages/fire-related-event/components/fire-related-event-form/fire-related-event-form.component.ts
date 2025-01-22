@@ -121,7 +121,8 @@ export class FireRelatedEventForm implements OnInit {
   public dataFindedRelationsEvents = signal<any[]>([]);
 
   public comparativeDates = signal<ComparativeDate[]>([]);
-  public listaSucesosRelacionados = signal<any>({});
+  public listaSucesosRelacionados = signal<any>({ data: {} });
+
   public listaSucesos = signal<any>({});
 
   public fireStatus = signal<FireStatus[]>([]);
@@ -134,8 +135,6 @@ export class FireRelatedEventForm implements OnInit {
   public eventStatus = signal<EventStatus[]>([]);
   public moves = signal<Move[]>([]);
   public showDateEnd = signal<boolean>(true);
-  //public provinces = signal<Province[]>([]);
-  //public autonomousCommunities = signal<AutonomousCommunity[]>([]);
 
   public listadoClaseSuceso = signal<any[]>([]);
   public listadoTerritorio = signal<any[]>([]);
@@ -217,16 +216,16 @@ export class FireRelatedEventForm implements OnInit {
 
       if (this.fireDetail) {
         const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(this.fireDetail.id);
-
         this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
       }
 
       await this.loadCommunities();
+
       this.spinner.hide();
 
       await this.onSubmit();
     } catch (error) {
-      console.error('error');
+      console.error('error', error);
       this.spinner.hide();
     }
   }
@@ -303,15 +302,15 @@ export class FireRelatedEventForm implements OnInit {
       IdComparativoFecha: between,
       FechaInicio: moment(fechaInicio).format('YYYY-MM-DD'),
       FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
-      //Sort: '',
       Page: 0,
       //PageSize: 0,
+      //Sort: '',
       search: name,
     });
 
     const dataFiltrada = listadoSucesos.data.filter(
       (listadoSuceso: any) =>
-        !this.listaSucesosRelacionados()?.data?.sucesosAsociados.some((sucesoRelacionado: any) => sucesoRelacionado.id === listadoSuceso.id)
+        !this.listaSucesosRelacionados()?.data?.sucesosAsociados?.some((sucesoRelacionado: any) => sucesoRelacionado.id === listadoSuceso.id)
     );
 
     this.listaSucesos.set({ data: dataFiltrada });
@@ -319,18 +318,27 @@ export class FireRelatedEventForm implements OnInit {
   }
 
   async guardarAgregar() {
+    this.spinner.show();
     if (this.isSaving()) {
+      this.spinner.hide();
       return;
     }
     this.isSaving.set(true);
-    const itemsSelected: any = this.listaSucesos()?.data?.filter((item: any) => item.selected);
 
-    const idsSucesosAsociados = itemsSelected.map((item: any) => item.id);
+    const idsSucesosAsociados = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
 
-    const resultAsociado = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
-
-    if (resultAsociado?.length > 0) {
-      idsSucesosAsociados.push(...resultAsociado);
+    if (idsSucesosAsociados?.length === 0) {
+      this.spinner.hide();
+      this.alertService
+        .showAlert({
+          title: 'Advertencia!',
+          text: 'Debe meter almenos un Suceso Relacionado',
+          icon: 'error',
+        })
+        .then((result) => {
+          this.isSaving.set(false);
+          return;
+        });
     }
 
     const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
@@ -340,8 +348,9 @@ export class FireRelatedEventForm implements OnInit {
     });
 
     const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
-    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
 
+    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+    this.spinner.hide();
     await this.onSubmit();
 
     this.alertService
@@ -352,19 +361,43 @@ export class FireRelatedEventForm implements OnInit {
       })
       .then((result) => {
         this.closeModal.emit();
+
         this.isSaving.set(false);
       });
   }
 
-  async agregarItem(i: any) {
+  async handleSeleccionarItem(i: any) {
     const newLista: any = this.listaSucesos();
     newLista.data[i].selected = !newLista.data[i].selected;
     this.listaSucesos.set(newLista);
   }
 
+  agregarItem() {
+    this.spinner.show();
+    const newData = this.listaSucesosRelacionados();
+
+    const dataPush = this.listaSucesos()?.data?.filter((item: any) => item.selected);
+
+    if (newData?.data?.sucesosAsociados) {
+      newData.data.sucesosAsociados = [...newData.data.sucesosAsociados, ...dataPush];
+    } else {
+      newData.data.sucesosAsociados = [...dataPush];
+    }
+
+    const newDataOptions = this.listaSucesos()?.data?.filter((item: any) => !item.selected);
+
+    this.listaSucesos.set({ data: newDataOptions });
+    this.listaSucesosRelacionados.set({ ...newData });
+    this.spinner.hide();
+  }
+
   async eliminarItem(i: any) {
-    const newListaSucesos = [...this.listaSucesos().data, { ...this.listaSucesosRelacionados().data.sucesosAsociados[i] }];
+    this.spinner.show();
+    const newListaSucesos = [...this.listaSucesos().data, { ...this.listaSucesosRelacionados().data.sucesosAsociados[i], selected: false }];
     this.listaSucesos.set({ data: newListaSucesos });
+    try {
+      await this.sucesosRelacionadosService.delete(this.listaSucesosRelacionados().data.sucesosAsociados[i].id);
+    } catch (error) {}
 
     const newAsociados: any = this.listaSucesosRelacionados().data.sucesosAsociados.filter(
       (asociado: any) => asociado.id !== this.listaSucesosRelacionados().data.sucesosAsociados[i].id
@@ -376,6 +409,7 @@ export class FireRelatedEventForm implements OnInit {
         sucesosAsociados: newAsociados,
       },
     });
+    this.spinner.hide();
   }
 
   clearFormFilter() {
