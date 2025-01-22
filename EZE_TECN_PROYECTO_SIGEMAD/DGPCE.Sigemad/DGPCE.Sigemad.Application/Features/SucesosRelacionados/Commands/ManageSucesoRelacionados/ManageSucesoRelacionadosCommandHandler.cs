@@ -108,14 +108,7 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
 
         if (request.IdSucesoRelacionado.HasValue && request.IdSucesoRelacionado.Value > 0)
         {
-            if (request.IdsSucesosAsociados.Any())
-            {
-                _unitOfWork.Repository<SucesoRelacionado>().UpdateEntity(sucesoRelacionado);
-            }
-            else
-            {
-                _unitOfWork.Repository<SucesoRelacionado>().DeleteEntity(sucesoRelacionado);
-            }
+            _unitOfWork.Repository<SucesoRelacionado>().UpdateEntity(sucesoRelacionado);
         }
         else
         {

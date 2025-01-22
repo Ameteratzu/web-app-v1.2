@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Sucesos;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
+using DGPCE.Sigemad.Application.Specifications.SucesosRelacionados;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -35,7 +36,8 @@ public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, P
         if (request.IdSuceso.HasValue)
         {
             // Precomputar los IDs relacionados
-            var sucesosRelacionados = await _unitOfWork.Repository<DetalleSucesoRelacionado>().GetAsync(dsr => dsr.SucesoRelacionado.IdSucesoPrincipal == request.IdSuceso);
+            var specDetalle = new DetalleSucesoRelacionadoByIdSucesoPrincipalSpecification(request.IdSuceso.Value);
+            var sucesosRelacionados = await _unitOfWork.Repository<DetalleSucesoRelacionado>().GetAllWithSpec(specDetalle);
             idsRelacionados = sucesosRelacionados.Select(drs => drs.IdSucesoAsociado).ToList();
         }
 
