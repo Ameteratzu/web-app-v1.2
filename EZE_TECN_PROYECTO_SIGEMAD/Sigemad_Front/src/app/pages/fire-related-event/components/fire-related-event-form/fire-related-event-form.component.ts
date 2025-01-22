@@ -339,44 +339,45 @@ export class FireRelatedEventForm implements OnInit {
           this.isSaving.set(false);
           return;
         });
-    }
-    try {
-      const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
-        idsSucesosAsociados,
-        idSucesoRelacionado: this.fireDetail?.id ?? 0,
-        idSuceso: this.fire.idSuceso,
-      });
-
-      const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
-
-      this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-      this.spinner.hide();
-      await this.onSubmit();
-
-      this.alertService
-        .showAlert({
-          title: 'Buen trabajo!',
-          text: 'Registro actualizado correctamente!',
-          icon: 'success',
-        })
-        .then((result) => {
-          this.closeModal.emit();
-
-          this.isSaving.set(false);
+    } else {
+      try {
+        const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
+          idsSucesosAsociados,
+          idSucesoRelacionado: this.fireDetail?.id ?? 0,
+          idSuceso: this.fire.idSuceso,
         });
-    } catch (error) {
-      console.error('error', error);
-      this.alertService
-        .showAlert({
-          title: 'Ha ocurrido un error!',
-          text: 'Contacte a soporte técnico!',
-          icon: 'error',
-        })
-        .then((result) => {
-          this.closeModal.emit();
 
-          this.isSaving.set(false);
-        });
+        const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
+
+        this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+        this.spinner.hide();
+        await this.onSubmit();
+
+        this.alertService
+          .showAlert({
+            title: 'Buen trabajo!',
+            text: 'Registro actualizado correctamente!',
+            icon: 'success',
+          })
+          .then((result) => {
+            this.closeModal.emit();
+
+            this.isSaving.set(false);
+          });
+      } catch (error) {
+        console.error('error', error);
+        this.alertService
+          .showAlert({
+            title: 'Ha ocurrido un error!',
+            text: 'Contacte a soporte técnico!',
+            icon: 'error',
+          })
+          .then((result) => {
+            this.closeModal.emit();
+
+            this.isSaving.set(false);
+          });
+      }
     }
   }
 
