@@ -147,7 +147,6 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
-    console.log("🚀 ~ FireDocumentation ~ isToEditDocumentation ~ this.dataProps.fire:", this.dataProps.fire)
     if (!this.dataProps?.fireDetail?.id) {
       this.spinner.hide();
       return;
@@ -155,16 +154,16 @@ export class FireDocumentation implements OnInit {
     const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
 
     const newData = dataDocumentacion?.detalles?.map((documento: any) => {
-      const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate(); 
-      const hora = moment(documento.fechaHora).format('HH:mm'); 
+      const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
+      const hora = moment(documento.fechaHora).format('HH:mm');
       documento.archivo.name = documento.archivo.nombreOriginal;
       return {
         id: documento.id,
         descripcion: documento.descripcion,
         idSuceso: dataDocumentacion.idSuceso,
         idDocumento: dataDocumentacion.id,
-        fecha, 
-        hora,  
+        fecha,
+        hora,
         fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
         horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
         procendenciaDestino: documento.procedenciaDestinos,
@@ -174,11 +173,10 @@ export class FireDocumentation implements OnInit {
       };
     });
 
-     console.log("🚀 ~ FireDocumentation ~ newData ~ newData:", newData)
+    console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
     this.dataOtherInformation.set(newData);
     this.spinner.hide();
   }
-   
 
   trackByFn(index: number, item: any): string {
     return item;
@@ -187,33 +185,32 @@ export class FireDocumentation implements OnInit {
   onSubmit(formDirective: FormGroupDirective): void {
     if (this.formData.valid) {
       const formValue = this.formData.value;
-  
+
       const data = {
         ...formValue,
         file: formValue.file,
       };
-  
+
       if (this.isCreate() == -1) {
         this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
       } else {
         this.editarItem(this.isCreate());
       }
-  
+
       formDirective.resetForm();
       this.formData.reset({
         fecha: moment().toDate(),
         hora: moment().format('HH:mm'),
         procendenciaDestino: [],
         tipoDocumento: null,
-        file: null, 
+        file: null,
       });
       this.fileFlag = false;
     } else {
       this.formData.markAllAsTouched();
     }
-    console.log("🚀 ~ FireDocumentation ~ onSubmit ~ this.dataOtherInformation():", this.dataOtherInformation())
+    console.log('🚀 ~ FireDocumentation ~ onSubmit ~ this.dataOtherInformation():', this.dataOtherInformation());
   }
-   
 
   async saveList() {
     if (this.isSaving()) {
@@ -225,9 +222,8 @@ export class FireDocumentation implements OnInit {
       this.isSaving.set(false);
       return;
     }
-    console.log("🚀 ~ FireDocumentation ~ arrayToSave ~ this.dataOtherInformation():", this.dataOtherInformation())
+    console.log('🚀 ~ FireDocumentation ~ arrayToSave ~ this.dataOtherInformation():', this.dataOtherInformation());
     const arrayToSave = this.dataOtherInformation().map((item, index) => {
-     
       return {
         id: item.id ?? null,
         idDocumento: item.idDocumento ?? null,
@@ -244,13 +240,11 @@ export class FireDocumentation implements OnInit {
     const objToSave = {
       detallesDocumentaciones: arrayToSave,
     };
-    
 
     const formData = new FormData();
-   
+
     formData.append('idSuceso', this.dataProps.fire?.idSuceso.toString());
     objToSave.detallesDocumentaciones.forEach((detalle, index) => {
-      
       formData.append('idDocumento', detalle.idDocumento ?? '0');
       formData.append(`detalles[${index}].fechaHora`, this.getFechaHoraIso(detalle.fechaHora));
       formData.append(`detalles[${index}].fechaHoraSolicitud`, this.getFechaHoraIso(detalle.fechaHora));
@@ -267,11 +261,7 @@ export class FireDocumentation implements OnInit {
       if (detalle.id) {
         formData.append(`detalles[${index}].id`, detalle.id);
       }
-      if (detalle.archivo.id) {
-        formData.append(`detalles[${index}].IdArchivo`, detalle.archivo.id);
-      }else{
-        formData.append(`detalles[${index}].archivo`, detalle.archivo);
-      }
+      formData.append(`detalles[${index}].archivo`, detalle.archivo);
     });
 
     try {
@@ -344,19 +334,14 @@ export class FireDocumentation implements OnInit {
         return idsABuscar.includes(Number(procedencia.id));
       });
     };
-    console.log("🚀 ~ FireDocumentation ~ seleccionarItem ~ this.dataOtherInformation():", this.dataOtherInformation())
 
     this.formData.patchValue({
       ...this.dataOtherInformation()[index],
       tipoDocumento: documentoSelected(),
       procendenciaDestino: procedenciasSelecteds(),
     });
-      console.log("🚀 ~ FireDocumentation ~ seleccionarItem ~ this.formData:", this.formData)
-      console.log("🚀 ~ FireDocumentation ~ seleccionarItem ~  this.formData:",  this.formData)
-      
 
     // this.dataOtherInformation.set([data, ...this.dataOtherInformation()]);
-    
   }
 
   editarItem(index: number) {
@@ -389,9 +374,9 @@ export class FireDocumentation implements OnInit {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          this.file = file; 
+          this.file = file;
           this.fileFlag = true;
-  
+
           this.formData.patchValue({ file });
         });
       } else {
