@@ -18,12 +18,12 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" fxFlex="20">
-      <mat-label>Inicio</mat-label>
+      <mat-label>Fecha de inicio</mat-label>
       <input matInput [formControl]="getForm('startDate')" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" fxFlex="20">
-      <mat-label>Estado</mat-label>
+      <mat-label>Estado del suceso</mat-label>
       <input matInput [formControl]="getForm('estado')" />
     </mat-form-field>
   </div>
@@ -138,10 +138,10 @@
           </ng-container>
 
           <ng-container matColumnDef="opciones">
-            <th mat-header-cell *matHeaderCellDef>Opciones</th>
+            <th mat-header-cell *matHeaderCellDef class="text-center">Opciones</th>
             <td mat-cell *matCellDef="let fire" class="text-center">
               <a (click)="goModalEdit(fire)">
-                <img src="/assets/img/edit.svg" alt="Editar" />
+                <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Editar registro" />
               </a>
             </td>
           </ng-container>
