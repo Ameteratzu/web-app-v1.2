@@ -93,7 +93,7 @@ export class ConsequencesComponent {
 
   public polygon = signal<any>([]);
 
-  public displayedColumns: string[] = ['fechaHora', 'tipo', 'denominacion', 'numero', 'opciones'];
+  public displayedColumns: string[] = ['tipo', 'denominacion', 'numero', 'opciones'];
 
   formData!: FormGroup;
   formDataComplementarios!: FormGroup;
@@ -231,18 +231,25 @@ export class ConsequencesComponent {
       this.listadoCamposComplementarios.set([]);
       this.listadoDenominaciones.set([]);
       this.listadoGrupos.set([]);
-
-      this.formData.reset();
+      const { fire } = this.dataProp;
+      this.formData.reset({
+        tipo: [null, Validators.required],
+        grupo: [null, Validators.required],
+        denominacion: [null, Validators.required],
+        numero: [null, Validators.required],
+        localizacion: [fire?.municipio?.descripcion, Validators.required], //MUNICIPIO DEL INCENDIO
+        observacion: [''],
+      });
     } else {
       this.formData.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
-    if (this.evolutionService.dataConse().length > 0 && this.isCreate() == 1) {
+    if (this.evolutionService.dataConse().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
-      if (this.isCreate() == -1) {
+      if (this.editData) {
         this.save.emit({ save: false, delete: false, close: false, update: true });
       }
     }
@@ -258,7 +265,7 @@ export class ConsequencesComponent {
 
   editarItem(index: number) {
     const dataEditada = {
-      //IdImpactoClasificado: this.formData.value.denominacion.id,
+      IdImpactoClasificado: this.formData.value.denominacion.id,
       ...this.formData.value,
       ...this.formDataComplementarios.value,
     };
@@ -284,7 +291,9 @@ export class ConsequencesComponent {
 
     this.loadGrupos({ value: data.tipo }).then(() => {
       this.loadDenominacion({ value: data.grupo }).then(async () => {
-        const denominacion = this.listadoDenominaciones().find((item: any) => item.descripcion == data.denominacion);
+        const txtDenominacion = data?.denominacion?.descripcion ? data?.denominacion?.descripcion : data?.denominacion;
+
+        const denominacion = this.listadoDenominaciones().find((item: any) => item.descripcion == txtDenominacion);
 
         if (denominacion) {
           await this.loadCamposImpacto({ value: denominacion });

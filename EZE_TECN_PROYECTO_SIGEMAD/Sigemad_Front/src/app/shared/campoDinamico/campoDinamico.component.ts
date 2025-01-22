@@ -105,11 +105,15 @@ export class CampoDinamico implements OnInit {
   async createForm() {
     const group: { [key: string]: any } = {};
     this.fields.forEach((field) => {
-      group[field.campo] = field.esObligatorio ? [field.initValue, Validators.required] : [field.campo == TipoCampo.Checkbox ? false : null];
+      console.info('field.campo', field.campo, field.esObligatorio);
+      //group[field.campo] = field.esObligatorio ? [field.initValue, Validators.required] : [field.campo == TipoCampo.Checkbox ? false : null];
+
+      group[field.campo] = [field.initValue, field.esObligatorio ? [Validators.required] : []];
     });
     this.formGroup = this.fb.group(group);
 
     // Emitir cambios del formulario
+    this.formGroupChange.emit(this.formGroup);
     this.formGroup.valueChanges.subscribe(() => {
       this.formGroupChange.emit(this.formGroup);
     });
@@ -126,8 +130,8 @@ export class CampoDinamico implements OnInit {
 
   public openModalMapCreate(section: string = '') {
     let mapModalRef = this.matDialog.open(MapCreateComponent, {
-      width: '1000px',
-      maxWidth: '1000px',
+      width: '780px',
+      maxWidth: '780px',
     });
 
     mapModalRef.componentInstance.section = section;

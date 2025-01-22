@@ -44,3 +44,11 @@ textarea {
   resize: none; /* Evita que el usuario cambie el tamaño del textarea */
   line-height: 1.5; /* Ajustar la línea para que el texto quede bien alineado */
 }
+
+.pin-location {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  margin-top: -12px;
+  margin-left: -20px;
+}
