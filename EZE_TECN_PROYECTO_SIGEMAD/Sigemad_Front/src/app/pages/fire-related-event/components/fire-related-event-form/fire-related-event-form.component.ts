@@ -340,30 +340,44 @@ export class FireRelatedEventForm implements OnInit {
           return;
         });
     }
-
-    const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
-      idsSucesosAsociados,
-      idSucesoRelacionado: this.fireDetail?.id ?? 0,
-      idSuceso: this.fire.idSuceso,
-    });
-
-    const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
-
-    this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-    this.spinner.hide();
-    await this.onSubmit();
-
-    this.alertService
-      .showAlert({
-        title: 'Buen trabajo!',
-        text: 'Registro actualizado correctamente!',
-        icon: 'success',
-      })
-      .then((result) => {
-        this.closeModal.emit();
-
-        this.isSaving.set(false);
+    try {
+      const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
+        idsSucesosAsociados,
+        idSucesoRelacionado: this.fireDetail?.id ?? 0,
+        idSuceso: this.fire.idSuceso,
       });
+
+      const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
+
+      this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
+      this.spinner.hide();
+      await this.onSubmit();
+
+      this.alertService
+        .showAlert({
+          title: 'Buen trabajo!',
+          text: 'Registro actualizado correctamente!',
+          icon: 'success',
+        })
+        .then((result) => {
+          this.closeModal.emit();
+
+          this.isSaving.set(false);
+        });
+    } catch (error) {
+      console.error('error', error);
+      this.alertService
+        .showAlert({
+          title: 'Ha ocurrido un error!',
+          text: 'Contacte a soporte técnico!',
+          icon: 'error',
+        })
+        .then((result) => {
+          this.closeModal.emit();
+
+          this.isSaving.set(false);
+        });
+    }
   }
 
   async handleSeleccionarItem(i: any) {
@@ -395,9 +409,11 @@ export class FireRelatedEventForm implements OnInit {
     this.spinner.show();
     const newListaSucesos = [...this.listaSucesos().data, { ...this.listaSucesosRelacionados().data.sucesosAsociados[i], selected: false }];
     this.listaSucesos.set({ data: newListaSucesos });
+    /*
     try {
       await this.sucesosRelacionadosService.delete(this.listaSucesosRelacionados().data.sucesosAsociados[i].id);
     } catch (error) {}
+     */
 
     const newAsociados: any = this.listaSucesosRelacionados().data.sucesosAsociados.filter(
       (asociado: any) => asociado.id !== this.listaSucesosRelacionados().data.sucesosAsociados[i].id
