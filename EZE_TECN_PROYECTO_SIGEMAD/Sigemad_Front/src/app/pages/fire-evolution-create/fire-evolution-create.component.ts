@@ -125,7 +125,28 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-    await this.processData();
+    console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.data?.fireDetail?.id);
+    if (this.evolutionSevice.dataRecords().length > 0) {
+      await this.processData();
+    } else {
+      if (!this.data?.fireDetail?.id) {
+        this.alertService
+          .showAlert({
+            title: 'Atención',
+            text: 'Debe ingresar Registro/Parámetros antes de continuar.',
+            icon: 'warning',
+          })
+          .then(async (result) => {
+            this.spinner.hide();
+            return;
+          });
+
+        return;
+      }else{
+        await this.processData();
+      }
+    }
+
     this.evolutionSevice.clearData();
 
     setTimeout(() => {
@@ -153,6 +174,7 @@ export class FireCreateComponent implements OnInit {
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
       this.idReturn = result.id;
     }
+
     if (this.evolutionSevice.dataAffectedArea().length > 0) {
       await this.handleDataProcessing(
         this.evolutionSevice.dataAffectedArea(),

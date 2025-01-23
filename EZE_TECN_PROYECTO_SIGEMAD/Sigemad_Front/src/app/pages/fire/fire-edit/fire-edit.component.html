@@ -92,7 +92,7 @@
         <div fxLayout="row" fxLayoutGap="8px" class="btn-container">
           <button mat-button class="circle-button" (click)="goModalEvolution()" appTooltip="Datos evolutivos">E</button>
           <button mat-button class="circle-button" (click)="goModalCoordination()" appTooltip="Dirección y coordinación">C</button>
-          <button mat-button class="circle-button" appTooltip="Actuaciones relevantes">R</button>
+          <button mat-button class="circle-button" (click)="goModalEvolution()" appTooltip="Actuaciones relevantes">R</button>
           <button mat-button class="circle-button" (click)="goModalDocumentation()" appTooltip="Documentación">D</button>
           <button mat-button class="circle-button" (click)="goModalOtherInformation()" appTooltip="Otra información">O</button>
           <button mat-button class="circle-button" (click)="goModalRelatedEvent()" appTooltip="Sucesos relacionados">S</button>
