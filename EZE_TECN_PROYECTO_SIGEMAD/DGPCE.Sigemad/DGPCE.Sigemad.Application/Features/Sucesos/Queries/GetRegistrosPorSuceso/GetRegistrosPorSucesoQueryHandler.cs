@@ -56,6 +56,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Datos de evolución",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
         }));
@@ -68,6 +69,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Otra Información",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(o)),
             Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = o.FechaCreacion == suceso.OtraInformaciones.Max(e => e.FechaCreacion)
         }));
@@ -80,6 +82,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Dirección y coordinación",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
         }));
@@ -92,6 +95,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Documentación",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.Documentaciones.Max(e => e.FechaCreacion)
         }));
@@ -104,6 +108,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Sucesos Relacionados",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.SucesoRelacionados.Max(e => e.FechaCreacion)
         }));
@@ -135,6 +140,102 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             u => u.Nombre ?? "Desconocido" // Valor: Nombre del usuario
         );
     }
+
+    private static List<string> GetTitulosDeApartados(Evolucion evolucion)
+    {
+        var titulos = new List<string>();
+
+        // Verifica si "Registro" tiene datos
+        if (evolucion.Registro != null)
+        {
+            titulos.Add("Registro");
+        }
+
+        // Verifica si "DatoPrincipal" tiene datos
+        if (evolucion.DatoPrincipal != null)
+        {
+            titulos.Add("Dato Principal");
+        }
+
+        // Verifica si "Parametro" tiene datos
+        if (evolucion.Parametro != null)
+        {
+            titulos.Add("Parámetro");
+        }
+
+        // Verifica si "AreaAfectadas" tiene al menos un elemento
+        if (evolucion.AreaAfectadas != null && evolucion.AreaAfectadas.Any())
+        {
+            titulos.Add("Area Afectadas");
+        }
+
+        // Verifica si "Impactos" tiene al menos un elemento
+        if (evolucion.Impactos != null && evolucion.Impactos.Any())
+        {
+            titulos.Add("Impactos");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(DireccionCoordinacionEmergencia direccionCoordinacionEmergencia)
+    {
+        var titulos = new List<string>();
+
+        if (direccionCoordinacionEmergencia.Direcciones != null && direccionCoordinacionEmergencia.Direcciones.Any())
+        {
+            titulos.Add("Dirección");
+        }
+
+        if (direccionCoordinacionEmergencia.CoordinacionesCecopi != null && direccionCoordinacionEmergencia.CoordinacionesCecopi.Any())
+        {
+            titulos.Add("Coordinación CECOPI");
+        }
+
+        if (direccionCoordinacionEmergencia.CoordinacionesPMA != null && direccionCoordinacionEmergencia.CoordinacionesPMA.Any())
+        {
+            titulos.Add("Coordinación PMA");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(Documentacion documentacion)
+    {
+        var titulos = new List<string>();
+
+        if (documentacion.DetallesDocumentacion != null && documentacion.DetallesDocumentacion.Any())
+        {
+            titulos.Add("Documentación");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(OtraInformacion otraInformacion)
+    {
+        var titulos = new List<string>();
+
+        if (otraInformacion.DetallesOtraInformacion != null && otraInformacion.DetallesOtraInformacion.Any())
+        {
+            titulos.Add("Otra Información");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(SucesoRelacionado sucesoRelacionado)
+    {
+        var titulos = new List<string>();
+
+        if (sucesoRelacionado.DetalleSucesoRelacionados != null && sucesoRelacionado.DetalleSucesoRelacionados.Any())
+        {
+            titulos.Add("Suceso Relacionado");
+        }
+
+        return titulos;
+    }
+
 
 
 }
