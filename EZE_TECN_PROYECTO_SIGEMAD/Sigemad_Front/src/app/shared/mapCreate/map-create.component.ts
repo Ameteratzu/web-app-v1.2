@@ -1,3 +1,6 @@
+import 'ol/ol.css';
+import "ol-ext/dist/ol-ext.css"
+
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -7,8 +10,11 @@ import { Draw, Snap } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import Map from 'ol/Map';
-import { OSM, Vector as VectorSource } from 'ol/source';
+import { OSM, Vector as VectorSource, XYZ } from 'ol/source';
 import View from 'ol/View';
+import LayerGroup from 'ol/layer/Group';
+import { defaults as defaultControls, FullScreen, ScaleLine } from 'ol/control';
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
@@ -64,11 +70,35 @@ export class MapCreateComponent {
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
 
+    this.configureMap(municipio, defaultPolygon, onlyView);
+  }
+
+  configureMap(municipio: any, defaultPolygon: any, onlyView: any) {
+
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
       defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
+
+    let baseLayers = new LayerGroup({
+      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+          properties: { 'title': 'OpenStreetMap', baseLayer: true },
+          visible: true
+
+        }),
+        new TileLayer({
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+          }),
+          properties: { 'title': 'Satélite', baseLayer: true, },
+          visible: false
+        })
+      ]
+    });    
 
     this.source = new VectorSource();
 
@@ -79,23 +109,30 @@ export class MapCreateComponent {
         'stroke-color': '#ffcc33',
         'stroke-width': 2,
       },
+      properties: { 'title': 'Área afectada' }
     });
 
     this.map = new Map({
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-        this.vector,
-      ],
+      controls: defaultControls({ 
+        zoom: true, 
+        zoomOptions: { 
+          zoomInTipLabel: 'Acercar', 
+          zoomOutTipLabel: 'Alejar' 
+        } 
+      }).extend([
+        new FullScreen(({tipLabel: 'Pantalla completa'})),
+      ]),
       target: 'map',
-      controls: [],
+      layers: [baseLayers, this.vector],
       view: new View({
         center: fromLonLat(municipio.geoPosicion.coordinates),
         zoom: 12,
         projection: 'EPSG:3857',
-      }),
+      })
     });
+
+    this.map.addControl(new LayerSwitcher());
+    this.map.addControl(new ScaleLine());
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
 
@@ -115,6 +152,7 @@ export class MapCreateComponent {
       source: new VectorSource({
         features: [pointFeature],
       }),
+      properties: { 'title': 'Municipio' }
     });
 
     pointLayer.setStyle(
@@ -140,9 +178,6 @@ export class MapCreateComponent {
       this.coordinates = `Lon: ${lon}, Lat: ${lat}`;
 
       const pixel = this.map.getEventPixel(event.originalEvent);
-
-      //const mapViewport = this.map.getViewport();
-      //const rect = mapViewport.getBoundingClientRect();
 
       this.cursorPosition = {
         x: pixel[0],

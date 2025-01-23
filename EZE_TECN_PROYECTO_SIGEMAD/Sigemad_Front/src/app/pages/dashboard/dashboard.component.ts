@@ -1,12 +1,17 @@
+import 'ol/ol.css';
+import "ol-ext/dist/ol-ext.css"
+
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { Draw, Modify, Snap } from 'ol/interaction';
-import { DrawEvent } from 'ol/interaction/Draw';
-import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { OSM, XYZ } from 'ol/source';
 import { get } from 'ol/proj';
+import LayerGroup from 'ol/layer/Group';
+import TileLayer from 'ol/layer/Tile';
+import { defaults as defaultControls, FullScreen, ScaleLine,ZoomToExtent } from 'ol/control';
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -23,12 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  public draw!: Draw;
-  public source!: VectorSource;
   public map!: Map;
-  public snap!: Snap;
-
-  public currentDrawType: 'Polygon' | 'LineString' | 'Circle' = 'Polygon';
   public menuItemActiveService = inject(MenuItemActiveService);
 
   public events = [
@@ -41,40 +41,7 @@ export class DashboardComponent {
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
-    // Map
-    const raster = new TileLayer({
-      source: new XYZ({
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        maxZoom: 19,
-      }),
-    });
-
-    this.source = new VectorSource();
-    const vector = new VectorLayer({
-      source: this.source,
-      style: {
-        'fill-color': 'rgba(255, 255, 255, 0.2)',
-        'stroke-color': '#ffcc33',
-        'stroke-width': 2,
-      },
-    });
-
-    const extent = get('EPSG:3857')!.getExtent().slice();
-
-    extent[0] += extent[0];
-    extent[2] += extent[2];
-
-    this.map = new Map({
-      layers: [raster, vector],
-      target: 'map',
-      view: new View({
-        center: [-400000, 4900000],
-        zoom: 6.2,
-        extent,
-      }),
-    });
-
-    this.addInteractions();
+    this.configuremap();
 
     // Graph
     const data = {
@@ -96,41 +63,50 @@ export class DashboardComponent {
     };
   }
 
-  addInteractions() {
-    this.removeCurrentInteraction();
+  configuremap() {
 
-    this.draw = new Draw({
-      source: this.source,
-      type: this.currentDrawType,
+    let baseLayers = new LayerGroup({
+      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      layers: [
+        new TileLayer({
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+          }),
+          properties: { 'title': 'Satélite', baseLayer: true, },
+          visible: true
+        }),        
+        new TileLayer({
+          source: new OSM(),
+          properties: { 'title': 'OpenStreetMap', baseLayer: true },
+          visible: false
+        })
+      ]
     });
 
-    this.draw.on('drawstart', (drawEvent: DrawEvent) => {
-      const features = this.source.getFeatures();
-      const last = features[features.length - 1];
-      this.source.removeFeature(last);
+    this.map = new Map({
+      controls: defaultControls({ 
+        zoom: true, zoomOptions: { 
+          zoomInTipLabel: 'Acercar', 
+          zoomOutTipLabel: 'Alejar' } 
+      }).extend([
+        new FullScreen({tipLabel: 'Pantalla completa'}),
+      ]),
+      target: 'map',
+      layers: [baseLayers],
+      view: new View({
+        center: [-400000, 4900000],
+        zoom: 6,
+        extent: [-4500000, 3000000,  2500000, 6500000]
+      })
     });
 
-    this.draw.on('drawend', (drawEvent: DrawEvent) => {
-      console.log('Figura finalizada:', drawEvent.feature.getGeometry());
-    });
+    this.map.addControl(new LayerSwitcher());
+    this.map.addControl(new ScaleLine());
 
-    this.map.addInteraction(this.draw);
-
-    this.snap = new Snap({ source: this.source });
-    this.map.addInteraction(this.snap);
+    this.map.addControl(new ZoomToExtent({
+      extent: [-2032613, 3138198, -1449857, 3445169],
+      tipLabel: 'Islas Canarias',
+    }));
   }
+ }
 
-  changeDrawType(type: 'Polygon' | 'LineString' | 'Circle') {
-    this.currentDrawType = type;
-    this.addInteractions();
-  }
-
-  removeCurrentInteraction() {
-    if (this.draw) {
-      this.map.removeInteraction(this.draw);
-    }
-    if (this.snap) {
-      this.map.removeInteraction(this.snap);
-    }
-  }
-}
