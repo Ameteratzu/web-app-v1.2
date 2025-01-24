@@ -87,9 +87,12 @@ export class FireTableComponent implements OnChanges {
     return label;
   }
 
-  getLastUpdated(fire: Fire) {
-    const { fechaInicio, fechaModificacion } = fire;
-    return fechaModificacion ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm') : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+  getLastUpdated(fecha: string) {
+    if (fecha) {
+      return moment(fecha).format('DD/MM/yyyy hh:mm');
+    } else {
+      return 'Sin registros guardados.';
+    }
   }
 
   getFechaInicio(fecha: any) {

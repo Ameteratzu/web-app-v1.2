@@ -106,7 +106,7 @@ export class FireEditComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico', 'opciones'];
+  public displayedColumns: string[] = ['numero', 'fechaHora', 'tipoRegistro', 'apartados', 'tecnico', 'opciones'];
 
   public fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
