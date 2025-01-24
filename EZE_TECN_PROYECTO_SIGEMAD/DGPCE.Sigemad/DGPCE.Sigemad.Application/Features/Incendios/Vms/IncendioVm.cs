@@ -22,6 +22,7 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Vms
         public int? IdProvincia { get; set; }
         public int? IdMunicipio { get; set; }
         public DateTime FechaInicio { get; set; }
+        public DateTime? FechaUltimoRegistro { get; set; }
         public string? Ubicacion { get; set; }
         public string Denominacion { get; set; } = null!;
         public string? NotaGeneral { get; set; }
@@ -31,7 +32,7 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Vms
         public int? Huso { get; set; }
         public Geometry? GeoPosicion { get; set; }
 
-        public DateTime FechaUltimoRegistro { get; set; }
+    
 
 
         public virtual Suceso Suceso { get; set; } = null!;

@@ -70,7 +70,7 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
                      .OrderByDescending(r => r.FechaHora)
                      .FirstOrDefault();
 
-                incencioVm.FechaUltimoRegistro = ultimoRegistro.FechaHora;
+                incencioVm.FechaUltimoRegistro = ultimoRegistro != null ? ultimoRegistro.FechaHora : null;
             }
 
             incendioVmList.Add(incencioVm);
