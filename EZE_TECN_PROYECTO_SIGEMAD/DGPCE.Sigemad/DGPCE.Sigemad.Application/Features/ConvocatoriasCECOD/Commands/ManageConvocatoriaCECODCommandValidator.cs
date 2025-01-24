@@ -19,7 +19,7 @@ public class ManageConvocatoriaCECODCommandValidator : AbstractValidator<ManageC
             .When(d => d.Detalles != null && d.Detalles.Count > 0);
     }
 
-    public class ManageConvocatoriaCECODCommandListValidator : AbstractValidator<ConvocatoriaCECODDto>
+    public class ManageConvocatoriaCECODCommandListValidator : AbstractValidator<ManageConvocatoriaCECODDto>
     {
         public ManageConvocatoriaCECODCommandListValidator(IStringLocalizer<ValidationMessages> localizer)
         {
