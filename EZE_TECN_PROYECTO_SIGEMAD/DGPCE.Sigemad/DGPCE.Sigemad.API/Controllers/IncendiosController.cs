@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Features.Incendios.Commands.DeleteIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosNacionalesById;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -36,7 +37,7 @@ public class IncendiosController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(PaginationVm<Incendio>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<PaginationVm<Incendio>>> GetIncendios(
+    public async Task<ActionResult<PaginationVm<IncendioVm>>> GetIncendios(
         [FromQuery] GetIncendiosListQuery query)
     {
         var pagination = await _mediator.Send(query);
