@@ -47,7 +47,7 @@ public class ManageEmergenciasNacionalesCommandValidatorTests
         var model = new ManageEmergenciasNacionalesCommand
         {
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 Autoridad = "",
                 DescripcionSolicitud = ""
@@ -65,7 +65,7 @@ public class ManageEmergenciasNacionalesCommandValidatorTests
         var model = new ManageEmergenciasNacionalesCommand
         {
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 FechaHoraSolicitud = DateTime.Now,
                 Autoridad = "Autoridad Valida",
@@ -84,7 +84,7 @@ public class ManageEmergenciasNacionalesCommandValidatorTests
         var model = new ManageEmergenciasNacionalesCommand
         {
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 FechaHoraSolicitud = DateTime.Now,
                 Autoridad = new string('A', 511),
@@ -101,7 +101,7 @@ public class ManageEmergenciasNacionalesCommandValidatorTests
         var model = new ManageEmergenciasNacionalesCommand
         {
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 FechaHoraSolicitud = DateTime.Now,
                 Autoridad = "Autoridad Valida",

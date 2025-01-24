@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Dtos.ActivacionesPlanes;
 using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
+using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
@@ -18,6 +20,7 @@ using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
+using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
@@ -203,14 +206,18 @@ public class MappingProfile : Profile
         CreateMap<ManageEmergenciasNacionalesCommand, ActuacionRelevanteDGPCE>()
           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
 
-        CreateMap<EmergenciaNacionalDto, EmergenciaNacional>();
-
+        CreateMap<ManageEmergenciaNacionalDto, EmergenciaNacional>();
+       
 
         CreateMap<ManageDeclaracionesZAGEPCommand, ActuacionRelevanteDGPCE>()
        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
        .ForMember(dest => dest.DeclaracionesZAGEP, opt => opt.MapFrom(src => src.Detalles));
 
-        CreateMap<DeclaracionZAGEPDto, DeclaracionZAGEP>();
+        CreateMap<ManageDeclaracionZAGEPDto, DeclaracionZAGEP>();
+      
+
+
+
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();
@@ -318,13 +325,27 @@ public class MappingProfile : Profile
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
            .ForMember(dest => dest.ConvocatoriaCECOD, opt => opt.MapFrom(src => src.Detalles));
 
-        CreateMap<ConvocatoriaCECODDto, ConvocatoriaCECOD>();
+        CreateMap<ManageConvocatoriaCECODDto, ConvocatoriaCECOD>();
+
+        CreateMap<ConvocatoriaCECOD, ConvocatoriaCECODDto>();
+        CreateMap<ActivacionSistema, ActivacionSistemaDto>();
+        CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaDto>();
+        CreateMap<DeclaracionZAGEP, DeclaracionZAGEPDto>();
+        CreateMap<EmergenciaNacional, EmergenciaNacionalDto>();
 
         CreateMap<ManageActivacionSistemaCommand, ActuacionRelevanteDGPCE>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
             .ForMember(dest => dest.ActivacionSistemas, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageActivacionSistemaDto, ActivacionSistema>();
+
+    
+
+        CreateMap<ActuacionRelevanteDGPCE, ActuacionRelevanteDGPCEDto>();
+
+      
+
+        
     }
 
 }

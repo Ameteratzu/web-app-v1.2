@@ -1,14 +1,17 @@
 using DGPCE.Sigemad.API.Models.ActivacionesPlanes;
 using DGPCE.Sigemad.Application.Dtos.ActivacionesPlanes;
 using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
+using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
+using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Quereis.ActuacionesRelevantesById;
 using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
+using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +21,6 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-[Authorize]
 [Route("api/v1/actuaciones-relevantes")]
 [ApiController]
 public class ActuacionesRelevantesDGPCEController : ControllerBase
@@ -28,6 +30,18 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
     {
         _mediator = mediator;
 
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [SwaggerOperation(Summary = "Obtener Actuacion Relevante mediante id")]
+    public async Task<ActionResult<ActuacionRelevanteDGPCEDto>> GetActuacionRelevanteDGPCEById(int id)
+    {
+        var query = new GetActuacionRelevanteDGPCEById(id);
+        var impacto = await _mediator.Send(query);
+        return Ok(impacto);
     }
 
     [HttpPost("emergencia-nacional")]

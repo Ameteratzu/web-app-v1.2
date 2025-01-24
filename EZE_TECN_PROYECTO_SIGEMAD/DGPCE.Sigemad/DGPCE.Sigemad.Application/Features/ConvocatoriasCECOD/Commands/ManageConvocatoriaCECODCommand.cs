@@ -6,5 +6,5 @@ public class ManageConvocatoriaCECODCommand : IRequest<ManageConvocatoriaCECODRe
 {
     public int? IdActuacionRelevante { get; set; }
     public int IdSuceso { get; set; }
-    public List<ConvocatoriaCECODDto>? Detalles { get; set; } = new();
+    public List<ManageConvocatoriaCECODDto>? Detalles { get; set; } = new();
 }
