@@ -71,8 +71,8 @@ export class MapCreateComponent implements OnInit {
 
   public section: string = '';
 
-  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000'; 
-  public cursorPosition = { x: 0, y: 0 }; 
+  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000';
+  public cursorPosition = { x: 0, y: 0 };
 
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
@@ -105,44 +105,49 @@ export class MapCreateComponent implements OnInit {
           visible: false
         })
       ]
-    });    
+    });
 
     this.source = new VectorSource();
 
     this.vector = new VectorLayer({
       source: this.source,
       style: {
-        'stroke-color': 'rgb(252, 5, 5)', 
+        'stroke-color': 'rgb(252, 5, 5)',
         'stroke-width': 5,
       },
       properties: { 'title': 'Área afectada' }
     });
 
-    const wmsNucleosPoblacion = new TileLayer({
-      source: new TileWMS({
-        url: environment.urlGeoserver,
-        params: {
-          'LAYERS': 'nucleos_poblacion',
-          'TILED': true,
-        },
-        serverType: 'geoserver', 
-        transition: 0,
-      }),
-      properties: { 'title': 'Núcleos de población' }
-    });
 
-    const wmsLimitesMunicipio = new TileLayer({
-      source: new TileWMS({
-        url: environment.urlGeoserver,
-        params: {
-          'LAYERS': 'limites_municipio',
-          'TILED': true,
-        },
-        serverType: 'geoserver', 
-        transition: 0,
-      }),
-      properties: { 'title': 'Límites municipio' }
-    });    
+    const wmsLayersGroup = new LayerGroup({
+      properties: { 'title': 'Capas Geoserver', 'openInLayerSwitcher': true },
+      layers: [
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver,
+            params: {
+              'LAYERS': 'nucleos_poblacion',
+              'TILED': true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { 'title': 'Núcleos de población' }
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver,
+            params: {
+              'LAYERS': 'limites_municipio',
+              'TILED': true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { 'title': 'Límites municipio' }
+        }),
+      ]
+    });
 
     this.view = new View({
       center: fromLonLat(municipio.geoPosicion.coordinates),
@@ -151,17 +156,17 @@ export class MapCreateComponent implements OnInit {
     })
 
     this.map = new Map({
-      controls: defaultControls({ 
-        zoom: true, 
-        zoomOptions: { 
-          zoomInTipLabel: 'Acercar', 
-          zoomOutTipLabel: 'Alejar' 
-        } 
+      controls: defaultControls({
+        zoom: true,
+        zoomOptions: {
+          zoomInTipLabel: 'Acercar',
+          zoomOutTipLabel: 'Alejar'
+        }
       }).extend([
-        new FullScreen(({tipLabel: 'Pantalla completa'})),
+        new FullScreen(({ tipLabel: 'Pantalla completa' })),
       ]),
       target: 'map',
-      layers: [baseLayers, wmsLimitesMunicipio, wmsNucleosPoblacion, this.vector], 
+      layers: [baseLayers, wmsLayersGroup, this.vector],
       view: this.view
     });
 
@@ -193,7 +198,7 @@ export class MapCreateComponent implements OnInit {
       new Style({
         image: new Icon({
           anchor: [1, 1],
-          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', 
+          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
           scale: 0.05,
         }),
       })
@@ -285,7 +290,7 @@ export class MapCreateComponent implements OnInit {
       const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
       const coordinate = fromLonLat([lon, lat]);
       this.view.setCenter(coordinate);
-      this.view.setZoom(13); 
+      this.view.setZoom(13);
     }
   }
 }
