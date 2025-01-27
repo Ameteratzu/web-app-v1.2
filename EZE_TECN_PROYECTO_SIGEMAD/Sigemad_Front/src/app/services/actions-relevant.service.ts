@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { EmergenciaNacional } from '../types/actions-relevant.type';
+import { Zagep } from '../types/zagep.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
   private http = inject(HttpClient);
   public dataEmergencia = signal<EmergenciaNacional[]>([]);
+  public dataZagep = signal<Zagep[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -40,10 +42,11 @@ export class ActionsRelevantService {
 
   clearData(): void {
     this.dataEmergencia.set([]);
+    this.dataZagep.set([]);
   }
 
   getById(id: Number) {
-    let endpoint = `/Evoluciones/${id}`;
+    let endpoint = `/actuaciones-relevantes/${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

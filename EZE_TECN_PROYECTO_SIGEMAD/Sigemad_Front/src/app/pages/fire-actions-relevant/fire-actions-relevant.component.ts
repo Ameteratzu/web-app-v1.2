@@ -7,6 +7,7 @@ import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FireDetail } from '../../types/fire-detail.type';
 import { EmergencyNationalComponent } from "./emergency-national/emergency-national.component";
+import { ZagepComponent } from "./zagep/zagep.component";
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
 import { AlertService } from '../../shared/alert/alert.service';
 
@@ -14,7 +15,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 @Component({
   selector: 'app-fire-actions-relevant',
   standalone: true,
-  imports: [NgxSpinnerModule, FlexLayoutModule, MatChipsModule, CommonModule, EmergencyNationalComponent],
+  imports: [NgxSpinnerModule, FlexLayoutModule, MatChipsModule, CommonModule, EmergencyNationalComponent, ZagepComponent],
   animations: [
     trigger('fadeInOut', [
       state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
@@ -130,8 +131,8 @@ export class FireActionsRelevantComponent {
         })
         .then(async (result) => {
           this.isDataReady = false;
-          const dataCordinacion: any = await this.actionsRelevantSevice.getById(Number(this.idReturn));
-          this.editData = dataCordinacion;
+          const dataActuaciones: any = await this.actionsRelevantSevice.getById(Number(this.idReturn));
+          this.editData = dataActuaciones;
           this.isDataReady = true;
           this.spinner.hide();
         });
@@ -143,7 +144,8 @@ export class FireActionsRelevantComponent {
       this.editData ? (this.idReturn = this.editData.id) : 0;
       this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;
       const result: any = await this.actionsRelevantSevice.postData(this.actionsRelevantSevice.dataEmergencia()[0]);
-      this.idReturn = result.id;
+      this.idReturn = result.idActuacionRelevante;
+      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.idReturn:",  this.idReturn)
     }
   }
 

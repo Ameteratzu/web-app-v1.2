@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, Output, runInInjectionContext, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -43,7 +43,7 @@ const MY_DATE_FORMATS = {
     MatSelectModule,
     MatTableModule,
     ReactiveFormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
   ],
   templateUrl: './emergency-national.component.html',
   styleUrl: './emergency-national.component.scss',
@@ -61,6 +61,7 @@ export class EmergencyNationalComponent {
   @Input() fire: any;
   private fb = inject(FormBuilder);
   public actionsRelevantSevice = inject(ActionsRelevantService);
+  private environmentInjector = inject(EnvironmentInjector);
   formData!: FormGroup;
 
   formDataSignal = signal({
@@ -87,26 +88,39 @@ export class EmergencyNationalComponent {
     });
     this.formData.get('end_date')?.disable();
 
-    // runInInjectionContext(this.environmentInjector, () => {
-    //   effect(() => {
-    //     const { end_date, ...rest } = this.formDataSignal();
-    //     this.formData.patchValue(rest, { emitEvent: false });
-    //   });
+    runInInjectionContext(this.environmentInjector, () => {
+      effect(() => {
+        const { ...rest } = this.formDataSignal();
+        this.formData.patchValue(rest, { emitEvent: false });
+      });
+    });
 
-    // });
+    this.formData.get('phases')?.disable();
+    this.formData.get('nivel')?.disable();
+    this.formData.get('operativa')?.disable();
 
-    // this.formData.get('phases')?.disable();
-    // this.formData.get('nivel')?.disable();
-    // this.formData.get('operativa')?.disable();
-
-    // if (this.editData) {
-    //   if (this.evolutionSevice.dataRecords().length === 0) {
-    //     this.updateFormWithJson(this.editData);
-    //   }
-    // } else {
-    //   this.updateEndDate(this.estadoIncendio);
-    // }
+    this.formData.get('phases')?.disable();
+    this.formData.get('nivel')?.disable();
+    this.formData.get('operativa')?.disable();
+    console.log('🚀 ~ EmergencyNationalComponent ~ ngOnInit ~ this.editData:', this.editData);
+    if (this.editData) {
+      if (this.actionsRelevantSevice.dataEmergencia().length === 0) {
+        this.updateFormWithJson(this.editData);
+      }
+    }
     this.spinner.hide();
+  }
+
+  async updateFormWithJson(json: any) {
+    this.formDataSignal.set({
+      autoridad: json.emergenciaNacional?.autoridad || '',
+      descripcionSolicitud: json.emergenciaNacional?.descripcionSolicitud || '',
+      fechaHoraSolicitud: json.emergenciaNacional?.fechaHoraSolicitud ? new Date(json.emergenciaNacional.fechaHoraSolicitud) : new Date(),
+      fechaHoraDeclaracion: json.emergenciaNacional?.fechaHoraDeclaracion ? new Date(json.emergenciaNacional.fechaHoraDeclaracion) : new Date(),
+      descripcionDeclaracion: json.emergenciaNacional?.descripcionDeclaracion || '',
+      fechaHoraDireccion: json.emergenciaNacional?.fechaHoraDireccion ? new Date(json.emergenciaNacional.fechaHoraDireccion) : new Date(),
+      observaciones: json.emergenciaNacional?.observaciones || '',
+    });
   }
 
   async sendDataToEndpoint() {
@@ -125,7 +139,7 @@ export class EmergencyNationalComponent {
           descripcionDeclaracion: formValues.descripcionDeclaracion,
           fechaHoraDireccion: formValues.fechaHoraDireccion.toISOString(),
           observaciones: formValues.observaciones,
-        }
+        },
       };
 
       this.actionsRelevantSevice.dataEmergencia.update((records) => [newRecord, ...records]);

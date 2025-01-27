@@ -29,7 +29,7 @@
               <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
                 <mat-label>Fecha/hora de declaración</mat-label>
                 <input matInput [matDatepicker]="picker2" [formControl]="getForm('fechaHoraDeclaracion')" />
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
               </mat-form-field>
 
@@ -44,7 +44,7 @@
             <mat-form-field appearance="fill" fxFlex="35%" class="mb-3">
                 <mat-label>Fecha/hora Dirección operativa GEJUME</mat-label>
                 <input matInput [matDatepicker]="picker3" [formControl]="getForm('fechaHoraDireccion')" />
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                 <mat-datepicker #picker3></mat-datepicker>
               </mat-form-field>
 

@@ -22,8 +22,7 @@
       @fadeInOut
     ></app-emergency-national>
     
-   <!--
-    <app-area
+    <app-zagep
       [fire]="data.fire"
       [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
       [editData]="editData"
@@ -31,8 +30,9 @@
       *ngIf="selectedOption.value === 2 && isDataReady"
       class="component-width"
       @fadeInOut
-    ></app-area>
-  
+    ></app-zagep>
+
+      <!--
     <app-consequences
       *ngIf="selectedOption.value === 3 && isDataReady"
       [dataProp]="data"
