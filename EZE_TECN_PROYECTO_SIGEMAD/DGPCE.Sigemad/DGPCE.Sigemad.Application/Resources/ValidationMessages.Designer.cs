@@ -313,6 +313,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a FechaHoraNotificacion es obligatorio.
+        /// </summary>
+        public static string FechaHoraNotificacionObligatorio {
+            get {
+                return ResourceManager.GetString("FechaHoraNotificacionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a FechaHora no puede ser vacio.
         /// </summary>
         public static string FechaHoraNoVacio {
@@ -565,6 +574,15 @@ namespace DGPCE.Sigemad.Application.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a IdTipoNotificacion es obligatorio.
+        /// </summary>
+        public static string IdTipoNotificacionObligatorio {
+            get {
+                return ResourceManager.GetString("IdTipoNotificacionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Id Tipo Sistema de Emergencia es obligatorio.
         /// </summary>
         public static string IdTipoSistemaEmergencia {
@@ -714,6 +732,24 @@ namespace DGPCE.Sigemad.Application.Resources {
         public static string ObservacionObligatorio {
             get {
                 return ResourceManager.GetString("ObservacionObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Organos notificados no puede superar los 510 caracteres.
+        /// </summary>
+        public static string OrganosNotificadosMaxLength {
+            get {
+                return ResourceManager.GetString("OrganosNotificadosMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Organos Notificados es obligatorio.
+        /// </summary>
+        public static string OrganosNotificadosObligatorio {
+            get {
+                return ResourceManager.GetString("OrganosNotificadosObligatorio", resourceCulture);
             }
         }
         

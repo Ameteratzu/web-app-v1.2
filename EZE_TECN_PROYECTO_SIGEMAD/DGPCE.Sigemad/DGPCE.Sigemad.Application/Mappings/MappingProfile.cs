@@ -17,6 +17,7 @@ using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
+using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
@@ -58,6 +59,7 @@ using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.CreateInt
 using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateIntervencionMedios;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
+using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
@@ -339,7 +341,12 @@ public class MappingProfile : Profile
 
         CreateMap<ManageActivacionSistemaDto, ActivacionSistema>();
 
-    
+        CreateMap<NotificacionEmergencia, NotificacionEmergenciaDto>();
+        CreateMap<ManageNotificacionEmergenciaDto, NotificacionEmergencia>();
+
+        CreateMap<ManageNotificacionEmergenciaCommand, ActuacionRelevanteDGPCE>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
+            .ForMember(dest => dest.NotificacionEmergencia, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ActuacionRelevanteDGPCE, ActuacionRelevanteDGPCEDto>();
 
