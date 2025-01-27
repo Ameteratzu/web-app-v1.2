@@ -1,7 +1,7 @@
 import 'ol/ol.css';
 import "ol-ext/dist/ol-ext.css"
 
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import Feature from 'ol/Feature';
@@ -15,6 +15,7 @@ import View from 'ol/View';
 import LayerGroup from 'ol/layer/Group';
 import { defaults as defaultControls, FullScreen, ScaleLine } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import TileWMS from 'ol/source/TileWMS';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
@@ -27,15 +28,20 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
+import proj4 from 'proj4';
+import { environment } from '../../../environments/environment';
+
+// Define the projection for UTM zone 30N (EPSG:25830)
+const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
 
 @Component({
   selector: 'app-map-create',
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
   templateUrl: './map-create.component.html',
-  styleUrl: './map-create.component.css',
+  styleUrls: ['./map-create.component.css'],
 })
-export class MapCreateComponent {
+export class MapCreateComponent implements OnInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
@@ -44,6 +50,7 @@ export class MapCreateComponent {
 
   public source!: VectorSource;
   public map!: Map;
+  public view!: View;
   public draw!: Draw;
   public snap!: Snap;
   public vector!: VectorLayer;
@@ -64,8 +71,8 @@ export class MapCreateComponent {
 
   public section: string = '';
 
-  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000'; // Coordenadas iniciales
-  public cursorPosition = { x: 0, y: 0 }; // Posición del cursor
+  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000'; 
+  public cursorPosition = { x: 0, y: 0 }; 
 
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
@@ -105,12 +112,43 @@ export class MapCreateComponent {
     this.vector = new VectorLayer({
       source: this.source,
       style: {
-        'fill-color': 'rgba(255, 255, 255, 0.2)',
-        'stroke-color': '#ffcc33',
-        'stroke-width': 2,
+        'stroke-color': 'rgb(252, 5, 5)', 
+        'stroke-width': 5,
       },
       properties: { 'title': 'Área afectada' }
     });
+
+    const wmsNucleosPoblacion = new TileLayer({
+      source: new TileWMS({
+        url: environment.urlGeoserver,
+        params: {
+          'LAYERS': 'nucleos_poblacion',
+          'TILED': true,
+        },
+        serverType: 'geoserver', 
+        transition: 0,
+      }),
+      properties: { 'title': 'Núcleos de población' }
+    });
+
+    const wmsLimitesMunicipio = new TileLayer({
+      source: new TileWMS({
+        url: environment.urlGeoserver,
+        params: {
+          'LAYERS': 'limites_municipio',
+          'TILED': true,
+        },
+        serverType: 'geoserver', 
+        transition: 0,
+      }),
+      properties: { 'title': 'Límites municipio' }
+    });    
+
+    this.view = new View({
+      center: fromLonLat(municipio.geoPosicion.coordinates),
+      zoom: 12,
+      projection: 'EPSG:3857',
+    })
 
     this.map = new Map({
       controls: defaultControls({ 
@@ -123,12 +161,8 @@ export class MapCreateComponent {
         new FullScreen(({tipLabel: 'Pantalla completa'})),
       ]),
       target: 'map',
-      layers: [baseLayers, this.vector],
-      view: new View({
-        center: fromLonLat(municipio.geoPosicion.coordinates),
-        zoom: 12,
-        projection: 'EPSG:3857',
-      })
+      layers: [baseLayers, wmsLimitesMunicipio, wmsNucleosPoblacion, this.vector], 
+      view: this.view
     });
 
     this.map.addControl(new LayerSwitcher());
@@ -159,7 +193,7 @@ export class MapCreateComponent {
       new Style({
         image: new Icon({
           anchor: [1, 1],
-          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', // URL del ícono que debemo cambiar
+          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png', 
           scale: 0.05,
         }),
       })
@@ -183,6 +217,16 @@ export class MapCreateComponent {
         x: pixel[0],
         y: pixel[1] + 40,
       };
+    });
+
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
     });
   }
 
@@ -231,5 +275,17 @@ export class MapCreateComponent {
 
   closeModal() {
     this.matDialogRef.close();
+  }
+
+  searchCoordinates() {
+    const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
+    const utmY = (document.getElementById('utm-y') as HTMLInputElement).value;
+
+    if (utmX && utmY) {
+      const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
+      const coordinate = fromLonLat([lon, lat]);
+      this.view.setCenter(coordinate);
+      this.view.setZoom(13); 
+    }
   }
 }

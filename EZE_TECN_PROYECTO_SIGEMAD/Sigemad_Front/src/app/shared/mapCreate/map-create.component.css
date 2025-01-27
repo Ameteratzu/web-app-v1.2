@@ -50,3 +50,12 @@ button {
   padding-bottom: 20px;
   font-size: 24px;
 }
+
+.coordinate-search {
+  margin-bottom: 20px;
+}
+
+.coordinate-search input {
+  margin-right: 10px;
+  padding: 5px;
+}

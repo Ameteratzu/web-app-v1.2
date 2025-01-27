@@ -1,16 +1,17 @@
 import 'ol/ol.css';
 import "ol-ext/dist/ol-ext.css"
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { OSM, XYZ } from 'ol/source';
-import { get } from 'ol/proj';
+import { get, fromLonLat, toLonLat } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import { defaults as defaultControls, FullScreen, ScaleLine,ZoomToExtent } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import proj4 from 'proj4';
 
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,15 +21,19 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+// Define the projection for UTM zone 30N (EPSG:25830)
+const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, MatFormFieldModule, MatGridListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+  styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   public map!: Map;
+  public view!: View;
   public menuItemActiveService = inject(MenuItemActiveService);
 
   public events = [
@@ -83,6 +88,12 @@ export class DashboardComponent {
       ]
     });
 
+    this.view = new View({
+      center: [-400000, 4900000],
+      zoom: 6,
+      extent: [-4500000, 3000000,  2500000, 6500000]
+    })
+
     this.map = new Map({
       controls: defaultControls({ 
         zoom: true, zoomOptions: { 
@@ -93,11 +104,7 @@ export class DashboardComponent {
       ]),
       target: 'map',
       layers: [baseLayers],
-      view: new View({
-        center: [-400000, 4900000],
-        zoom: 6,
-        extent: [-4500000, 3000000,  2500000, 6500000]
-      })
+      view: this.view,
     });
 
     this.map.addControl(new LayerSwitcher());
@@ -107,6 +114,27 @@ export class DashboardComponent {
       extent: [-2032613, 3138198, -1449857, 3445169],
       tipLabel: 'Islas Canarias',
     }));
-  }
- }
 
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
+    });
+  }
+
+  searchCoordinates() {
+    const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
+    const utmY = (document.getElementById('utm-y') as HTMLInputElement).value;
+
+    if (utmX && utmY) {
+      const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
+      const coordinate = fromLonLat([lon, lat]);
+      this.view.setCenter(coordinate);
+      this.view.setZoom(13); 
+    }
+  }
+}

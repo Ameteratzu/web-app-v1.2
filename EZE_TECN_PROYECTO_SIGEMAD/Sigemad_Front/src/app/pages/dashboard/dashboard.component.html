@@ -25,6 +25,12 @@
         </button>
       </div>
       <div id="map" class="map"></div>
+      <div id="cursor-coordinates" class="coordinates-display"></div>
+      <div class="coordinate-search">
+        <input type="text" id="utm-x" placeholder="UTM X" />
+        <input type="text" id="utm-y" placeholder="UTM Y" />
+        <button (click)="searchCoordinates()">Buscar</button>
+      </div>
     </mat-grid-tile>
 
     <mat-grid-tile [colspan]="2" class="tile-align-top">
