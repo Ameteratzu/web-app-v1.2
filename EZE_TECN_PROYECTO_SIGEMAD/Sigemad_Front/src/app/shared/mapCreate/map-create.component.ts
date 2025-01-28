@@ -1,7 +1,7 @@
 import 'ol/ol.css';
 import "ol-ext/dist/ol-ext.css"
 
-import { Component, EventEmitter, inject, Input, Output, signal, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import Feature from 'ol/Feature';
@@ -39,9 +39,9 @@ const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
   templateUrl: './map-create.component.html',
-  styleUrls: ['./map-create.component.css'],
+  styleUrl: './map-create.component.css',
 })
-export class MapCreateComponent implements OnInit {
+export class MapCreateComponent {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;

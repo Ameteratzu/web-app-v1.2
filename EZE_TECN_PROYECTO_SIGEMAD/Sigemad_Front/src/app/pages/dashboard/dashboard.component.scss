@@ -112,7 +112,7 @@
 
 .map {
   width: 100%;
-  height: 70%;
+  height: 69%;
   background-color: #e3e3e3;
 }
 
@@ -122,3 +122,25 @@
   left: .5em;
 }
 
+.coordinates-display {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1px;
+  font-size: 12px;
+}
+
+.coordinate-search {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 3px;
+  font-size: 11px;
+  
+  input {
+    margin-right: 10px;
+    width: 80px; 
+    font-size: 12px;
+  }
+
+  button {
+    padding: 1px; 
+    font-size: 12px; 
+  }
+}

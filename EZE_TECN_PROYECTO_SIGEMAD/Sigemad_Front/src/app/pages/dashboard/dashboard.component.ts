@@ -1,7 +1,7 @@
 import 'ol/ol.css';
 import "ol-ext/dist/ol-ext.css"
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -29,9 +29,9 @@ const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
   standalone: true,
   imports: [CommonModule, MatFormFieldModule, MatGridListModule, MatCardModule, MatDividerModule, MatIconModule, MatButtonModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   public map!: Map;
   public view!: View;
   public menuItemActiveService = inject(MenuItemActiveService);
