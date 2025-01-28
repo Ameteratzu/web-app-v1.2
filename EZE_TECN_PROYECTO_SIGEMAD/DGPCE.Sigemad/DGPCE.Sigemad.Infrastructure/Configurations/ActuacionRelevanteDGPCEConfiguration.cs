@@ -12,10 +12,11 @@ public class ActuacionRelevanteDGPCEConfiguration : IEntityTypeConfiguration<Act
         builder.HasKey(c => c.Id);
 
         builder.HasOne(s => s.Suceso)
-            .WithMany()
+            .WithMany(a => a.ActuacionesRelevantes)
             .HasForeignKey(s => s.IdSuceso)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
 
         builder.Property(e => e.CreadoPor)
               .HasMaxLength(500)

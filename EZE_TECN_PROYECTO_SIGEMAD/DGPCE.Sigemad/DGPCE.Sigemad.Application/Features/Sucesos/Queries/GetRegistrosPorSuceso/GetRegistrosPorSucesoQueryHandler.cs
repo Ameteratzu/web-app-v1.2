@@ -1,11 +1,13 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks.Dataflow;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
 public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, IReadOnlyList<RegistroActualizacionDto>>
@@ -41,6 +43,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         guidsUsuarios.UnionWith(suceso.OtraInformaciones.Select(o => o.CreadoPor));
         guidsUsuarios.UnionWith(suceso.Documentaciones.Select(d => d.CreadoPor));
         guidsUsuarios.UnionWith(suceso.SucesoRelacionados.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.ActuacionesRelevantes.Select(d => d.CreadoPor));
 
         // Obtener nombres de usuarios
         var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
@@ -111,6 +114,19 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.SucesoRelacionados.Max(e => e.FechaCreacion)
+        }));
+
+        // Procesar Actuaciones Relevantes
+        registros.AddRange(suceso.ActuacionesRelevantes.Select(d => new RegistroActualizacionDto
+        {
+            Id = d.Id,
+            FechaHora = d.FechaCreacion,
+            Registro = "",
+            Origen = "",
+            TipoRegistro = "Actuaciones Relevantes",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == suceso.ActuacionesRelevantes.Max(e => e.FechaCreacion)
         }));
 
         // Ordenar por FechaHora descendente
@@ -231,6 +247,42 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         if (sucesoRelacionado.DetalleSucesoRelacionados != null && sucesoRelacionado.DetalleSucesoRelacionados.Any())
         {
             titulos.Add("Suceso Relacionado");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(ActuacionRelevanteDGPCE actuacionRelevante)
+    {
+        var titulos = new List<string>();
+
+        if (actuacionRelevante.EmergenciaNacional != null)
+        {
+            titulos.Add("Emergencia Nacional");
+        }
+
+        if (actuacionRelevante.ActivacionPlanEmergencias != null && actuacionRelevante.ActivacionPlanEmergencias.Any())
+        {
+            titulos.Add("Activacion Plan Emergencias");
+        }
+
+        if (actuacionRelevante.DeclaracionesZAGEP != null && actuacionRelevante.DeclaracionesZAGEP.Any())
+        {
+            titulos.Add("Declaraciones ZAGEP");
+        }
+
+        if (actuacionRelevante.ActivacionSistemas != null && actuacionRelevante.ActivacionSistemas.Any())
+        {
+            titulos.Add("Activacion Sistemas");
+        }
+
+        if (actuacionRelevante.ConvocatoriaCECOD != null && actuacionRelevante.ConvocatoriaCECOD.Any())
+        {
+            titulos.Add("Convocatoria CECOD");
+        }
+        else
+        {
+            titulos.Add("NOTIFICACIONES");
         }
 
         return titulos;
