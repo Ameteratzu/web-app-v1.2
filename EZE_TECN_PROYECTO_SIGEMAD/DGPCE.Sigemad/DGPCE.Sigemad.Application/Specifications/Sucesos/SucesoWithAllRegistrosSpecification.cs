@@ -33,5 +33,6 @@ public class SucesoWithAllRegistrosSpecification : BaseSpecification<Suceso>
         AddInclude("ActuacionesRelevantes.DeclaracionesZAGEP");
         AddInclude("ActuacionesRelevantes.ActivacionSistemas");
         AddInclude("ActuacionesRelevantes.ConvocatoriaCECOD");
+        AddInclude("ActuacionesRelevantes.NotificacionEmergencia");
     }
 }

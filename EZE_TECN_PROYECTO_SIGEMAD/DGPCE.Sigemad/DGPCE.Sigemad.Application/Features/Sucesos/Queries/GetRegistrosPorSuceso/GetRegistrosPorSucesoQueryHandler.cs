@@ -280,10 +280,12 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         {
             titulos.Add("Convocatoria CECOD");
         }
-        else
+
+        if (actuacionRelevante.NotificacionEmergencia != null && actuacionRelevante.NotificacionEmergencia.Any())
         {
-            titulos.Add("NOTIFICACIONES");
+            titulos.Add("Notificacion Emergencia");
         }
+      
 
         return titulos;
     }
