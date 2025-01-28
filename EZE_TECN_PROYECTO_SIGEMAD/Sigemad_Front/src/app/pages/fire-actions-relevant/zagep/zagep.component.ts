@@ -72,7 +72,7 @@ export class ZagepComponent {
   private spinner = inject(NgxSpinnerService);
 
 
-  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
+  public displayedColumns: string[] = ['fechaSolicitud', 'denominacion', 'opciones'];
 
   formData!: FormGroup;
 
@@ -90,7 +90,7 @@ export class ZagepComponent {
   
     if (this.editData) {
       if (this.zagepService.dataZagep().length === 0) {
-        this.zagepService.dataZagep.set(this.editData.areaAfectadas);
+        this.zagepService.dataZagep.set(this.editData.declaracionesZAGEP);
       }
     }
     this.spinner.hide();
@@ -110,9 +110,9 @@ export class ZagepComponent {
       });
       this.formData.reset();
     
-      this.formData.patchValue({
-        fechaHora: new Date(), 
-      });
+      // this.formData.patchValue({
+      //   fechaHora: new Date(), 
+      // });
 
     } else {
       this.formData.markAllAsTouched();
@@ -120,7 +120,11 @@ export class ZagepComponent {
   }
 
   async sendDataToEndpoint() {
+    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.zagepService.dataZagep().length:", this.zagepService.dataZagep().length)
+    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
     if (this.zagepService.dataZagep().length > 0 && !this.editData) {
+      console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
+      
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       if (this.editData) {
@@ -149,6 +153,9 @@ export class ZagepComponent {
   async seleccionarItem(index: number) {
     this.isCreate.set(index);
     const data = this.zagepService.dataZagep()[index];
+    this.formData.get('fechaSolicitud')?.setValue(data.fechaSolicitud);
+    this.formData.get('denominacion')?.setValue(data.denominacion);
+    this.formData.get('observaciones')?.setValue(data.observaciones);
     this.spinner.show();
     this.spinner.hide();
   }

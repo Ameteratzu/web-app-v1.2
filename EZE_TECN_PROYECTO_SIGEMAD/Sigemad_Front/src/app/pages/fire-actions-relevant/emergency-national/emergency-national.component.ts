@@ -68,9 +68,9 @@ export class EmergencyNationalComponent {
     autoridad: '',
     descripcionSolicitud: '',
     fechaHoraSolicitud: new Date(),
-    fechaHoraDeclaracion: new Date(),
+    fechaHoraDeclaracion: null as Date | null,
     descripcionDeclaracion: '',
-    fechaHoraDireccion: new Date(),
+    fechaHoraDireccion: null as Date | null,
     observaciones: '',
   });
 
@@ -81,9 +81,9 @@ export class EmergencyNationalComponent {
       autoridad: [this.formDataSignal().autoridad, Validators.required],
       descripcionSolicitud: [this.formDataSignal().descripcionSolicitud, Validators.required],
       fechaHoraSolicitud: [this.formDataSignal().fechaHoraSolicitud, Validators.required],
-      fechaHoraDeclaracion: [this.formDataSignal().fechaHoraDeclaracion, Validators.required],
-      descripcionDeclaracion: [this.formDataSignal().descripcionDeclaracion, Validators.required],
-      fechaHoraDireccion: [this.formDataSignal().fechaHoraDireccion, Validators.required],
+      fechaHoraDeclaracion: [this.formDataSignal().fechaHoraDeclaracion],
+      descripcionDeclaracion: [this.formDataSignal().descripcionDeclaracion],
+      fechaHoraDireccion: [this.formDataSignal().fechaHoraDireccion],
       observaciones: [this.formDataSignal().observaciones],
     });
     this.formData.get('end_date')?.disable();
@@ -95,13 +95,6 @@ export class EmergencyNationalComponent {
       });
     });
 
-    this.formData.get('phases')?.disable();
-    this.formData.get('nivel')?.disable();
-    this.formData.get('operativa')?.disable();
-
-    this.formData.get('phases')?.disable();
-    this.formData.get('nivel')?.disable();
-    this.formData.get('operativa')?.disable();
     console.log('🚀 ~ EmergencyNationalComponent ~ ngOnInit ~ this.editData:', this.editData);
     if (this.editData) {
       if (this.actionsRelevantSevice.dataEmergencia().length === 0) {
@@ -116,9 +109,9 @@ export class EmergencyNationalComponent {
       autoridad: json.emergenciaNacional?.autoridad || '',
       descripcionSolicitud: json.emergenciaNacional?.descripcionSolicitud || '',
       fechaHoraSolicitud: json.emergenciaNacional?.fechaHoraSolicitud ? new Date(json.emergenciaNacional.fechaHoraSolicitud) : new Date(),
-      fechaHoraDeclaracion: json.emergenciaNacional?.fechaHoraDeclaracion ? new Date(json.emergenciaNacional.fechaHoraDeclaracion) : new Date(),
+      fechaHoraDeclaracion: json.emergenciaNacional?.fechaHoraDeclaracion ? new Date(json.emergenciaNacional.fechaHoraDeclaracion) : null,
       descripcionDeclaracion: json.emergenciaNacional?.descripcionDeclaracion || '',
-      fechaHoraDireccion: json.emergenciaNacional?.fechaHoraDireccion ? new Date(json.emergenciaNacional.fechaHoraDireccion) : new Date(),
+      fechaHoraDireccion: json.emergenciaNacional?.fechaHoraDireccion ? new Date(json.emergenciaNacional.fechaHoraDireccion) : null,
       observaciones: json.emergenciaNacional?.observaciones || '',
     });
   }
@@ -135,9 +128,9 @@ export class EmergencyNationalComponent {
           autoridad: formValues.autoridad,
           descripcionSolicitud: formValues.descripcionSolicitud,
           fechaHoraSolicitud: formValues.fechaHoraSolicitud.toISOString(),
-          fechaHoraDeclaracion: formValues.fechaHoraDeclaracion.toISOString(),
+          fechaHoraDeclaracion: formValues.fechaHoraDeclaracion ? formValues.fechaHoraDeclaracion.toISOString() : null,
           descripcionDeclaracion: formValues.descripcionDeclaracion,
-          fechaHoraDireccion: formValues.fechaHoraDireccion.toISOString(),
+          fechaHoraDireccion: formValues.fechaHoraDireccion ? formValues.fechaHoraDireccion.toISOString() : null,
           observaciones: formValues.observaciones,
         },
       };

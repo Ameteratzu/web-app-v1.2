@@ -25,6 +25,21 @@ export class ActionsRelevantService {
     );
   }
 
+  postDataZagep(body: any) {
+    const endpoint = `/actuaciones-relevantes/declaraciones-zagep/lista`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
   update(body: any) {
     const endpoint = `/Evoluciones`;
 

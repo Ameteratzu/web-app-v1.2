@@ -6,11 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FireDetail } from '../../types/fire-detail.type';
-import { EmergencyNationalComponent } from "./emergency-national/emergency-national.component";
-import { ZagepComponent } from "./zagep/zagep.component";
+import { EmergencyNationalComponent } from './emergency-national/emergency-national.component';
+import { ZagepComponent } from './zagep/zagep.component';
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
 import { AlertService } from '../../shared/alert/alert.service';
-
 
 @Component({
   selector: 'app-fire-actions-relevant',
@@ -29,21 +28,21 @@ import { AlertService } from '../../shared/alert/alert.service';
 export class FireActionsRelevantComponent {
   private dialogRef = inject(MatDialogRef<FireActionsRelevantComponent>);
   private spinner = inject(NgxSpinnerService);
-   public renderer = inject(Renderer2);
-   public actionsRelevantSevice = inject(ActionsRelevantService);
-   public alertService = inject(AlertService);
+  public renderer = inject(Renderer2);
+  public actionsRelevantSevice = inject(ActionsRelevantService);
+  public alertService = inject(AlertService);
 
-  selectedOption: MatChipListboxChange = { source: null as any, value: 7 };
+  selectedOption: MatChipListboxChange = { source: null as any, value: 6 };
 
-   data = inject(MAT_DIALOG_DATA) as {
-      title: string;
-      idIncendio: number;
-      fireDetail?: FireDetail;
-      valoresDefecto?: number;
-      fire?: any;
-    };
+  data = inject(MAT_DIALOG_DATA) as {
+    title: string;
+    idIncendio: number;
+    fireDetail?: FireDetail;
+    valoresDefecto?: number;
+    fire?: any;
+  };
 
-    editData: any;
+  editData: any;
   isDataReady = false;
   idReturn = null;
   isEdit = false;
@@ -62,23 +61,17 @@ export class FireActionsRelevantComponent {
   async ngOnInit() {
     console.log('🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:', this.data.fire);
     this.spinner.show();
-    this.isToEditDocumentation();
+    this.isToEdit();
   }
 
-  async isToEditDocumentation() {
-    if (!this.data?.fireDetail?.id) {
-      if (this.data?.valoresDefecto) {
-        //const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
-       // this.estado = dataCordinacion.parametro?.estadoIncendio.id;
-      }
-      this.isDataReady = true;
-      return;
+  async isToEdit() {
+    if(this.data.fireDetail?.id){
+      const dataCordinacion: any = await this.actionsRelevantSevice.getById(Number(this.data.fireDetail?.id));
+      this.editData = dataCordinacion;
+  
     }
-
-    //const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.fireDetail.id));
-
-    //this.editData = dataCordinacion;
     this.isDataReady = true;
+
   }
 
   async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
@@ -100,7 +93,7 @@ export class FireActionsRelevantComponent {
           break;
         case 'update':
           this.isEdit = true;
-          //this.save();
+          this.save();
           break;
         default:
           console.error('Clave inesperada');
@@ -111,13 +104,11 @@ export class FireActionsRelevantComponent {
   }
 
   async save() {
+    console.log('🚀 ~ FireActionsRelevantComponent ~ save ~ save:', 'save');
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
- 
-    if (this.actionsRelevantSevice.dataEmergencia().length > 0) {
-      await this.processData();
-    }
+    await this.processData();
 
     this.actionsRelevantSevice.clearData();
 
@@ -145,8 +136,45 @@ export class FireActionsRelevantComponent {
       this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;
       const result: any = await this.actionsRelevantSevice.postData(this.actionsRelevantSevice.dataEmergencia()[0]);
       this.idReturn = result.idActuacionRelevante;
-      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.idReturn:",  this.idReturn)
+      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~  this.idReturn:', this.idReturn);
     }
+    if (this.actionsRelevantSevice.dataZagep().length > 0) {
+      await this.handleDataProcessing(
+        this.actionsRelevantSevice.dataZagep(),
+        (item) => ({
+          id: item.id ?? 0,
+          fechaSolicitud: this.formatDate(item.fechaSolicitud),
+          denominacion: item.denominacion,
+          observaciones: item.observaciones,
+        }),
+        this.actionsRelevantSevice.postDataZagep.bind(this.actionsRelevantSevice),
+        'detalles'
+      );
+    }
+  }
+
+  async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
+    if (data.length > 0) {
+      const formattedData = data.map(formatter);
+
+      const body = {
+        idSuceso: this.data.idIncendio,
+        idActuacionRelevante: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        [key]: formattedData,
+      };
+
+      const result = await postService(body);
+      console.log('🚀 ~ result:', result);
+      this.idReturn = result.idActuacionRelevante;
+    }
+  }
+
+  formatDate(date: Date | string): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onSelectionChange(event: MatChipListboxChange): void {
@@ -161,7 +189,4 @@ export class FireActionsRelevantComponent {
   closeModal(value?: any) {
     this.dialogRef.close(value);
   }
-
-
-
 }

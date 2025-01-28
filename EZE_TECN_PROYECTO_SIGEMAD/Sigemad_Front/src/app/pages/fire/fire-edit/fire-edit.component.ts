@@ -107,7 +107,7 @@ export class FireEditComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico', 'opciones'];
+  public displayedColumns: string[] = ['numero', 'fechaHora', 'tipoRegistro', 'apartados', 'tecnico', 'opciones'];
 
   public fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -201,6 +201,7 @@ export class FireEditComponent implements OnInit {
 
   
   goModalRelevantActions(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalRelevantActions ~ fireDetail:", fireDetail)
     const dialogRef = this.matDialog.open(FireActionsRelevantComponent, {
       width: '90vw',
       height: '90vh',
@@ -321,6 +322,7 @@ export class FireEditComponent implements OnInit {
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
       'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
+      'Actuaciones Relevantes': this.goModalRelevantActions.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro];
