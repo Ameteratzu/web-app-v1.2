@@ -59,8 +59,11 @@ INSERT INTO dbo.AmbitoPlan (Id,Descripcion) VALUES
 -- =============================================
 
 INSERT INTO TipoNotificacion (Id,Descripcion) VALUES
-    (1, 'Notificación 1'),
-    (2, 'Notificación 2');
+    (1, 'Activación plan estatal'),
+    (2, 'Activación PLEGEM'),
+	(3, 'Declaración situación'),
+	(4, 'Desactivación plan estatal');
+
 
 -- =============================================
 -- PLANES DE EMERGENCIA

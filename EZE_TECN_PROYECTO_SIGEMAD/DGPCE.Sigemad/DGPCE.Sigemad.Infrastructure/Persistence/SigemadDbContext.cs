@@ -82,6 +82,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
             modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
+            modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
+            modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
         }
 
 

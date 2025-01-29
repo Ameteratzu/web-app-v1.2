@@ -16,6 +16,8 @@ using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
+using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
+using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
@@ -343,9 +345,34 @@ public class MappingProfile : Profile
 
         CreateMap<ActuacionRelevanteDGPCE, ActuacionRelevanteDGPCEDto>();
 
-      
+        //Movilizaciones
+        CreateMap<MovilizacionMedioDto, MovilizacionMedio>();
+        CreateMap<ManageSolicitudMedioDto, SolicitudMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
+            .ForMember(dest => dest.Archivo, opt => opt.Ignore());
 
-        
+        CreateMap<ManageTramitacionMedioDto, TramitacionMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageCancelacionMedioDto, CancelacionMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageOfrecimientoMedioDto,OfrecimientoMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageAportacionMedioDto,AportacionMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageDespliegueMedioDto,DespliegueMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageFinIntervencionMedioDto,FinIntervencionMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<ManageLlegadaBaseMedioDto,LlegadaBaseMedio>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
+
     }
 
 }
