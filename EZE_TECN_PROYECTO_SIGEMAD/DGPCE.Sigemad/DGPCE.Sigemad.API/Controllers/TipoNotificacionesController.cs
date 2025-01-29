@@ -10,7 +10,7 @@ using System.Net;
 namespace DGPCE.Sigemad.API.Controllers
 {
 
-    [Route("api/v1/tipo-notificacion")]
+    [Route("api/v1/tipo-notificaciones")]
     [ApiController]
     public class TipoNotificacionController : ControllerBase
     {
