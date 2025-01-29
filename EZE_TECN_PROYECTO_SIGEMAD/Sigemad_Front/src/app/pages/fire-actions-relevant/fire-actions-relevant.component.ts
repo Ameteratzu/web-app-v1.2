@@ -9,13 +9,24 @@ import { FireDetail } from '../../types/fire-detail.type';
 import { EmergencyNationalComponent } from './emergency-national/emergency-national.component';
 import { ZagepComponent } from './zagep/zagep.component';
 import { CecodComponent } from './cecod/cecod.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
 import { AlertService } from '../../shared/alert/alert.service';
+import { _isNumberValue } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-fire-actions-relevant',
   standalone: true,
-  imports: [NgxSpinnerModule, FlexLayoutModule, MatChipsModule, CommonModule, EmergencyNationalComponent, ZagepComponent, CecodComponent],
+  imports: [
+    NgxSpinnerModule,
+    FlexLayoutModule,
+    MatChipsModule,
+    CommonModule,
+    EmergencyNationalComponent,
+    ZagepComponent,
+    CecodComponent,
+    NotificationsComponent,
+  ],
   animations: [
     trigger('fadeInOut', [
       state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
@@ -59,20 +70,33 @@ export class FireActionsRelevantComponent {
     { id: 7, label: 'Emergencia nacional' },
   ];
 
+  dataMaestros: any = {};
+
   async ngOnInit() {
     console.log('🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:', this.data.fire);
     this.spinner.show();
+    await this.loadData();
     this.isToEdit();
   }
 
+  async loadData() {
+    const tipoNotificaciones = await this.actionsRelevantSevice.getTipoNotificacion();
+
+    this.dataMaestros = {
+      tipoNotificaciones,
+    };
+
+    console.log('🚀 ~ loadData ~ this.dataMaestros:', this.dataMaestros);
+
+    return this.dataMaestros;
+  }
+
   async isToEdit() {
-    if(this.data.fireDetail?.id){
+    if (this.data.fireDetail?.id) {
       const dataCordinacion: any = await this.actionsRelevantSevice.getById(Number(this.data.fireDetail?.id));
       this.editData = dataCordinacion;
-  
     }
     this.isDataReady = true;
-
   }
 
   async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
@@ -146,13 +170,32 @@ export class FireActionsRelevantComponent {
         (item) => ({
           id: item.id ?? 0,
           fechaInicio: this.formatDate(item.fechaInicio),
-          fechaFin: item.fechaFin ?  this.formatDate(item.fechaFin) : null,
+          fechaFin: item.fechaFin ? this.formatDate(item.fechaFin) : null,
           lugar: item.lugar,
           convocados: item.convocados,
           participantes: item.participantes,
           observaciones: item.observaciones,
         }),
         this.actionsRelevantSevice.postDataCecod.bind(this.actionsRelevantSevice),
+        'detalles'
+      );
+    }
+    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ this.actionsRelevantSevice.dataNotificaciones():", this.actionsRelevantSevice.dataNotificaciones())
+    if (this.actionsRelevantSevice.dataNotificaciones().length > 0) {
+    
+      await this.handleDataProcessing(
+        this.actionsRelevantSevice.dataNotificaciones(),
+        (item) => ({
+          id: item.id ?? 0,
+          idTipoNotificacion: _isNumberValue(item.idTipoNotificacion) ? item.idTipoNotificacion : item.idTipoNotificacion.id,
+          fechaHoraNotificacion: this.formatDate(item.fechaHoraNotificacion),
+          organosNotificados: item.organosNotificados,
+          ucpm: item.ucpm,
+          organismoInternacional: item.organismoInternacional,
+          otrosPaises: item.otrosPaises,
+          observaciones: item.observaciones,
+        }),
+        this.actionsRelevantSevice.postDataNotificaciones.bind(this.actionsRelevantSevice),
         'detalles'
       );
     }

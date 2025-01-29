@@ -31,3 +31,19 @@ export interface Cecod {
   observaciones: string;
 }
 
+export interface Notificaciones {
+  id: number;
+  idTipoNotificacion: GenericMaster;
+  fechaHoraNotificacion: string;
+  organosNotificados: string;
+  ucpm: string;
+  organismoInternacional: string;
+  otrosPaises: string;
+  observaciones: string;
+}
+
+export interface GenericMaster {
+  id: number;
+  descripcion: string;
+}
+
