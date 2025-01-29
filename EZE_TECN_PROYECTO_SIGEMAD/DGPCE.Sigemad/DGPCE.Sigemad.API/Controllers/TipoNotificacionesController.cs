@@ -12,11 +12,11 @@ namespace DGPCE.Sigemad.API.Controllers
 
     [Route("api/v1/tipo-notificaciones")]
     [ApiController]
-    public class TipoNotificacionController : ControllerBase
+    public class TipoNotificacionesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public TipoNotificacionController(IMediator mediator)
+        public TipoNotificacionesController(IMediator mediator)
         {
             _mediator = mediator;
         }
