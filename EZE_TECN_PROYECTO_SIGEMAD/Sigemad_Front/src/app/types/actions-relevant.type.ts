@@ -13,3 +13,21 @@ export interface Declaracion {
   fechaHoraDireccion: string;
   observaciones: string;
 }
+
+export interface Zagep {
+  id: number;
+  fechaSolicitud: string;
+  denominacion: string;
+  observaciones: string;
+}
+
+export interface Cecod {
+  id: number;
+  fechaInicio: string;
+  fechaFin: string;
+  lugar: string;
+  convocados: string;
+  participantes: string;
+  observaciones: string;
+}
+

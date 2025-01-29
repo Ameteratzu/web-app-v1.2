@@ -17,7 +17,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import moment from 'moment';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ActionsRelevantService } from '../../../services/actions-relevant.service';
-import { CoordinationAddress } from '../../../types/coordination-address';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 
 const MY_DATE_FORMATS = {
@@ -33,7 +32,7 @@ const MY_DATE_FORMATS = {
 };
 
 @Component({
-  selector: 'app-zagep',
+  selector: 'app-cecod',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -54,10 +53,10 @@ const MY_DATE_FORMATS = {
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
-  templateUrl: './zagep.component.html',
-  styleUrl: './zagep.component.scss',
+  templateUrl: './cecod.component.html',
+  styleUrl: './cecod.component.scss',
 })
-export class ZagepComponent {
+export class CecodComponent {
   @ViewChild(MatSort) sort!: MatSort;
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<SavePayloadModal>();
@@ -65,32 +64,34 @@ export class ZagepComponent {
   @Input() esUltimo: boolean | undefined;
   @Input() fire: any;
 
-  public zagepService = inject(ActionsRelevantService);
+  public cecodService = inject(ActionsRelevantService);
   public toast = inject(MatSnackBar);
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
 
-
-  public displayedColumns: string[] = ['fechaSolicitud', 'denominacion', 'opciones'];
+  public displayedColumns: string[] = ['fechaInicio', 'fechaFin', 'lugar', 'opciones'];
 
   formData!: FormGroup;
 
-  public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     this.formData = this.fb.group({
-      fechaSolicitud: [new Date(), Validators.required],
-      denominacion: [''],
-      observaciones: ['']
+      fechaInicio: [new Date(), Validators.required],
+      fechaFin: [null],
+      lugar: ['', Validators.required],
+      convocados: ['', Validators.required],
+      participantes: [''],
+      observaciones: [''],
     });
-  
+
     if (this.editData) {
-      if (this.zagepService.dataZagep().length === 0) {
-        this.zagepService.dataZagep.set(this.editData.declaracionesZAGEP);
+      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.editData:', this.editData);
+      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.cecodService.dataCecod():', this.cecodService.dataCecod());
+      if (this.cecodService.dataCecod().length === 0) {
+        this.cecodService.dataCecod.set(this.editData.convocatoriasCECOD);
       }
     }
     this.spinner.hide();
@@ -100,7 +101,7 @@ export class ZagepComponent {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
-        this.zagepService.dataZagep.set([data, ...this.zagepService.dataZagep()]);
+        this.cecodService.dataCecod.set([data, ...this.cecodService.dataCecod()]);
       } else {
         this.editarItem(this.isCreate());
       }
@@ -109,22 +110,13 @@ export class ZagepComponent {
         fechaHora: new Date(),
       });
       this.formData.reset();
-    
-      // this.formData.patchValue({
-      //   fechaHora: new Date(), 
-      // });
-
     } else {
       this.formData.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
-    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.zagepService.dataZagep().length:", this.zagepService.dataZagep().length)
-    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
-    if (this.zagepService.dataZagep().length > 0 && !this.editData) {
-      console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
-      
+    if (this.cecodService.dataCecod().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       if (this.editData) {
@@ -135,7 +127,7 @@ export class ZagepComponent {
 
   editarItem(index: number) {
     const dataEditada = this.formData.value;
-    this.zagepService.dataZagep.update((data) => {
+    this.cecodService.dataCecod.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
@@ -144,7 +136,7 @@ export class ZagepComponent {
   }
 
   eliminarItem(index: number) {
-    this.zagepService.dataZagep.update((data) => {
+    this.cecodService.dataCecod.update((data) => {
       data.splice(index, 1);
       return [...data];
     });
@@ -152,16 +144,23 @@ export class ZagepComponent {
 
   async seleccionarItem(index: number) {
     this.isCreate.set(index);
-    const data = this.zagepService.dataZagep()[index];
-    this.formData.get('fechaSolicitud')?.setValue(data.fechaSolicitud);
-    this.formData.get('denominacion')?.setValue(data.denominacion);
+    const data = this.cecodService.dataCecod()[index];
+    this.formData.get('fechaInicio')?.setValue(data.fechaInicio);
+    this.formData.get('fechaFin')?.setValue(data.fechaFin);
+    this.formData.get('lugar')?.setValue(data.lugar);
+    this.formData.get('convocados')?.setValue(data.convocados);
+    this.formData.get('participantes')?.setValue(data.participantes);
     this.formData.get('observaciones')?.setValue(data.observaciones);
     this.spinner.show();
     this.spinner.hide();
   }
 
   getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YYYY');
+    if(date){
+      return moment(date).format('DD/MM/YYYY');
+    }else{
+      return 'Sin fecha selecionada.'
+    }
   }
 
   getForm(atributo: string): any {
