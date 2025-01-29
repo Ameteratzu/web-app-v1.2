@@ -34,7 +34,7 @@ public class NotificacionEmergenciaConfiguration : IEntityTypeConfiguration<Noti
             .HasMaxLength(510);
      
         builder.HasOne(e => e.ActuacionRelevanteDGPCE)
-          .WithMany(e => e.NotificacionEmergencia)
+          .WithMany(e => e.NotificacionesEmergencias)
           .HasForeignKey(e => e.IdActuacionRelevanteDGPCE)
           .OnDelete(DeleteBehavior.Restrict);
 

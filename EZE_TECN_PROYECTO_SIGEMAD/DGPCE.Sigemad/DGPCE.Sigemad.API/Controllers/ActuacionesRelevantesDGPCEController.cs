@@ -8,6 +8,7 @@ using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
+using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Commands.DeleteActuacionRelevante;
 using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Quereis.ActuacionesRelevantesById;
 using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
@@ -22,7 +23,7 @@ using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
 
-[Authorize]
+
 [Route("api/v1/actuaciones-relevantes")]
 [ApiController]
 public class ActuacionesRelevantesDGPCEController : ControllerBase
@@ -44,6 +45,18 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
         var query = new GetActuacionRelevanteDGPCEById(id);
         var impacto = await _mediator.Send(query);
         return Ok(impacto);
+    }
+
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Eliminar actuación relevante por id")]
+    public async Task<ActionResult> Delete(int id)
+    {
+        var command = new DeleteActuacionRelevanteCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
     }
 
     [HttpPost("emergencia-nacional")]

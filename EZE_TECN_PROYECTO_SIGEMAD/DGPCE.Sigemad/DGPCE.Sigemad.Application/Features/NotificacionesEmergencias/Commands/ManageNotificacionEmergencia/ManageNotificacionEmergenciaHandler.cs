@@ -52,7 +52,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
                 .Select(c => c.Id)
                 .ToList();
 
-            var itemsParaEliminar = actuacionRelevante.NotificacionEmergencia
+            var itemsParaEliminar = actuacionRelevante.NotificacionesEmergencias
                 .Where(c => c.Id > 0 && c.Borrado == false && !idsEnRequest.Contains(c.Id))
                 .ToList();
 
@@ -91,7 +91,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
 
             if (notificacionEmergenciaDto.Id.HasValue && notificacionEmergenciaDto.Id > 0)
             {
-                var notificacionEmergencia = actuacionRelevante.NotificacionEmergencia!.FirstOrDefault(a => a.Id == notificacionEmergenciaDto.Id.Value);
+                var notificacionEmergencia = actuacionRelevante.NotificacionesEmergencias!.FirstOrDefault(a => a.Id == notificacionEmergenciaDto.Id.Value);
                 if (notificacionEmergencia != null)
                 {
                     // Actualizar datos existentes
@@ -107,8 +107,8 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
                 var nuevaNotificacionEmergencia = _mapper.Map<NotificacionEmergencia>(notificacionEmergenciaDto);
                 nuevaNotificacionEmergencia.Id = 0;
 
-                actuacionRelevante.NotificacionEmergencia = actuacionRelevante.NotificacionEmergencia != null ? actuacionRelevante.NotificacionEmergencia : new List<NotificacionEmergencia>();
-                actuacionRelevante.NotificacionEmergencia.Add(nuevaNotificacionEmergencia);
+                actuacionRelevante.NotificacionesEmergencias = actuacionRelevante.NotificacionesEmergencias != null ? actuacionRelevante.NotificacionesEmergencias : new List<NotificacionEmergencia>();
+                actuacionRelevante.NotificacionesEmergencias.Add(nuevaNotificacionEmergencia);
             }
         }
     }
