@@ -170,7 +170,12 @@ export class MapCreateComponent {
       view: this.view
     });
 
-    this.map.addControl(new LayerSwitcher());
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      extent: true,
+      show_progress: true,
+    }));
+
     this.map.addControl(new ScaleLine());
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));

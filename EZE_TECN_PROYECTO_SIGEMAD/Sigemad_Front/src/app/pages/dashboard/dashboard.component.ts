@@ -5,7 +5,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { OSM, XYZ } from 'ol/source';
+import { OSM, TileWMS, XYZ } from 'ol/source';
 import { get, fromLonLat, toLonLat } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
@@ -20,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { environment } from '../../../environments/environment';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
@@ -32,10 +33,12 @@ const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  public map!: Map;
-  public view!: View;
-  public menuItemActiveService = inject(MenuItemActiveService);
+  private map!: Map;
+  private view!: View;
+  private layerIncendios!: TileLayer;
 
+  public menuItemActiveService = inject(MenuItemActiveService);
+  
   public events = [
     { date: '13/06/2024 05:50', type: 'Terremoto', description: 'ALBORÁN SUR. Magnitud: 3mblg' },
     { date: '12/06/2024 10:25', type: 'Incendio forestal', description: 'Vilanova (Orense). Estado: Activo' },
@@ -88,6 +91,26 @@ export class DashboardComponent {
       ]
     });
 
+    const wmsIncencios = new TileWMS({
+      url: environment.urlGeoserver,
+      params: {
+        'LAYERS': 'Incendio',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+
+    this.layerIncendios = new TileLayer({
+      source: wmsIncencios,
+      properties: { 'title': 'Incendios' }
+    });
+
+    const wmsLayersGroup = new LayerGroup({
+      properties: { 'title': 'Capas Geoserver', 'openInLayerSwitcher': true },
+      layers: [this.layerIncendios]
+    });
+
     this.view = new View({
       center: [-400000, 4900000],
       zoom: 6,
@@ -103,11 +126,15 @@ export class DashboardComponent {
         new FullScreen({tipLabel: 'Pantalla completa'}),
       ]),
       target: 'map',
-      layers: [baseLayers],
+      layers: [baseLayers, wmsLayersGroup],
       view: this.view,
     });
 
-    this.map.addControl(new LayerSwitcher());
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      show_progress: true,
+    }));
+
     this.map.addControl(new ScaleLine());
 
     this.map.addControl(new ZoomToExtent({
