@@ -64,7 +64,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
 
             if (convocatoriaCecodDto.Id.HasValue && convocatoriaCecodDto.Id > 0)
             {
-                var convocatoriaCecod = actuacion.ConvocatoriaCECOD!.FirstOrDefault(a => a.Id == convocatoriaCecodDto.Id.Value);
+                var convocatoriaCecod = actuacion.ConvocatoriasCECOD!.FirstOrDefault(a => a.Id == convocatoriaCecodDto.Id.Value);
                 if (convocatoriaCecod != null)
                 {
                     // Actualizar datos existentes
@@ -80,8 +80,8 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
                 var nuevaConvocatoria = _mapper.Map<ConvocatoriaCECOD>(convocatoriaCecodDto);
                 nuevaConvocatoria.Id = 0;
 
-                actuacion.ConvocatoriaCECOD = actuacion.ConvocatoriaCECOD != null ? actuacion.ConvocatoriaCECOD : new List<ConvocatoriaCECOD>();
-                actuacion.ConvocatoriaCECOD.Add(nuevaConvocatoria);
+                actuacion.ConvocatoriasCECOD = actuacion.ConvocatoriasCECOD != null ? actuacion.ConvocatoriasCECOD : new List<ConvocatoriaCECOD>();
+                actuacion.ConvocatoriasCECOD.Add(nuevaConvocatoria);
             }
         }
 
@@ -95,7 +95,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
                 .Select(a => a.Id)
                 .ToList();
 
-            var convocatoriasParaEliminar = actuacion.ConvocatoriaCECOD!
+            var convocatoriasParaEliminar = actuacion.ConvocatoriasCECOD!
                 .Where(a => a.Id > 0 && !idsEnRequest.Contains(a.Id))
                 .ToList();
 

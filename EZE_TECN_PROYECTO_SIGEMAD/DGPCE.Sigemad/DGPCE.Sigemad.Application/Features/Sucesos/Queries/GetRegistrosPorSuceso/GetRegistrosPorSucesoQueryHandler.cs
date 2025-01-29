@@ -276,14 +276,14 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             titulos.Add("Activacion Sistemas");
         }
 
-        if (actuacionRelevante.ConvocatoriaCECOD != null && actuacionRelevante.ConvocatoriaCECOD.Any())
+        if (actuacionRelevante.ConvocatoriasCECOD != null && actuacionRelevante.ConvocatoriasCECOD.Any())
         {
-            titulos.Add("Convocatoria CECOD");
+            titulos.Add("Convocatorias CECOD");
         }
 
-        if (actuacionRelevante.NotificacionEmergencia != null && actuacionRelevante.NotificacionEmergencia.Any())
+        if (actuacionRelevante.NotificacionesEmergencias != null && actuacionRelevante.NotificacionesEmergencias.Any())
         {
-            titulos.Add("Notificacion Emergencia");
+            titulos.Add("Notificaciones Emergencias");
         }
       
 

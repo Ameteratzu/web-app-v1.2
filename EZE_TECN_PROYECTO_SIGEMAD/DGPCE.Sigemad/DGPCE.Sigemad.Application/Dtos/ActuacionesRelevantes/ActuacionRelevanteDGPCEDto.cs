@@ -23,7 +23,7 @@ public class ActuacionRelevanteDGPCEDto : BaseDto<int>
 
     public virtual List<ActivacionSistemaDto>? ActivacionSistemas { get; set; } = null;
 
-    public virtual List<ConvocatoriaCECODDto>? ConvocatoriaCECOD { get; set; } = null;
+    public virtual List<ConvocatoriaCECODDto>? ConvocatoriasCECOD { get; set; } = null;
 
-    public virtual List<NotificacionEmergenciaDto>? NotificacionEmergencia { get; set; } = null;
+    public virtual List<NotificacionEmergenciaDto>? NotificacionesEmergencias { get; set; } = null;
 }

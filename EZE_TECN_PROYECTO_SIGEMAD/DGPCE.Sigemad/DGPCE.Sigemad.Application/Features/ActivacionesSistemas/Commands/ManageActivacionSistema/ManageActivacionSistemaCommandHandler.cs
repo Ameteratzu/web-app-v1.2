@@ -131,7 +131,7 @@ public class ManageActivacionSistemaCommandHandler : IRequestHandler<ManageActiv
             if (idsModosActivacionInvalidas.Any())
             {
                 _logger.LogWarning($"Los siguientes Id's de Modos de activación: {string.Join(", ", idsModosActivacionInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(PlanEmergencia), string.Join(", ", idsModosActivacionInvalidas));
+                throw new NotFoundException(nameof(ModoActivacion), string.Join(", ", idsModosActivacionInvalidas));
             }
         }
     }
