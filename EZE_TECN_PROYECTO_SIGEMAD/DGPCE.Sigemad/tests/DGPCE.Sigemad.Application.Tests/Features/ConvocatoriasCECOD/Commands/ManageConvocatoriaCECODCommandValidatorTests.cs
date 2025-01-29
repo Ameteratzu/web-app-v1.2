@@ -49,9 +49,9 @@ public class ManageConvocatoriaCECODCommandValidatorTests
         var command = new ManageConvocatoriaCECODCommand
         {
             IdSuceso = 1,
-            Detalles = new List<ConvocatoriaCECODDto>
+            Detalles = new List<ManageConvocatoriaCECODDto>
                 {
-                    new ConvocatoriaCECODDto
+                    new ManageConvocatoriaCECODDto
                     {
                     }
                 }
@@ -84,7 +84,7 @@ public class ManageConvocatoriaCECODCommandValidatorTests
         var commandWithEmptyDetalles = new ManageConvocatoriaCECODCommand
         {
             IdSuceso = 1,
-            Detalles = new List<ConvocatoriaCECODDto>()
+            Detalles = new List<ManageConvocatoriaCECODDto>()
         };
 
         // Act

@@ -12,6 +12,7 @@ public class Suceso: BaseDomainModel<int>
         Documentaciones = new();
         OtraInformaciones = new();
         SucesoRelacionados = new();
+        ActuacionesRelevantes = new();
     }
 
     public int IdTipo { get; set; }
@@ -27,4 +28,5 @@ public class Suceso: BaseDomainModel<int>
     public virtual List<Documentacion> Documentaciones { get; set; }
     public virtual List<OtraInformacion> OtraInformaciones { get; set; }
     public virtual List<SucesoRelacionado> SucesoRelacionados { get; set; }
+    public virtual List<ActuacionRelevanteDGPCE> ActuacionesRelevantes { get; set; }
 }

@@ -50,6 +50,7 @@ import { FireDocumentation } from '../../fire-documentation/fire-documentation.c
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
 import { FireRelatedEventComponent } from '../../fire-related-event/fire-related-event.component';
+import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-actions-relevant.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -106,7 +107,7 @@ export class FireEditComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico', 'opciones'];
+  public displayedColumns: string[] = ['numero', 'fechaHora', 'tipoRegistro', 'apartados', 'tecnico', 'opciones'];
 
   public fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -192,6 +193,29 @@ export class FireEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       console.info('close', result);
+      if (result) {
+        this.cargarRegistros();
+      }
+    });
+  }
+
+  
+  goModalRelevantActions(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalRelevantActions ~ fireDetail:", fireDetail)
+    const dialogRef = this.matDialog.open(FireActionsRelevantComponent, {
+      width: '90vw',
+      height: '90vh',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: fireDetail ? 'Editar -Actuaciones relevantes' : 'Nuevo - Actuaciones relevantes',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fireDetail,
+        fire: this.fire 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarRegistros();
       }
@@ -298,6 +322,7 @@ export class FireEditComponent implements OnInit {
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
       'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
+      'Actuaciones Relevantes': this.goModalRelevantActions.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro];

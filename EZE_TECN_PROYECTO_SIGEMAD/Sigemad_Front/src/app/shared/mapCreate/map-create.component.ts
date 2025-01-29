@@ -172,7 +172,6 @@ export class MapCreateComponent {
 
     this.map.addControl(new LayerSwitcher({
       mouseover: true,
-      extent: true,
       show_progress: true,
     }));
 

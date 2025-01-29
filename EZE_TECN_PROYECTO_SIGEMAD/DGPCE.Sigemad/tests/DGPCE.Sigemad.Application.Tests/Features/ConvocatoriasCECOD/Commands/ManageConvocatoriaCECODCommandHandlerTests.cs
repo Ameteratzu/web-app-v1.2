@@ -34,9 +34,9 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         {
             IdActuacionRelevante = 1,
             IdSuceso = 1,
-            Detalles = new List<ConvocatoriaCECODDto>
+            Detalles = new List<ManageConvocatoriaCECODDto>
         {
-            new ConvocatoriaCECODDto
+            new ManageConvocatoriaCECODDto
             {
                 Id = 1,
                 FechaInicio = new DateOnly(2022, 1, 1),
@@ -94,9 +94,9 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         var command = new ManageConvocatoriaCECODCommand
         {
             IdSuceso = 1,
-            Detalles = new List<ConvocatoriaCECODDto>
+            Detalles = new List<ManageConvocatoriaCECODDto>
         {
-            new ConvocatoriaCECODDto
+            new ManageConvocatoriaCECODDto
             {
                 Id = 0,
                 FechaInicio = new DateOnly(2022, 1, 1),
@@ -130,7 +130,7 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         _unitOfWorkMock.Setup(uow => uow.Repository<Suceso>().GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(suceso);
 
-        _mapperMock.Setup(m => m.Map<ConvocatoriaCECOD>(It.IsAny<ConvocatoriaCECODDto>()))
+        _mapperMock.Setup(m => m.Map<ConvocatoriaCECOD>(It.IsAny<ManageConvocatoriaCECODDto>()))
             .Returns(convocatoriaCECOD);
 
         _unitOfWorkMock.Setup(uow => uow.Repository<ActuacionRelevanteDGPCE>().AddEntity(It.IsAny<ActuacionRelevanteDGPCE>()))
@@ -162,9 +162,9 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         {
             IdActuacionRelevante = 1,
             IdSuceso = 1,
-            Detalles = new List<ConvocatoriaCECODDto>
+            Detalles = new List<ManageConvocatoriaCECODDto>
         {
-            new ConvocatoriaCECODDto
+            new ManageConvocatoriaCECODDto
             {
                 Id = 1,
                 FechaInicio = new DateOnly(2022, 1, 1),

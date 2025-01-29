@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 public class ConvocatoriaCECODDto
 {
-    public int? Id { get; set; }
+    public int Id { get; set; }
     public DateOnly FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }
     public string Lugar { get; set; }

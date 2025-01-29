@@ -19,7 +19,7 @@ public class ManageDeclaracionesZAGEPCommandValidator : AbstractValidator<Manage
     }
 
 
-    public class ManageDeclaracionesZAGEPCommandListValidator : AbstractValidator<DeclaracionZAGEPDto>
+    public class ManageDeclaracionesZAGEPCommandListValidator : AbstractValidator<ManageDeclaracionZAGEPDto>
     {
         public ManageDeclaracionesZAGEPCommandListValidator(IStringLocalizer<ValidationMessages> localizer)
         {

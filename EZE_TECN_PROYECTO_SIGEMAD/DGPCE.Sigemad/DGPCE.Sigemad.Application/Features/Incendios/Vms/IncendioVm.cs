@@ -1,43 +1,48 @@
-﻿using DGPCE.Sigemad.Application.Features.Municipios.Vms;
+﻿using DGPCE.Sigemad.Application.Dtos.Registros;
+using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
+using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
+using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
 using NetTopologySuite.Geometries;
 
 
 namespace DGPCE.Sigemad.Application.Features.Incendios.Vms
 {
-    public class IncendioVm
+    public class IncendioVm : BaseDomainModel<int>
     {
-        public string Denominacion { get; set; } = null!;
-
-        public decimal? UtmX { get; set; }
-
-        public decimal? UtmY { get; set; }
-
-        public int? Huso { get; set; }
-
-        public Geometry? GeoPosicion { get; set; }
-        public string? Contenido { get; set; }
-
-        public string? Comentarios { get; set; }
-
+        public int IdSuceso { get; set; }
+        public int IdTerritorio { get; set; }
         public int IdClaseSuceso { get; set; }
-
-        public bool CoordenadasReales { get; set; }
+        public int IdEstadoSuceso { get; set; }
+        public int IdPais { get; set; }
+        public bool EsLimitrofe { get; set; }
+        public int? IdDistrito { get; set; }
+        public int? IdMunicipioExtranjero { get; set; }
+        public int? IdProvincia { get; set; }
+        public int? IdMunicipio { get; set; }
         public DateTime FechaInicio { get; set; }
+        public DateTime? FechaUltimoRegistro { get; set; }
+        public string? Ubicacion { get; set; }
+        public string Denominacion { get; set; } = null!;
+        public string? NotaGeneral { get; set; }
         public string? RutaMapaRiesgo { get; set; }
+        public decimal? UtmX { get; set; }
+        public decimal? UtmY { get; set; }
+        public int? Huso { get; set; }
+        public Geometry? GeoPosicion { get; set; }
 
+    
 
-        public virtual ClaseSuceso ClaseSuceso { get; set; } = null!;
-
-        public virtual MunicipioSinIdProvinciaVm Municipio { get; set; } = null!;
-
-        public virtual ProvinciaSinMunicipiosVm Provincia { get; set; } = null!;
 
         public virtual Suceso Suceso { get; set; } = null!;
         public virtual Territorio Territorio { get; set; } = null!;
-
+        public virtual ClaseSuceso ClaseSuceso { get; set; } = null!;
         public virtual EstadoSuceso EstadoSuceso { get; set; } = null!;
         public virtual Pais Pais { get; set; } = null!;
+        public virtual Distrito Distrito { get; set; } = null!;
+        public virtual MunicipioExtranjero MunicipioExtranjero { get; set; } = null!;
+        public virtual ProvinciaSinMunicipiosVm Provincia { get; set; } = null!;
+        public virtual MunicipioSinIdProvinciaVm Municipio { get; set; } = null!;
     }
 }
