@@ -325,7 +325,7 @@ public class MappingProfile : Profile
 
         CreateMap<ManageConvocatoriaCECODCommand, ActuacionRelevanteDGPCE>()
            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
-           .ForMember(dest => dest.ConvocatoriaCECOD, opt => opt.MapFrom(src => src.Detalles));
+           .ForMember(dest => dest.ConvocatoriasCECOD, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageConvocatoriaCECODDto, ConvocatoriaCECOD>();
 
@@ -346,7 +346,7 @@ public class MappingProfile : Profile
 
         CreateMap<ManageNotificacionEmergenciaCommand, ActuacionRelevanteDGPCE>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
-            .ForMember(dest => dest.NotificacionEmergencia, opt => opt.MapFrom(src => src.Detalles));
+            .ForMember(dest => dest.NotificacionesEmergencias, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ActuacionRelevanteDGPCE, ActuacionRelevanteDGPCEDto>();
 
