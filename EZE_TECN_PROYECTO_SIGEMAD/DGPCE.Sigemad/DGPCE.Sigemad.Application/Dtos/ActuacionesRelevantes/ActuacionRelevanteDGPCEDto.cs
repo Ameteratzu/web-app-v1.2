@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
+using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Domain.Modelos;
 
@@ -21,5 +22,5 @@ public class ActuacionRelevanteDGPCEDto : BaseDto<int>
     public virtual List<ConvocatoriaCECODDto>? ConvocatoriasCECOD { get; set; } = null;
 
     public virtual List<NotificacionEmergenciaDto>? NotificacionesEmergencias { get; set; } = null;
-    public List<MovilizacionMedio> MovilizacionMedios { get; set; } = new();
+    public virtual List<MovilizacionMedioListaDto> MovilizacionMedios { get; set; } = new();
 }

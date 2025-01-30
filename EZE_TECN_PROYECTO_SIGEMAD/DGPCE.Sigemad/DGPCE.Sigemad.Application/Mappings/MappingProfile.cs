@@ -211,14 +211,14 @@ public class MappingProfile : Profile
           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
 
         CreateMap<ManageEmergenciaNacionalDto, EmergenciaNacional>();
-       
+
 
         CreateMap<ManageDeclaracionesZAGEPCommand, ActuacionRelevanteDGPCE>()
        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
        .ForMember(dest => dest.DeclaracionesZAGEP, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageDeclaracionZAGEPDto, DeclaracionZAGEP>();
-      
+
 
 
 
@@ -354,31 +354,75 @@ public class MappingProfile : Profile
 
         //Movilizaciones
         CreateMap<MovilizacionMedioDto, MovilizacionMedio>();
+
+        CreateMap<MovilizacionMedio, MovilizacionMedioListaDto>()
+            .ForMember(dest => dest.Pasos, opt => opt.Ignore())
+            .AfterMap((src, dest, context) =>
+            {
+                // Filtrar los pasos que no estén marcados como borrados y mapearlos al destino
+                dest.Pasos = src.Pasos
+                    .Where(p => !p.Borrado) // Filtra los pasos con Borrado == false
+                    .Select(p => context.Mapper.Map<EjecucionPasoDto>(p)) // Mapea cada paso al DTO correspondiente
+                    .ToList();
+
+            });
+
+
+        CreateMap<EjecucionPaso, EjecucionPasoDto>();
+        CreateMap<PasoMovilizacion, PasoMovilizacionDto>();
+
+        CreateMap<ProcedenciaMedio, ProcedenciaMedioDto>();
+        CreateMap<DestinoMedio, DestinoMedioDto>();
+
         CreateMap<ManageSolicitudMedioDto, SolicitudMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
             .ForMember(dest => dest.Archivo, opt => opt.Ignore());
 
+        CreateMap<SolicitudMedio, SolicitudMedioDto>();
+        CreateMap<TramitacionMedio, TramitacionMedioDto>();
+        CreateMap<CancelacionMedio, CancelacionMedioDto>();
+        CreateMap<AportacionMedio, AportacionMedioDto>();
+        CreateMap<OfrecimientoMedio, OfrecimientoMedioDto>();
+        CreateMap<DespliegueMedio, DespliegueMedioDto>();
+        CreateMap<FinIntervencionMedio, FinIntervencionMedioDto>();
+        CreateMap<LlegadaBaseMedio, LlegadaBaseMedioDto>();
+
+
         CreateMap<ManageTramitacionMedioDto, TramitacionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<TramitacionMedio, ManageTramitacionMedioDto>();
 
         CreateMap<ManageCancelacionMedioDto, CancelacionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+        CreateMap<CancelacionMedio, ManageCancelacionMedioDto>();
+
         CreateMap<ManageOfrecimientoMedioDto,OfrecimientoMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<OfrecimientoMedio, ManageOfrecimientoMedioDto>();
 
         CreateMap<ManageAportacionMedioDto,AportacionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+        CreateMap<AportacionMedio, ManageAportacionMedioDto>();
+
         CreateMap<ManageDespliegueMedioDto,DespliegueMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<DespliegueMedio, ManageDespliegueMedioDto>();
 
         CreateMap<ManageFinIntervencionMedioDto,FinIntervencionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+        CreateMap<FinIntervencionMedio, ManageFinIntervencionMedioDto>();
+
         CreateMap<ManageLlegadaBaseMedioDto,LlegadaBaseMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<LlegadaBaseMedio, ManageLlegadaBaseMedioDto>();
 
     }
 
