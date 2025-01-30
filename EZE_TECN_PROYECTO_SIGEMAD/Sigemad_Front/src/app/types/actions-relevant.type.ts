@@ -42,6 +42,19 @@ export interface Notificaciones {
   observaciones: string;
 }
 
+export interface Planes {
+  idActuacionRelevante: any;
+  id: number;
+  idTipoPlan: GenericMaster;
+  nombrePlan: string;
+  nombrePlanPersonalizado: string;
+  fechaInicio: string;
+  fechaFin: string;
+  autoridad: string;
+  observaciones: string;
+  file?: any;
+}
+
 export interface GenericMaster {
   id: number;
   descripcion: string;
