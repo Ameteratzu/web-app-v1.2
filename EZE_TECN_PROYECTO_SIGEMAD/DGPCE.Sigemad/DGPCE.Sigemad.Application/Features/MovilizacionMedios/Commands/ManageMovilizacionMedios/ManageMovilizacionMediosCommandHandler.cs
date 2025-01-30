@@ -66,10 +66,9 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
 
                         if (ejecucionPasoExistente != null)
                         {
-                            // 🔹 Si el paso existe, actualizarlo
-                            //_mapper.Map(pasoDto, ejecucionPasoExistente.);
+                            // Si el paso existe, actualizarlo
                             ejecucionPasoExistente.Borrado = false;
-                            ActualizarPasoEspecifico(ejecucionPasoExistente, pasoDto);
+                            await ActualizarPasoEspecifico(ejecucionPasoExistente, pasoDto);
                         }
                         else
                         {
@@ -84,6 +83,8 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
                             movilizacionExistente.Pasos.Add(nuevoEjecucionPaso);
                         }
                     }
+
+                    await EliminarPasosNoEnRequest(movilizacionExistente, movilizacionDto);
                 }
                 else
                 {
@@ -142,7 +143,7 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
         return nuevaMovilizacion;
     }
 
-    private void ActualizarPasoEspecifico(EjecucionPaso ejecucionPaso, DatosPasoBase pasoDto)
+    private async Task ActualizarPasoEspecifico(EjecucionPaso ejecucionPaso, DatosPasoBase pasoDto)
     {
         switch (pasoDto)
         {
@@ -150,6 +151,7 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
                 if (ejecucionPaso.SolicitudMedio != null)
                 {
                     _mapper.Map(solicitud, ejecucionPaso.SolicitudMedio);
+                    ejecucionPaso.SolicitudMedio.Archivo = await MapArchivo(solicitud, ejecucionPaso.SolicitudMedio.Archivo);
                     ejecucionPaso.SolicitudMedio.Borrado = false;
                 }
                 break;
@@ -297,6 +299,38 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
                 };
                 break;
         };
+    }
+
+    private async Task EliminarPasosNoEnRequest(MovilizacionMedio movilizacionExistente, MovilizacionMedioDto movilizacionDto)
+    {
+        var idsPasosEnRequest = movilizacionDto.Pasos
+            .Where(p => p.Id.HasValue && p.Id > 0)
+            .Select(p => p.Id)
+            .ToList();
+
+        var pasosParaEliminar = movilizacionExistente.Pasos
+            .Where(p => p.Id > 0 && p.Borrado == false && !idsPasosEnRequest.Contains(p.Id))
+            .ToList();
+
+        if (pasosParaEliminar.Any())
+        {
+            var ultimoPaso = movilizacionExistente.Pasos
+                .OrderByDescending(p => p.FechaCreacion)
+                .FirstOrDefault();
+
+            foreach (var paso in pasosParaEliminar)
+            {
+                // 🔹 Si el paso que se intenta eliminar NO es el último, detener el proceso
+                if (paso != ultimoPaso)
+                {
+                    throw new BadRequestException($"No se puede eliminar el paso con ID {paso.Id} porque no es el último paso registrado en la movilización con ID {movilizacionExistente.Id}.");
+                }
+
+                _unitOfWork.Repository<EjecucionPaso>().DeleteEntity(paso);
+            }
+        }
+
+        await Task.CompletedTask;
     }
 
     private async Task<Archivo?> MapArchivo(ManageSolicitudMedioDto manageSolicitudMedioDto, Archivo? archivoExistente)

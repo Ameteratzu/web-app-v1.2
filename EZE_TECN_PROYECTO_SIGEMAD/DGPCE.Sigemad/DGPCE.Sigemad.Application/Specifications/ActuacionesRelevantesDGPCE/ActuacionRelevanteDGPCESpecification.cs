@@ -17,6 +17,7 @@ public class ActuacionRelevanteDGPCESpecification : BaseSpecification<ActuacionR
 
         AddInclude(d => d.MovilizacionMedios);
         AddInclude("MovilizacionMedios.Pasos.SolicitudMedio");
+        AddInclude("MovilizacionMedios.Pasos.SolicitudMedio.Archivo");
         AddInclude("MovilizacionMedios.Pasos.TramitacionMedio");
         AddInclude("MovilizacionMedios.Pasos.CancelacionMedio");
         AddInclude("MovilizacionMedios.Pasos.OfrecimientoMedio");
