@@ -35,6 +35,10 @@ public class GetActuacionRelevanteDGPCEByIdHandler : IRequestHandler<GetActuacio
             _logger.LogWarning($"No se encontro actuacionRelevante con id: {request.Id}");
             throw new NotFoundException(nameof(ActuacionRelevanteDGPCE), request.Id);
         }
+        if (actuacionRelevante != null && actuacionRelevante.EmergenciaNacional != null && actuacionRelevante.EmergenciaNacional.Borrado)
+        {
+            actuacionRelevante.EmergenciaNacional = null;
+        }
 
         _logger.LogInformation($"{nameof(GetActuacionRelevanteDGPCEById)} - END");
         return _mapper.Map<ActuacionRelevanteDGPCEDto>(actuacionRelevante);
