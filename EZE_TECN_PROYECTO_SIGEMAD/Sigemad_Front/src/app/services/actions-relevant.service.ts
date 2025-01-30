@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { EmergenciaNacional, Zagep, Cecod } from '../types/actions-relevant.type';
-
+import { EmergenciaNacional, Zagep, Cecod, Notificaciones } from '../types/actions-relevant.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
@@ -10,6 +9,7 @@ export class ActionsRelevantService {
   public dataEmergencia = signal<EmergenciaNacional[]>([]);
   public dataZagep = signal<Zagep[]>([]);
   public dataCecod = signal<Cecod[]>([]);
+  public dataNotificaciones = signal<Notificaciones[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -56,11 +56,11 @@ export class ActionsRelevantService {
     );
   }
 
-  update(body: any) {
-    const endpoint = `/Evoluciones`;
+  postDataNotificaciones(body: any) {
+    const endpoint = `/actuaciones-relevantes/notificaciones/lista`;
 
     return firstValueFrom(
-      this.http.put(endpoint, body).pipe(
+      this.http.post(endpoint, body).pipe(
         map((response) => {
           return response;
         }),
@@ -74,7 +74,8 @@ export class ActionsRelevantService {
   clearData(): void {
     this.dataEmergencia.set([]);
     this.dataZagep.set([]);
-    this.dataCecod.set([]); 
+    this.dataCecod.set([]);
+    this.dataNotificaciones.set([]);
   }
 
   getById(id: Number) {
@@ -86,4 +87,11 @@ export class ActionsRelevantService {
     const endpoint = `/actuaciones-relevantes/${id}`;
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
+
+  //Maestros
+  getTipoNotificacion() {
+    let endpoint = `/tipo-notificaciones`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
 }
