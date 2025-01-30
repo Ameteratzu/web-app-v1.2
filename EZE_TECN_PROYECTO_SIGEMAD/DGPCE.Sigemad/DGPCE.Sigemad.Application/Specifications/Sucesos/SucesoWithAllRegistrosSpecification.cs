@@ -26,5 +26,13 @@ public class SucesoWithAllRegistrosSpecification : BaseSpecification<Suceso>
 
         AddInclude(i => i.SucesoRelacionados.Where(dir => !dir.Borrado));
         AddInclude("SucesoRelacionados.DetalleSucesoRelacionados");
+
+        AddInclude(i => i.ActuacionesRelevantes.Where(dir => !dir.Borrado));
+        AddInclude("ActuacionesRelevantes.EmergenciaNacional");
+        AddInclude("ActuacionesRelevantes.ActivacionPlanEmergencias");
+        AddInclude("ActuacionesRelevantes.DeclaracionesZAGEP");
+        AddInclude("ActuacionesRelevantes.ActivacionSistemas");
+        AddInclude("ActuacionesRelevantes.ConvocatoriasCECOD");
+        AddInclude("ActuacionesRelevantes.NotificacionesEmergencias");
     }
 }

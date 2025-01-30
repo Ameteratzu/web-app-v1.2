@@ -1,1 +1,49 @@
-<p>fire-actions-relevant works!</p>
+<div class="modal-header">
+    <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+  </div>
+  
+  <div class="container">
+    <div class="side-menu">
+      <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
+        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip" [disabled]="sec.id !== 7 && sec.id !== 6 && sec.id !== 2">
+          {{ sec.label }}
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <app-cecod
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 2 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-cecod>
+  
+    <app-emergency-national
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      [estadoIncendio]="estado"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 7 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-emergency-national>
+    
+    <app-zagep
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 6 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-zagep>
+  </div>
+  
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+    <p style="color: white">Cargando...</p>
+  </ngx-spinner>
+  

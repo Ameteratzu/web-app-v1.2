@@ -53,7 +53,7 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         {
             Id = 1,
             IdSuceso = 1,
-            ConvocatoriaCECOD = new List<ConvocatoriaCECOD>
+            ConvocatoriasCECOD = new List<ConvocatoriaCECOD>
         {
             new ConvocatoriaCECOD
             {
@@ -200,7 +200,7 @@ public class ManageConvocatoriaCECODCommandHandlerTests
         var actuacionRelevante = new ActuacionRelevanteDGPCE
         {
             Id = 1,
-            ConvocatoriaCECOD = new List<ConvocatoriaCECOD>
+            ConvocatoriasCECOD = new List<ConvocatoriaCECOD>
         {
             new ConvocatoriaCECOD
             {

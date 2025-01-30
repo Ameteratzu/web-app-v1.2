@@ -169,5 +169,10 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<ConvocatoriaCECOD> ConvocatoriasCECOD { get; set; }
 
+        public DbSet<NotificacionEmergencia> NotificacionesEmergencias { get; set; }
+
+        public DbSet<TipoNotificacion> TiposNotificaciones { get; set; }
+        
+
     }
 }

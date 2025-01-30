@@ -24,7 +24,9 @@ public class ActuacionRelevanteDGPCEActiveByIdSpecification : BaseSpecification<
 
             AddInclude(d => d.ActivacionSistemas.Where(dir => !dir.Borrado));
 
-            AddInclude(d => d.ConvocatoriaCECOD.Where(dir => !dir.Borrado));
+            AddInclude(d => d.ConvocatoriasCECOD.Where(dir => !dir.Borrado));
+
+            AddInclude(d => d.NotificacionesEmergencias.Where(dir => !dir.Borrado));
         }
     }
 

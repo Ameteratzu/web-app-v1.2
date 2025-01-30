@@ -38,7 +38,7 @@ public class ConvocatoriaCECODConfiguration : IEntityTypeConfiguration<Convocato
 
 
         builder.HasOne(d => d.ActuacionRelevanteDGPCE)
-            .WithMany(dce => dce.ConvocatoriaCECOD)
+            .WithMany(dce => dce.ConvocatoriasCECOD)
             .HasForeignKey(d => d.IdActuacionRelevanteDGPCE)
             .OnDelete(DeleteBehavior.Restrict);
     }
