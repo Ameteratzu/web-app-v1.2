@@ -424,6 +424,8 @@ public class MappingProfile : Profile
 
         CreateMap<LlegadaBaseMedio, ManageLlegadaBaseMedioDto>();
 
+        CreateMap<TipoPlan, TipoPlanDto>();
+
     }
 
 }

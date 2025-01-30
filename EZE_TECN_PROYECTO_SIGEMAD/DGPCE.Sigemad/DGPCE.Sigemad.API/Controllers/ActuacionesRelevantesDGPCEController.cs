@@ -75,7 +75,7 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
 
 
 
-    [HttpPost("activaciones-planes")]
+    [HttpPost("activaciones-planes/lista")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerOperation(Summary = "Crear listado de activaciones de planes en Actuacion Relevante")]
