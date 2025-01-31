@@ -178,11 +178,11 @@ export class FireActionsRelevantComponent {
       const arrayToSave = this.actionsRelevantSevice.dataPlanes().map((item, index) => {
         return {
           id: item.id ?? null,
-          idTipoPlan: _isNumberValue(item.idTipoPlan) ? item.idTipoPlan : item.idTipoPlan.id,
+          idTipoPlan: _isNumberValue(item.idTipoPlan) ? item.idTipoPlan : item.idTipoPlan?.id,
           nombrePlan: item.nombrePlan,
           nombrePlanPersonalizado: item.nombrePlanPersonalizado,
           fechaInicio: this.formatDate(item.fechaInicio),
-          fechaFin: this.formatDate(item.fechaFin),
+          fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): null,
           autoridad: item.autoridad,
           observaciones: item.observaciones,
           archivo: item.file,
@@ -198,16 +198,20 @@ export class FireActionsRelevantComponent {
       formData.append('idSuceso', this.data.idIncendio.toString());
 
       objToSave.detallesDocumentaciones.forEach((detalle, index) => {
-        formData.append(`detalles[${index}].Id`, (detalle.id ?? '0').toString());
-        formData.append(`detalles[${index}].IdTipoPlan`, (detalle.idTipoPlan).toString());
-        formData.append(`detalles[${index}].FechaInicio`, detalle.fechaInicio);
-        formData.append(`detalles[${index}].FechaFin`, detalle.fechaFin);
-        formData.append(`detalles[${index}].Autoridad`, detalle.autoridad ?? '');
-        formData.append(`detalles[${index}].TipoPlanPersonalizado`, detalle.nombrePlanPersonalizado ?? '');
-        formData.append(`detalles[${index}].IdPlanEmergencia`, '3');
-        formData.append(`detalles[${index}].PlanEmergenciaPersonalizado`, detalle.nombrePlan ?? '');
-        formData.append(`detalles[${index}].Observaciones`, detalle.observaciones ?? '');
-        formData.append(`detalles[${index}].Archivo`, detalle.archivo);
+        formData.append(`ActivacionPlanes[${index}].Id`, (detalle.id ?? '0').toString());
+        formData.append(`ActivacionPlanes[${index}].IdTipoPlan`, (detalle.idTipoPlan).toString());
+        formData.append(`ActivacionPlanes[${index}].FechaInicio`, detalle.fechaInicio);
+        formData.append(`ActivacionPlanes[${index}].FechaFin`, detalle.fechaFin ?? '');
+        formData.append(`ActivacionPlanes[${index}].Autoridad`, detalle.autoridad ?? '');
+        formData.append(`ActivacionPlanes[${index}].TipoPlanPersonalizado`, detalle.nombrePlanPersonalizado ?? '');
+        formData.append(`ActivacionPlanes[${index}].IdPlanEmergencia`, '3');
+        formData.append(`ActivacionPlanes[${index}].PlanEmergenciaPersonalizado`, detalle.nombrePlan ?? '');
+        formData.append(`ActivacionPlanes[${index}].Observaciones`, detalle.observaciones ?? '');
+        if(detalle.archivo?.id){
+          formData.append(`ActivacionPlanes[${index}].Archivo`, detalle.archivo.id);
+        }else{
+          formData.append(`ActivacionPlanes[${index}].Archivo`, detalle.archivo);
+        }
       });
 
       const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);

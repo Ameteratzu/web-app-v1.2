@@ -144,75 +144,58 @@ export class ActivationPlanComponent implements OnInit {
       fechaFin: [null],
       autoridad: ['', Validators.required],
       observaciones: [''],
-      file: [null, Validators.required],
+      file: [null],
     });
 
     this.dataSource.data = [];
 
-    // this.isToEditDocumentation();
+    if (this.editData) {
+      if (this.planesService.dataPlanes().length === 0) {
+        if (this.planesService.dataPlanes().length === 0) {
+          const nuevosPlanes = this.editData.activacionPlanEmergencias.map((plan: any) => ({
+            idActuacionRelevante: this.editData.id,
+            idTipoPlan: {
+              id: plan.tipoPlan?.id ?? 0,
+              descripcion: plan.tipoPlan.descipcion ?? ''
+            },
+            nombrePlan: plan.planEmergenciaPersonalizado ?? '',
+            nombrePlanPersonalizado: plan.tipoPlanPersonalizado ?? '',
+            fechaInicio: plan.fechaInicio,
+            fechaFin: plan.fechaFin,
+            autoridad: plan.autoridad,
+            observaciones: plan.observaciones,
+            file: plan.archivo ? {
+              name: plan.archivo.nombreOriginal,
+              id: plan.archivo.id,
+            } : null,
+            archivoSubido: plan.archivo?.id ?? false
+          }));
+        
+          this.planesService.dataPlanes.update((planes) => [...planes, ...nuevosPlanes]);
+        }
+      }
+    }
   }
-
-  // async isToEditDocumentation() {
-  //   if (!this.dataProps?.fireDetail?.id) {
-  //     this.spinner.hide();
-  //     return;
-  //   }
-  //   const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
-
-  //   const newData = dataDocumentacion?.detalles?.map((documento: any) => {
-  //     const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
-  //     const hora = moment(documento.fechaHora).format('HH:mm');
-  //     documento.archivo.name = documento.archivo.nombreOriginal;
-  //     return {
-  //       id: documento.id,
-  //       descripcion: documento.descripcion,
-  //       idSuceso: dataDocumentacion.idSuceso,
-  //       idDocumento: dataDocumentacion.id,
-  //       fecha,
-  //       hora,
-  //       fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
-  //       horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
-  //       procendenciaDestino: documento.procedenciaDestinos,
-  //       tipoDocumento: documento.tipoDocumento,
-  //       archivo: documento.archivo,
-  //       file: documento.archivo,
-  //     };
-  //   });
-
-  //   console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
-  //   this.dataOtherInformation.set(newData);
-  //   this.spinner.hide();
-  // }
 
   trackByFn(index: number, item: any): string {
     return item;
   }
 
-  onSubmit(formDirective: FormGroupDirective): void {
+  async onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
-      const formValue = this.formData.value;
-
-      const data = {
-        ...formValue,
-        file: formValue.file,
-      };
-
+      const data = this.formData.value;
       if (this.isCreate() == -1) {
         this.planesService.dataPlanes.set([data, ...this.planesService.dataPlanes()]);
+        console.log("🚀 ~ onSubmit ~ this.planesService.dataPlanes:", this.planesService.dataPlanes())
       } else {
         this.editarItem(this.isCreate());
       }
-
-      formDirective.resetForm();
-      this.formData.reset({
-        fecha: moment().toDate(),
-        hora: moment().format('HH:mm'),
-        procendenciaDestino: [],
-        tipoDocumento: null,
-        file: null,
+      formDirective.resetForm({
+        fechaInicio: new Date(),
       });
-      this.fileFlag = false;
+      this.formData.reset();
     } else {
+      console.log("🚀 ~ ActivationPlanComponent ~ onSubmit ~ else:", "else")
       this.formData.markAllAsTouched();
     }
   }
@@ -255,30 +238,41 @@ export class ActivationPlanComponent implements OnInit {
       return tipo.descripcion;
     }
 
-  async delete() {
-    this.spinner.show();
-  }
+    delete() {
+      this.save.emit({ save: false, delete: true, close: false, update: false });
+    }
 
-  seleccionarItem(index: number) {
-
+  async seleccionarItem(index: number) {
     this.isCreate.set(index);
-    this.formData.patchValue({
-      ...this.planesService.dataPlanes()[index],
-    });
+    const data = this.planesService.dataPlanes()[index];
+
+      var ob = this.tiposPlanes().find((tipo) => 
+        typeof data.idTipoPlan === 'number' 
+          ? tipo.id === data.idTipoPlan 
+          : tipo.id === data.idTipoPlan.id
+      );
+
+
+    this.formData.get('idTipoPlan')?.setValue(ob);
+    this.formData.get('nombrePlan')?.setValue(data.nombrePlan);
+    this.formData.get('nombrePlanPersonalizado')?.setValue(data.nombrePlanPersonalizado);
+    this.formData.get('fechaInicio')?.setValue(data.fechaInicio);
+    this.formData.get('fechaFin')?.setValue(data.fechaFin);
+    this.formData.get('autoridad')?.setValue(data.autoridad);
+    this.formData.get('observaciones')?.setValue(data.observaciones);
+
+
   }
 
   editarItem(index: number) {
     const dataEditada = this.formData.value;
+    console.log("🚀 ~ editarItem ~ dataEditada:", dataEditada)
     this.planesService.dataPlanes.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
     });
     this.isCreate.set(-1);
-    this.formData.reset({
-      procendenciaDestino: [],
-      tipoDocumento: null,
-    });
-    this.file = null;
+    this.formData.reset();
   }
 
   eliminarItem(index: number) {
@@ -359,6 +353,7 @@ export class ActivationPlanComponent implements OnInit {
   }
 
   async onFileNameClick(data: any) {
+    console.log("🚀 ~ ActivationPlanComponent ~ onFileNameClick ~ data:", data)
     try {
       const blob = await this.fireDocumentationService.getFile(data.id);
       const url = window.URL.createObjectURL(blob);
