@@ -19,7 +19,6 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { CoordinationAddressService } from '../../../services/coordination-address.service';
-import { DireccionesService } from '../../../services/direcciones.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
@@ -71,10 +70,10 @@ export class PmaComponent {
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
+  @Input() dataMaestros: any;
+  @Input() fire: any;
 
   public polygon = signal<any>([]);
-
-  public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
   private fb = inject(FormBuilder);
@@ -95,11 +94,7 @@ export class PmaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
-    this.coordinationAddress.set(coordinationAddress);
-
-    const provinces = await this.provinceService.get();
-    this.provinces.set(provinces);
+    this.provinces.set(this.dataMaestros.provinces);
 
     this.formData = this.fb.group({
       provincia: ['', Validators.required],
@@ -110,7 +105,14 @@ export class PmaComponent {
       observaciones: [''],
     });
 
-    this.formData.get('municipio')?.disable();
+    const defaultProvincia = this.provinces().find((provincia) => provincia.id === this.fire.idProvincia);
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.fire:', this.fire);
+    this.formData.get('provincia')?.setValue(defaultProvincia);
+
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    this.municipalities.set(municipalities);
+    const defaultMuni = this.municipalities().find((muni) => muni.id === this.fire.idMunicipio);
+    this.formData.get('municipio')?.setValue(defaultMuni);
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
@@ -197,8 +199,6 @@ export class PmaComponent {
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      //this.featuresCoords = features;
-      console.info('features', features);
       this.polygon.set(features);
     });
   }

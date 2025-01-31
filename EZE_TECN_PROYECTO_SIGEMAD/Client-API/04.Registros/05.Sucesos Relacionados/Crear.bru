@@ -1,0 +1,28 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/sucesos-relacionados/lista
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idSucesoRelacionado": 0,
+    "idSuceso": {{IdSuceso}},
+    "idsSucesosAsociados": [2]
+  }
+  
+}
+
+vars:post-response {
+  IdSucesoRelacionado: res.body.idSucesoRelacionado
+}
+
+assert {
+  res.status: eq 200
+}

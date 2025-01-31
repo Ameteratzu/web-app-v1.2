@@ -6,5 +6,9 @@ public class SucesoRelacionadoActiveByIdSpecification : BaseSpecification<Suceso
     public SucesoRelacionadoActiveByIdSpecification(int id) 
         : base(b => b.Id == id && b.Borrado == false)
     {
+        AddInclude(b => b.DetalleSucesoRelacionados);
+        AddInclude("DetalleSucesoRelacionados.SucesoAsociado");
+        AddInclude("DetalleSucesoRelacionados.SucesoAsociado.TipoSuceso");
+        AddInclude("DetalleSucesoRelacionados.SucesoAsociado.Incendios.EstadoSuceso");
     }
 }

@@ -74,6 +74,7 @@ export class AreaComponent {
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
+  @Input() fire: any;
 
   public evolutionService = inject(EvolutionService);
   public toast = inject(MatSnackBar);
@@ -98,6 +99,7 @@ export class AreaComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
+
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
 
@@ -109,9 +111,16 @@ export class AreaComponent {
       observaciones: [''],
       fichero: ['', Validators.required],
     });
-    this.formData.get('municipio')?.disable();
     this.formData.get('fichero')?.disable();
     this.formData.get('entidadMenor')?.disable();
+    this.formData.get('provincia')?.setValue(this.fire.provincia.id);
+    const municipalities = await this.municipalityService.get(this.fire.provincia.id);
+    this.municipalities.set(municipalities);
+    this.formData.get('municipio')?.setValue(this.fire.municipio.id);
+
+    const minor = await this.minorService.get(this.fire.municipio.id);
+    this.minors.set(minor);
+    this.formData.get('entidadMenor')?.enable();
 
     if (this.editData) {
       if (this.evolutionService.dataAffectedArea().length === 0) {
@@ -121,7 +130,7 @@ export class AreaComponent {
     }
     this.spinner.hide();
   }
-
+   
   async loadMunicipalities(event: any) {
     this.spinner.show();
     const province_id = event.value;
@@ -140,7 +149,7 @@ export class AreaComponent {
     this.spinner.hide();
   }
 
-  onSubmit(formDirective: FormGroupDirective) {
+  async onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -157,8 +166,16 @@ export class AreaComponent {
         fechaHora: new Date(),
       });
       this.formData.reset();
-      this.formData.get('municipio')?.disable();
       this.formData.get('entidadMenor')?.disable();
+
+      this.formData.get('provincia')?.setValue(this.fire.provincia.id);
+      const municipalities = await this.municipalityService.get(this.fire.provincia.id);
+      this.municipalities.set(municipalities);
+      this.formData.get('municipio')?.setValue(this.fire.municipio.id);
+      this.formData.patchValue({
+        fechaHora: new Date(), 
+      });
+
     } else {
       this.formData.markAllAsTouched();
     }
@@ -200,7 +217,7 @@ export class AreaComponent {
       const municipalities = await this.municipalityService.get(data.provincia.id);
       this.municipalities.set(municipalities);
     }
-    if (data.entidadMenor.id && data.municipio.id) {
+    if (data.entidadMenor?.id && data.municipio.id) {
       const minor = await this.minorService.get(data.municipio.id);
       this.minors.set(minor);
     }
@@ -211,7 +228,9 @@ export class AreaComponent {
     if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
       this.formData.get('municipio')?.setValue(data.municipio.id);
-      this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+      if(data.entidadMenor){
+        this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+      }
     } else {
       this.formData.get('provincia')?.setValue(data.provincia);
       this.formData.get('municipio')?.setValue(data.municipio);
@@ -271,7 +290,6 @@ export class AreaComponent {
       return;
     }
     const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
-    console.info('municipioSelected', municipioSelected);
 
     if (!municipioSelected) {
       return;

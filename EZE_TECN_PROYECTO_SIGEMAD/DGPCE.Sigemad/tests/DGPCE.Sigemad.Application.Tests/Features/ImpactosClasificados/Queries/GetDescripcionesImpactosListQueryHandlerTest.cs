@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetDescripcionImpactosList;
 using DGPCE.Sigemad.Application.Mappings;
+using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Moq;
@@ -15,7 +16,7 @@ public class GetDescripcionesImpactosListQueryHandlerTest
 
     public GetDescripcionesImpactosListQueryHandlerTest()
     {
-        _unitOfWorkMock = new Mock<IUnitOfWork>();        
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
         var mapperConfig = new MapperConfiguration(cfg =>
         {
@@ -40,7 +41,7 @@ public class GetDescripcionesImpactosListQueryHandlerTest
             new ImpactoClasificado { Id = 3, Descripcion = "Personas sin hogar" }
         };
 
-        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllAsync()).ReturnsAsync(impactos);
+        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllWithSpec(It.IsAny<ISpecification<ImpactoClasificado>>())).ReturnsAsync(impactos);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -66,7 +67,7 @@ public class GetDescripcionesImpactosListQueryHandlerTest
         var request = new GetDescripcionImpactosListQuery();
         var impactos = new List<ImpactoClasificado>();
 
-        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllAsync()).ReturnsAsync(impactos);
+        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllWithSpec(It.IsAny<ISpecification<ImpactoClasificado>>())).ReturnsAsync(impactos);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -82,7 +83,7 @@ public class GetDescripcionesImpactosListQueryHandlerTest
         // Arrange
         var request = new GetDescripcionImpactosListQuery();
 
-        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllAsync()).ReturnsAsync((List<ImpactoClasificado>)null);
+        _unitOfWorkMock.Setup(u => u.Repository<ImpactoClasificado>().GetAllWithSpec(It.IsAny<ISpecification<ImpactoClasificado>>())).ReturnsAsync((List<ImpactoClasificado>)null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);

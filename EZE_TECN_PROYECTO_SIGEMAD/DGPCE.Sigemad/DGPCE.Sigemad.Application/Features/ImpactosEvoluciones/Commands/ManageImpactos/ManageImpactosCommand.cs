@@ -5,6 +5,6 @@ namespace DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.Create
 public class ManageImpactosCommand: IRequest<ManageImpactoResponse>
 {
     public int? IdEvolucion { get; set; }
-    public int IdIncendio { get; set; } // Se usará si no se recibe el IdEvolucion
+    public int IdSuceso { get; set; } // Se usará si no se recibe el IdEvolucion
     public List<ManageImpactoDto> Impactos { get; set; } = new();
 }

@@ -1,3 +1,6 @@
+import 'ol/ol.css';
+import "ol-ext/dist/ol-ext.css"
+
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -7,8 +10,12 @@ import { Draw, Snap } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import Map from 'ol/Map';
-import { OSM, Vector as VectorSource } from 'ol/source';
+import { OSM, Vector as VectorSource, XYZ } from 'ol/source';
 import View from 'ol/View';
+import LayerGroup from 'ol/layer/Group';
+import { defaults as defaultControls, FullScreen, ScaleLine } from 'ol/control';
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import TileWMS from 'ol/source/TileWMS';
 
 import { MunicipalityService } from '../../services/municipality.service';
 
@@ -19,6 +26,13 @@ import { Municipality } from '../../types/municipality.type';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
+import Icon from 'ol/style/Icon';
+import Style from 'ol/style/Style';
+import proj4 from 'proj4';
+import { environment } from '../../../environments/environment';
+
+// Define the projection for UTM zone 30N (EPSG:25830)
+const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
 
 @Component({
   selector: 'app-map-create',
@@ -36,9 +50,10 @@ export class MapCreateComponent {
 
   public source!: VectorSource;
   public map!: Map;
+  public view!: View;
   public draw!: Draw;
   public snap!: Snap;
-  public vector!: VectorLayer;
+  public layerAreasAfectadas!: VectorLayer;
   public coords: any;
 
   public data = inject(MAT_DIALOG_DATA);
@@ -56,41 +71,91 @@ export class MapCreateComponent {
 
   public section: string = '';
 
+  public coordinates: string = '';
+  public cursorPosition = { x: 0, y: 0 };
+
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
-    console.info('init MAP-', onlyView);
+
+    this.configureMap(municipio, defaultPolygon, onlyView);
+  }
+
+  configureMap(municipio: any, defaultPolygon: any, onlyView: any) {
+
+    // capas base
+    let baseLayers = new LayerGroup({
+      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+          properties: { 'title': 'OpenStreetMap', baseLayer: true },
+          visible: true
+
+        }),
+        new TileLayer({
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+          }),
+          properties: { 'title': 'Satélite', baseLayer: true, },
+          visible: false
+        })
+      ]
+    });
+
+    // capas wms administrativas
+    const wmsLayersGroup = new LayerGroup({
+      properties: { 'title': 'Límites administrativos', 'openInLayerSwitcher': true },
+      layers: [
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              'LAYERS': 'nucleos_poblacion',
+              'TILED': true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { 'title': 'Núcleos de población' }
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              'LAYERS': 'municipio_limites',
+              'TILED': true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { 'title': 'Límites municipio' }
+        }),
+      ]
+    });    
+
+    // capas de incendios
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
       defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
-    }
+    }    
 
     this.source = new VectorSource();
 
-    this.vector = new VectorLayer({
+    this.layerAreasAfectadas = new VectorLayer({
       source: this.source,
       style: {
-        'fill-color': 'rgba(255, 255, 255, 0.2)',
-        'stroke-color': '#ffcc33',
-        'stroke-width': 2,
+        'stroke-color': 'rgb(252, 5, 5)',
+        'stroke-width': 5,
       },
+      properties: { 'title': 'Área afectada' }
     });
 
-    this.map = new Map({
-      layers: [
-        new TileLayer({
-          source: new OSM(),
-        }),
-        this.vector,
-      ],
-      target: 'map',
-      controls: [],
-      view: new View({
-        center: fromLonLat(municipio.geoPosicion.coordinates),
-        zoom: 12,
-        projection: 'EPSG:3857',
-      }),
-    });
+    this.view = new View({
+      center: fromLonLat(municipio.geoPosicion.coordinates),
+      zoom: 12,
+      projection: 'EPSG:3857',
+    })
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
 
@@ -106,20 +171,81 @@ export class MapCreateComponent {
       this.source.addFeature(polygonFeature);
     }
 
-    const pointLayer = new VectorLayer({
+    const layerMunicipio = new VectorLayer({
       source: new VectorSource({
         features: [pointFeature],
       }),
+      properties: { 'title': 'Municipio' }
     });
 
-    this.map.addLayer(pointLayer);
+    layerMunicipio.setStyle(
+      new Style({
+        image: new Icon({
+          anchor: [1, 1],
+          src: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+          scale: 0.05,
+        }),
+      })
+    );
+
+    const layersGroupIncendio = new LayerGroup({
+      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      layers: [ layerMunicipio, this.layerAreasAfectadas ]
+    });    
+
+    // Crear el mapa
+    this.map = new Map({
+      controls: defaultControls({
+        zoom: true,
+        zoomOptions: {
+          zoomInTipLabel: 'Acercar',
+          zoomOutTipLabel: 'Alejar'
+        }
+      }).extend([
+        new FullScreen(({ tipLabel: 'Pantalla completa' })),
+      ]),
+      target: 'map',
+      layers: [baseLayers, wmsLayersGroup],
+      view: this.view
+    });
+
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      show_progress: true,
+    }));
+
+    this.map.addControl(new ScaleLine());
+
+
+    this.map.addLayer(layersGroupIncendio);
+
     if (!onlyView) {
       this.addInteractions();
     }
+
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
+
+      this.coordinates = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
+
+      const pixel = this.map.getEventPixel(event.originalEvent);
+
+      this.cursorPosition = {
+        x: pixel[0],
+        y: pixel[1] + 40,
+      };
+
+    });
   }
 
   changeMunicipio(event: any) {
-    console.info('event', event);
+    //console.info('event', event);
   }
 
   addInteractions() {
@@ -163,5 +289,17 @@ export class MapCreateComponent {
 
   closeModal() {
     this.matDialogRef.close();
+  }
+
+  searchCoordinates() {
+    const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
+    const utmY = (document.getElementById('utm-y') as HTMLInputElement).value;
+
+    if (utmX && utmY) {
+      const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
+      const coordinate = fromLonLat([lon, lat]);
+      this.view.setCenter(coordinate);
+      this.view.setZoom(13);
+    }
   }
 }

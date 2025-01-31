@@ -2,7 +2,7 @@
 public class OtraInformacionVm
 {
     public int IdOtraInformacion { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
     public DateTime FechaHora { get; set; }
     public int IdMedio { get; set; }
     public string Asunto { get; set; }

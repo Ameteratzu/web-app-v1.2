@@ -1,0 +1,27 @@
+meta {
+  name: Eliminar elementos
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/direcciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idDireccionCoordinacionEmergencia": {{IdDireccionCoordinacionEmergencia}},
+    "idSuceso": {{IdSuceso}},
+    "direcciones": []
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}
+
+assert {
+  res.status: eq 200
+}

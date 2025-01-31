@@ -86,7 +86,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25">
-          <mat-label>Superficies</mat-label>
+          <mat-label>Superficie afectada</mat-label>
           <mat-select [formControl]="getForm('affectedArea')">
             <mat-option *ngFor="let option of superficiesFiltro()" [value]="option.id">
               {{ option.descripcion }}
@@ -109,7 +109,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25">
-          <mat-label>Entre</mat-label>
+          <mat-label>Rango de fechas</mat-label>
           <mat-select [formControl]="getForm('between')" (selectionChange)="changeBetween($event)">
             <mat-option *ngFor="let option of comparativeDates()" [value]="option.id">
               {{ option.descripcion }}
@@ -119,7 +119,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
-          <mat-label>Fecha de inicio</mat-label>
+          <mat-label>{{ showDateEnd() ? 'Fecha de inicio' : 'Fecha' }}</mat-label>
           <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaInicio')" />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>

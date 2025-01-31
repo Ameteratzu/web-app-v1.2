@@ -40,7 +40,7 @@ export class FireService {
   }
 
   details(fire_id: number) {
-    const endpoint = `/Incendios/${fire_id}/registros`;
+    const endpoint = `/sucesos/${fire_id}/registros`;
 
     return firstValueFrom(this.http.get<FireDetail[]>(endpoint).pipe((response) => response));
   }
@@ -50,7 +50,7 @@ export class FireService {
       IdTerritorio: data.territory ? data.territory : 1,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
+      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd' + ' ' + data.startTime),
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,

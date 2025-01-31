@@ -47,14 +47,18 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.AddSupportedUICultures(supportedCultures);
 });
 
+/*
 // Configura la política predeterminada para permitir a todos
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("RequiereAutorizacion", policy =>
+        policy.RequireAuthenticatedUser()); // Requiere que el usuario esté autenticado
+
     options.DefaultPolicy = new AuthorizationPolicyBuilder()
         .RequireAssertion(_ => true) // Permitir a todos
         .Build();
 });
-
+*/
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
@@ -74,8 +78,6 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
-
-//app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -1,38 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, OnInit, Output, runInInjectionContext, signal } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InputOutputService } from '../../../services/input-output.service';
-import { MediaService } from '../../../services/media.service';
-import { OriginDestinationService } from '../../../services/origin-destination.service';
-import { FireStatusService } from '../../../services/fire-status.service';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { EvolutionService } from '../../../services/evolution.service';
-import { PhasesService } from '../../../services/phases.service';
-import { SituationsEquivalentService } from '../../../services/situations-equivalent.service';
+import { MasterDataEvolutionsService } from '../../../services/master-data-evolutions.service';
+import { EvolucionIncendio } from '../../../types/evolution-record.type';
+import { FireStatus } from '../../../types/fire-status.type';
 import { InputOutput } from '../../../types/input-output.type';
 import { Media } from '../../../types/media.type';
 import { OriginDestination } from '../../../types/origin-destination.type';
-import { FireStatus } from '../../../types/fire-status.type';
 import { Phases } from '../../../types/phases.type';
-import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatButtonModule } from '@angular/material/button';
-import moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
-import { MatSelectModule } from '@angular/material/select';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { EvolucionIncendio } from '../../../types/evolution-record.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { SituationPlan } from '../../../types/situation-plan.type';
+import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
+import { TypesPlans } from '../../../types/types-plans.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -78,6 +73,7 @@ export class RecordsComponent implements OnInit {
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
   @Input() estadoIncendio: any;
+  @Input() fire: any;
 
   formDataSignal = signal({
     inputOutput: 1,
@@ -88,7 +84,7 @@ export class RecordsComponent implements OnInit {
     observations_1: '',
     forecast: '',
     status: 1,
-    end_date: new Date(),
+    end_date: null as Date | null,
     emergencyPlanActivated: '',
     phases: '',
     nivel: '',
@@ -98,14 +94,8 @@ export class RecordsComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   public matDialog = inject(MatDialog);
-  public inputOutputService = inject(InputOutputService);
-  public mediaService = inject(MediaService);
-  public originDestinationService = inject(OriginDestinationService);
-  public fireStatusService = inject(FireStatusService);
+  public masterData = inject(MasterDataEvolutionsService);
   public evolutionSevice = inject(EvolutionService);
-  public phasesService = inject(PhasesService);
-  public situationEquivalentService = inject(SituationsEquivalentService);
-
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
 
@@ -116,28 +106,31 @@ export class RecordsComponent implements OnInit {
   public medias = signal<Media[]>([]);
   public originDestinations = signal<OriginDestination[]>([]);
   public status = signal<FireStatus[]>([]);
-  public phases = signal<Phases[]>([]);
+  public typesPlans = signal<TypesPlans[]>([]);
   public situationEquivalent = signal<SituationsEquivalent[]>([]);
   public isCreate = signal<number>(-1);
+  public phases = signal<Phases[]>([]);
+  public niveles = signal<SituationPlan[]>([]);
+  public operativas = signal<SituationPlan[]>([]);
 
   async ngOnInit() {
-    const inputOutputs = await this.inputOutputService.get();
+    const inputOutputs = await this.masterData.getInputOutput();
     this.inputOutputs.set(inputOutputs);
 
-    const medias = await this.mediaService.get();
+    const medias = await this.masterData.getMedia();
     this.medias.set(medias);
 
-    const originDestinations = await this.originDestinationService.get();
+    const originDestinations = await this.masterData.getOriginDestination();
     this.originDestinations.set(originDestinations);
 
-    const status = await this.fireStatusService.get();
+    const status = await this.masterData.getFireStatus();
     this.status.set(status);
 
-    const phases = await this.phasesService.get();
-    this.phases.set(phases);
+    const typesPlans = await this.masterData.getTypesPlans(this.fire.provincia.idCcaa);
+    this.typesPlans.set(typesPlans);
 
-    const situationsEquivalent = await this.situationEquivalentService.get();
-    this.situationEquivalent.set(situationsEquivalent);
+    const situationEquivalente = await this.masterData.getSituationEquivalent();
+    this.situationEquivalent.set(situationEquivalente);
 
     this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
@@ -157,34 +150,35 @@ export class RecordsComponent implements OnInit {
       operativa: [this.formDataSignal().operativa],
       afectada: [this.formDataSignal().afectada],
     });
+    this.formData.get('end_date')?.disable();
 
     runInInjectionContext(this.environmentInjector, () => {
       effect(() => {
-        const data = this.formDataSignal();
-        this.formData.patchValue(data, { emitEvent: false });
+        const { end_date, ...rest } = this.formDataSignal();
+        this.formData.patchValue(rest, { emitEvent: false });
       });
 
-      this.formData.valueChanges.subscribe((values) => {
-        this.formDataSignal.set({ ...this.formDataSignal(), ...values });
-      });
+      // this.formData.valueChanges.subscribe((values) => {
+      //   this.formDataSignal.set({ ...this.formDataSignal(), ...values });
+      // });
     });
 
-    this.formData.get('emergencyPlanActivated')?.disable();
     this.formData.get('phases')?.disable();
     this.formData.get('nivel')?.disable();
     this.formData.get('operativa')?.disable();
-    this.formData.get('end_date')?.disable();
 
     if (this.editData) {
-      console.log('Información recibida en el hijo:', this.editData);
       if (this.evolutionSevice.dataRecords().length === 0) {
+        // this.evolutionSevice.dataRecords.update((records) => [this.editData, ...records]);
         this.updateFormWithJson(this.editData);
       }
+    } else {
+      this.updateEndDate(this.estadoIncendio);
     }
     this.spinner.hide();
   }
 
-  updateFormWithJson(json: any) {
+  async updateFormWithJson(json: any) {
     const procedenciasSelecteds = () => {
       const idsABuscar = json.registro?.procedenciaDestinos?.map((obj: any) => Number(obj.id)) || [];
       return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
@@ -199,23 +193,47 @@ export class RecordsComponent implements OnInit {
       observations_1: json.datoPrincipal?.observaciones || '',
       forecast: json.datoPrincipal?.prevision || '',
       status: json.parametro?.estadoIncendio?.id || '',
-      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : new Date(),
-      emergencyPlanActivated: json.parametro?.planEmergenciaActivado || '',
-      phases: json.parametro?.fase?.id || '',
-      nivel: json.parametro?.situacionEquivalente?.id || '',
-      operativa: json.parametro?.situacionOperativa?.id || '',
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : null,
+      emergencyPlanActivated: json.parametro?.planEmergencia?.id || '',
+      phases: json.parametro?.faseEmergencia?.id || '',
+      nivel: json.parametro?.planSituacion?.id || '',
+      operativa: json.parametro?.situacionEquivalente?.id || '',
       afectada: json.parametro?.superficieAfectadaHectarea || null,
     });
+
+    await this.updateEndDate(this.formDataSignal().status);
+    this.formData.patchValue({
+      end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : null,
+    });
+    this.loadPhases(null, json.parametro?.planEmergencia?.id);
+    this.loadLevels();
+  }
+
+  updateEndDate(statusValue: number) {
+    const endDateControl = this.formData.get('end_date');
+    if (!endDateControl) return;
+
+    if (statusValue === 2) {
+      endDateControl.enable();
+      endDateControl.setValidators([Validators.required]);
+      endDateControl.patchValue(new Date());
+    } else {
+      endDateControl.disable();
+      endDateControl.clearValidators();
+      endDateControl.patchValue(null);
+    }
+    endDateControl.updateValueAndValidity();
+    return true;
   }
 
   async sendDataToEndpoint() {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-      formValues.end_date;
+      // formValues.end_date;
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
-        idIncendio: this.data.idIncendio,
+        idSuceso: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: formValues.startDate.toISOString(),
           idEntradaSalida: formValues.inputOutput,
@@ -231,10 +249,10 @@ export class RecordsComponent implements OnInit {
           idEstadoIncendio: formValues.status,
           fechaFinal: formValues.end_date ? formValues.end_date.toISOString() : '',
           superficieAfectadaHectarea: formValues.afectada,
-          planEmergenciaActivado: '',
-          idFase: 1,
-          idSituacionOperativa: 1,
-          idSituacionEquivalente: 1,
+          idPlanEmergencia: formValues.emergencyPlanActivated,
+          idFaseEmergencia: formValues.phases,
+          idSituacionEquivalente: Number(formValues.operativa),
+          idPlanSituacion: formValues.nivel,
         },
       };
 
@@ -245,6 +263,70 @@ export class RecordsComponent implements OnInit {
       this.formData.markAllAsTouched();
       this.spinner.hide();
     }
+  }
+
+  async loadLevels() {
+    const phases_id = this.editData.parametro?.faseEmergencia?.id;
+    const plan_id = this.editData.parametro?.planEmergencia?.id;
+    let situationsPlans: any[] = [];
+    if (plan_id) {
+      situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    }
+    this.niveles.set(situationsPlans);
+    this.formData.get('nivel')?.setValue(this.editData.parametro?.planSituacion?.id);
+    return true;
+  }
+
+  async loadPhases(event: any, id?: string) {
+    let id_plan;
+
+    if (!event) {
+      id_plan = id;
+    } else {
+      id_plan = event.value;
+    }
+
+    this.spinner.show();
+    if (id_plan) {
+      const phases = await this.masterData.getPhases(id_plan);
+      this.phases.set(phases);
+      this.formData.get('phases')?.enable();
+      this.spinner.hide();
+      return phases;
+    }
+    this.spinner.hide();
+    return [];
+  }
+
+  async loadSituationPlans(event: any) {
+    this.spinner.show();
+    const phases_id = event.value;
+    const plan_id = this.formData.get('emergencyPlanActivated')?.value;
+    let situationsPlans: any = [];
+    if (plan_id) {
+      situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
+    }
+
+    this.niveles.set(situationsPlans);
+    this.formData.get('nivel')?.enable();
+    this.formData.get('operativa')?.enable();
+
+    this.spinner.hide();
+  }
+
+  selectStatus(event: any) {
+    const status_id = event.value;
+    this.updateEndDate(status_id);
+  }
+
+  async loadSituacionEquivalente(event: any) {
+    this.spinner.show();
+    let arr: SituationPlan[] = [];
+    const nivelSelect = this.niveles().find((situacion) => situacion.id === event.value);
+    const found = this.situationEquivalent().find((situacion) => situacion.descripcion === String(nivelSelect?.situacionEquivalente));
+
+    this.formData.get('operativa')?.setValue(found?.id);
+    this.spinner.hide();
   }
 
   getFormatdate(date: any) {

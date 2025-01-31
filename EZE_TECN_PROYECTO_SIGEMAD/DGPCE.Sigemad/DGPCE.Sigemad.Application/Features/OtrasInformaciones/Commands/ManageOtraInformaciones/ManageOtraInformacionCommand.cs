@@ -5,6 +5,6 @@ namespace DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageO
 public class ManageOtraInformacionCommand: IRequest<ManageOtraInformacionResponse>
 {
     public int? IdOtraInformacion { get; set; }
-    public int IdIncendio { get; set; }
+    public int IdSuceso { get; set; }
     public List<CreateDetalleOtraInformacionDto> Lista { get; set; }
 }

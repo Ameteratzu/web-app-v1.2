@@ -1,5 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.ActividadesPlanesEmergencia.Vms;
-using DGPCE.Sigemad.Domain.Common;
+﻿using DGPCE.Sigemad.Domain.Common;
 using NetTopologySuite.Geometries;
 
 
@@ -27,6 +26,4 @@ public class DireccionCoordinacionEmergenciaVm : BaseDomainModel<int>
     public string? LugarPMA { get; set; }
     public Geometry? GeoPosicionPMA { get; set; }
     public string? ObservacionesPMA { get; set; }
-
-    public virtual ActivacionPlanEmergenciaVm ActivacionPlanEmergencia { get; set; } = null!;
 }

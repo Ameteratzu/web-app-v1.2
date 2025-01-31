@@ -17,6 +17,7 @@ public class IncendiosSpecificationParams: SpecificationParams
     public int? IdSuperficieAfectada { get; set; }
     public int? IdMovimiento { get; set; }
     public int? IdComparativoFecha { get; set; }
+    public int? IdSituacionEquivalente { get; set; }
 
     public bool? busquedaSucesos { get; set; }
     public DateOnly? FechaInicio { get; set; }

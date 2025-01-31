@@ -65,6 +65,7 @@ export class AddressComponent {
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
+  @Input() dataMaestros: any;
   @Input() esUltimo: boolean | undefined;
 
   public direcionesServices = inject(DireccionesService);
@@ -85,8 +86,7 @@ export class AddressComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
-    this.coordinationAddress.set(coordinationAddress);
+    this.coordinationAddress.set(this.dataMaestros.coordinationAddress);
 
     this.formData = this.fb.group({
       tipoDireccionEmergencia: ['', Validators.required],

@@ -31,37 +31,47 @@ public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosComman
     {
         _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - BEGIN");
 
-        Evolucion evolucion;
+        var evolucion = await GetOrCreateEvolucionAsync(request);
+        await ValidateImpactosClasificadosAsync(request);
+        await ValidateTiposDanioAsync(request);
 
-        // Verificar si el IdEvolucion es proporcionado, si no, crear una nueva evolución
-        if (request.IdEvolucion.HasValue)
+        MapAndManageImpactos(request, evolucion);
+        await DeleteLogicalActivaciones(request, evolucion);
+
+        await SaveEvolucionAsync(request, evolucion);
+
+        _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - END");
+        return new ManageImpactoResponse { IdEvolucion = evolucion.Id };
+    }
+
+    private async Task<Evolucion> GetOrCreateEvolucionAsync(ManageImpactosCommand request)
+    {
+        if (request.IdEvolucion.HasValue && request.IdEvolucion.Value > 0)
         {
             var spec = new EvolucionByIdWithImpactosSpecification(request.IdEvolucion.Value);
-            evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(spec);
+            var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(spec);
             if (evolucion is null)
             {
                 _logger.LogWarning($"request.IdEvolucion: {request.IdEvolucion}, no encontrado");
                 throw new NotFoundException(nameof(Evolucion), request.IdEvolucion);
             }
+            return evolucion;
         }
         else
         {
-            // Validar si el IdIncendio es válido
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.IdIncendio);
-            if (incendio is null || incendio.Borrado)
+            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
+            if (suceso is null || suceso.Borrado)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
+                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
-            // Crear nueva evolución si no se proporciona IdEvolucion
-            evolucion = new Evolucion
-            {
-                IdIncendio = request.IdIncendio
-            };
+            return new Evolucion { IdSuceso = request.IdSuceso };
         }
+    }
 
-        // Validar los IdImpactoClasificado de los impactos en el listado
+    private async Task ValidateImpactosClasificadosAsync(ManageImpactosCommand request)
+    {
         var idsImpactosClasificados = request.Impactos.Select(ie => ie.IdImpactoClasificado).Distinct();
         var impactosClasificadosExistentes = await _unitOfWork.Repository<ImpactoClasificado>().GetAsync(ic => idsImpactosClasificados.Contains(ic.Id));
 
@@ -76,8 +86,10 @@ public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosComman
                 throw new NotFoundException(nameof(ImpactoClasificado), string.Join(", ", idsImpactosClasificadosInvalidos));
             }
         }
+    }
 
-        // VALIDACIÓN DE LOS ID EN EL LISTADO DE IMPACTOS DE EVOLUCIÓN
+    private async Task ValidateTiposDanioAsync(ManageImpactosCommand request)
+    {
         var idsTipoDanio = request.Impactos
             .Where(i => i.IdTipoDanio.HasValue)
             .Select(i => i.IdTipoDanio.Value)
@@ -99,22 +111,22 @@ public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosComman
                 }
             }
         }
+    }
 
-        // Mapear y actualizar/crear las direcciones de la emergencia
+    private void MapAndManageImpactos(ManageImpactosCommand request, Evolucion evolucion)
+    {
         foreach (var impactoDto in request.Impactos)
         {
             if (impactoDto.Id.HasValue && impactoDto.Id > 0)
             {
-                var direccion = evolucion.Impactos.FirstOrDefault(d => d.Id == impactoDto.Id.Value);
-                if (direccion != null)
+                var impacto = evolucion.Impactos.FirstOrDefault(d => d.Id == impactoDto.Id.Value);
+                if (impacto != null)
                 {
-                    // Actualizar datos existentes
-                    _mapper.Map(impactoDto, direccion);
-                    direccion.Borrado = false;
+                    _mapper.Map(impactoDto, impacto);
+                    impacto.Borrado = false;
                 }
                 else
                 {
-                    // Crear nueva dirección
                     var nuevoImpacto = _mapper.Map<ImpactoEvolucion>(impactoDto);
                     nuevoImpacto.Id = 0;
                     evolucion.Impactos.Add(nuevoImpacto);
@@ -122,35 +134,36 @@ public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosComman
             }
             else
             {
-                // Crear nueva dirección
                 var nuevoImpacto = _mapper.Map<ImpactoEvolucion>(impactoDto);
                 nuevoImpacto.Id = 0;
                 evolucion.Impactos.Add(nuevoImpacto);
             }
         }
+    }
 
-        // Eliminar lógicamente las direcciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
-        if (request.IdEvolucion.HasValue)
+    private async Task DeleteLogicalActivaciones(ManageImpactosCommand request, Evolucion evolucion)
+    {
+        if (request.IdEvolucion.HasValue && request.IdEvolucion.Value > 0)
         {
-            // Solo las direcciones con Id existente (no nuevas)
             var idsEnRequest = request.Impactos
                 .Where(d => d.Id.HasValue && d.Id > 0)
             .Select(d => d.Id)
             .ToList();
 
             var impactosParaEliminar = evolucion.Impactos
-                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id)) // Solo las direcciones que ya existen en la base de datos y no están en el request
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id))
                 .ToList();
+
             foreach (var impacto in impactosParaEliminar)
             {
                 _unitOfWork.Repository<ImpactoEvolucion>().DeleteEntity(impacto);
             }
         }
+    }
 
-
-
-        // Guardar los impactos de evolución
-        if (request.IdEvolucion.HasValue)
+    private async Task SaveEvolucionAsync(ManageImpactosCommand request, Evolucion evolucion)
+    {
+        if (request.IdEvolucion.HasValue && request.IdEvolucion.Value > 0)
         {
             _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
         }
@@ -164,8 +177,5 @@ public class ManageImpactosCommandHandler : IRequestHandler<ManageImpactosComman
         {
             throw new Exception("No se pudo insertar/actualizar nueva evolución");
         }
-
-        _logger.LogInformation($"{nameof(CreateImpactoEvolucionCommandHandler)} - END");
-        return new ManageImpactoResponse { IdEvolucion = evolucion.Id };
     }
 }

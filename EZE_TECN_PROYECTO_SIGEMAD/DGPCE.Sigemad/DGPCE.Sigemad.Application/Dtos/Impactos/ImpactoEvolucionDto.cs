@@ -1,14 +1,10 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Dtos.Impactos;
 public class ImpactoEvolucionDto
 {
+    public int? Id { get; set; }
     public bool? Nuclear { get; set; }
     public int? ValorAD { get; set; }
     public int? Numero { get; set; }

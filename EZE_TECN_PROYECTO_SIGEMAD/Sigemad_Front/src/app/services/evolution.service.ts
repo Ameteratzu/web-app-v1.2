@@ -2,17 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
-import { Evolution } from '../types/evolution.type';
-import { EvolucionIncendio } from '../types/evolution-record.type';
 import { AffectedArea } from '../types/affected-area.type';
-import { Consequences } from '../types/consequences.type';
+import { EvolucionIncendio } from '../types/evolution-record.type';
+import { Evolution } from '../types/evolution.type';
 
 @Injectable({ providedIn: 'root' })
 export class EvolutionService {
   private http = inject(HttpClient);
   public dataRecords = signal<EvolucionIncendio[]>([]);
   public dataAffectedArea = signal<AffectedArea[]>([]);
-  public dataConse = signal<Consequences[]>([]);
+  public dataConse = signal<any[]>([]);
 
   get(fire_id: any) {
     const endpoint = `/Evoluciones/${fire_id}`;
@@ -72,6 +71,7 @@ export class EvolutionService {
   clearData(): void {
     this.dataRecords.set([]);
     this.dataAffectedArea.set([]);
+    this.dataConse.set([]);
   }
 
   postData(body: any) {
@@ -104,6 +104,21 @@ export class EvolutionService {
     );
   }
 
+  postConse(body: any) {
+    const endpoint = `/evoluciones/impactos`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
   getById(id: Number) {
     let endpoint = `/Evoluciones/${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
@@ -112,6 +127,11 @@ export class EvolutionService {
   delete(id: number) {
     const endpoint = `/Evoluciones/${id}`;
 
+    return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
+  }
+  
+  deleteConse(id: number) {
+    const endpoint = `/evoluciones/${id}`;
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
 }

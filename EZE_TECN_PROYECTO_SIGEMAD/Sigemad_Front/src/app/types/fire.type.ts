@@ -7,6 +7,7 @@ export type Fire = {
   denominacion: string;
   fechaInicio: string;
   fechaModificacion: string;
+  fechaUltimoRegistro: string;
   estadoSuceso: FireStatus;
   notaGeneral: string;
   idSuceso: number;

@@ -1,0 +1,94 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/evoluciones/areas-afectadas
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "IdSuceso": {{IdSuceso}},
+    "IdEvolucion": null,
+    "AreasAfectadas": [
+      {
+        "FechaHora": "2024-10-29T09:17:19",
+        "IdProvincia": 30,
+        "IdMunicipio": 1001,
+        "IdEntidadMenor": null,
+        "GeoPosicion": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -104.99404,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75621
+              ]
+            ]
+          ]
+        }
+      },
+      {
+        "FechaHora": "2024-10-29T09:17:19",
+        "IdProvincia": 30,
+        "IdMunicipio": 1001,
+        "IdEntidadMenor": 101,
+        "GeoPosicion": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -104.99404,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75621
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdEvolucion: res.body.idEvolucion
+}
+
+assert {
+  res.status: eq 200
+}

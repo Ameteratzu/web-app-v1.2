@@ -1,0 +1,15 @@
+meta {
+  name: Tipos Planes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{Server}}/api/v1/tipos-planes
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}

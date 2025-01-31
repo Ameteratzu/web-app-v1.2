@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DGPCE.Sigemad.Application.Specifications.Sucesos;
+﻿namespace DGPCE.Sigemad.Application.Specifications.Sucesos;
 public class SucesosSpecificationParams : SpecificationParams
 {
     public string? Denominacion { get; set; }
     public int? IdClaseSuceso { get; set; }
     public int? IdTerritorio { get; set; }
     public int? IdPais { get; set; }
-    public int? IdSuceso { get; set; }
     public int? IdCcaa { get; set; }
     public int? IdProvincia { get; set; }
     public int? IdMunicipio { get; set; }
@@ -19,5 +12,6 @@ public class SucesosSpecificationParams : SpecificationParams
     public int? IdComparativoFecha { get; set; }
     public DateOnly? FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }
+    public int? IdSuceso { get; set; }
 
 }

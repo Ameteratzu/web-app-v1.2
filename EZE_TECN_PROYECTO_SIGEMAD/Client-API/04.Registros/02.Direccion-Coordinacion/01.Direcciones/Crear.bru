@@ -1,0 +1,31 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/direcciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idDireccionCoordinacionEmergencia": null,
+    "idSuceso": {{IdSuceso}},
+    "direcciones": [
+      {
+        "id": null,
+        "idTipoDireccionEmergencia": 1,
+        "autoridadQueDirige": "Autoridad #1",
+        "fechaInicio": "2024-11-24",
+        "fechaFin_": "2024-11-25"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}

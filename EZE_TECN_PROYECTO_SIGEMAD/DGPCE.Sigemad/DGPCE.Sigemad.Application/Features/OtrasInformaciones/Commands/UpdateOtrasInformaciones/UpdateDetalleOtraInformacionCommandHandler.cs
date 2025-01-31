@@ -42,16 +42,16 @@ public class UpdateDetalleOtraInformacionCommandHandler : IRequestHandler<Update
         }
         else
         {
-            var incendio = await _unitOfWork.Repository<Incendio>().GetByIdAsync((int)request.IdIncendio);
-            if (incendio == null)
+            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
+            if (suceso == null)
             {
-                _logger.LogWarning($"request.IdIncendio: {request.IdIncendio}, no encontrado");
-                throw new NotFoundException(nameof(Incendio), request.IdIncendio);
+                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
+                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
             }
 
             otraInformacion = new OtraInformacion 
             {
-                IdIncendio = request.IdIncendio
+                IdSuceso = request.IdSuceso
             };
 
             _unitOfWork.Repository<OtraInformacion>().AddEntity(otraInformacion);

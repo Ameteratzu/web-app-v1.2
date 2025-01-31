@@ -1,0 +1,15 @@
+meta {
+  name: Listar Registros
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{Server}}/api/v1/sucesos/1/registros
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}

@@ -19,6 +19,8 @@ namespace DGPCE.Sigemad.Infrastructure
             services.AddDbContext<SigemadDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ConnectionString"),
                 options => options.UseNetTopologySuite())
+                .EnableSensitiveDataLogging() // Incluye datos sensibles en los logs (¡solo para desarrollo!)
+                .EnableDetailedErrors() // Habilita errores detallados
             );
 
             services.AddSingleton<GeometryFactory>(NetTopologySuite.Geometries.GeometryFactory.Default);

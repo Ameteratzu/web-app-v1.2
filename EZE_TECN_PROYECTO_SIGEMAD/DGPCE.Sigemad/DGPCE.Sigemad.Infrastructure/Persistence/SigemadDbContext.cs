@@ -35,7 +35,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
                         entry.State = EntityState.Modified;
                         entry.Entity.Borrado = true;
                         entry.Entity.FechaEliminacion = DateTime.Now;
-                        entry.Entity.ModificadoPor = _authService.GetCurrentUserId();
+                        entry.Entity.EliminadoPor = _authService.GetCurrentUserId();
                         break;
                 }
             }
@@ -46,41 +46,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Streamer>()
-            //.HasMany(m => m.Videos)
-            //    .WithOne(m => m.Streamer)
-            //    .HasForeignKey(m => m.StreamerId)
-            //    .IsRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Director>()
-            //.HasMany(v => v.Videos)
-            //    .WithOne(d => d.Director)
-            //    .HasForeignKey(d => d.DirectorId)
-            //    .IsRequired()
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
-            //modelBuilder.Entity<Video>()
-            //    .HasMany(a => a.Actores)
-            //    .WithMany(v => v.Videos)
-            //    .UsingEntity<VideoActor>(
-            //         j => j
-            //           .HasOne(p => p.Actor)
-            //           .WithMany(p => p.VideoActors)
-            //           .HasForeignKey(p => p.ActorId),
-            //        j => j
-            //            .HasOne(p => p.Video)
-            //            .WithMany(p => p.VideoActors)
-            //            .HasForeignKey(p => p.VideoId),
-            //        j =>
-            //        {
-            //            j.HasKey(t => new { t.ActorId, t.VideoId });
-            //        }
-            //);
-
-            //modelBuilder.Entity<VideoActor>().Ignore(va => va.Id);
-
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
@@ -114,9 +79,11 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionOperativa>().ToTable(nameof(SituacionOperativa));
             modelBuilder.Entity<SucesoRelacionado>().ToTable(nameof(SucesoRelacionado));
             modelBuilder.Entity<Archivo>().ToTable(nameof(Archivo));
-            modelBuilder.Entity<Fase>().ToTable(nameof(Fase));
-            modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
+            modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
+            modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
+            modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
+            modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
         }
 
 
@@ -172,9 +139,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<DetalleOtraInformacion_ProcedenciaDestino> DetallesOtraInformacion_ProcedenciaDestinos { get; set; }
 
         public DbSet<SucesoRelacionado> SucesosRelacionados { get; set; }
-        public DbSet<Fase> Fases { get; set; }
-        public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
-
+        public DbSet<FaseEmergencia> FasesEmergencia { get; set; }
         public DbSet<Registro> Registros { get; set; }
 
         public DbSet<Parametro> Parametro { get; set; }
@@ -182,9 +147,32 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         public DbSet<TipoDocumento> TipoDocumentos { get; set; }
         public DbSet<Documentacion> Documentaciones { get; set; }
-
         public DbSet<DetalleDocumentacion> DetalleDocumentaciones { get; set; }
         public DbSet<DocumentacionProcedenciaDestino> DocumentacionProcedenciaDestinos { get; set; }
+        public DbSet<AmbitoPlan> AmbitoPlanes { get; set; }
+        public DbSet<TipoRiesgo> TipoRiesgos { get; set; }
+        public DbSet<PlanEmergencia> PlanesEmergencias { get; set; }
+        public DbSet<ModoActivacion> ModosActivacion { get; set; }
+
+        public DbSet<TipoSistemaEmergencia> TiposSistemasEmergencias { get; set; }
+
+        public DbSet<PlanSituacion> PlanesSituaciones { get; set; }
+
+        public DbSet<ActuacionRelevanteDGPCE> ActuacionesRelevantesDGPCE { get; set; }
+
+        public DbSet<EmergenciaNacional> EmergenciasNacionales { get; set; }
+        public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
+
+        public DbSet<DeclaracionZAGEP> DeclaracionesZAGEP { get; set; }
+
+        public DbSet<ActivacionSistema> ActivacionesSistemas { get; set; }
+
+        public DbSet<ConvocatoriaCECOD> ConvocatoriasCECOD { get; set; }
+
+        public DbSet<NotificacionEmergencia> NotificacionesEmergencias { get; set; }
+
+        public DbSet<TipoNotificacion> TiposNotificaciones { get; set; }
+        
 
     }
 }

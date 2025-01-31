@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  urlBase: 'https://cd72e1572e6a.ngrok.app//api/v1',
+  urlBase: 'https://develop.sigemad.duckdns.org/api/v1',
+  urlGeoserver: 'https://geoserver.sigemad.duckdns.org/geoserver/sigemad/wms/',
 };

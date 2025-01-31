@@ -1,13 +1,8 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetGruposImpactosList;
-using DGPCE.Sigemad.Application.Features.ImpactosClasificados.Queries.GetTiposImpactosList;
+using DGPCE.Sigemad.Application.Specifications;
 using DGPCE.Sigemad.Domain.Modelos;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Tests.Features.ImpactosClasificados.Queries;
 public class GetGruposImpactosListQueryHandlerTest
@@ -25,7 +20,7 @@ public class GetGruposImpactosListQueryHandlerTest
     public async Task Handle_ValidQuery_ReturnsListOfGruposImpactos()
     {
         // Arrange
-        var request = new GetGruposImpactosListQuery();        
+        var request = new GetGruposImpactosListQuery();
 
         var impactoClasificadoList = new List<ImpactoClasificado>
         {
@@ -33,10 +28,9 @@ public class GetGruposImpactosListQueryHandlerTest
             new ImpactoClasificado { GrupoImpacto = "Servicios básicos" },
             new ImpactoClasificado { GrupoImpacto = "Daños" },
             new ImpactoClasificado { GrupoImpacto = "Medio natural y otros" }
-        };        
+        };
 
-        _unitOfWorkMock
-            .Setup(uow => uow.Repository<ImpactoClasificado>().GetAllAsync())
+        _unitOfWorkMock.Setup(uow => uow.Repository<ImpactoClasificado>().GetAllWithSpec(It.IsAny<ISpecification<ImpactoClasificado>>()))
             .ReturnsAsync(impactoClasificadoList);
 
 
@@ -81,7 +75,7 @@ public class GetGruposImpactosListQueryHandlerTest
 
         var expectedGruposImpactos = new List<string> { "Personas", "Servicios básicos", "Daños", "Medio natural y otros" };
 
-        _unitOfWorkMock.Setup(uow => uow.Repository<ImpactoClasificado>().GetAllAsync())
+        _unitOfWorkMock.Setup(uow => uow.Repository<ImpactoClasificado>().GetAllWithSpec(It.IsAny<ISpecification<ImpactoClasificado>>()))
             .ReturnsAsync(impactoClasificadoList);
 
         // Act

@@ -27,14 +27,13 @@ public class DeleteIncendioCommandHandler : IRequestHandler<DeleteIncendioComman
     public async Task<Unit> Handle(DeleteIncendioCommand request, CancellationToken cancellationToken)
     {
         var incendioToDelete = await _unitOfWork.Repository<Incendio>().GetByIdAsync(request.Id);
-        if (incendioToDelete is null)
+        if (incendioToDelete is null || incendioToDelete.Borrado)
         {
             _logger.LogWarning($"El incendio con id:{request.Id}, no existe en la base de datos");
             throw new NotFoundException(nameof(Incendio), request.Id);
         }
 
-        incendioToDelete.Borrado = true;
-        _unitOfWork.Repository<Incendio>().UpdateEntity(incendioToDelete);
+        _unitOfWork.Repository<Incendio>().DeleteEntity(incendioToDelete);
 
         await _unitOfWork.Complete();
         _logger.LogInformation($"El incendio con id: {request.Id}, se actualizo estado de borrado con éxito");

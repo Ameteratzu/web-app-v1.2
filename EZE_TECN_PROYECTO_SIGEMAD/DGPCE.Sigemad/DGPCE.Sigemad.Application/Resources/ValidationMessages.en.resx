@@ -324,4 +324,79 @@
   <data name="ObservacionObligatorio" xml:space="preserve">
     <value>Note is mandatory</value>
   </data>
+  <data name="IdSucesoObligatorio" xml:space="preserve">
+    <value>Id Event is mandatory</value>
+  </data>
+  <data name="RegistroObligatorio" xml:space="preserve">
+    <value>Record Data is mandatory</value>
+  </data>
+  <data name="DatoPrincipalObligatorio" xml:space="preserve">
+    <value>Main data are mandatory</value>
+  </data>
+  <data name="ParametroObligatorio" xml:space="preserve">
+    <value>Parameter data are mandatory</value>
+  </data>
+  <data name="IdEntradaSalidaObligatorio" xml:space="preserve">
+    <value>Input/Output list ID is mandatory</value>
+  </data>
+  <data name="IdMedioObligatorio" xml:space="preserve">
+    <value>Media list ID is required</value>
+  </data>
+  <data name="ProcedenciasDestinosObligatorio" xml:space="preserve">
+    <value>Source/Destination list is required</value>
+  </data>
+  <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
+    <value>State Fire ID is mandatory</value>
+  </data>
+  <data name="AutoridadSolicitanteObligatorio" xml:space="preserve">
+    <value>Requesting Authority is mandatory</value>
+  </data>
+  <data name="AutoridadSolicitanteMaxLength" xml:space="preserve">
+    <value>Requesting Authority cannot exceed 500 characters</value>
+  </data>
+  <data name="DescripcionSolicitudObligatorio" xml:space="preserve">
+    <value>Application Description is mandatory</value>
+  </data>
+  <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
+    <value>Application Description cannot exceed 510 characters</value>
+  </data>
+  <data name="FechaSolicitudObligatorio" xml:space="preserve">
+    <value>DateRequest is Mandatory</value>
+  </data>
+  <data name="DenominacionZAGEPMaxLength" xml:space="preserve">
+    <value>Designation cannot exceed 510 characters</value>
+  </data>
+  <data name="AutoridadObligatorio" xml:space="preserve">
+    <value>Authority is mandatory</value>
+  </data>
+  <data name="AutoridadMaxLength" xml:space="preserve">
+    <value>Authority cannot exceed 100 characters</value>
+  </data>
+  <data name="LugarObligatorioMaxLength" xml:space="preserve">
+    <value>The location cannot exceed 510 characters</value>
+  </data>
+  <data name="ConvocadosObligatorio" xml:space="preserve">
+    <value>Summoned is mandatory</value>
+  </data>
+  <data name="ConvocadosMaxLength" xml:space="preserve">
+    <value>Summoned cannot exceed 510 characters</value>
+  </data>
+  <data name="IdArchivoOrArchivo" xml:space="preserve">
+    <value>You must provide at least one value for FileID or Archive</value>
+  </data>
+  <data name="IdTipoSistemaEmergencia" xml:space="preserve">
+    <value>Emergency System Type ID is mandatory</value>
+  </data>
+  <data name="IdTipoNotificacionObligatorio" xml:space="preserve">
+    <value>IdNotificationType is mandatory</value>
+  </data>
+  <data name="FechaHoraNotificacionObligatorio" xml:space="preserve">
+    <value>DateTimeNotification is mandatory</value>
+  </data>
+  <data name="OrganosNotificadosObligatorio" xml:space="preserve">
+    <value>Notified Bodies is mandatory</value>
+  </data>
+  <data name="OrganosNotificadosMaxLength" xml:space="preserve">
+    <value>Notified bodies may not exceed 510 characters in length.</value>
+  </data>
 </root>

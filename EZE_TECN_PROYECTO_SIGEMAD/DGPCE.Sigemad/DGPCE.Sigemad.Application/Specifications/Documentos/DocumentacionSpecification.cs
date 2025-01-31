@@ -10,6 +10,6 @@ internal class DocumentacionSpecification : BaseSpecification<Documentacion>
         AddInclude(d => d.DetallesDocumentacion);
         AddInclude("DetallesDocumentacion.DocumentacionProcedenciaDestinos.ProcedenciaDestino");
         AddInclude("DetallesDocumentacion.TipoDocumento");
-
+        AddInclude("DetallesDocumentacion.Archivo");
     }
 }

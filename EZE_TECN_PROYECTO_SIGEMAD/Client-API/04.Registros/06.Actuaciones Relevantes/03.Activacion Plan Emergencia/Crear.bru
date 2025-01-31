@@ -1,0 +1,30 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/actuaciones-relevantes/activaciones-planes/lista
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  IdActuacionRelevante: 0
+  IdSuceso: 1
+  ActivacionPlanes[0].Id: 0
+  ActivacionPlanes[0].IdTipoPlan: 1
+  ActivacionPlanes[0].TipoPlanPersonalizado: Nuevo plan personalizado
+  ActivacionPlanes[0].IdPlanEmergencia: 1
+  ActivacionPlanes[0].PlanEmergenciaPersonalizado: Plan de emergencia personalizado
+  ActivacionPlanes[0].FechaInicio: 2025-01-27
+  ActivacionPlanes[0].FechaFin: 2025-02-27
+  ActivacionPlanes[0].Autoridad: Nueva autoridad
+  ActivacionPlanes[0].Observaciones: Nueva observacion
+  ActivacionPlanes[0].Archivo: @file(C:\Users\ftm_com_uat\Downloads\vite.svg)
+}
+
+assert {
+  res.status: eq 200
+}

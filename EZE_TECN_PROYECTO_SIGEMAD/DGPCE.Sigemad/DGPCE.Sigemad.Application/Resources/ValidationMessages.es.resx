@@ -310,10 +310,10 @@
     <value>IdTipoDocumento es invalido</value>
   </data>
   <data name="DescripcionObligatorio" xml:space="preserve">
-    <value>Descripcion es obligatorio</value>
+    <value>Descripción es obligatorio</value>
   </data>
   <data name="DescripcionMaxLength" xml:space="preserve">
-    <value>Descripcion no puede exceder los 255 caracteres</value>
+    <value>Descripción no puede exceder los 255 caracteres</value>
   </data>
   <data name="IdArchivoObligatorio" xml:space="preserve">
     <value>IdArchivo es obligatorio</value>
@@ -323,5 +323,80 @@
   </data>
   <data name="ObservacionObligatorio" xml:space="preserve">
     <value>Observación es obligatorio</value>
+  </data>
+  <data name="IdSucesoObligatorio" xml:space="preserve">
+    <value>Id Suceso es obligatorio</value>
+  </data>
+  <data name="RegistroObligatorio" xml:space="preserve">
+    <value>Datos de Registros son obligatorio</value>
+  </data>
+  <data name="DatoPrincipalObligatorio" xml:space="preserve">
+    <value>Datos Principal son obligatorios</value>
+  </data>
+  <data name="ParametroObligatorio" xml:space="preserve">
+    <value>Datos de parámetros son obligatorio</value>
+  </data>
+  <data name="IdEntradaSalidaObligatorio" xml:space="preserve">
+    <value>Id de lista Entrada/Salida es obligatorio</value>
+  </data>
+  <data name="IdMedioObligatorio" xml:space="preserve">
+    <value>Id de lista de medios es obligatorio</value>
+  </data>
+  <data name="ProcedenciasDestinosObligatorio" xml:space="preserve">
+    <value>Lista de procedencia/Destino es obligatorio</value>
+  </data>
+  <data name="IdEstadoIncendioObligatorio" xml:space="preserve">
+    <value>Id de estado incendio es obligatorio</value>
+  </data>
+  <data name="AutoridadSolicitanteObligatorio" xml:space="preserve">
+    <value>Autoridad Solicitante es obligatorio</value>
+  </data>
+  <data name="AutoridadSolicitanteMaxLength" xml:space="preserve">
+    <value>Autoridad solicitante no puede superar los 510 caracteres</value>
+  </data>
+  <data name="DescripcionSolicitudObligatorio" xml:space="preserve">
+    <value>Descripción Solicitud es obligatorio</value>
+  </data>
+  <data name="DescripcionSolicitudMaxLength" xml:space="preserve">
+    <value>Descripción Solicitud no puede superar los 510 caracteres</value>
+  </data>
+  <data name="FechaSolicitudObligatorio" xml:space="preserve">
+    <value>FechaSolicitud es obligatoria</value>
+  </data>
+  <data name="DenominacionZAGEPMaxLength" xml:space="preserve">
+    <value>Denominación no puede exceder los 510 caracteres</value>
+  </data>
+  <data name="AutoridadObligatorio" xml:space="preserve">
+    <value>Autoridad es obligatorio</value>
+  </data>
+  <data name="AutoridadMaxLength" xml:space="preserve">
+    <value>Autoridad no puede exceder 100 caracteres</value>
+  </data>
+  <data name="LugarObligatorioMaxLength" xml:space="preserve">
+    <value>Lugar no puede exceder los 510 caracteres</value>
+  </data>
+  <data name="ConvocadosObligatorio" xml:space="preserve">
+    <value>Convocados es obligatorio</value>
+  </data>
+  <data name="ConvocadosMaxLength" xml:space="preserve">
+    <value>Convocados no puede exceder los 510 caracteres</value>
+  </data>
+  <data name="IdArchivoOrArchivo" xml:space="preserve">
+    <value>Debe proporcionar al menos un valor para IdArchivo o Archivo</value>
+  </data>
+  <data name="IdTipoSistemaEmergencia" xml:space="preserve">
+    <value>Id Tipo Sistema de Emergencia es obligatorio</value>
+  </data>
+  <data name="IdTipoNotificacionObligatorio" xml:space="preserve">
+    <value>IdTipoNotificacion es obligatorio</value>
+  </data>
+  <data name="FechaHoraNotificacionObligatorio" xml:space="preserve">
+    <value>FechaHoraNotificacion es obligatorio</value>
+  </data>
+  <data name="OrganosNotificadosObligatorio" xml:space="preserve">
+    <value>Organos Notificados es obligatorio</value>
+  </data>
+  <data name="OrganosNotificadosMaxLength" xml:space="preserve">
+    <value>Organos notificados no puede superar los 510 caracteres</value>
   </data>
 </root>

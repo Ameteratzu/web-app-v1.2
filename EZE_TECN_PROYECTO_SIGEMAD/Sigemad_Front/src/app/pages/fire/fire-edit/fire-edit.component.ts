@@ -22,7 +22,6 @@ import moment from 'moment';
 
 import { EventService } from '../../../services/event.service';
 import { EventStatusService } from '../../../services/eventStatus.service';
-import { FireStatusService } from '../../../services/fire-status.service';
 import { FireService } from '../../../services/fire.service';
 import { MenuItemActiveService } from '../../../services/menu-item-active.service';
 import { MunicipalityService } from '../../../services/municipality.service';
@@ -50,6 +49,8 @@ import { FireCoordinationData } from '../../fire-coordination-data/fire-coordina
 import { FireDocumentation } from '../../fire-documentation/fire-documentation.component';
 import { FireCreateComponent } from '../../fire-evolution-create/fire-evolution-create.component';
 import { FireOtherInformationComponent } from '../../fire-other-information/fire-other-information.component';
+import { FireRelatedEventComponent } from '../../fire-related-event/fire-related-event.component';
+import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-actions-relevant.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -89,7 +90,6 @@ export class FireEditComponent implements OnInit {
   public municipalityService = inject(MunicipalityService);
   public eventService = inject(EventService);
   public eventStatusService = inject(EventStatusService);
-  public fireStatusService = inject(FireStatusService);
   public route = inject(ActivatedRoute);
   public routenav = inject(Router);
   private spinner = inject(NgxSpinnerService);
@@ -107,7 +107,7 @@ export class FireEditComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['numero', 'fechaHora', 'registro', 'origen', 'tipoRegistro', 'tecnico', 'opciones'];
+  public displayedColumns: string[] = ['numero', 'fechaHora', 'tipoRegistro', 'apartados', 'tecnico', 'opciones'];
 
   public fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -145,7 +145,7 @@ export class FireEditComponent implements OnInit {
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
       municipality: this.fire.municipio,
-      startDate: moment(this.fire.fechaInicio).format('YYYY-MM-DD'),
+      startDate: moment(this.fire.fechaInicio).format('DD/MM/YYYY'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
       idEstado: this.fire.idEstadoSuceso,
@@ -177,6 +177,51 @@ export class FireEditComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
+  goModalRelatedEvent(fireDetail?: FireDetail) {
+    const dialogRef = this.matDialog.open(FireRelatedEventComponent, {
+      width: '90vw',
+      maxWidth: 'none',
+      maxHeight: '95vh',
+      disableClose: true,
+      data: {
+        title: fireDetail ? 'Editar - Sucesos Relacionados' : 'Nuevo - Sucesos Relacionados',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fire: this.fire,
+        fireDetail,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.info('close', result);
+      if (result) {
+        this.cargarRegistros();
+      }
+    });
+  }
+
+  
+  goModalRelevantActions(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalRelevantActions ~ fireDetail:", fireDetail)
+    const dialogRef = this.matDialog.open(FireActionsRelevantComponent, {
+      width: '90vw',
+      height: '90vh',
+      maxWidth: 'none',
+      disableClose: true,
+      data: {
+        title: fireDetail ? 'Editar -Actuaciones relevantes' : 'Nuevo - Actuaciones relevantes',
+        idIncendio: Number(this.route.snapshot.paramMap.get('id')),
+        fireDetail,
+        fire: this.fire 
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.cargarRegistros();
+      }
+    });
+  }
+
   goModalEvolution(fireDetail?: FireDetail) {
     const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
 
@@ -190,6 +235,7 @@ export class FireEditComponent implements OnInit {
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
         valoresDefecto: resultado ? resultado.id : null,
+        fire: this.fire 
       },
     });
 
@@ -275,6 +321,8 @@ export class FireEditComponent implements OnInit {
       'Otra Información': this.goModalOtherInformation.bind(this),
       'Dirección y coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
+      'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
+      'Actuaciones Relevantes': this.goModalRelevantActions.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro];
@@ -317,7 +365,10 @@ export class FireEditComponent implements OnInit {
                 icon: 'success',
               })
               .then((result) => {
-                this.routenav.navigate([`/fire`]);
+                this.routenav.navigate(['/fire']).then(() => {
+                  window.location.href = '/fire';
+                });
+
               });
           }, 2000);
         } else {

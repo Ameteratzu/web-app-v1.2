@@ -23,7 +23,6 @@ import { DireccionesService } from '../../../services/direcciones.service';
 import { MunicipalityService } from '../../../services/municipality.service';
 import { ProvinceService } from '../../../services/province.service';
 import { MapCreateComponent } from '../../../shared/mapCreate/map-create.component';
-import { CoordinationAddress } from '../../../types/coordination-address';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
@@ -70,6 +69,9 @@ export class CecopiComponent {
   @Output() save = new EventEmitter<SavePayloadModal>();
   @Input() editData: any;
   @Input() esUltimo: boolean | undefined;
+  @Input() dataMaestros: any;
+  @Input() fire: any;
+
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
   public polygon = signal<any>([]);
@@ -88,7 +90,6 @@ export class CecopiComponent {
 
   formDataCecopi!: FormGroup;
 
-  public coordinationAddress = signal<CoordinationAddress[]>([]);
   public isCreate = signal<number>(-1);
   public provinces = signal<Province[]>([]);
   public municipalities = signal<Municipality[]>([]);
@@ -96,12 +97,8 @@ export class CecopiComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
-    this.coordinationAddress.set(coordinationAddress);
-
-    const provinces = await this.provinceService.get();
-    this.provinces.set(provinces);
-
+    this.provinces.set(this.dataMaestros.provinces);
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.dataMaestros.provinces:', this.dataMaestros.provinces);
     this.formDataCecopi = this.fb.group({
       provincia: ['', Validators.required],
       municipio: ['', Validators.required],
@@ -111,7 +108,14 @@ export class CecopiComponent {
       observaciones: [''],
     });
 
-    this.formDataCecopi.get('municipio')?.disable();
+    const defaultProvincia = this.provinces().find((provincia) => provincia.id === this.fire.idProvincia);
+    console.log('🚀 ~ CecopiComponent ~ ngOnInit ~ this.fire:', this.fire);
+    this.formDataCecopi.get('provincia')?.setValue(defaultProvincia);
+
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    this.municipalities.set(municipalities);
+    const defaultMuni = this.municipalities().find((muni) => muni.id === this.fire.idMunicipio);
+    this.formDataCecopi.get('municipio')?.setValue(defaultMuni);
 
     if (this.editData) {
       console.log('Información recibida en el hijo:', this.editData);
@@ -228,7 +232,7 @@ export class CecopiComponent {
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
-    console.info("this.coordinationServices.dataCecopi()[index]", this.coordinationServices.dataCecopi()[index])
+
     this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];

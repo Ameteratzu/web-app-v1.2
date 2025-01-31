@@ -1,9 +1,9 @@
-﻿using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Features.Sucesos.Vms;
+﻿using DGPCE.Sigemad.Application.Dtos.Sucesos;
+using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetSucesosList;
-public class GetSucesosListQuery : SucesosSpecificationParams, IRequest<PaginationVm<SucesosBusquedaVm>>
+public class GetSucesosListQuery : SucesosSpecificationParams, IRequest<PaginationVm<SucesoGridDto>>
 {
 }

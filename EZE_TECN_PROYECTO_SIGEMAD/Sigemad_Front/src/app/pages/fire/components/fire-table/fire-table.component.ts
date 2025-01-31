@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import moment from 'moment';
+import { TooltipDirective } from '../../../../shared/directive/tooltip/tooltip.directive';
 import { Fire } from '../../../../types/fire.type';
 import { FireCreateComponent } from '../../../fire-evolution-create/fire-evolution-create.component';
 import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.component';
@@ -16,7 +17,7 @@ import { FireCreateEdit } from '../fire-create-edit-form/fire-create-edit-form.c
   standalone: true,
   templateUrl: './fire-table.component.html',
   styleUrls: ['./fire-table.component.scss'],
-  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule],
+  imports: [MatPaginatorModule, MatTableModule, MatDialogModule, CommonModule, MatProgressSpinnerModule, TooltipDirective],
 })
 export class FireTableComponent implements OnChanges {
   @Input() fires: Fire[] = [];
@@ -87,8 +88,17 @@ export class FireTableComponent implements OnChanges {
   }
 
   getLastUpdated(fire: Fire) {
-    const { fechaInicio, fechaModificacion } = fire;
-    return fechaModificacion ? moment(fechaModificacion).format('DD/MM/yyyy hh:mm') : moment(fire.fechaInicio).format('DD/MM/yyyy hh:mm');
+    const { fechaUltimoRegistro } = fire;
+    if(fechaUltimoRegistro){
+      return fechaUltimoRegistro ? moment(fechaUltimoRegistro).format('DD/MM/yyyy hh:mm') : moment(fire.fechaUltimoRegistro).format('DD/MM/yyyy hh:mm');
+    }else{
+      return 'Sin fecha registrada.'
+    }
+    
+  }
+
+  getFechaInicio(fecha: any) {
+    return moment(fecha).format('DD/MM/yyyy hh:mm');
   }
 
   goModalEdit(fire: Fire) {
@@ -102,8 +112,8 @@ export class FireTableComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if(result?.refresh){
-        this.refreshFilterFormChange.emit(!this.refreshFilterForm)
+      if (result?.refresh) {
+        this.refreshFilterFormChange.emit(!this.refreshFilterForm);
       }
     });
   }

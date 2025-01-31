@@ -9,8 +9,8 @@ public class CreateOrUpdateDireccionCommandValidator : AbstractValidator<CreateO
 {
     public CreateOrUpdateDireccionCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(x => x.IdIncendio)
-            .GreaterThan(0).WithMessage(localizer["IdIncendioObligatorio"]);
+        RuleFor(x => x.IdSuceso)
+            .GreaterThan(0).WithMessage(localizer["IdSucesoObligatorio"]);
 
         RuleForEach(x => x.Direcciones)
             .SetValidator(new DireccionDtoValidator(localizer))

@@ -17,6 +17,8 @@ import { FireDetail } from '../../types/fire-detail.type';
 import { AddressComponent } from './address/address.component';
 import { CecopiComponent } from './cecopi/cecopi.component';
 import { PmaComponent } from './pma/pma.component';
+import { DireccionesService } from '../../services/direcciones.service';
+import { ProvinceService } from '../../services/province.service';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -49,6 +51,7 @@ export class FireCoordinationData {
     title: string;
     idIncendio: number;
     fireDetail?: FireDetail;
+    fire?: FireDetail;
   };
 
   public matDialog = inject(MatDialog);
@@ -58,8 +61,10 @@ export class FireCoordinationData {
   public renderer = inject(Renderer2);
   public router = inject(Router);
   public alertService = inject(AlertService);
-
   private dialogRef = inject(MatDialogRef<FireCoordinationData>);
+  public direcionesServices = inject(DireccionesService);
+  private provinceService = inject(ProvinceService);
+
   readonly sections = [
     { id: 1, label: 'Dirección' },
     { id: 2, label: 'Coordinación CECOPI' },
@@ -77,6 +82,8 @@ export class FireCoordinationData {
   idReturn = null;
   isEdit = false;
 
+  dataMaestros: any = {};
+
   async isToEditDocumentation() {
     if (!this.data?.fireDetail?.id) {
       this.isDataReady = true;
@@ -91,8 +98,23 @@ export class FireCoordinationData {
     this.isDataReady = true;
   }
 
+  async loadData() {
+    const coordinationAddress = await this.direcionesServices.getAllDirecciones();
+    const provinces = await this.provinceService.get();
+
+    this.dataMaestros = {
+      coordinationAddress,
+      provinces,
+    };
+
+    console.log('🚀 ~ loadData ~ this.dataMaestros:', this.dataMaestros);
+
+    return this.dataMaestros;
+  }
+
   async ngOnInit() {
     this.spinner.show();
+    await this.loadData();
     this.isToEditDocumentation();
   }
 
@@ -266,7 +288,7 @@ export class FireCoordinationData {
       const formattedData = data.map(formatter);
 
       const body = {
-        idIncendio: this.data.idIncendio,
+        IdSuceso: this.data.idIncendio,
         idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
