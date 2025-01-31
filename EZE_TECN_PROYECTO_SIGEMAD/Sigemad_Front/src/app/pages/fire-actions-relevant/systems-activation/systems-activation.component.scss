@@ -26,6 +26,7 @@
 
 .title {
   color: var(--fire-color);
+  text-decoration: underline;
 }
 
 .mat-mdc-row:nth-child(odd) {
@@ -45,4 +46,3 @@
   margin-top: 12px;
   margin-bottom: 20px;
 }
-

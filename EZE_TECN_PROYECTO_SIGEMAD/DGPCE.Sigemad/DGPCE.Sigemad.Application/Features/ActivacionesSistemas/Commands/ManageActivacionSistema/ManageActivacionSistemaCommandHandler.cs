@@ -120,7 +120,7 @@ public class ManageActivacionSistemaCommandHandler : IRequestHandler<ManageActiv
 
     private async Task ValidateModosActivacion(ManageActivacionSistemaCommand request)
     {
-        var idsModosActivacion = request.Detalles.Select(c => c.IdModoActivacion).Distinct();
+        var idsModosActivacion = request.Detalles.Select(c => c.IdModoActivacion).Where(c => c.HasValue).Distinct();
         var ModosActivacionExistentes = await _unitOfWork.Repository<ModoActivacion>().GetAsync(p => idsModosActivacion.Contains(p.Id));
 
         if (ModosActivacionExistentes.Count() != idsModosActivacion.Count())

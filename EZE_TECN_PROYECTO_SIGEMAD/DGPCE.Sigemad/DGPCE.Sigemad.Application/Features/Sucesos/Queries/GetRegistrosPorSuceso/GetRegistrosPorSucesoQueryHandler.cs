@@ -170,13 +170,13 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         // Verifica si "DatoPrincipal" tiene datos
         if (evolucion.DatoPrincipal != null)
         {
-            titulos.Add("Dato Principal");
+            titulos.Add("Datos principales");
         }
 
         // Verifica si "Parametro" tiene datos
         if (evolucion.Parametro != null)
         {
-            titulos.Add("Parámetro");
+            titulos.Add("Parámetros");
         }
 
         // Verifica si "AreaAfectadas" tiene al menos un elemento
@@ -246,7 +246,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
 
         if (sucesoRelacionado.DetalleSucesoRelacionados != null && sucesoRelacionado.DetalleSucesoRelacionados.Any())
         {
-            titulos.Add("Suceso Relacionado");
+            titulos.Add("Sucesos Relacionados");
         }
 
         return titulos;
@@ -268,7 +268,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
 
         if (actuacionRelevante.DeclaracionesZAGEP != null && actuacionRelevante.DeclaracionesZAGEP.Any())
         {
-            titulos.Add("Declaraciones ZAGEP");
+            titulos.Add("Declaración ZAGEP");
         }
 
         if (actuacionRelevante.ActivacionSistemas != null && actuacionRelevante.ActivacionSistemas.Any())
@@ -278,12 +278,12 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
 
         if (actuacionRelevante.ConvocatoriasCECOD != null && actuacionRelevante.ConvocatoriasCECOD.Any())
         {
-            titulos.Add("Convocatorias CECOD");
+            titulos.Add("Convocatoria CECOD");
         }
 
         if (actuacionRelevante.NotificacionesEmergencias != null && actuacionRelevante.NotificacionesEmergencias.Any())
         {
-            titulos.Add("Notificaciones Emergencias");
+            titulos.Add("Notificaciones oficiales");
         }
       
 

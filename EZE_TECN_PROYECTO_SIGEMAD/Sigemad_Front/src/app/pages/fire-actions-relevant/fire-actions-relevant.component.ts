@@ -10,9 +10,12 @@ import { EmergencyNationalComponent } from './emergency-national/emergency-natio
 import { ZagepComponent } from './zagep/zagep.component';
 import { CecodComponent } from './cecod/cecod.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { ActivationPlanComponent } from './activation-plan/activation-plan.component';
+import { SystemsActivationComponent } from './systems-activation/systems-activation.component';
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
+import moment from 'moment';
 
 @Component({
   selector: 'app-fire-actions-relevant',
@@ -26,6 +29,8 @@ import { _isNumberValue } from '@angular/cdk/coercion';
     ZagepComponent,
     CecodComponent,
     NotificationsComponent,
+    ActivationPlanComponent,
+    SystemsActivationComponent
   ],
   animations: [
     trigger('fadeInOut', [
@@ -81,12 +86,16 @@ export class FireActionsRelevantComponent {
 
   async loadData() {
     const tipoNotificaciones = await this.actionsRelevantSevice.getTipoNotificacion();
+    const tipoPlanes = await this.actionsRelevantSevice.getAllPlanes();
+    const tiposActivacion = await this.actionsRelevantSevice.getTipoActivacion();
+    const modosActivacion = await this.actionsRelevantSevice.getModosActivacion();
 
     this.dataMaestros = {
       tipoNotificaciones,
+      tipoPlanes,
+      tiposActivacion,
+      modosActivacion
     };
-
-    console.log('🚀 ~ loadData ~ this.dataMaestros:', this.dataMaestros);
 
     return this.dataMaestros;
   }
@@ -161,7 +170,50 @@ export class FireActionsRelevantComponent {
       this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;
       const result: any = await this.actionsRelevantSevice.postData(this.actionsRelevantSevice.dataEmergencia()[0]);
       this.idReturn = result.idActuacionRelevante;
-      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~  this.idReturn:', this.idReturn);
+    }
+
+    if (this.actionsRelevantSevice.dataPlanes().length > 0) {
+      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ this.actionsRelevantSevice.dataPlanes():", this.actionsRelevantSevice.dataPlanes())
+
+      const arrayToSave = this.actionsRelevantSevice.dataPlanes().map((item, index) => {
+        return {
+          id: item.id ?? null,
+          idTipoPlan: _isNumberValue(item.idTipoPlan) ? item.idTipoPlan : item.idTipoPlan.id,
+          nombrePlan: item.nombrePlan,
+          nombrePlanPersonalizado: item.nombrePlanPersonalizado,
+          fechaInicio: this.formatDate(item.fechaInicio),
+          fechaFin: this.formatDate(item.fechaFin),
+          autoridad: item.autoridad,
+          observaciones: item.observaciones,
+          archivo: item.file,
+        };
+      });
+  
+      const objToSave = {
+        detallesDocumentaciones: arrayToSave,
+      };
+  
+      const formData = new FormData();
+      formData.append('IdActuacionRelevante', this.actionsRelevantSevice.dataPlanes()[0].idActuacionRelevante ?? 0);
+      formData.append('idSuceso', this.data.idIncendio.toString());
+
+      objToSave.detallesDocumentaciones.forEach((detalle, index) => {
+        formData.append(`detalles[${index}].Id`, (detalle.id ?? '0').toString());
+        formData.append(`detalles[${index}].IdTipoPlan`, (detalle.idTipoPlan).toString());
+        formData.append(`detalles[${index}].FechaInicio`, detalle.fechaInicio);
+        formData.append(`detalles[${index}].FechaFin`, detalle.fechaFin);
+        formData.append(`detalles[${index}].Autoridad`, detalle.autoridad ?? '');
+        formData.append(`detalles[${index}].TipoPlanPersonalizado`, detalle.nombrePlanPersonalizado ?? '');
+        formData.append(`detalles[${index}].IdPlanEmergencia`, '3');
+        formData.append(`detalles[${index}].PlanEmergenciaPersonalizado`, detalle.nombrePlan ?? '');
+        formData.append(`detalles[${index}].Observaciones`, detalle.observaciones ?? '');
+        formData.append(`detalles[${index}].Archivo`, detalle.archivo);
+      });
+
+      const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);
+      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:", resp)
+      
+      this.idReturn = resp.idActuacionRelevante;
     }
 
     if (this.actionsRelevantSevice.dataCecod().length > 0) {
@@ -180,7 +232,7 @@ export class FireActionsRelevantComponent {
         'detalles'
       );
     }
-    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ this.actionsRelevantSevice.dataNotificaciones():", this.actionsRelevantSevice.dataNotificaciones())
+
     if (this.actionsRelevantSevice.dataNotificaciones().length > 0) {
     
       await this.handleDataProcessing(
@@ -196,6 +248,33 @@ export class FireActionsRelevantComponent {
           observaciones: item.observaciones,
         }),
         this.actionsRelevantSevice.postDataNotificaciones.bind(this.actionsRelevantSevice),
+        'detalles'
+      );
+    }
+
+    if (this.actionsRelevantSevice.dataSistemas().length > 0) {
+    
+      await this.handleDataProcessing(
+        this.actionsRelevantSevice.dataSistemas(),
+        (item) => ({
+          id: item.id ?? 0,
+          idTipoSistemaEmergencia: _isNumberValue(item.idTipoSistemaEmergencia) ? item.idTipoSistemaEmergencia : item.idTipoSistemaEmergencia.id,
+          fechaHoraActivacion: item.fechaHoraActivacion ? this.formatDate(item.fechaHoraActivacion) : null,
+          fechaHoraActualizacion: item.fechaHoraActualizacion ? this.formatDate(item.fechaHoraActualizacion) : null,
+          autoridad: item.autoridad,
+          descripcionSolicitud: item.descripcionSolicitud,
+          observaciones: item.observaciones,
+          idModoActivacion: _isNumberValue(item.idModoActivacion) ? item.idModoActivacion : item.idModoActivacion?.id ?? null,
+          fechaActivacion: item.fechaActivacion ? this.formatDate(item.fechaActivacion) : null,
+          codigo: item.codigo,
+          nombre: item.nombre,
+          urlAcceso: item.urlAcceso,
+          fechaHoraPeticion: item.fechaHoraPeticion ? this.formatDate(item.fechaHoraPeticion) : null,
+          fechaAceptacion: item.fechaAceptacion ? this.formatDate(item.fechaAceptacion) : null,
+          peticiones: item.peticiones,
+          mediosCapacidades: item.mediosCapacidades,  
+        }),
+        this.actionsRelevantSevice.postSistemas.bind(this.actionsRelevantSevice),
         'detalles'
       );
     }
@@ -237,6 +316,26 @@ export class FireActionsRelevantComponent {
     const month = (d.getMonth() + 1).toString().padStart(2, '0');
     const day = d.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  getFechaHora(fecha: Date, hora: string, format: string = 'MM/DD/YY HH:mm'): any {
+      if (hora && fecha) {
+        const [horas, minutos] = hora.split(':').map(Number);
+        const fechaHora = new Date(fecha);
+        fechaHora.setHours(horas, minutos, 0, 0);
+        return moment(fechaHora).format(format);
+      }
+    }
+
+  getFechaHoraIso(fechaHora: string): any {
+    if (fechaHora) {
+      const [fecha, hora] = fechaHora.split(' ');
+      const [mes, dia, anio] = fecha.split('/');
+      const anioCompleto = `20${anio}`;
+      const dateTime = new Date(`${anioCompleto}-${mes}-${dia}T${hora}:00.000Z`);
+
+      return dateTime.toISOString();
+    }
   }
 
   async delete() {
@@ -288,7 +387,6 @@ export class FireActionsRelevantComponent {
   }
 
   onSelectionChange(event: MatChipListboxChange): void {
-    this.spinner.show();
     this.selectedOption = event;
   }
 
