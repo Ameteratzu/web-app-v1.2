@@ -5,7 +5,7 @@
   <div class="container">
     <div class="side-menu">
       <mat-chip-listbox [value]="selectedOption.value" (change)="onSelectionChange($event)">
-        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip" [disabled]="sec.id !== 7 && sec.id !== 6 && sec.id !== 2  && sec.id !== 4">
+        <mat-chip-option *ngFor="let sec of sections; trackBy: trackByFn" [value]="sec.id" class="full-width-chip" [disabled]="sec.id === 1">
           {{ sec.label }}
         </mat-chip-option>
       </mat-chip-listbox>
@@ -21,6 +21,17 @@
       @fadeInOut
     ></app-cecod>
 
+    <app-activation-plan
+      [dataMaestros]="dataMaestros"
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 3 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-activation-plan>
+
     <app-notifications
       [dataMaestros]="dataMaestros"
       [fire]="data.fire"
@@ -31,6 +42,17 @@
       class="component-width"
       @fadeInOut
     ></app-notifications>
+
+    <app-systems-activation
+      [dataMaestros]="dataMaestros"
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 5 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-systems-activation>
   
     <app-emergency-national
       [fire]="data.fire"

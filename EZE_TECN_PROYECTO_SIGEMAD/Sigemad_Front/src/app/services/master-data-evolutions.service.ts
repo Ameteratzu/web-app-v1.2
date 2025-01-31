@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { InputOutput } from '../types/input-output.type';
@@ -45,6 +45,17 @@ export class MasterDataEvolutionsService {
     getTypesPlans(idCcaa:  number | string) {
       const endpoint = `/planes-emergencias?IdTipoRiesgo=15&IdCcaa=${idCcaa}`;
       return firstValueFrom(this.http.get<TypesPlans[]>(endpoint).pipe((response) => response));
+    }
+
+    getTypesPlansByPlan(idCcaa: number | string, idTipoPlan: number | string) {
+      const endpoint = '/planes-emergencias';
+      const params = new HttpParams()
+        .set('IdTipoRiesgo', '15')
+        .set('IdCcaa', idCcaa.toString())
+        .set('IdTipoPlan', idTipoPlan.toString())
+        .set('IsFullDescription', true);
+    
+      return firstValueFrom(this.http.get<TypesPlans[]>(endpoint, { params }));
     }
 
     getPhases(plan_id: number | string) {

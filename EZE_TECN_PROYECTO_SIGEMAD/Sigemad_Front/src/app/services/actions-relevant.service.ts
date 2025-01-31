@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { EmergenciaNacional, Zagep, Cecod, Notificaciones } from '../types/actions-relevant.type';
+import { EmergenciaNacional, Zagep, Cecod, Notificaciones, Planes, ActivacionSistemas } from '../types/actions-relevant.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
@@ -10,6 +10,8 @@ export class ActionsRelevantService {
   public dataZagep = signal<Zagep[]>([]);
   public dataCecod = signal<Cecod[]>([]);
   public dataNotificaciones = signal<Notificaciones[]>([]);
+  public dataPlanes = signal<Planes[]>([]);
+  public dataSistemas = signal<ActivacionSistemas[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -71,11 +73,44 @@ export class ActionsRelevantService {
     );
   }
 
+  postPlanes(data: any) {
+    const endpoint = '/actuaciones-relevantes/activaciones-planes/lista';
+  
+    return firstValueFrom(
+      this.http.post(endpoint, data).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
+  postSistemas(data: any) {
+    const endpoint = '/actuaciones-relevantes/activaciones-sistemas/lista';
+  
+    return firstValueFrom(
+      this.http.post(endpoint, data).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
   clearData(): void {
     this.dataEmergencia.set([]);
     this.dataZagep.set([]);
     this.dataCecod.set([]);
     this.dataNotificaciones.set([]);
+    this.dataPlanes.set([]);
+    this.dataSistemas.set([]);
+    
   }
 
   getById(id: Number) {
@@ -94,4 +129,19 @@ export class ActionsRelevantService {
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
+  getAllPlanes() {
+    let endpoint = `/tipos-planes`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getModosActivacion() {
+    let endpoint = `/modos-activacion`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getTipoActivacion() {
+    let endpoint = `/tipos-sistemas-emergencia`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+  
 }
