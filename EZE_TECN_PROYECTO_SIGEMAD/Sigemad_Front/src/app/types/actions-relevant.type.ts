@@ -55,6 +55,25 @@ export interface Planes {
   file?: any;
 }
 
+export interface ActivacionSistemas {
+  id: number;
+  idTipoSistemaEmergencia: GenericMaster;
+  fechaHoraActivacion: string;
+  fechaHoraActualizacion: string;
+  autoridad: string;
+  descripcionSolicitud: string;
+  observaciones: string;
+  idModoActivacion: GenericMaster;
+  fechaActivacion: string;
+  codigo: string;
+  nombre: string;
+  urlAcceso: string;
+  fechaHoraPeticion: string;
+  fechaAceptacion: string;
+  peticiones: string;
+  mediosCapacidades: string;
+}
+
 export interface GenericMaster {
   id: number;
   descripcion: string;

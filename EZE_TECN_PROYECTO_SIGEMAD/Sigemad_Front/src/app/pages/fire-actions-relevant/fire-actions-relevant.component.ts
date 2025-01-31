@@ -11,6 +11,7 @@ import { ZagepComponent } from './zagep/zagep.component';
 import { CecodComponent } from './cecod/cecod.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ActivationPlanComponent } from './activation-plan/activation-plan.component';
+import { SystemsActivationComponent } from './systems-activation/systems-activation.component';
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
 import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
@@ -28,7 +29,8 @@ import moment from 'moment';
     ZagepComponent,
     CecodComponent,
     NotificationsComponent,
-    ActivationPlanComponent
+    ActivationPlanComponent,
+    SystemsActivationComponent
   ],
   animations: [
     trigger('fadeInOut', [
@@ -85,14 +87,15 @@ export class FireActionsRelevantComponent {
   async loadData() {
     const tipoNotificaciones = await this.actionsRelevantSevice.getTipoNotificacion();
     const tipoPlanes = await this.actionsRelevantSevice.getAllPlanes();
-    console.log("🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoPlanes:", tipoPlanes)
+    const tiposActivacion = await this.actionsRelevantSevice.getTipoActivacion();
+    const modosActivacion = await this.actionsRelevantSevice.getModosActivacion();
 
     this.dataMaestros = {
       tipoNotificaciones,
-      tipoPlanes
+      tipoPlanes,
+      tiposActivacion,
+      modosActivacion
     };
-
-    console.log('🚀 ~ loadData ~ this.dataMaestros:', this.dataMaestros);
 
     return this.dataMaestros;
   }
@@ -245,6 +248,33 @@ export class FireActionsRelevantComponent {
           observaciones: item.observaciones,
         }),
         this.actionsRelevantSevice.postDataNotificaciones.bind(this.actionsRelevantSevice),
+        'detalles'
+      );
+    }
+
+    if (this.actionsRelevantSevice.dataSistemas().length > 0) {
+    
+      await this.handleDataProcessing(
+        this.actionsRelevantSevice.dataSistemas(),
+        (item) => ({
+          id: item.id ?? 0,
+          idTipoSistemaEmergencia: _isNumberValue(item.idTipoSistemaEmergencia) ? item.idTipoSistemaEmergencia : item.idTipoSistemaEmergencia.id,
+          fechaHoraActivacion: item.fechaHoraActivacion ? this.formatDate(item.fechaHoraActivacion) : null,
+          fechaHoraActualizacion: item.fechaHoraActualizacion ? this.formatDate(item.fechaHoraActualizacion) : null,
+          autoridad: item.autoridad,
+          descripcionSolicitud: item.descripcionSolicitud,
+          observaciones: item.observaciones,
+          idModoActivacion: _isNumberValue(item.idModoActivacion) ? item.idModoActivacion : item.idModoActivacion?.id ?? null,
+          fechaActivacion: item.fechaActivacion ? this.formatDate(item.fechaActivacion) : null,
+          codigo: item.codigo,
+          nombre: item.nombre,
+          urlAcceso: item.urlAcceso,
+          fechaHoraPeticion: item.fechaHoraPeticion ? this.formatDate(item.fechaHoraPeticion) : null,
+          fechaAceptacion: item.fechaAceptacion ? this.formatDate(item.fechaAceptacion) : null,
+          peticiones: item.peticiones,
+          mediosCapacidades: item.mediosCapacidades,  
+        }),
+        this.actionsRelevantSevice.postSistemas.bind(this.actionsRelevantSevice),
         'detalles'
       );
     }
