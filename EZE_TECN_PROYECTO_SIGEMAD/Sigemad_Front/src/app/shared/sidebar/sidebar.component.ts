@@ -21,7 +21,7 @@ export class SidebarComponent {
 
   public title = 'sigemad';
 
-  public active: string;
+  public active: string | undefined;
 
   public menuBack = signal<Menu[]>([]);
 

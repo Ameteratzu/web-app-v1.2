@@ -15,5 +15,16 @@ public class ActuacionRelevanteDGPCESpecification : BaseSpecification<ActuacionR
         AddInclude("ActivacionPlanEmergencias.TipoPlan");
         AddInclude("ActivacionPlanEmergencias.PlanEmergencia");
         AddInclude("ActivacionPlanEmergencias.Archivo");
+
+        AddInclude(d => d.MovilizacionMedios);
+        AddInclude("MovilizacionMedios.Pasos.SolicitudMedio");
+        AddInclude("MovilizacionMedios.Pasos.SolicitudMedio.Archivo");
+        AddInclude("MovilizacionMedios.Pasos.TramitacionMedio");
+        AddInclude("MovilizacionMedios.Pasos.CancelacionMedio");
+        AddInclude("MovilizacionMedios.Pasos.OfrecimientoMedio");
+        AddInclude("MovilizacionMedios.Pasos.AportacionMedio");
+        AddInclude("MovilizacionMedios.Pasos.DespliegueMedio");
+        AddInclude("MovilizacionMedios.Pasos.FinIntervencionMedio");
+        AddInclude("MovilizacionMedios.Pasos.LlegadaBaseMedio");
     }
 }

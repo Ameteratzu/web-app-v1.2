@@ -13,3 +13,37 @@ export interface Declaracion {
   fechaHoraDireccion: string;
   observaciones: string;
 }
+
+export interface Zagep {
+  id: number;
+  fechaSolicitud: string;
+  denominacion: string;
+  observaciones: string;
+}
+
+export interface Cecod {
+  id: number;
+  fechaInicio: string;
+  fechaFin: string;
+  lugar: string;
+  convocados: string;
+  participantes: string;
+  observaciones: string;
+}
+
+export interface Notificaciones {
+  id: number;
+  idTipoNotificacion: GenericMaster;
+  fechaHoraNotificacion: string;
+  organosNotificados: string;
+  ucpm: string;
+  organismoInternacional: string;
+  otrosPaises: string;
+  observaciones: string;
+}
+
+export interface GenericMaster {
+  id: number;
+  descripcion: string;
+}
+

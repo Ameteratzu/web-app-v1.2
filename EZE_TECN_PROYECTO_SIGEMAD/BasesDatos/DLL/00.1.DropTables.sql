@@ -1,5 +1,68 @@
 -- ELIMINAR TABLAS CON DEPENDENCIAS
 
+DROP TABLE IF EXISTS LlegadaBaseMedio
+GO
+
+DROP TABLE IF EXISTS FinIntervencionMedio
+GO
+
+DROP TABLE IF EXISTS DespliegueMedio
+GO
+
+DROP TABLE IF EXISTS AportacionMedio
+GO
+
+DROP TABLE IF EXISTS OfrecimientoMedio
+GO
+
+DROP TABLE IF EXISTS CancelacionMedio
+GO
+
+DROP TABLE IF EXISTS TramitacionMedio
+GO
+
+DROP TABLE IF EXISTS SolicitudMedio
+GO
+
+DROP TABLE IF EXISTS EjecucionPaso
+GO
+
+DROP TABLE IF EXISTS MovilizacionMedio
+GO
+
+DROP TABLE IF EXISTS Capacidad
+GO
+
+DROP TABLE IF EXISTS TipoCapacidad
+GO
+
+DROP TABLE IF EXISTS Entidad
+GO
+
+DROP TABLE IF EXISTS Organismo
+GO
+
+DROP TABLE IF EXISTS Administracion
+GO
+
+DROP TABLE IF EXISTS TipoAdministracion
+GO
+
+DROP TABLE IF EXISTS FlujoPasoMovilizacion
+GO
+
+DROP TABLE IF EXISTS PasoMovilizacion
+GO
+
+DROP TABLE IF EXISTS EstadoMovilizacion
+GO
+
+DROP TABLE IF EXISTS DestinoMedio
+GO
+
+DROP TABLE IF EXISTS ProcedenciaMedio
+GO
+
 DROP TABLE IF EXISTS EmergenciaNacional
 GO
 

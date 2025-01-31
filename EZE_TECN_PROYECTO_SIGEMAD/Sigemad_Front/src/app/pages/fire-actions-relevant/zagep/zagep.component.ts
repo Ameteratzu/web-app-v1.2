@@ -161,7 +161,7 @@ export class ZagepComponent {
   }
 
   getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YY');
+    return moment(date).format('DD/MM/YYYY');
   }
 
   getForm(atributo: string): any {

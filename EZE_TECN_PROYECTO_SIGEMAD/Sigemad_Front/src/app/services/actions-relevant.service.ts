@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { EmergenciaNacional } from '../types/actions-relevant.type';
-import { Zagep } from '../types/zagep.type';
+import { EmergenciaNacional, Zagep, Cecod, Notificaciones } from '../types/actions-relevant.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
   private http = inject(HttpClient);
   public dataEmergencia = signal<EmergenciaNacional[]>([]);
   public dataZagep = signal<Zagep[]>([]);
+  public dataCecod = signal<Cecod[]>([]);
+  public dataNotificaciones = signal<Notificaciones[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -40,11 +41,26 @@ export class ActionsRelevantService {
     );
   }
 
-  update(body: any) {
-    const endpoint = `/Evoluciones`;
+  postDataCecod(body: any) {
+    const endpoint = `/actuaciones-relevantes/convocatoria-cecod/lista`;
 
     return firstValueFrom(
-      this.http.put(endpoint, body).pipe(
+      this.http.post(endpoint, body).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
+
+  postDataNotificaciones(body: any) {
+    const endpoint = `/actuaciones-relevantes/notificaciones/lista`;
+
+    return firstValueFrom(
+      this.http.post(endpoint, body).pipe(
         map((response) => {
           return response;
         }),
@@ -58,6 +74,8 @@ export class ActionsRelevantService {
   clearData(): void {
     this.dataEmergencia.set([]);
     this.dataZagep.set([]);
+    this.dataCecod.set([]);
+    this.dataNotificaciones.set([]);
   }
 
   getById(id: Number) {
@@ -65,15 +83,15 @@ export class ActionsRelevantService {
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
-  delete(id: number) {
-    const endpoint = `/Evoluciones/${id}`;
-
+  deleteActions(id: number) {
+    const endpoint = `/actuaciones-relevantes/${id}`;
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
 
-  deleteConse(id: number) {
-    const endpoint = `/evoluciones/${id}`;
-
-    return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
+  //Maestros
+  getTipoNotificacion() {
+    let endpoint = `/tipo-notificaciones`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
+
 }
