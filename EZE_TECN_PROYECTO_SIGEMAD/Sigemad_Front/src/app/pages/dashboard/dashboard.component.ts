@@ -35,7 +35,6 @@ const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
 export class DashboardComponent {
   private map!: Map;
   private view!: View;
-  private layerIncendios!: TileLayer;
 
   public menuItemActiveService = inject(MenuItemActiveService);
   
@@ -69,11 +68,12 @@ export class DashboardComponent {
         },
       ],
     };
+
   }
 
   configuremap() {
 
-    let baseLayers = new LayerGroup({
+    const baseLayers = new LayerGroup({
       properties: { 'title': 'Capas base', openInLayerSwitcher: true },
       layers: [
         new TileLayer({
@@ -91,24 +91,51 @@ export class DashboardComponent {
       ]
     });
 
-    const wmsIncencios = new TileWMS({
-      url: environment.urlGeoserver,
+    const wmsIncenciosEvolutivo = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'Incendio',
+        'LAYERS': 'incendios_evolutivo',
         'TILED': true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
-
-    this.layerIncendios = new TileLayer({
-      source: wmsIncencios,
-      properties: { 'title': 'Incendios' }
+    const layerIncendiosEvolutivo = new TileLayer({
+      source: wmsIncenciosEvolutivo,
+      properties: { 'title': 'Evolutivo' }
     });
 
-    const wmsLayersGroup = new LayerGroup({
-      properties: { 'title': 'Capas Geoserver', 'openInLayerSwitcher': true },
-      layers: [this.layerIncendios]
+    const wmsIncenciosInicial = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_inicial',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncendiosInicial = new TileLayer({
+      source: wmsIncenciosInicial,
+      properties: { 'title': 'Inicial' }
+    });    
+
+    const wmsIncendiosCentroideMunicipios = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_centroide_municipio',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncenciosCentroideMunicipio = new TileLayer({
+      source: wmsIncendiosCentroideMunicipios,
+      properties: { 'title': 'Municipios' }
+    });
+
+    const wmsLayersGroupIncendios = new LayerGroup({
+      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio]
     });
 
     this.view = new View({
@@ -126,7 +153,7 @@ export class DashboardComponent {
         new FullScreen({tipLabel: 'Pantalla completa'}),
       ]),
       target: 'map',
-      layers: [baseLayers, wmsLayersGroup],
+      layers: [baseLayers, wmsLayersGroupIncendios],
       view: this.view,
     });
 
@@ -151,6 +178,21 @@ export class DashboardComponent {
         cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
       }
     });
+
+    this.fetchLayerCentroideMunicipiosInfo();
+  }
+
+  fetchLayerCentroideMunicipiosInfo() {
+    const url = `${environment.urlGeoserver}?service=WMS&version=1.1.1&request=GetFeatureInfo&layers=centroide_municipios_incendios&query_layers=centroide_municipios_incendios&info_format=application/json&x=50&y=50&height=101&width=101&srs=EPSG:4326&bbox=${this.view.calculateExtent(this.map.getSize()).join(',')}`;
+    
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Layer Centroide Municipios Info:', data);
+      })
+      .catch(error => {
+        console.error('Error fetching layer info:', error);
+      });
   }
 
   searchCoordinates() {

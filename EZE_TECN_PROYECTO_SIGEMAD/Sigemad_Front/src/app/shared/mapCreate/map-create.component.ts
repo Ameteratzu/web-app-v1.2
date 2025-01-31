@@ -53,7 +53,7 @@ export class MapCreateComponent {
   public view!: View;
   public draw!: Draw;
   public snap!: Snap;
-  public vector!: VectorLayer;
+  public layerAreasAfectadas!: VectorLayer;
   public coords: any;
 
   public data = inject(MAT_DIALOG_DATA);
@@ -71,7 +71,7 @@ export class MapCreateComponent {
 
   public section: string = '';
 
-  public coordinates: string = 'Lon: 0.0000, Lat: 0.0000';
+  public coordinates: string = '';
   public cursorPosition = { x: 0, y: 0 };
 
   async ngOnInit() {
@@ -82,12 +82,7 @@ export class MapCreateComponent {
 
   configureMap(municipio: any, defaultPolygon: any, onlyView: any) {
 
-    let defaultPolygonMercator;
-
-    if (defaultPolygon) {
-      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
-    }
-
+    // capas base
     let baseLayers = new LayerGroup({
       properties: { 'title': 'Capas base', openInLayerSwitcher: true },
       layers: [
@@ -107,24 +102,13 @@ export class MapCreateComponent {
       ]
     });
 
-    this.source = new VectorSource();
-
-    this.vector = new VectorLayer({
-      source: this.source,
-      style: {
-        'stroke-color': 'rgb(252, 5, 5)',
-        'stroke-width': 5,
-      },
-      properties: { 'title': 'Área afectada' }
-    });
-
-
+    // capas wms administrativas
     const wmsLayersGroup = new LayerGroup({
-      properties: { 'title': 'Capas Geoserver', 'openInLayerSwitcher': true },
+      properties: { 'title': 'Límites administrativos', 'openInLayerSwitcher': true },
       layers: [
         new TileLayer({
           source: new TileWMS({
-            url: environment.urlGeoserver,
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
             params: {
               'LAYERS': 'nucleos_poblacion',
               'TILED': true,
@@ -136,9 +120,9 @@ export class MapCreateComponent {
         }),
         new TileLayer({
           source: new TileWMS({
-            url: environment.urlGeoserver,
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
             params: {
-              'LAYERS': 'limites_municipio',
+              'LAYERS': 'municipio_limites',
               'TILED': true,
             },
             serverType: 'geoserver',
@@ -147,6 +131,24 @@ export class MapCreateComponent {
           properties: { 'title': 'Límites municipio' }
         }),
       ]
+    });    
+
+    // capas de incendios
+    let defaultPolygonMercator;
+
+    if (defaultPolygon) {
+      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
+    }    
+
+    this.source = new VectorSource();
+
+    this.layerAreasAfectadas = new VectorLayer({
+      source: this.source,
+      style: {
+        'stroke-color': 'rgb(252, 5, 5)',
+        'stroke-width': 5,
+      },
+      properties: { 'title': 'Área afectada' }
     });
 
     this.view = new View({
@@ -154,28 +156,6 @@ export class MapCreateComponent {
       zoom: 12,
       projection: 'EPSG:3857',
     })
-
-    this.map = new Map({
-      controls: defaultControls({
-        zoom: true,
-        zoomOptions: {
-          zoomInTipLabel: 'Acercar',
-          zoomOutTipLabel: 'Alejar'
-        }
-      }).extend([
-        new FullScreen(({ tipLabel: 'Pantalla completa' })),
-      ]),
-      target: 'map',
-      layers: [baseLayers, wmsLayersGroup, this.vector],
-      view: this.view
-    });
-
-    this.map.addControl(new LayerSwitcher({
-      mouseover: true,
-      show_progress: true,
-    }));
-
-    this.map.addControl(new ScaleLine());
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
 
@@ -191,14 +171,14 @@ export class MapCreateComponent {
       this.source.addFeature(polygonFeature);
     }
 
-    const pointLayer = new VectorLayer({
+    const layerMunicipio = new VectorLayer({
       source: new VectorSource({
         features: [pointFeature],
       }),
       properties: { 'title': 'Municipio' }
     });
 
-    pointLayer.setStyle(
+    layerMunicipio.setStyle(
       new Style({
         image: new Icon({
           anchor: [1, 1],
@@ -208,17 +188,51 @@ export class MapCreateComponent {
       })
     );
 
-    this.map.addLayer(pointLayer);
+    const layersGroupIncendio = new LayerGroup({
+      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      layers: [ layerMunicipio, this.layerAreasAfectadas ]
+    });    
+
+    // Crear el mapa
+    this.map = new Map({
+      controls: defaultControls({
+        zoom: true,
+        zoomOptions: {
+          zoomInTipLabel: 'Acercar',
+          zoomOutTipLabel: 'Alejar'
+        }
+      }).extend([
+        new FullScreen(({ tipLabel: 'Pantalla completa' })),
+      ]),
+      target: 'map',
+      layers: [baseLayers, wmsLayersGroup],
+      view: this.view
+    });
+
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      show_progress: true,
+    }));
+
+    this.map.addControl(new ScaleLine());
+
+
+    this.map.addLayer(layersGroupIncendio);
 
     if (!onlyView) {
       this.addInteractions();
     }
 
     this.map.on('pointermove', (event) => {
-      const coords = toLonLat(event.coordinate);
-      const [lon, lat] = [coords[0].toFixed(4), coords[1].toFixed(4)];
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
 
-      this.coordinates = `Lon: ${lon}, Lat: ${lat}`;
+      this.coordinates = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
 
       const pixel = this.map.getEventPixel(event.originalEvent);
 
@@ -226,16 +240,7 @@ export class MapCreateComponent {
         x: pixel[0],
         y: pixel[1] + 40,
       };
-    });
 
-    this.map.on('pointermove', (event) => {
-      const coordinate = event.coordinate;
-      const [lon, lat] = toLonLat(coordinate);
-      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
-      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
-      if (cursorCoordinatesElement) {
-        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
-      }
     });
   }
 
