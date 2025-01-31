@@ -178,21 +178,6 @@ export class DashboardComponent {
         cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
       }
     });
-
-    this.fetchLayerCentroideMunicipiosInfo();
-  }
-
-  fetchLayerCentroideMunicipiosInfo() {
-    const url = `${environment.urlGeoserver}?service=WMS&version=1.1.1&request=GetFeatureInfo&layers=centroide_municipios_incendios&query_layers=centroide_municipios_incendios&info_format=application/json&x=50&y=50&height=101&width=101&srs=EPSG:4326&bbox=${this.view.calculateExtent(this.map.getSize()).join(',')}`;
-    
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log('Layer Centroide Municipios Info:', data);
-      })
-      .catch(error => {
-        console.error('Error fetching layer info:', error);
-      });
   }
 
   searchCoordinates() {
