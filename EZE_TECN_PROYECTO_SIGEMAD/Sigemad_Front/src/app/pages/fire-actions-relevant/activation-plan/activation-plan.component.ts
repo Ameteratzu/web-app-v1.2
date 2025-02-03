@@ -158,6 +158,7 @@ export class ActivationPlanComponent implements OnInit {
               id: plan.tipoPlan?.id ?? 0,
               descripcion: plan.tipoPlan.descipcion ?? ''
             },
+            id: plan.id,
             nombrePlan: plan.planEmergenciaPersonalizado ?? '',
             nombrePlanPersonalizado: plan.tipoPlanPersonalizado ?? '',
             fechaInicio: plan.fechaInicio,

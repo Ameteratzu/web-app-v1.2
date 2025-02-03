@@ -11,6 +11,17 @@
       </mat-chip-listbox>
     </div>
 
+    <app-mobilization
+      [dataMaestros]="dataMaestros"
+      [fire]="data.fire"
+      [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
+      [editData]="editData"
+      (save)="onSaveFromChild($event)"
+      *ngIf="selectedOption.value === 1 && isDataReady"
+      class="component-width"
+      @fadeInOut
+    ></app-mobilization>
+
     <app-cecod
       [fire]="data.fire"
       [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"

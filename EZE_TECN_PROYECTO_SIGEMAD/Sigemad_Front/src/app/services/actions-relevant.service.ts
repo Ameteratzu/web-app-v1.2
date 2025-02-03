@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { EmergenciaNacional, Zagep, Cecod, Notificaciones, Planes, ActivacionSistemas } from '../types/actions-relevant.type';
+import { Movilizacion } from '../types/mobilization.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
@@ -12,6 +13,7 @@ export class ActionsRelevantService {
   public dataNotificaciones = signal<Notificaciones[]>([]);
   public dataPlanes = signal<Planes[]>([]);
   public dataSistemas = signal<ActivacionSistemas[]>([]);
+  public dataMovilizacion = signal<Movilizacion[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -110,7 +112,7 @@ export class ActionsRelevantService {
     this.dataNotificaciones.set([]);
     this.dataPlanes.set([]);
     this.dataSistemas.set([]);
-    
+    this.dataMovilizacion.set([]);
   }
 
   getById(id: Number) {
@@ -141,6 +143,11 @@ export class ActionsRelevantService {
 
   getTipoActivacion() {
     let endpoint = `/tipos-sistemas-emergencia`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getTipoGestion(id?: number) {
+    let endpoint = id ? `/movilizaciones-medios/tipos-gestion?IdPasoActual=${id}` : '/movilizaciones-medios/tipos-gestion';
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
   

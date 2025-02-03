@@ -10,6 +10,7 @@ import { EmergencyNationalComponent } from './emergency-national/emergency-natio
 import { ZagepComponent } from './zagep/zagep.component';
 import { CecodComponent } from './cecod/cecod.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { MobilizationComponent } from './mobilization/mobilization.component';
 import { ActivationPlanComponent } from './activation-plan/activation-plan.component';
 import { SystemsActivationComponent } from './systems-activation/systems-activation.component';
 import { ActionsRelevantService } from '../../services/actions-relevant.service';
@@ -30,7 +31,8 @@ import moment from 'moment';
     CecodComponent,
     NotificationsComponent,
     ActivationPlanComponent,
-    SystemsActivationComponent
+    SystemsActivationComponent,
+    MobilizationComponent
   ],
   animations: [
     trigger('fadeInOut', [
@@ -49,7 +51,7 @@ export class FireActionsRelevantComponent {
   public actionsRelevantSevice = inject(ActionsRelevantService);
   public alertService = inject(AlertService);
 
-  selectedOption: MatChipListboxChange = { source: null as any, value: 2 };
+  selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
 
   data = inject(MAT_DIALOG_DATA) as {
     title: string;
@@ -89,12 +91,14 @@ export class FireActionsRelevantComponent {
     const tipoPlanes = await this.actionsRelevantSevice.getAllPlanes();
     const tiposActivacion = await this.actionsRelevantSevice.getTipoActivacion();
     const modosActivacion = await this.actionsRelevantSevice.getModosActivacion();
+    const tiposGestion = await this.actionsRelevantSevice.getTipoGestion();
 
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
       tiposActivacion,
-      modosActivacion
+      modosActivacion,
+      tiposGestion
     };
 
     return this.dataMaestros;
@@ -207,11 +211,11 @@ export class FireActionsRelevantComponent {
         formData.append(`ActivacionPlanes[${index}].IdPlanEmergencia`, '3');
         formData.append(`ActivacionPlanes[${index}].PlanEmergenciaPersonalizado`, detalle.nombrePlan ?? '');
         formData.append(`ActivacionPlanes[${index}].Observaciones`, detalle.observaciones ?? '');
-        if(detalle.archivo?.id){
-          formData.append(`ActivacionPlanes[${index}].Archivo`, detalle.archivo.id);
-        }else{
+        if(!detalle.archivo?.id){
           formData.append(`ActivacionPlanes[${index}].Archivo`, detalle.archivo);
         }
+
+        
       });
 
       const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);
