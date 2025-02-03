@@ -123,22 +123,23 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 {
                     _mapper.Map(activacionPlanDto, activacionPlanEntity);
                     activacionPlanEntity.Borrado = false;
+                    activacionPlanEntity.Archivo = await MapArchivo(activacionPlanDto, activacionPlanEntity.Archivo);
                 }
                 else
                 {
-                    var nuevoActivacionPlan = CreateNewActivacionPlan(activacionPlanDto);
+                    var nuevoActivacionPlan = await CreateNewActivacionPlan(activacionPlanDto);
                     actuacionRelevante.ActivacionPlanEmergencias.Add(nuevoActivacionPlan);
                 }
             }
             else
             {
-                var nuevoActivacionPlan = CreateNewActivacionPlan(activacionPlanDto);
+                var nuevoActivacionPlan = await CreateNewActivacionPlan(activacionPlanDto);
                 actuacionRelevante.ActivacionPlanEmergencias.Add(nuevoActivacionPlan);
             }
         }
     }
 
-    private ActivacionPlanEmergencia CreateNewActivacionPlan(ManageActivacionPlanEmergenciaDto activacionPlanDto)
+    private async Task<ActivacionPlanEmergencia> CreateNewActivacionPlan(ManageActivacionPlanEmergenciaDto activacionPlanDto)
     {
         var nuevoActivacionPlan = new ActivacionPlanEmergencia
         {
@@ -152,6 +153,13 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
             Observaciones = activacionPlanDto.Observaciones,
         };
 
+        nuevoActivacionPlan.Archivo = await MapArchivo(activacionPlanDto, null);
+
+        return nuevoActivacionPlan;
+    }
+
+    private async Task<Archivo?> MapArchivo(ManageActivacionPlanEmergenciaDto activacionPlanDto, Archivo? archivoExistente)
+    {
         if (activacionPlanDto.Archivo != null)
         {
             var fileEntity = new Archivo
@@ -163,12 +171,12 @@ public class ManageActivacionPlanEmergenciaCommandHandler : IRequestHandler<Mana
                 PesoEnBytes = activacionPlanDto.Archivo?.Length ?? 0,
             };
 
-            fileEntity.RutaDeAlmacenamiento = _fileService.SaveFileAsync(activacionPlanDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH).Result;
+            fileEntity.RutaDeAlmacenamiento = await _fileService.SaveFileAsync(activacionPlanDto.Archivo?.Content ?? new byte[0], fileEntity.NombreUnico, ARCHIVOS_PATH);
             fileEntity.FechaCreacion = DateTime.Now;
-            nuevoActivacionPlan.Archivo = fileEntity;
+            return fileEntity;
         }
 
-        return nuevoActivacionPlan;
+        return archivoExistente;
     }
 
     private async Task DeleteLogicalActivaciones(ManageActivacionPlanEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
