@@ -170,7 +170,7 @@ CREATE TABLE ActivacionSistema (
     IdTipoSistemaEmergencia INT NOT NULL FOREIGN KEY REFERENCES TipoSistemaEmergencia(Id),
     FechaHoraActivacion DATETIME2(7) NULL,
     FechaHoraActualizacion DATETIME2(7) NULL,
-    Autoridad NVARCHAR(255) NOT NULL,
+    Autoridad NVARCHAR(255) NULL,
     DescripcionSolicitud NVARCHAR(MAX) NULL,
     Observaciones NVARCHAR(MAX) NULL,
     -- Copernicus

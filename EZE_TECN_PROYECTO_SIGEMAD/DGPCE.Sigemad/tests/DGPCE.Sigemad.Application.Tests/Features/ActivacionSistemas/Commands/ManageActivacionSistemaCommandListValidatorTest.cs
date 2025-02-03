@@ -20,7 +20,6 @@ public class ManageActivacionSistemaCommandListValidatorTest
             _localizerMock = new Mock<IStringLocalizer<ValidationMessages>>();
             _localizerMock.Setup(l => l["IdSucesoObligatorio"]).Returns(new LocalizedString("IdSucesoObligatorio", "IdSuceso es obligatorio"));
             _localizerMock.Setup(l => l["IdTipoSistemaEmergencia"]).Returns(new LocalizedString("IdTipoSistemaEmergencia", "IdTipoSistemaEmergencia es obligatorio"));
-            _localizerMock.Setup(l => l["AutoridadObligatorio"]).Returns(new LocalizedString("AutoridadObligatorio", "Autoridad es obligatoria"));
             _localizerMock.Setup(l => l["AutoridadMaxLength"]).Returns(new LocalizedString("AutoridadMaxLength", "La longitud máxima de la Autoridad es 510 caracteres"));
 
             _validator = new ManageActivacionSistemaCommandValidator(_localizerMock.Object);
@@ -64,8 +63,6 @@ public class ManageActivacionSistemaCommandListValidatorTest
         // Assert
         result.ShouldHaveValidationErrorFor("Detalles[0].IdTipoSistemaEmergencia")
               .WithErrorMessage("IdTipoSistemaEmergencia es obligatorio");
-        result.ShouldHaveValidationErrorFor("Detalles[0].Autoridad")
-              .WithErrorMessage("Autoridad es obligatoria");
     }
 
 
