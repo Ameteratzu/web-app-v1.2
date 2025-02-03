@@ -1,10 +1,10 @@
 <div class="form-container">
   <form *ngIf="formData" #formDirective="ngForm" [formGroup]="formData" (ngSubmit)="onSubmit(formDirective)">
     <div>
-      <h3 class="title"><b>NOTIFICACIONES OFICIALES</b></h3>
+      <h3 class="title"><b>ACTIVACIÓN DE PLANES DE EMERGENCIA</b></h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
         <mat-form-field appearance="fill" fxFlex="30%">
-          <mat-label>Tipo de notificación</mat-label>
+          <mat-label>Tipo de Activación</mat-label>
           <mat-select [formControl]="getForm('idTipoSistemaEmergencia')" (selectionChange)="loadTipo($event)">
             <mat-option *ngFor="let option of tiposActivacion()" [value]="option">
               {{ option.descripcion }}
@@ -49,18 +49,19 @@
         </mat-form-field>
       </div>
 
-      <h3 *ngIf="mostrarCamposAdicionales() === 1 || mostrarCamposAdicionales() === 2" class="title">
+      <mat-label *ngIf="mostrarCamposAdicionales() === 1 || mostrarCamposAdicionales() === 2" class="title_sub">
         Datos de la activación de {{ mostrarCamposAdicionales() === 1 ? 'Copernicus' : 'UCPM' }}
-      </h3>
+      </mat-label>
+      <br> 
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center" *ngIf="mostrarCamposAdicionales() === 1">
         <mat-form-field appearance="fill" fxFlex="30%">
           <mat-label>Modo de activación</mat-label>
           <mat-select [formControl]="getForm('idModoActivacion')">
+            <mat-option [value]="null">Ninguno</mat-option>
             <mat-option *ngFor="let option of modosActivacion()" [value]="option">
               {{ option.descripcion }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="formData.get('idModoActivacion')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
