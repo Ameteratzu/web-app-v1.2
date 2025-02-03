@@ -425,6 +425,9 @@ public class MappingProfile : Profile
         CreateMap<LlegadaBaseMedio, ManageLlegadaBaseMedioDto>();
 
         CreateMap<TipoPlan, TipoPlanDto>();
+        CreateMap<ManageActivacionPlanEmergenciaDto, ActivacionPlanEmergencia>()
+            .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
+            .ForMember(dest => dest.Archivo, opt => opt.Ignore());
 
     }
 
