@@ -1,6 +1,3 @@
-import 'ol/ol.css';
-import "ol-ext/dist/ol-ext.css"
-
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';

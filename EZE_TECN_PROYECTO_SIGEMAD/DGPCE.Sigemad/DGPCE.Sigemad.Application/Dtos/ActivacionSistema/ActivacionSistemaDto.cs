@@ -13,7 +13,7 @@ public class ActivacionSistemaDto
 
     public DateTime? FechaHoraActivacion { get; set; }
     public DateTime? FechaHoraActualizacion { get; set; }
-    public string Autoridad { get; set; }
+    public string? Autoridad { get; set; }
     public string? DescripcionSolicitud { get; set; }
     public string? Observaciones { get; set; }
     public int? IdModoActivacion { get; set; }

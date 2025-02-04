@@ -1,7 +1,7 @@
 <div class="form-container">
   <form [formGroup]="formData" #formDirective="ngForm" (ngSubmit)="onSubmit(formDirective)">
     <div>
-      <h3 class="title">Documentación</h3>
+      <h3 class="title">ACTIVACIÓN DE PLANES</h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
         <mat-form-field class="input spaced-input" fxFlex="20%">
           <mat-label>Tipo de plan</mat-label>
@@ -61,11 +61,7 @@
       </ng-template>
     </ngx-file-drop>
 
-    <ng-template #noFile>
-      <mat-error style="text-align: center">Este campo es obligatorio.</mat-error>
-    </ng-template>
-
-    <div *ngIf="formData.get('file')?.value; else noFile">
+    <div *ngIf="formData.get('file')?.value;">
       <p style="text-align: center">
         Nombre del archivo:
         <strong>{{ formData.get('file')?.value.name }}</strong>
@@ -87,14 +83,14 @@
       <ng-container matColumnDef="idTipoPlan">
         <th mat-header-cell *matHeaderCellDef>Tipo de plan</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ getTipo(coordinacionData.idTipoPlan) }}
+          {{ coordinacionData.idTipoPlan ? getTipo(coordinacionData.idTipoPlan) : getTipo(coordinacionData.tipoPlan) }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="nombrePlan">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre del plan</th>
         <td mat-cell *matCellDef="let otherInformation">
-            {{ otherInformation.nombrePlan ? otherInformation.nombrePlan: otherInformation.nombrePlanPersonalizado}}
+          {{ otherInformation.nombrePlan ?? otherInformation.nombrePlanPersonalizado }}
         </td>
       </ng-container>
 
@@ -129,16 +125,23 @@
       <ng-container matColumnDef="fichero">
         <th mat-header-cell *matHeaderCellDef>Fichero</th>
         <td mat-cell *matCellDef="let otherInformation">
-          <ng-container *ngIf="!otherInformation?.file?.id; else showOriginalName">
+          <!-- <ng-container *ngIf="!otherInformation?.file?.id;">
             <span>
-              {{ otherInformation.file.name }}
+              {{ otherInformation.file?.name ?? 'Sin archivo seleccionado' }}
+            </span>
+          </ng-container> -->
+
+          <ng-container *ngIf="!otherInformation?.archivoSubido; else showOriginalName">
+            <span>
+              {{ otherInformation.file?.name ?? 'Sin archivo seleccionado' }}
             </span>
           </ng-container>
           <ng-template #showOriginalName>
-            <a (click)="onFileNameClick(otherInformation.archivo)" style="color: blue; text-decoration: underline; cursor: pointer">
-              {{ otherInformation.archivo.nombreOriginal }}
+            <a (click)="onFileNameClick(otherInformation.file)" style="color: blue; text-decoration: underline; cursor: pointer">
+              {{  otherInformation.file?.name }}
             </a>
           </ng-template>
+
         </td>
       </ng-container>
 

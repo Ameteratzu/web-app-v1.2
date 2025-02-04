@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -91,8 +91,8 @@ export class SystemsActivationComponent {
       idTipoSistemaEmergencia: [null, Validators.required],
       fechaHoraActivacion: [new Date(), Validators.required],
       fechaHoraActualizacion: [new Date(), Validators.required],
-      autoridad: ['', Validators.required],
-      descripcionSolicitud: ['', Validators.required],
+      autoridad: ['', ],
+      descripcionSolicitud: ['', ],
       observaciones: [''],
       idModoActivacion: [null],
       fechaActivacion: [null],
@@ -230,6 +230,10 @@ export class SystemsActivationComponent {
     }
 
     return tipo.descripcion;
+  }
+
+  cleanSelect(){
+    this.formData.get('idModoActivacion')?.setValue(null);
   }
 
   getForm(atributo: string): any {

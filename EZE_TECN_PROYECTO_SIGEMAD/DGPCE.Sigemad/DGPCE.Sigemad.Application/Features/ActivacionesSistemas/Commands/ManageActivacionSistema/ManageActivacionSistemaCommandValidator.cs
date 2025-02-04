@@ -25,7 +25,6 @@ public class ActivacionSistemaDtoValidator : AbstractValidator<ManageActivacionS
          .GreaterThan(0).WithMessage(localizer["IdTipoSistemaEmergencia"]);
 
         RuleFor(x => x.Autoridad)
-            .NotEmpty().WithMessage(localizer["AutoridadObligatorio"])
             .MaximumLength(510).WithMessage(localizer["AutoridadMaxLength"]);
 
     }

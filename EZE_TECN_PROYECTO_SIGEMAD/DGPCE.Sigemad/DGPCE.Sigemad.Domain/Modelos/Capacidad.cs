@@ -6,9 +6,9 @@ public class Capacidad
     public string Descripcion { get; set; }
     public bool Gestionado { get; set; }
 
-    public TipoCapacidad TipoCapacidad { get; set; }
-    public int IdTipoCapacidad { get; set; }
+    public TipoCapacidad? TipoCapacidad { get; set; }
+    public int? IdTipoCapacidad { get; set; }
 
-    public Entidad Entidad { get; set; }
-    public int IdEntidad { get; set; }
+    public Entidad? Entidad { get; set; }
+    public int? IdEntidad { get; set; }
 }
