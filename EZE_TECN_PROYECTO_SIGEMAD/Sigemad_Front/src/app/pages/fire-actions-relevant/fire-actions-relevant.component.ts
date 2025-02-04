@@ -130,7 +130,7 @@ export class FireActionsRelevantComponent {
           break;
         case 'close':
           this.spinner.hide();
-          //this.evolutionSevice.clearData();
+          this.actionsRelevantSevice.clearData();
           this.closeModal(true);
           break;
         case 'update':
