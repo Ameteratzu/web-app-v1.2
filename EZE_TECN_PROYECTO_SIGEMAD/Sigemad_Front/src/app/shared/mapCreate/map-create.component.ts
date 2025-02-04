@@ -1,6 +1,3 @@
-import 'ol/ol.css';
-import "ol-ext/dist/ol-ext.css"
-
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
