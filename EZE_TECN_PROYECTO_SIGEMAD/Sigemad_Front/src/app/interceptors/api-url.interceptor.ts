@@ -21,8 +21,6 @@ export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const updatedApiUrl = req.url.includes('tipos-gestion') ? apiUrl.replace('/v1', '') : apiUrl;
-  console.log('🚀 ~ updatedApiUrl:', updatedApiUrl);
-
   const updatedUrl = req.url.startsWith('http') ? req.url : `${updatedApiUrl}${req.url}`;
 
   let modifiedReq = req.clone({ url: updatedUrl });

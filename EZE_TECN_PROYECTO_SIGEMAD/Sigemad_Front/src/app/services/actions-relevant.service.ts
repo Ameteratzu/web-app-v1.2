@@ -147,6 +147,7 @@ export class ActionsRelevantService {
   }
 
   getTipoGestion(id?: number) {
+    console.log("🚀 ~ ActionsRelevantService ~ getTipoGestion ~ id:", id)
     let endpoint = id ? `/movilizaciones-medios/tipos-gestion?IdPasoActual=${id}` : '/movilizaciones-medios/tipos-gestion';
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
