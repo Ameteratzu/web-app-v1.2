@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { GenericMaster } from '../../../../types/actions-relevant.type';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { GenericMaster } from '../../../../types/actions-relevant.type';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -22,7 +21,7 @@ const MY_DATE_FORMATS = {
   },
 };
 @Component({
-  selector: 'app-step3',
+  selector: 'app-step-cancel',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,25 +32,25 @@ const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatCheckboxModule
   ],
-  templateUrl: './step3.component.html',
-  styleUrl: './step3.component.scss',
+  templateUrl: './step-cancel.component.html',
+  styleUrl: './step-cancel.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
 })
-export class Step3Component {
+export class StepCancelComponent {
   @Input() formGroup!: FormGroup;
   @Input() dataMaestros: any;
-  public destinos = signal<GenericMaster[]>([]);
+  public procedencia = signal<GenericMaster[]>([]);
 
   async ngOnInit() {
-    this.destinos.set(this.dataMaestros.destinos);
+    this.procedencia.set(this.dataMaestros.procedencia);
   }
 
   getForm(atributo: string): any {
     return this.formGroup.controls[atributo];
   }
 }
+

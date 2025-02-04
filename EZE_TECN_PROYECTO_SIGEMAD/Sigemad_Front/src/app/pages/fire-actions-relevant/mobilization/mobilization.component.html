@@ -17,6 +17,7 @@
       <app-step1 *ngIf="getForm('idTipoNotificacion')?.value?.id === 1" [formGroup]="formData" [dataMaestros]="dataMaestros"></app-step1>
       <app-step2 *ngIf="getForm('idTipoNotificacion')?.value?.id === 2" [formGroup]="formData" [dataMaestros]="dataMaestros"></app-step2>
       <app-step3 *ngIf="getForm('idTipoNotificacion')?.value?.id === 3" [formGroup]="formData" [dataMaestros]="dataMaestros"></app-step3>
+      <app-step-cancel *ngIf="getForm('idTipoNotificacion')?.value?.id === 4" [formGroup]="formData" [dataMaestros]="dataMaestros"></app-step-cancel>
 
       <div class="row add-button-row" fxLayout="row" fxLayoutAlign="end center">
         <button mat-flat-button color="primary" disabled="true">

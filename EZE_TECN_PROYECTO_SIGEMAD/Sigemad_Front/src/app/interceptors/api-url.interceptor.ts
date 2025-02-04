@@ -20,8 +20,8 @@ export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const updatedApiUrl = req.url.includes('tipos-gestion') ? apiUrl.replace('/v1', '') : apiUrl;
-  const updatedUrl = req.url.startsWith('http') ? req.url : `${updatedApiUrl}${req.url}`;
+  // const updatedApiUrl = req.url.includes('tipos-gestion') ? apiUrl.replace('/v1', '') : apiUrl;
+  const updatedUrl = req.url.startsWith('http') ? req.url : `${apiUrl}${req.url}`;
 
   let modifiedReq = req.clone({ url: updatedUrl });
 

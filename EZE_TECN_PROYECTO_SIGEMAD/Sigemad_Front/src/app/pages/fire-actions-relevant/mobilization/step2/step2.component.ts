@@ -48,7 +48,6 @@ export class Step2Component {
   public destinos = signal<GenericMaster[]>([]);
 
   async ngOnInit() {
-    console.log('🚀 ~ Step1Component ~ ngOnInit ~ this.dataMaestros:', this.dataMaestros);
     this.destinos.set(this.dataMaestros.destinos);
   }
 

@@ -23,6 +23,7 @@ import { _isNumberValue } from '@angular/cdk/coercion';
 import { Step1Component } from './step1/step1.component';
 import { Step2Component } from './step2/step2.component';
 import { Step3Component } from './step3/step3.component';
+import { StepCancelComponent } from './step-cancel/step-cancel.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -55,7 +56,8 @@ const MY_DATE_FORMATS = {
     NgxSpinnerModule,
     Step1Component,
     Step2Component,
-    Step3Component
+    Step3Component,
+    StepCancelComponent,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -86,7 +88,7 @@ export class MobilizationComponent {
       solicitante: 'Delegación del gobierno',
       situacion: 'Emergencia activada',
       ultimaActualizacion: '20/08/2024',
-    }
+    },
   ]);
   formData!: FormGroup;
 
@@ -119,13 +121,9 @@ export class MobilizationComponent {
       Descripcion3: [''],
       FechaHoraDisponibilidad: [null],
       Observaciones3: [''],
-      
     });
 
-
     if (this.editData) {
-      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.editData:', this.editData);
-      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.cecodService.dataCecod():', this.movilizacionService.dataMovilizacion());
       if (this.movilizacionService.dataMovilizacion().length === 0) {
         this.movilizacionService.dataMovilizacion.set(this.editData.notificacionesEmergencias);
       }
@@ -224,7 +222,6 @@ export class MobilizationComponent {
   }
 
   async loadTipo(id: any) {
-    console.log('🚀 ~ MobilizationComponent ~ loadTipo ~ id:', id);
     this.spinner.show();
     id === 8 ? this.formData.get('idTipoNotificacion')?.disable() : this.formData.get('idTipoNotificacion')?.enable();
     const tipos = await this.movilizacionService.getTipoGestion(id);
