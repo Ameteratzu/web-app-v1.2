@@ -156,7 +156,7 @@
       <ng-container matColumnDef="autoridad">
         <th mat-header-cell *matHeaderCellDef>Autoridad solicitante</th>
         <td mat-cell *matCellDef="let coordinacionData">
-          {{ coordinacionData.autoridad }}
+          {{ coordinacionData.autoridad ?  coordinacionData.autoridad :'Sin autoridad ingresada' }}
         </td>
       </ng-container>
 

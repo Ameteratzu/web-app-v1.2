@@ -23,7 +23,7 @@ export interface PasoBase {
 /** Paso 1 - Solicitud */
 export interface PasoSolicitud extends PasoBase {
   TipoPaso: 1;
-  IdProcedenciaMedio: number;
+  IdProcedenciaMedio: GenericMaster;
   AutoridadSolicitante: string;
   FechaHoraSolicitud: string;
 }
@@ -79,4 +79,9 @@ export interface PasoLlegadaBase extends PasoBase {
   IdCapacidad: number;
   MedioNoCatalogado: string;
   FechaHoraLlegada: string;
+}
+
+export interface GenericMaster {
+  id: number;
+  descripcion: string;
 }

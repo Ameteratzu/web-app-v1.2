@@ -39,6 +39,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/ngx-spinner/animations/ball-atom.css",
               "node_modules/ol/ol.css",
               "node_modules/ol-ext/dist/ol-ext.css"
             ],
@@ -139,5 +140,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

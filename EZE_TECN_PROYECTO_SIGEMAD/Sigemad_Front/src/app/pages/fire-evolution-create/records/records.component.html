@@ -86,7 +86,6 @@
           <mat-datepicker #picker3></mat-datepicker>
         </mat-form-field>
 
-
         <mat-form-field class="input spaced-input" fxFlex="50%">
           <mat-label>Plan de emergencias activado</mat-label>
           <mat-select formControlName="emergencyPlanActivated" (selectionChange)="loadPhases($event)">
@@ -94,8 +93,7 @@
               {{ op.descripcion }}
             </mat-option>
           </mat-select>
-        </mat-form-field> 
-
+        </mat-form-field>
       </div>
 
       <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">

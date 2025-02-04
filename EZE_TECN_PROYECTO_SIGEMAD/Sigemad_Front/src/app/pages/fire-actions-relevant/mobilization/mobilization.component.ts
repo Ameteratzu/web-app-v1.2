@@ -20,6 +20,10 @@ import { ActionsRelevantService } from '../../../services/actions-relevant.servi
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { GenericMaster } from '../../../types/actions-relevant.type';
 import { _isNumberValue } from '@angular/cdk/coercion';
+import { Step1Component } from './step1/step1.component';
+import { Step2Component } from './step2/step2.component';
+import { Step3Component } from './step3/step3.component';
+import { StepCancelComponent } from './step-cancel/step-cancel.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -50,13 +54,17 @@ const MY_DATE_FORMATS = {
     MatTableModule,
     MatIconModule,
     NgxSpinnerModule,
+    Step1Component,
+    Step2Component,
+    Step3Component,
+    StepCancelComponent,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './mobilization.component.html',
-  styleUrl: './mobilization.component.scss'
+  styleUrl: './mobilization.component.scss',
 })
 export class MobilizationComponent {
   @ViewChild(MatSort) sort!: MatSort;
@@ -73,24 +81,49 @@ export class MobilizationComponent {
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
 
-  public displayedColumns: string[] = ['idTipoNotificacion', 'fechaHoraNotificacion', 'organosNotificados', 'opciones'];
-
+  displayedColumns: string[] = ['solicitante', 'situacion', 'ultimaActualizacion', 'opciones'];
+  // Definir datos estáticos
+  dataSource = new MatTableDataSource([
+    {
+      solicitante: 'Delegación del gobierno',
+      situacion: 'Emergencia activada',
+      ultimaActualizacion: '20/08/2024',
+    },
+  ]);
   formData!: FormGroup;
 
   public isCreate = signal<number>(-1);
   public tiposGestion = signal<GenericMaster[]>([]);
-  public dataSource = new MatTableDataSource<any>([]);
+  // public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
     this.tiposGestion.set(this.dataMaestros.tiposGestion);
 
     this.formData = this.fb.group({
-      gestion: [null, Validators.required]
+      //Paso1
+      idTipoNotificacion: [null, Validators.required],
+      IdProcedenciaMedio: [null, Validators.required],
+      AutoridadSolicitante: ['', Validators.required],
+      FechaHoraSolicitud: [new Date(), Validators.required],
+      Descripcion: [''],
+      Observaciones: [''],
+      //Paso2
+      IdDestinoMedio: [null, Validators.required],
+      TitularMedio: [''],
+      FechaHoraTramitacion: [new Date(), Validators.required],
+      PublicadoCECIS: [false],
+      Descripcion2: [''],
+      Observaciones2: [''],
+      //Paso 3
+      TitularMedio3: [''],
+      GestionCECOD: [false],
+      FechaHoraOfrecimiento: [new Date(), Validators.required],
+      Descripcion3: [''],
+      FechaHoraDisponibilidad: [null],
+      Observaciones3: [''],
     });
 
     if (this.editData) {
-      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.editData:', this.editData);
-      console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.cecodService.dataCecod():', this.movilizacionService.dataMovilizacion());
       if (this.movilizacionService.dataMovilizacion().length === 0) {
         this.movilizacionService.dataMovilizacion.set(this.editData.notificacionesEmergencias);
       }
@@ -148,19 +181,18 @@ export class MobilizationComponent {
     const data = this.movilizacionService.dataMovilizacion()[index];
     // console.log("🚀 ~ NotificationsComponent ~ seleccionarItem ~ data:", data.idTipoNotificacion)
     // // if (typeof data.idTipoNotificacion === 'number') {
-    //   var ob = this.tiposNotificaciones().find((tipo) => 
-    //     typeof data.idTipoNotificacion === 'number' 
-    //       ? tipo.id === data.idTipoNotificacion 
+    //   var ob = this.tiposNotificaciones().find((tipo) =>
+    //     typeof data.idTipoNotificacion === 'number'
+    //       ? tipo.id === data.idTipoNotificacion
     //       : tipo.id === data.idTipoNotificacion.id
     //   );
 
-      // this.formData.get('idTipoNotificacion')?.setValue(ob);
-
+    // this.formData.get('idTipoNotificacion')?.setValue(ob);
 
     // }else{
     //   this.formData.get('idTipoNotificacion')?.setValue(data.idTipoNotificacion);
     // }
-   
+
     // this.formData.get('fechaHoraNotificacion')?.setValue(data.fechaHoraNotificacion);
     // this.formData.get('organosNotificados')?.setValue(data.organosNotificados);
     // this.formData.get('ucpm')?.setValue(data.ucpm);
@@ -189,6 +221,20 @@ export class MobilizationComponent {
     return tipo.descripcion;
   }
 
+  async loadTipo(id: any) {
+    this.spinner.show();
+    id === 8 ? this.formData.get('idTipoNotificacion')?.disable() : this.formData.get('idTipoNotificacion')?.enable();
+    const tipos = await this.movilizacionService.getTipoGestion(id);
+    this.tiposGestion.set(tipos);
+    this.formData.get('idTipoNotificacion')?.setValue(null);
+    // this.formData.patchValue({
+    //   nombrePlan: planes[0]?.descripcion ?? '',
+    //   nombrePlanPersonalizado: ''
+    // });
+
+    this.spinner.hide();
+  }
+
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
   }
@@ -209,4 +255,3 @@ export class MobilizationComponent {
     return Number.isInteger(value);
   }
 }
-

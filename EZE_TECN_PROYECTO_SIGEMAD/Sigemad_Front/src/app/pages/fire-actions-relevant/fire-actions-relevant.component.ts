@@ -32,7 +32,7 @@ import moment from 'moment';
     NotificationsComponent,
     ActivationPlanComponent,
     SystemsActivationComponent,
-    MobilizationComponent
+    MobilizationComponent,
   ],
   animations: [
     trigger('fadeInOut', [
@@ -92,13 +92,17 @@ export class FireActionsRelevantComponent {
     const tiposActivacion = await this.actionsRelevantSevice.getTipoActivacion();
     const modosActivacion = await this.actionsRelevantSevice.getModosActivacion();
     const tiposGestion = await this.actionsRelevantSevice.getTipoGestion();
+    const procedencia = await this.actionsRelevantSevice.getProcedencia();
+    const destinos = await this.actionsRelevantSevice.getDestinos();
 
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
       tiposActivacion,
       modosActivacion,
-      tiposGestion
+      tiposGestion,
+      procedencia,
+      destinos,
     };
 
     return this.dataMaestros;
@@ -126,7 +130,7 @@ export class FireActionsRelevantComponent {
           break;
         case 'close':
           this.spinner.hide();
-          //this.evolutionSevice.clearData();
+          this.actionsRelevantSevice.clearData();
           this.closeModal(true);
           break;
         case 'update':
@@ -177,7 +181,10 @@ export class FireActionsRelevantComponent {
     }
 
     if (this.actionsRelevantSevice.dataPlanes().length > 0) {
-      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ this.actionsRelevantSevice.dataPlanes():", this.actionsRelevantSevice.dataPlanes())
+      console.log(
+        '🚀 ~ FireActionsRelevantComponent ~ processData ~ this.actionsRelevantSevice.dataPlanes():',
+        this.actionsRelevantSevice.dataPlanes()
+      );
 
       const arrayToSave = this.actionsRelevantSevice.dataPlanes().map((item, index) => {
         return {
@@ -186,24 +193,24 @@ export class FireActionsRelevantComponent {
           nombrePlan: item.nombrePlan,
           nombrePlanPersonalizado: item.nombrePlanPersonalizado,
           fechaInicio: this.formatDate(item.fechaInicio),
-          fechaFin: item.fechaFin ? this.formatDate(item.fechaFin): null,
+          fechaFin: item.fechaFin ? this.formatDate(item.fechaFin) : null,
           autoridad: item.autoridad,
           observaciones: item.observaciones,
           archivo: item.file,
         };
       });
-  
+
       const objToSave = {
         detallesDocumentaciones: arrayToSave,
       };
-  
+
       const formData = new FormData();
       formData.append('IdActuacionRelevante', this.actionsRelevantSevice.dataPlanes()[0].idActuacionRelevante ?? 0);
       formData.append('idSuceso', this.data.idIncendio.toString());
 
       objToSave.detallesDocumentaciones.forEach((detalle, index) => {
         formData.append(`ActivacionPlanes[${index}].Id`, (detalle.id ?? '0').toString());
-        formData.append(`ActivacionPlanes[${index}].IdTipoPlan`, (detalle.idTipoPlan).toString());
+        formData.append(`ActivacionPlanes[${index}].IdTipoPlan`, detalle.idTipoPlan.toString());
         formData.append(`ActivacionPlanes[${index}].FechaInicio`, detalle.fechaInicio);
         formData.append(`ActivacionPlanes[${index}].FechaFin`, detalle.fechaFin ?? '');
         formData.append(`ActivacionPlanes[${index}].Autoridad`, detalle.autoridad ?? '');
@@ -211,16 +218,14 @@ export class FireActionsRelevantComponent {
         formData.append(`ActivacionPlanes[${index}].IdPlanEmergencia`, '3');
         formData.append(`ActivacionPlanes[${index}].PlanEmergenciaPersonalizado`, detalle.nombrePlan ?? '');
         formData.append(`ActivacionPlanes[${index}].Observaciones`, detalle.observaciones ?? '');
-        if(!detalle.archivo?.id){
+        if (!detalle.archivo?.id) {
           formData.append(`ActivacionPlanes[${index}].Archivo`, detalle.archivo);
         }
-
-        
       });
 
       const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);
-      console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:", resp)
-      
+      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
+
       this.idReturn = resp.idActuacionRelevante;
     }
 
@@ -242,7 +247,6 @@ export class FireActionsRelevantComponent {
     }
 
     if (this.actionsRelevantSevice.dataNotificaciones().length > 0) {
-    
       await this.handleDataProcessing(
         this.actionsRelevantSevice.dataNotificaciones(),
         (item) => ({
@@ -261,7 +265,6 @@ export class FireActionsRelevantComponent {
     }
 
     if (this.actionsRelevantSevice.dataSistemas().length > 0) {
-    
       await this.handleDataProcessing(
         this.actionsRelevantSevice.dataSistemas(),
         (item) => ({
@@ -272,7 +275,7 @@ export class FireActionsRelevantComponent {
           autoridad: item.autoridad,
           descripcionSolicitud: item.descripcionSolicitud,
           observaciones: item.observaciones,
-          idModoActivacion: _isNumberValue(item.idModoActivacion) ? item.idModoActivacion : item.idModoActivacion?.id ?? null,
+          idModoActivacion: _isNumberValue(item.idModoActivacion) ? item.idModoActivacion : (item.idModoActivacion?.id ?? null),
           fechaActivacion: item.fechaActivacion ? this.formatDate(item.fechaActivacion) : null,
           codigo: item.codigo,
           nombre: item.nombre,
@@ -280,7 +283,7 @@ export class FireActionsRelevantComponent {
           fechaHoraPeticion: item.fechaHoraPeticion ? this.formatDate(item.fechaHoraPeticion) : null,
           fechaAceptacion: item.fechaAceptacion ? this.formatDate(item.fechaAceptacion) : null,
           peticiones: item.peticiones,
-          mediosCapacidades: item.mediosCapacidades,  
+          mediosCapacidades: item.mediosCapacidades,
         }),
         this.actionsRelevantSevice.postSistemas.bind(this.actionsRelevantSevice),
         'detalles'
@@ -327,13 +330,13 @@ export class FireActionsRelevantComponent {
   }
 
   getFechaHora(fecha: Date, hora: string, format: string = 'MM/DD/YY HH:mm'): any {
-      if (hora && fecha) {
-        const [horas, minutos] = hora.split(':').map(Number);
-        const fechaHora = new Date(fecha);
-        fechaHora.setHours(horas, minutos, 0, 0);
-        return moment(fechaHora).format(format);
-      }
+    if (hora && fecha) {
+      const [horas, minutos] = hora.split(':').map(Number);
+      const fechaHora = new Date(fecha);
+      fechaHora.setHours(horas, minutos, 0, 0);
+      return moment(fechaHora).format(format);
     }
+  }
 
   getFechaHoraIso(fechaHora: string): any {
     if (fechaHora) {
