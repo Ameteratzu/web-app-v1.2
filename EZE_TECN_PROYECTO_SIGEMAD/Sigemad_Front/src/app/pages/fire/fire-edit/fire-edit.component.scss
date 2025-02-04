@@ -90,3 +90,99 @@ p {
   margin-top: 12px;
   margin-bottom: 20px;
 }
+
+/* PCD */
+.tabla-contenedor-historico {
+  display: flex;
+  flex-wrap: nowrap; /* Evita que los elementos dentro del contenedor se reorganicen */
+  align-items: flex-start; /* Alineación vertical */
+  justify-content: flex-start; /* Alineación horizontal */
+  width: 100%;
+  overflow-x: auto; /* Esto permite el desplazamiento horizontal si la tabla es demasiado ancha */
+  max-width: 100%; /* Esto garantiza que el contenedor no se expanda más allá del 100% del ancho disponible */
+}
+
+/* Estilo para la leyenda de los iconos */
+.leyenda {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra los íconos verticalmente */
+  margin-right: 10px; /* Espacio entre la leyenda y la tabla */
+  justify-content: center; /* Alinea los íconos verticalmente en el centro */
+}
+
+/* Estilo para cada ítem de la leyenda */
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido dentro de cada ítem */
+  margin-bottom: 0px; /* Espacio entre los íconos */
+  height: 20px; /* Asegura que todos los íconos tengan la misma altura */
+}
+
+/* Estilo de la tabla */
+#tablaHistorico {
+  border-collapse: collapse;
+}
+
+/* Estilo para las celdas de la tabla */
+#tablaHistorico tr {
+  height: 30px;
+}
+
+/* Estilo para las celdas de la tabla */
+#tablaHistorico td {
+  text-align: center;
+  max-width: 16px;
+  font-size: 0.1em;
+}
+
+/* ------------ REGLA ------------- */
+.regla td {
+  font-family: 'Courier New', monospace;
+  vertical-align: middle;
+  position: relative;
+  text-align: center;
+  padding: 8px;
+}
+
+/* Crear la línea horizontal central */
+.regla td::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: black;
+  transform: translateY(-50%);
+}
+
+/* Crear la barra vertical entre las horas */
+.regla td::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 20%;
+  background-color: black;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+/* Primer borde izquierdo de cada día */
+.regla td:first-child {
+  border-left: 2px solid black;
+  height: 100%;
+}
+
+/* Último borde derecho al final del día */
+.regla td:last-child {
+  border-right: 2px solid black;
+}
+
+/* Borde derecho de las celdas intermedias (horas) */
+.regla td:not(:last-child) {
+  border-right: 1px solid black;
+}
+/*  FIN PCD */
