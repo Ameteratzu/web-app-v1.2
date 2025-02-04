@@ -139,7 +139,11 @@
               <td
                 [id]="'filaEvolucion_' + entry.key + '_' + horaIndex"
                 class="hora-celda"
+                [ngClass]="{ 'inicio-dia': horaIndex === 0 }"
                 style="position: relative; text-align: center; padding: 8px"
+                [attr.title]="
+                  'Estado del incendio el ' + entry.key + ' a las ' + horaIndex + ' horas: ' + getEstadoFilaEvolucion(entry.key, horaIndex)
+                "
               >
                 <div
                   *ngIf="getBackgroundColorFilaEvolucion(entry.key, horaIndex) !== 'transparent'"
@@ -152,12 +156,10 @@
                     height: '30%',
                     display: 'block',
                   }"
-                  [attr.title]="
-                    'Estado del incendio el ' + entry.key + ' a las ' + horaIndex + ' horas: ' + getEstadoFilaEvolucion(entry.key, horaIndex)
-                  "
                 >
                   <!--{{ horaIndex }}-->
                 </div>
+                <div class="tercer-borde"></div>
               </td>
             </ng-container>
           </ng-container>
@@ -411,8 +413,8 @@
           </ng-container>
 
           <ng-container matColumnDef="opciones">
-            <th mat-header-cell *matHeaderCellDef style="text-align: center;" >Opciones</th>
-            <td mat-cell *matCellDef="let fire" style="text-align: center;">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center">Opciones</th>
+            <td mat-cell *matCellDef="let fire" style="text-align: center">
               <a (click)="goModalEdit(fire)">
                 <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Editar registro" />
               </a>
