@@ -53,6 +53,7 @@ import { FireRelatedEventComponent } from '../../fire-related-event/fire-related
 import { DataSource } from '@angular/cdk/collections';
 import { EvolutionService } from '../../../services/evolution.service';
 import { Evolution } from '../../../types/evolution.type';
+import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-actions-relevant.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -254,9 +255,8 @@ export class FireEditComponent implements OnInit {
     });
   }
 
-  
   goModalRelevantActions(fireDetail?: FireDetail) {
-    console.log("🚀 ~ FireEditComponent ~ goModalRelevantActions ~ fireDetail:", fireDetail)
+    console.log('🚀 ~ FireEditComponent ~ goModalRelevantActions ~ fireDetail:', fireDetail);
     const dialogRef = this.matDialog.open(FireActionsRelevantComponent, {
       width: '90vw',
       height: '90vh',
@@ -266,7 +266,7 @@ export class FireEditComponent implements OnInit {
         title: fireDetail ? 'Editar - Actuaciones relevantes de la DGPCE' : 'Nuevo - Actuaciones relevantes de la DGPCE',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
-        fire: this.fire 
+        fire: this.fire,
       },
     });
 
