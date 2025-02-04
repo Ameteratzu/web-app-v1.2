@@ -148,8 +148,7 @@ export class ActivationPlanComponent implements OnInit {
     });
 
     this.dataSource.data = [];
-
-    if (this.editData) {
+    if (this.editData) {  
       if (this.planesService.dataPlanes().length === 0) {
         if (this.planesService.dataPlanes().length === 0) {
           const nuevosPlanes = this.editData.activacionPlanEmergencias.map((plan: any) => ({
@@ -283,8 +282,8 @@ export class ActivationPlanComponent implements OnInit {
     });
   }
 
-  closeModal(params?: any) {
-    this.dialogRef.close(params);
+  closeModal() {
+    this.save.emit({ save: false, delete: false, close: true, update: false });
   }
 
   public dropped(files: NgxFileDropEntry[]) {
