@@ -429,6 +429,13 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
             .ForMember(dest => dest.Archivo, opt => opt.Ignore());
 
+        CreateMap<TipoAdministracion, TipoAdministracionDto>();
+        CreateMap<Administracion, AdministracionDto>();
+        CreateMap<Organismo, OrganismoDto>();
+        CreateMap<Entidad, EntidadDto>();
+        CreateMap<TipoCapacidad, TipoCapacidadDto>();
+        CreateMap<Capacidad, CapacidadDto>();
+
     }
 
 }

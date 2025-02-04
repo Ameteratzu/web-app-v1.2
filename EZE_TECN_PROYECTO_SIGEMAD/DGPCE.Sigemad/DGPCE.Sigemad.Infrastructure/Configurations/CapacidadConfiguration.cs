@@ -13,13 +13,13 @@ public class CapacidadConfiguration : IEntityTypeConfiguration<Capacidad>
         builder.HasOne(builder => builder.TipoCapacidad)
             .WithMany()
             .HasForeignKey(builder => builder.IdTipoCapacidad)
-            .IsRequired()
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(builder => builder.Entidad)
             .WithMany()
             .HasForeignKey(builder => builder.IdEntidad)
-            .IsRequired()
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
