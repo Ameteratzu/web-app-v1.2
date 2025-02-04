@@ -165,7 +165,7 @@ p {
   top: 50%;
   left: 50%;
   width: 1px;
-  height: 20%;
+  height: 30%;
   background-color: black;
   transform: translateX(-50%) translateY(-50%);
 }
@@ -182,7 +182,17 @@ p {
 }
 
 /* Borde derecho de las celdas intermedias (horas) */
-.regla td:not(:last-child) {
-  border-right: 1px solid black;
+
+.inicio-dia {
+  border-left: 2px solid black !important; /* Más grueso */
+}
+
+.regla td .tercer-borde {
+  position: absolute;
+  top: 4px; /* Ajusta la posición si es necesario */
+  right: 0;
+  width: 1%;
+  height: 60%; /* Altura del tercer borde */
+  background-color: black; /* Cambia el color según sea necesario */
 }
 /*  FIN PCD */
