@@ -151,5 +151,15 @@ export class ActionsRelevantService {
     let endpoint = id ? `/movilizaciones-medios/tipos-gestion?IdPasoActual=${id}` : '/movilizaciones-medios/tipos-gestion';
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
+
+  getProcedencia() {
+    let endpoint = `/movilizaciones-medios/procedencias-medios`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getDestinos() {
+    let endpoint = `/movilizaciones-medios/destinos-medios`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
   
 }

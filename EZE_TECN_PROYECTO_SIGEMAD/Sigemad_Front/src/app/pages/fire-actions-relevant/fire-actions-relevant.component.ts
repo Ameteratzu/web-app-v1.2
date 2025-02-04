@@ -92,13 +92,19 @@ export class FireActionsRelevantComponent {
     const tiposActivacion = await this.actionsRelevantSevice.getTipoActivacion();
     const modosActivacion = await this.actionsRelevantSevice.getModosActivacion();
     const tiposGestion = await this.actionsRelevantSevice.getTipoGestion();
-
+    //const procedencia = await this.actionsRelevantSevice.getProcedencia();
+    //const destinos = await this.actionsRelevantSevice.getDestinos();
+    const procedencia: never[] =[];
+    const destinos: never[] =[];
+    
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
       tiposActivacion,
       modosActivacion,
-      tiposGestion
+      tiposGestion,
+      procedencia,
+      destinos
     };
 
     return this.dataMaestros;

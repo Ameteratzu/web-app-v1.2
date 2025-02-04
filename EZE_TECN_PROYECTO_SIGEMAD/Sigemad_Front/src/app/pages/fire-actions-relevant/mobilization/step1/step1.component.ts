@@ -23,7 +23,16 @@ const MY_DATE_FORMATS = {
 @Component({
   selector: 'app-step1',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatSelectModule, ReactiveFormsModule, FlexLayoutModule, MatDatepickerModule, MatNativeDateModule, MatInputModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+  ],
   templateUrl: './step1.component.html',
   styleUrl: './step1.component.scss',
   providers: [
@@ -38,7 +47,7 @@ export class Step1Component {
 
   async ngOnInit() {
     console.log('🚀 ~ Step1Component ~ ngOnInit ~ this.dataMaestros:', this.dataMaestros);
-    this.procedencia.set(this.dataMaestros.tiposGestion);
+    this.procedencia.set(this.dataMaestros.procedencia);
   }
 
   getForm(atributo: string): any {

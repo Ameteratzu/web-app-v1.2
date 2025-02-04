@@ -208,7 +208,7 @@ export class FireEditComponent implements OnInit {
       maxWidth: 'none',
       disableClose: true,
       data: {
-        title: fireDetail ? 'Editar -Actuaciones relevantes' : 'Nuevo - Actuaciones relevantes',
+        title: fireDetail ? 'Editar - Actuaciones relevantes de la DGPCE' : 'Nuevo - Actuaciones relevantes de la DGPCE',
         idIncendio: Number(this.route.snapshot.paramMap.get('id')),
         fireDetail,
         fire: this.fire 

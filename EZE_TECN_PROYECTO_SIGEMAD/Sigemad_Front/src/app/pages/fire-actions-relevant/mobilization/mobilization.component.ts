@@ -21,6 +21,8 @@ import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { GenericMaster } from '../../../types/actions-relevant.type';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import { Step1Component } from './step1/step1.component';
+import { Step2Component } from './step2/step2.component';
+import { Step3Component } from './step3/step3.component';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -52,6 +54,8 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     NgxSpinnerModule,
     Step1Component,
+    Step2Component,
+    Step3Component
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -82,12 +86,7 @@ export class MobilizationComponent {
       solicitante: 'Delegación del gobierno',
       situacion: 'Emergencia activada',
       ultimaActualizacion: '20/08/2024',
-    },
-    {
-      solicitante: 'Bomberos',
-      situacion: 'Incendio controlado',
-      ultimaActualizacion: '22/08/2024',
-    },
+    }
   ]);
   formData!: FormGroup;
 
@@ -99,13 +98,30 @@ export class MobilizationComponent {
     this.tiposGestion.set(this.dataMaestros.tiposGestion);
 
     this.formData = this.fb.group({
+      //Paso1
       idTipoNotificacion: [null, Validators.required],
       IdProcedenciaMedio: [null, Validators.required],
       AutoridadSolicitante: ['', Validators.required],
       FechaHoraSolicitud: [new Date(), Validators.required],
       Descripcion: [''],
       Observaciones: [''],
+      //Paso2
+      IdDestinoMedio: [null, Validators.required],
+      TitularMedio: [''],
+      FechaHoraTramitacion: [new Date(), Validators.required],
+      PublicadoCECIS: [false],
+      Descripcion2: [''],
+      Observaciones2: [''],
+      //Paso 3
+      TitularMedio3: [''],
+      GestionCECOD: [false],
+      FechaHoraOfrecimiento: [new Date(), Validators.required],
+      Descripcion3: [''],
+      FechaHoraDisponibilidad: [null],
+      Observaciones3: [''],
+      
     });
+
 
     if (this.editData) {
       console.log('🚀 ~ CecodComponent ~ ngOnInit ~ this.editData:', this.editData);
