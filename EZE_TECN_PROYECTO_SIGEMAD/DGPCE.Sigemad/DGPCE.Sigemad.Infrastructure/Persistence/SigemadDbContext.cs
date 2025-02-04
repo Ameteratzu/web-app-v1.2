@@ -82,6 +82,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoDocumento>().ToTable(nameof(TipoDocumento));
             modelBuilder.Entity<AmbitoPlan>().ToTable(nameof(AmbitoPlan));
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
+            modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
+            modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
         }
 
 
@@ -162,6 +164,15 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<SituacionEquivalente> SituacionEquivalentes { get; set; }
 
         public DbSet<DeclaracionZAGEP> DeclaracionesZAGEP { get; set; }
+
+        public DbSet<ActivacionSistema> ActivacionesSistemas { get; set; }
+
+        public DbSet<ConvocatoriaCECOD> ConvocatoriasCECOD { get; set; }
+
+        public DbSet<NotificacionEmergencia> NotificacionesEmergencias { get; set; }
+
+        public DbSet<TipoNotificacion> TiposNotificaciones { get; set; }
+        
 
     }
 }

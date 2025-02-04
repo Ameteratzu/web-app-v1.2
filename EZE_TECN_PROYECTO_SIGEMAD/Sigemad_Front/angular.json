@@ -39,7 +39,9 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/ngx-spinner/animations/ball-atom.css"
+              "node_modules/ngx-spinner/animations/ball-atom.css",
+              "node_modules/ol/ol.css",
+              "node_modules/ol-ext/dist/ol-ext.css"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -129,12 +131,17 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ol/ol.css",
+              "node_modules/ol-ext/dist/ol-ext.css"              
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

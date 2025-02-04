@@ -1,11 +1,13 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks.Dataflow;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
 public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, IReadOnlyList<RegistroActualizacionDto>>
@@ -41,6 +43,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         guidsUsuarios.UnionWith(suceso.OtraInformaciones.Select(o => o.CreadoPor));
         guidsUsuarios.UnionWith(suceso.Documentaciones.Select(d => d.CreadoPor));
         guidsUsuarios.UnionWith(suceso.SucesoRelacionados.Select(d => d.CreadoPor));
+        guidsUsuarios.UnionWith(suceso.ActuacionesRelevantes.Select(d => d.CreadoPor));
 
         // Obtener nombres de usuarios
         var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
@@ -56,6 +59,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Datos de evolución",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
         }));
@@ -68,6 +72,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Otra Información",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(o)),
             Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = o.FechaCreacion == suceso.OtraInformaciones.Max(e => e.FechaCreacion)
         }));
@@ -80,6 +85,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Dirección y coordinación",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
         }));
@@ -92,6 +98,7 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Documentación",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.Documentaciones.Max(e => e.FechaCreacion)
         }));
@@ -104,8 +111,22 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             Registro = "",
             Origen = "",
             TipoRegistro = "Sucesos Relacionados",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
             Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
             EsUltimoRegistro = d.FechaCreacion == suceso.SucesoRelacionados.Max(e => e.FechaCreacion)
+        }));
+
+        // Procesar Actuaciones Relevantes
+        registros.AddRange(suceso.ActuacionesRelevantes.Select(d => new RegistroActualizacionDto
+        {
+            Id = d.Id,
+            FechaHora = d.FechaCreacion,
+            Registro = "",
+            Origen = "",
+            TipoRegistro = "Actuaciones Relevantes",
+            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
+            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+            EsUltimoRegistro = d.FechaCreacion == suceso.ActuacionesRelevantes.Max(e => e.FechaCreacion)
         }));
 
         // Ordenar por FechaHora descendente
@@ -135,6 +156,140 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             u => u.Nombre ?? "Desconocido" // Valor: Nombre del usuario
         );
     }
+
+    private static List<string> GetTitulosDeApartados(Evolucion evolucion)
+    {
+        var titulos = new List<string>();
+
+        // Verifica si "Registro" tiene datos
+        if (evolucion.Registro != null)
+        {
+            titulos.Add("Registro");
+        }
+
+        // Verifica si "DatoPrincipal" tiene datos
+        if (evolucion.DatoPrincipal != null)
+        {
+            titulos.Add("Datos principales");
+        }
+
+        // Verifica si "Parametro" tiene datos
+        if (evolucion.Parametro != null)
+        {
+            titulos.Add("Parámetros");
+        }
+
+        // Verifica si "AreaAfectadas" tiene al menos un elemento
+        if (evolucion.AreaAfectadas != null && evolucion.AreaAfectadas.Any())
+        {
+            titulos.Add("Area Afectadas");
+        }
+
+        // Verifica si "Impactos" tiene al menos un elemento
+        if (evolucion.Impactos != null && evolucion.Impactos.Any())
+        {
+            titulos.Add("Impactos");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(DireccionCoordinacionEmergencia direccionCoordinacionEmergencia)
+    {
+        var titulos = new List<string>();
+
+        if (direccionCoordinacionEmergencia.Direcciones != null && direccionCoordinacionEmergencia.Direcciones.Any())
+        {
+            titulos.Add("Dirección");
+        }
+
+        if (direccionCoordinacionEmergencia.CoordinacionesCecopi != null && direccionCoordinacionEmergencia.CoordinacionesCecopi.Any())
+        {
+            titulos.Add("Coordinación CECOPI");
+        }
+
+        if (direccionCoordinacionEmergencia.CoordinacionesPMA != null && direccionCoordinacionEmergencia.CoordinacionesPMA.Any())
+        {
+            titulos.Add("Coordinación PMA");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(Documentacion documentacion)
+    {
+        var titulos = new List<string>();
+
+        if (documentacion.DetallesDocumentacion != null && documentacion.DetallesDocumentacion.Any())
+        {
+            titulos.Add("Documentación");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(OtraInformacion otraInformacion)
+    {
+        var titulos = new List<string>();
+
+        if (otraInformacion.DetallesOtraInformacion != null && otraInformacion.DetallesOtraInformacion.Any())
+        {
+            titulos.Add("Otra Información");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(SucesoRelacionado sucesoRelacionado)
+    {
+        var titulos = new List<string>();
+
+        if (sucesoRelacionado.DetalleSucesoRelacionados != null && sucesoRelacionado.DetalleSucesoRelacionados.Any())
+        {
+            titulos.Add("Sucesos Relacionados");
+        }
+
+        return titulos;
+    }
+
+    private static List<string> GetTitulosDeApartados(ActuacionRelevanteDGPCE actuacionRelevante)
+    {
+        var titulos = new List<string>();
+
+        if (actuacionRelevante.EmergenciaNacional != null)
+        {
+            titulos.Add("Emergencia Nacional");
+        }
+
+        if (actuacionRelevante.ActivacionPlanEmergencias != null && actuacionRelevante.ActivacionPlanEmergencias.Any())
+        {
+            titulos.Add("Activacion Plan Emergencias");
+        }
+
+        if (actuacionRelevante.DeclaracionesZAGEP != null && actuacionRelevante.DeclaracionesZAGEP.Any())
+        {
+            titulos.Add("Declaración ZAGEP");
+        }
+
+        if (actuacionRelevante.ActivacionSistemas != null && actuacionRelevante.ActivacionSistemas.Any())
+        {
+            titulos.Add("Activacion Sistemas");
+        }
+
+        if (actuacionRelevante.ConvocatoriasCECOD != null && actuacionRelevante.ConvocatoriasCECOD.Any())
+        {
+            titulos.Add("Convocatoria CECOD");
+        }
+
+        if (actuacionRelevante.NotificacionesEmergencias != null && actuacionRelevante.NotificacionesEmergencias.Any())
+        {
+            titulos.Add("Notificaciones oficiales");
+        }
+      
+
+        return titulos;
+    }
+
 
 
 }

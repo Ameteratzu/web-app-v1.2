@@ -1,20 +1,19 @@
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RecordsComponent } from './records/records.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { EvolutionService } from '../../services/evolution.service';
+import { AlertService } from '../../shared/alert/alert.service';
+import { FireDetail } from '../../types/fire-detail.type';
+import { AreaComponent } from './area/area.component';
 import { ConsequencesComponent } from './consequences/consequences.component';
 import { InterventionComponent } from './intervention/intervention.component';
-import { AreaComponent } from './area/area.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EvolutionService } from '../../services/evolution.service';
-import { MatDialog } from '@angular/material/dialog';
-import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
-import { FireDetail } from '../../types/fire-detail.type';
-import { Router } from '@angular/router';
-import { AlertService } from '../../shared/alert/alert.service';
+import { RecordsComponent } from './records/records.component';
 
 @Component({
   selector: 'app-fire-create',
@@ -88,11 +87,10 @@ export class FireCreateComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log("🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:", this.data.fire)
+    console.log('🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:', this.data.fire);
     this.spinner.show();
     this.isToEditDocumentation();
   }
-  
 
   async onSaveFromChild(value: { save: boolean; delete: boolean; close: boolean; update: boolean }) {
     const keyWithTrue = (Object.keys(value) as Array<keyof typeof value>).find((key) => value[key]);
@@ -127,19 +125,27 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-    console.log("🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():", this.evolutionSevice.dataRecords())
-    // if (this.evolutionSevice.dataRecords().length === 0) {
-    //   this.alertService.showAlert({
-    //     title: 'Falta información',
-    //     text: 'Debe ingresar datos en Registro/Párametros',
-    //     icon: 'warning',
-    //     confirmButtonText: 'OK',
-    //   });
-    //   this.spinner.hide();
-    //   return;
-    // }
+    console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.data?.fireDetail?.id);
+    if (this.evolutionSevice.dataRecords().length > 0) {
+      await this.processData();
+    } else {
+      if (!this.data?.fireDetail?.id) {
+        this.alertService
+          .showAlert({
+            title: 'Atención',
+            text: 'Debe ingresar Registro/Parámetros antes de continuar.',
+            icon: 'warning',
+          })
+          .then(async (result) => {
+            this.spinner.hide();
+            return;
+          });
 
-    await this.processData();
+        return;
+      }else{
+        await this.processData();
+      }
+    }
 
     this.evolutionSevice.clearData();
 
@@ -169,20 +175,36 @@ export class FireCreateComponent implements OnInit {
       this.idReturn = result.id;
     }
 
-    await this.handleDataProcessing(
-      this.evolutionSevice.dataAffectedArea(),
-      (item) => ({
-        id: item.id ?? 0,
-        fechaHora: this.formatDate(item.fechaHora),
-        idProvincia: item.provincia.id ?? item.provincia,
-        idMunicipio: item.municipio.id ?? item.municipio,
-        idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
-        observaciones: item.observaciones,
-        GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
-      }),
-      this.evolutionSevice.postAreas.bind(this.evolutionSevice),
-      'areasAfectadas'
-    );
+    if (this.evolutionSevice.dataAffectedArea().length > 0) {
+      await this.handleDataProcessing(
+        this.evolutionSevice.dataAffectedArea(),
+        (item) => ({
+          id: item.id ?? 0,
+          fechaHora: this.formatDate(item.fechaHora),
+          idProvincia: item.provincia.id ?? item.provincia,
+          idMunicipio: item.municipio.id ?? item.municipio,
+          idEntidadMenor: item.entidadMenor?.id ?? item.entidadMenor ?? null,
+          observaciones: item.observaciones,
+          GeoPosicion: this.isGeoPosicionValid(item) ? item.geoPosicion : null,
+        }),
+        this.evolutionSevice.postAreas.bind(this.evolutionSevice),
+        'areasAfectadas'
+      );
+    }
+
+    if (this.evolutionSevice.dataConse().length > 0) {
+      this.editData ? (this.idReturn = this.editData.id) : 0;
+      this.idReturn ? (this.evolutionSevice.dataConse()[0].idEvolucion = this.idReturn) : 0;
+
+      const dataSave = {
+        idSuceso: this.data.idIncendio,
+        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        Impactos: this.evolutionSevice.dataConse(),
+      };
+      const result: any = await this.evolutionSevice.postConse(dataSave);
+      console.info('result', result);
+      this.idReturn = result.idEvolucion;
+    }
   }
 
   async handleDataProcessing<T>(data: T[], formatter: (item: T) => any, postService: (body: any) => Promise<any>, key: string): Promise<void> {
@@ -233,7 +255,7 @@ export class FireCreateComponent implements OnInit {
     this.selectedOption = event;
   }
 
-  closeModal(value: boolean) {
+  closeModal(value?: any) {
     this.dialogRef.close(value);
   }
 
@@ -253,21 +275,32 @@ export class FireCreateComponent implements OnInit {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await this.evolutionSevice.delete(Number(this.data?.fireDetail?.id));
-          this.evolutionSevice.clearData();
-          setTimeout(() => {
-            this.renderer.setStyle(toolbar, 'z-index', '5');
-            this.spinner.hide();
-          }, 2000);
+          try {
+            await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));
+            this.evolutionSevice.clearData();
+            setTimeout(() => {
+              this.renderer.setStyle(toolbar, 'z-index', '5');
+              this.spinner.hide();
+            }, 2000);
 
-          this.alertService
-            .showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            })
-            .then((result) => {
-              this.closeModal(true);
-            });
+            this.alertService
+              .showAlert({
+                title: 'Eliminado!',
+                icon: 'success',
+              })
+              .then((result) => {
+                this.closeModal(true);
+              });
+          } catch (error) {
+            this.alertService
+              .showAlert({
+                title: 'No hemos podido eliminar la evolución',
+                icon: 'error',
+              })
+              .then((result) => {
+                this.closeModal();
+              });
+          }
         } else {
           this.spinner.hide();
         }

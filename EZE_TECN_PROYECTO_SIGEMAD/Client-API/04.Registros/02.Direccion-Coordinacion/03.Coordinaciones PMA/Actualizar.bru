@@ -1,0 +1,64 @@
+meta {
+  name: Actualizar
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/coordinaciones-pma
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idDireccionCoordinacionEmergencia": {{IdDireccionCoordinacionEmergencia}},
+    "idSuceso": {{IdSuceso}},
+    "coordinaciones": [
+      {
+        "id": 1,
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-24",
+        "idProvincia": 1,
+        "idMunicipio": 1001,
+        "lugar": "***** ACTUALIZADO ******",
+        "observaciones": null,
+        "GeoPosicion": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -104.99404,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75422
+              ],
+              [
+                -104.99011,
+                39.75621
+              ],
+              [
+                -104.99404,
+                39.75621
+              ]
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}
+
+assert {
+  res.status: eq 200
+}

@@ -2,8 +2,6 @@
 -- TIPO DE RIESGO
 -- =============================================
 
-SET IDENTITY_INSERT TipoRiesgo ON;
-
 INSERT INTO TipoRiesgo (Id,Descripcion, IdTipoSuceso, Codigo) VALUES
 	 (1, N'General', NULL, '00'),
 	 (2, N'Accidentes con sustancias biológicas', 8, '01'),
@@ -27,13 +25,9 @@ INSERT INTO TipoRiesgo (Id,Descripcion, IdTipoSuceso, Codigo) VALUES
 	 (20, N'Terremotos', 11, '19'),
 	 (21, N'Viento', 25, '20');
 
-SET IDENTITY_INSERT TipoRiesgo OFF;
-
 -- =============================================
 -- TIPO DE PLAN
 -- =============================================
-
-SET IDENTITY_INSERT dbo.TipoPlan ON;
 
 INSERT INTO dbo.TipoPlan (Id,Descripcion,Codigo) VALUES
 	(1	,'Estatal', '00'),
@@ -42,9 +36,6 @@ INSERT INTO dbo.TipoPlan (Id,Descripcion,Codigo) VALUES
     (4	,'Normativa Básica', '03'),
     (5	,'Autoprotección', '04'),
     (6	,'Otros', '05');
-
-SET IDENTITY_INSERT dbo.TipoPlan OFF;
-
 
 INSERT INTO TipoPlanMapeo (IdAntiguo, IdNuevo)
 VALUES 
@@ -59,13 +50,19 @@ VALUES
 -- AMBITO PLAN
 -- =============================================
 
-SET IDENTITY_INSERT dbo.AmbitoPlan ON;
-
 INSERT INTO dbo.AmbitoPlan (Id,Descripcion) VALUES
     (1, 'Estatal'),
     (2, 'Autonómico');
 
-SET IDENTITY_INSERT dbo.AmbitoPlan OFF;
+-- =============================================
+-- TIPO NOTIFICACION
+-- =============================================
+
+INSERT INTO TipoNotificacion (Id,Descripcion) VALUES
+    (1, 'Activación plan estatal'),
+    (2, 'Activación PLEGEM'),
+	(3, 'Declaración situación'),
+	(4, 'Desactivación plan estatal');
 
 
 -- =============================================
@@ -279,7 +276,7 @@ INSERT INTO FaseEmergencia (Id,IdPlanEmergencia,Orden,Descripcion) VALUES
 	 (48,18,1,N'Alerta'),
 	 (49,18,2,N'Preemergencia'),
 	 (50,18,3,N'Emergencia'),
-	 (51,19,1,N' Preemergencia'),
+	 (51,19,1,N'Preemergencia'),
 	 (52,19,2,N'Emergencia '),
 	 (53,19,3,N'Recuperación '),
 	 (54,20,1,N'Fase 0'),
@@ -287,26 +284,26 @@ INSERT INTO FaseEmergencia (Id,IdPlanEmergencia,Orden,Descripcion) VALUES
 	 (56,20,3,N'Fase 2'),
 	 (57,20,4,N'Fase 3'),
 	 (58,20,5,N'Fase de Normalización'),
-	 (59,21,1,N' Preemergencia '),
+	 (59,21,1,N'Preemergencia '),
 	 (60,21,2,N'Emergencia            '),
-	 (61,21,3,N' Emergencia            '),
+	 (61,21,3,N'Emergencia            '),
 	 (62,21,4,N'Normalización'),
 	 (63,22,1,N'Emergencia            '),
 	 (64,22,2,N'Normalización'),
 	 (65,23,1,N'Preemergencia '),
-	 (66,23,2,N' Emergencia '),
+	 (66,23,2,N'Emergencia '),
 	 (67,23,3,N'Emergencia '),
 	 (68,23,4,N'Fase de Normalización'),
 	 (69,24,1,N'Preemergencia'),
 	 (70,24,2,N'Emergencia            '),
-	 (71,24,3,N' Emergencia            '),
+	 (71,24,3,N'Emergencia            '),
 	 (72,24,4,N'Normalización'),
 	 (73,25,1,N'Preemergencia'),
 	 (74,25,2,N'Emergencia '),
 	 (75,25,3,N'Recuperación '),
 	 (76,26,1,N'Alerta'),
 	 (77,26,2,N'Emergencia'),
-	 (78,27,1,N' Alerta'),
+	 (78,27,1,N'Alerta'),
 	 (79,27,2,N'Emergencia '),
 	 (80,27,3,N'Fase de Normalización'),
 	 (81,28,1,N'Alerta'),

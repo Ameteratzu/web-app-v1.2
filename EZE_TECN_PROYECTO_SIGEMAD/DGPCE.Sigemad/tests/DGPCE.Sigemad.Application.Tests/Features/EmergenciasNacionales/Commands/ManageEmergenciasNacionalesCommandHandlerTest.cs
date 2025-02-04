@@ -32,7 +32,7 @@ public class ManageEmergenciasNacionalesCommandHandlerTests
         {
             IdActuacionRelevante = null,
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 Autoridad = "ESDJM4555",
                 DescripcionSolicitud = "ESDJM4555",
@@ -101,7 +101,7 @@ public class ManageEmergenciasNacionalesCommandHandlerTests
         {
             IdActuacionRelevante = 2,
             IdSuceso = 1,
-            EmergenciaNacional = new EmergenciaNacionalDto
+            EmergenciaNacional = new ManageEmergenciaNacionalDto
             {
                 Autoridad = "ESDJM4555",
                 DescripcionSolicitud = "ESDJM4555",

@@ -10,17 +10,17 @@ import { Router } from '@angular/router';
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-
 export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const token = sessionStorage.getItem('jwtToken');
-  const apiUrl = environment.urlBase;
+  let apiUrl = environment.urlBase;
 
   if (req.url.startsWith('/assets/')) {
     return next(req);
   }
 
+  // const updatedApiUrl = req.url.includes('tipos-gestion') ? apiUrl.replace('/v1', '') : apiUrl;
   const updatedUrl = req.url.startsWith('http') ? req.url : `${apiUrl}${req.url}`;
 
   let modifiedReq = req.clone({ url: updatedUrl });
@@ -44,11 +44,7 @@ export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   );
 };
 
-const handle401Error = (
-  req: HttpRequest<any>,
-  next: HttpHandlerFn,
-  authService: AuthService
-): Observable<HttpEvent<any>> => {
+const handle401Error = (req: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService): Observable<HttpEvent<any>> => {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);

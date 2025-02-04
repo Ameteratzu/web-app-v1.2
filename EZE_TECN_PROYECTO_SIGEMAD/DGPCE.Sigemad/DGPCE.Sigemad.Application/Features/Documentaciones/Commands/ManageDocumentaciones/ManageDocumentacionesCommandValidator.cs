@@ -24,7 +24,6 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
 {
     public ManageDocumentacionesCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-
         RuleFor(x => x.FechaHora)
             .NotEmpty().WithMessage(localizer["FechaHoraObligatorio"]);
 
@@ -38,8 +37,5 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
             .NotEmpty().WithMessage(localizer["DescripcionObligatorio"])
             .MaximumLength(255).WithMessage(localizer["DescripcionMaxLength"]);
 
-        //RuleFor(x => x.IdArchivo)
-        //    .NotEmpty().WithMessage(localizer["IdArchivoObligatorio"]);
     }
-
 }

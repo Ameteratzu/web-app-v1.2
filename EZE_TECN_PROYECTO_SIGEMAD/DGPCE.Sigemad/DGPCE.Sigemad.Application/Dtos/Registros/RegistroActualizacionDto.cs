@@ -6,6 +6,7 @@ public class RegistroActualizacionDto
     public string Registro { get; set; } // Entrada/Salida/Interna
     public string Origen { get; set; }
     public string TipoRegistro { get; set; } // Ejemplo: Datos de evolución, Otra información, etc.
+    public string Apartados { get; set; } = string.Empty;
     public string Tecnico { get; set; } // Técnico que realizó la acción
 
     public bool EsUltimoRegistro { get; set; } // Técnico que realizó la acción

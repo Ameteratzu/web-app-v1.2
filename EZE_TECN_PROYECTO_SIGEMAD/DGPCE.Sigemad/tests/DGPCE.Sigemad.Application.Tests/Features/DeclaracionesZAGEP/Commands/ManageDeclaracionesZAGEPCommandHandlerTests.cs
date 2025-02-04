@@ -25,16 +25,16 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
         }
 
         [Fact]
-        public async Task Handle_WithValidRequestAndExistingActuacionRelevante_ShouldUpdateActuacionRelevante()
+        public async Task Handle_WithValidRequestAndExistingDeclaracionesZAGEP_ShouldUpdateDeclaracionesZAGEP()
         {
             // Arrange
             var command = new ManageDeclaracionesZAGEPCommand
             {
                 IdActuacionRelevante = 1,
                 IdSuceso = 1,
-                Detalles = new List<DeclaracionZAGEPDto>
+                Detalles = new List<ManageDeclaracionZAGEPDto>
         {
-            new DeclaracionZAGEPDto
+            new ManageDeclaracionZAGEPDto
             {
                 Id = 1,
                 FechaSolicitud = new DateOnly(2022, 1, 1),
@@ -79,15 +79,15 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
 
 
         [Fact]
-        public async Task Handle_WithValidRequestAndNewActuacionRelevante_ShouldAddActuacionRelevante()
+        public async Task Handle_WithValidRequestAndNewDeclaracionesZAGEP_ShouldAddDeclaracionesZAGEP()
         {
             // Arrange
             var command = new ManageDeclaracionesZAGEPCommand
             {
                 IdSuceso = 1,
-                Detalles = new List<DeclaracionZAGEPDto>
+                Detalles = new List<ManageDeclaracionZAGEPDto>
         {
-            new DeclaracionZAGEPDto
+            new ManageDeclaracionZAGEPDto
             {
                 Id = 0,
                 FechaSolicitud = new DateOnly(2022, 1, 1),
@@ -115,7 +115,7 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
             _unitOfWorkMock.Setup(uow => uow.Repository<Suceso>().GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(suceso);
 
-            _mapperMock.Setup(m => m.Map<DeclaracionZAGEP>(It.IsAny<DeclaracionZAGEPDto>()))
+            _mapperMock.Setup(m => m.Map<DeclaracionZAGEP>(It.IsAny<ManageDeclaracionZAGEPDto>()))
                 .Returns(declaracionZagep);
 
             _unitOfWorkMock.Setup(uow => uow.Repository<ActuacionRelevanteDGPCE>().AddEntity(It.IsAny<ActuacionRelevanteDGPCE>()))
@@ -147,9 +147,9 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
             {
                 IdActuacionRelevante = 1,
                 IdSuceso = 1,
-                Detalles = new List<DeclaracionZAGEPDto>
+                Detalles = new List<ManageDeclaracionZAGEPDto>
         {
-            new DeclaracionZAGEPDto
+            new ManageDeclaracionZAGEPDto
             {
                 Id = 1,
                 FechaSolicitud = new DateOnly(2022, 1, 1),

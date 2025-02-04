@@ -372,4 +372,31 @@
   <data name="AutoridadMaxLength" xml:space="preserve">
     <value>Authority cannot exceed 100 characters</value>
   </data>
+  <data name="LugarObligatorioMaxLength" xml:space="preserve">
+    <value>The location cannot exceed 510 characters</value>
+  </data>
+  <data name="ConvocadosObligatorio" xml:space="preserve">
+    <value>Summoned is mandatory</value>
+  </data>
+  <data name="ConvocadosMaxLength" xml:space="preserve">
+    <value>Summoned cannot exceed 510 characters</value>
+  </data>
+  <data name="IdArchivoOrArchivo" xml:space="preserve">
+    <value>You must provide at least one value for FileID or Archive</value>
+  </data>
+  <data name="IdTipoSistemaEmergencia" xml:space="preserve">
+    <value>Emergency System Type ID is mandatory</value>
+  </data>
+  <data name="IdTipoNotificacionObligatorio" xml:space="preserve">
+    <value>IdNotificationType is mandatory</value>
+  </data>
+  <data name="FechaHoraNotificacionObligatorio" xml:space="preserve">
+    <value>DateTimeNotification is mandatory</value>
+  </data>
+  <data name="OrganosNotificadosObligatorio" xml:space="preserve">
+    <value>Notified Bodies is mandatory</value>
+  </data>
+  <data name="OrganosNotificadosMaxLength" xml:space="preserve">
+    <value>Notified bodies may not exceed 510 characters in length.</value>
+  </data>
 </root>

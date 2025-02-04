@@ -25,21 +25,14 @@
         </button>
       </div>
 
-      <div class="toolbar">
-        <button mat-raised-button color="primary" (click)="changeDrawType('Polygon')">
-          <mat-icon>pentagon</mat-icon>
-          Dibujar Polígono
-        </button>
-        <button mat-raised-button color="accent" (click)="changeDrawType('LineString')">
-          <mat-icon>show_chart</mat-icon>
-          Dibujar Línea
-        </button>
-        <button mat-raised-button color="warn" (click)="changeDrawType('Circle')">
-          <mat-icon>circle</mat-icon>
-          Dibujar Círculo
-        </button>
-      </div>
       <div id="map" class="map"></div>
+
+      <div id="cursor-coordinates" class="coordinates-display"></div>
+      <div class="coordinate-search">
+        <input type="text" id="utm-x" placeholder="UTM X" />
+        <input type="text" id="utm-y" placeholder="UTM Y" />
+        <button (click)="searchCoordinates()" mat-flat-button color="secondary">Buscar</button>
+      </div>
     </mat-grid-tile>
 
     <mat-grid-tile [colspan]="2" class="tile-align-top">

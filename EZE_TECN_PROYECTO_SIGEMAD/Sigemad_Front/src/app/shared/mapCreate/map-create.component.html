@@ -1,12 +1,17 @@
 <div class="container gap-4 flex-column align-items-center justify-content-center p-4">
   <span class="mapa-titulo">Mapa del municipio</span>
 
+  <div class="coordinate-search">
+    <input type="text" id="utm-x" placeholder="UTM X" />
+    <input type="text" id="utm-y" placeholder="UTM Y" />
+    <button (click)="searchCoordinates()" mat-raised-button color="secondary">Buscar</button>
+  </div>
+
   <div id="map"></div>
 
   <div
     id="cursor-coordinates"
     [ngStyle]="{ top: cursorPosition.y + 'px', left: cursorPosition.x + 'px' }"
-    style="position: absolute; background: rgba(0, 0, 0, 0.7); color: #fff; padding: 5px; border-radius: 3px; font-size: 12px"
   >
     {{ coordinates }}
   </div>
@@ -14,7 +19,6 @@
   <div class="p-flex mt-20" *ngIf="!data.onlyView">
     <div>
       <button (click)="closeModal()" mat-raised-button color="secondary">Cancelar</button>
-
       <button (click)="savePolygon()" mat-flat-button color="primary">Guardar</button>
     </div>
   </div>

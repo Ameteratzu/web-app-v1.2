@@ -1,0 +1,15 @@
+meta {
+  name: Get by ID
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/{{IdDireccionCoordinacionEmergencia}}
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+}

@@ -67,6 +67,7 @@ export class FireRelatedEventComponent implements OnInit {
     public alertService: AlertService
   ) {}
 
+  @ViewChild(FireRelatedEventForm) FireRelatedEventForm!: FireRelatedEventForm;
   @ViewChild(MatSort) sort!: MatSort;
 
   public sucesosRelacionadosService = inject(SucesosRelacionadosService);
@@ -124,6 +125,10 @@ export class FireRelatedEventComponent implements OnInit {
 
   trackByFn(index: number, item: any): number {
     return item.id;
+  }
+
+  async callSave() {
+    this.FireRelatedEventForm.guardarAgregar();
   }
 
   async delete() {

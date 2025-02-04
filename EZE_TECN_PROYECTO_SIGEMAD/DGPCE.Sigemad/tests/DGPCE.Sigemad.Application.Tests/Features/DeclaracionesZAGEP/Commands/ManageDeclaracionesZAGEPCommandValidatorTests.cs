@@ -45,9 +45,9 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
             var command = new ManageDeclaracionesZAGEPCommand
             {
                 IdSuceso = 1,
-                Detalles = new List<DeclaracionZAGEPDto>
+                Detalles = new List<ManageDeclaracionZAGEPDto>
                 {
-                    new DeclaracionZAGEPDto
+                    new ManageDeclaracionZAGEPDto
                     {
                         Denominacion = ""
                     }
@@ -77,7 +77,7 @@ namespace DGPCE.Sigemad.Application.Tests.Features.DeclaracionesZAGEP.Commands
             var commandWithEmptyDetalles = new ManageDeclaracionesZAGEPCommand
             {
                 IdSuceso = 1,
-                Detalles = new List<DeclaracionZAGEPDto>()
+                Detalles = new List<ManageDeclaracionZAGEPDto>()
             };
 
             // Act

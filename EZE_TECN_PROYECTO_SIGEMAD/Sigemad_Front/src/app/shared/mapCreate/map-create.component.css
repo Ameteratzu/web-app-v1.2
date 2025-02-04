@@ -45,8 +45,24 @@ button {
 #cursor-coordinates {
   pointer-events: none;
   transform: translate(10px, 10px);
+  position: absolute; 
+  background: rgba(0, 0, 0, 0.7); 
+  color: #fff;
+  padding: 3px; 
+  border-radius: 3px; 
+  font-size: 12px;
 }
+
 .mapa-titulo {
   padding-bottom: 20px;
   font-size: 24px;
+}
+
+.coordinate-search {
+  margin-bottom: 20px;
+}
+
+.coordinate-search input {
+  margin-right: 10px;
+  padding: 5px;
 }

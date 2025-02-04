@@ -72,7 +72,7 @@
       <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
         <mat-form-field class="input spaced-input" fxFlex="25%">
           <mat-label>Estado del incendio</mat-label>
-          <mat-select formControlName="status">
+          <mat-select formControlName="status"  (selectionChange)="selectStatus($event)">
             <mat-option *ngFor="let op of status()" [value]="op.id">
               {{ op.descripcion }}
             </mat-option>

@@ -1,0 +1,20 @@
+meta {
+  name: Impactos
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{Server}}/api/v1/impactos?Tipo=Consecuencia&Grupo=Personas
+  body: none
+  auth: inherit
+}
+
+params:query {
+  Tipo: Consecuencia
+  Grupo: Personas
+}
+
+assert {
+  res.status: eq 200
+}

@@ -1,6 +1,4 @@
-﻿
-
-namespace DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP
+﻿namespace DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP
 {
     public class ManageDeclaracionZAGEPResponse
     {

@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.Common;
-using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Dtos.Documentaciones;
 public class DetalleDocumentacionDto
@@ -9,7 +8,6 @@ public class DetalleDocumentacionDto
     public DateTime FechaHoraSolicitud { get; set; }
     public int IdTipoDocumento { get; set; }
     public string Descripcion { get; set; }
-    public Guid? IdArchivo { get; set; }
     public FileDto? Archivo { get; set; }
 
     public List<int>? IdsProcedenciasDestinos { get; set; } = new();

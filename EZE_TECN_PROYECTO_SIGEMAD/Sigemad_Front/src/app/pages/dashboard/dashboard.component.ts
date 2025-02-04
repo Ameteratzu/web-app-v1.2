@@ -2,11 +2,14 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { Draw, Modify, Snap } from 'ol/interaction';
-import { DrawEvent } from 'ol/interaction/Draw';
-import { XYZ, OSM, Vector as VectorSource } from 'ol/source';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import { get } from 'ol/proj';
+import { OSM, TileWMS, XYZ } from 'ol/source';
+import { get, fromLonLat, toLonLat } from 'ol/proj';
+import LayerGroup from 'ol/layer/Group';
+import TileLayer from 'ol/layer/Tile';
+import { defaults as defaultControls, FullScreen, ScaleLine,ZoomToExtent } from 'ol/control';
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import proj4 from 'proj4';
+
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -14,6 +17,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { environment } from '../../../environments/environment';
+
+// Define the projection for UTM zone 30N (EPSG:25830)
+const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
 
 @Component({
   selector: 'app-dashboard',
@@ -23,14 +30,11 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  public draw!: Draw;
-  public source!: VectorSource;
-  public map!: Map;
-  public snap!: Snap;
+  private map!: Map;
+  private view!: View;
 
-  public currentDrawType: 'Polygon' | 'LineString' | 'Circle' = 'Polygon';
   public menuItemActiveService = inject(MenuItemActiveService);
-
+  
   public events = [
     { date: '13/06/2024 05:50', type: 'Terremoto', description: 'ALBORÁN SUR. Magnitud: 3mblg' },
     { date: '12/06/2024 10:25', type: 'Incendio forestal', description: 'Vilanova (Orense). Estado: Activo' },
@@ -41,40 +45,7 @@ export class DashboardComponent {
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
-    // Map
-    const raster = new TileLayer({
-      source: new XYZ({
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        maxZoom: 19,
-      }),
-    });
-
-    this.source = new VectorSource();
-    const vector = new VectorLayer({
-      source: this.source,
-      style: {
-        'fill-color': 'rgba(255, 255, 255, 0.2)',
-        'stroke-color': '#ffcc33',
-        'stroke-width': 2,
-      },
-    });
-
-    const extent = get('EPSG:3857')!.getExtent().slice();
-
-    extent[0] += extent[0];
-    extent[2] += extent[2];
-
-    this.map = new Map({
-      layers: [raster, vector],
-      target: 'map',
-      view: new View({
-        center: [-400000, 4900000],
-        zoom: 6.2,
-        extent,
-      }),
-    });
-
-    this.addInteractions();
+    this.configuremap();
 
     // Graph
     const data = {
@@ -94,43 +65,127 @@ export class DashboardComponent {
         },
       ],
     };
+
   }
 
-  addInteractions() {
-    this.removeCurrentInteraction();
+  configuremap() {
 
-    this.draw = new Draw({
-      source: this.source,
-      type: this.currentDrawType,
+    const baseLayers = new LayerGroup({
+      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      layers: [
+        new TileLayer({
+          source: new XYZ({
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+          }),
+          properties: { 'title': 'Satélite', baseLayer: true, },
+          visible: true
+        }),        
+        new TileLayer({
+          source: new OSM(),
+          properties: { 'title': 'OpenStreetMap', baseLayer: true },
+          visible: false
+        })
+      ]
     });
 
-    this.draw.on('drawstart', (drawEvent: DrawEvent) => {
-      const features = this.source.getFeatures();
-      const last = features[features.length - 1];
-      this.source.removeFeature(last);
+    const wmsIncenciosEvolutivo = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_evolutivo',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncendiosEvolutivo = new TileLayer({
+      source: wmsIncenciosEvolutivo,
+      properties: { 'title': 'Evolutivo' }
     });
 
-    this.draw.on('drawend', (drawEvent: DrawEvent) => {
-      console.log('Figura finalizada:', drawEvent.feature.getGeometry());
+    const wmsIncenciosInicial = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_inicial',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncendiosInicial = new TileLayer({
+      source: wmsIncenciosInicial,
+      properties: { 'title': 'Inicial' }
+    });    
+
+    const wmsIncendiosCentroideMunicipios = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_centroide_municipio',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncenciosCentroideMunicipio = new TileLayer({
+      source: wmsIncendiosCentroideMunicipios,
+      properties: { 'title': 'Municipios' }
     });
 
-    this.map.addInteraction(this.draw);
+    const wmsLayersGroupIncendios = new LayerGroup({
+      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio]
+    });
 
-    this.snap = new Snap({ source: this.source });
-    this.map.addInteraction(this.snap);
+    this.view = new View({
+      center: [-400000, 4900000],
+      zoom: 6,
+      extent: [-4500000, 3000000,  2500000, 6500000]
+    })
+
+    this.map = new Map({
+      controls: defaultControls({ 
+        zoom: true, zoomOptions: { 
+          zoomInTipLabel: 'Acercar', 
+          zoomOutTipLabel: 'Alejar' } 
+      }).extend([
+        new FullScreen({tipLabel: 'Pantalla completa'}),
+      ]),
+      target: 'map',
+      layers: [baseLayers, wmsLayersGroupIncendios],
+      view: this.view,
+    });
+
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      show_progress: true,
+    }));
+
+    this.map.addControl(new ScaleLine());
+
+    this.map.addControl(new ZoomToExtent({
+      extent: [-2032613, 3138198, -1449857, 3445169],
+      tipLabel: 'Islas Canarias',
+    }));
+
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
+    });
   }
 
-  changeDrawType(type: 'Polygon' | 'LineString' | 'Circle') {
-    this.currentDrawType = type;
-    this.addInteractions();
-  }
+  searchCoordinates() {
+    const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
+    const utmY = (document.getElementById('utm-y') as HTMLInputElement).value;
 
-  removeCurrentInteraction() {
-    if (this.draw) {
-      this.map.removeInteraction(this.draw);
-    }
-    if (this.snap) {
-      this.map.removeInteraction(this.snap);
+    if (utmX && utmY) {
+      const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
+      const coordinate = fromLonLat([lon, lat]);
+      this.view.setCenter(coordinate);
+      this.view.setZoom(13); 
     }
   }
 }

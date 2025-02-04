@@ -113,7 +113,6 @@ export class AreaComponent {
     });
     this.formData.get('fichero')?.disable();
     this.formData.get('entidadMenor')?.disable();
-
     this.formData.get('provincia')?.setValue(this.fire.provincia.id);
     const municipalities = await this.municipalityService.get(this.fire.provincia.id);
     this.municipalities.set(municipalities);
@@ -150,7 +149,7 @@ export class AreaComponent {
     this.spinner.hide();
   }
 
-  onSubmit(formDirective: FormGroupDirective) {
+  async onSubmit(formDirective: FormGroupDirective) {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
@@ -167,8 +166,16 @@ export class AreaComponent {
         fechaHora: new Date(),
       });
       this.formData.reset();
-      this.formData.get('municipio')?.disable();
       this.formData.get('entidadMenor')?.disable();
+
+      this.formData.get('provincia')?.setValue(this.fire.provincia.id);
+      const municipalities = await this.municipalityService.get(this.fire.provincia.id);
+      this.municipalities.set(municipalities);
+      this.formData.get('municipio')?.setValue(this.fire.municipio.id);
+      this.formData.patchValue({
+        fechaHora: new Date(), 
+      });
+
     } else {
       this.formData.markAllAsTouched();
     }
@@ -210,7 +217,7 @@ export class AreaComponent {
       const municipalities = await this.municipalityService.get(data.provincia.id);
       this.municipalities.set(municipalities);
     }
-    if (data.entidadMenor.id && data.municipio.id) {
+    if (data.entidadMenor?.id && data.municipio.id) {
       const minor = await this.minorService.get(data.municipio.id);
       this.minors.set(minor);
     }
@@ -221,7 +228,9 @@ export class AreaComponent {
     if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
       this.formData.get('municipio')?.setValue(data.municipio.id);
-      this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+      if(data.entidadMenor){
+        this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
+      }
     } else {
       this.formData.get('provincia')?.setValue(data.provincia);
       this.formData.get('municipio')?.setValue(data.municipio);

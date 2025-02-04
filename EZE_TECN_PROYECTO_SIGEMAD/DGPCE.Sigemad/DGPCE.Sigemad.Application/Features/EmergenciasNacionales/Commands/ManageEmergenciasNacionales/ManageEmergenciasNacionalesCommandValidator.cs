@@ -19,7 +19,7 @@ public class ManageEmergenciasNacionalesCommandValidator : AbstractValidator<Man
     }
 }
 
-public class ManageEmergenciasNacionalesCommandObjectValidator : AbstractValidator<EmergenciaNacionalDto>
+public class ManageEmergenciasNacionalesCommandObjectValidator : AbstractValidator<ManageEmergenciaNacionalDto>
 {
     public ManageEmergenciasNacionalesCommandObjectValidator(IStringLocalizer<ValidationMessages> localizer)
     {
