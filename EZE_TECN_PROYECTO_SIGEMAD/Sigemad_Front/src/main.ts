@@ -19,7 +19,7 @@ function loadRuntimeConfig(): Promise<any> {
     .then((config) => {
       // Se almacena la configuración en una variable global.
       // También podrías inyectarla en un servicio, según tus necesidades.
-      window['runtimeConfig'] = config;
+      (window as any)['runtimeConfig'] = config;
       return config;
     });
 }
