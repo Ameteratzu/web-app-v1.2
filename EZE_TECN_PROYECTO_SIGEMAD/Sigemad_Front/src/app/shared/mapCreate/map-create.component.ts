@@ -95,7 +95,7 @@ export class MapCreateComponent {
       layers: [
         new TileLayer({
           source: new TileWMS({
-            url: 'https://www.ign.es/wms-inspire/mapa-rasterizado?',
+            url: 'https://www.ign.es/wms-inspire/mapa-raster?',
             params: { 'LAYERS': 'mtn_rasterizado', 'FORMAT': 'image/jpeg' },
             attributions: '© Instituto Geográfico Nacional de España'
           }),
