@@ -144,3 +144,56 @@
     font-size: 12px; 
   }
 }
+
+// Estilos para el popup de información contextual
+.map-popup {
+  position: absolute;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #424242;
+  }
+  
+  .close-button {
+    cursor: pointer;
+    color: #616161;
+    
+    &:hover {
+      color: #424242;
+    }
+  }
+}
+
+.popup-content {
+  font-size: 14px;
+  
+  .info-row {
+    display: flex;
+    margin-bottom: 8px;
+    
+    .label {
+      font-weight: 600;
+      min-width: 100px;
+      color: #616161;
+    }
+    
+    .value {
+      color: #424242;
+    }
+  }
+}

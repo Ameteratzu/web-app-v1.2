@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import Map from 'ol/Map';
 import View from 'ol/View';
 import { OSM, TileWMS, XYZ } from 'ol/source';
-import { get, fromLonLat, toLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import { defaults as defaultControls, FullScreen, ScaleLine,ZoomToExtent } from 'ol/control';
@@ -42,6 +43,10 @@ export class DashboardComponent {
     { date: '10/06/2024 15:45', type: 'Terremoto', description: 'S TETUAN.MAC. Magnitud: 3.6 mblg' },
   ];
 
+  // Añadir nuevas propiedades para el popup
+  public selectedFeature: any = null;
+  public popupPosition = { x: 0, y: 0 };
+
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
@@ -74,17 +79,36 @@ export class DashboardComponent {
       properties: { 'title': 'Capas base', openInLayerSwitcher: true },
       layers: [
         new TileLayer({
+          source: new TileWMS({
+            url: 'https://www.ign.es/wms-inspire/mapa-raster?',
+            params: { 'LAYERS': 'mtn_rasterizado', 'FORMAT': 'image/jpeg' },
+            attributions: '© Instituto Geográfico Nacional de España'
+          }),
+          properties: { 'title': 'IGN raster', baseLayer: true, },
+          visible: false 
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: 'https://www.ign.es/wms-inspire/pnoa-ma?',
+            params: { 'LAYERS': 'OI.OrthoimageCoverage', 'FORMAT': 'image/jpeg' },
+            attributions: '© PNOA - IGN España'
+          }),
+          properties: { 'title': 'IGN satélite', baseLayer: true, },
+          visible: false 
+        }),
+        new TileLayer({
           source: new XYZ({
-            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics'
           }),
           properties: { 'title': 'Satélite', baseLayer: true, },
           visible: true
-        }),        
+        }),
         new TileLayer({
           source: new OSM(),
           properties: { 'title': 'OpenStreetMap', baseLayer: true },
           visible: false
-        })
+        }),
       ]
     });
 
@@ -130,8 +154,23 @@ export class DashboardComponent {
       properties: { 'title': 'Municipios' }
     });
 
+    // const wmsIncendiosLimitesMunicipios = new TileWMS({
+    //   url: environment.urlGeoserver + 'wms?version=1.1.0',
+    //   params: {
+    //     'LAYERS': 'incendios_limites_municipio',
+    //     'TILED': true,
+    //   },
+    //   serverType: 'geoserver',
+    //   transition: 0,
+    // });
+    // const layerIncenciosLimitesMunicipio = new TileLayer({
+    //   source: wmsIncendiosLimitesMunicipios,
+    //   properties: { 'title': 'Limites Municipios' }
+    // });    
+
     const wmsLayersGroupIncendios = new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      //layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio, layerIncenciosLimitesMunicipio]
       layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio]
     });
 
@@ -175,6 +214,64 @@ export class DashboardComponent {
         cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
       }
     });
+
+    // Añadir el manejador de eventos click
+    this.map.on('click', async (evt) => {
+      const coordinate = evt.coordinate;
+      const pixel = this.map.getEventPixel(evt.originalEvent);
+
+      // Obtener información de las capas WMS
+      const viewResolution = this.view.getResolution();
+      const projection = this.view.getProjection();
+
+      // Cerrar popup existente
+      this.closePopup();
+
+      // Consultar cada capa WMS
+      const layers = [
+        //{ source: wmsIncenciosEvolutivo, type: 'Incendio Evolutivo' },
+        //{ source: wmsIncenciosInicial, type: 'Incendio Inicial' },
+        { source: wmsIncendiosCentroideMunicipios, type: 'Incendio' }
+      ];
+
+      for (const layer of layers) {
+        if (!viewResolution) continue;
+
+        const url = layer.source.getFeatureInfoUrl(
+          coordinate,
+          viewResolution,
+          projection,
+          {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1}
+        );
+
+        if (url) {
+          try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.features && data.features.length > 0) {
+              const feature = data.features[0];
+              this.selectedFeature = {
+                type: layer.type,
+                date: feature.properties.fechaInicio,
+                location: feature.properties.municipio,
+                status: feature.properties.estado,
+              };
+
+              // Posicionar el popup
+              this.popupPosition = {
+                x: pixel[0],
+                y: pixel[1] + 10 // Pequeño offset vertical
+              };
+
+              break; // Mostrar solo el primer feature encontrado
+            }
+          } catch (error) {
+            console.error('Error al obtener información del feature:', error);
+          }
+        }
+      }
+    });
   }
 
   searchCoordinates() {
@@ -187,5 +284,10 @@ export class DashboardComponent {
       this.view.setCenter(coordinate);
       this.view.setZoom(13); 
     }
+  }
+
+  // Añadir método para cerrar el popup
+  closePopup(): void {
+    this.selectedFeature = null;
   }
 }
