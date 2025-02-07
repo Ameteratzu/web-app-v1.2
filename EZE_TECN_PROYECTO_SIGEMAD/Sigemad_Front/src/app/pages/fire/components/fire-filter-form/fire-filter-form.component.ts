@@ -44,6 +44,7 @@ import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
 import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
 import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
+import { SituationsEquivalent } from '../../../../types/situations-equivalent.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -126,7 +127,7 @@ export class FireFilterFormComponent implements OnInit {
   public eventStatus = signal<EventStatus[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
-  public severityLevels = signal<SeverityLevel[]>([]);
+  public situationsEquivalent = signal<SituationsEquivalent[]>([]);
 
   public showDateEnd = signal<boolean>(true);
 
@@ -148,7 +149,7 @@ export class FireFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
     const {
-      severityLevel,
+      situationEquivalent,
       name,
       territory,
       country,
@@ -178,7 +179,7 @@ export class FireFilterFormComponent implements OnInit {
       municipality: new FormControl(municipality ?? ''),
       fireStatus: new FormControl(initFireStatus ?? ''),
       episode: new FormControl(episode ?? ''),
-      severityLevel: new FormControl(severityLevel ?? ''),
+      situationEquivalent: new FormControl(situationEquivalent ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
       move: new FormControl(move ?? 1),
       //start: new FormControl(start ?? ''),
@@ -190,7 +191,6 @@ export class FireFilterFormComponent implements OnInit {
       fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
     });
-    this.formData.get('severityLevel')?.disable();
 
     const countriesExtranjeros = await this.countryService.getExtranjeros();
     this.listaPaisesExtranjeros.set(countriesExtranjeros);
@@ -211,8 +211,8 @@ export class FireFilterFormComponent implements OnInit {
     const fireStatus = await this.masterData.getFireStatus();
     this.fireStatus.set(fireStatus);
 
-    const severityLevels = await this.severityLevelService.get();
-    this.severityLevels.set(severityLevels);
+    const situationsEquivalents = await this.masterData.getSituationEquivalent();
+    this.situationsEquivalent.set(situationsEquivalents);
 
     const eventStatus = await this.eventStatusService.get();
     this.eventStatus.set(eventStatus);
@@ -305,7 +305,7 @@ export class FireFilterFormComponent implements OnInit {
       province,
       fireStatus,
       eventStatus,
-      severityLevel,
+      situationEquivalent,
       affectedArea,
       move,
       between,
@@ -323,7 +323,7 @@ export class FireFilterFormComponent implements OnInit {
       IdProvincia: province,
       IdEstadoSuceso: eventStatus,
       IdEstadoIncendio: fireStatus,
-      IdNivelGravedad: severityLevel,
+      IdSituacionEquivalente: situationEquivalent,
       IdSuperficieAfectada: affectedArea,
       IdMovimiento: move,
       IdComparativoFecha: between,
@@ -354,7 +354,7 @@ export class FireFilterFormComponent implements OnInit {
       fireStatus: '',
       episode: '',
       affectedArea: '',
-      severityLevel: '',
+      situationEquivalent: '',
       name: '',
     });
   }
