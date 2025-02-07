@@ -221,11 +221,15 @@ export class ConsequencesComponent {
         IdImpactoClasificado: this.formData.value.denominacion.id,
         ...this.formData.value,
         ...this.formDataComplementarios.value,
-        zonaPlanificacion: {
-          type: 'Polygon',
-          coordinates: [this.polygon()],
-        },
+        zonaPlanificacion:
+          this.polygon() && Array.isArray(this.polygon()) && this.polygon().length > 0
+            ? {
+                type: 'Polygon',
+                coordinates: [this.polygon()],
+              }
+            : null,
       };
+
       if (this.isCreate() == -1) {
         this.evolutionService.dataConse.set([data, ...this.evolutionService.dataConse()]);
       } else {
