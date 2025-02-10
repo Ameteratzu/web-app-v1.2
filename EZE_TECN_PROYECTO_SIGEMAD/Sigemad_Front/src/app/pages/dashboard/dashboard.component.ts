@@ -50,6 +50,8 @@ export class DashboardComponent {
   public selectedFeature: any = null;
   public popupPosition = { x: 0, y: 0 };
 
+  private isShowingPeninsula = true;  // Para cambiar zoom a Canarias o Península
+
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
@@ -244,7 +246,7 @@ export class DashboardComponent {
 
     this.map.addControl(new ScaleLine());
 
-    this.addZoomControls();
+    this.addZoomCanariasPeninsula();
 
     this.map.on('pointermove', (event) => {
       const coordinate = event.coordinate;
@@ -315,31 +317,39 @@ export class DashboardComponent {
       }
     });
   }
-  addZoomControls() {
-    const peninsulaControl = this.createCustomControl('Península y Baleares', () => {
-      this.map.getView().animate({
-        center: [-400000, 4900000],
-        zoom: 6,
-        duration: 1000
-      });
-    }, 'terrain', 2);
+  addZoomCanariasPeninsula() {
+    const toggleViewControl = this.createCustomControl('Alternar vista', () => {
+      if (this.isShowingPeninsula) {
+        // Zoom a Canarias
+        this.map.getView().animate({
+          center: [-1741235, 3291683.5],
+          zoom: 8,
+          duration: 1000
+        });
+      } else {
+        // Zoom a Península
+        this.map.getView().animate({
+          center: [-400000, 4900000],
+          zoom: 6,
+          duration: 1000
+        });
+      }
+      this.isShowingPeninsula = !this.isShowingPeninsula;
+      
+      // Actualizar el título del botón
+      const button = document.querySelector('.ol-custom-control') as HTMLButtonElement;
+      if (button) {
+        button.title = this.isShowingPeninsula ? 'Ver Canarias' : 'Ver Península y Baleares';
+      }
+    }, 'sync', 2);  // Usamos el icono 'sync' para indicar alternancia
 
-    const canariasControl = this.createCustomControl('Canarias', () => {
-      this.map.getView().animate({
-        center: [-1741235, 3291683.5],
-        zoom: 8,
-        duration: 1000
-      });
-    }, 'sailing', 2.7);
-
-    this.map.addControl(peninsulaControl);
-    this.map.addControl(canariasControl);
+    this.map.addControl(toggleViewControl);
   }
 
   private createCustomControl(label: string, callback: () => void, icon: string, index: number): Control {
     const button = document.createElement('button');
     button.innerHTML = `<span class="material-icons">${icon}</span>`;
-    button.title = label;
+    button.title = 'Ver Canarias'; 
     button.className = 'ol-custom-control';
 
     const element = document.createElement('div');
@@ -352,7 +362,6 @@ export class DashboardComponent {
 
     return new Control({ element });
   }
-
 
   searchCoordinates() {
     const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
