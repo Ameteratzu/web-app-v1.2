@@ -45,6 +45,8 @@ import { Territory } from '../../../../types/territory.type';
 import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
 import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
 import { SituationsEquivalent } from '../../../../types/situations-equivalent.type';
+import { EventService } from '../../../../services/event.service';
+import { Event } from '../../../../types/event.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -108,6 +110,7 @@ export class FireFilterFormComponent implements OnInit {
   public provinceService = inject(ProvinceService);
   public countryService = inject(CountryService);
   public eventStatusService = inject(EventStatusService);
+  public eventTypeService = inject(EventService);
   public municipalityService = inject(MunicipalityService);
   public severityLevelService = inject(SeverityLevelService);
   public fireService = inject(FireService);
@@ -128,6 +131,9 @@ export class FireFilterFormComponent implements OnInit {
   public municipalities = signal<Municipality[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
   public situationsEquivalent = signal<SituationsEquivalent[]>([]);
+
+  public eventTypes = signal<Event[]>([]);
+  
 
   public showDateEnd = signal<boolean>(true);
 
@@ -168,6 +174,7 @@ export class FireFilterFormComponent implements OnInit {
       provincia,
       fechaInicio,
       fechaFin,
+      eventTypes
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -190,6 +197,7 @@ export class FireFilterFormComponent implements OnInit {
       provincia: new FormControl(provincia ?? ''),
       fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
+      eventTypes: new FormControl(eventTypes ?? 1),
     });
 
     const countriesExtranjeros = await this.countryService.getExtranjeros();
@@ -222,6 +230,9 @@ export class FireFilterFormComponent implements OnInit {
 
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
+
+    const eventsTypes = await this.eventTypeService.get();
+    this.eventTypes.set(eventsTypes);
 
     this.loadCommunities();
 
@@ -314,6 +325,7 @@ export class FireFilterFormComponent implements OnInit {
       fechaInicio,
       fechaFin,
       name,
+      eventTypes
     } = this.formData.value;
 
     const fires = await this.fireService.get({
@@ -331,6 +343,7 @@ export class FireFilterFormComponent implements OnInit {
       FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
       denominacion: name,
       search: name,
+      idClaseSuceso: eventTypes
     });
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
@@ -356,6 +369,7 @@ export class FireFilterFormComponent implements OnInit {
       affectedArea: '',
       situationEquivalent: '',
       name: '',
+      eventTypes: 1
     });
   }
 
