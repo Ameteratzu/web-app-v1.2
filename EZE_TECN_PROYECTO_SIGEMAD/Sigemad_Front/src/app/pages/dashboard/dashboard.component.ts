@@ -7,7 +7,7 @@ import { OSM, TileWMS, XYZ } from 'ol/source';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
-import { defaults as defaultControls, FullScreen, ScaleLine,ZoomToExtent } from 'ol/control';
+import { Control, defaults as defaultControls, FullScreen, ScaleLine, ZoomToExtent } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
 import proj4 from 'proj4';
 
@@ -35,7 +35,7 @@ export class DashboardComponent {
   private view!: View;
 
   public menuItemActiveService = inject(MenuItemActiveService);
-  
+
   public events = [
     { date: '13/06/2024 05:50', type: 'Terremoto', description: 'ALBORÁN SUR. Magnitud: 3mblg' },
     { date: '12/06/2024 10:25', type: 'Incendio forestal', description: 'Vilanova (Orense). Estado: Activo' },
@@ -85,7 +85,7 @@ export class DashboardComponent {
             attributions: '© Instituto Geográfico Nacional de España'
           }),
           properties: { 'title': 'IGN raster', baseLayer: true, },
-          visible: false 
+          visible: false
         }),
         new TileLayer({
           source: new TileWMS({
@@ -94,7 +94,7 @@ export class DashboardComponent {
             attributions: '© PNOA - IGN España'
           }),
           properties: { 'title': 'IGN satélite', baseLayer: true, },
-          visible: false 
+          visible: false
         }),
         new TileLayer({
           source: new XYZ({
@@ -111,34 +111,6 @@ export class DashboardComponent {
         }),
       ]
     });
-
-    const wmsIncenciosEvolutivo = new TileWMS({
-      url: environment.urlGeoserver + 'wms?version=1.1.0',
-      params: {
-        'LAYERS': 'incendios_evolutivo',
-        'TILED': true,
-      },
-      serverType: 'geoserver',
-      transition: 0,
-    });
-    const layerIncendiosEvolutivo = new TileLayer({
-      source: wmsIncenciosEvolutivo,
-      properties: { 'title': 'Evolutivo' }
-    });
-
-    const wmsIncenciosInicial = new TileWMS({
-      url: environment.urlGeoserver + 'wms?version=1.1.0',
-      params: {
-        'LAYERS': 'incendios_inicial',
-        'TILED': true,
-      },
-      serverType: 'geoserver',
-      transition: 0,
-    });
-    const layerIncendiosInicial = new TileLayer({
-      source: wmsIncenciosInicial,
-      properties: { 'title': 'Inicial' }
-    });    
 
     const wmsIncendiosCentroideMunicipios = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -171,22 +143,23 @@ export class DashboardComponent {
     const wmsLayersGroupIncendios = new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
       //layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio, layerIncenciosLimitesMunicipio]
-      layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio]
+      layers: [layerIncenciosCentroideMunicipio]
     });
 
     this.view = new View({
       center: [-400000, 4900000],
       zoom: 6,
-      extent: [-4500000, 3000000,  2500000, 6500000]
+      extent: [-4500000, 3000000, 2500000, 6500000]
     })
 
     this.map = new Map({
-      controls: defaultControls({ 
-        zoom: true, zoomOptions: { 
-          zoomInTipLabel: 'Acercar', 
-          zoomOutTipLabel: 'Alejar' } 
+      controls: defaultControls({
+        zoom: true, zoomOptions: {
+          zoomInTipLabel: 'Acercar',
+          zoomOutTipLabel: 'Alejar'
+        }
       }).extend([
-        new FullScreen({tipLabel: 'Pantalla completa'}),
+        new FullScreen({ tipLabel: 'Pantalla completa' }),
       ]),
       target: 'map',
       layers: [baseLayers, wmsLayersGroupIncendios],
@@ -200,10 +173,7 @@ export class DashboardComponent {
 
     this.map.addControl(new ScaleLine());
 
-    this.map.addControl(new ZoomToExtent({
-      extent: [-2032613, 3138198, -1449857, 3445169],
-      tipLabel: 'Islas Canarias',
-    }));
+    this.addZoomControls();
 
     this.map.on('pointermove', (event) => {
       const coordinate = event.coordinate;
@@ -241,7 +211,7 @@ export class DashboardComponent {
           coordinate,
           viewResolution,
           projection,
-          {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1}
+          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1 }
         );
 
         if (url) {
@@ -273,6 +243,44 @@ export class DashboardComponent {
       }
     });
   }
+  addZoomControls() {
+    const peninsulaControl = this.createCustomControl('Península y Baleares', () => {
+      this.map.getView().animate({
+        center: [-400000, 4900000],
+        zoom: 6,
+        duration: 1000
+      });
+    }, 'terrain', 2);
+
+    const canariasControl = this.createCustomControl('Canarias', () => {
+      this.map.getView().animate({
+        center: [-1741235, 3291683.5],
+        zoom: 8,
+        duration: 1000
+      });
+    }, 'sailing', 2.7);
+
+    this.map.addControl(peninsulaControl);
+    this.map.addControl(canariasControl);
+  }
+
+  private createCustomControl(label: string, callback: () => void, icon: string, index: number): Control {
+    const button = document.createElement('button');
+    button.innerHTML = `<span class="material-icons">${icon}</span>`;
+    button.title = label;
+    button.className = 'ol-custom-control';
+
+    const element = document.createElement('div');
+    element.className = 'ol-unselectable ol-control custom-controls';
+    element.style.top = `${index * 40}px`;
+    element.style.left = '9px';
+    element.appendChild(button);
+
+    button.addEventListener('click', callback);
+
+    return new Control({ element });
+  }
+
 
   searchCoordinates() {
     const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
@@ -282,7 +290,7 @@ export class DashboardComponent {
       const [lon, lat] = proj4(utm30n, 'EPSG:4326', [parseFloat(utmX), parseFloat(utmY)]);
       const coordinate = fromLonLat([lon, lat]);
       this.view.setCenter(coordinate);
-      this.view.setZoom(13); 
+      this.view.setZoom(13);
     }
   }
 
