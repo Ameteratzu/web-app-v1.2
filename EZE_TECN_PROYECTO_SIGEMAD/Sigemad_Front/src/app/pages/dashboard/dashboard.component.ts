@@ -112,19 +112,63 @@ export class DashboardComponent {
       ]
     });
 
-    const wmsIncendiosCentroideMunicipios = new TileWMS({
+    const wmsIncendiosActivos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'incendios_centroide_municipio',
+        'LAYERS': 'incendios_activos',
         'TILED': true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
-    const layerIncenciosCentroideMunicipio = new TileLayer({
-      source: wmsIncendiosCentroideMunicipios,
-      properties: { 'title': 'Municipios' }
+    const layerIncenciosActivos = new TileLayer({
+      source: wmsIncendiosActivos,
+      properties: { 'title': 'Activos' }
     });
+
+    const wmsIncendiosControlados = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_controlados',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncenciosControlados = new TileLayer({
+      source: wmsIncendiosControlados,
+      properties: { 'title': 'Controlados' }
+    });    
+
+    const wmsIncendiosEstabilizados = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_estabilizados',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncenciosEstabilizados = new TileLayer({
+      source: wmsIncendiosEstabilizados,
+      properties: { 'title': 'Estabilizados' },
+    });    
+
+    const wmsIncendiosExtinguidos = new TileWMS({
+      url: environment.urlGeoserver + 'wms?version=1.1.0',
+      params: {
+        'LAYERS': 'incendios_extinguidos',
+        'TILED': true,
+      },
+      serverType: 'geoserver',
+      transition: 0,
+    });
+    const layerIncenciosExtinguidos = new TileLayer({
+      source: wmsIncendiosExtinguidos,
+      properties: { 'title': 'Extinguidos' },
+      visible: false
+
+    });        
 
     // const wmsIncendiosLimitesMunicipios = new TileWMS({
     //   url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -143,7 +187,7 @@ export class DashboardComponent {
     const wmsLayersGroupIncendios = new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
       //layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio, layerIncenciosLimitesMunicipio]
-      layers: [layerIncenciosCentroideMunicipio]
+      layers: [layerIncenciosExtinguidos, layerIncenciosEstabilizados,  layerIncenciosControlados, layerIncenciosActivos]
     });
 
     this.view = new View({
@@ -199,9 +243,10 @@ export class DashboardComponent {
 
       // Consultar cada capa WMS
       const layers = [
-        //{ source: wmsIncenciosEvolutivo, type: 'Incendio Evolutivo' },
-        //{ source: wmsIncenciosInicial, type: 'Incendio Inicial' },
-        { source: wmsIncendiosCentroideMunicipios, type: 'Incendio' }
+        { source: wmsIncendiosActivos, type: 'Incendio activo' },
+        { source: wmsIncendiosControlados, type: 'Incendio controlado' },
+        { source: wmsIncendiosEstabilizados, type: 'Incendio estabilizado' },
+        { source: wmsIncendiosExtinguidos, type: 'Incendio extinguido' },
       ];
 
       for (const layer of layers) {
