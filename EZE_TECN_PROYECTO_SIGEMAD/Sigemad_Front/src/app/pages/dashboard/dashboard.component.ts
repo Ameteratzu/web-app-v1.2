@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { OSM, TileWMS, XYZ } from 'ol/source';
+import { OSM, TileWMS, WMTS, XYZ } from 'ol/source';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
+import WMTSTileGrid from 'ol/tilegrid/WMTS';
+import { get as getProjection } from 'ol/proj';
+import { getTopLeft } from 'ol/extent';
 import { Control, defaults as defaultControls, FullScreen, ScaleLine, ZoomToExtent } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
 import proj4 from 'proj4';
@@ -79,13 +82,28 @@ export class DashboardComponent {
       properties: { 'title': 'Capas base', openInLayerSwitcher: true },
       layers: [
         new TileLayer({
-          source: new TileWMS({
-            url: 'https://www.ign.es/wms-inspire/mapa-raster?',
-            params: { 'LAYERS': 'mtn_rasterizado', 'FORMAT': 'image/jpeg' },
-            attributions: '© Instituto Geográfico Nacional de España'
+          source: new WMTS({
+            url: 'https://www.ign.es/wmts/ign-base?',
+            layer: 'IGNBaseTodo',
+            matrixSet: 'GoogleMapsCompatible',
+            format: 'image/png',
+            style: 'default',
+            tileGrid: new WMTSTileGrid({
+              origin: getTopLeft(getProjection('EPSG:3857')?.getExtent() || [0, 0, 0, 0]),
+              resolutions: [
+                156543.03392804097, 78271.51696402048, 39135.75848201024,
+                19567.87924100512, 9783.93962050256, 4891.96981025128,
+                2445.98490512564, 1222.99245256282, 611.49622628141,
+                305.748113140705, 152.8740565703525, 76.43702828517625,
+                38.21851414258813, 19.109257071294063, 9.554628535647032,
+                4.777314267823516, 2.388657133911758, 1.194328566955879,
+                0.5971642834779395, 0.29858214173896974, 0.14929107086948487
+              ],
+              matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+            })
           }),
-          properties: { 'title': 'IGN raster', baseLayer: true, },
-          visible: false
+          properties: { 'title': 'IGN base', baseLayer: true, },
+          visible: true
         }),
         new TileLayer({
           source: new TileWMS({
@@ -102,7 +120,7 @@ export class DashboardComponent {
             attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics'
           }),
           properties: { 'title': 'Satélite', baseLayer: true, },
-          visible: true
+          visible: false
         }),
         new TileLayer({
           source: new OSM(),
@@ -111,6 +129,15 @@ export class DashboardComponent {
         }),
       ]
     });
+
+    // Evitar que se oculten todas las capas base
+    function preventGroupLayerToggle(event: any) {
+      if (event.target === baseLayers) {
+        // Revertir el cambio
+        baseLayers.setVisible(true);
+      }
+    }
+    baseLayers.on('change:visible', preventGroupLayerToggle);
 
     const wmsIncendiosActivos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -138,7 +165,7 @@ export class DashboardComponent {
     const layerIncenciosControlados = new TileLayer({
       source: wmsIncendiosControlados,
       properties: { 'title': 'Controlados' }
-    });    
+    });
 
     const wmsIncendiosEstabilizados = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -152,7 +179,7 @@ export class DashboardComponent {
     const layerIncenciosEstabilizados = new TileLayer({
       source: wmsIncendiosEstabilizados,
       properties: { 'title': 'Estabilizados' },
-    });    
+    });
 
     const wmsIncendiosExtinguidos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -168,7 +195,7 @@ export class DashboardComponent {
       properties: { 'title': 'Extinguidos' },
       visible: false
 
-    });        
+    });
 
     // const wmsIncendiosLimitesMunicipios = new TileWMS({
     //   url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -187,7 +214,7 @@ export class DashboardComponent {
     const wmsLayersGroupIncendios = new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
       //layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio, layerIncenciosLimitesMunicipio]
-      layers: [layerIncenciosExtinguidos, layerIncenciosEstabilizados,  layerIncenciosControlados, layerIncenciosActivos]
+      layers: [layerIncenciosExtinguidos, layerIncenciosEstabilizados, layerIncenciosControlados, layerIncenciosActivos]
     });
 
     this.view = new View({
