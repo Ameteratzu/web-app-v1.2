@@ -31,7 +31,6 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { MunicipalityService } from '../../services/municipality.service';
 import { Municipality } from '../../types/municipality.type';
 
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 
