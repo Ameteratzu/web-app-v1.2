@@ -22,6 +22,7 @@ import { SucesosRelacionadosService } from '../../services/sucesos-relacionados.
 import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { FireRelatedEventForm } from './components/fire-related-event-form/fire-related-event-form.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -54,6 +55,7 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     NgxSpinnerModule,
     FireRelatedEventForm,
+    DragDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },

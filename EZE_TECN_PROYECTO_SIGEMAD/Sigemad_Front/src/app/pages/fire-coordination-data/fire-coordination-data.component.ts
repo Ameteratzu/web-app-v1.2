@@ -19,6 +19,7 @@ import { CecopiComponent } from './cecopi/cecopi.component';
 import { PmaComponent } from './pma/pma.component';
 import { DireccionesService } from '../../services/direcciones.service';
 import { ProvinceService } from '../../services/province.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-fire-coordination-data',
@@ -34,6 +35,7 @@ import { ProvinceService } from '../../services/province.service';
     CecopiComponent,
     PmaComponent,
     MatButtonModule,
+    DragDropModule,
   ],
   templateUrl: './fire-coordination-data.component.html',
   styleUrl: './fire-coordination-data.component.scss',

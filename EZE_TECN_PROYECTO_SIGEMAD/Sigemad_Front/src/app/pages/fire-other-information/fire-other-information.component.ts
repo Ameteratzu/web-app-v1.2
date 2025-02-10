@@ -23,6 +23,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -64,6 +65,7 @@ interface FormType {
     MatTableModule,
     MatIconModule,
     NgxSpinnerModule,
+    DragDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },

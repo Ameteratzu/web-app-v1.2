@@ -1,4 +1,6 @@
-<h2 mat-dialog-title class="title">{{ data.fire?.id ? 'Modificar' : 'Crear' }} Incendio</h2>
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="title">
+  {{ data.fire?.id ? 'Modificar' : 'Crear' }} Incendio
+</h2>
 
 <form [formGroup]="formData" (ngSubmit)="onSubmit()">
   <mat-dialog-content>

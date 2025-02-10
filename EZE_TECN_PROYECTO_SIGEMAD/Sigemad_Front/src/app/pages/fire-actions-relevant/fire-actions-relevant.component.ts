@@ -17,6 +17,7 @@ import { ActionsRelevantService } from '../../services/actions-relevant.service'
 import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import moment from 'moment';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-fire-actions-relevant',
@@ -33,6 +34,7 @@ import moment from 'moment';
     ActivationPlanComponent,
     SystemsActivationComponent,
     MobilizationComponent,
+    DragDropModule,
   ],
   animations: [
     trigger('fadeInOut', [

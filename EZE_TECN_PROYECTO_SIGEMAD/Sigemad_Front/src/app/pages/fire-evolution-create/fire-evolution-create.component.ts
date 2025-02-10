@@ -14,6 +14,7 @@ import { AreaComponent } from './area/area.component';
 import { ConsequencesComponent } from './consequences/consequences.component';
 import { InterventionComponent } from './intervention/intervention.component';
 import { RecordsComponent } from './records/records.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-fire-create',
@@ -30,6 +31,7 @@ import { RecordsComponent } from './records/records.component';
     InterventionComponent,
     AreaComponent,
     NgxSpinnerModule,
+    DragDropModule,
   ],
   animations: [
     trigger('fadeInOut', [
@@ -142,7 +144,7 @@ export class FireCreateComponent implements OnInit {
           });
 
         return;
-      }else{
+      } else {
         await this.processData();
       }
     }

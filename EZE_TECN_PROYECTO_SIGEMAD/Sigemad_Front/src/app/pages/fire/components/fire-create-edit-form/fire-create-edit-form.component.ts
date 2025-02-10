@@ -38,6 +38,10 @@ import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import { EventStatus } from '../../../../types/eventStatus.type';
 
+// PCD
+import { DragDropModule } from '@angular/cdk/drag-drop';
+// FIN PCD
+
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL', // Definir el formato de entrada
@@ -71,6 +75,7 @@ const MY_DATE_FORMATS = {
     MatNativeDateModule,
     NgxSpinnerModule,
     TooltipDirective,
+    DragDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
