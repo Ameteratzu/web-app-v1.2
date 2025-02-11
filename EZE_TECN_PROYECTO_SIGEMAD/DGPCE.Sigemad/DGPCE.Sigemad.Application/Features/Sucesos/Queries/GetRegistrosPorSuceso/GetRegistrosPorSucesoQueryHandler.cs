@@ -2,6 +2,8 @@
 using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
+using DGPCE.Sigemad.Application.Features.Incendios.Vms;
+using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -10,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks.Dataflow;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
-public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, IReadOnlyList<RegistroActualizacionDto>>
+public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, PaginationVm<RegistroActualizacionDto>>
 {
     private readonly ILogger<GetRegistrosPorSucesoQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
@@ -23,11 +25,15 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IReadOnlyList<RegistroActualizacionDto>> Handle(GetRegistrosPorSucesoQuery request, CancellationToken cancellationToken)
+    public async Task<PaginationVm<RegistroActualizacionDto>> Handle(GetRegistrosPorSucesoQuery request, CancellationToken cancellationToken)
     {
+
+       var sucesoSpecifications=  new SucesoWithAllRegistrosSpecification(request); 
+
         // Usar la especificación para obtener el suceso con todos los registros relacionados
         var suceso = await _unitOfWork.Repository<Suceso>()
-            .GetByIdWithSpec(new SucesoWithAllRegistrosSpecification(request.IdSuceso));
+            .GetByIdWithSpec(sucesoSpecifications);
+
 
         if (suceso == null)
         {
@@ -129,8 +135,28 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             EsUltimoRegistro = d.FechaCreacion == suceso.ActuacionesRelevantes.Max(e => e.FechaCreacion)
         }));
 
-        // Ordenar por FechaHora descendente
-        return registros.OrderByDescending(r => r.FechaHora).ToList();
+        var totalRegistros = registros.Count;
+
+        var rounded = Math.Ceiling(Convert.ToDecimal(totalRegistros) / Convert.ToDecimal(request.PageSize));
+        var totalPages = Convert.ToInt32(rounded);
+
+        var dataPaginada = registros
+           .OrderByDescending(r => r.FechaHora)
+           .Skip((request.Page - 1) * request.PageSize)
+           .Take(request.PageSize)
+           .ToList();
+
+        var pagination = new PaginationVm<RegistroActualizacionDto>
+        {
+            Count = totalRegistros,
+            Data = dataPaginada,
+            PageCount = totalPages,
+            Page = request.Page,
+            PageSize = request.PageSize
+        };
+
+
+        return pagination;
     }
 
     /// <summary>
