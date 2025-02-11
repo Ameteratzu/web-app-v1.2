@@ -334,7 +334,7 @@ export class FireRelatedEventForm implements OnInit {
     const idsSucesosAsociados = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
 
     if (idsSucesosAsociados?.length === 0) {
-      this.spinner.hide();
+      //this.spinner.hide();
       /*
       this.alertService
         .showAlert({
@@ -359,6 +359,7 @@ export class FireRelatedEventForm implements OnInit {
         .afterDismissed()
         .subscribe(() => {
           this.isSaving.set(false);
+          this.spinner.hide();
           return;
         });
       // FIN PCD
@@ -373,7 +374,7 @@ export class FireRelatedEventForm implements OnInit {
         const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
 
         this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-        this.spinner.hide();
+        //this.spinner.hide();
         await this.onSubmit();
 
         /*
@@ -400,6 +401,7 @@ export class FireRelatedEventForm implements OnInit {
           .subscribe(() => {
             this.closeModal.emit();
             this.isSaving.set(false);
+            this.spinner.hide();
           });
         // FIN PCD
       } catch (error) {

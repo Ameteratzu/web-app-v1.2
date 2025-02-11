@@ -137,6 +137,7 @@ export class FireRelatedEventComponent implements OnInit {
     this.spinner.show();
 
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -145,11 +146,25 @@ export class FireRelatedEventComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+        */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
       .then(async (result) => {
         if (result.isConfirmed) {
           //this.closeModal();
           await this.sucesosRelacionadosService.delete(this.dataProps.fireDetail.id);
-          this.spinner.hide();
+          //this.spinner.hide();
 
           /*
           this.alertService
@@ -173,6 +188,7 @@ export class FireRelatedEventComponent implements OnInit {
             .afterDismissed()
             .subscribe(() => {
               this.closeModal({ refresh: true });
+              this.spinner.hide();
             });
           // FIN PCD
         } else {

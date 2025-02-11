@@ -232,7 +232,7 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .update(data)
           .then((response) => {
-            this.spinner.hide();
+            //this.spinner.hide();
             /*
             this.alertService
               .showAlert({
@@ -256,6 +256,7 @@ export class FireCreateEdit implements OnInit {
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal({ refresh: true });
+                this.spinner.hide();
               });
             // FIN PCD
           })
@@ -266,7 +267,7 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .post(data)
           .then((response) => {
-            this.spinner.hide();
+            //this.spinner.hide();
             /*
             this.alertService
               .showAlert({
@@ -290,6 +291,7 @@ export class FireCreateEdit implements OnInit {
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal({ refresh: true });
+                this.spinner.hide();
               });
             // FIN PCD
           })

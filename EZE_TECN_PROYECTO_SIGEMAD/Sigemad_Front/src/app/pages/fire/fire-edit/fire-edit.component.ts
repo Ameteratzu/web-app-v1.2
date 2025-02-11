@@ -418,6 +418,7 @@ export class FireEditComponent implements OnInit {
 
   async deleteFire() {
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -426,6 +427,21 @@ export class FireEditComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+      */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
+
       .then(async (result) => {
         if (result.isConfirmed) {
           this.spinner.show();
@@ -434,8 +450,8 @@ export class FireEditComponent implements OnInit {
 
           await this.fireService.delete(this.fire_id);
           setTimeout(() => {
-            this.renderer.setStyle(toolbar, 'z-index', '5');
-            this.spinner.hide();
+            //this.renderer.setStyle(toolbar, 'z-index', '5');
+            //this.spinner.hide();
 
             /*
             this.alertService
@@ -460,10 +476,10 @@ export class FireEditComponent implements OnInit {
               })
               .afterDismissed()
               .subscribe(() => {
-                // Después de que el snackbar se cierre, navegas
                 this.routenav.navigate(['/fire']).then(() => {
                   window.location.href = '/fire';
                 });
+                this.spinner.hide();
               });
             // FIN PCD
           }, 2000);

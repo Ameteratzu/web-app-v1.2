@@ -213,6 +213,7 @@ export class FireCoordinationData {
     this.spinner.show();
 
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -221,15 +222,32 @@ export class FireCoordinationData {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+       */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
+
       .then(async (result) => {
         if (result.isConfirmed) {
           console.log('🚀 ~ FireCoordinationData ~ .then ~ this.data?.fireDetail?.id:', this.data?.fireDetail?.id);
           await this.coordinationServices.delete(Number(this.data?.fireDetail?.id));
           this.coordinationServices.clearData();
+          /*
           setTimeout(() => {
             this.renderer.setStyle(toolbar, 'z-index', '5');
             this.spinner.hide();
           }, 2000);
+          */
 
           /*
           this.alertService
@@ -253,6 +271,7 @@ export class FireCoordinationData {
             .afterDismissed()
             .subscribe(() => {
               this.closeModal(true);
+              this.spinner.hide();
             });
           // FIN PCD
         } else {
