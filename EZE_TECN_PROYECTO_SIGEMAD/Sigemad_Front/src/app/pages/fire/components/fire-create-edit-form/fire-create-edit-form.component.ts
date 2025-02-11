@@ -37,6 +37,7 @@ import { TooltipDirective } from '../../../../shared/directive/tooltip/tooltip.d
 import { FormFieldComponent } from '../../../../shared/Inputs/field.component';
 import { MapCreateComponent } from '../../../../shared/mapCreate/map-create.component';
 import { EventStatus } from '../../../../types/eventStatus.type';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // PCD
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -125,6 +126,10 @@ export class FireCreateEdit implements OnInit {
   public coordinates = signal<any>({});
   public polygon = signal<any>([]);
   private spinner = inject(NgxSpinnerService);
+
+  //PCD
+  public snackBar = inject(MatSnackBar);
+  // FIN PCD
 
   async ngOnInit() {
     this.formData = new FormGroup({
@@ -228,6 +233,7 @@ export class FireCreateEdit implements OnInit {
           .update(data)
           .then((response) => {
             this.spinner.hide();
+            /*
             this.alertService
               .showAlert({
                 title: 'Buen trabajo!',
@@ -237,6 +243,21 @@ export class FireCreateEdit implements OnInit {
               .then((result) => {
                 this.closeModal({ refresh: true });
               });
+             */
+
+            // PCD
+            this.snackBar
+              .open('Datos modificados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal({ refresh: true });
+              });
+            // FIN PCD
           })
           .catch((error) => {
             console.error('Error', error);
@@ -246,6 +267,7 @@ export class FireCreateEdit implements OnInit {
           .post(data)
           .then((response) => {
             this.spinner.hide();
+            /*
             this.alertService
               .showAlert({
                 title: 'Buen trabajo!',
@@ -255,6 +277,21 @@ export class FireCreateEdit implements OnInit {
               .then((result) => {
                 this.closeModal({ refresh: true });
               });
+              */
+
+            // PCD
+            this.snackBar
+              .open('Datos creados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal({ refresh: true });
+              });
+            // FIN PCD
           })
           .catch((error) => {
             console.log(error);

@@ -57,6 +57,7 @@ import { Evolution } from '../../../types/evolution.type';
 import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-actions-relevant.component';
 import { ImpactService } from '../../../services/impact.service';
 import { ImpactEvolutionService } from '../../../services/impact-evolution.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-edit',
@@ -97,6 +98,7 @@ export class FireEditComponent implements OnInit {
   public evolutionService = inject(EvolutionService);
   public impactosEvolucionesService = inject(ImpactEvolutionService);
   public actuacionesRelevantesService = inject(ActionsRelevantService);
+  public snackBar = inject(MatSnackBar);
   // FIN PCD
 
   public provinceService = inject(ProvinceService);
@@ -434,6 +436,8 @@ export class FireEditComponent implements OnInit {
           setTimeout(() => {
             this.renderer.setStyle(toolbar, 'z-index', '5');
             this.spinner.hide();
+
+            /*
             this.alertService
               .showAlert({
                 title: 'Eliminado!',
@@ -444,6 +448,24 @@ export class FireEditComponent implements OnInit {
                   window.location.href = '/fire';
                 });
               });
+              */
+
+            //PCD
+            this.snackBar
+              .open('Datos eliminados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                // Después de que el snackbar se cierre, navegas
+                this.routenav.navigate(['/fire']).then(() => {
+                  window.location.href = '/fire';
+                });
+              });
+            // FIN PCD
           }, 2000);
         } else {
           this.spinner.hide();
@@ -999,11 +1021,11 @@ export class FireEditComponent implements OnInit {
       case '0':
         return '/assets/assets/img/satelite.png';
       case '1':
-        return '/assets/assets/img/activar.png';
+        return '/assets/assets/img/satelite.png';
       case '2':
-        return '/assets/assets/img/hoja.png';
+        return '/assets/assets/img/satelite.png';
       case '3':
-        return '/assets/assets/img/ucmp.png';
+        return '/assets/assets/img/satelite.png';
       default:
         return '/assets/img/logo-color.png';
     }

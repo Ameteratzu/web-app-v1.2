@@ -10,9 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-
-import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import moment from 'moment';
@@ -26,6 +23,8 @@ import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -122,7 +121,9 @@ export class FireDocumentation implements OnInit {
 
   public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
-  public toast = inject(MatSnackBar);
+  // PCD
+  public snackBar = inject(MatSnackBar);
+  // FIN PCD
 
   async ngOnInit() {
     this.spinner.show();
@@ -220,7 +221,7 @@ export class FireDocumentation implements OnInit {
     }
     this.isSaving.set(true);
     if (this.dataOtherInformation().length <= 0) {
-      this.showToast({ title: 'Debe meter data en la lista' });
+      //this.showToast({ title: 'Debe meter data en la lista' });
       this.isSaving.set(false);
       return;
     }
@@ -274,6 +275,7 @@ export class FireDocumentation implements OnInit {
         this.isSaving.set(false);
         this.spinner.hide();
 
+        /*
         this.alertService
           .showAlert({
             title: 'Buen trabajo!',
@@ -283,8 +285,23 @@ export class FireDocumentation implements OnInit {
           .then((result) => {
             this.closeModal({ refresh: true });
           });
+          */
+
+        // PCD
+        this.snackBar
+          .open('Datos modificados correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-verde'],
+          })
+          .afterDismissed()
+          .subscribe(() => {
+            this.closeModal({ refresh: true });
+          });
+        // FIN PCD
       } else {
-        this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
+        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
       }
     } catch (error) {
@@ -310,6 +327,7 @@ export class FireDocumentation implements OnInit {
           await this.fireDocumentationService.delete(Number(this.dataProps?.fireDetail?.id));
           this.spinner.hide();
 
+          /*
           this.alertService
             .showAlert({
               title: 'Eliminado!',
@@ -318,6 +336,21 @@ export class FireDocumentation implements OnInit {
             .then((result) => {
               this.closeModal({ refresh: true });
             });
+            */
+
+          // PCD
+          this.snackBar
+            .open('Datos eliminados correctamente!', '', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-verde'],
+            })
+            .afterDismissed()
+            .subscribe(() => {
+              this.closeModal({ refresh: true });
+            });
+          // FIN PCD
         } else {
           this.spinner.hide();
         }
@@ -425,14 +458,6 @@ export class FireDocumentation implements OnInit {
 
       return dateTime.toISOString();
     }
-  }
-
-  showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
-    this.toast.open(title, txt, {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 
   trackByIdDocumento(index: number, opcion: any): number {

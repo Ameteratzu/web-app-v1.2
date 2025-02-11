@@ -15,7 +15,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import moment from 'moment';
 
 import { SucesosRelacionadosService } from '../../services/sucesos-relacionados.service';
@@ -23,6 +22,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { FireRelatedEventForm } from './components/fire-related-event-form/fire-related-event-form.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -74,7 +74,7 @@ export class FireRelatedEventComponent implements OnInit {
 
   public sucesosRelacionadosService = inject(SucesosRelacionadosService);
 
-  public toast = inject(MatSnackBar);
+  public snackBar = inject(MatSnackBar);
 
   private fb = inject(FormBuilder);
 
@@ -151,6 +151,7 @@ export class FireRelatedEventComponent implements OnInit {
           await this.sucesosRelacionadosService.delete(this.dataProps.fireDetail.id);
           this.spinner.hide();
 
+          /*
           this.alertService
             .showAlert({
               title: 'Eliminado!',
@@ -159,6 +160,21 @@ export class FireRelatedEventComponent implements OnInit {
             .then((result) => {
               this.closeModal({ refresh: true });
             });
+            */
+
+          // PCD
+          this.snackBar
+            .open('Datos eliminados correctamente!', '', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-verde'],
+            })
+            .afterDismissed()
+            .subscribe(() => {
+              this.closeModal({ refresh: true });
+            });
+          // FIN PCD
         } else {
           this.spinner.hide();
         }
@@ -209,13 +225,5 @@ export class FireRelatedEventComponent implements OnInit {
 
     return moment(fechaHora).format('MM/DD/YY HH:mm');
     //return fechaHora.toISOString();
-  }
-
-  showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
-    this.toast.open(title, txt, {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 }

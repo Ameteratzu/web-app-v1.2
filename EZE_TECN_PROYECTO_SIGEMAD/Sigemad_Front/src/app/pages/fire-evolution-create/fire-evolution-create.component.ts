@@ -15,6 +15,7 @@ import { ConsequencesComponent } from './consequences/consequences.component';
 import { InterventionComponent } from './intervention/intervention.component';
 import { RecordsComponent } from './records/records.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-create',
@@ -58,6 +59,10 @@ export class FireCreateComponent implements OnInit {
   public renderer = inject(Renderer2);
   public router = inject(Router);
   public alertService = inject(AlertService);
+
+  // PCD
+  public snackBar = inject(MatSnackBar);
+  // FIN PCD
 
   readonly sections = [
     { id: 1, label: 'Registro / Parámetros' },
@@ -151,6 +156,7 @@ export class FireCreateComponent implements OnInit {
 
     this.evolutionSevice.clearData();
 
+    /*
     setTimeout(() => {
       this.renderer.setStyle(toolbar, 'z-index', '5');
       this.alertService
@@ -167,6 +173,27 @@ export class FireCreateComponent implements OnInit {
           this.spinner.hide();
         });
     }, 2000);
+    */
+
+    // TEST
+    setTimeout(() => {
+      this.renderer.setStyle(toolbar, 'z-index', '5');
+      this.snackBar.open('Registro guardado correctamente!', '', {
+        duration: 3000, // Duración en milisegundos
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['snackbar-verde'],
+      });
+
+      this.isDataReady = false;
+      this.evolutionSevice.getById(Number(this.idReturn)).then((dataCordinacion: any) => {
+        this.editData = dataCordinacion;
+        this.isDataReady = true;
+        this.spinner.hide();
+      });
+    }, 2000);
+
+    // FIN TEST
   }
 
   async processData(): Promise<void> {
@@ -285,6 +312,7 @@ export class FireCreateComponent implements OnInit {
               this.spinner.hide();
             }, 2000);
 
+            /*
             this.alertService
               .showAlert({
                 title: 'Eliminado!',
@@ -293,6 +321,24 @@ export class FireCreateComponent implements OnInit {
               .then((result) => {
                 this.closeModal(true);
               });
+             */
+
+            // PCD
+
+            this.snackBar
+              .open('Registro eliminado correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                // Acción que se ejecuta después de que el snackbar se cierra
+                this.closeModal(true); // Llamada a tu función para cerrar el modal
+              });
+
+            // FIN PCD
           } catch (error) {
             this.alertService
               .showAlert({

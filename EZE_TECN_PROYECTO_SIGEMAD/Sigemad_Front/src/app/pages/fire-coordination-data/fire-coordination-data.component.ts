@@ -59,7 +59,7 @@ export class FireCoordinationData {
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
   public coordinationServices = inject(CoordinationAddressService);
-  public toast = inject(MatSnackBar);
+  public snackBar = inject(MatSnackBar);
   public renderer = inject(Renderer2);
   public router = inject(Router);
   public alertService = inject(AlertService);
@@ -165,6 +165,7 @@ export class FireCoordinationData {
 
     setTimeout(() => {
       this.renderer.setStyle(toolbar, 'z-index', '5');
+      /*
       this.alertService
         .showAlert({
           title: 'Buen trabajo!',
@@ -181,6 +182,28 @@ export class FireCoordinationData {
           this.isDataReady = true;
           this.spinner.hide();
         });
+       */
+
+      // PCD
+      this.snackBar
+        .open('Datos guardados correctamente!', '', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-verde'],
+        })
+        .afterDismissed()
+        .subscribe(async () => {
+          this.isDataReady = false;
+          const dataCordinacion: any = await this.coordinationServices.getById(Number(this.idReturn));
+
+          this.editDataDir = dataCordinacion.direcciones;
+          this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
+          this.editDataPma = dataCordinacion.coordinacionesPMA;
+          this.isDataReady = true;
+          this.spinner.hide();
+        });
+      // FIN PCD
     }, 2000);
   }
 
@@ -208,6 +231,7 @@ export class FireCoordinationData {
             this.spinner.hide();
           }, 2000);
 
+          /*
           this.alertService
             .showAlert({
               title: 'Eliminado!',
@@ -216,6 +240,21 @@ export class FireCoordinationData {
             .then((result) => {
               this.closeModal(true);
             });
+            */
+
+          // PCD
+          this.snackBar
+            .open('Datos eliminados correctamente!', '', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-verde'],
+            })
+            .afterDismissed()
+            .subscribe(() => {
+              this.closeModal(true);
+            });
+          // FIN PCD
         } else {
           this.spinner.hide();
         }
