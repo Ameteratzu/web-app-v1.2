@@ -151,3 +151,23 @@ table .mat-mdc-header-cell {
 .mat-mdc-button-persistent-ripple::before {
   opacity: 0 !important;
 }
+
+// PCD
+.snackbar-verde {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: green,
+      supporting-text-color: white,
+    )
+  );
+}
+
+.snackbar-rojo {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: darkred,
+      supporting-text-color: white,
+    )
+  );
+}
+// FIN PCD

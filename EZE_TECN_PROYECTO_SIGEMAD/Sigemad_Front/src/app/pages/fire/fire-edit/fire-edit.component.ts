@@ -52,8 +52,12 @@ import { FireOtherInformationComponent } from '../../fire-other-information/fire
 import { FireRelatedEventComponent } from '../../fire-related-event/fire-related-event.component';
 import { DataSource } from '@angular/cdk/collections';
 import { EvolutionService } from '../../../services/evolution.service';
+import { ActionsRelevantService } from '../../../services/actions-relevant.service';
 import { Evolution } from '../../../types/evolution.type';
 import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-actions-relevant.component';
+import { ImpactService } from '../../../services/impact.service';
+import { ImpactEvolutionService } from '../../../services/impact-evolution.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-edit',
@@ -92,6 +96,9 @@ export class FireEditComponent implements OnInit {
 
   // PCD
   public evolutionService = inject(EvolutionService);
+  public impactosEvolucionesService = inject(ImpactEvolutionService);
+  public actuacionesRelevantesService = inject(ActionsRelevantService);
+  public snackBar = inject(MatSnackBar);
   // FIN PCD
 
   public provinceService = inject(ProvinceService);
@@ -171,10 +178,11 @@ export class FireEditComponent implements OnInit {
     this.spinner.show();
     const details = await this.fireService.details(Number(this.fire_id));
     this.dataSource.data = details;
-    this.spinner.hide();
+    //this.spinner.hide();
 
     // PCD
     this.listadoEvoluciones = [];
+    this.listadoActuacionesRelevantes = [];
 
     if (this.dataSource.data != null && this.dataSource.data.length > 0) {
       for (const actualizacion of this.dataSource.data) {
@@ -183,42 +191,56 @@ export class FireEditComponent implements OnInit {
           if (evolucion != null) {
             this.listadoEvoluciones.push(evolucion);
           }
+        } else if (actualizacion.tipoRegistro === 'Actuaciones Relevantes') {
+          const actuacionRelevante: any = await this.actuacionesRelevantesService.getById(actualizacion.id);
+          if (actuacionRelevante != null) {
+            //console.log(JSON.stringify(actuacionRelevante, null, 2));
+            this.listadoActuacionesRelevantes.push(actuacionRelevante);
+          }
         }
       }
     }
 
-    this.cargarFilaEvolucion();
-    this.cargarNivelSituacionOperativaEquivalente();
-    this.cargarFilaAfectaciones();
-    this.cargarFilaMediosExtincionOrdinarios();
-    this.cargarFilaEMediosExtincionExtraordinariosNacionales();
-    this.cargarFilaEMediosExtincionExtraordinariosInternacionales();
+    await this.cargarFilaEvolucion();
+    await this.cargarFilaNivelSituacionOperativaEquivalente();
+    await this.cargarFilaActivacionSistemas();
+    await this.cargarFilaAfectaciones();
+    await this.cargarFilaMediosExtincionOrdinarios();
+    await this.cargarFilaEMediosExtincionExtraordinariosNacionales();
+    await this.cargarFilaEMediosExtincionExtraordinariosInternacionales();
 
     // Obtenemos el rango completo de fechas
-    const menorFechaHistorico = this.obtenerMenorFechaHistorico([
-      this.filaEvolucion,
-      this.filaNivelSituacionOperativaEquivalente,
-      this.filaAfectaciones,
-      this.filaMediosExtincionOrdinarios,
-      this.filaMediosExtincionExtraordinariosNacionales,
-      this.filaMediosExtincionExtraordinariosInternacionales,
-    ]);
+    const menorFechaHistorico = this.obtenerMenorFechaHistorico(
+      [
+        this.filaEvolucion,
+        this.filaNivelSituacionOperativaEquivalente,
+        this.filaActivacionSistemas,
+        this.filaAfectaciones,
+        this.filaMediosExtincionOrdinarios,
+        this.filaMediosExtincionExtraordinariosNacionales,
+        this.filaMediosExtincionExtraordinariosInternacionales,
+      ].filter((m) => m instanceof Map && m.size > 0) // Filtra mapas vacíos
+    );
 
-    const mayorFechaHistorico = this.obtenerMayorFechaHistorico([
-      this.filaEvolucion,
-      this.filaNivelSituacionOperativaEquivalente,
-      this.filaAfectaciones,
-      this.filaMediosExtincionOrdinarios,
-      this.filaMediosExtincionExtraordinariosNacionales,
-      this.filaMediosExtincionExtraordinariosInternacionales,
-    ]);
+    const mayorFechaHistorico = this.obtenerMayorFechaHistorico(
+      [
+        this.filaEvolucion,
+        this.filaNivelSituacionOperativaEquivalente,
+        this.filaActivacionSistemas,
+        this.filaAfectaciones,
+        this.filaMediosExtincionOrdinarios,
+        this.filaMediosExtincionExtraordinariosNacionales,
+        this.filaMediosExtincionExtraordinariosInternacionales,
+      ].filter((m) => m instanceof Map && m.size > 0) // Filtra mapas vacíos
+    );
 
     if (menorFechaHistorico && mayorFechaHistorico) {
-      this.cargarFilaDias(menorFechaHistorico, mayorFechaHistorico);
+      await this.cargarFilaDias(menorFechaHistorico, mayorFechaHistorico);
     } else {
       console.error('Error: No se encontraron fechas válidas.');
     }
 
+    this.spinner.hide();
     // FIN PCD
     return;
   }
@@ -414,6 +436,8 @@ export class FireEditComponent implements OnInit {
           setTimeout(() => {
             this.renderer.setStyle(toolbar, 'z-index', '5');
             this.spinner.hide();
+
+            /*
             this.alertService
               .showAlert({
                 title: 'Eliminado!',
@@ -424,6 +448,24 @@ export class FireEditComponent implements OnInit {
                   window.location.href = '/fire';
                 });
               });
+              */
+
+            //PCD
+            this.snackBar
+              .open('Datos eliminados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                // Después de que el snackbar se cierre, navegas
+                this.routenav.navigate(['/fire']).then(() => {
+                  window.location.href = '/fire';
+                });
+              });
+            // FIN PCD
           }, 2000);
         } else {
           this.spinner.hide();
@@ -475,9 +517,11 @@ export class FireEditComponent implements OnInit {
   // PCD
   // Mapas para las filas del gráfico
   listadoEvoluciones: any[] = [];
+  listadoActuacionesRelevantes: any[] = [];
   filaDias: Map<string, { hora: string; estado: string }[]> = new Map();
   filaEvolucion: Map<string, { hora: string; estado: string }[]> = new Map();
   filaNivelSituacionOperativaEquivalente: Map<string, { hora: string; estado: string }[]> = new Map();
+  filaActivacionSistemas: Map<string, { hora: string; estado: string }[]> = new Map();
   filaAfectaciones: Map<string, { hora: string; estado: string }[]> = new Map();
   filaMediosExtincionOrdinarios: Map<string, { hora: string; estado: string }[]> = new Map();
   filaMediosExtincionExtraordinariosNacionales: Map<string, { hora: string; estado: string }[]> = new Map();
@@ -785,7 +829,7 @@ export class FireEditComponent implements OnInit {
   /********************************************* */
   /*   Fila NivelSituacionOperativaEquivalente   */
   /********************************************* */
-  async cargarNivelSituacionOperativaEquivalente() {
+  async cargarFilaNivelSituacionOperativaEquivalente() {
     this.filaNivelSituacionOperativaEquivalente.clear();
 
     if (this.listadoEvoluciones.length > 0) {
@@ -823,85 +867,7 @@ export class FireEditComponent implements OnInit {
     }
   }
 
-  /*
   getBackgroundColorFilaNivelSituacionOperativaEquivalente(fecha: string, horaIndex: number): string {
-    console.log(fecha + ' ' + horaIndex);
-
-    // Obtener todas las fechas ordenadas
-
-    const fechas = Array.from(this.filaNivelSituacionOperativaEquivalente.keys()).sort((a, b) => {
-      const [dayA, monthA, yearA] = a.split('-').map(Number);
-      const [dayB, monthB, yearB] = b.split('-').map(Number);
-      const dateA = new Date(yearA, monthA - 1, dayA);
-      const dateB = new Date(yearB, monthB - 1, dayB);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    // Asegurar continuidad temporal agregando días intermedios
-    const [dayInicio, monthInicio, yearInicio] = fechas[0].split('-').map(Number);
-    const [dayFin, monthFin, yearFin] = fechas[fechas.length - 1].split('-').map(Number);
-
-    const fechaInicio = new Date(yearInicio, monthInicio - 1, dayInicio);
-    const fechaFin = new Date(yearFin, monthFin - 1, dayFin);
-
-    for (let fechaIter = new Date(fechaInicio); fechaIter <= fechaFin; fechaIter.setDate(fechaIter.getDate() + 1)) {
-      const dia = String(fechaIter.getDate()).padStart(2, '0');
-      const mes = String(fechaIter.getMonth() + 1).padStart(2, '0');
-      const anio = fechaIter.getFullYear();
-      const fechaFormateada = `${dia}-${mes}-${anio}`;
-
-      if (!this.filaNivelSituacionOperativaEquivalente.has(fechaFormateada)) {
-        this.filaNivelSituacionOperativaEquivalente.set(fechaFormateada, []); // Añadir día sin entradas
-      }
-    }
-
-    // Obtener todas las entradas del día dado
-    const entradas = this.filaNivelSituacionOperativaEquivalente.get(fecha);
-
-    let color = 'transparent'; // Color predeterminado
-
-    if (entradas) {
-      // Ordenar las entradas por hora
-      const entradasOrdenadas = entradas.sort((a, b) => {
-        const [horaA] = a.hora.split(':').map((num) => parseInt(num, 10));
-        const [horaB] = b.hora.split(':').map((num) => parseInt(num, 10));
-        return horaA - horaB;
-      });
-
-      // Recorrer las entradas del día para buscar el rango de horas
-      for (let i = 0; i < entradasOrdenadas.length; i++) {
-        const entrada = entradasOrdenadas[i];
-        const [horaSolo] = entrada.hora.split(':').map((num) => parseInt(num, 10));
-
-        // Si el horaIndex está en el rango actual
-        if (horaSolo <= horaIndex && (i === entradasOrdenadas.length - 1 || horaIndex < parseInt(entradasOrdenadas[i + 1].hora.split(':')[0], 10))) {
-          color = this.getColorPorEstadoFilaNivelSituacionOperativaEquivalente(entrada.estado);
-          return color;
-        }
-      }
-    }
-
-    // Si no se encontró un color en el día actual, buscar en días anteriores
-    for (let i = fechas.indexOf(fecha) - 1; i >= 0; i--) {
-      const fechaAnterior = fechas[i];
-      const entradasAnteriores = this.filaNivelSituacionOperativaEquivalente.get(fechaAnterior);
-
-      if (entradasAnteriores && entradasAnteriores.length > 0) {
-        // Obtener la última entrada del día anterior
-        const ultimaEntrada = entradasAnteriores[entradasAnteriores.length - 1];
-        color = this.getColorPorEstadoFilaNivelSituacionOperativaEquivalente(ultimaEntrada.estado);
-        break;
-      }
-    }
-
-    return color;
-  }
-    */
-
-  // test
-  getBackgroundColorFilaNivelSituacionOperativaEquivalente(fecha: string, horaIndex: number): string {
-    console.log(fecha + ' ' + horaIndex);
-
     // Usamos filaNivelSituacionOperativaEquivalenteDiasCompletos para garantizar que todas las fechas estén
     const fechas = Array.from(this.filaNivelSituacionOperativaEquivalenteDiasCompletos.keys());
 
@@ -938,8 +904,6 @@ export class FireEditComponent implements OnInit {
     return color;
   }
 
-  // test
-
   getColorPorEstadoFilaNivelSituacionOperativaEquivalente(estado: string): string {
     switch (estado) {
       case '0':
@@ -971,77 +935,176 @@ export class FireEditComponent implements OnInit {
 
     return completo;
   }
+
+  getIconUrlFilaNivelSituacionOperativaEquivalentePorEstado(estado: string): string {
+    estado = estado.toLowerCase();
+    switch (estado) {
+      case 'personas':
+        return '/assets/assets/img/persona.png';
+      case 'carreteras':
+        return '/assets/assets/img/vialidad.png';
+      case 'medioambiente':
+        return '/assets/assets/img/hoja.png';
+      case 'varios':
+        return '/assets/assets/img/varios_3.png';
+      default:
+        return '/assets/img/logo-color.png';
+    }
+  }
   /********************************************* */
   /* FIN Fila NivelSituacionOperativaEquivalente */
+  /********************************************* */
+
+  /********************************************* */
+  /*           Fila ActivacionSistemas           */
+  /********************************************* */
+
+  async cargarFilaActivacionSistemas() {
+    this.filaActivacionSistemas.clear();
+
+    if (this.listadoActuacionesRelevantes.length > 0) {
+      this.listadoActuacionesRelevantes.sort((a, b) => {
+        const fechaA = new Date(a.fechaHora);
+        const fechaB = new Date(b.fechaHora);
+        return fechaA.getTime() - fechaB.getTime();
+      });
+      for (const actuacionRelevante of this.listadoActuacionesRelevantes) {
+        const fechaActivacionSistema: string = this.fechaADDMMYY(actuacionRelevante.activacionSistemas[0]?.fechaHoraActivacion);
+        const horaActivacionSistema: string = this.fechaAHHMM(actuacionRelevante.activacionSistemas[0]?.fechaHoraActivacion);
+        const estadoSistema: string = actuacionRelevante.activacionSistemas[0]?.id?.toString();
+        if (estadoSistema) {
+          this.actualizarFilaActivacionSistemas(fechaActivacionSistema, horaActivacionSistema, estadoSistema);
+        }
+      }
+    }
+  }
+
+  actualizarFilaActivacionSistemas(fechaActivacionSistema: string, horaActivacionSistema: string, estadoSistema: string) {
+    // Verificar si ya existe la fecha en el mapa
+    if (this.filaActivacionSistemas.has(fechaActivacionSistema)) {
+      // Si ya existe, obtener el array de entradas para esa fecha
+      const entradas = this.filaActivacionSistemas.get(fechaActivacionSistema) || []; // Si es undefined, se asigna un array vacío
+
+      // Añadir un nuevo estado a las entradas
+      entradas.push({ hora: horaActivacionSistema, estado: estadoSistema });
+
+      // Actualizar la entrada en el mapa con el nuevo valor
+      this.filaActivacionSistemas.set(fechaActivacionSistema, entradas);
+    } else {
+      // Si no existe la fecha, crear una nueva entrada
+      this.filaActivacionSistemas.set(fechaActivacionSistema, [{ hora: horaActivacionSistema, estado: estadoSistema }]);
+    }
+  }
+
+  getBackgroundIconFilaActivacionSistemas(fecha: string, horaIndex: number): string {
+    const entradas = this.filaActivacionSistemasDiasCompletos.get(fecha);
+    let iconUrl = ''; // Valor predeterminado (sin icono)
+
+    if (entradas && entradas.length > 0) {
+      // Buscar una coincidencia exacta de hora
+      for (const entrada of entradas) {
+        const [horaExacta] = entrada.hora.split(':').map((num) => parseInt(num, 10));
+
+        if (horaExacta === horaIndex) {
+          iconUrl = this.getIconUrlFilaActivacionSistemasPorEstado(entrada.estado);
+          return `url('${iconUrl}')`;
+        }
+      }
+    }
+
+    return 'none';
+  }
+
+  getIconUrlFilaActivacionSistemasPorEstado(estado: string): string {
+    //estado = estado.toLowerCase();
+    switch (estado) {
+      case '0':
+        return '/assets/assets/img/satelite.png';
+      case '1':
+        return '/assets/assets/img/satelite.png';
+      case '2':
+        return '/assets/assets/img/satelite.png';
+      case '3':
+        return '/assets/assets/img/satelite.png';
+      default:
+        return '/assets/img/logo-color.png';
+    }
+  }
+
+  get filaActivacionSistemasDiasCompletos(): Map<string, { hora: string; estado: string }[]> {
+    const completo = new Map<string, { hora: string; estado: string }[]>();
+    // Iteramos sobre todas las fechas en filaDias
+    for (const fecha of this.filaDias.keys()) {
+      if (this.filaActivacionSistemas.has(fecha)) {
+        completo.set(fecha, this.filaActivacionSistemas.get(fecha)!);
+      } else {
+        // Si no existe, se agrega con un array vacío
+        completo.set(fecha, []);
+      }
+    }
+
+    return completo;
+  }
+
+  /********************************************* */
+  /* Fin Fila NivelSituacionOperativaEquivalente */
   /********************************************* */
 
   /*************************/
   /* Fin Fila Afectaciones */
   /*************************/
-  cargarFilaAfectaciones() {
+  async cargarFilaAfectaciones() {
+    this.filaAfectaciones.clear();
+    /*
     this.filaAfectaciones.set('29-01-2025', [
       { hora: '02:15', estado: 'PERSONAS' },
       { hora: '16:20', estado: 'CARRETERAS' },
     ]);
     this.filaAfectaciones.set('28-01-2025', [{ hora: '12:15', estado: 'MEDIOAMBIENTE' }]);
-  }
+    */
 
-  /*
-  getBackgroundIconFilaAfectaciones(fecha: string, horaIndex: number): string {
-    // Obtener todas las fechas ordenadas
-    const fechas = Array.from(this.filaAfectaciones.keys()).sort((a, b) => {
-      const [dayA, monthA, yearA] = a.split('-').map(Number);
-      const [dayB, monthB, yearB] = b.split('-').map(Number);
-      const dateA = new Date(yearA, monthA - 1, dayA);
-      const dateB = new Date(yearB, monthB - 1, dayB);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    // Asegurar continuidad temporal agregando días intermedios
-    const [dayInicio, monthInicio, yearInicio] = fechas[0].split('-').map(Number);
-    const [dayFin, monthFin, yearFin] = fechas[fechas.length - 1].split('-').map(Number);
-
-    const fechaInicio = new Date(yearInicio, monthInicio - 1, dayInicio);
-    const fechaFin = new Date(yearFin, monthFin - 1, dayFin);
-
-    for (let fechaIter = new Date(fechaInicio); fechaIter <= fechaFin; fechaIter.setDate(fechaIter.getDate() + 1)) {
-      const dia = String(fechaIter.getDate()).padStart(2, '0');
-      const mes = String(fechaIter.getMonth() + 1).padStart(2, '0');
-      const anio = fechaIter.getFullYear();
-      const fechaFormateada = `${dia}-${mes}-${anio}`;
-
-      if (!this.filaAfectaciones.has(fechaFormateada)) {
-        this.filaAfectaciones.set(fechaFormateada, []); // Añadir día sin entradas
-      }
+    if (this.listadoEvoluciones == null || this.listadoEvoluciones.length == 0) {
+      return;
     }
 
-    // Obtener todas las entradas del día dado
-    const entradas = this.filaAfectaciones.get(fecha);
+    for (const evolucion of this.listadoEvoluciones) {
+      const afectacionesEvolucion: any = await this.impactosEvolucionesService.getImpactosPorEvolucion(evolucion.id);
+      if (afectacionesEvolucion != null && afectacionesEvolucion.length > 0) {
+        for (const afectacion of afectacionesEvolucion) {
+          //console.log(JSON.stringify(afectacion, null, 2));
+          //alert(afectacion.impactoClasificado.grupoImpacto);
 
-    let iconUrl = ''; // Valor predeterminado (sin icono)
-
-    if (entradas && entradas.length > 0) {
-      // Buscar una coincidencia exacta de hora
-      for (const entrada of entradas) {
-        const [horaExacta] = entrada.hora.split(':').map((num) => parseInt(num, 10));
-
-        if (horaExacta === horaIndex) {
-          iconUrl = this.getIconUrlPorEstado(entrada.estado);
-          return `url('${iconUrl}')`;
+          const fechaAfectacion: string = this.fechaADDMMYY(afectacion.fechaHora);
+          const horaAfectacion: string = this.fechaAHHMM(afectacion.fechaHora);
+          const estadoAfectacion: string = afectacion.impactoClasificado?.grupoImpacto;
+          if (estadoAfectacion) {
+            this.actualizarFilaAfectaciones(fechaAfectacion, horaAfectacion, estadoAfectacion);
+          }
         }
       }
     }
-
-    // Si no hay coincidencia exacta, devolver 'none' (sin icono)
-    return 'none';
   }
-  */
 
-  //
+  actualizarFilaAfectaciones(fechaAfectacion: string, horaAfectacion: string, estadoAfectacion: string) {
+    // Verificar si ya existe la fecha en el mapa
+    if (this.filaAfectaciones.has(fechaAfectacion)) {
+      // Si ya existe, obtener el array de entradas para esa fecha
+      const entradas = this.filaAfectaciones.get(fechaAfectacion) || []; // Si es undefined, se asigna un array vacío
+
+      // Añadir un nuevo estado a las entradas
+      entradas.push({ hora: horaAfectacion, estado: estadoAfectacion });
+
+      // Actualizar la entrada en el mapa con el nuevo valor
+      this.filaAfectaciones.set(fechaAfectacion, entradas);
+    } else {
+      // Si no existe la fecha, crear una nueva entrada
+      this.filaAfectaciones.set(fechaAfectacion, [{ hora: horaAfectacion, estado: estadoAfectacion }]);
+    }
+  }
+
   getBackgroundIconFilaAfectaciones(fecha: string, horaIndex: number): string {
     // Obtener todas las entradas del día dado desde filaAfectacionesDiasCompletos
     const entradas = this.filaAfectacionesDiasCompletos.get(fecha);
-
     let iconUrl = ''; // Valor predeterminado (sin icono)
 
     if (entradas && entradas.length > 0) {
@@ -1050,26 +1113,26 @@ export class FireEditComponent implements OnInit {
         const [horaExacta] = entrada.hora.split(':').map((num) => parseInt(num, 10));
 
         if (horaExacta === horaIndex) {
-          iconUrl = this.getIconUrlPorEstado(entrada.estado);
+          iconUrl = this.getIconUrlFilaAfectacionesPorEstado(entrada.estado);
           return `url('${iconUrl}')`;
         }
       }
     }
 
-    // Si no hay coincidencia exacta, devolver 'none' (sin icono)
     return 'none';
   }
   //
 
-  getIconUrlPorEstado(estado: string): string {
+  getIconUrlFilaAfectacionesPorEstado(estado: string): string {
+    estado = estado.toLowerCase();
     switch (estado) {
-      case 'PERSONAS':
+      case 'personas':
         return '/assets/assets/img/persona.png';
-      case 'CARRETERAS':
+      case 'carreteras':
         return '/assets/assets/img/vialidad.png';
-      case 'MEDIOAMBIENTE':
+      case 'medioambiente':
         return '/assets/assets/img/hoja.png';
-      case 'VARIOS':
+      case 'varios':
         return '/assets/assets/img/varios_3.png';
       default:
         return '/assets/img/logo-color.png';
@@ -1078,10 +1141,8 @@ export class FireEditComponent implements OnInit {
 
   get filaAfectacionesDiasCompletos(): Map<string, { hora: string; estado: string }[]> {
     const completo = new Map<string, { hora: string; estado: string }[]>();
-
     // Iteramos sobre todas las fechas en filaDias
     for (const fecha of this.filaDias.keys()) {
-      // Si la fecha existe en filaNivelSituacionOperativaEquivalente, la usamos
       if (this.filaAfectaciones.has(fecha)) {
         completo.set(fecha, this.filaAfectaciones.get(fecha)!);
       } else {
@@ -1099,12 +1160,12 @@ export class FireEditComponent implements OnInit {
   /************************************** */
   /*   Fila Medios extinción ordinarios   */
   /************************************** */
-  cargarFilaMediosExtincionOrdinarios() {
-    this.filaMediosExtincionOrdinarios.set('28-01-2025', [
+  async cargarFilaMediosExtincionOrdinarios() {
+    this.filaMediosExtincionOrdinarios.set('04-02-2025', [
       { hora: '12:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
-    this.filaMediosExtincionOrdinarios.set('29-01-2025', [{ hora: '12:15', estado: 'BRIGADAS' }]);
+    //this.filaMediosExtincionOrdinarios.set('29-01-2025', [{ hora: '12:15', estado: 'BRIGADAS' }]);
   }
 
   /*
@@ -1257,12 +1318,12 @@ export class FireEditComponent implements OnInit {
   /****************************************************** */
   /* Fin Fila Medios extinción extraordinarios nacionales */
   /****************************************************** */
-  cargarFilaEMediosExtincionExtraordinariosNacionales() {
-    this.filaMediosExtincionExtraordinariosNacionales.set('29-01-2025', [
+  async cargarFilaEMediosExtincionExtraordinariosNacionales() {
+    this.filaMediosExtincionExtraordinariosNacionales.set('03-02-2025', [
       { hora: '08:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
-    this.filaMediosExtincionExtraordinariosNacionales.set('28-01-2025', [{ hora: '14:15', estado: 'BRIGADAS' }]);
+    this.filaMediosExtincionExtraordinariosNacionales.set('04-02-2025', [{ hora: '14:15', estado: 'BRIGADAS' }]);
   }
 
   /*
@@ -1416,12 +1477,12 @@ export class FireEditComponent implements OnInit {
   /*************************************************************/
   /*   Fila Medios extinción extraordinarios internacionales   */
   /*************************************************************/
-  cargarFilaEMediosExtincionExtraordinariosInternacionales() {
-    this.filaMediosExtincionExtraordinariosInternacionales.set('29-01-2025', [
-      { hora: '06:15', estado: 'AVION' },
+  async cargarFilaEMediosExtincionExtraordinariosInternacionales() {
+    this.filaMediosExtincionExtraordinariosInternacionales.set('03-02-2025', [
+      { hora: '09:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
-    this.filaMediosExtincionExtraordinariosInternacionales.set('28-01-2025', [{ hora: '04:15', estado: 'BRIGADAS' }]);
+    this.filaMediosExtincionExtraordinariosInternacionales.set('04-02-2025', [{ hora: '04:15', estado: 'BRIGADAS' }]);
   }
 
   /*
@@ -1577,7 +1638,6 @@ export class FireEditComponent implements OnInit {
     const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexed, por eso sumamos 1
     const anio = fecha.getFullYear();
     const fechaFormateada = `${dia}-${mes}-${anio}`;
-    console.log(dia);
     return fechaFormateada;
   }
 
@@ -1643,5 +1703,9 @@ export class FireEditComponent implements OnInit {
     return mayor.getDate().toString().padStart(2, '0') + '-' + (mayor.getMonth() + 1).toString().padStart(2, '0') + '-' + mayor.getFullYear();
   }
 
+  toggleVistaTabla() {
+    const tablaHistorico = document.getElementById('tablaHistorico');
+    tablaHistorico?.classList.toggle('vista-general');
+  }
   // FIN PCD
 }

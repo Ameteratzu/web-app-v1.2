@@ -229,8 +229,8 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('refreshFilterForm' in changes ) {
-      this.onSubmit()
+    if ('refreshFilterForm' in changes) {
+      this.onSubmit();
     }
   }
 
@@ -288,15 +288,15 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-  this.firesChange.emit({
-    count: 0,
-    page: 1,
-    pageSize: 10,
-    data: [],
-    pageCount: 0,
-  })
-    this.isLoading = true
-    this.isLoadingChange.emit(true)
+    this.firesChange.emit({
+      count: 0,
+      page: 1,
+      pageSize: 10,
+      data: [],
+      pageCount: 0,
+    });
+    this.isLoading = true;
+    this.isLoadingChange.emit(true);
 
     const {
       territory,
@@ -335,8 +335,8 @@ export class FireFilterFormComponent implements OnInit {
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
-    this.isLoadingChange.emit(false)
-    this.isLoading = false
+    this.isLoadingChange.emit(false);
+    this.isLoading = false;
   }
 
   clearFormFilter() {
