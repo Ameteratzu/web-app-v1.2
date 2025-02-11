@@ -144,3 +144,93 @@
     font-size: 12px; 
   }
 }
+
+// Estilos para el popup de información contextual
+.map-popup {
+  position: absolute;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #424242;
+  }
+  
+  .close-button {
+    cursor: pointer;
+    color: #616161;
+    
+    &:hover {
+      color: #424242;
+    }
+  }
+}
+
+.popup-content {
+  font-size: 14px;
+  
+  .info-row {
+    display: flex;
+    margin-bottom: 8px;
+    
+    .label {
+      font-weight: 600;
+      min-width: 100px;
+      color: #616161;
+    }
+    
+    .value {
+      color: #424242;
+    }
+  }
+}
+
+.ol-custom-control {
+  background-color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .material-icons {
+    font-size: 20px;
+    color: #424242;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.ol-custom-control:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 12px;
+  pointer-events: none;
+}
+

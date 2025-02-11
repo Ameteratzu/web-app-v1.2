@@ -33,7 +33,10 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         {
             AddInclude(i => i.Suceso);
             AddInclude(i => i.Suceso.Evoluciones);
-            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
+            AddCriteria(i => i.Suceso.Evoluciones
+              .OrderByDescending(e => e.FechaCreacion)
+              .Take(1)
+              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value)); // Filtrar por IdSituacionEquivalente
         }
 
 

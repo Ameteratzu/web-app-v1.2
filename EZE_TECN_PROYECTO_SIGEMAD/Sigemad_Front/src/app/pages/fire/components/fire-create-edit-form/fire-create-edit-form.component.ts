@@ -139,7 +139,7 @@ export class FireCreateEdit implements OnInit {
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
       startDate: new FormControl(new Date(), Validators.required),
-      startTime: new FormControl(new Date(), Validators.required),
+      startTime: new FormControl(null, Validators.required),
       eventStatus: new FormControl('', Validators.required),
       generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente

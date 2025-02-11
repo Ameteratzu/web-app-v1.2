@@ -868,6 +868,8 @@ export class FireEditComponent implements OnInit {
   }
 
   getBackgroundColorFilaNivelSituacionOperativaEquivalente(fecha: string, horaIndex: number): string {
+
+
     // Usamos filaNivelSituacionOperativaEquivalenteDiasCompletos para garantizar que todas las fechas estén
     const fechas = Array.from(this.filaNivelSituacionOperativaEquivalenteDiasCompletos.keys());
 

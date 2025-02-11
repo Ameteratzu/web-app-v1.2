@@ -132,8 +132,8 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
-    console.log('🚀 ~ FireCreateComponent ~ save ~ this.evolutionSevice.dataRecords():', this.data?.fireDetail?.id);
-    if (this.evolutionSevice.dataRecords().length > 0) {
+    if (this.evolutionSevice.dataRecords().length > 0 || this.idReturn) {
+     
       await this.processData();
     } else {
       if (!this.data?.fireDetail?.id) {
