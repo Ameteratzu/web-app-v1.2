@@ -23,6 +23,7 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -64,6 +65,7 @@ interface FormType {
     MatTableModule,
     MatIconModule,
     NgxSpinnerModule,
+    DragDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -81,7 +83,7 @@ export class FireOtherInformationComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
 
-  public toast = inject(MatSnackBar);
+  public snackBar = inject(MatSnackBar);
 
   private fb = inject(FormBuilder);
   dataProps = inject(MAT_DIALOG_DATA) as {
@@ -177,9 +179,20 @@ export class FireOtherInformationComponent implements OnInit {
     }
     this.isSaving.set(true);
     if (this.dataOtherInformation().length <= 0) {
-      this.showToast({ title: 'Debe meter data en la lista' });
+      //this.showToast({ title: 'Debe meter data en la lista' });
+      //this.isSaving.set(false);
+      //return;
+
+      // PCD
+      this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: ['snackbar-rojo'],
+      });
       this.isSaving.set(false);
       return;
+      // FIN PCD
     }
 
     const arrayToSave = this.dataOtherInformation().map((item) => {
@@ -205,6 +218,7 @@ export class FireOtherInformationComponent implements OnInit {
         this.isSaving.set(false);
         this.spinner.hide();
 
+        /*
         this.alertService
           .showAlert({
             title: 'Buen trabajo!',
@@ -214,8 +228,23 @@ export class FireOtherInformationComponent implements OnInit {
           .then((result) => {
             this.closeModal({ refresh: true });
           });
+         */
+
+        // PCD
+        this.snackBar
+          .open('Datos guardados correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-verde'],
+          })
+          .afterDismissed()
+          .subscribe(() => {
+            this.closeModal({ refresh: true });
+          });
+        // FIN PCD
       } else {
-        this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
+        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
       }
     } catch (error) {
@@ -247,6 +276,7 @@ export class FireOtherInformationComponent implements OnInit {
           this.spinner.hide();
           //}, 2000);
 
+          /*
           this.alertService
             .showAlert({
               title: 'Eliminado!',
@@ -255,6 +285,21 @@ export class FireOtherInformationComponent implements OnInit {
             .then((result) => {
               this.closeModal({ refresh: true });
             });
+            */
+
+          // PCD
+          this.snackBar
+            .open('Datos eliminados correctamente!', '', {
+              duration: 3000,
+              horizontalPosition: 'right',
+              verticalPosition: 'top',
+              panelClass: ['snackbar-verde'],
+            })
+            .afterDismissed()
+            .subscribe(() => {
+              this.closeModal({ refresh: true });
+            });
+          // FIN PCD
         } else {
           this.spinner.hide();
         }
@@ -318,13 +363,5 @@ export class FireOtherInformationComponent implements OnInit {
 
     return moment(fechaHora).format('MM/DD/YY HH:mm');
     //return fechaHora.toISOString();
-  }
-
-  showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
-    this.toast.open(title, txt, {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
   }
 }

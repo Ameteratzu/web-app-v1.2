@@ -46,6 +46,8 @@ import { EventService } from '../../../../services/event.service';
 import { SucesosRelacionadosService } from '../../../../services/sucesos-relacionados.service';
 
 import { AlertService } from '../../../../shared/alert/alert.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -102,6 +104,10 @@ export class FireRelatedEventForm implements OnInit {
 
   private spinner = inject(NgxSpinnerService);
   private alertService = inject(AlertService);
+
+  // PCD
+  public snackBar = inject(MatSnackBar);
+  // FIN PCD
 
   public autonomousCommunityService = inject(AutonomousCommunityService);
   public municipioService = inject(MunicipalityService);
@@ -329,6 +335,7 @@ export class FireRelatedEventForm implements OnInit {
 
     if (idsSucesosAsociados?.length === 0) {
       this.spinner.hide();
+      /*
       this.alertService
         .showAlert({
           title: 'Advertencia!',
@@ -339,6 +346,22 @@ export class FireRelatedEventForm implements OnInit {
           this.isSaving.set(false);
           return;
         });
+        */
+
+      // PCD
+      this.snackBar
+        .open('Debe introducir al menos un suceso!', '', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-rojo'],
+        })
+        .afterDismissed()
+        .subscribe(() => {
+          this.isSaving.set(false);
+          return;
+        });
+      // FIN PCD
     } else {
       try {
         const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
@@ -353,6 +376,7 @@ export class FireRelatedEventForm implements OnInit {
         this.spinner.hide();
         await this.onSubmit();
 
+        /*
         this.alertService
           .showAlert({
             title: 'Buen trabajo!',
@@ -361,9 +385,23 @@ export class FireRelatedEventForm implements OnInit {
           })
           .then((result) => {
             this.closeModal.emit();
-
             this.isSaving.set(false);
           });
+          */
+
+        this.snackBar
+          .open('Registro guardado correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['snackbar-verde'],
+          })
+          .afterDismissed()
+          .subscribe(() => {
+            this.closeModal.emit();
+            this.isSaving.set(false);
+          });
+        // FIN PCD
       } catch (error) {
         console.error('error', error);
         this.alertService
