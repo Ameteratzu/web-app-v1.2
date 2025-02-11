@@ -61,11 +61,11 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
 
             _mapper.Map(item, incencioVm);
 
-            var registros = await _getRegistrosSucesos.Handle(new GetRegistrosPorSucesoQuery(item.IdSuceso), cancellationToken);
+            var registros = await _getRegistrosSucesos.Handle(new GetRegistrosPorSucesoQuery { IdSuceso = item.IdSuceso,PageSize = 1000}, cancellationToken);
 
-            if (registros != null && registros.Count > 0)
+            if (registros.Data != null && registros.Data.Count > 0)
             {
-                var ultimoRegistro = registros
+                var ultimoRegistro = registros.Data
                      .Where(r => r.EsUltimoRegistro)
                      .OrderByDescending(r => r.FechaHora)
                      .FirstOrDefault();
