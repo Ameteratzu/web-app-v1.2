@@ -136,7 +136,7 @@ export class FireEditComponent implements OnInit {
       municipality: new FormControl(),
       startDate: new FormControl({ value: '', disabled: true }),
       event: new FormControl(),
-      generalNote: new FormControl(),
+      generalNote: new FormControl({ value: '', disabled: true }),
       idEstado: new FormControl(),
       ubicacion: new FormControl({ value: '', disabled: true }),
       suceso: new FormControl({ value: '', disabled: true }),
@@ -868,8 +868,6 @@ export class FireEditComponent implements OnInit {
   }
 
   getBackgroundColorFilaNivelSituacionOperativaEquivalente(fecha: string, horaIndex: number): string {
-
-
     // Usamos filaNivelSituacionOperativaEquivalenteDiasCompletos para garantizar que todas las fechas estén
     const fechas = Array.from(this.filaNivelSituacionOperativaEquivalenteDiasCompletos.keys());
 

@@ -1,0 +1,1217 @@
+Verificando conexión a la base de datos (sqlcmd -S localhost -d Sigemad -Q "SELECT 1" -E) ...
+Conexión a la base de datos verificada correctamente.
+
+===========================================
+Ejecutando scripts en la carpeta DLL...
+
+===========================================
+
+Ejecutando scripts en la carpeta: ..\DLL
+
+Ejecutando script: 00.1.DropTables.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\00.1.DropTables.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 00.1.DropTables.sql
+Duración de ejecución: 0.3564929 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 00.2.Security_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\00.2.Security_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 00.2.Security_DLL.sql
+Duración de ejecución: 0.137092 segundos
+Detalles del script:
+Advertencia: la m�xima longitud de clave para un �ndice agrupado es de 900 bytes. El �ndice 'PK_AspNetUserLogins' tiene una longitud m�xima de 1800 bytes. Para algunas combinaciones de valores grandes, la operaci�n de inserci�n o actualizaci�n no funcionar� correctamente.
+Advertencia: la m�xima longitud de clave para un �ndice agrupado es de 900 bytes. El �ndice 'PK_AspNetUserRoles' tiene una longitud m�xima de 1800 bytes. Para algunas combinaciones de valores grandes, la operaci�n de inserci�n o actualizaci�n no funcionar� correctamente.
+Advertencia: la m�xima longitud de clave para un �ndice agrupado es de 900 bytes. El �ndice 'PK_AspNetUserTokens' tiene una longitud m�xima de 2700 bytes. Para algunas combinaciones de valores grandes, la operaci�n de inserci�n o actualizaci�n no funcionar� correctamente.
+
+(1 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 01.Territorio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\01.Territorio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 01.Territorio_DLL.sql
+Duración de ejecución: 0.0662569 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 02.Pais_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\02.Pais_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 02.Pais_DDL.sql
+Duración de ejecución: 0.0679964 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 03.Distrito_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\03.Distrito_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 03.Distrito_DLL.sql
+Duración de ejecución: 0.0725744 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 04.MunicipioExtranjero_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\04.MunicipioExtranjero_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 04.MunicipioExtranjero_DLL.sql
+Duración de ejecución: 0.0811467 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 05.CCAA_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\05.CCAA_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 05.CCAA_DDL.sql
+Duración de ejecución: 0.0711726 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 06.Provincia_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\06.Provincia_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 06.Provincia_DDL.sql
+Duración de ejecución: 0.0794294 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 07.1.Municipio_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\07.1.Municipio_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 07.1.Municipio_DDL.sql
+Duración de ejecución: 0.0729129 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 07.2.EntidadMenor_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\07.2.EntidadMenor_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 07.2.EntidadMenor_DLL.sql
+Duración de ejecución: 0.0780862 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 07.3.Archivos_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\07.3.Archivos_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 07.3.Archivos_DLL.sql
+Duración de ejecución: 0.0731053 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 08.NivelGravedad_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\08.NivelGravedad_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 08.NivelGravedad_DDL.sql
+Duración de ejecución: 0.0683998 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 09.TipoSuceso_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\09.TipoSuceso_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 09.TipoSuceso_DDL.sql
+Duración de ejecución: 0.0683005 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 10.EstadoSuceso_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\10.EstadoSuceso_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 10.EstadoSuceso_DDL.sql
+Duración de ejecución: 0.0738858 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 11.Menu_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\11.Menu_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 11.Menu_DDL.sql
+Duración de ejecución: 0.0699838 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 12.ClaseSuceso_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\12.ClaseSuceso_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 12.ClaseSuceso_DDL.sql
+Duración de ejecución: 0.0677675 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 13.Suceso_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\13.Suceso_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 13.Suceso_DDL.sql
+Duración de ejecución: 0.0804433 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 14.EstadoIncendio_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\14.EstadoIncendio_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 14.EstadoIncendio_DDL.sql
+Duración de ejecución: 0.0733849 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 15.Incendio_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\15.Incendio_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 15.Incendio_DDL.sql
+Duración de ejecución: 0.0777301 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 16.TipoMovimiento_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\16.TipoMovimiento_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 16.TipoMovimiento_DLL.sql
+Duración de ejecución: 0.074661 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 17.ComparativaFecha_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\17.ComparativaFecha_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 17.ComparativaFecha_DLL.sql
+Duración de ejecución: 0.0673443 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 18.EntradaSalida_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\18.EntradaSalida_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 18.EntradaSalida_DLL.sql
+Duración de ejecución: 0.0843561 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 19.Medio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\19.Medio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 19.Medio_DLL.sql
+Duración de ejecución: 0.0787755 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 20.ProcedenciaDestino_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\20.ProcedenciaDestino_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 20.ProcedenciaDestino_DLL.sql
+Duración de ejecución: 0.0851875 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 21.EstadoEvolucion_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\21.EstadoEvolucion_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 21.EstadoEvolucion_DLL.sql
+Duración de ejecución: 0.0808407 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 22.TipoRegistro_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\22.TipoRegistro_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 22.TipoRegistro_DDL.sql
+Duración de ejecución: 0.0797259 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 23.1.PlanesEmergencia_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\23.1.PlanesEmergencia_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 23.1.PlanesEmergencia_DLL.sql
+Duración de ejecución: 0.1013133 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 23.2.Evolucion_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\23.2.Evolucion_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 23.2.Evolucion_DLL.sql
+Duración de ejecución: 0.0811759 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 24.Evolucion_ProcedenciaDestino_DDL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\24.Evolucion_ProcedenciaDestino_DDL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 24.Evolucion_ProcedenciaDestino_DDL.sql
+Duración de ejecución: 0.0683036 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 25.Impacto_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\25.Impacto_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 25.Impacto_DLL.sql
+Duración de ejecución: 0.0930831 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 26.CaracterMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\26.CaracterMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 26.CaracterMedio_DLL.sql
+Duración de ejecución: 0.0706705 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 27.TitularidadMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\27.TitularidadMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 27.TitularidadMedio_DLL.sql
+Duración de ejecución: 0.0764681 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 28.ClasificacionMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\28.ClasificacionMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 28.ClasificacionMedio_DLL.sql
+Duración de ejecución: 0.0727061 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 29.TipoEntidadTitularidadMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\29.TipoEntidadTitularidadMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 29.TipoEntidadTitularidadMedio_DLL.sql
+Duración de ejecución: 0.0701577 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 30.TipoIntervencionMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\30.TipoIntervencionMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 30.TipoIntervencionMedio_DLL.sql
+Duración de ejecución: 0.0761467 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 31.IntervencionMedio_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\31.IntervencionMedio_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 31.IntervencionMedio_DLL.sql
+Duración de ejecución: 0.0809217 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 32.DireccionEmergencia_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\32.DireccionEmergencia_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 32.DireccionEmergencia_DLL.sql
+Duración de ejecución: 0.0972046 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 33.SuperficieFiltro_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\33.SuperficieFiltro_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 33.SuperficieFiltro_DLL.sql
+Duración de ejecución: 0.0770322 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 34.OtraInformacion_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\34.OtraInformacion_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 34.OtraInformacion_DLL.sql
+Duración de ejecución: 0.0790066 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 35.SucesoRelacionado_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\35.SucesoRelacionado_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 35.SucesoRelacionado_DLL.sql
+Duración de ejecución: 0.0871521 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 37.Documentacion_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\37.Documentacion_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 37.Documentacion_DLL.sql
+Duración de ejecución: 0.1010898 segundos
+Detalles del script:
+Filas afectadas: 0
+
+Ejecutando script: 38.MovilizacionMedios_DLL.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\DLL\38.MovilizacionMedios_DLL.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 38.MovilizacionMedios_DLL.sql
+Duración de ejecución: 0.116686 segundos
+Detalles del script:
+Filas afectadas: 0
+Scripts de DLL ejecutados correctamente.
+
+===========================================
+Ejecutando scripts en la carpeta DATOS...
+
+===========================================
+
+Ejecutando scripts en la carpeta: ..\Datos
+
+Ejecutando script: 00.Security_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\00.Security_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 00.Security_Datos.sql
+Duración de ejecución: 0.1152215 segundos
+Detalles del script:
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+
+(1 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 01.Territorio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\01.Territorio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 01.Territorio_Datos.sql
+Duración de ejecución: 0.0728455 segundos
+Detalles del script:
+
+(3 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 02.Pais_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\02.Pais_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 02.Pais_Datos.sql
+Duración de ejecución: 0.5567371 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(9 filas afectadas)
+
+(198 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 03.Distrito_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\03.Distrito_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 03.Distrito_Datos.sql
+Duración de ejecución: 0.1032424 segundos
+Detalles del script:
+
+(112 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 04.MunicipioExtranjero_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\04.MunicipioExtranjero_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 04.MunicipioExtranjero_Datos.sql
+Duración de ejecución: 13.0580918 segundos
+Detalles del script:
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(224 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 05.CCAA_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\05.CCAA_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 05.CCAA_Datos.sql
+Duración de ejecución: 0.1010467 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(9 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 06.Provincia_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\06.Provincia_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 06.Provincia_Datos.sql
+Duración de ejecución: 0.0981428 segundos
+Detalles del script:
+
+(52 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 07.1.Municipio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\07.1.Municipio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 07.1.Municipio_Datos.sql
+Duración de ejecución: 3.3407435 segundos
+Detalles del script:
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(278 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 07.2.EntidadMenor_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\07.2.EntidadMenor_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 07.2.EntidadMenor_Datos.sql
+Duración de ejecución: 8.0068918 segundos
+Detalles del script:
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(500 filas afectadas)
+
+(487 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 08.NivelGravedad_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\08.NivelGravedad_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 08.NivelGravedad_Datos.sql
+Duración de ejecución: 0.0769477 segundos
+Detalles del script:
+
+(6 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 09.TipoSuceso_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\09.TipoSuceso_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 09.TipoSuceso_Datos.sql
+Duración de ejecución: 0.0752265 segundos
+Detalles del script:
+
+(26 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 10.EstadoSuceso_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\10.EstadoSuceso_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 10.EstadoSuceso_Datos.sql
+Duración de ejecución: 0.0661502 segundos
+Detalles del script:
+
+(3 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 11.Menu_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\11.Menu_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 11.Menu_Datos.sql
+Duración de ejecución: 0.0754623 segundos
+Detalles del script:
+
+(24 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 13.ClaseSuceso_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\13.ClaseSuceso_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 13.ClaseSuceso_Datos.sql
+Duración de ejecución: 0.0682136 segundos
+Detalles del script:
+
+(2 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 14.EstadoIncendio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\14.EstadoIncendio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 14.EstadoIncendio_Datos.sql
+Duración de ejecución: 0.070027 segundos
+Detalles del script:
+
+(4 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 16.TipoMovimiento_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\16.TipoMovimiento_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 16.TipoMovimiento_Datos.sql
+Duración de ejecución: 0.0711283 segundos
+Detalles del script:
+
+(4 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 17.ComparativaFechas_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\17.ComparativaFechas_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 17.ComparativaFechas_Datos.sql
+Duración de ejecución: 0.0676703 segundos
+Detalles del script:
+
+(5 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 18.EntradaSalida_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\18.EntradaSalida_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 18.EntradaSalida_Datos.sql
+Duración de ejecución: 0.0735657 segundos
+Detalles del script:
+
+(4 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 19.Medio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\19.Medio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 19.Medio_Datos.sql
+Duración de ejecución: 0.0750314 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(6 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 20.ProcedenciaDestino_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\20.ProcedenciaDestino_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 20.ProcedenciaDestino_Datos.sql
+Duración de ejecución: 0.1135937 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(4 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 22.TipoRegistro_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\22.TipoRegistro_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 22.TipoRegistro_Datos.sql
+Duración de ejecución: 0.0778006 segundos
+Detalles del script:
+
+(2 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 23.1.PlanesEmergencia_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\23.1.PlanesEmergencia_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 23.1.PlanesEmergencia_Datos.sql
+Duración de ejecución: 0.6837867 segundos
+Detalles del script:
+
+(21 filas afectadas)
+
+(6 filas afectadas)
+
+(5 filas afectadas)
+
+(2 filas afectadas)
+
+(4 filas afectadas)
+
+(39 filas afectadas)
+
+(108 filas afectadas)
+
+(200 filas afectadas)
+
+(200 filas afectadas)
+
+(64 filas afectadas)
+
+(6 filas afectadas)
+
+(7 filas afectadas)
+
+(2 filas afectadas)
+
+(785 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 23.2.Evolucion_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\23.2.Evolucion_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 23.2.Evolucion_Datos.sql
+Duración de ejecución: 0.081419 segundos
+Detalles del script:
+
+(4 filas afectadas)
+
+(10 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 25.Impacto_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\25.Impacto_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 25.Impacto_Datos.sql
+Duración de ejecución: 0.1547606 segundos
+Detalles del script:
+
+(97 filas afectadas)
+
+(226 filas afectadas)
+
+(3 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 26.CaracterMedio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\26.CaracterMedio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 26.CaracterMedio_Datos.sql
+Duración de ejecución: 0.0824266 segundos
+Detalles del script:
+
+(3 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 27.TitularidadMedio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\27.TitularidadMedio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 27.TitularidadMedio_Datos.sql
+Duración de ejecución: 0.0706668 segundos
+Detalles del script:
+
+(6 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 28.ClasificacionMedio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\28.ClasificacionMedio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 28.ClasificacionMedio_Datos.sql
+Duración de ejecución: 0.0775033 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(1 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 29.TipoEntidadTitularidadMedio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\29.TipoEntidadTitularidadMedio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 29.TipoEntidadTitularidadMedio_Datos.sql
+Duración de ejecución: 0.073968 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(4 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 30.TipoIntervencionMedio_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\30.TipoIntervencionMedio_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 30.TipoIntervencionMedio_Datos.sql
+Duración de ejecución: 0.3089148 segundos
+Detalles del script:
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(10 filas afectadas)
+
+(9 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 32.DireccionEmergencia_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\32.DireccionEmergencia_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 32.DireccionEmergencia_Datos.sql
+Duración de ejecución: 0.0803967 segundos
+Detalles del script:
+
+(5 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 33.SuperficieFiltro_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\33.SuperficieFiltro_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 33.SuperficieFiltro_Datos.sql
+Duración de ejecución: 0.0653355 segundos
+Detalles del script:
+
+(5 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 37.Documentacion_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\37.Documentacion_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 37.Documentacion_Datos.sql
+Duración de ejecución: 0.072783 segundos
+Detalles del script:
+
+(11 filas afectadas)
+Filas afectadas: 0
+
+Ejecutando script: 38.Movilizacion_Datos.sql
+Comando: sqlcmd -S localhost -d Sigemad -i "C:\PROYECTOS\SIGEMAD\GIT\EZE_TECN_PROYECTO_SIGEMAD\BasesDatos\Datos\38.Movilizacion_Datos.sql" -f 65001 -E -o output.log
+Script ejecutado correctamente: 38.Movilizacion_Datos.sql
+Duración de ejecución: 0.1231218 segundos
+Detalles del script:
+
+(3 filas afectadas)
+
+(6 filas afectadas)
+
+(3 filas afectadas)
+
+(8 filas afectadas)
+
+(16 filas afectadas)
+
+(2 filas afectadas)
+
+(13 filas afectadas)
+
+(13 filas afectadas)
+
+(16 filas afectadas)
+
+(15 filas afectadas)
+
+(92 filas afectadas)
+Filas afectadas: 0
+Todos los scripts de Datos se ejecutaron correctamente.
+Proceso completado con éxito.

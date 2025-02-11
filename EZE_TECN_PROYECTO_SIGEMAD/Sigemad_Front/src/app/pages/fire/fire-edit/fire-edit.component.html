@@ -10,7 +10,14 @@
       <input matInput [formControl]="getForm('ubicacion')" />
     </mat-form-field>
 
-    <img (click)="openModalMap()" matSuffix src="/assets/img/location-btn.svg" alt="location-btn" class="pin-location" />
+    <img
+      (click)="openModalMap()"
+      matSuffix
+      src="/assets/img/location-btn.svg"
+      alt="location-btn"
+      class="pin-location"
+      matTooltip="Mapa de ubicación"
+    />
 
     <mat-form-field appearance="fill" fxFlex="20">
       <mat-label>Clase de suceso</mat-label>
@@ -27,6 +34,15 @@
       <input matInput [formControl]="getForm('estado')" />
     </mat-form-field>
   </div>
+
+  <!-- PCD -->
+  <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch">
+    <mat-form-field appearance="fill" fxFlex="100">
+      <mat-label>Nota general</mat-label>
+      <input matInput [formControl]="getForm('generalNote')" />
+    </mat-form-field>
+  </div>
+  <!-- FIN PCD -->
 
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <div>
