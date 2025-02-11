@@ -114,7 +114,8 @@ export class MapCreateComponent {
                 0.5971642834779395, 0.29858214173896974, 0.14929107086948487
               ],
               matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
-            })
+            }),
+            attributions: '© Instituto Geográfico Nacional de España (IGN)'
           }),
           properties: { 'title': 'IGN callejero', baseLayer: true, },
           visible: true
