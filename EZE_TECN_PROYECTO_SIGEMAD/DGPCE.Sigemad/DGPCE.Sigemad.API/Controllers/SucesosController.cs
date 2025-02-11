@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
-
+[Authorize]
 [Route("api/v1/[controller]")]
 [ApiController]
 public class SucesosController : ControllerBase
@@ -32,7 +32,7 @@ public class SucesosController : ControllerBase
     }
 
     [HttpGet("registros")]
-    [ProducesResponseType(typeof(IReadOnlyList<RegistroActualizacionDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(PaginationVm<RegistroActualizacionDto>), (int)HttpStatusCode.OK)]
     public async Task<PaginationVm<RegistroActualizacionDto>> GetIncendioDetalles([FromQuery] GetRegistrosPorSucesoQuery query)
     {
         var result = await _mediator.Send(query);
