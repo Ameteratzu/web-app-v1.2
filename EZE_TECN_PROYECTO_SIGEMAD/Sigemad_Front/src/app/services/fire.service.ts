@@ -4,7 +4,7 @@ import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 
 import { ApiResponse } from '../types/api-response.type';
-import { FireDetail } from '../types/fire-detail.type';
+import { FireDetail, FireDetailResponse } from '../types/fire-detail.type';
 import { Fire } from '../types/fire.type';
 
 @Injectable({ providedIn: 'root' })
@@ -40,9 +40,9 @@ export class FireService {
   }
 
   details(fire_id: number) {
-    const endpoint = `/sucesos/${fire_id}/registros`;
+    const endpoint = `/sucesos/registros?IdSuceso=${fire_id}&PageSize=15&page1`;
 
-    return firstValueFrom(this.http.get<FireDetail[]>(endpoint).pipe((response) => response));
+    return firstValueFrom(this.http.get<FireDetailResponse>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {

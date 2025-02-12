@@ -17,6 +17,7 @@ import { ActionsRelevantService } from '../../services/actions-relevant.service'
 import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import moment from 'moment';
+import { ActuacionRelevante, Movilizacion } from '../../types/mobilization.type';
 
 @Component({
   selector: 'app-fire-actions-relevant',
@@ -94,7 +95,10 @@ export class FireActionsRelevantComponent {
     const tiposGestion = await this.actionsRelevantSevice.getTipoGestion();
     const procedencia = await this.actionsRelevantSevice.getProcedencia();
     const destinos = await this.actionsRelevantSevice.getDestinos();
-
+    const capacidades = await this.actionsRelevantSevice.getCapacidades();
+    const tipoAdmin = await this.actionsRelevantSevice.getTipoAdministracion();
+    console.log("🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:", tipoAdmin)
+    
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
@@ -103,6 +107,8 @@ export class FireActionsRelevantComponent {
       tiposGestion,
       procedencia,
       destinos,
+      capacidades,
+      tipoAdmin
     };
 
     return this.dataMaestros;
@@ -173,6 +179,21 @@ export class FireActionsRelevantComponent {
   }
 
   async processData(): Promise<void> {
+    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.actionsRelevantSevice.dataMovilizacion():",  this.actionsRelevantSevice.dataMovilizacion())
+    if (this.actionsRelevantSevice.dataMovilizacion().length > 0) {
+      console.log('this.actionsRelevantSevice.dataMovilizacion():', this.actionsRelevantSevice.dataMovilizacion());
+
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(this.actionsRelevantSevice.dataMovilizacion()[0]));
+      // formData.append('idSuceso', this.data.idIncendio.toString());
+
+      const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);
+      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
+
+      this.idReturn = resp.idActuacionRelevante;
+    }
+     
+
     if (this.actionsRelevantSevice.dataEmergencia().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
       this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;

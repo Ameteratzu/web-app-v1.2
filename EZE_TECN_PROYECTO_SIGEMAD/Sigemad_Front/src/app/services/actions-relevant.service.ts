@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { EmergenciaNacional, Zagep, Cecod, Notificaciones, Planes, ActivacionSistemas } from '../types/actions-relevant.type';
-import { Movilizacion } from '../types/mobilization.type';
+import { ActuacionRelevante } from '../types/mobilization.type';
 
 @Injectable({ providedIn: 'root' })
 export class ActionsRelevantService {
@@ -13,7 +13,7 @@ export class ActionsRelevantService {
   public dataNotificaciones = signal<Notificaciones[]>([]);
   public dataPlanes = signal<Planes[]>([]);
   public dataSistemas = signal<ActivacionSistemas[]>([]);
-  public dataMovilizacion = signal<Movilizacion[]>([]);
+  public dataMovilizacion = signal<ActuacionRelevante[]>([]);
 
   postData(body: any) {
     const endpoint = `/actuaciones-relevantes/emergencia-nacional`;
@@ -104,6 +104,20 @@ export class ActionsRelevantService {
       )
     );
   }
+  postMovilizaciones(data: any) {
+    const endpoint = '/actuaciones-relevantes/movilizacion-medios/lista';
+  
+    return firstValueFrom(
+      this.http.post(endpoint, data).pipe(
+        map((response) => {
+          return response;
+        }),
+        catchError((error) => {
+          return throwError(error.error);
+        })
+      )
+    );
+  }
 
   clearData(): void {
     this.dataEmergencia.set([]);
@@ -159,6 +173,16 @@ export class ActionsRelevantService {
 
   getDestinos() {
     let endpoint = `/movilizaciones-medios/destinos-medios`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getCapacidades() {
+    let endpoint = `/movilizaciones-medios/capacidades`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getTipoAdministracion() {
+    let endpoint = `/movilizaciones-medios/tipos-administracion`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
   

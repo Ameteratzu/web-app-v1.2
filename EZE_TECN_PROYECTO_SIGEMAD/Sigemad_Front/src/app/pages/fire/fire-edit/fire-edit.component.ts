@@ -170,7 +170,8 @@ export class FireEditComponent implements OnInit {
   async cargarRegistros() {
     this.spinner.show();
     const details = await this.fireService.details(Number(this.fire_id));
-    this.dataSource.data = details;
+    console.log('🚀 ~ FireEditComponent ~ cargarRegistros ~ details:', details);
+    this.dataSource.data = details.data;
     this.spinner.hide();
 
     // PCD
@@ -900,7 +901,6 @@ export class FireEditComponent implements OnInit {
 
   // test
   getBackgroundColorFilaNivelSituacionOperativaEquivalente(fecha: string, horaIndex: number): string {
-
     // Usamos filaNivelSituacionOperativaEquivalenteDiasCompletos para garantizar que todas las fechas estén
     const fechas = Array.from(this.filaNivelSituacionOperativaEquivalenteDiasCompletos.keys());
 

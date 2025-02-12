@@ -214,8 +214,9 @@ export class FireCreateEdit implements OnInit {
 
       data.geoposition = {
         type: 'Polygon',
-        coordinates: [this.polygon()],
+        coordinates: [this.polygon() ?? ''],
       };
+        console.log("🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():", this.polygon())
 
       if (this.data.fire?.id) {
         data.id = this.data.fire.id;
