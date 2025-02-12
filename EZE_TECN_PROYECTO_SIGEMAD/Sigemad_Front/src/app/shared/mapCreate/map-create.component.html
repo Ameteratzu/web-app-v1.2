@@ -2,19 +2,13 @@
   <span class="mapa-titulo">Mapa del municipio</span>
 
   <div class="coordinate-search">
+    <span class="coordinates-display">{{ coordinates }}</span>
     <input type="text" id="utm-x" placeholder="UTM X" />
     <input type="text" id="utm-y" placeholder="UTM Y" />
     <button (click)="searchCoordinates()" mat-raised-button color="secondary">Buscar</button>
   </div>
 
   <div id="map"></div>
-
-  <div
-    id="cursor-coordinates"
-    [ngStyle]="{ top: cursorPosition.y + 'px', left: cursorPosition.x + 'px' }"
-  >
-    {{ coordinates }}
-  </div>
 
   <div class="p-flex mt-20" *ngIf="!data.onlyView">
     <div>
@@ -27,5 +21,9 @@
     <div>
       <button (click)="closeModal()" mat-flat-button color="secondary">Cerrar</button>
     </div>
+  </div>
+
+  <div id="popup" class="ol-popup">
+    <div id="popup-content"></div>
   </div>
 </div>

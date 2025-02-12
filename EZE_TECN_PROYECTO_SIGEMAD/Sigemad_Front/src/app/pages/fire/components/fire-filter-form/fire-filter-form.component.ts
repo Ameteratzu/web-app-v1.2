@@ -44,6 +44,9 @@ import { SeverityLevel } from '../../../../types/severity-level.type';
 import { Territory } from '../../../../types/territory.type';
 import { FireCreateEdit } from '../../../fire/components/fire-create-edit-form/fire-create-edit-form.component';
 import { MasterDataEvolutionsService } from '../../../../services/master-data-evolutions.service';
+import { SituationsEquivalent } from '../../../../types/situations-equivalent.type';
+import { EventService } from '../../../../services/event.service';
+import { Event } from '../../../../types/event.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -107,6 +110,7 @@ export class FireFilterFormComponent implements OnInit {
   public provinceService = inject(ProvinceService);
   public countryService = inject(CountryService);
   public eventStatusService = inject(EventStatusService);
+  public eventTypeService = inject(EventService);
   public municipalityService = inject(MunicipalityService);
   public severityLevelService = inject(SeverityLevelService);
   public fireService = inject(FireService);
@@ -126,7 +130,10 @@ export class FireFilterFormComponent implements OnInit {
   public eventStatus = signal<EventStatus[]>([]);
   public municipalities = signal<Municipality[]>([]);
   public fireStatus = signal<FireStatus[]>([]);
-  public severityLevels = signal<SeverityLevel[]>([]);
+  public situationsEquivalent = signal<SituationsEquivalent[]>([]);
+
+  public eventTypes = signal<Event[]>([]);
+  
 
   public showDateEnd = signal<boolean>(true);
 
@@ -148,7 +155,7 @@ export class FireFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
     const {
-      severityLevel,
+      situationEquivalent,
       name,
       territory,
       country,
@@ -167,6 +174,7 @@ export class FireFilterFormComponent implements OnInit {
       provincia,
       fechaInicio,
       fechaFin,
+      eventTypes
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -178,7 +186,7 @@ export class FireFilterFormComponent implements OnInit {
       municipality: new FormControl(municipality ?? ''),
       fireStatus: new FormControl(initFireStatus ?? ''),
       episode: new FormControl(episode ?? ''),
-      severityLevel: new FormControl(severityLevel ?? ''),
+      situationEquivalent: new FormControl(situationEquivalent ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
       move: new FormControl(move ?? 1),
       //start: new FormControl(start ?? ''),
@@ -189,8 +197,8 @@ export class FireFilterFormComponent implements OnInit {
       provincia: new FormControl(provincia ?? ''),
       fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
+      eventTypes: new FormControl(eventTypes ?? 1),
     });
-    this.formData.get('severityLevel')?.disable();
 
     const countriesExtranjeros = await this.countryService.getExtranjeros();
     this.listaPaisesExtranjeros.set(countriesExtranjeros);
@@ -211,8 +219,8 @@ export class FireFilterFormComponent implements OnInit {
     const fireStatus = await this.masterData.getFireStatus();
     this.fireStatus.set(fireStatus);
 
-    const severityLevels = await this.severityLevelService.get();
-    this.severityLevels.set(severityLevels);
+    const situationsEquivalents = await this.masterData.getSituationEquivalent();
+    this.situationsEquivalent.set(situationsEquivalents);
 
     const eventStatus = await this.eventStatusService.get();
     this.eventStatus.set(eventStatus);
@@ -223,14 +231,17 @@ export class FireFilterFormComponent implements OnInit {
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
 
+    const eventsTypes = await this.eventTypeService.get();
+    this.eventTypes.set(eventsTypes);
+
     this.loadCommunities();
 
     this.onSubmit();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('refreshFilterForm' in changes ) {
-      this.onSubmit()
+    if ('refreshFilterForm' in changes) {
+      this.onSubmit();
     }
   }
 
@@ -288,15 +299,15 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-  this.firesChange.emit({
-    count: 0,
-    page: 1,
-    pageSize: 10,
-    data: [],
-    pageCount: 0,
-  })
-    this.isLoading = true
-    this.isLoadingChange.emit(true)
+    this.firesChange.emit({
+      count: 0,
+      page: 1,
+      pageSize: 10,
+      data: [],
+      pageCount: 0,
+    });
+    this.isLoading = true;
+    this.isLoadingChange.emit(true);
 
     const {
       territory,
@@ -305,7 +316,7 @@ export class FireFilterFormComponent implements OnInit {
       province,
       fireStatus,
       eventStatus,
-      severityLevel,
+      situationEquivalent,
       affectedArea,
       move,
       between,
@@ -314,6 +325,7 @@ export class FireFilterFormComponent implements OnInit {
       fechaInicio,
       fechaFin,
       name,
+      eventTypes
     } = this.formData.value;
 
     const fires = await this.fireService.get({
@@ -323,7 +335,7 @@ export class FireFilterFormComponent implements OnInit {
       IdProvincia: province,
       IdEstadoSuceso: eventStatus,
       IdEstadoIncendio: fireStatus,
-      IdNivelGravedad: severityLevel,
+      IdSituacionEquivalente: situationEquivalent,
       IdSuperficieAfectada: affectedArea,
       IdMovimiento: move,
       IdComparativoFecha: between,
@@ -331,12 +343,13 @@ export class FireFilterFormComponent implements OnInit {
       FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
       denominacion: name,
       search: name,
+      idClaseSuceso: eventTypes
     });
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
     this.firesChange.emit(this.fires);
-    this.isLoadingChange.emit(false)
-    this.isLoading = false
+    this.isLoadingChange.emit(false);
+    this.isLoading = false;
   }
 
   clearFormFilter() {
@@ -354,8 +367,9 @@ export class FireFilterFormComponent implements OnInit {
       fireStatus: '',
       episode: '',
       affectedArea: '',
-      severityLevel: '',
+      situationEquivalent: '',
       name: '',
+      eventTypes: 1
     });
   }
 

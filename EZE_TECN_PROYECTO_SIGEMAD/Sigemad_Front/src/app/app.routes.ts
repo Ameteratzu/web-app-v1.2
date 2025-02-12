@@ -22,7 +22,7 @@ export const routes: Routes = [
         path: 'fire',
         component: FireComponent,
         data: { breadcrumb: 'Incendios forestales' },
-        children: [{ path: 'fire-national-edit/:id', component: FireEditComponent, data: { breadcrumb: 'Evolución y gestión' } }],
+        children: [{ path: 'fire-national-edit/:id', component: FireEditComponent, data: { breadcrumb: 'Panel de seguimiento' } }],
       },
       { path: 'earthquakes', component: CommentsComponent, data: { breadcrumb: 'earthquakes' } },
       { path: 'adverse-weather', component: CommentsComponent, data: { breadcrumb: 'adverse-weather' } },

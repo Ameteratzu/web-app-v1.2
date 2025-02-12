@@ -18,6 +18,8 @@ import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import moment from 'moment';
 import { ActuacionRelevante, Movilizacion } from '../../types/mobilization.type';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-actions-relevant',
@@ -34,6 +36,7 @@ import { ActuacionRelevante, Movilizacion } from '../../types/mobilization.type'
     ActivationPlanComponent,
     SystemsActivationComponent,
     MobilizationComponent,
+    DragDropModule,
   ],
   animations: [
     trigger('fadeInOut', [
@@ -51,6 +54,10 @@ export class FireActionsRelevantComponent {
   public renderer = inject(Renderer2);
   public actionsRelevantSevice = inject(ActionsRelevantService);
   public alertService = inject(AlertService);
+
+  // PCD
+  public snackBar = inject(MatSnackBar);
+  // FIN PCD
 
   selectedOption: MatChipListboxChange = { source: null as any, value: 1 };
 
@@ -162,6 +169,7 @@ export class FireActionsRelevantComponent {
 
     setTimeout(() => {
       this.renderer.setStyle(toolbar, 'z-index', '5');
+      /*
       this.alertService
         .showAlert({
           title: 'Buen trabajo!',
@@ -175,6 +183,25 @@ export class FireActionsRelevantComponent {
           this.isDataReady = true;
           this.spinner.hide();
         });
+        */
+
+      //PCD
+      this.snackBar
+        .open('Datos guardados correctamente!', '', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: ['snackbar-verde'],
+        })
+        .afterDismissed()
+        .subscribe(async () => {
+          this.isDataReady = false;
+          const dataActuaciones: any = await this.actionsRelevantSevice.getById(Number(this.idReturn));
+          this.editData = dataActuaciones;
+          this.isDataReady = true;
+          this.spinner.hide();
+        });
+      // FIN PCD
     }, 2000);
   }
 
@@ -394,6 +421,7 @@ export class FireActionsRelevantComponent {
               this.spinner.hide();
             }, 2000);
 
+            /*
             this.alertService
               .showAlert({
                 title: 'Eliminado!',
@@ -402,7 +430,23 @@ export class FireActionsRelevantComponent {
               .then((result) => {
                 this.closeModal(true);
               });
+              */
+
+            //PCD
+            this.snackBar
+              .open('Datos eliminados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal(true);
+              });
+            // FIN PCD
           } catch (error) {
+            /*
             this.alertService
               .showAlert({
                 title: 'No hemos podido eliminar la evolución',
@@ -411,6 +455,21 @@ export class FireActionsRelevantComponent {
               .then((result) => {
                 this.closeModal();
               });
+              */
+
+            //PCD
+            this.snackBar
+              .open('No hemos podido eliminar la evolución!', '', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: ['snackbar-rojo'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal();
+              });
+            // FIN PCD
           }
         } else {
           this.spinner.hide();

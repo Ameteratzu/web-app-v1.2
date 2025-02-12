@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h2 mat-dialog-title class="title">{{ data.title }}</h2>
+  <h2 mat-dialog-title class="title" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>{{ data.title }}</h2>
 </div>
 
 <div class="container">
@@ -38,7 +38,6 @@
     (save)="onSaveFromChild($event)"
     class="component-width"
     @fadeInOut
-  
     [fire]="data.fire"
     [esUltimo]="data.fireDetail?.esUltimoRegistro ?? false"
     [editData]="editData"

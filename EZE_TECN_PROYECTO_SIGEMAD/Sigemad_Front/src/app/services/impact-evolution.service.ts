@@ -20,4 +20,17 @@ export class ImpactEvolutionService {
       )
     );
   }
+
+  // PCD
+  getImpactosPorEvolucion(idEvolucion: number) {
+    const endpoint = '/impactos-evoluciones/evolucion/' + idEvolucion;
+
+    return firstValueFrom(
+      this.http.get(endpoint).pipe(
+        map((response) => response),
+        catchError((error) => throwError(error.error))
+      )
+    );
+  }
+  // FIN PCD
 }
