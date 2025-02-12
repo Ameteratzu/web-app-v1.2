@@ -40,7 +40,7 @@ export class FireService {
   }
 
   details(fire_id: number) {
-    const endpoint = `/sucesos/registros?IdSuceso=${fire_id}&PageSize=15&page1`;
+    const endpoint = `/sucesos/registros?IdSuceso=${fire_id}&PageSize=5&page1`;
 
     return firstValueFrom(this.http.get<FireDetailResponse>(endpoint).pipe((response) => response));
   }
