@@ -183,8 +183,8 @@ export class FireActionsRelevantComponent {
       this.snackBar
         .open('Datos guardados correctamente!', '', {
           duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
           panelClass: ['snackbar-verde'],
         })
         .afterDismissed()
@@ -433,8 +433,8 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('Datos eliminados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
@@ -459,8 +459,8 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('No hemos podido eliminar la evolución!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-rojo'],
               })
               .afterDismissed()

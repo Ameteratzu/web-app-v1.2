@@ -249,8 +249,8 @@ export class FireCreateEdit implements OnInit {
             this.snackBar
               .open('Datos modificados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
@@ -284,8 +284,8 @@ export class FireCreateEdit implements OnInit {
             this.snackBar
               .open('Datos creados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()

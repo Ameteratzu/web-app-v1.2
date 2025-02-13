@@ -187,8 +187,8 @@ export class FireOtherInformationComponent implements OnInit {
 
       this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
         duration: 3000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
         panelClass: ['snackbar-rojo'],
       });
       this.isSaving.set(false);
@@ -235,8 +235,8 @@ export class FireOtherInformationComponent implements OnInit {
         this.snackBar
           .open('Datos guardados correctamente!', '', {
             duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
             panelClass: ['snackbar-verde'],
           })
           .afterDismissed()
@@ -309,8 +309,8 @@ export class FireOtherInformationComponent implements OnInit {
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
             })
             .afterDismissed()

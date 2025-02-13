@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, Renderer2, signal, ViewChild } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -58,6 +58,7 @@ import { FireActionsRelevantComponent } from '../../fire-actions-relevant/fire-a
 import { ImpactService } from '../../../services/impact.service';
 import { ImpactEvolutionService } from '../../../services/impact-evolution.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FireCreateEdit } from '../components/fire-create-edit-form/fire-create-edit-form.component';
 
 @Component({
   selector: 'app-fire-edit',
@@ -127,6 +128,57 @@ export class FireEditComponent implements OnInit {
   public fire_id = Number(this.route.snapshot.paramMap.get('id'));
 
   async ngOnInit() {
+    /*
+    this.menuItemActiveService.set.emit('/fire');
+    this.formData = new FormGroup({
+      id: new FormControl(),
+      denomination: new FormControl({ value: '', disabled: true }),
+      territory: new FormControl(),
+      province: new FormControl(),
+      municipality: new FormControl(),
+      startDate: new FormControl({ value: '', disabled: true }),
+      event: new FormControl(),
+      generalNote: new FormControl({ value: '', disabled: true }),
+      idEstado: new FormControl(),
+      ubicacion: new FormControl({ value: '', disabled: true }),
+      suceso: new FormControl({ value: '', disabled: true }),
+      estado: new FormControl({ value: '', disabled: true }),
+    });
+
+    this.dataSource.data = [];
+
+    const fire = await this.fireService.getById(this.fire_id);
+
+    this.fire = fire;
+
+    const municipalities = await this.municipalityService.get(this.fire.idProvincia);
+    this.municipalities.set(municipalities);
+
+    await this.cargarRegistros();
+
+    this.formData.patchValue({
+      id: this.fire.id,
+      territory: this.fire.idTerritorio,
+      denomination: this.fire.denominacion,
+      province: this.fire.idProvincia,
+      municipality: this.fire.municipio,
+      startDate: moment(this.fire.fechaInicio).format('DD/MM/YYYY'),
+      event: this.fire.idClaseSuceso,
+      generalNote: this.fire.notaGeneral,
+      idEstado: this.fire.idEstadoSuceso,
+      ubicacion: this.fire.ubicacion,
+      suceso: this.fire.claseSuceso?.descripcion,
+      estado: this.fire.estadoSuceso?.descripcion,
+    });
+    */
+
+    // PCD
+    await this.cargarIncendio();
+    // FIN PCD
+  }
+
+  // PCD
+  async cargarIncendio() {
     this.menuItemActiveService.set.emit('/fire');
     this.formData = new FormGroup({
       id: new FormControl(),
@@ -169,6 +221,7 @@ export class FireEditComponent implements OnInit {
       estado: this.fire.estadoSuceso?.descripcion,
     });
   }
+  // FIN PCD
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -254,6 +307,25 @@ export class FireEditComponent implements OnInit {
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
   }
+
+  // PCD
+  goModalEditFire() {
+    const dialogRef = this.matDialog.open(FireCreateEdit, {
+      width: '75vw',
+      maxWidth: 'none',
+      data: {
+        title: 'Modificar - Incendio.',
+        fire: this.fire,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result?.refresh) {
+        await this.cargarIncendio();
+      }
+    });
+  }
+  // FIN PCD
 
   goModalRelatedEvent(fireDetail?: FireDetail) {
     const dialogRef = this.matDialog.open(FireRelatedEventComponent, {
@@ -394,6 +466,10 @@ export class FireEditComponent implements OnInit {
 
   goModalEdit(fireDetail: FireDetail) {
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
+      // PCD
+      Incendio: this.goModalDocumentation.bind(this),
+      // FIN PCD
+
       Documentación: this.goModalDocumentation.bind(this),
       'Otra Información': this.goModalOtherInformation.bind(this),
       'Dirección y coordinación': this.goModalCoordination.bind(this),
@@ -470,8 +546,8 @@ export class FireEditComponent implements OnInit {
             this.snackBar
               .open('Datos eliminados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
@@ -1722,6 +1798,18 @@ export class FireEditComponent implements OnInit {
   toggleVistaTabla() {
     const tablaHistorico = document.getElementById('tablaHistorico');
     tablaHistorico?.classList.toggle('vista-general');
+  }
+
+  async refrescarDatos() {
+    this.spinner.show();
+
+    await this.delay(1000);
+    await this.cargarIncendio();
+    this.spinner.hide();
+  }
+
+  delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
   // FIN PCD
 }

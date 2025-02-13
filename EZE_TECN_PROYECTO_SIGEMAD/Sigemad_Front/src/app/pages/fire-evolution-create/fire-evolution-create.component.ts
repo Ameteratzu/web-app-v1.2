@@ -178,8 +178,8 @@ export class FireCreateComponent implements OnInit {
     this.snackBar
       .open('Registro guardado correctamente!', '', {
         duration: 3000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
         panelClass: ['snackbar-verde'],
       })
       .afterDismissed()
@@ -343,8 +343,8 @@ export class FireCreateComponent implements OnInit {
             this.snackBar
               .open('Registro eliminado correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
