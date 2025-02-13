@@ -148,14 +148,14 @@ export class ActivationPlanComponent implements OnInit {
     });
 
     this.dataSource.data = [];
-    if (this.editData) {  
+    if (this.editData) {
       if (this.planesService.dataPlanes().length === 0) {
         if (this.planesService.dataPlanes().length === 0) {
           const nuevosPlanes = this.editData.activacionPlanEmergencias.map((plan: any) => ({
             idActuacionRelevante: this.editData.id,
             idTipoPlan: {
               id: plan.tipoPlan?.id ?? 0,
-              descripcion: plan.tipoPlan.descipcion ?? ''
+              descripcion: plan.tipoPlan.descipcion ?? '',
             },
             id: plan.id,
             nombrePlan: plan.planEmergenciaPersonalizado ?? '',
@@ -164,13 +164,15 @@ export class ActivationPlanComponent implements OnInit {
             fechaFin: plan.fechaFin,
             autoridad: plan.autoridad,
             observaciones: plan.observaciones,
-            file: plan.archivo ? {
-              name: plan.archivo.nombreOriginal,
-              id: plan.archivo.id,
-            } : null,
-            archivoSubido: plan.archivo?.id ?? false
+            file: plan.archivo
+              ? {
+                  name: plan.archivo.nombreOriginal,
+                  id: plan.archivo.id,
+                }
+              : null,
+            archivoSubido: plan.archivo?.id ?? false,
           }));
-        
+
           this.planesService.dataPlanes.update((planes) => [...planes, ...nuevosPlanes]);
         }
       }
@@ -186,7 +188,7 @@ export class ActivationPlanComponent implements OnInit {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
         this.planesService.dataPlanes.set([data, ...this.planesService.dataPlanes()]);
-        console.log("🚀 ~ onSubmit ~ this.planesService.dataPlanes:", this.planesService.dataPlanes())
+        console.log('🚀 ~ onSubmit ~ this.planesService.dataPlanes:', this.planesService.dataPlanes());
       } else {
         this.editarItem(this.isCreate());
       }
@@ -195,7 +197,7 @@ export class ActivationPlanComponent implements OnInit {
       });
       this.formData.reset();
     } else {
-      console.log("🚀 ~ ActivationPlanComponent ~ onSubmit ~ else:", "else")
+      console.log('🚀 ~ ActivationPlanComponent ~ onSubmit ~ else:', 'else');
       this.formData.markAllAsTouched();
     }
   }
@@ -214,12 +216,12 @@ export class ActivationPlanComponent implements OnInit {
     this.spinner.show();
     const tipo_id = event?.value?.id ?? event.id;
     this.mostrarCamposAdicionales.set(tipo_id !== 6);
-  
+
     if (tipo_id !== 6) {
       const planes = await this.masterData.getTypesPlansByPlan(this.fire.provincia.idCcaa, tipo_id);
       this.formData.patchValue({
         nombrePlan: planes[0]?.descripcion ?? '',
-        nombrePlanPersonalizado: ''
+        nombrePlanPersonalizado: '',
       });
     } else {
       this.formData.patchValue({ nombrePlan: '' });
@@ -227,31 +229,25 @@ export class ActivationPlanComponent implements OnInit {
     this.spinner.hide();
   }
 
-   getTipo(value: any) {
-
-      var tipo: any;
-      if (_isNumberValue(value)) {
-        tipo = this.tiposPlanes().find((tipo) => tipo.id === value) || null;
-      } else {
-        tipo = this.tiposPlanes().find((tipo) => tipo.id === value.id) || null;
-      }
-      return tipo.descripcion;
+  getTipo(value: any) {
+    var tipo: any;
+    if (_isNumberValue(value)) {
+      tipo = this.tiposPlanes().find((tipo) => tipo.id === value) || null;
+    } else {
+      tipo = this.tiposPlanes().find((tipo) => tipo.id === value.id) || null;
     }
+    return tipo.descripcion;
+  }
 
-    delete() {
-      this.save.emit({ save: false, delete: true, close: false, update: false });
-    }
+  delete() {
+    this.save.emit({ save: false, delete: true, close: false, update: false });
+  }
 
   async seleccionarItem(index: number) {
     this.isCreate.set(index);
     const data = this.planesService.dataPlanes()[index];
 
-      var ob = this.tiposPlanes().find((tipo) => 
-        typeof data.idTipoPlan === 'number' 
-          ? tipo.id === data.idTipoPlan 
-          : tipo.id === data.idTipoPlan.id
-      );
-
+    var ob = this.tiposPlanes().find((tipo) => (typeof data.idTipoPlan === 'number' ? tipo.id === data.idTipoPlan : tipo.id === data.idTipoPlan.id));
 
     this.formData.get('idTipoPlan')?.setValue(ob);
     this.formData.get('nombrePlan')?.setValue(data.nombrePlan);
@@ -260,13 +256,11 @@ export class ActivationPlanComponent implements OnInit {
     this.formData.get('fechaFin')?.setValue(data.fechaFin);
     this.formData.get('autoridad')?.setValue(data.autoridad);
     this.formData.get('observaciones')?.setValue(data.observaciones);
-
-
   }
 
   editarItem(index: number) {
     const dataEditada = this.formData.value;
-    console.log("🚀 ~ editarItem ~ dataEditada:", dataEditada)
+    console.log('🚀 ~ editarItem ~ dataEditada:', dataEditada);
     this.planesService.dataPlanes.update((data) => {
       data[index] = { ...data[index], ...dataEditada };
       return [...data];
@@ -343,8 +337,8 @@ export class ActivationPlanComponent implements OnInit {
   showToast({ title, txt = 'Cerrar' }: { title: string; txt?: string }) {
     this.toast.open(title, txt, {
       duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
     });
   }
 
@@ -353,7 +347,7 @@ export class ActivationPlanComponent implements OnInit {
   }
 
   async onFileNameClick(data: any) {
-    console.log("🚀 ~ ActivationPlanComponent ~ onFileNameClick ~ data:", data)
+    console.log('🚀 ~ ActivationPlanComponent ~ onFileNameClick ~ data:', data);
     try {
       const blob = await this.fireDocumentationService.getFile(data.id);
       const url = window.URL.createObjectURL(blob);
@@ -375,10 +369,10 @@ export class ActivationPlanComponent implements OnInit {
   }
 
   getFormatdate(date: any) {
-      if (date) {
-        return moment(date).format('DD/MM/YYYY');
-      } else {
-        return 'Sin fecha selecionada.';
-      }
+    if (date) {
+      return moment(date).format('DD/MM/YYYY');
+    } else {
+      return 'Sin fecha selecionada.';
     }
+  }
 }

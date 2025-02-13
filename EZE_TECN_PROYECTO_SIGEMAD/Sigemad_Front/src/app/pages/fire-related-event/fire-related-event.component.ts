@@ -181,8 +181,8 @@ export class FireRelatedEventComponent implements OnInit {
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
             })
             .afterDismissed()

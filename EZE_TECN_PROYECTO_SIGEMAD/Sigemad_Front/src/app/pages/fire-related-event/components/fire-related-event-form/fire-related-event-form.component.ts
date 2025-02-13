@@ -352,8 +352,8 @@ export class FireRelatedEventForm implements OnInit {
       this.snackBar
         .open('Debe introducir al menos un suceso!', '', {
           duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
           panelClass: ['snackbar-rojo'],
         })
         .afterDismissed()
@@ -393,8 +393,8 @@ export class FireRelatedEventForm implements OnInit {
         this.snackBar
           .open('Registro guardado correctamente!', '', {
             duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
             panelClass: ['snackbar-verde'],
           })
           .afterDismissed()
