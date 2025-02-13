@@ -21,6 +21,7 @@ export class FireComponent implements OnInit {
 
   public isLoading = true;
   public refreshFilterForm = true;
+  public childActivated = false;
 
   public fires: ApiResponse<Fire[]> = {
     count: 0,
