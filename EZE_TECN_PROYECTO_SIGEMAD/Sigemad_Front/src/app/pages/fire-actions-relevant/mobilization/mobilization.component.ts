@@ -124,7 +124,6 @@ export class MobilizationComponent {
   public movilizacionSeleccionada?: Movilizacion;
 
   async ngOnInit() {
-    console.log('🚀 ~ MobilizationComponent ~ sendDataToEndpoint ~ this.pasoSolicitud:', this.pasoSolicitud);
     this.tiposGestion.set(this.dataMaestros.tiposGestion);
 
     this.formData = this.fb.group({
@@ -184,9 +183,112 @@ export class MobilizationComponent {
 
     if (this.editData) {
       if (this.movilizacionService.dataMovilizacion().length === 0) {
-        this.movilizacionService.dataMovilizacion.set(this.editData.notificacionesEmergencias);
+        const inputMobilizaciones = this.editData.movilizacionMedios;
+        const mappedMobilizaciones = {
+          IdActuacionRelevante: this.editData.id,
+          IdSuceso: this.editData.idSuceso,
+          Movilizaciones: inputMobilizaciones.map((movilizacion: any) => ({
+            Id: movilizacion.id,
+            Solicitante: movilizacion.solicitante,
+            Pasos: movilizacion.pasos.reduce((acc: any[], p: any) => {
+              // Mapeo para Paso 1: Solicitud
+              if (p.pasoMovilizacion && p.pasoMovilizacion.id === 1 && p.solicitudMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 1,
+                  IdProcedenciaMedio: p.solicitudMedio.procedenciaMedio?.id || 0,
+                  AutoridadSolicitante: p.solicitudMedio.autoridadSolicitante || '',
+                  FechaHoraSolicitud: new Date(p.solicitudMedio.fechaHoraSolicitud).toISOString(),
+                  Descripcion: p.solicitudMedio.descripcion || '',
+                  Observaciones: p.solicitudMedio.observaciones || '',
+                });
+              }
+              // Mapeo para Paso 2: Tramitación
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 2 && p.tramitacionMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 2,
+                  IdDestinoMedio: p.tramitacionMedio.destinoMedio?.id || 0,
+                  TitularMedio: p.tramitacionMedio.titularMedio || '',
+                  FechaHoraTramitacion: new Date(p.tramitacionMedio.fechaHoraTramitacion).toISOString(),
+                  PublicadoCECIS: p.tramitacionMedio.publicadoCECIS ?? false,
+                  Descripcion: p.tramitacionMedio.descripcion || '',
+                  Observaciones: p.tramitacionMedio.observaciones || '',
+                });
+              }
+              // Mapeo para Paso 3: Ofrecimiento
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 3 && p.ofrecimientoMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 3,
+                  TitularMedio: p.ofrecimientoMedio.titularMedio || '',
+                  FechaHoraOfrecimiento: new Date(p.ofrecimientoMedio.fechaHoraOfrecimiento).toISOString(),
+                  FechaHoraDisponibilidad: p.ofrecimientoMedio.fechaHoraDisponibilidad
+                    ? new Date(p.ofrecimientoMedio.fechaHoraDisponibilidad).toISOString()
+                    : null,
+                  GestionCECOD: p.ofrecimientoMedio.gestionCECOD ?? false,
+                  Descripcion: p.ofrecimientoMedio.descripcion || '',
+                  Observaciones: p.ofrecimientoMedio.observaciones || '',
+                });
+              }
+              // Mapeo para Paso 5: Aportación
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 5 && p.aportacionMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 5,
+                  IdCapacidad: p.aportacionMedio.capacidad?.id || 0,
+                  MedioNoCatalogado: p.aportacionMedio.medioNoCatalogado || '',
+                  IdTipoAdministracion: p.aportacionMedio.idTipoAdministracion || 0,
+                  TitularMedio: p.aportacionMedio.titularMedio || '',
+                  FechaHoraAportacion: new Date(p.aportacionMedio.fechaHoraAportacion).toISOString(),
+                  Descripcion: p.aportacionMedio.descripcion || '',
+                  Observaciones: p.aportacionMedio.observaciones || '',
+                });
+              }
+              // Paso 6: Despliegue
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 6 && p.despliegueMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 6,
+                  IdCapacidad: p.despliegueMedio.capacidad?.id || 0,
+                  MedioNoCatalogado: p.despliegueMedio.medioNoCatalogado || '',
+                  FechaHoraDespliegue: new Date(p.despliegueMedio.fechaHoraDespliegue).toISOString(),
+                  FechaHoraInicioIntervencion: new Date(p.despliegueMedio.fechaHoraInicioIntervencion).toISOString(),
+                  Observaciones: p.despliegueMedio.observaciones || '',
+                });
+              }
+              // Paso 7: Intervención (Fin de intervención)
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 7 && p.finIntervencionMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 7,
+                  IdCapacidad: p.finIntervencionMedio.capacidad?.id || 0,
+                  MedioNoCatalogado: p.finIntervencionMedio.medioNoCatalogado || '',
+                  FechaHoraInicioIntervencion: new Date(p.finIntervencionMedio.fechaHoraInicioIntervencion).toISOString(),
+                  Observaciones: p.finIntervencionMedio.observaciones || '',
+                });
+              }
+              // Paso 8: Llegada a Base
+              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 8 && p.llegadaBaseMedio) {
+                acc.push({
+                  Id: p.id,
+                  TipoPaso: 8,
+                  IdCapacidad: p.llegadaBaseMedio.capacidad?.id || 0,
+                  MedioNoCatalogado: p.llegadaBaseMedio.medioNoCatalogado || '',
+                  FechaHoraLlegada: new Date(p.llegadaBaseMedio.fechaHoraLlegada).toISOString(),
+                  Observaciones: p.llegadaBaseMedio.observaciones || '',
+                });
+              }
+              return acc;
+            }, []),
+          })),
+        };
+
+        this.movilizacionService.dataMovilizacion.set([mappedMobilizaciones]);
+        console.log("🚀 ~ MobilizationComponent ~ ngOnInit ~ this.movilizacionService.dataMovilizacion:", this.movilizacionService.dataMovilizacion())
+    
       }
-    }
+       }
     this.spinner.hide();
   }
 
@@ -199,8 +301,9 @@ export class MobilizationComponent {
 
     const actuaciones = this.getOrCreateActuacion();
     const movilizaciones = actuaciones[0].Movilizaciones;
-
+    console.log("🚀 ~ MobilizationComponent ~ onSubmit ~ pasoActual:", pasoActual)
     switch (pasoActual) {
+      
       case 1:
         if (!this.procesarPaso1()) return;
         this.agregarNuevaMovilizacion(movilizaciones, this.pasoSolicitud);
@@ -259,12 +362,13 @@ export class MobilizationComponent {
     }
 
     this.onReset(formDirective);
-
+    console.log("🚀 ~ MobilizationComponent ~ onSubmit ~ actuacionRelevante: ActuacionRelevante.IdActuacionRelevante:", this.editData)
     const actuacionRelevante: ActuacionRelevante = {
-      IdActuacionRelevante: 0,
+      IdActuacionRelevante: this.editData?.id ?? 0,
       IdSuceso: this.data.idIncendio,
       Movilizaciones: movilizaciones,
     };
+    
     this.movilizacionService.dataMovilizacion.set([actuacionRelevante]);
     console.log('Datos actualizados:', this.movilizacionService.dataMovilizacion());
   }
@@ -274,7 +378,7 @@ export class MobilizationComponent {
     if (!actuaciones.length) {
       actuaciones = [
         {
-          IdActuacionRelevante: 0,
+          IdActuacionRelevante: this.editData?.id ?? 0,
           IdSuceso: this.data.idIncendio,
           Movilizaciones: [],
         },
@@ -285,7 +389,7 @@ export class MobilizationComponent {
 
   private agregarNuevaMovilizacion(movilizaciones: Movilizacion[], paso: PasoSolicitud): void {
     const nuevaMovilizacion: Movilizacion = {
-      Id: movilizaciones.length,
+      Id: 0,
       Solicitante: paso?.AutoridadSolicitante || 'Solicitud de movilización',
       Pasos: [paso],
     };
@@ -496,17 +600,15 @@ export class MobilizationComponent {
 
   cargarPaso(movilizacion: Movilizacion) {
     this.movilizacionSeleccionada = movilizacion;
-    const pasoActual = this.getMaxTipoPaso(this.movilizacionService.dataMovilizacion());
+    const pasoActual = this.getMaxTipoPaso(movilizacion);
     this.loadTipo(pasoActual);
   }
 
-  getMaxTipoPaso(data: ActuacionRelevante[]): number {
-    const allPasos = data.flatMap((actuacion) => (actuacion.Movilizaciones || []).flatMap((movilizacion) => movilizacion.Pasos || []));
-
-    if (allPasos.length === 0) {
+  getMaxTipoPaso(movilizacion: Movilizacion): number {
+    if (!movilizacion || !movilizacion.Pasos || movilizacion.Pasos.length === 0) {
       return 0;
     }
-    return allPasos.reduce((max, paso) => (paso.TipoPaso > max ? paso.TipoPaso : max), 0);
+    return movilizacion.Pasos.reduce((max, paso) => (paso.TipoPaso > max ? paso.TipoPaso : max), 0);
   }
 
   getAllMovilizaciones(): Movilizacion[] {
