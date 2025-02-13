@@ -91,7 +91,67 @@ export class MapCreateComponent {
   }
 
   configureMap(municipio: any, defaultPolygon: any, onlyView: any) {
-    // capas base
+
+    const baseLayers = this.getBaseLayers();
+
+    const layersGroupAdmin = this.getAdminLayers();
+
+    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon);
+
+    // Crear el popup
+    const container = document.getElementById('popup');
+    this.popup = new Overlay({
+      element: container!,
+      autoPan: true,
+      positioning: 'bottom-center',
+    });
+
+    this.view = new View({
+      center: fromLonLat(municipio.geoPosicion.coordinates),
+      zoom: 12,
+      projection: 'EPSG:3857',
+    })
+
+    // Crear el mapa
+    this.map = new Map({
+      controls: defaultControls({
+        zoom: true,
+        zoomOptions: {
+          zoomInTipLabel: 'Acercar',
+          zoomOutTipLabel: 'Alejar'
+        }
+      }).extend([
+        new FullScreen(({ tipLabel: 'Pantalla completa' })),
+      ]),
+      target: 'map',
+      layers: [baseLayers, layersGroupAdmin, layersGroupIncendio],
+      view: this.view,
+      overlays: [this.popup],
+    });
+
+    this.map.addControl(new LayerSwitcher({
+      mouseover: true,
+      show_progress: true,
+    }));
+
+    this.map.addControl(new ScaleLine());
+
+    if (!onlyView) {
+      this.addInteractions();
+    }
+
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+
+      this.coordinates = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+    });
+
+    this.infoPopup(layersGroupAdmin);
+  }
+
+  getBaseLayers() {
     const baseLayers = new LayerGroup({
       properties: { 'title': 'Capas base', openInLayerSwitcher: true },
       layers: [
@@ -151,24 +211,25 @@ export class MapCreateComponent {
       }
     }
     baseLayers.on('change:visible', preventGroupLayerToggle);
+    return baseLayers;
+  }
 
-    // capas wms administrativas
-    const wmsNucleosPoblacion = new TileWMS({
-      url: environment.urlGeoserver + 'wms?version=1.1.0',
-      params: {
-        'LAYERS': 'nucleos_poblacion',
-        'TILED': true,
-      },
-      serverType: 'geoserver',
-      transition: 0,
-    });
+  getAdminLayers() {
     const wmsLayersGroup = new LayerGroup({
       properties: { 'title': 'Límites administrativos', 'openInLayerSwitcher': true },
 
       layers: [
         new TileLayer({
-          source: wmsNucleosPoblacion,
-          properties: { 'title': 'Núcleos de población' }
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              'LAYERS': 'nucleos_poblacion',
+              'TILED': true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { 'id': 'nucleos_poblacion', 'title': 'Núcleos de población' }
         }),
         new TileLayer({
           source: new TileWMS({
@@ -184,8 +245,10 @@ export class MapCreateComponent {
         }),
       ]
     });
+    return wmsLayersGroup;
+  }
 
-    // capas de incendios
+  getFireLayers(municipio: any, defaultPolygon: any) {
     let defaultPolygonMercator;
 
     if (defaultPolygon) {
@@ -202,12 +265,6 @@ export class MapCreateComponent {
       },
       properties: { 'title': 'Área afectada' }
     });
-
-    this.view = new View({
-      center: fromLonLat(municipio.geoPosicion.coordinates),
-      zoom: 12,
-      projection: 'EPSG:3857',
-    })
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
 
@@ -240,65 +297,23 @@ export class MapCreateComponent {
       })
     );
 
-    const layersGroupIncendio = new LayerGroup({
+    return new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
       layers: [layerMunicipio, this.layerAreasAfectadas]
     });
+  }
 
-    // Crear el popup
-    const container = document.getElementById('popup');
-    this.popup = new Overlay({
-      element: container!,
-      autoPan: true,
-      positioning: 'bottom-center',
-    });
-
-    // Crear el mapa
-    this.map = new Map({
-      controls: defaultControls({
-        zoom: true,
-        zoomOptions: {
-          zoomInTipLabel: 'Acercar',
-          zoomOutTipLabel: 'Alejar'
-        }
-      }).extend([
-        new FullScreen(({ tipLabel: 'Pantalla completa' })),
-      ]),
-      target: 'map',
-      layers: [baseLayers, wmsLayersGroup],
-      view: this.view,
-      overlays: [this.popup],
-    });
-
-    this.map.addControl(new LayerSwitcher({
-      mouseover: true,
-      show_progress: true,
-    }));
-
-    this.map.addControl(new ScaleLine());
-
-
-    this.map.addLayer(layersGroupIncendio);
-
-    if (!onlyView) {
-      this.addInteractions();
-    }
-
-    this.map.on('pointermove', (event) => {
-      const coordinate = event.coordinate;
-      const [lon, lat] = toLonLat(coordinate);
-      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
-
-      this.coordinates = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
-    });
-
-    // Añadir evento click
+  infoPopup(layersGroupAdmin: LayerGroup) {
     this.map.on('singleclick', (evt) => {
       const coordinate = evt.coordinate;
 
       // Hacer la consulta WMS GetFeatureInfo
       const viewResolution = this.view.getResolution();
-      const url = wmsNucleosPoblacion.getFeatureInfoUrl(
+
+      const nucleosPoblacionLayer = layersGroupAdmin.getLayers().getArray()
+        .find(layer => layer.get('id') === 'nucleos_poblacion') as TileLayer;
+
+      const url = (nucleosPoblacionLayer?.getSource() as TileWMS)?.getFeatureInfoUrl(
         coordinate,
         viewResolution!,
         'EPSG:3857',
@@ -347,7 +362,7 @@ export class MapCreateComponent {
 
     let tgPoint = new Toggle({
       title: 'Dibujar punto',
-      html: '<img src="/assets/img/location-dot-solid.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">', 
+      html: '<img src="/assets/img/location-dot-solid.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       interaction: this.drawPoint
     });
 
@@ -371,7 +386,7 @@ export class MapCreateComponent {
 
     let tgPolygon = new Toggle({
       title: 'Dibujar polígono',
-      html: '<img src="/assets/img/draw-polygon.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">', 
+      html: '<img src="/assets/img/draw-polygon.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       interaction: this.drawPolygon
     });
 
@@ -397,14 +412,14 @@ export class MapCreateComponent {
     drawBar.addControl(tgPolygon);
 
     const tgSelect = new Toggle({
-      html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">', 
+      html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       title: "Seleccionar",
       interaction: new Select({ hitTolerance: 2 }),
     });
     drawBar.addControl(tgSelect);
 
     const tgDelete = new Toggle({
-      html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">', 
+      html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       title: "Borrar",
       onToggle: () => {
         if (this.select) {
