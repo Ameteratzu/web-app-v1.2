@@ -177,8 +177,8 @@ export class FireEditComponent implements OnInit {
   async cargarRegistros() {
     this.spinner.show();
     const details = await this.fireService.details(Number(this.fire_id));
-    this.dataSource.data = details;
-    //this.spinner.hide();
+    console.log('🚀 ~ FireEditComponent ~ cargarRegistros ~ details:', details);
+    this.dataSource.data = details.data;
 
     // PCD
     this.listadoEvoluciones = [];

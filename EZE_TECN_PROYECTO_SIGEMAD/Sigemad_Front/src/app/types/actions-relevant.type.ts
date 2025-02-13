@@ -77,5 +77,17 @@ export interface ActivacionSistemas {
 export interface GenericMaster {
   id: number;
   descripcion: string;
+  nombre: string;
+}
+
+export interface TipoCapacidad {
+  id: number;
+  nombre: string;
+}
+
+export interface Capacidad {
+  id: number;
+  nombre: string;
+  tipoCapacidad: TipoCapacidad;
 }
 

@@ -62,7 +62,8 @@ INSERT INTO TipoNotificacion (Id,Descripcion) VALUES
     (1, 'Activación plan estatal'),
     (2, 'Activación PLEGEM'),
 	(3, 'Declaración situación'),
-	(4, 'Desactivación plan estatal');
+	(4, 'Desactivación plan estatal'),
+	(5, 'Otros')
 
 
 -- =============================================

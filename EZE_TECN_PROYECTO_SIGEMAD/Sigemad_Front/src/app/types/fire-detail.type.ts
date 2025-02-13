@@ -7,3 +7,11 @@ export type FireDetail = {
   tipoRegistro: string;
   esUltimoRegistro: boolean;
 };
+
+export interface FireDetailResponse {
+  count: number;
+  page: number;
+  pageSize: number;
+  data: FireDetail[];
+  pageCount: number;
+}

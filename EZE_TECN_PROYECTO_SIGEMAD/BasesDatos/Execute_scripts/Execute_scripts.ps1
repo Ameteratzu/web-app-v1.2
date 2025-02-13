@@ -199,5 +199,9 @@ if ($dllExecutionResult) {
 Write-Host "Proceso completado con éxito."
 Add-Content -Path $logFile -Value "Proceso completado con éxito."
 
+# Resumen final
+Add-Content -Path $logFile -Value "$1`r`nResumen de ejecución:"
+Add-Content -Path $logFile -Value "Scripts en carpeta DLL: $($dllExecutionResult -eq $true ? 'Todos ejecutados correctamente' : 'Errores durante la ejecución')"
+Add-Content -Path $logFile -Value "Scripts en carpeta Datos: $($datosExecutionResult -eq $true ? 'Todos ejecutados correctamente' : 'Errores durante la ejecución')"
 
 Write-Host "Log de ejecución generado: $logFile"
