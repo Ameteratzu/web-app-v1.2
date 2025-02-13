@@ -19,15 +19,41 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         (incendio.Borrado != true)
         )
     {
+
         if (request.IdEstadoIncendio.HasValue)
         {
-            //AddInclude(i => i.Evoluciones);
 
-            //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
-            //AddCriteria(i => i.Evoluciones.Any(e => e.IdEstadoIncendio == request.IdEstadoIncendio.Value));
+            AddInclude(i => i.Suceso);
+            AddInclude(i => i.Suceso.Evoluciones);
+
+            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
 
 
+        if (request.IdSituacionEquivalente.HasValue)
+        {
+            AddCriteria(i => i.Suceso.Evoluciones
+              .OrderByDescending(e => e.FechaCreacion)
+              .Take(1)
+              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
+        }
+
+        AddInclude("Suceso.Evoluciones.Parametro.SituacionEquivalente");
+
+        if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
+        {
+            AddInclude(i => i.Suceso.TipoSuceso);
+        }
+        else
+        {
+            AddInclude(i => i.Territorio);
+            AddInclude(i => i.Municipio);
+            AddInclude(i => i.Provincia);
+            AddInclude(i => i.ClaseSuceso);
+            AddInclude(i => i.Suceso);
+        }
+
+        AddInclude(i => i.EstadoSuceso);
 
         if (request.IdMovimiento == MovimientoTipos.Registro && request.IdComparativoFecha.HasValue)
         {
@@ -138,6 +164,36 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
                     break;
                 default:
                     throw new ArgumentException("Operador de comparar fechas no válido");
+            }
+        }
+
+
+        // Aplicar la ordenación
+        if (!string.IsNullOrEmpty(request.Sort?.ToLower()))
+        {
+            switch (request.Sort)
+            {
+                case "fechainicioasc":
+                    AddOrderBy(i => i.FechaInicio);
+                    break;
+                case "fechaIniciodesc":
+                    AddOrderByDescending(i => i.FechaInicio);
+                    break;
+                case "denominacionasc":
+                    AddOrderBy(i => i.Denominacion);
+                    break;
+                case "denominaciondesc":
+                    AddOrderByDescending(i => i.Denominacion);
+                    break;
+                case "estadosucesoasc":
+                    AddOrderBy(i => i.IdEstadoSuceso);
+                    break;
+                case "estadosucesodesc":
+                    AddOrderByDescending(i => i.IdEstadoSuceso);
+                    break;
+                default:
+                    AddOrderBy(i => i.FechaInicio); // Orden por defecto
+                    break;
             }
         }
     }

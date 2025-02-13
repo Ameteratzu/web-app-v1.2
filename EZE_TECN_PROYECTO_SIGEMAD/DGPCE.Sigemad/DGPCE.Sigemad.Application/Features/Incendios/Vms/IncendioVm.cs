@@ -32,7 +32,11 @@ namespace DGPCE.Sigemad.Application.Features.Incendios.Vms
         public int? Huso { get; set; }
         public Geometry? GeoPosicion { get; set; }
 
-    
+        public String? Sop { get; set; }
+
+        public String? MaxSop { get; set; }
+
+
 
 
         public virtual Suceso Suceso { get; set; } = null!;
