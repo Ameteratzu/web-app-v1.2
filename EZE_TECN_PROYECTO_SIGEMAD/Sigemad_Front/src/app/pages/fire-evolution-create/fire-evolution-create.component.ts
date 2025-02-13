@@ -133,7 +133,6 @@ export class FireCreateComponent implements OnInit {
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
     if (this.evolutionSevice.dataRecords().length > 0 || this.idReturn) {
-     
       await this.processData();
     } else {
       if (!this.data?.fireDetail?.id) {
@@ -175,25 +174,24 @@ export class FireCreateComponent implements OnInit {
     }, 2000);
     */
 
-    // TEST
-    setTimeout(() => {
-      this.renderer.setStyle(toolbar, 'z-index', '5');
-      this.snackBar.open('Registro guardado correctamente!', '', {
-        duration: 3000, // Duración en milisegundos
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
+    // PCD
+    this.snackBar
+      .open('Registro guardado correctamente!', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
         panelClass: ['snackbar-verde'],
-      });
-
-      this.isDataReady = false;
-      this.evolutionSevice.getById(Number(this.idReturn)).then((dataCordinacion: any) => {
+      })
+      .afterDismissed()
+      .subscribe(async () => {
+        this.isDataReady = false;
+        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
         this.editData = dataCordinacion;
         this.isDataReady = true;
         this.spinner.hide();
       });
-    }, 2000);
 
-    // FIN TEST
+    // FIN PCD
   }
 
   async processData(): Promise<void> {
@@ -294,6 +292,7 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
 
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -302,15 +301,31 @@ export class FireCreateComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+      */
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
             await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));
             this.evolutionSevice.clearData();
+
+            /*
             setTimeout(() => {
               this.renderer.setStyle(toolbar, 'z-index', '5');
               this.spinner.hide();
             }, 2000);
+            */
 
             /*
             this.alertService
@@ -328,14 +343,14 @@ export class FireCreateComponent implements OnInit {
             this.snackBar
               .open('Registro eliminado correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
               .subscribe(() => {
-                // Acción que se ejecuta después de que el snackbar se cierra
-                this.closeModal(true); // Llamada a tu función para cerrar el modal
+                this.closeModal(true);
+                this.spinner.hide();
               });
 
             // FIN PCD

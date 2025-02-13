@@ -233,7 +233,7 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .update(data)
           .then((response) => {
-            this.spinner.hide();
+            //this.spinner.hide();
             /*
             this.alertService
               .showAlert({
@@ -250,13 +250,14 @@ export class FireCreateEdit implements OnInit {
             this.snackBar
               .open('Datos modificados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal({ refresh: true });
+                this.spinner.hide();
               });
             // FIN PCD
           })
@@ -267,7 +268,7 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .post(data)
           .then((response) => {
-            this.spinner.hide();
+            //this.spinner.hide();
             /*
             this.alertService
               .showAlert({
@@ -284,13 +285,14 @@ export class FireCreateEdit implements OnInit {
             this.snackBar
               .open('Datos creados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal({ refresh: true });
+                this.spinner.hide();
               });
             // FIN PCD
           })

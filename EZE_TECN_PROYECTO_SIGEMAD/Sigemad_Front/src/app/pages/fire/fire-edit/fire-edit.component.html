@@ -46,7 +46,22 @@
 
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <div>
-      <button (click)="deleteFire()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+      <!--<button (click)="deleteFire()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>-->
+
+      <!-- PCD-->
+      <a (click)="refrescarDatos()" style="cursor: pointer" matTooltip="Refrescar datos">
+        <img src="/assets/img/refresh.svg" alt="Refrescar" style="width: 30px; position: relative; top: 10px; margin-right: 5px" />
+      </a>
+      <button (click)="goModalEditFire()" mat-flat-button [style.background-color]="'var(--fire-color)'" style="margin-right: 5px">Editar</button>
+      <button
+        (click)="deleteFire()"
+        mat-flat-button
+        [style.background-color]="dataSource.data.length > 0 ? 'grey' : 'var(--fire-color)'"
+        [disabled]="dataSource.data.length > 0"
+      >
+        Eliminar
+      </button>
+      <!-- FIN PCD-->
     </div>
 
     <div fxLayout="row" fxLayoutGap="16px">

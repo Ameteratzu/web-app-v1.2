@@ -189,8 +189,8 @@ export class FireActionsRelevantComponent {
       this.snackBar
         .open('Datos guardados correctamente!', '', {
           duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
           panelClass: ['snackbar-verde'],
         })
         .afterDismissed()
@@ -403,6 +403,7 @@ export class FireActionsRelevantComponent {
     this.spinner.show();
 
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -411,15 +412,32 @@ export class FireActionsRelevantComponent {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+      */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
+
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
             await this.actionsRelevantSevice.deleteActions(Number(this.data?.fireDetail?.id));
             this.actionsRelevantSevice.clearData();
+            /*
             setTimeout(() => {
               this.renderer.setStyle(toolbar, 'z-index', '5');
               this.spinner.hide();
             }, 2000);
+            */
 
             /*
             this.alertService
@@ -436,13 +454,14 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('Datos eliminados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal(true);
+                this.spinner.hide();
               });
             // FIN PCD
           } catch (error) {
@@ -461,13 +480,14 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('No hemos podido eliminar la evolución!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-rojo'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal();
+                this.spinner.hide();
               });
             // FIN PCD
           }
