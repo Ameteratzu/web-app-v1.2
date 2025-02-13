@@ -6,7 +6,8 @@ CREATE TABLE dbo.SituacionOperativa (
 CREATE TABLE SituacionEquivalente (
 	Id int NOT NULL PRIMARY KEY IDENTITY(1,1),
 	Descripcion NVARCHAR(255) NOT NULL,
-    Obsoleto BIT NOT NULL
+    Obsoleto BIT NOT NULL,
+    Prioridad INT NOT NULL DEFAULT 0
 );
 
 

@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
             AddInclude(i => i.Registro);
             AddInclude(i => i.DatoPrincipal);
             AddInclude(i => i.Registro.ProcedenciaDestinos);
-        }
 
-    }
+        }
+}
 }
