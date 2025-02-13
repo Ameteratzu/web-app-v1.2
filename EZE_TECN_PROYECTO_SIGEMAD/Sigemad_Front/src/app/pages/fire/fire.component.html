@@ -1,4 +1,5 @@
-<router-outlet></router-outlet>
-<app-fire-filter-form [(isLoading)]="isLoading" [(refreshFilterForm)]="refreshFilterForm" [filtros]="filtros" [(fires)]="fires"></app-fire-filter-form>
-<app-fire-table [isLoading]="isLoading" [(refreshFilterForm)]="refreshFilterForm" [fires]="fires.data" *ngIf="this.fires?.data"></app-fire-table>
-
+<router-outlet (activate)="childActivated = true" (deactivate)="childActivated = false"></router-outlet>
+<div *ngIf="!childActivated">
+  <app-fire-filter-form [(isLoading)]="isLoading" [(refreshFilterForm)]="refreshFilterForm" [filtros]="filtros" [(fires)]="fires"></app-fire-filter-form>
+  <app-fire-table [isLoading]="isLoading" [(refreshFilterForm)]="refreshFilterForm" [fires]="fires.data" *ngIf="fires?.data"></app-fire-table>
+</div>
