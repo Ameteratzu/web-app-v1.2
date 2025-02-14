@@ -85,22 +85,12 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
                              .OrderByDescending(e => e.FechaCreacion)
                              .FirstOrDefault();
 
-                if (evolucionItem != null && evolucionItem.Parametro != null && evolucionItem.Parametro.IdSituacionEquivalente != null)
+                if (evolucionItem != null && evolucionItem.Parametro != null && !evolucionItem.Parametro.Borrado && evolucionItem.Parametro.IdSituacionEquivalente != null)
                 {
                     incencioVm.Sop = evolucionItem
                                          .Parametro
                                          .SituacionEquivalente
                                          .Descripcion;
-                }
-
-                if (request.IdSituacionEquivalente !=null)
-                {
-                    var evolucionSpec = new EvolucionSpecification(new EvolucionSpecificationParams
-                    {
-                        IdSuceso = item.IdSuceso
-                    });
-
-                    evoluciones = (List<Evolucion>)await _unitOfWork.Repository<Evolucion>().GetAllWithSpec(evolucionSpec);
                 }
 
                 maxSop = evoluciones
