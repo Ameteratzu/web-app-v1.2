@@ -4,7 +4,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 public class CreateOrUpdateDireccionCommand: IRequest<CreateOrUpdateDireccionResponse>
 {
-    public int? IdDireccionCoordinacionEmergencia { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
     public List<CreateOrUpdateDireccionDto> Direcciones { get; set; } = new();
 }

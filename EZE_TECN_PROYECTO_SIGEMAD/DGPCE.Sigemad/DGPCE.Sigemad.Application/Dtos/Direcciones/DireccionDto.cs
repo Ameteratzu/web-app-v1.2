@@ -9,4 +9,5 @@ public class DireccionDto
     public string AutoridadQueDirige { get; set; }
     public DateOnly FechaInicio { get; set; }
     public DateOnly? FechaFin { get; set; }
+    public bool EsEliminable { get; set; }
 }

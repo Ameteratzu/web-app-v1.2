@@ -197,12 +197,6 @@ GO
 DROP TABLE IF EXISTS Registro_ProcedenciaDestino
 GO
 
-DROP TABLE IF EXISTS Registro_ProcedenciaDestino
-GO
-
-DROP TABLE IF EXISTS Registro
-GO
-
 DROP TABLE IF EXISTS Datoprincipal
 GO
 
@@ -257,7 +251,7 @@ GO
 DROP TABLE IF EXISTS SituacionEquivalente
 GO
 
-DROP TABLE IF EXISTS TipoRegistro
+DROP TABLE IF EXISTS TipoRegistro_
 GO
 
 DROP TABLE IF EXISTS EstadoEvolucion
@@ -290,9 +284,6 @@ GO
 DROP TABLE IF EXISTS EstadoIncendio
 GO
 
-DROP TABLE IF EXISTS Suceso
-GO
-
 DROP TABLE IF EXISTS ClaseSuceso
 GO
 
@@ -303,6 +294,30 @@ DROP TABLE IF EXISTS EstadoSuceso
 GO
 
 DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS HistorialCambios
+GO
+
+DROP TABLE IF EXISTS DetalleRegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS RegistroApartado
+GO
+
+DROP TABLE IF EXISTS RegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS EstadoRegistro
+GO
+
+DROP TABLE IF EXISTS ApartadoRegistro
+GO
+
+DROP TABLE IF EXISTS TipoRegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS Suceso
 GO
 
 DROP TABLE IF EXISTS TipoSuceso

@@ -3,9 +3,13 @@
 namespace DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 public class DireccionCoordinacionEmergenciaWithDirecciones : BaseSpecification<DireccionCoordinacionEmergencia>
 {
-    public DireccionCoordinacionEmergenciaWithDirecciones(int id)
-        : base(d => d.Id == id && d.Borrado == false)
+    public DireccionCoordinacionEmergenciaWithDirecciones(DireccionCoordinacionEmergenciaParams @params)
+        : base(d =>
+        (!@params.Id.HasValue || d.Id == @params.Id) &&
+        (!@params.IdSuceso.HasValue || d.IdSuceso == @params.IdSuceso) &&
+         d.Borrado == false)
     {
         AddInclude(d => d.Direcciones);
+        AddInclude("Direcciones.TipoDireccionEmergencia");
     }
 }

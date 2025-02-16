@@ -1,0 +1,197 @@
+﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Specifications.RegistrosActualizaciones;
+using DGPCE.Sigemad.Domain.Common;
+using DGPCE.Sigemad.Domain.Enums;
+using DGPCE.Sigemad.Domain.Modelos;
+
+namespace DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
+public class RegistroActualizacionService : IRegistroActualizacionService
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+
+    public RegistroActualizacionService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper
+        )
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
+
+    public async Task<RegistroActualizacion> GetOrCreateRegistroActualizacion<T>(int? idRegistroActualizacion, int idSuceso, TipoRegistroActualizacionEnum tipoRegistro) where T : BaseDomainModel<int>
+    {
+        if (idRegistroActualizacion.HasValue && idRegistroActualizacion.Value > 0)
+        {
+            var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
+            {
+                Id = idRegistroActualizacion.Value,
+            });
+            var registroActualizacion = await _unitOfWork.Repository<RegistroActualizacion>().GetByIdWithSpec(spec);
+
+            if (registroActualizacion is null)
+                throw new NotFoundException(nameof(RegistroActualizacion), idRegistroActualizacion);
+            return registroActualizacion;
+        }
+
+        return new RegistroActualizacion
+        {
+            IdTipoRegistroActualizacion = (int)tipoRegistro,
+            IdSuceso = idSuceso,
+            TipoEntidad = typeof(T).Name
+        };
+    }
+
+    public async Task ReflectNewRegistrosInFuture<T>(
+        RegistroActualizacion registroActualizacion,
+        ApartadoRegistroEnum apartadoRegistro,
+        List<int> nuevasReferenciasIds)
+        where T : BaseDomainModel<int>
+    {
+        if (!nuevasReferenciasIds.Any()) return;
+
+        var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
+        {
+            IdMinimo = registroActualizacion.Id,
+            IdSuceso = registroActualizacion.IdSuceso,
+            IdTipoRegistroActualizacion = registroActualizacion.IdTipoRegistroActualizacion
+        });
+        var registrosPosteriores = await _unitOfWork.Repository<RegistroActualizacion>().GetAllWithSpec(spec);
+
+        foreach (var registroPosterior in registrosPosteriores)
+        {
+            bool seActualizoRegistroPosterior = false;
+            var detallesPrevios = registroPosterior.DetallesRegistro;
+
+            foreach (var idReferencia in nuevasReferenciasIds)
+            {
+                if (detallesPrevios.Any(d => d.IdReferencia == idReferencia)) continue;
+
+                var nuevoDetalle = new DetalleRegistroActualizacion
+                {
+                    IdRegistroActualizacion = registroPosterior.Id,
+                    IdApartadoRegistro = (int)apartadoRegistro,
+                    IdReferencia = idReferencia,
+                    IdEstadoRegistro = EstadoRegistroEnum.CreadoEnRegistroAnterior
+                };
+
+                registroPosterior.DetallesRegistro.Add(nuevoDetalle);
+                seActualizoRegistroPosterior = true;
+            }
+
+            if (seActualizoRegistroPosterior)
+                _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroPosterior);
+        }
+    }
+
+    public async Task SaveRegistroActualizacion<T, E, G>(
+        RegistroActualizacion registroActualizacion,
+        T entidad,
+        ApartadoRegistroEnum apartadoRegistro,
+        List<int> referenciasParaEliminar,
+        Dictionary<int, G> entidadesOriginales)
+        where T : BaseDomainModel<int>
+        where E : BaseDomainModel<int>
+        where G : class
+    {
+
+        registroActualizacion.IdReferencia = entidad.Id;
+        var nuevasReferenciasIds = new List<int>();
+
+        // Obtener lista
+        var propiedadLista = entidad.GetType().GetProperties().FirstOrDefault(p => p.PropertyType == typeof(List<E>));
+
+        if (propiedadLista != null)
+        {
+            var lista = propiedadLista.GetValue(entidad) as System.Collections.IEnumerable;
+            if (lista != null)
+            {
+                foreach (E item in lista)
+                {
+                    var estado = GetEstadoRegistro<E, G>(item, registroActualizacion.DetallesRegistro, entidadesOriginales, referenciasParaEliminar);
+
+                    var detalleExistente = registroActualizacion.DetallesRegistro.FirstOrDefault(d => d.IdReferencia == item.Id);
+
+                    if (detalleExistente != null)
+                    {
+                        if (estado == EstadoRegistroEnum.Permanente) continue;
+                        detalleExistente.IdEstadoRegistro = estado;
+                    }
+                    else
+                    {
+                        registroActualizacion.DetallesRegistro.Add(new DetalleRegistroActualizacion
+                        {
+                            IdApartadoRegistro = (int)apartadoRegistro,
+                            IdReferencia = item.Id,
+                            IdEstadoRegistro = estado
+                        });
+
+                        if (estado == EstadoRegistroEnum.Creado)
+                        {
+                            nuevasReferenciasIds.Add(item.Id);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (registroActualizacion.Id > 0)
+        {
+            await ReflectNewRegistrosInFuture<T>(registroActualizacion, apartadoRegistro, nuevasReferenciasIds);
+            _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroActualizacion);
+        }
+        else
+        {
+            _unitOfWork.Repository<RegistroActualizacion>().AddEntity(registroActualizacion);
+        }
+
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar registros de actualizaciones");
+    }
+
+
+    private EstadoRegistroEnum GetEstadoRegistro<E, G>(
+    E entidad,
+    IEnumerable<DetalleRegistroActualizacion> detallesPrevios,
+    Dictionary<int, G> entidadesOriginales,
+    List<int> referenciasParaEliminar)
+        where E : BaseDomainModel<int>
+        where G : class
+    {
+        if (referenciasParaEliminar.Contains(entidad.Id))
+        {
+            return EstadoRegistroEnum.Eliminado;
+        }
+
+        if (!entidadesOriginales.ContainsKey(entidad.Id))
+        {
+            return EstadoRegistroEnum.Creado;
+        }
+
+        var detallePrevio = detallesPrevios.FirstOrDefault(d => d.IdReferencia == entidad.Id);
+
+        var copiaOriginal = entidadesOriginales[entidad.Id];
+        var copiaNueva = _mapper.Map<G>(entidad);
+
+        if (detallePrevio != null)
+        {
+            if (!copiaOriginal.Equals(copiaNueva))
+            {
+                if (detallePrevio.IdEstadoRegistro == EstadoRegistroEnum.Creado)
+                    return EstadoRegistroEnum.CreadoYModificado;
+                return EstadoRegistroEnum.Modificado;
+            }
+            return EstadoRegistroEnum.Permanente;
+        }
+
+        if (copiaOriginal.Equals(copiaNueva))
+        {
+            return EstadoRegistroEnum.Permanente;
+        }
+
+        return EstadoRegistroEnum.Modificado;
+    }
+
+}

@@ -8,7 +8,6 @@ public class Suceso: BaseDomainModel<int>
     {
         Incendios = new();
         Evoluciones = new();
-        DireccionCoordinacionEmergencias = new();
         Documentaciones = new();
         OtraInformaciones = new();
         SucesoRelacionados = new();
@@ -24,7 +23,7 @@ public class Suceso: BaseDomainModel<int>
 
     // Datos del suceso
     public virtual List<Evolucion> Evoluciones { get; set; }
-    public virtual List<DireccionCoordinacionEmergencia> DireccionCoordinacionEmergencias { get; set; }
+    public virtual DireccionCoordinacionEmergencia DireccionCoordinacionEmergencia { get; set; }
     public virtual List<Documentacion> Documentaciones { get; set; }
     public virtual List<OtraInformacion> OtraInformaciones { get; set; }
     public virtual List<SucesoRelacionado> SucesoRelacionados { get; set; }

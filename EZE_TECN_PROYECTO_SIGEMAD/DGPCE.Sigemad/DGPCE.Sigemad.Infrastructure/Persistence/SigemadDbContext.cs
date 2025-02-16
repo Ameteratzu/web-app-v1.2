@@ -84,6 +84,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
             modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
+
         }
 
 
@@ -172,7 +173,13 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<NotificacionEmergencia> NotificacionesEmergencias { get; set; }
 
         public DbSet<TipoNotificacion> TiposNotificaciones { get; set; }
-        
+        public DbSet<TipoRegistroActualizacion> TipoRegistroActualizaciones { get; set; }
+        public DbSet<ApartadoRegistro> ApartadosRegistro { get; set; }
+        public DbSet<RegistroActualizacion> RegistrosActualizacion { get; set; }
+        public DbSet<RegistroApartado> RegistrosApartados { get; set; }
+        public DbSet<DetalleRegistroActualizacion> DetallesRegistroActualizacion { get; set; }
+        public DbSet<HistorialCambios> HistorialCambios { get; set; }
+
 
     }
 }

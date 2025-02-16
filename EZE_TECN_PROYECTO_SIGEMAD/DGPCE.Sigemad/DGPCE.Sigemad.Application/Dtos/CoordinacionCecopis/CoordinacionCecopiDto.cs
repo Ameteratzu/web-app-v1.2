@@ -13,4 +13,5 @@ public class CoordinacionCecopiDto
     public string Lugar { get; set; }
     public string? Observaciones { get; set; }
     public Geometry? GeoPosicion { get; set; }
+    public bool EsEliminable { get; set; }
 }

@@ -159,10 +159,12 @@ public class MappingProfile : Profile
         CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaVm>();
         CreateMap<DireccionCoordinacionEmergencia, DireccionCoordinacionEmergenciaDto>();
         CreateMap<CreateOrUpdateDireccionDto, Direccion>();
+        CreateMap<CreateOrUpdateDireccionDto, DireccionDto>();
         CreateMap<CreateOrUpdateCoordinacionCecopiDto, CoordinacionCecopi>();
         CreateMap<CreateOrUpdateCoordinacionPmaDto, CoordinacionPMA>();
         CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
         CreateMap<Direccion, DireccionDto>();
+        CreateMap<Direccion, CreateOrUpdateDireccionDto>();
         CreateMap<CoordinacionCecopi, CoordinacionCecopiDto>();
         CreateMap<CoordinacionPMA, CoordinacionPMADto>();
 
