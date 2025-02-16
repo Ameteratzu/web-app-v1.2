@@ -23,13 +23,13 @@
     <!-- SOP Column -->
     <ng-container matColumnDef="ngp">
       <th mat-header-cell *matHeaderCellDef>SOP</th>
-      <td mat-cell *matCellDef="let fire">-</td>
+      <td mat-cell *matCellDef="let fire">{{ fire.sop }}</td>
     </ng-container>
 
     <!-- Max NGP Column -->
     <ng-container matColumnDef="maxNgp">
       <th mat-header-cell *matHeaderCellDef>Max. SOP</th>
-      <td mat-cell *matCellDef="let fire">-</td>
+      <td mat-cell *matCellDef="let fire">{{ fire.maxSop }}</td>
     </ng-container>
 
     <!-- Ubicación Column -->
@@ -52,7 +52,7 @@
           <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de incendio" />
         </a>
         <a (click)="goToEdit(fire)">
-          <img src="/assets/img/complement.svg" alt="Editar" appTooltip="Datos de evolución y gestión" />
+          <img src="/assets/img/complement.svg" alt="Editar" appTooltip="Panel de seguimiento" />
         </a>
       </td>
     </ng-container>

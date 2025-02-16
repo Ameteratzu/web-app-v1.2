@@ -1,10 +1,11 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
+﻿using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
+using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Specifications.Sucesos;
 public class SucesoWithAllRegistrosSpecification : BaseSpecification<Suceso>
 {
-    public SucesoWithAllRegistrosSpecification(int idSuceso)
-        : base(s => s.Id == idSuceso && s.Borrado == false)
+    public SucesoWithAllRegistrosSpecification(GetRegistrosPorSucesoQuery request)
+        : base(s => s.Id == request.IdSuceso && s.Borrado == false)
     {
         AddInclude(i => i.Evoluciones.Where(dir => !dir.Borrado));
         AddInclude("Evoluciones.Registro");
@@ -34,5 +35,6 @@ public class SucesoWithAllRegistrosSpecification : BaseSpecification<Suceso>
         AddInclude("ActuacionesRelevantes.ActivacionSistemas");
         AddInclude("ActuacionesRelevantes.ConvocatoriasCECOD");
         AddInclude("ActuacionesRelevantes.NotificacionesEmergencias");
+
     }
 }

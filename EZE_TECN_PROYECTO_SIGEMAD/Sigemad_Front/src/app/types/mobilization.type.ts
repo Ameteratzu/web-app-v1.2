@@ -1,13 +1,20 @@
+export interface ActuacionRelevante {
+  IdActuacionRelevante: number;
+  IdSuceso: number;
+  Movilizaciones: Movilizacion[];
+}
+
 export interface Movilizacion {
   Id: number;
   Solicitante: string;
   Pasos: Paso[];
 }
 
-export type Paso = 
+export type Paso =
   | PasoSolicitud
   | PasoTramitacion
   | PasoOfrecimiento
+  | PasoCancelacion
   | PasoAportacion
   | PasoDespliegue
   | PasoIntervencion
@@ -22,8 +29,8 @@ export interface PasoBase {
 
 /** Paso 1 - Solicitud */
 export interface PasoSolicitud extends PasoBase {
-  TipoPaso: 1;
-  IdProcedenciaMedio: GenericMaster;
+  TipoPaso: number;
+  IdProcedenciaMedio: number;
   AutoridadSolicitante: string;
   FechaHoraSolicitud: string;
 }
@@ -40,6 +47,15 @@ export interface PasoTramitacion extends PasoBase {
 /** Paso 3 - Ofrecimiento */
 export interface PasoOfrecimiento extends PasoBase {
   TipoPaso: 3;
+  TitularMedio: string;
+  FechaHoraOfrecimiento: string;
+  FechaHoraDisponibilidad: string;
+  GestionCECOD?: boolean;
+}
+
+/** Paso 3 - Cancelación */
+export interface PasoCancelacion extends PasoBase {
+  TipoPaso: 4;
   TitularMedio: string;
   FechaHoraOfrecimiento: string;
   FechaHoraDisponibilidad: string;
@@ -79,9 +95,4 @@ export interface PasoLlegadaBase extends PasoBase {
   IdCapacidad: number;
   MedioNoCatalogado: string;
   FechaHoraLlegada: string;
-}
-
-export interface GenericMaster {
-  id: number;
-  descripcion: string;
 }

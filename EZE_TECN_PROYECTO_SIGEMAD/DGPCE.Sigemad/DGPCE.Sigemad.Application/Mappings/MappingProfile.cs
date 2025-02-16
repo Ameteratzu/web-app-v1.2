@@ -4,6 +4,7 @@ using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
 using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
+using DGPCE.Sigemad.Application.Dtos.CaracterMedios;
 using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
@@ -330,6 +331,8 @@ public class MappingProfile : Profile
         CreateMap<Archivo, ArchivoDto>();
 
         CreateMap<SituacionEquivalente, SituacionEquivalenteDto>();
+
+        CreateMap<CaracterMedio, CaracterMedioDto>();
 
 
         CreateMap<ManageConvocatoriaCECODCommand, ActuacionRelevanteDGPCE>()

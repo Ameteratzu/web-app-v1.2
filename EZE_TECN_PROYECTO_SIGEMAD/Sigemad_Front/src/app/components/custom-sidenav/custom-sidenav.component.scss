@@ -41,6 +41,23 @@
   height: 40px !important;
 }
 
+// PCD
+.submenu .submenu-item {
+  padding-left: 15%;
+}
+
+.user-label {
+  width: calc(100% - 16px); /* Resta un pequeño margen para evitar el desbordamiento */
+  max-width: 100%; /* Asegura que no se pase del contenedor */
+  overflow: hidden; /* Evita el scroll */
+  white-space: nowrap; /* Mantiene todo en una línea */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box; /* Incluye padding/border en el ancho total */
+}
+// FIN PCD
+
 .mat-mdc-list-base {
   padding-left: 7px;
   padding-right: 7px;

@@ -184,10 +184,11 @@ export class FireOtherInformationComponent implements OnInit {
       //return;
 
       // PCD
+
       this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
         duration: 3000,
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
         panelClass: ['snackbar-rojo'],
       });
       this.isSaving.set(false);
@@ -216,7 +217,7 @@ export class FireOtherInformationComponent implements OnInit {
       const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
       if (resp!.idOtraInformacion > 0) {
         this.isSaving.set(false);
-        this.spinner.hide();
+        //this.spinner.hide();
 
         /*
         this.alertService
@@ -234,13 +235,14 @@ export class FireOtherInformationComponent implements OnInit {
         this.snackBar
           .open('Datos guardados correctamente!', '', {
             duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
             panelClass: ['snackbar-verde'],
           })
           .afterDismissed()
           .subscribe(() => {
             this.closeModal({ refresh: true });
+            this.spinner.hide();
           });
         // FIN PCD
       } else {
@@ -259,7 +261,8 @@ export class FireOtherInformationComponent implements OnInit {
     this.spinner.show();
 
     this.alertService
-      .showAlert({
+      /*
+    .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
         icon: 'warning',
@@ -267,13 +270,28 @@ export class FireOtherInformationComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+      */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
+
       .then(async (result) => {
         if (result.isConfirmed) {
           await this.otherInformationService.delete(Number(this.dataProps?.fireDetail?.id));
           //this.coordinationServices.clearData();
           //setTimeout(() => {
           //this.renderer.setStyle(toolbar, 'z-index', '5');
-          this.spinner.hide();
+          //this.spinner.hide();
           //}, 2000);
 
           /*
@@ -291,13 +309,14 @@ export class FireOtherInformationComponent implements OnInit {
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
-              horizontalPosition: 'right',
-              verticalPosition: 'top',
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
             })
             .afterDismissed()
             .subscribe(() => {
               this.closeModal({ refresh: true });
+              this.spinner.hide();
             });
           // FIN PCD
         } else {

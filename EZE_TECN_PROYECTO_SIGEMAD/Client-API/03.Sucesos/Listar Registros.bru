@@ -5,9 +5,15 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/sucesos/1/registros
+  url: {{Server}}/api/v1/sucesos/registros?IdSuceso=1&Page=1&PageSize=5
   body: none
   auth: inherit
+}
+
+params:query {
+  IdSuceso: 1
+  Page: 1
+  PageSize: 5
 }
 
 assert {

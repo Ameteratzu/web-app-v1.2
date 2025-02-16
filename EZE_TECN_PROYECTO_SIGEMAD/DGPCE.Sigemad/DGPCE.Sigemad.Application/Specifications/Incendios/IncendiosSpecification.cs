@@ -29,16 +29,16 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
 
-        if(request.IdSituacionEquivalente.HasValue)
+
+        if (request.IdSituacionEquivalente.HasValue)
         {
-            AddInclude(i => i.Suceso);
-            AddInclude(i => i.Suceso.Evoluciones);
             AddCriteria(i => i.Suceso.Evoluciones
               .OrderByDescending(e => e.FechaCreacion)
               .Take(1)
-              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value)); // Filtrar por IdSituacionEquivalente
+              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
         }
 
+        AddInclude("Suceso.Evoluciones.Parametro.SituacionEquivalente");
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
         {
@@ -161,7 +161,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                     {
                         throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'No Entre'");
                     }
-                    break;
+                    break;                                         
                 default:
                     throw new ArgumentException("Operador de comparar fechas no válido");
             }

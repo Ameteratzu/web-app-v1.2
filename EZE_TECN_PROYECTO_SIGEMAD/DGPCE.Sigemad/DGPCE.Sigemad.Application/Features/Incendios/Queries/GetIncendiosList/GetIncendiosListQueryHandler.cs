@@ -5,6 +5,7 @@ using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
+using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -61,11 +62,11 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
 
             _mapper.Map(item, incencioVm);
 
-            var registros = await _getRegistrosSucesos.Handle(new GetRegistrosPorSucesoQuery(item.IdSuceso), cancellationToken);
+            var registros = await _getRegistrosSucesos.Handle(new GetRegistrosPorSucesoQuery { IdSuceso = item.IdSuceso,PageSize = 1000}, cancellationToken);
 
-            if (registros != null && registros.Count > 0)
+            if (registros.Data != null && registros.Data.Count > 0)
             {
-                var ultimoRegistro = registros
+                var ultimoRegistro = registros.Data
                      .Where(r => r.EsUltimoRegistro)
                      .OrderByDescending(r => r.FechaHora)
                      .FirstOrDefault();
@@ -73,6 +74,35 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
                 incencioVm.FechaUltimoRegistro = ultimoRegistro != null ? ultimoRegistro.FechaHora : null;
             }
 
+            if (item.Suceso.Evoluciones != null) { 
+
+                string? maxSop;
+                List<Evolucion> evoluciones;
+
+                evoluciones = item.Suceso.Evoluciones;
+
+                var evolucionItem = evoluciones
+                             .OrderByDescending(e => e.FechaCreacion)
+                             .FirstOrDefault();
+
+                if (evolucionItem != null && evolucionItem.Parametro != null && !evolucionItem.Parametro.Borrado && evolucionItem.Parametro.IdSituacionEquivalente != null)
+                {
+                    incencioVm.Sop = evolucionItem
+                                         .Parametro
+                                         .SituacionEquivalente
+                                         .Descripcion;
+                }
+
+                maxSop = evoluciones
+                             .Where(e => !e.Borrado && e.Parametro != null && !e.Parametro.Borrado && e.Parametro.SituacionEquivalente != null)
+                             .OrderBy(e => e.Parametro.SituacionEquivalente.Prioridad)
+                             .Select(e => e.Parametro.SituacionEquivalente.Descripcion)
+                             .FirstOrDefault();
+
+                incencioVm.MaxSop = maxSop;
+
+            }
+        
             incendioVmList.Add(incencioVm);
         }
 

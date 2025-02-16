@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { GenericMaster } from '../../../../types/actions-relevant.type';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
@@ -47,9 +47,13 @@ export class Step1Component {
 
   async ngOnInit() {
     this.procedencia.set(this.dataMaestros.procedencia);
+    console.log("🚀 ~ Step1Component ~ getForm ~  this.formGroup:",  this.formGroup)
   }
 
-  getForm(atributo: string): any {
-    return this.formGroup.controls[atributo];
+  getForm(controlName: string): FormControl {
+    return this.formGroup.get(controlName) as FormControl;
   }
+
+  
+   
 }

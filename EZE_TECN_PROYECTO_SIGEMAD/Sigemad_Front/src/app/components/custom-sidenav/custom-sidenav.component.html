@@ -13,6 +13,7 @@
       routerLinkActive="selected-menu-item"
       #rla="routerLinkActive"
       [activated]="rla.isActive"
+      [title]="sideNavCollapsed() ? item.nombre : ''"
     >
       <mat-icon *ngIf="iconMap[item.ruta]" matListItemIcon [svgIcon]="iconMap[item.ruta]"></mat-icon>
 
@@ -32,6 +33,7 @@
         routerLinkActive="selected-submenu-item"
         #subRla="routerLinkActive"
         [activated]="subRla.isActive"
+        [title]="sideNavCollapsed() ? subItem.nombre : ''"
       >
         <mat-icon *ngIf="iconMap[subItem.ruta]" matListItemIcon [svgIcon]="iconMap[subItem.ruta]"></mat-icon>
 
@@ -46,7 +48,6 @@
 </ngx-spinner>
 
 <div class="user-label" *ngIf="!sideNavCollapsed()">
-
   <div class="user-info">
     <mat-icon matListItemIcon>account_circle</mat-icon>
     <span>Usuario: {{ userName }}</span>

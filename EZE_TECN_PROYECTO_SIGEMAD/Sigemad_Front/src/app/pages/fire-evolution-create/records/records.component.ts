@@ -343,8 +343,8 @@ export class RecordsComponent implements OnInit {
   showToast() {
     this.toast.open('Guardado correctamente', 'Cerrar', {
       duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
     });
   }
 

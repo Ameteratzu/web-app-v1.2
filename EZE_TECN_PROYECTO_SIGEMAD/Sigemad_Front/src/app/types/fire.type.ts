@@ -19,6 +19,8 @@ export type Fire = {
   idClaseSuceso: number;
   incendioNacional: FireNational;
   geoPosicion: GeoPosition;
+  sop:string;
+  maxSop:string;
   municipio?: {
     descripcion: string;
   };
