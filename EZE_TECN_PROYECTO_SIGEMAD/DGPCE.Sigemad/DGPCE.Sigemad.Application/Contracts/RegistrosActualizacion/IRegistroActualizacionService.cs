@@ -5,6 +5,7 @@ using DGPCE.Sigemad.Domain.Modelos;
 namespace DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 public interface IRegistroActualizacionService
 {
+    Task ValidarSuceso(int idSuceso);
     Task<RegistroActualizacion> GetOrCreateRegistroActualizacion<T>(int? idRegistroActualizacion, int idSuceso, TipoRegistroActualizacionEnum tipoRegistro) where T : BaseDomainModel<int>;
     
     Task SaveRegistroActualizacion<T, E, G>(

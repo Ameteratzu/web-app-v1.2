@@ -1,159 +1,226 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
+using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 
 namespace DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
-public class CreateOrUpdateCoordinacionPmaCommandHandler: IRequestHandler<CreateOrUpdateCoordinacionPmaCommand, CreateOrUpdateCoordinacionPmaResponse>
+public class CreateOrUpdateCoordinacionPmaCommandHandler : IRequestHandler<CreateOrUpdateCoordinacionPmaCommand, CreateOrUpdateCoordinacionPmaResponse>
 {
     private readonly ILogger<CreateOrUpdateCoordinacionPmaCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IRegistroActualizacionService _registroActualizacionService;
 
     public CreateOrUpdateCoordinacionPmaCommandHandler(
         ILogger<CreateOrUpdateCoordinacionPmaCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IRegistroActualizacionService registroActualizacionService
         )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _registroActualizacionService = registroActualizacionService;
     }
 
     public async Task<CreateOrUpdateCoordinacionPmaResponse> Handle(CreateOrUpdateCoordinacionPmaCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionPmaCommandHandler)} - BEGIN");
 
-        DireccionCoordinacionEmergencia direccionCoordinacionEmergencia;
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
+        await ValidateProvincia(request);
+        await ValidateMunicipio(request);
 
-        // Si el IdDireccionCoordinacionEmergencia es proporcionado, intentar actualizar, si no, crear nueva instancia
-        if (request.IdDireccionCoordinacionEmergencia.HasValue)
-        {
-            var spec = new DireccionCoordinacionEmergenciaWithCoordinacionPma(request.IdDireccionCoordinacionEmergencia.Value);
-            direccionCoordinacionEmergencia = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(spec);
-            if (direccionCoordinacionEmergencia is null || direccionCoordinacionEmergencia.Borrado)
-            {
-                _logger.LogWarning($"request.IdDireccionCoordinacionEmergencia: {request.IdDireccionCoordinacionEmergencia}, no encontrado");
-                throw new NotFoundException(nameof(DireccionCoordinacionEmergencia), request.IdDireccionCoordinacionEmergencia);
-            }
-        }
-        else
-        {
-            // Validar si el IdSuceso es válido
-            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
-            if (suceso is null || suceso.Borrado)
-            {
-                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
-            }
+        await _unitOfWork.BeginTransactionAsync();
 
-            // Crear nueva Dirección y Coordinación de Emergencia
-            direccionCoordinacionEmergencia = new DireccionCoordinacionEmergencia
+        try
+        {
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<DireccionCoordinacionEmergencia>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.DireccionCoordinacion);
+
+            DireccionCoordinacionEmergencia direccionCoordinacionEmergencia = await GetOrCreateDireccionCoordinacion(request, registroActualizacion);
+
+            var coordinacionesOriginales = direccionCoordinacionEmergencia.CoordinacionesCecopi.ToDictionary(d => d.Id, d => _mapper.Map<CreateOrUpdateCoordinacionPmaDto>(d));
+            MapAndSaveCoordinaciones(request, direccionCoordinacionEmergencia);
+
+            var coordinacionesParaEliminar = await DeleteLogicalCoordinaciones(request, direccionCoordinacionEmergencia, registroActualizacion.Id);
+            await SaveDireccionCoordinacion(direccionCoordinacionEmergencia);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                DireccionCoordinacionEmergencia, CoordinacionPMA, CreateOrUpdateCoordinacionPmaDto>(
+                registroActualizacion,
+                direccionCoordinacionEmergencia,
+                ApartadoRegistroEnum.CoordinacionPMA,
+                coordinacionesParaEliminar, coordinacionesOriginales);
+
+            await _unitOfWork.CommitAsync();
+
+            _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionPmaCommandHandler)} - END");
+            return new CreateOrUpdateCoordinacionPmaResponse
             {
-                IdSuceso = request.IdSuceso
+                IdDireccionCoordinacionEmergencia = direccionCoordinacionEmergencia.Id,
+                IdRegistroActualizacion = registroActualizacion.Id
             };
+
         }
-
-        // Validar los IdProvincia y IdMunicipio de las CoordinacionesPMA en el listado
-        var idsProvincias = request.Coordinaciones.Select(c => c.IdProvincia).Distinct();
-        var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(p => idsProvincias.Contains(p.Id));
-
-        if (provinciasExistentes.Count() != idsProvincias.Count())
+        catch (Exception ex)
         {
-            var idsProvinciasExistentes = provinciasExistentes.Select(p => p.Id).ToList();
-            var idsProvinciasInvalidas = idsProvincias.Except(idsProvinciasExistentes).ToList();
-
-            if (idsProvinciasInvalidas.Any())
-            {
-                _logger.LogWarning($"Los siguientes Id's de Provincia: {string.Join(", ", idsProvinciasInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(Provincia), string.Join(", ", idsProvinciasInvalidas));
-            }
+            await _unitOfWork.RollbackAsync();
+            _logger.LogError(ex, "Error en la transacción de CreateOrUpdateDireccionCommandHandler");
+            throw;
         }
+    }
 
-        var idsMunicipios = request.Coordinaciones.Select(c => c.IdMunicipio).Distinct();
-        var municipiosExistentes = await _unitOfWork.Repository<Municipio>().GetAsync(m => idsMunicipios.Contains(m.Id));
 
-        if (municipiosExistentes.Count() != idsMunicipios.Count())
+    private async Task<DireccionCoordinacionEmergencia> GetOrCreateDireccionCoordinacion(CreateOrUpdateCoordinacionPmaCommand request, RegistroActualizacion registroActualizacion)
+    {
+        if (registroActualizacion.IdReferencia > 0)
         {
-            var idsMunicipiosExistentes = municipiosExistentes.Select(m => m.Id).ToList();
-            var idsMunicipiosInvalidas = idsMunicipios.Except(idsMunicipiosExistentes).ToList();
+            List<int> idsDirecciones = new List<int>();
+            List<int> idsCecopi = new List<int>();
+            List<int> idsPma = new List<int>();
 
-            if (idsMunicipiosInvalidas.Any())
+            // Separar IdReferencia según su tipo
+            foreach (var detalle in registroActualizacion.DetallesRegistro)
             {
-                _logger.LogWarning($"Los siguientes Id's de Municipio: {string.Join(", ", idsMunicipiosInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(Municipio), string.Join(", ", idsMunicipiosInvalidas));
-            }
-        }
-
-        // Mapear y actualizar/crear las coordinaciones PMA de la emergencia
-        foreach (var coordinacionPmaDto in request.Coordinaciones)
-        {
-            if (coordinacionPmaDto.Id.HasValue && coordinacionPmaDto.Id > 0)
-            {
-                var coordinacion = direccionCoordinacionEmergencia.CoordinacionesPMA.FirstOrDefault(c => c.Id == coordinacionPmaDto.Id.Value);
-                if (coordinacion != null)
+                if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.CoordinacionPMA)
                 {
-                    // Actualizar datos existentes
-                    _mapper.Map(coordinacionPmaDto, coordinacion);
-                    coordinacion.Borrado = false;
+                    idsCecopi.Add(detalle.IdReferencia);
+                }
+            }
+
+            // Buscar la Dirección y Coordinación de Emergencia por IdReferencia
+            var direccionCoordinacion = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>()
+                .GetByIdWithSpec(new DireccionCoordinacionEmergenciaWithFilteredData(registroActualizacion.IdReferencia, idsDirecciones, idsCecopi, idsPma));
+
+            if (direccionCoordinacion is null || direccionCoordinacion.Borrado)
+                throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de Direccion y Coordinacion");
+
+            return direccionCoordinacion;
+        }
+
+        // Validar si ya existe un registro de Dirección y Coordinación de Emergencia para este suceso
+        var specSuceso = new DireccionCoordinacionEmergenciaWithCoordinacionPma(new DireccionCoordinacionEmergenciaParams { IdSuceso = request.IdSuceso });
+        var direccionExistente = await _unitOfWork.Repository<DireccionCoordinacionEmergencia>().GetByIdWithSpec(specSuceso);
+
+        return direccionExistente ?? new DireccionCoordinacionEmergencia { IdSuceso = request.IdSuceso };
+    }
+
+    private async Task ValidateProvincia(CreateOrUpdateCoordinacionPmaCommand request)
+    {
+        var idsProvincia = request.Coordinaciones.Select(d => d.IdProvincia).Distinct();
+        var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(td => idsProvincia.Contains(td.Id));
+
+        if (provinciasExistentes.Count() != idsProvincia.Count())
+        {
+            var idsInvalidos = idsProvincia.Except(provinciasExistentes.Select(td => td.Id)).ToList();
+            throw new NotFoundException(nameof(Provincia), string.Join(", ", idsInvalidos));
+        }
+    }
+
+    private async Task ValidateMunicipio(CreateOrUpdateCoordinacionPmaCommand request)
+    {
+        var idsMunicipio = request.Coordinaciones.Select(d => d.IdMunicipio).Distinct();
+        var municipiosExistentes = await _unitOfWork.Repository<Municipio>().GetAsync(td => idsMunicipio.Contains(td.Id));
+
+        if (municipiosExistentes.Count() != idsMunicipio.Count())
+        {
+            var idsInvalidos = idsMunicipio.Except(municipiosExistentes.Select(td => td.Id)).ToList();
+            throw new NotFoundException(nameof(Municipio), string.Join(", ", idsInvalidos));
+        }
+    }
+
+    private void MapAndSaveCoordinaciones(CreateOrUpdateCoordinacionPmaCommand request, DireccionCoordinacionEmergencia direccionCoordinacion)
+    {
+        foreach (var coordinacionDto in request.Coordinaciones)
+        {
+            if (coordinacionDto.Id.HasValue && coordinacionDto.Id > 0)
+            {
+                var coordinacionExistente = direccionCoordinacion.CoordinacionesPMA.FirstOrDefault(d => d.Id == coordinacionDto.Id.Value);
+                if (coordinacionExistente != null)
+                {
+                    var copiaOriginal = _mapper.Map<CreateOrUpdateCoordinacionPmaDto>(coordinacionExistente);
+                    var copiaNueva = _mapper.Map<CreateOrUpdateCoordinacionPmaDto>(coordinacionDto);
+
+                    if (!copiaOriginal.Equals(copiaNueva))
+                    {
+                        _mapper.Map(coordinacionDto, coordinacionExistente);
+                        coordinacionExistente.Borrado = false;
+                    }
                 }
                 else
                 {
-                    // Crear nueva coordinación
-                    var nuevaCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionPmaDto);
-                    nuevaCoordinacion.Id = 0;
-                    direccionCoordinacionEmergencia.CoordinacionesPMA.Add(nuevaCoordinacion);
+                    direccionCoordinacion.CoordinacionesPMA.Add(_mapper.Map<CoordinacionPMA>(coordinacionDto));
                 }
             }
             else
             {
-                // Crear nueva coordinación
-                var nuevaCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionPmaDto);
-                nuevaCoordinacion.Id = 0;
-                direccionCoordinacionEmergencia.CoordinacionesPMA.Add(nuevaCoordinacion);
+                direccionCoordinacion.CoordinacionesPMA.Add(_mapper.Map<CoordinacionPMA>(coordinacionDto));
             }
         }
+    }
 
-        // Eliminar lógicamente las coordinaciones PMA que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
-        if (request.IdDireccionCoordinacionEmergencia.HasValue)
+    private async Task<List<int>> DeleteLogicalCoordinaciones(CreateOrUpdateCoordinacionPmaCommand request, DireccionCoordinacionEmergencia direccionCoordinacion, int idRegistroActualizacion)
+    {
+        if (direccionCoordinacion.Id > 0)
         {
-            var idsEnRequest = request.Coordinaciones
-                .Where(c => c.Id.HasValue && c.Id > 0)
-                .Select(c => c.Id)
+            var idsEnRequest = request.Coordinaciones.Where(d => d.Id.HasValue && d.Id > 0).Select(d => d.Id).ToList();
+            var coordinacionesParaEliminar = direccionCoordinacion.CoordinacionesPMA
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id))
                 .ToList();
 
-            var coordinacionesParaEliminar = direccionCoordinacionEmergencia.CoordinacionesPMA
-            .Where(c => c.Id > 0 && !idsEnRequest.Contains(c.Id))
-                .ToList();
+            if (coordinacionesParaEliminar.Count == 0)
+            {
+                return new List<int>();
+            }
+
+            // Obtener el historial de creación de estas direcciones
+            var idsCoordinacionesParaEliminar = coordinacionesParaEliminar.Select(d => d.Id).ToList();
+            var historialCoordinaciones = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
+                .GetAsync(d =>
+                idsCoordinacionesParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.CoordinacionPMA);
 
             foreach (var coordinacion in coordinacionesParaEliminar)
             {
+                var historial = historialCoordinaciones.FirstOrDefault(d =>
+                d.IdReferencia == coordinacion.Id &&
+                (d.IdEstadoRegistro == EstadoRegistroEnum.Creado || d.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado));
+
+                if (historial == null || historial.IdRegistroActualizacion != idRegistroActualizacion)
+                {
+                    throw new BadRequestException($"La coordinacion PMA con ID {coordinacion.Id} solo puede eliminarse en el registro en que fue creada.");
+                }
+
                 _unitOfWork.Repository<CoordinacionPMA>().DeleteEntity(coordinacion);
             }
+
+            return idsCoordinacionesParaEliminar;
         }
 
-        if (request.IdDireccionCoordinacionEmergencia.HasValue)
+        return new List<int>();
+    }
+
+    private async Task SaveDireccionCoordinacion(DireccionCoordinacionEmergencia direccionCoordinacion)
+    {
+        if (direccionCoordinacion.Id > 0)
         {
-            _unitOfWork.Repository<DireccionCoordinacionEmergencia>().UpdateEntity(direccionCoordinacionEmergencia);
+            _unitOfWork.Repository<DireccionCoordinacionEmergencia>().UpdateEntity(direccionCoordinacion);
         }
         else
         {
-            _unitOfWork.Repository<DireccionCoordinacionEmergencia>().AddEntity(direccionCoordinacionEmergencia);
+            _unitOfWork.Repository<DireccionCoordinacionEmergencia>().AddEntity(direccionCoordinacion);
         }
 
-        var result = await _unitOfWork.Complete();
-        if (result <= 0)
-        {
-            throw new Exception("No se pudo insertar/actualizar la Coordinación PMA");
-        }
-
-        _logger.LogInformation($"{nameof(CreateOrUpdateCoordinacionPmaCommandHandler)} - END");
-        return new CreateOrUpdateCoordinacionPmaResponse { IdDireccionCoordinacionEmergencia = direccionCoordinacionEmergencia.Id };
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar la Dirección y Coordinación de Emergencia");
     }
 }

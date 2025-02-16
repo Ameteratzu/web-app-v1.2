@@ -165,8 +165,13 @@ public class MappingProfile : Profile
         CreateMap<ActivacionPlanEmergencia, ActivacionPlanEmergenciaVm>();
         CreateMap<Direccion, DireccionDto>();
         CreateMap<Direccion, CreateOrUpdateDireccionDto>();
+
+
         CreateMap<CoordinacionCecopi, CoordinacionCecopiDto>();
+        CreateMap<CoordinacionCecopi, CreateOrUpdateCoordinacionCecopiDto>();
+
         CreateMap<CoordinacionPMA, CoordinacionPMADto>();
+        CreateMap<CoordinacionPMA, CreateOrUpdateCoordinacionPmaDto>();
 
 
 

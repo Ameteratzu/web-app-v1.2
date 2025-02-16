@@ -35,7 +35,8 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
     {
         _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - BEGIN");
 
-        await ValidateSuceso(request.IdSuceso);
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
+        await ValidateTipoDireccionEmergencia(request);
 
         await _unitOfWork.BeginTransactionAsync();
 
@@ -45,8 +46,6 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
                 request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.DireccionCoordinacion);
 
             DireccionCoordinacionEmergencia direccionCoordinacionEmergencia = await GetOrCreateDireccionCoordinacion(request, registroActualizacion);
-
-            await ValidateTipoDireccionEmergencia(request);
 
             var direccionesOriginales = direccionCoordinacionEmergencia.Direcciones.ToDictionary(d => d.Id, d => _mapper.Map<CreateOrUpdateDireccionDto>(d));
             MapAndSaveDirecciones(request, direccionCoordinacionEmergencia);
@@ -80,43 +79,6 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
             throw;
         }
     }
-
-    private async Task ValidateSuceso(int idSuceso)
-    {
-        var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(idSuceso);
-        if (suceso is null || suceso.Borrado)
-            throw new NotFoundException(nameof(Suceso), idSuceso);
-    }
-
-    /*
-    private async Task<RegistroActualizacion> GetOrCreateRegistroActualizacion(CreateOrUpdateDireccionCommand request)
-    {
-        if (request.IdRegistroActualizacion.HasValue && request.IdRegistroActualizacion.Value > 0)
-        {
-            var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
-            {
-                Id = request.IdRegistroActualizacion.Value,
-            });
-            var registroActualizacion = await _unitOfWork.Repository<RegistroActualizacion>().GetByIdWithSpec(spec);
-
-            if (registroActualizacion is null)
-                throw new NotFoundException(nameof(RegistroActualizacion), request.IdRegistroActualizacion);
-
-            if (registroActualizacion.IdTipoRegistroActualizacion != (int)TipoRegistroActualizacionEnum.DireccionCoordinacion)
-                throw new BadRequestException("El registro de actualización no es de tipo 'Direccion y Coordinacion'");
-
-            return registroActualizacion;
-        }
-
-        // Crear nuevo registro de actualización
-        return new RegistroActualizacion
-        {
-            IdTipoRegistroActualizacion = (int)TipoRegistroActualizacionEnum.DireccionCoordinacion,
-            IdSuceso = request.IdSuceso,
-            TipoEntidad = nameof(DireccionCoordinacionEmergencia)
-        };
-    }
-    */
 
     private async Task<DireccionCoordinacionEmergencia> GetOrCreateDireccionCoordinacion(CreateOrUpdateDireccionCommand request, RegistroActualizacion registroActualizacion)
     {
@@ -260,177 +222,4 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
         if (await _unitOfWork.Complete() <= 0)
             throw new Exception("No se pudo insertar/actualizar la Dirección y Coordinación de Emergencia");
     }
-
-    /*
-    private async Task SaveRegistroActualizacion(
-        RegistroActualizacion registroActualizacion,
-        DireccionCoordinacionEmergencia direccionCoordinacion,
-        List<int> direccionesParaEliminar,
-        Dictionary<int, CreateOrUpdateDireccionDto> direccionesOriginales)
-    {
-        registroActualizacion.IdReferencia = direccionCoordinacion.Id;
-        var nuevasDireccionesIds = new List<int>();
-
-        foreach (var direccion in direccionCoordinacion.Direcciones)
-        {
-            var estado = GetEstadoRegistro(direccion, registroActualizacion.DetallesRegistro, direccionesOriginales, direccionesParaEliminar);
-
-            var detalleExistente = registroActualizacion.DetallesRegistro.FirstOrDefault(d => d.IdReferencia == direccion.Id);
-
-            if (detalleExistente != null)
-            {
-                if (estado == EstadoRegistroEnum.Permanente) continue;
-
-                detalleExistente.IdEstadoRegistro = estado;
-                //_unitOfWork.Repository<DetalleRegistroActualizacion>().UpdateEntity(detalleExistente);
-            }
-            else
-            {
-                registroActualizacion.DetallesRegistro.Add(new DetalleRegistroActualizacion
-                {
-                    IdApartadoRegistro = (int)ApartadoRegistroEnum.Direccion,
-                    IdReferencia = direccion.Id,
-                    IdEstadoRegistro = estado
-                });
-                if (estado == EstadoRegistroEnum.Creado)
-                {
-                    // Registrar las nuevas direcciones
-                    nuevasDireccionesIds.Add(direccion.Id);
-                }
-            }
-
-        }
-
-        // Guardar el registro de actualización
-        if (registroActualizacion.Id > 0)
-        {
-            // Llamar a ReflectNewDireccionesInFutureRegistros para propagar las nuevas direcciones a registros posteriores
-            await ReflectNewDireccionesInFutureRegistros(registroActualizacion, nuevasDireccionesIds);
-
-            _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroActualizacion);
-        }
-        else
-        {
-            _unitOfWork.Repository<RegistroActualizacion>().AddEntity(registroActualizacion);
-        }
-
-        if (await _unitOfWork.Complete() <= 0)
-            throw new Exception("No se pudo insertar/actualizar registros de actualizaciones");
-    }
-
-    private EstadoRegistroEnum GetEstadoRegistro(
-    Direccion direccion,
-    RegistroActualizacion registroActualizacion,
-    Dictionary<int, CreateOrUpdateDireccionDto> direccionesOriginales,
-    List<int> direccionesParaEliminar)
-    {
-        if (direccionesParaEliminar.Contains(direccion.Id))
-        {
-            return EstadoRegistroEnum.Eliminado;
-        }
-
-        if (!direccionesOriginales.ContainsKey(direccion.Id))
-        {
-            return EstadoRegistroEnum.Creado;
-        }
-
-        var copiaOriginal = direccionesOriginales[direccion.Id];
-        var copiaNueva = _mapper.Map<CreateOrUpdateDireccionDto>(direccion);
-
-        if (copiaOriginal.Equals(copiaNueva))
-        {
-            return EstadoRegistroEnum.Permanente;
-        }
-
-        return EstadoRegistroEnum.Modificado;
-    }
-
-    private EstadoRegistroEnum GetEstadoRegistro(
-    Direccion direccion,
-    IEnumerable<DetalleRegistroActualizacion> detallesPrevios,
-    Dictionary<int, CreateOrUpdateDireccionDto> direccionesOriginales,
-    List<int> direccionesParaEliminar)
-    {
-        if (direccionesParaEliminar.Contains(direccion.Id))
-        {
-            return EstadoRegistroEnum.Eliminado;
-        }
-
-        if (!direccionesOriginales.ContainsKey(direccion.Id))
-        {
-            return EstadoRegistroEnum.Creado;
-        }
-
-        var detallePrevio = detallesPrevios.FirstOrDefault(d => d.IdReferencia == direccion.Id);
-
-        var copiaOriginal = direccionesOriginales[direccion.Id];
-        var copiaNueva = _mapper.Map<CreateOrUpdateDireccionDto>(direccion);
-
-        if (detallePrevio != null)
-        {
-            if (!copiaOriginal.Equals(copiaNueva))
-            {
-                if (detallePrevio.IdEstadoRegistro == EstadoRegistroEnum.Creado)
-                    return EstadoRegistroEnum.CreadoYModificado;
-                return EstadoRegistroEnum.Modificado;
-            }
-            return EstadoRegistroEnum.Permanente;
-        }
-
-        if (copiaOriginal.Equals(copiaNueva))
-        {
-            return EstadoRegistroEnum.Permanente;
-        }
-
-        return EstadoRegistroEnum.Modificado;
-    }
-
-    private async Task ReflectNewDireccionesInFutureRegistros(
-        RegistroActualizacion registroActualizacion,
-        List<int> nuevasDireccionesIds)
-    {
-        if (!nuevasDireccionesIds.Any()) return;
-
-        // Buscar registros de actualización posteriores al actual
-
-        var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
-        {
-            IdMinimo = registroActualizacion.Id,
-            IdSuceso = registroActualizacion.IdSuceso,
-            IdTipoRegistroActualizacion = (int)TipoRegistroActualizacionEnum.DireccionCoordinacion
-        });
-        var registrosPosteriores = await _unitOfWork.Repository<RegistroActualizacion>().GetAllWithSpec(spec);
-
-        foreach (var registroPosterior in registrosPosteriores)
-        {
-            bool seActualizoRegistroPosterior = false;
-            // Obtener los detalles previos de cada registro
-            //var detallesPrevios = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
-            //    .GetAsync(d => d.IdRegistroActualizacion == registroPosterior.Id);
-
-            var detallesPrevios = registroPosterior.DetallesRegistro;
-
-            foreach (var idDireccion in nuevasDireccionesIds)
-            {
-                // Si la dirección ya existe en el registro, no la agregamos nuevamente
-                if (detallesPrevios.Any(d => d.IdReferencia == idDireccion)) continue;
-
-                // Agregar la dirección con estado "Creado en Registro Anterior"
-                var nuevoDetalle = new DetalleRegistroActualizacion
-                {
-                    IdRegistroActualizacion = registroPosterior.Id,
-                    IdApartadoRegistro = (int)ApartadoRegistroEnum.Direccion,
-                    IdReferencia = idDireccion,
-                    IdEstadoRegistro = EstadoRegistroEnum.CreadoEnRegistroAnterior
-                };
-
-                registroPosterior.DetallesRegistro.Add(nuevoDetalle);
-                seActualizoRegistroPosterior = true;
-            }
-
-            if (seActualizoRegistroPosterior)
-                _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroPosterior);
-        }
-    }
-    */
 }

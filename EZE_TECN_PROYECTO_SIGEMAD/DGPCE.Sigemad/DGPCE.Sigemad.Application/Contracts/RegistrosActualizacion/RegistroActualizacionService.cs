@@ -21,6 +21,13 @@ public class RegistroActualizacionService : IRegistroActualizacionService
         _mapper = mapper;
     }
 
+    public async Task ValidarSuceso(int idSuceso)
+    {
+        var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(idSuceso);
+        if (suceso is null || suceso.Borrado)
+            throw new NotFoundException(nameof(Suceso), idSuceso);
+    }
+
     public async Task<RegistroActualizacion> GetOrCreateRegistroActualizacion<T>(int? idRegistroActualizacion, int idSuceso, TipoRegistroActualizacionEnum tipoRegistro) where T : BaseDomainModel<int>
     {
         if (idRegistroActualizacion.HasValue && idRegistroActualizacion.Value > 0)
