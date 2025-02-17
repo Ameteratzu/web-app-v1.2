@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/{{IdDireccionCoordinacionEmergencia}}
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/1?idSuceso=1&idRegistroActualizacion=1014
   body: none
   auth: inherit
+}
+
+params:query {
+  idSuceso: 1
+  idRegistroActualizacion: 1014
 }
 
 assert {

@@ -62,10 +62,11 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .OnDelete(DeleteBehavior.Restrict); // Configurar comportamiento de eliminación en cascada
 
 
+        // Relación uno a uno con Suceso
         builder.HasOne(d => d.Suceso)
-                .WithMany(i => i.Evoluciones)
-                .HasForeignKey(d => d.IdSuceso)
-                .OnDelete(DeleteBehavior.Restrict);
+            .WithOne(s => s.Evolucion)
+            .HasForeignKey<Evolucion>(d => d.IdSuceso)
+            .OnDelete(DeleteBehavior.Restrict); // Evita eliminación en cascada
 
     }
 }

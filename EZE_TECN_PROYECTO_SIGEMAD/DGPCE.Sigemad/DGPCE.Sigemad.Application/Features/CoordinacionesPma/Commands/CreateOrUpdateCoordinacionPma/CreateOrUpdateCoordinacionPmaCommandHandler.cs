@@ -118,7 +118,7 @@ public class CreateOrUpdateCoordinacionPmaCommandHandler : IRequestHandler<Creat
     private async Task ValidateProvincia(CreateOrUpdateCoordinacionPmaCommand request)
     {
         var idsProvincia = request.Coordinaciones.Select(d => d.IdProvincia).Distinct();
-        var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(td => idsProvincia.Contains(td.Id));
+        var provinciasExistentes = await _unitOfWork.Repository<Provincia>().GetAsync(td => idsProvincia.Contains(td.Id) && td.Borrado == false);
 
         if (provinciasExistentes.Count() != idsProvincia.Count())
         {
@@ -130,7 +130,7 @@ public class CreateOrUpdateCoordinacionPmaCommandHandler : IRequestHandler<Creat
     private async Task ValidateMunicipio(CreateOrUpdateCoordinacionPmaCommand request)
     {
         var idsMunicipio = request.Coordinaciones.Select(d => d.IdMunicipio).Distinct();
-        var municipiosExistentes = await _unitOfWork.Repository<Municipio>().GetAsync(td => idsMunicipio.Contains(td.Id));
+        var municipiosExistentes = await _unitOfWork.Repository<Municipio>().GetAsync(td => idsMunicipio.Contains(td.Id) && td.Borrado == false);
 
         if (municipiosExistentes.Count() != idsMunicipio.Count())
         {

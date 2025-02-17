@@ -178,6 +178,8 @@ public class MappingProfile : Profile
 
 
         CreateMap<CreateOrUpdateAreaAfectadaDto, AreaAfectada>();
+        CreateMap<AreaAfectada, CreateOrUpdateAreaAfectadaDto>();
+
         CreateMap<UpdateAreaAfectadaDto, AreaAfectada>();
         CreateMap<AreaAfectada, AreaAfectadaDto>();
         CreateMap<UpdateAreaAfectadaCommand, AreaAfectada>();

@@ -4,7 +4,7 @@ namespace DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergenc
 public class DireccionCoordinacionEmergenciaWithFilteredData : BaseSpecification<DireccionCoordinacionEmergencia>
 {
     public DireccionCoordinacionEmergenciaWithFilteredData(int id, List<int> idsDirecciones, List<int> idsCecopi, List<int> idsPma)
-        : base(d => d.Id == id)
+        : base(d => d.Id == id && d.Borrado == false)
     {
         if (idsDirecciones.Any())
         {
