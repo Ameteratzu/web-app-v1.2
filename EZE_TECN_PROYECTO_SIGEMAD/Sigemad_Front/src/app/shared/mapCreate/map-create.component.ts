@@ -447,6 +447,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
       coords.push(coords[0]);
 
       this.coords = coords;
+      this.save.emit(this.coords);
     });
 
     drawBar.addControl(tgPolygon);

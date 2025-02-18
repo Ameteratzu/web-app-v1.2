@@ -103,7 +103,7 @@ export class AreaComponent {
   listaMunicipios: any;
   onlyView: any = null;
   defaultPolygon: any;
-  // index = 0;
+  index = 0;
 
   async ngOnInit() {
 
@@ -134,8 +134,9 @@ export class AreaComponent {
     if (this.editData) {
       if (this.evolutionService.dataAffectedArea().length === 0) {
         this.evolutionService.dataAffectedArea.set(this.editData.areaAfectadas);
-        this.polygon.set(this.editData.areaAfectadas[0].geoPosicion?.coordinates[0]);
-        //this.polygon.set(this.editData.areaAfectadas[this.index].geoPosicion?.coordinates[0]);
+        if (this.editData.areaAfectadas.length > 0) {
+          this.polygon.set(this.editData.areaAfectadas[0].geoPosicion?.coordinates[0]);
+        }
       }
     }
 
@@ -169,6 +170,7 @@ export class AreaComponent {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
+        this.defaultPolygon = [];
         data.geoPosicion = {
           type: 'Polygon',
           coordinates: [this.polygon()],
@@ -198,11 +200,17 @@ export class AreaComponent {
   }
 
   async sendDataToEndpoint() {
-    //this.editData.areaAfectadas[this.index].geoPosicion = this.polygon();
     if (this.evolutionService.dataAffectedArea().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       if (this.editData) {
+        if (this.index != -1 && this.index < this.editData.areaAfectadas.length) {
+           const geoPosicion = {  
+            type: 'Polygon',
+            coordinates: [this.polygon()],
+          };
+          this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
+        }
         this.save.emit({ save: false, delete: false, close: false, update: true });
       }
     }
@@ -219,6 +227,7 @@ export class AreaComponent {
   }
 
   eliminarItem(index: number) {
+    this.index = -1;
     this.evolutionService.dataAffectedArea.update((data) => {
       data.splice(index, 1);
       return [...data];
@@ -226,7 +235,7 @@ export class AreaComponent {
   }
 
   async seleccionarItem(index: number) {
-    //this.index = index;
+    this.index = index;
     this.isCreate.set(index);
     const data = this.evolutionService.dataAffectedArea()[index];
     this.spinner.show();
@@ -302,34 +311,6 @@ export class AreaComponent {
 
   onChangeMunicipio(event: any) {
     this.polygon.set([]);
-  }
-
-  openModalMap() {
-    if (!this.formData.value.municipio) {
-      return;
-    }
-    const municipioSelected = this.municipalities().find((item) => item.id == this.formData.value.municipio);
-
-    if (!municipioSelected) {
-      return;
-    }
-
-    const dialogRef = this.matDialog.open(MapCreateComponent, {
-      width: '780px',
-      maxWidth: '780px',
-      //height: '780px',
-      //maxHeight: '780px',
-      data: {
-        municipio: municipioSelected,
-        listaMunicipios: this.municipalities(),
-        defaultPolygon: this.polygon(),
-        onlyView: false
-      },
-    });
-
-    dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      this.polygon.set(features);
-    });
   }
 
   isInteger(value: any): boolean {
