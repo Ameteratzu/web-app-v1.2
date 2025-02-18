@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
+using DGPCE.Sigemad.Application.Dtos.CaracterMedios;
 using DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis.GetCaracterMediosList;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -25,7 +26,7 @@ public class CaracterMediosController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene la lista general de caracter de medios")]
-    public async Task<ActionResult<IReadOnlyList<CaracterMedio>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<CaracterMedioDto>>> GetAll()
     {
         var query = new GetCaracterMediosListQuery();
         var listado = await _mediator.Send(query);
