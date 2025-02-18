@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, OnChanges, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -47,10 +47,12 @@ const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
-export class MapCreateComponent {
+export class MapCreateComponent implements OnInit, OnChanges {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
+  @Input() polygon: any;
+  @Input() close: boolean = true;
 
   @Output() save = new EventEmitter<Feature<Geometry>[]>();
 
@@ -87,10 +89,48 @@ export class MapCreateComponent {
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
 
-    this.configureMap(municipio, defaultPolygon, onlyView);
+    if (municipio != null) this.municipio = municipio;
+
+    if (defaultPolygon == null && this.polygon == null) {
+      this.polygon = [];
+    }
+    
+    if (defaultPolygon != null) {
+      this.polygon = defaultPolygon;
+    }
+
+    if (onlyView != null) this.onlyView = onlyView;
+
+    this.configureMap(this.municipio, this.polygon, this.onlyView);
   }
 
-  configureMap(municipio: any, defaultPolygon: any, onlyView: any) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['polygon'] && changes['polygon'].currentValue && this.source) {
+      this.updateMapWithPolygon(changes['polygon'].currentValue);
+    }
+  }
+
+  private updateMapWithPolygon(newPolygon: any) {
+    this.source.clear();
+    
+    let defaultPolygonMercator;
+
+    if (newPolygon) {
+      defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
+      const polygonFeature = new Feature({
+        geometry: new Polygon([defaultPolygonMercator]),
+      });
+
+      this.source.addFeature(polygonFeature);
+    }
+    this.map.render(); 
+  }
+
+  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
+
+    if (!municipio) { 
+      return;
+    }
 
     const baseLayers = this.getBaseLayers();
 
@@ -254,7 +294,6 @@ export class MapCreateComponent {
     if (defaultPolygon) {
       defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
-
     this.source = new VectorSource();
 
     this.layerAreasAfectadas = new VectorLayer({
@@ -389,6 +428,7 @@ export class MapCreateComponent {
       html: '<img src="/assets/img/draw-polygon.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       interaction: this.drawPolygon
     });
+    tgPolygon.setActive(true);
 
     this.drawPolygon.on('drawstart', (drawEvent: DrawEvent) => {
       this.coords = null;
@@ -446,12 +486,12 @@ export class MapCreateComponent {
       localStorage.setItem('coordinates' + this.section, this.coords);
       localStorage.setItem('polygon' + this.section, '1');
       this.save.emit(this.coords);
-      this.closeModal();
+      if (this.close) this.closeModal();
     }
   }
 
   closeModal() {
-    this.matDialogRef.close();
+    if (this.close) this.matDialogRef.close();
   }
 
   searchCoordinates() {

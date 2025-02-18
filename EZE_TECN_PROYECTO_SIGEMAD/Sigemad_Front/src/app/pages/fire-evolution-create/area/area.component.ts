@@ -60,6 +60,7 @@ const MY_DATE_FORMATS = {
     MatTableModule,
     MatIconModule,
     NgxSpinnerModule,
+    MapCreateComponent,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -98,7 +99,15 @@ export class AreaComponent {
   public minors = signal<MinorEntity[]>([]);
   public dataSource = new MatTableDataSource<any>([]);
 
+  selectedMunicipio: any;
+  listaMunicipios: any;
+  onlyView: any = null;
+  defaultPolygon: any;
+  // index = 0;
+
   async ngOnInit() {
+
+    this.selectedMunicipio = null;
 
     const provinces = await this.provinceService.get();
     this.provinces.set(provinces);
@@ -125,9 +134,16 @@ export class AreaComponent {
     if (this.editData) {
       if (this.evolutionService.dataAffectedArea().length === 0) {
         this.evolutionService.dataAffectedArea.set(this.editData.areaAfectadas);
-        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
+        this.polygon.set(this.editData.areaAfectadas[0].geoPosicion?.coordinates[0]);
+        //this.polygon.set(this.editData.areaAfectadas[this.index].geoPosicion?.coordinates[0]);
       }
     }
+
+    this.selectedMunicipio = this.municipalities().find((item) => item.id == this.formData.value.municipio);
+    this.listaMunicipios = this.municipalities();
+    this.onlyView = false;
+    this.defaultPolygon = this.polygon(),
+
     this.spinner.hide();
   }
    
@@ -182,6 +198,7 @@ export class AreaComponent {
   }
 
   async sendDataToEndpoint() {
+    //this.editData.areaAfectadas[this.index].geoPosicion = this.polygon();
     if (this.evolutionService.dataAffectedArea().length > 0 && !this.editData) {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
@@ -209,6 +226,7 @@ export class AreaComponent {
   }
 
   async seleccionarItem(index: number) {
+    //this.index = index;
     this.isCreate.set(index);
     const data = this.evolutionService.dataAffectedArea()[index];
     this.spinner.show();
@@ -224,6 +242,7 @@ export class AreaComponent {
     this.formData.get('fechaHora')?.setValue(data.fechaHora);
     this.formData.get('observaciones')?.setValue(data.observaciones);
     this.polygon.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
+    this.defaultPolygon = this.polygon();
 
     if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
@@ -304,6 +323,7 @@ export class AreaComponent {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.polygon(),
+        onlyView: false
       },
     });
 
@@ -314,5 +334,10 @@ export class AreaComponent {
 
   isInteger(value: any): boolean {
     return Number.isInteger(value);
+  }
+
+  onSave(features: Feature<Geometry>[]) {
+    console.log('Datos guardados:', features);
+    this.polygon.set(features);
   }
 }
