@@ -86,8 +86,8 @@ export class DashboardComponent {
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
-      center: [-319201, 4834489],
-      zoom: 6.5,
+      center: [-225030.611272, 4290257.523590],
+      zoom: 5.53,
       extent: [-4500000, 3000000, 2500000, 6500000]
     });
 
