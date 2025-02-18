@@ -86,8 +86,8 @@ export class DashboardComponent {
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
-      center: [-400000, 4900000],
-      zoom: 6,
+      center: [-319201, 4834489],
+      zoom: 6.5,
       extent: [-4500000, 3000000, 2500000, 6500000]
     });
 
@@ -382,8 +382,8 @@ export class DashboardComponent {
       } else {
         // Zoom a Península
         this.map.getView().animate({
-          center: [-400000, 4900000],
-          zoom: 6,
+          center: [-319201, 4834489],
+          zoom: 6.5,
           duration: 1000
         });
       }
