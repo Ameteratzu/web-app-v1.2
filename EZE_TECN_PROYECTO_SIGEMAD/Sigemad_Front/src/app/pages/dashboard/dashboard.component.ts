@@ -105,10 +105,22 @@ export class DashboardComponent {
       view: this.view,
     });
 
-    this.map.addControl(new LayerSwitcher({
+    const layersSwitcher = new LayerSwitcher({
       mouseover: true,
       show_progress: true,
-    }));
+      trash: true,
+    });
+
+    layersSwitcher.tip = {
+      up: 'Arriba/Abajo',
+      down: 'Arriba/Abajo',
+      info: 'Información',
+      extent: 'Extensión',
+      trash: 'Eliminar',
+      plus: 'Expandir/Contraer',
+    };
+
+    this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
 

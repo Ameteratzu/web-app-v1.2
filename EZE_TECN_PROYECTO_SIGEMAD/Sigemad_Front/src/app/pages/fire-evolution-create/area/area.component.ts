@@ -310,6 +310,7 @@ export class AreaComponent {
   }
 
   onChangeMunicipio(event: any) {
+    this.selectedMunicipio = this.listaMunicipios.find((item: any) => item.id == event.value);
     this.polygon.set([]);
   }
 

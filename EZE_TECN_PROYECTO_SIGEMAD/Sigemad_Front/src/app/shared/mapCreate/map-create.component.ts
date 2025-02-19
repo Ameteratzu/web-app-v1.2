@@ -86,6 +86,8 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
   public popup!: Overlay;
 
+  layerMunicipio!: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>>;
+
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
 
@@ -108,22 +110,33 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (changes['polygon'] && changes['polygon'].currentValue && this.source) {
       this.updateMapWithPolygon(changes['polygon'].currentValue);
     }
+    if (changes['municipio'] && changes['municipio'].currentValue && this.source) {
+      this.updateMapWithMunicipio(changes['municipio'].currentValue);
+    }
   }
 
   private updateMapWithPolygon(newPolygon: any) {
-    this.source.clear();
-    
-    let defaultPolygonMercator;
-
     if (newPolygon) {
-      defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
-      const polygonFeature = new Feature({
-        geometry: new Polygon([defaultPolygonMercator]),
-      });
-
-      this.source.addFeature(polygonFeature);
+      this.layerAreasAfectadas.getSource()?.clear();
+      
+      if (newPolygon) {
+        const defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
+        const polygonFeature = new Feature({
+          geometry: new Polygon([defaultPolygonMercator]),
+        });
+        this.layerAreasAfectadas.getSource()?.addFeature(polygonFeature);
+      }
     }
-    this.map.render(); 
+  }
+
+  private updateMapWithMunicipio(newMunicipio: any) {
+    if (newMunicipio && newMunicipio.geoPosicion) {
+      const coordinates = fromLonLat(newMunicipio.geoPosicion.coordinates);
+      this.map.getView().setCenter(coordinates);
+      this.layerMunicipio.getSource()?.clear();
+      const pointFeature = new Feature(new Point(coordinates));
+      this.layerMunicipio.getSource()?.addFeature(pointFeature);
+    }
   }
 
   configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
@@ -169,10 +182,22 @@ export class MapCreateComponent implements OnInit, OnChanges {
       overlays: [this.popup],
     });
 
-    this.map.addControl(new LayerSwitcher({
+    const layersSwitcher = new LayerSwitcher({
       mouseover: true,
       show_progress: true,
-    }));
+      trash: true,
+    });
+
+    layersSwitcher.tip = {
+      up: 'Arriba/Abajo',
+      down: 'Arriba/Abajo',
+      info: 'Información',
+      extent: 'Extensión',
+      trash: 'Eliminar',
+      plus: 'Expandir/Contraer',
+    };
+
+    this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
 
@@ -319,14 +344,14 @@ export class MapCreateComponent implements OnInit, OnChanges {
       this.source.addFeature(polygonFeature);
     }
 
-    const layerMunicipio = new VectorLayer({
+    this.layerMunicipio = new VectorLayer({
       source: new VectorSource({
         features: [pointFeature],
       }),
       properties: { 'title': 'Municipio' }
     });
 
-    layerMunicipio.setStyle(
+    this.layerMunicipio.setStyle(
       new Style({
         image: new Icon({
           anchor: [1, 1],
@@ -338,7 +363,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     return new LayerGroup({
       properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
-      layers: [layerMunicipio, this.layerAreasAfectadas]
+      layers: [this.layerMunicipio, this.layerAreasAfectadas]
     });
   }
 
