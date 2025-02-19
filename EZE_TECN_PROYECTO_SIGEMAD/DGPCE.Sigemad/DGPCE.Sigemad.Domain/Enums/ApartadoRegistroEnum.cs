@@ -8,6 +8,7 @@ public enum ApartadoRegistroEnum
     Direccion = 5,
     CoordinacionCECOPI = 6,
     CoordinacionPMA = 7,
+    Documentacion = 8
 }
 
 public enum ApartadoDireccionEnum

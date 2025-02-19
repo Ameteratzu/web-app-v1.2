@@ -5,7 +5,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
 public class ManageDocumentacionesCommand : IRequest<CreateOrUpdateDocumentacionResponse>
 {
-    public int? IdDocumento { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
 
     public List<DetalleDocumentacionDto> DetallesDocumentaciones { get; set; } = new();

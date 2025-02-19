@@ -14,6 +14,8 @@ CREATE TABLE Documentacion (
     FechaEliminacion DATETIME2(7) NULL,
     EliminadoPor UNIQUEIDENTIFIER NULL,
     Borrado BIT NOT NULL DEFAULT 0
+
+	CONSTRAINT UQ_Documentacion_IdSuceso UNIQUE (IdSuceso)
 );
  
  

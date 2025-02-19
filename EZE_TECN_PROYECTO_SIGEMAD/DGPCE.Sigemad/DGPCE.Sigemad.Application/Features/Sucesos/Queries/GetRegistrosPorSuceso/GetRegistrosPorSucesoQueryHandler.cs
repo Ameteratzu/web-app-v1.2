@@ -44,8 +44,8 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         // Obtener listado de usuarios
         var guidsUsuarios = new HashSet<Guid?>();
 
-        guidsUsuarios.UnionWith(suceso.Evoluciones.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
+       // guidsUsuarios.UnionWith(suceso.Evoluciones.Select(d => d.CreadoPor));
+       // guidsUsuarios.UnionWith(suceso.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
         guidsUsuarios.UnionWith(suceso.OtraInformaciones.Select(o => o.CreadoPor));
         guidsUsuarios.UnionWith(suceso.Documentaciones.Select(d => d.CreadoPor));
         guidsUsuarios.UnionWith(suceso.SucesoRelacionados.Select(d => d.CreadoPor));
@@ -58,17 +58,17 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         var registros = new List<RegistroActualizacionDto>();
 
         // Procesar Datos de Evolución
-        registros.AddRange(suceso.Evoluciones.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Datos de evolución",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
-        }));
+        //registros.AddRange(suceso.Evoluciones.Select(d => new RegistroActualizacionDto
+        //{
+        //    Id = d.Id,
+        //    FechaHora = d.FechaCreacion,
+        //    Registro = "",
+        //    Origen = "",
+        //    TipoRegistro = "Datos de evolución",
+        //    Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
+        //    Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+        //    EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
+        //}));
 
         // Procesar Otra Información
         registros.AddRange(suceso.OtraInformaciones.Select(o => new RegistroActualizacionDto
@@ -83,18 +83,18 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             EsUltimoRegistro = o.FechaCreacion == suceso.OtraInformaciones.Max(e => e.FechaCreacion)
         }));
 
-        // Procesar Direcciones y Coordinación
-        registros.AddRange(suceso.DireccionCoordinacionEmergencias.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Dirección y coordinación",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
-        }));
+        //// Procesar Direcciones y Coordinación
+        //registros.AddRange(suceso.DireccionCoordinacionEmergencias.Select(d => new RegistroActualizacionDto
+        //{
+        //    Id = d.Id,
+        //    FechaHora = d.FechaCreacion,
+        //    Registro = "",
+        //    Origen = "",
+        //    TipoRegistro = "Dirección y coordinación",
+        //    Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
+        //    Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
+        //    EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
+        //}));
 
         // Procesar Documentacion
         registros.AddRange(suceso.Documentaciones.Select(d => new RegistroActualizacionDto
