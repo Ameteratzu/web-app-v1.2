@@ -17,6 +17,7 @@ import { ActionsRelevantService } from '../../services/actions-relevant.service'
 import { AlertService } from '../../shared/alert/alert.service';
 import { _isNumberValue } from '@angular/cdk/coercion';
 import moment from 'moment';
+import { ActuacionRelevante, Movilizacion } from '../../types/mobilization.type';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -101,7 +102,10 @@ export class FireActionsRelevantComponent {
     const tiposGestion = await this.actionsRelevantSevice.getTipoGestion();
     const procedencia = await this.actionsRelevantSevice.getProcedencia();
     const destinos = await this.actionsRelevantSevice.getDestinos();
-
+    const capacidades = await this.actionsRelevantSevice.getCapacidades();
+    const tipoAdmin = await this.actionsRelevantSevice.getTipoAdministracion();
+    console.log("🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:", tipoAdmin)
+    
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
@@ -110,6 +114,8 @@ export class FireActionsRelevantComponent {
       tiposGestion,
       procedencia,
       destinos,
+      capacidades,
+      tipoAdmin
     };
 
     return this.dataMaestros;
@@ -183,8 +189,8 @@ export class FireActionsRelevantComponent {
       this.snackBar
         .open('Datos guardados correctamente!', '', {
           duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
           panelClass: ['snackbar-verde'],
         })
         .afterDismissed()
@@ -200,6 +206,21 @@ export class FireActionsRelevantComponent {
   }
 
   async processData(): Promise<void> {
+    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.actionsRelevantSevice.dataMovilizacion():",  this.actionsRelevantSevice.dataMovilizacion())
+    if (this.actionsRelevantSevice.dataMovilizacion().length > 0) {
+      console.log('this.actionsRelevantSevice.dataMovilizacion():', this.actionsRelevantSevice.dataMovilizacion());
+
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(this.actionsRelevantSevice.dataMovilizacion()[0]));
+      // formData.append('idSuceso', this.data.idIncendio.toString());
+
+      const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);
+      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
+
+      this.idReturn = resp.idActuacionRelevante;
+    }
+     
+
     if (this.actionsRelevantSevice.dataEmergencia().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
       this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;
@@ -382,6 +403,7 @@ export class FireActionsRelevantComponent {
     this.spinner.show();
 
     this.alertService
+      /*
       .showAlert({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esto!',
@@ -390,15 +412,32 @@ export class FireActionsRelevantComponent {
         cancelButtonColor: '#d33',
         confirmButtonText: '¡Sí, eliminar!',
       })
+      */
+
+      // PCD
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+      // FIN PCD
+
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
             await this.actionsRelevantSevice.deleteActions(Number(this.data?.fireDetail?.id));
             this.actionsRelevantSevice.clearData();
+            /*
             setTimeout(() => {
               this.renderer.setStyle(toolbar, 'z-index', '5');
               this.spinner.hide();
             }, 2000);
+            */
 
             /*
             this.alertService
@@ -415,13 +454,14 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('Datos eliminados correctamente!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal(true);
+                this.spinner.hide();
               });
             // FIN PCD
           } catch (error) {
@@ -440,13 +480,14 @@ export class FireActionsRelevantComponent {
             this.snackBar
               .open('No hemos podido eliminar la evolución!', '', {
                 duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
                 panelClass: ['snackbar-rojo'],
               })
               .afterDismissed()
               .subscribe(() => {
                 this.closeModal();
+                this.spinner.hide();
               });
             // FIN PCD
           }

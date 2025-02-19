@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Specifications.ProcedenciaDestinos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -15,7 +16,11 @@ namespace DGPCE.Sigemad.Application.Features.ProcedenciasDestinos.Queries.GetPro
 
         public async Task<IReadOnlyList<ProcedenciaDestino>> Handle(GetProcedenciasDestinosListQuery request, CancellationToken cancellationToken)
         {
-            var procedenciasDestinos = await _unitOfWork.Repository<ProcedenciaDestino>().GetAllAsync();
+
+            var spec = new ProcedenciaDestinoSpecification();
+            var procedenciasDestinos = await _unitOfWork.Repository<ProcedenciaDestino>()
+            .GetAllWithSpec(spec);
+
             return procedenciasDestinos;
         }
     }

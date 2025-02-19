@@ -17,7 +17,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutBaseComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent, data: { breadcrumb: 'Inicio' } },
+      { path: 'dashboard', component: DashboardComponent},
       {
         path: 'fire',
         component: FireComponent,

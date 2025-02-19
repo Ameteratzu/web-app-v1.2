@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { GenericMaster } from '../../../../types/actions-relevant.type';
+import { Capacidad, GenericMaster } from '../../../../types/actions-relevant.type';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ const MY_DATE_FORMATS = {
   },
 };
 @Component({
-  selector: 'app-step-cancel',
+  selector: 'app-step7',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,24 +33,24 @@ const MY_DATE_FORMATS = {
     MatNativeDateModule,
     MatInputModule,
   ],
-  templateUrl: './step-cancel.component.html',
-  styleUrl: './step-cancel.component.scss',
+  templateUrl: './step7.component.html',
+  styleUrl: './step7.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
 })
-export class StepCancelComponent {
+export class Step7Component {
   @Input() formGroup!: FormGroup;
   @Input() dataMaestros: any;
-  public procedencia = signal<GenericMaster[]>([]);
+  public capacidad = signal<Capacidad[]>([]);
 
   async ngOnInit() {
-    this.procedencia.set(this.dataMaestros.procedencia);
+    this.capacidad.set(this.dataMaestros.capacidades);
+    console.log('🚀 ~ Step5Component ~ ngOnInit ~  this.capacidad:', this.capacidad());
   }
 
-  getForm(atributo: string): any {
-    return this.formGroup.controls[atributo];
+  getForm(controlName: string): FormControl {
+    return this.formGroup.get(controlName) as FormControl;
   }
 }
-

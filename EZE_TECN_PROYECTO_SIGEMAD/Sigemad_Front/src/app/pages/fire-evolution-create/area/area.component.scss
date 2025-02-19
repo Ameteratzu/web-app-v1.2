@@ -1,10 +1,19 @@
 @use '../../../../styles.scss' as theme;
 
+.container {
+  display: flex;
+  justify-content: space-between;
+  width: 80vw;
+  overflow-x: hidden;
+}
+
 .form-container {
-  flex: 1;
+  flex: 0.9;
+  min-width: 0;
   background: #ececec;
   border-radius: 20px;
   padding: 20px;
+  margin-right: 10px;
 }
 
 .spaced-input {
@@ -44,4 +53,11 @@
   height: 32px;
   margin-top: 12px;
   margin-bottom: 20px;
+}
+
+.map-container {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ccc;
 }
