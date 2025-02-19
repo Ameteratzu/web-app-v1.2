@@ -35,6 +35,7 @@ public class RegistroActualizacionService : IRegistroActualizacionService
             var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
             {
                 Id = idRegistroActualizacion.Value,
+                IdTipoRegistroActualizacion = (int)tipoRegistro,
             });
             var registroActualizacion = await _unitOfWork.Repository<RegistroActualizacion>().GetByIdWithSpec(spec);
 
@@ -186,7 +187,8 @@ public class RegistroActualizacionService : IRegistroActualizacionService
         {
             if (!copiaOriginal.Equals(copiaNueva))
             {
-                if (detallePrevio.IdEstadoRegistro == EstadoRegistroEnum.Creado)
+                if (detallePrevio.IdEstadoRegistro == EstadoRegistroEnum.Creado ||
+                    detallePrevio.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado)
                     return EstadoRegistroEnum.CreadoYModificado;
                 return EstadoRegistroEnum.Modificado;
             }

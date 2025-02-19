@@ -84,7 +84,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
             modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
-
+            modelBuilder.Entity<GrupoMedio>().ToTable(nameof(GrupoMedio));
         }
 
 
@@ -116,6 +116,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
         public DbSet<Evolucion> Evoluciones { get; set; }
         public DbSet<AreaAfectada> AreaAfectadas { get; set; }
+        public DbSet<IntervencionMedio> IntervencionMedios { get; set; }
         public DbSet<RegistroProcedenciaDestino> RegistroProcedenciasDestinos { get; set; }
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
@@ -179,6 +180,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<RegistroApartado> RegistrosApartados { get; set; }
         public DbSet<DetalleRegistroActualizacion> DetallesRegistroActualizacion { get; set; }
         public DbSet<HistorialCambios> HistorialCambios { get; set; }
+        public DbSet<MediosCapacidad> MediosCapacidads { get; set; }
 
 
     }

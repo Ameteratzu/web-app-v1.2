@@ -1,11 +1,13 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
+using DGPCE.Sigemad.Application.Dtos.IntervencionMedios;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateOrUpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Queries.GetEvolucionById;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateListaImpactoEvolucion;
+using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.ManageIntervencionMedios;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +67,16 @@ public class EvolucionesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerOperation(Summary = "Crear lista de impactos de una evolucion (Consecuencia/Actuacion)")]
     public async Task<ActionResult<ManageImpactoResponse>> CreateImpactos([FromBody] ManageImpactosCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+    [HttpPost("intervenciones")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Crear lista de intervenciones de una evolucion")]
+    public async Task<ActionResult<ManageIntervencionMedioResponse>> CreateIntervenciones([FromBody] ManageIntervencionMedioCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

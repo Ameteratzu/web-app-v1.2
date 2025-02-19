@@ -33,9 +33,6 @@ GO
 DROP TABLE IF EXISTS Capacidad
 GO
 
-DROP TABLE IF EXISTS TipoCapacidad
-GO
-
 DROP TABLE IF EXISTS Entidad
 GO
 
@@ -152,6 +149,9 @@ GO
 DROP TABLE IF EXISTS TipoDireccionEmergencia
 GO
 
+DROP TABLE IF EXISTS DetalleIntervencionMedio
+GO
+
 DROP TABLE IF EXISTS IntervencionMedio
 GO
 
@@ -168,6 +168,21 @@ DROP TABLE IF EXISTS TitularidadMedio
 GO
 
 DROP TABLE IF EXISTS CaracterMedio
+GO
+
+DROP TABLE IF EXISTS MediosCapacidad
+GO
+
+DROP TABLE IF EXISTS TipoMedio
+GO
+
+DROP TABLE IF EXISTS SubgrupoMedio
+GO
+
+DROP TABLE IF EXISTS GrupoMedio
+GO
+
+DROP TABLE IF EXISTS TipoCapacidad
 GO
 
 DROP TABLE IF EXISTS ImpactoEvolucion
