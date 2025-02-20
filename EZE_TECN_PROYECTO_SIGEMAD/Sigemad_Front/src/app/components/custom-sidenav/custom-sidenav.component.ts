@@ -38,6 +38,9 @@ export class CustomSidenavComponent {
   };
 
   expandedMenuId: number | null = null;
+  // PCD
+  expandedSubMenuId: number | null = null;
+  // FIN PCD
 
   sideNavCollapsed = signal(false);
   @Input() set collapsed(val: boolean) {
@@ -63,6 +66,54 @@ export class CustomSidenavComponent {
     '/catalogs': 'catalogs',
     '/search': 'search',
     '/episodes': 'episodes',
+
+    // PCD
+    // OPE - ADMINISTRACIÓN
+    '/ope-administracion-periodos': 'ope-administracion-periodos',
+    '/ope-administracion-puertos': 'ope-administracion-puertos',
+    '/ope-administracion-lineas-maritimas': 'ope-administracion-lineas-maritimas',
+    '/ope-administracion-fronteras': 'ope-administracion-fronteras',
+    '/ope-administracion-puntos-control-carreteras': 'ope-administracion-puntos-control-carreteras',
+    '/ope-administracion-areas-descanso': 'ope-administracion-areas-descanso',
+    '/ope-administracion-areas-estacionamiento': 'ope-administracion-areas-estacionamiento',
+    '/ope-administracion-ocupacion-areas-estacionamiento': 'ope-administracion-ocupacion-areas-estacionamiento',
+    '/ope-administracion-log': 'ope-administracion-log',
+    // OPE - NUEVO
+    '/ope-nuevo-embarques-diarios': 'ope-nuevo-embarques-diarios',
+    '/ope-nuevo-embarques-funcionalidades': 'ope-nuevo-embarques-funcionalidades',
+    '/ope-nuevo-asistencias': 'ope-nuevo-asistencias',
+    '/ope-nuevo-asistencias-funcionalidades': 'ope-nuevo-asistencias-funcionalidades',
+    '/ope-nuevo-fronteras': 'ope-nuevo-fronteras',
+    '/ope-nuevo-fronteras-funcionalidades': 'ope-nuevo-fronteras-funcionalidades',
+    '/ope-nuevo-afluencia-puntos-control-carreteras': 'ope-nuevo-afluencia-puntos-control-carreteras',
+    '/ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades': 'ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades',
+    '/ope-nuevo-areas-descanso': 'ope-nuevo-areas-descanso',
+    '/ope-nuevo-areas-estacionamiento': 'ope-nuevo-areas-estacionamiento',
+    '/ope-nuevo-areas-estacionamiento-funcionalidades': 'ope-nuevo-areas-estacionamiento-funcionalidades',
+    // OPE - BUSCAR
+    '/ope-buscar-embarques-diarios': 'ope-buscar-embarques-diarios',
+    '/ope-buscar-embarques-funcionalidades': 'ope-buscar-embarques-funcionalidades',
+    '/ope-buscar-asistencias': 'ope-buscar-asistencias',
+    '/ope-buscar-asistencias-funcionalidades': 'ope-buscar-asistencias-funcionalidades',
+    '/ope-buscar-fronteras': 'ope-buscar-fronteras',
+    '/ope-buscar-fronteras-funcionalidades': 'ope-buscar-fronteras-funcionalidades',
+    '/ope-buscar-afluencia-puntos-control-carretera': 'ope-buscar-afluencia-puntos-control-carretera',
+    '/ope-buscar-afluencia-puntos-control-carretera-funcionalidades': 'ope-buscar-afluencia-puntos-control-carretera-funcionalidades',
+    '/ope-buscar-areas-descanso': 'ope-buscar-areas-descanso',
+    '/ope-buscar-ocupacion-areas-estacionamiento': 'ope-buscar-ocupacion-areas-estacionamiento',
+    '/ope-buscar-ocupacion-areas-estacionamiento-funcionalidades': 'ope-buscar-ocupacion-areas-estacionamiento-funcionalidades',
+    // OPE - APBA
+    '/ope-apba-entrada-vehiculos-puertos': 'ope-apba-entrada-vehiculos-puertos',
+    '/ope-apba-entrada-vehiculos-puertos-funcionalidades': 'ope-apba-entrada-vehiculos-puertos-funcionalidades',
+    '/ope-apba-embarques-vehiculos-intervalos-horarios': 'ope-apba-embarques-vehiculos-intervalos-horarios',
+    '/ope-apba-embarques-vehiculos-intervalos-horarios-funcionalidades': 'ope-apba-embarques-vehiculos-intervalos-horarios-funcionalidades',
+    // OPE - PLANIFICACIÓN
+    '/ope-planificacion-plan-flota': 'ope-planificacion-plan-flota',
+    '/ope-planificacion-plan-flota-funcionalidades': 'ope-planificacion-plan-flota-funcionalidades',
+    '/ope-planificacion-participantes-age': 'ope-planificacion-participantes-age',
+    // OPE - INCIDENCIAS
+    '/ope-incidencias-datos-inicio': 'ope-incidencias-datos-inicio',
+    // FIN PCD
   };
 
   userName = sessionStorage.getItem('username');
@@ -88,6 +139,54 @@ export class CustomSidenavComponent {
       { name: 'config', path: '/assets/img/config.svg' },
       { name: 'users', path: '/assets/img/users.svg' },
       { name: 'catalogs', path: '/assets/img/catalogs.svg' },
+
+      // PCD
+      // OPE - ADMINISTRACIÓN
+      { name: 'ope-administracion-periodos', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-puertos', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-lineas-maritimas', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-fronteras', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-puntos-control-carreteras', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-areas-descanso', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-areas-estacionamiento', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-ocupacion-areas-estacionamiento', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-log', path: '/assets/img/config.svg' },
+      // OPE - NUEVO
+      { name: 'ope-nuevo-embarques-diarios', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-embarques-funcionalidades', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-asistencias', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-asistencias-funcionalidades', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-fronteras', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-fronteras-funcionalidades', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-afluencia-puntos-control-carreteras', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-areas-descanso', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-areas-estacionamiento', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-areas-estacionamiento-funcionalidades', path: '/assets/img/ope.svg' },
+      // OPE - BUSCAR
+      { name: 'ope-buscar-embarques-diarios', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-embarques-funcionalidades', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-asistencias', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-asistencias-funcionalidades', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-fronteras', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-fronteras-funcionalidades', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-afluencia-puntos-control-carretera', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-afluencia-puntos-control-carretera-funcionalidades', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-areas-descanso', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-ocupacion-areas-estacionamiento', path: '/assets/img/search.svg' },
+      { name: 'ope-buscar-ocupacion-areas-estacionamiento-funcionalidades', path: '/assets/img/search.svg' },
+      // OPE - APBA
+      { name: 'ope-apba-entrada-vehiculos-puertos', path: '/assets/img/search.svg' },
+      { name: 'ope-apba-entrada-vehiculos-puertos-funcionalidades', path: '/assets/img/search.svg' },
+      { name: 'ope-apba-embarques-vehiculos-intervalos-horarios', path: '/assets/img/search.svg' },
+      { name: 'ope-apba-embarques-vehiculos-intervalos-horarios-funcionalidades', path: '/assets/img/search.svg' },
+      // OPE - PLANIFICACIÓN
+      { name: 'ope-planificacion-plan-flota', path: '/assets/img/floods.svg' },
+      { name: 'ope-planificacion-plan-flota-funcionalidades', path: '/assets/img/floods.svg' },
+      { name: 'ope-planificacion-participantes-age', path: '/assets/img/floods.svg' },
+      // OPE - INCIDENCIAS
+      { name: 'ope-incidencias-datos-inicio', path: '/assets/img/dangerous-goods.svg' },
+      // FIN PCD
     ];
 
     icons.forEach((icon) => {
@@ -95,6 +194,7 @@ export class CustomSidenavComponent {
     });
   }
 
+  /*
   toggleSubmenu(item: any): void {
     item.ruta ? this.redirectTo(item) : '';
     if (this.expandedMenuId === item.id) {
@@ -103,6 +203,34 @@ export class CustomSidenavComponent {
       this.expandedMenuId = item.id;
     }
   }
+   */
+
+  //
+  toggleSubmenu(item: any, level: number): void {
+    // Si el item tiene una ruta, se realiza la redirección
+    if (item.ruta) {
+      this.redirectTo(item);
+      return; // Si hay ruta, no se hace nada más
+    }
+
+    if (level === 1) {
+      // Primer nivel (menú principal)
+      if (this.expandedMenuId === item.id) {
+        this.expandedMenuId = null; // Contraemos el submenú principal
+      } else {
+        this.expandedMenuId = item.id; // Expandimos el submenú principal
+      }
+    } else if (level === 2) {
+      // Segundo nivel (submenú)
+      if (this.expandedSubMenuId === item.id) {
+        this.expandedSubMenuId = null; // Contraemos el submenú
+      } else {
+        this.expandedSubMenuId = item.id; // Expandimos el submenú
+      }
+    }
+  }
+
+  //
 
   getActiveStyle(item: any, isActive: boolean): { [key: string]: string } {
     if (isActive && item.colorRgb) {
@@ -133,6 +261,7 @@ export class CustomSidenavComponent {
     });
 
     const respMenu = await this.menuService.get();
+
     this.menuBack.set(respMenu);
     this.spinner.hide();
     this.renderer.setStyle(toolbar, 'z-index', '5');
@@ -141,9 +270,9 @@ export class CustomSidenavComponent {
   redirectTo(itemSelected: Menu) {
     this.router.navigate([`${itemSelected.ruta}`]);
   }
-  
-  logout(){
-    console.log("🚀 ~ CustomSidenavComponent ~ logout ~ logout:", "logout")
+
+  logout() {
+    console.log('🚀 ~ CustomSidenavComponent ~ logout ~ logout:', 'logout');
     this.authService.logout();
   }
 }
