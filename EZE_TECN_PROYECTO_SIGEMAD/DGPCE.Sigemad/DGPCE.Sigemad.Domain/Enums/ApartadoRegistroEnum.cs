@@ -2,18 +2,22 @@
 public enum ApartadoRegistroEnum
 {
     Registro = 1,
-    AreaAfectada = 2,
-    ConsecuenciaActuacion = 3,
-    IntervencionMedios = 4,
-    Direccion = 5,
-    CoordinacionCECOPI = 6,
-    CoordinacionPMA = 7,
-    Documentacion = 8
-}
-
-public enum ApartadoDireccionEnum
-{
-    Direccion = 5,
-    CoordinacionCECOPI = 6,
-    CoordinacionPMA = 7,
+    DatoPrincipal = 2,
+    Parametro = 3,
+    AreaAfectada = 4,
+    ConsecuenciaActuacion = 5,
+    IntervencionMedios = 6,
+    Direccion = 7,
+    CoordinacionCECOPI = 8,
+    CoordinacionPMA = 9,
+    MovilizacionMedios = 10,
+    CoordinacionCECOD = 11,
+    ActivacionDePlanes = 12,
+    NotificacionesOficiales = 13,
+    ActivacionDeSistemas = 14,
+    DeclaracionZAGEPI = 15,
+    EmergenciaNacional = 16,
+    Documentacion = 17,
+    OtraInformacion = 18,
+    SucesosRelacionados = 19,
 }

@@ -17,6 +17,7 @@ using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
 using DGPCE.Sigemad.Application.Dtos.EntidadesMenor;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
+using DGPCE.Sigemad.Application.Dtos.IntervencionMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
@@ -24,13 +25,9 @@ using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
-using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
@@ -45,9 +42,6 @@ using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
@@ -58,8 +52,6 @@ using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.UpdateImpa
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.CreateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Commands.UpdateIncendios;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
-using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.CreateIntervencionMedios;
-using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.UpdateIntervencionMedios;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
@@ -75,6 +67,7 @@ using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Vms;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Application.Features.TipoIntervencionMedios.Vms;
 using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
+using DGPCE.Sigemad.Application.Mappings.Resolvers;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -85,14 +78,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CreateAlertaCommand, Alerta>();
-        CreateMap<UpdateAlertaCommand, Alerta>();
-        CreateMap<CreateEstadoAlertaCommand, EstadoAlerta>();
-        CreateMap<UpdateEstadoAlertaCommand, EstadoAlerta>();
-
-        CreateMap<Alerta, AlertaVm>();
-        CreateMap<EstadoAlerta, EstadosAlertasVm>();
-
         CreateMap<Menu, MenuItemVm>();
 
         CreateMap<Ccaa, ComunidadesAutonomasSinProvinciasVm>();
@@ -147,9 +132,6 @@ public class MappingProfile : Profile
 
         CreateMap<TipoIntervencionMedio, TipoIntervencionMedioVm>();
 
-        CreateMap<CreateIntervencionMedioCommand, IntervencionMedio>();
-        CreateMap<UpdateIntervencionMedioCommand, IntervencionMedio>();
-
         CreateMap<Distrito, DistritoVm>();
 
         CreateMap<EntidadMenor, EntidadMenorVm>();
@@ -175,6 +157,13 @@ public class MappingProfile : Profile
         CreateMap<CoordinacionPMA, CreateOrUpdateCoordinacionPmaDto>();
 
 
+        CreateMap<ManageIntervencionMedioDto, IntervencionMedio>()
+            .ForMember(dest => dest.DetalleIntervencionMedios, opt => opt.MapFrom<CustomDetalleIntervencionMedioResolver>());
+
+        CreateMap<ManageDetalleIntervencionMedioDto, DetalleIntervencionMedio>();
+
+        CreateMap<IntervencionMedio, ManageIntervencionMedioDto>();
+        CreateMap<DetalleIntervencionMedio, ManageDetalleIntervencionMedioDto>();
 
 
         CreateMap<CreateOrUpdateAreaAfectadaDto, AreaAfectada>();
@@ -415,27 +404,27 @@ public class MappingProfile : Profile
 
         CreateMap<CancelacionMedio, ManageCancelacionMedioDto>();
 
-        CreateMap<ManageOfrecimientoMedioDto,OfrecimientoMedio>()
+        CreateMap<ManageOfrecimientoMedioDto, OfrecimientoMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<OfrecimientoMedio, ManageOfrecimientoMedioDto>();
 
-        CreateMap<ManageAportacionMedioDto,AportacionMedio>()
+        CreateMap<ManageAportacionMedioDto, AportacionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<AportacionMedio, ManageAportacionMedioDto>();
 
-        CreateMap<ManageDespliegueMedioDto,DespliegueMedio>()
+        CreateMap<ManageDespliegueMedioDto, DespliegueMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<DespliegueMedio, ManageDespliegueMedioDto>();
 
-        CreateMap<ManageFinIntervencionMedioDto,FinIntervencionMedio>()
+        CreateMap<ManageFinIntervencionMedioDto, FinIntervencionMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<FinIntervencionMedio, ManageFinIntervencionMedioDto>();
 
-        CreateMap<ManageLlegadaBaseMedioDto,LlegadaBaseMedio>()
+        CreateMap<ManageLlegadaBaseMedioDto, LlegadaBaseMedio>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
         CreateMap<LlegadaBaseMedio, ManageLlegadaBaseMedioDto>();

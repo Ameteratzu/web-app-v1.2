@@ -3,11 +3,9 @@ public class RegistroActualizacionDto
 {
     public int Id { get; set; }
     public DateTime FechaHora { get; set; }
-    public string Registro { get; set; } // Entrada/Salida/Interna
-    public string Origen { get; set; }
-    public string TipoRegistro { get; set; } // Ejemplo: Datos de evolución, Otra información, etc.
+    public string TipoRegistro { get; set; } = string.Empty;
     public string Apartados { get; set; } = string.Empty;
-    public string Tecnico { get; set; } // Técnico que realizó la acción
+    public string Tecnico { get; set; } = string.Empty;
 
     public bool EsUltimoRegistro { get; set; } // Técnico que realizó la acción
 

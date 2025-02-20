@@ -87,7 +87,7 @@ public class GetSucesosListQueryHandler : IRequestHandler<GetSucesosListQuery, P
             Count = totalSucesos,
             Data = sucesosGrid,
             PageCount = totalPages,
-            Page = request.Page,
+            PageIndex = request.PageIndex,
             PageSize = request.PageSize
         };
 

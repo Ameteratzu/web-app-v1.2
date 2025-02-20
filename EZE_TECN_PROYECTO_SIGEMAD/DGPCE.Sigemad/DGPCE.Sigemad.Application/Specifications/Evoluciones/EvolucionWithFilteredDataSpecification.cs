@@ -37,11 +37,12 @@ public class EvolucionWithFilteredDataSpecification : BaseSpecification<Evolucio
         if(idsIntervencionMedio.Any())
         {
             AddInclude(e => e.IntervencionMedios.Where(intervencion => idsIntervencionMedio.Contains(intervencion.Id) && !intervencion.Borrado));
-            AddInclude("IntervencionMedios.TipoIntervencionMedio");
             AddInclude("IntervencionMedios.CaracterMedio");
-            AddInclude("IntervencionMedios.ClasificacionMedio");
             AddInclude("IntervencionMedios.TitularidadMedio");
             AddInclude("IntervencionMedios.Municipio");
+            AddInclude("IntervencionMedios.Provincia");
+            AddInclude("IntervencionMedios.DetalleIntervencionMedios");
+            AddInclude("IntervencionMedios.DetalleIntervencionMedios.MediosCapacidad");
         }
     }
 }

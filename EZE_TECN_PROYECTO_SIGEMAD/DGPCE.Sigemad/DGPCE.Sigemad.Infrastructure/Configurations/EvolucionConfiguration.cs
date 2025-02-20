@@ -61,6 +61,11 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
             .HasForeignKey(r => r.IdEvolucion) // El Id de Registro es también la clave foránea
             .OnDelete(DeleteBehavior.Restrict); // Configurar comportamiento de eliminación en cascada
 
+        builder.HasMany(e => e.IntervencionMedios)
+            .WithOne(r => r.Evolucion)
+            .HasForeignKey(r => r.IdEvolucion) // El Id de Registro es también la clave foránea
+            .OnDelete(DeleteBehavior.Restrict); // Configurar comportamiento de eliminación en cascada
+
 
         // Relación uno a uno con Suceso
         builder.HasOne(d => d.Suceso)
