@@ -13,7 +13,6 @@ public class RegistroActualizacion: BaseDomainModel<int>
     public int IdTipoRegistroActualizacion { get; set; }
     public int IdReferencia { get; set; } // ID de la cabecera (DireccionCoordinacionEmergencia, etc.)
     public string TipoEntidad { get; set; } // 'Direccion', 'CoordinacionCecopi', 'CoordinacionPMA'
-    public DateTime FechaHora { get; set; }
 
     public TipoRegistroActualizacion TipoRegistroActualizacion { get; set; }
     public List<RegistroApartado> RegistrosApartados { get; set; }

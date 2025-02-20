@@ -21,12 +21,30 @@ INSERT INTO TipoRegistroActualizacion (Id, Nombre) VALUES
 -- Insertar Apartados de Evolución
 INSERT INTO ApartadoRegistro (Id, IdTipoRegistroActualizacion, Nombre) VALUES 
 (1, 1, 'Registro'),
-(2, 1, 'Área afectada'),
-(3, 1, 'Consecuencias / Actuaciones'),
-(4, 1, 'Intervención de Medios');
+(2, 1, 'Datos principales'),
+(3, 1, 'Parámetros'),
+(4, 1, 'Área Afectada'),
+(5, 1, 'Consecuencias / Actuaciones'),
+(6, 1, 'Intervención de Medios');
 
 -- Insertar Apartados de Direccion y Coordinación
 INSERT INTO ApartadoRegistro (Id, IdTipoRegistroActualizacion, Nombre) VALUES 
-(5, 2, 'Dirección'),
-(6, 2, 'Coordinación Cecopi'),
-(7, 2, 'Coordinación PMA');
+(7, 2, 'Dirección'),
+(8, 2, 'Coord. CECOPI'),
+(9, 2, 'Coord. PMA');
+
+-- Insertar Apartados de Actuaciones Relevantes
+INSERT INTO ApartadoRegistro (Id, IdTipoRegistroActualizacion, Nombre) VALUES 
+(10, 3, 'Movilización'),
+(11, 3, 'Coord. CECOD'),
+(12, 3, 'Activación Planes'),
+(13, 3, 'Notificaciones oficiales'),
+(14, 3, 'Activación de Sistemas'),
+(15, 3, 'Declaración ZAGEP'),
+(16, 3, 'Emergencia Nacional');
+
+-- Insertar Apartados de Documentacion, Otra Información y Sucesos Relacionados
+INSERT INTO ApartadoRegistro (Id, IdTipoRegistroActualizacion, Nombre) VALUES 
+(17, 4, 'Documentación'),
+(18, 5, 'Otra Información'),
+(19, 6, 'Sucesos Relacionados');

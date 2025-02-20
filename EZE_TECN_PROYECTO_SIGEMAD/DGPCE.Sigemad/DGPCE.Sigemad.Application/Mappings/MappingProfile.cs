@@ -28,9 +28,6 @@ using DGPCE.Sigemad.Application.Dtos.Provincias;
 using DGPCE.Sigemad.Application.Dtos.SituacionesEquivalentes;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Vms;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.CreateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.Alertas.Vms;
 using DGPCE.Sigemad.Application.Features.ApplicationUsers.Vms;
 using DGPCE.Sigemad.Application.Features.Archivos.Commands.CreateFile;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
@@ -45,9 +42,6 @@ using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.CreateAlertas;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Commands.UpdateAlertas;
-using DGPCE.Sigemad.Application.Features.EstadosAlertas.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.EvolucionProcedenciaDestinos.Vms;
@@ -84,14 +78,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CreateAlertaCommand, Alerta>();
-        CreateMap<UpdateAlertaCommand, Alerta>();
-        CreateMap<CreateEstadoAlertaCommand, EstadoAlerta>();
-        CreateMap<UpdateEstadoAlertaCommand, EstadoAlerta>();
-
-        CreateMap<Alerta, AlertaVm>();
-        CreateMap<EstadoAlerta, EstadosAlertasVm>();
-
         CreateMap<Menu, MenuItemVm>();
 
         CreateMap<Ccaa, ComunidadesAutonomasSinProvinciasVm>();

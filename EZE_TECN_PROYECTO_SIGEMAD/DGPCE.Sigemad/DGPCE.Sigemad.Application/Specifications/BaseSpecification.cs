@@ -56,7 +56,7 @@ namespace DGPCE.Sigemad.Application.Specifications
 
         protected void ApplyPaging(SpecificationParams specParams)
         {
-            ApplyPaging((specParams.Page - 1) * specParams.PageSize, specParams.PageSize);
+            ApplyPaging((specParams.PageIndex) * specParams.PageSize, specParams.PageSize);
         }
 
         public bool IsPagingEnable { get; private set; }

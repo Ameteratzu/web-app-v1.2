@@ -50,8 +50,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Alerta>().ToTable("Alerta");
-            modelBuilder.Entity<EstadoAlerta>().ToTable("EstadoAlerta");
             modelBuilder.Entity<TipoSuceso>().ToTable("TipoSuceso");
             modelBuilder.Entity<ClaseSuceso>().ToTable("ClaseSuceso");
             modelBuilder.Entity<Menu>().ToTable("Menu");
@@ -87,9 +85,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<GrupoMedio>().ToTable(nameof(GrupoMedio));
         }
 
-
-        public DbSet<Alerta>? Alertas { get; set; }
-        public DbSet<EstadoAlerta>? EstadosAlertas { get; set; }
         public DbSet<TipoSuceso> TiposSuceso { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Ccaa>? CCAA { get; set; }
