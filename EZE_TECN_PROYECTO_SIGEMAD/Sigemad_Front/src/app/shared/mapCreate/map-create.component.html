@@ -12,8 +12,8 @@
 
   <div class="p-flex mt-20" *ngIf="!data.onlyView">
     <div>
-      <button (click)="closeModal()" mat-raised-button color="secondary">Cancelar</button>
-      <button (click)="savePolygon()" mat-flat-button color="primary">Guardar</button>
+      <button (click)="closeModal()" *ngIf="close" mat-raised-button color="secondary">Cancelar</button>
+      <button (click)="savePolygon()" *ngIf="close" mat-flat-button color="primary">Guardar</button>
     </div>
   </div>
 

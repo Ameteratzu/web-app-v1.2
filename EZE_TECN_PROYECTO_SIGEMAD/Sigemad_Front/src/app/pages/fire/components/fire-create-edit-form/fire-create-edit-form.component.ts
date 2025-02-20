@@ -332,6 +332,7 @@ export class FireCreateEdit implements OnInit {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.polygon(),
+        close: true,
       },
     });
 
