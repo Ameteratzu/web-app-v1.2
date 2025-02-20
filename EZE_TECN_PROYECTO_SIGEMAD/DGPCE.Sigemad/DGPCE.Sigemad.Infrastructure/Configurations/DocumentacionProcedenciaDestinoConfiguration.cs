@@ -9,7 +9,7 @@ public class DocumentacionProcedenciaDestinoConfiguration: IEntityTypeConfigurat
     public void Configure(EntityTypeBuilder<DocumentacionProcedenciaDestino> builder)
     {
         builder.ToTable("Documentacion_ProcedenciaDestino");
-        builder.HasKey(e => e.Id);
+        builder.HasKey(e => new {e.IdProcedenciaDestino, e.IdDetalleDocumentacion});
 
         builder.HasOne(e => e.DetalleDocumentacion)
                      .WithMany(e => e.DocumentacionProcedenciaDestinos)

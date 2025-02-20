@@ -39,7 +39,6 @@ CREATE TABLE DetalleDocumentacion (
  
  
 CREATE TABLE dbo.Documentacion_ProcedenciaDestino (
-    Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
     IdDetalleDocumentacion int NOT NULL FOREIGN KEY REFERENCES DetalleDocumentacion(Id),
     IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
     ---
@@ -50,4 +49,7 @@ CREATE TABLE dbo.Documentacion_ProcedenciaDestino (
     FechaEliminacion DATETIME2(7) NULL,
     EliminadoPor UNIQUEIDENTIFIER NULL,
     Borrado BIT NOT NULL DEFAULT 0
+
+		-- Composite Primary Key
+    CONSTRAINT PK_Documentacion_ProcedenciaDestino PRIMARY KEY (IdDetalleDocumentacion, IdProcedenciaDestino)
 );

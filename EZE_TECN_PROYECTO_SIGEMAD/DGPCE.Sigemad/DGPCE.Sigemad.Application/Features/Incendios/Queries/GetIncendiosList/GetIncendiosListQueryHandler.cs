@@ -116,7 +116,7 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
             Count = totalIncendios,
             Data = incendioVmList,
             PageCount = totalPages,
-            Page = request.Page,
+            PageIndex = request.PageIndex,
             PageSize = request.PageSize
         };
 

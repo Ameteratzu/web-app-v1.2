@@ -122,7 +122,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
             var idsDetalleDocumentacionParaEliminar = detallesDocumentacionParaEliminar.Select(d => d.Id).ToList();
             var historialDirecciones = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
                 .GetAsync(d =>
-                idsDetalleDocumentacionParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Direccion);
+                idsDetalleDocumentacionParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Documentacion);
 
             foreach (var detalle in detallesDocumentacionParaEliminar)
             {
