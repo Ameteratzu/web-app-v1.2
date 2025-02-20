@@ -269,6 +269,10 @@ public class MappingProfile : Profile
         CreateMap<Documentacion, DocumentacionDto>()
              .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
+
+        CreateMap<DetalleDocumentacion, DetalleDocumentacionDto>()
+                .ForMember(dest => dest.IdsProcedenciasDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino.Id))); ;
+
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
             .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
             .ForMember(dest => dest.Archivo, opt => opt.Ignore())

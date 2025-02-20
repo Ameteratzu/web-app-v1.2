@@ -3,12 +3,9 @@ using DGPCE.Sigemad.Application.Contracts.Files;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
-using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
-using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
-using DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 using DGPCE.Sigemad.Application.Specifications.Documentos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -48,12 +45,13 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
         await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
         await ValidateIdsAsync(request);
 
+
         await _unitOfWork.BeginTransactionAsync();
 
         try
         {
-            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<DireccionCoordinacionEmergencia>(
-                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.DireccionCoordinacion);
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<Documentacion>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.Documentacion);
 
             Documentacion documentacion = await GetOrCreateDocumentacionAsync(request, registroActualizacion);
 
@@ -68,7 +66,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                 Documentacion, DetalleDocumentacion, DetalleDocumentacionDto>(
                 registroActualizacion,
                 documentacion,
-                ApartadoRegistroEnum.Direccion,
+                ApartadoRegistroEnum.Documentacion,
                 detallesDocumentacionParaEliminar, detallesDocumentacionOriginales);
 
             await _unitOfWork.CommitAsync();
@@ -137,6 +135,11 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                     throw new BadRequestException($"El detalle de documentacion con ID {detalle.Id} solo puede eliminarse en el registro en que fue creada.");
                 }
 
+                if (detalle.IdArchivo.HasValue)
+                {
+                    _unitOfWork.Repository<Archivo>().DeleteEntity(detalle.Archivo);
+                }
+
                 _unitOfWork.Repository<DetalleDocumentacion>().DeleteEntity(detalle);
             }
 
@@ -146,32 +149,35 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
         return new List<int>();
     }
 
-    private void MapAndSaveDetallesDocumentacion(ManageDocumentacionesCommand request, Documentacion documentacion)
+    private async void MapAndSaveDetallesDocumentacion(ManageDocumentacionesCommand request, Documentacion documentacion)
     {
-        foreach (var documentacionDto in request.DetallesDocumentaciones)
+        foreach (var detalleDocumentoDto in request.DetallesDocumentaciones)
         {
-            if (documentacionDto.Id.HasValue && documentacionDto.Id > 0)
+            if (detalleDocumentoDto.Id.HasValue && detalleDocumentoDto.Id > 0)
             {
-                var documentacionExistente = documentacion.DetallesDocumentacion.FirstOrDefault(d => d.Id == documentacionDto.Id.Value);
+                var documentacionExistente = documentacion.DetallesDocumentacion.FirstOrDefault(d => d.Id == detalleDocumentoDto.Id.Value);
                 if (documentacionExistente != null)
                 {
                     var copiaOriginal = _mapper.Map<DetalleDocumentacionDto>(documentacionExistente);
-                    var copiaNueva = _mapper.Map<DetalleDocumentacionDto>(documentacionDto);
+                    var copiaNueva = _mapper.Map<DetalleDocumentacionDto>(detalleDocumentoDto);
 
                     if (!copiaOriginal.Equals(copiaNueva))
                     {
-                        _mapper.Map(documentacionDto, documentacionExistente);
+                        _mapper.Map(detalleDocumentoDto, documentacionExistente);
                         documentacionExistente.Borrado = false;
+                        documentacionExistente.Archivo = await MapArchivo(detalleDocumentoDto, documentacionExistente.Archivo);
                     }
                 }
                 else
                 {
-                    documentacion.DetallesDocumentacion.Add(_mapper.Map<DetalleDocumentacion>(documentacionDto));
+                    var nuevoDetalleDocumentacion = await CreateDetalleDocumentacion(detalleDocumentoDto);
+                    documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
                 }
             }
             else
             {
-                documentacion.DetallesDocumentacion.Add(_mapper.Map<DetalleDocumentacion>(documentacionDto));
+                var nuevoDetalleDocumentacion = await CreateDetalleDocumentacion(detalleDocumentoDto);
+                documentacion.DetallesDocumentacion.Add(nuevoDetalleDocumentacion);
             }
         }
     }

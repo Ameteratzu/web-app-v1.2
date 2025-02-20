@@ -5,9 +5,14 @@ meta {
 }
 
 post {
-  url: {{Server}}/api/v1/Account/Login
+  url: {{Server}}/api/v1/Account/Login?email=sigemad@sigemad.com&password=sigemad123
   body: json
   auth: none
+}
+
+params:query {
+  email: sigemad@sigemad.com
+  password: sigemad123
 }
 
 body:json {

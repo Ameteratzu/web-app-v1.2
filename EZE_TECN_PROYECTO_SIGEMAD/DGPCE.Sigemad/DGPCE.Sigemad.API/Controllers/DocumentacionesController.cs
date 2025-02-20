@@ -36,7 +36,7 @@ public class DocumentacionesController : ControllerBase
         // Mapear desde el modelo de API al command
         var command = new ManageDocumentacionesCommand
         {
-            IdDocumento = request.IdDocumento,
+            IdRegistroActualizacion = request.IdRegistroActualizacion,
             IdSuceso = request.IdSuceso
         };
 
