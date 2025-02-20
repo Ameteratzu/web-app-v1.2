@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS dbo.Menu;
 
 CREATE TABLE dbo.Menu (
 	Id int NOT NULL,
-	Nombre varchar(30) NOT NULL,
+	Nombre varchar(100) NOT NULL,
 	Tipo varchar(5) NOT NULL,
 	IdGrupo int NOT NULL,
 	NumOrden int NOT NULL,
