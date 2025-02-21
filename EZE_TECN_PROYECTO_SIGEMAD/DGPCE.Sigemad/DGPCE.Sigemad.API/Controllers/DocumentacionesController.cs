@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
-using DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDetalleDocumentacionesById;
+using DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDocumentacion;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -76,18 +76,33 @@ public class DocumentacionesController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Summary = "Obtener los detalles de la documentacion por id")]
-    public async Task<ActionResult<DocumentacionDto>> GetById(int id)
+    [HttpGet]
+    public async Task<ActionResult<DocumentacionDto>> GetDocumentaciones(
+    [FromQuery] int? idRegistroActualizacion,
+    [FromQuery] int idSuceso)
     {
-        var query = new GetDocumentacionesByIdQuery(id);
-        var documentacionVm = await _mediator.Send(query);
+        var query = new GetDoumentacionQuery
+        {
+            IdRegistroActualizacion = idRegistroActualizacion,
+            IdSuceso = idSuceso
+        };
 
-        return Ok(documentacionVm);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
+
+    //[HttpGet("{id}")]
+    //[ProducesResponseType((int)HttpStatusCode.OK)]
+    //[ProducesResponseType((int)HttpStatusCode.NotFound)]
+    //[ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    //[SwaggerOperation(Summary = "Obtener los detalles de la documentacion por id")]
+    //public async Task<ActionResult<DocumentacionDto>> GetById(int id)
+    //{
+    //    var query = new GetDocumentacionesByIdQuery(id);
+    //    var documentacionVm = await _mediator.Send(query);
+
+    //    return Ok(documentacionVm);
+    //}
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

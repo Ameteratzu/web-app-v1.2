@@ -25,7 +25,7 @@ CREATE TABLE DetalleDocumentacion (
     FechaHora DATETIME2(7) NOT NULL,
     FechaHoraSolicitud DATETIME2(7) NOT NULL,
     IdTipoDocumento INT NOT NULL FOREIGN KEY REFERENCES TipoDocumento(Id),
-    Descripcion NVARCHAR(255) NOT NULL,
+    Descripcion NVARCHAR(255) NULL,
     IdArchivo UNIQUEIDENTIFIER NULL FOREIGN KEY REFERENCES Archivo(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),

@@ -8,7 +8,7 @@ public class DetalleDocumentacionDto : IEquatable<DetalleDocumentacionDto>
     public DateTime FechaHora { get; set; }
     public DateTime FechaHoraSolicitud { get; set; }
     public int IdTipoDocumento { get; set; }
-    public string Descripcion { get; set; }
+    public string? Descripcion { get; set; }
     public FileDto? Archivo { get; set; }
 
     public List<int>? IdsProcedenciasDestinos { get; set; } = new();

@@ -27,7 +27,7 @@ public class GetDocumentacionesByIdQueryHandler : IRequestHandler<GetDocumentaci
     public async Task<DocumentacionDto> Handle(GetDocumentacionesByIdQuery request, CancellationToken cancellationToken)
     {
         var documentacion = await _unitOfWork.Repository<Documentacion>()
-        .GetByIdWithSpec(new DetalleDocumentacionById(request.Id));
+        .GetByIdWithSpec(new DetalleDocumentacionById(new DocumentacionParams{ Id = request.Id }));
 
         if (documentacion == null)
         {

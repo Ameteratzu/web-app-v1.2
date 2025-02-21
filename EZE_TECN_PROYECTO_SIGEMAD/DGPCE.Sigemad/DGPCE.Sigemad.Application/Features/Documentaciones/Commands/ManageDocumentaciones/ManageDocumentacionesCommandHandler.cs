@@ -246,6 +246,8 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
 
     private async Task ValidateProcedenciasDestinosAsync(ManageDocumentacionesCommand request)
     {
+        if (request.DetallesDocumentaciones != null && request.DetallesDocumentaciones.Count >0)
+        {
         var idsDocumentacionProcedenciaDestinos = request.DetallesDocumentaciones
             .SelectMany(d => d.IdsProcedenciasDestinos ?? new List<int>())
             .Distinct();
@@ -262,6 +264,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
                 throw new NotFoundException(nameof(ProcedenciaDestino), string.Join(", ", idsDocumentacionProcedenciaDestinosInvalidos));
             }
         }
+       }
     }
 
     private async Task MapAndManageDetallesDocumentacion(ManageDocumentacionesCommand request, Documentacion documentacion)

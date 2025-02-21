@@ -8,5 +8,5 @@ public class ManageDocumentacionesCommand : IRequest<CreateOrUpdateDocumentacion
     public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
 
-    public List<DetalleDocumentacionDto> DetallesDocumentaciones { get; set; } = new();
+    public List<DetalleDocumentacionDto>? DetallesDocumentaciones { get; set; } = new();
 }

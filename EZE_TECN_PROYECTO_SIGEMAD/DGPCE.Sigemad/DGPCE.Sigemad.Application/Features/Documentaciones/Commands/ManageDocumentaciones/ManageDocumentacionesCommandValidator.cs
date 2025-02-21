@@ -33,9 +33,5 @@ public class ManageDocumentacionesCommandValidator : AbstractValidator<DetalleDo
         RuleFor(x => x.IdTipoDocumento)
             .GreaterThan(0).WithMessage(localizer["IdTipoDocumentoObligatorio"]);
 
-        RuleFor(x => x.Descripcion)
-            .NotEmpty().WithMessage(localizer["DescripcionObligatorio"])
-            .MaximumLength(255).WithMessage(localizer["DescripcionMaxLength"]);
-
     }
 }

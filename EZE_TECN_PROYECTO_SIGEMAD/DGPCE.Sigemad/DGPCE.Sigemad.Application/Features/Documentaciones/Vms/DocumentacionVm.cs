@@ -15,5 +15,5 @@ public class DocumentacionVm
     public string Descripcion { get; set; }
     public Guid? IdArchivo { get; set; }
 
-    public List<DetalleDocumentacion> DetalleDocumentaciones { get; set; } = null;
+    public List<DetalleDocumentacion>? DetalleDocumentaciones { get; set; } = null;
 }
