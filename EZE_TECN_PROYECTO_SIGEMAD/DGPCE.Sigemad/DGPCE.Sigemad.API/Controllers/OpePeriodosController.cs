@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.CreateOpePeriodos;
+﻿using Azure.Core;
+using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.CreateOpePeriodos;
 using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.DeleteOpePeriodos;
 using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.UpdateOpePeriodos;
 using DGPCE.Sigemad.Application.Features.Periodos.Queries.GetPeriodoById;
@@ -41,6 +42,7 @@ public class OpePeriodosController : ControllerBase
     public async Task<ActionResult<PaginationVm<OpePeriodoVm>>> GetOpePeriodos(
         [FromQuery] GetOpePeriodosListQuery query)
     {
+        Console.WriteLine("2222222222222222222222222: " + query.Search);
         var pagination = await _mediator.Send(query);
         return Ok(pagination);
     }

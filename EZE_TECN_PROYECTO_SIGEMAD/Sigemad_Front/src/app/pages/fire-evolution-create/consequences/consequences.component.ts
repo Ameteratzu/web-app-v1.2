@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -124,7 +124,7 @@ export class ConsequencesComponent {
       tipo: [null, Validators.required],
       grupo: [null, Validators.required],
       denominacion: [null, Validators.required],
-      numero: [null, Validators.required],
+      numero: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
       localizacion: [municipio.descripcion, Validators.required], //MUNICIPIO DEL INCENDIO
       observacion: [''],
     });
@@ -345,5 +345,19 @@ export class ConsequencesComponent {
 
   delete() {
     this.save.emit({ save: false, delete: true, close: false, update: false });
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+
+    // Permitir teclas de control como Backspace, Tab, etc.
+    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27) {
+      return; // Permite el backspace, tab, enter y escape
+    }
+
+    // Solo permite números (códigos 48-57) y previene el punto (46) y cualquier otro carácter
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   }
 }
