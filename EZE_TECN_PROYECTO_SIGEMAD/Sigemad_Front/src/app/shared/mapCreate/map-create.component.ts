@@ -36,14 +36,15 @@ import { Municipality } from '../../types/municipality.type';
 
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
-const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
+const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
 
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule, DragDropModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
@@ -96,7 +97,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (defaultPolygon == null && this.polygon == null) {
       this.polygon = [];
     }
-    
+
     if (defaultPolygon != null) {
       this.polygon = defaultPolygon;
     }
@@ -118,7 +119,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
   private updateMapWithPolygon(newPolygon: any) {
     if (newPolygon) {
       this.layerAreasAfectadas.getSource()?.clear();
-      
+
       if (newPolygon) {
         const defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
         const polygonFeature = new Feature({
@@ -140,8 +141,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
   }
 
   configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
-
-    if (!municipio) { 
+    if (!municipio) {
       return;
     }
 
@@ -163,7 +163,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
       center: fromLonLat(municipio.geoPosicion.coordinates),
       zoom: 12,
       projection: 'EPSG:3857',
-    })
+    });
 
     // Crear el mapa
     this.map = new Map({
@@ -171,11 +171,9 @@ export class MapCreateComponent implements OnInit, OnChanges {
         zoom: true,
         zoomOptions: {
           zoomInTipLabel: 'Acercar',
-          zoomOutTipLabel: 'Alejar'
-        }
-      }).extend([
-        new FullScreen(({ tipLabel: 'Pantalla completa' })),
-      ]),
+          zoomOutTipLabel: 'Alejar',
+        },
+      }).extend([new FullScreen({ tipLabel: 'Pantalla completa' })]),
       target: 'map',
       layers: [baseLayers, layersGroupAdmin, layersGroupIncendio],
       view: this.view,
@@ -218,7 +216,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
   getBaseLayers() {
     const baseLayers = new LayerGroup({
-      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      properties: { title: 'Capas base', openInLayerSwitcher: true },
       layers: [
         new TileLayer({
           source: new WMTS({
@@ -230,44 +228,41 @@ export class MapCreateComponent implements OnInit, OnChanges {
             tileGrid: new WMTSTileGrid({
               origin: getTopLeft(getProjection('EPSG:3857')?.getExtent() || [0, 0, 0, 0]),
               resolutions: [
-                156543.03392804097, 78271.51696402048, 39135.75848201024,
-                19567.87924100512, 9783.93962050256, 4891.96981025128,
-                2445.98490512564, 1222.99245256282, 611.49622628141,
-                305.748113140705, 152.8740565703525, 76.43702828517625,
-                38.21851414258813, 19.109257071294063, 9.554628535647032,
-                4.777314267823516, 2.388657133911758, 1.194328566955879,
-                0.5971642834779395, 0.29858214173896974, 0.14929107086948487
+                156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564,
+                1222.99245256282, 611.49622628141, 305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813, 19.109257071294063,
+                9.554628535647032, 4.777314267823516, 2.388657133911758, 1.194328566955879, 0.5971642834779395, 0.29858214173896974,
+                0.14929107086948487,
               ],
-              matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+              matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'],
             }),
-            attributions: '© Instituto Geográfico Nacional de España (IGN)'
+            attributions: '© Instituto Geográfico Nacional de España (IGN)',
           }),
-          properties: { 'title': 'IGN callejero', baseLayer: true, },
-          visible: true
+          properties: { title: 'IGN callejero', baseLayer: true },
+          visible: true,
         }),
         new TileLayer({
           source: new TileWMS({
             url: 'https://www.ign.es/wms-inspire/pnoa-ma?',
-            params: { 'LAYERS': 'OI.OrthoimageCoverage', 'FORMAT': 'image/jpeg' },
-            attributions: '© PNOA - IGN España'
+            params: { LAYERS: 'OI.OrthoimageCoverage', FORMAT: 'image/jpeg' },
+            attributions: '© PNOA - IGN España',
           }),
-          properties: { 'title': 'IGN satélite', baseLayer: true, },
-          visible: false
+          properties: { title: 'IGN satélite', baseLayer: true },
+          visible: false,
         }),
         new TileLayer({
           source: new XYZ({
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics'
+            attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics',
           }),
-          properties: { 'title': 'Satélite', baseLayer: true, },
-          visible: false
+          properties: { title: 'Satélite', baseLayer: true },
+          visible: false,
         }),
         new TileLayer({
           source: new OSM(),
-          properties: { 'title': 'OpenStreetMap', baseLayer: true },
-          visible: false
+          properties: { title: 'OpenStreetMap', baseLayer: true },
+          visible: false,
         }),
-      ]
+      ],
     });
     // Evitar que se oculten todas las capas base
     function preventGroupLayerToggle(event: any) {
@@ -281,34 +276,34 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
   getAdminLayers() {
     const wmsLayersGroup = new LayerGroup({
-      properties: { 'title': 'Límites administrativos', 'openInLayerSwitcher': true },
+      properties: { title: 'Límites administrativos', openInLayerSwitcher: true },
 
       layers: [
         new TileLayer({
           source: new TileWMS({
             url: environment.urlGeoserver + 'wms?version=1.1.0',
             params: {
-              'LAYERS': 'nucleos_poblacion',
-              'TILED': true,
+              LAYERS: 'nucleos_poblacion',
+              TILED: true,
             },
             serverType: 'geoserver',
             transition: 0,
           }),
-          properties: { 'id': 'nucleos_poblacion', 'title': 'Núcleos de población' }
+          properties: { id: 'nucleos_poblacion', title: 'Núcleos de población' },
         }),
         new TileLayer({
           source: new TileWMS({
             url: environment.urlGeoserver + 'wms?version=1.1.0',
             params: {
-              'LAYERS': 'municipio_limites',
-              'TILED': true,
+              LAYERS: 'municipio_limites',
+              TILED: true,
             },
             serverType: 'geoserver',
             transition: 0,
           }),
-          properties: { 'title': 'Límites municipio' }
+          properties: { title: 'Límites municipio' },
         }),
-      ]
+      ],
     });
     return wmsLayersGroup;
   }
@@ -327,7 +322,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
         'stroke-color': 'rgb(255, 128, 0)',
         'stroke-width': 5,
       },
-      properties: { 'title': 'Área afectada' }
+      properties: { title: 'Área afectada' },
     });
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
@@ -348,7 +343,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
       source: new VectorSource({
         features: [pointFeature],
       }),
-      properties: { 'title': 'Municipio' }
+      properties: { title: 'Municipio' },
     });
 
     this.layerMunicipio.setStyle(
@@ -362,8 +357,8 @@ export class MapCreateComponent implements OnInit, OnChanges {
     );
 
     return new LayerGroup({
-      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
-      layers: [this.layerMunicipio, this.layerAreasAfectadas]
+      properties: { title: 'Incendios', openInLayerSwitcher: true },
+      layers: [this.layerMunicipio, this.layerAreasAfectadas],
     });
   }
 
@@ -374,20 +369,19 @@ export class MapCreateComponent implements OnInit, OnChanges {
       // Hacer la consulta WMS GetFeatureInfo
       const viewResolution = this.view.getResolution();
 
-      const nucleosPoblacionLayer = layersGroupAdmin.getLayers().getArray()
-        .find(layer => layer.get('id') === 'nucleos_poblacion') as TileLayer;
+      const nucleosPoblacionLayer = layersGroupAdmin
+        .getLayers()
+        .getArray()
+        .find((layer) => layer.get('id') === 'nucleos_poblacion') as TileLayer;
 
-      const url = (nucleosPoblacionLayer?.getSource() as TileWMS)?.getFeatureInfoUrl(
-        coordinate,
-        viewResolution!,
-        'EPSG:3857',
-        { 'INFO_FORMAT': 'application/json' }
-      );
+      const url = (nucleosPoblacionLayer?.getSource() as TileWMS)?.getFeatureInfoUrl(coordinate, viewResolution!, 'EPSG:3857', {
+        INFO_FORMAT: 'application/json',
+      });
 
       if (url) {
         fetch(url)
-          .then(response => response.json())
-          .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             if (data.features.length > 0) {
               const content = document.getElementById('popup-content');
               content!.innerHTML = `
@@ -414,7 +408,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     let drawBar = new Bar({
       group: true,
-      toggleOne: true
+      toggleOne: true,
     });
 
     mainBar.addControl(drawBar);
@@ -427,18 +421,18 @@ export class MapCreateComponent implements OnInit, OnChanges {
     let tgPoint = new Toggle({
       title: 'Dibujar punto',
       html: '<img src="/assets/img/location-dot-solid.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      interaction: this.drawPoint
+      interaction: this.drawPoint,
     });
 
     this.drawPoint.on('drawend', (e) => {
-      console.log("draw", e.feature);
+      console.log('draw', e.feature);
 
       let format = new WKT();
       let wkt = format.writeFeature(e.feature, {
         dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857'
+        featureProjection: 'EPSG:3857',
       });
-      console.log("json:", wkt);
+      console.log('json:', wkt);
     });
 
     //drawBar.addControl(tgPoint);
@@ -451,7 +445,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     let tgPolygon = new Toggle({
       title: 'Dibujar polígono',
       html: '<img src="/assets/img/draw-polygon.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      interaction: this.drawPolygon
+      interaction: this.drawPolygon,
     });
     tgPolygon.setActive(true);
 
@@ -479,23 +473,23 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     const tgSelect = new Toggle({
       html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      title: "Seleccionar",
+      title: 'Seleccionar',
       interaction: new Select({ hitTolerance: 2 }),
     });
     drawBar.addControl(tgSelect);
 
     const tgDelete = new Toggle({
       html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      title: "Borrar",
+      title: 'Borrar',
       onToggle: () => {
         if (this.select) {
           const selectedFeatures = this.select.getFeatures();
-          selectedFeatures.forEach(feature => {
+          selectedFeatures.forEach((feature) => {
             this.source.removeFeature(feature);
           });
           selectedFeatures.clear();
         }
-      }
+      },
     });
     drawBar.addControl(tgDelete);
 

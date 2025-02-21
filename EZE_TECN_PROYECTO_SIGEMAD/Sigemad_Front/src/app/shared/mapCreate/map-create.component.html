@@ -1,4 +1,6 @@
-<div class="container gap-1 flex-column align-items-center justify-content-center p-1">
+<div class="container gap-4 flex-column align-items-center justify-content-center p-4" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+  <span class="mapa-titulo">Mapa de ubicación</span>
+
   <div class="coordinate-search">
     <span class="coordinates-display">{{ coordinates }}</span>
     <input type="text" id="utm-x" placeholder="UTM X" />

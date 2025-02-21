@@ -247,7 +247,6 @@ export class FireEditComponent implements OnInit {
         } else if (actualizacion.tipoRegistro === 'Actuaciones Relevantes') {
           const actuacionRelevante: any = await this.actuacionesRelevantesService.getById(actualizacion.id);
           if (actuacionRelevante != null) {
-            //console.log(JSON.stringify(actuacionRelevante, null, 2));
             this.listadoActuacionesRelevantes.push(actuacionRelevante);
           }
         }
@@ -1028,6 +1027,7 @@ export class FireEditComponent implements OnInit {
     return completo;
   }
 
+  /*
   getIconUrlFilaNivelSituacionOperativaEquivalentePorEstado(estado: string): string {
     estado = estado.toLowerCase();
     switch (estado) {
@@ -1043,6 +1043,7 @@ export class FireEditComponent implements OnInit {
         return '/assets/img/logo-color.png';
     }
   }
+    */
   /********************************************* */
   /* FIN Fila NivelSituacionOperativaEquivalente */
   /********************************************* */
@@ -1253,7 +1254,7 @@ export class FireEditComponent implements OnInit {
   /*   Fila Medios extinción ordinarios   */
   /************************************** */
   async cargarFilaMediosExtincionOrdinarios() {
-    this.filaMediosExtincionOrdinarios.set('04-02-2025', [
+    this.filaMediosExtincionOrdinarios.set('14-02-2025', [
       { hora: '12:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
@@ -1411,88 +1412,85 @@ export class FireEditComponent implements OnInit {
   /* Fin Fila Medios extinción extraordinarios nacionales */
   /****************************************************** */
   async cargarFilaEMediosExtincionExtraordinariosNacionales() {
+    /*
     this.filaMediosExtincionExtraordinariosNacionales.set('03-02-2025', [
       { hora: '08:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
     this.filaMediosExtincionExtraordinariosNacionales.set('04-02-2025', [{ hora: '14:15', estado: 'BRIGADAS' }]);
+    */
+
+    this.filaMediosExtincionExtraordinariosNacionales.clear();
+
+    if (this.listadoActuacionesRelevantes.length > 0) {
+      this.listadoActuacionesRelevantes.sort((a, b) => {
+        const fechaA = new Date(a.fechaHora);
+        const fechaB = new Date(b.fechaHora);
+        return fechaA.getTime() - fechaB.getTime();
+      });
+
+      for (const actuacionRelevante of this.listadoActuacionesRelevantes) {
+        if (actuacionRelevante.movilizacionMedios != null && actuacionRelevante.movilizacionMedios.length > 0) {
+          for (const movilizacionMedios of actuacionRelevante.movilizacionMedios) {
+            if (movilizacionMedios.pasos != null && movilizacionMedios.pasos.length > 0) {
+              for (const paso of movilizacionMedios.pasos) {
+                //console.log(JSON.stringify(actuacionRelevante, null, 2));
+                const fechaGestionMedioExtraordinarioNacional: string = this.fechaADDMMYY(
+                  paso.solicitudMedio?.fechaHoraSolicitud ||
+                    paso.tramitacionMedio?.fechaHoraTramitacion ||
+                    paso.ofrecimientoMedio?.fechaHoraOfrecimiento ||
+                    paso.aportacionMedio?.fechaHoraAportacion ||
+                    paso.despliegueMedio?.fechaHoraDespliegue ||
+                    paso.finIntervencionMedio?.fechaHoraInicioIntervencion
+                );
+                const horaGestionMedioExtraordinarioNacional: string = this.fechaAHHMM(
+                  paso.solicitudMedio?.fechaHoraSolicitud ||
+                    paso.tramitacionMedio?.fechaHoraTramitacion ||
+                    paso.ofrecimientoMedio?.fechaHoraOfrecimiento ||
+                    paso.aportacionMedio?.fechaHoraAportacion ||
+                    paso.despliegueMedio?.fechaHoraDespliegue ||
+                    paso.finIntervencionMedio?.fechaHoraInicioIntervencion
+                );
+                const estadoGestionMedioExtraordinarioNacional: string = paso.pasoMovilizacion?.descripcion;
+                if (estadoGestionMedioExtraordinarioNacional) {
+                  this.actualizarFilaMediosExtincionExtraordinariosNacionales(
+                    fechaGestionMedioExtraordinarioNacional,
+                    horaGestionMedioExtraordinarioNacional,
+                    estadoGestionMedioExtraordinarioNacional
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  actualizarFilaMediosExtincionExtraordinariosNacionales(
+    fechaGestionMedioExtraordinarioNacional: string,
+    horaGestionMedioExtraordinarioNacional: string,
+    estadoGestionMedioExtraordinarioNacional: string
+  ) {
+    // Verificar si ya existe la fecha en el mapa
+    if (this.filaMediosExtincionExtraordinariosNacionales.has(fechaGestionMedioExtraordinarioNacional)) {
+      // Si ya existe, obtener el array de entradas para esa fecha
+      const entradas = this.filaMediosExtincionExtraordinariosNacionales.get(fechaGestionMedioExtraordinarioNacional) || []; // Si es undefined, se asigna un array vacío
+
+      // Añadir un nuevo estado a las entradas
+      entradas.push({ hora: horaGestionMedioExtraordinarioNacional, estado: estadoGestionMedioExtraordinarioNacional });
+
+      // Actualizar la entrada en el mapa con el nuevo valor
+      this.filaMediosExtincionExtraordinariosNacionales.set(fechaGestionMedioExtraordinarioNacional, entradas);
+    } else {
+      // Si no existe la fecha, crear una nueva entrada
+      this.filaMediosExtincionExtraordinariosNacionales.set(fechaGestionMedioExtraordinarioNacional, [
+        { hora: horaGestionMedioExtraordinarioNacional, estado: estadoGestionMedioExtraordinarioNacional },
+      ]);
+    }
   }
 
   /*
-  getBackgroundColorFilaMediosExtincionExtraordinariosNacionales(fecha: string, horaIndex: number): string {
-    // Obtener todas las fechas ordenadas
-    const fechas = Array.from(this.filaMediosExtincionExtraordinariosNacionales.keys()).sort((a, b) => {
-      const [dayA, monthA, yearA] = a.split('-').map(Number);
-      const [dayB, monthB, yearB] = b.split('-').map(Number);
-      const dateA = new Date(yearA, monthA - 1, dayA);
-      const dateB = new Date(yearB, monthB - 1, dayB);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    // Asegurar continuidad temporal agregando días intermedios
-    if (fechas.length > 0) {
-      const [dayInicio, monthInicio, yearInicio] = fechas[0].split('-').map(Number);
-      const [dayFin, monthFin, yearFin] = fechas[fechas.length - 1].split('-').map(Number);
-
-      const fechaInicio = new Date(yearInicio, monthInicio - 1, dayInicio);
-      const fechaFin = new Date(yearFin, monthFin - 1, dayFin);
-
-      for (let fechaIter = new Date(fechaInicio); fechaIter <= fechaFin; fechaIter.setDate(fechaIter.getDate() + 1)) {
-        const dia = String(fechaIter.getDate()).padStart(2, '0');
-        const mes = String(fechaIter.getMonth() + 1).padStart(2, '0');
-        const anio = fechaIter.getFullYear();
-        const fechaFormateada = `${dia}-${mes}-${anio}`;
-
-        if (!this.filaMediosExtincionExtraordinariosNacionales.has(fechaFormateada)) {
-          this.filaMediosExtincionExtraordinariosNacionales.set(fechaFormateada, []); // Agregar día vacío
-        }
-      }
-    }
-
-    // Obtener todas las entradas del día dado
-    const entradas = this.filaMediosExtincionExtraordinariosNacionales.get(fecha);
-
-    let color = 'transparent'; // Color predeterminado
-
-    if (entradas && entradas.length > 0) {
-      // Ordenar las entradas por hora
-      const entradasOrdenadas = entradas.sort((a, b) => {
-        const [horaA] = a.hora.split(':').map((num) => parseInt(num, 10));
-        const [horaB] = b.hora.split(':').map((num) => parseInt(num, 10));
-        return horaA - horaB;
-      });
-
-      // Recorrer las entradas del día para buscar el rango de horas
-      for (let i = 0; i < entradasOrdenadas.length; i++) {
-        const entrada = entradasOrdenadas[i];
-        const [horaSolo] = entrada.hora.split(':').map((num) => parseInt(num, 10));
-
-        // Si el horaIndex está en el rango actual
-        if (horaSolo <= horaIndex && (i === entradasOrdenadas.length - 1 || horaIndex < parseInt(entradasOrdenadas[i + 1].hora.split(':')[0], 10))) {
-          color = '#00BFBF'; // Color específico
-          return color;
-        }
-      }
-    }
-
-    // Si no se encontró un color en el día actual, buscar en días anteriores
-    for (let i = fechas.indexOf(fecha) - 1; i >= 0; i--) {
-      const fechaAnterior = fechas[i];
-      const entradasAnteriores = this.filaMediosExtincionExtraordinariosNacionales.get(fechaAnterior);
-
-      if (entradasAnteriores && entradasAnteriores.length > 0) {
-        // Obtener la última entrada del día anterior
-        const ultimaEntrada = entradasAnteriores[entradasAnteriores.length - 1];
-        color = '#00BFBF'; // Color específico
-        break;
-      }
-    }
-
-    return color;
-  }
-    */
-
-  //
   getBackgroundColorFilaMediosExtincionExtraordinariosNacionales(fecha: string, horaIndex: number): string {
     // Obtener todas las fechas ordenadas desde el getter
     const fechas = Array.from(this.filaMediosExtincionOrdinariosNacionalesDiasCompletos.keys()).sort((a, b) => {
@@ -1543,10 +1541,185 @@ export class FireEditComponent implements OnInit {
 
     return color;
   }
+  */
 
-  //
+  /*
+ getEstiloFilaMediosExtincionExtraordinariosNacionales(fecha: string, horaIndex: number): { [key: string]: string } {
+    // Obtener todas las fechas ordenadas desde el getter
+    const fechas = Array.from(this.filaMediosExtincionExtraordinariosNacionalesDiasCompletos.keys()).sort((a, b) => {
+      const [dayA, monthA, yearA] = a.split('-').map(Number);
+      const [dayB, monthB, yearB] = b.split('-').map(Number);
+      const dateA = new Date(yearA, monthA - 1, dayA);
+      const dateB = new Date(yearB, monthB - 1, dayB);
+      return dateA.getTime() - dateB.getTime();
+    });
 
-  get filaMediosExtincionOrdinariosNacionalesDiasCompletos(): Map<string, { hora: string; estado: string }[]> {
+    // Obtener todas las entradas del día dado
+    const entradas = this.filaMediosExtincionExtraordinariosNacionalesDiasCompletos.get(fecha);
+
+    let estilo: { [key: string]: string } = {
+      'background-color': 'transparent',
+      position: 'absolute',
+      top: '8px',
+      left: '0',
+      width: '100%',
+      height: '30%',
+    };
+
+    let fondoAportacionAplicado = false; // Variable para saber si ya se aplicó el fondo "Aportación"
+
+    if (entradas && entradas.length > 0) {
+      // Ordenar las entradas por hora
+      const entradasOrdenadas = entradas.sort((a, b) => {
+        const [horaA] = a.hora.split(':').map((num) => parseInt(num, 10));
+        const [horaB] = b.hora.split(':').map((num) => parseInt(num, 10));
+        return horaA - horaB;
+      });
+
+      // Recorrer las entradas del día para buscar el rango de horas
+      for (let i = 0; i < entradasOrdenadas.length; i++) {
+        const entrada = entradasOrdenadas[i];
+        const [horaExacta] = entrada.hora.split(':').map((num) => parseInt(num, 10));
+
+        // Si encontramos un evento "Aportación", aplicamos el fondo
+        if (entrada.estado.toLowerCase() === 'aportación') {
+          estilo = { 'background-color': '#00BFBF', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+          fondoAportacionAplicado = true;
+          break;
+        }
+
+        // Si el fondo "Aportación" ya ha sido aplicado, no se cambia más
+        if (fondoAportacionAplicado) {
+          break;
+        }
+
+        // Si el horaExacta es igual a horaIndex
+        if (horaExacta === horaIndex) {
+          estilo = this.getEstiloPorEstadoFilaMediosExtincionExtraordinariosNacionales(entrada.estado);
+          return estilo;
+        } else if (
+          horaExacta <= horaIndex &&
+          (i === entradasOrdenadas.length - 1 || horaIndex < parseInt(entradasOrdenadas[i + 1].hora.split(':')[0], 10))
+        ) {
+          return estilo;
+        }
+      }
+    }
+
+    return estilo;
+  }
+  */
+
+  // TEST
+  getEstiloFilaMediosExtincionExtraordinariosNacionales(fecha: string, horaIndex: number): { [key: string]: string } {
+    // Obtener todas las fechas ordenadas desde el getter
+    const fechas = Array.from(this.filaMediosExtincionExtraordinariosNacionalesDiasCompletos.keys()).sort((a, b) => {
+      const [dayA, monthA, yearA] = a.split('-').map(Number);
+      const [dayB, monthB, yearB] = b.split('-').map(Number);
+      const dateA = new Date(yearA, monthA - 1, dayA);
+      const dateB = new Date(yearB, monthB - 1, dayB);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    // Obtener todas las entradas del día dado
+    const entradas = this.filaMediosExtincionExtraordinariosNacionalesDiasCompletos.get(fecha);
+
+    let estilo: { [key: string]: string } = {
+      'background-color': 'transparent',
+      position: 'absolute',
+      top: '8px',
+      left: '0',
+      width: '100%',
+      height: '30%',
+    };
+
+    let fondoAportacionAplicado = false; // Variable para saber si ya se aplicó el fondo "Aportación"
+
+    if (entradas && entradas.length > 0) {
+      // Ordenar las entradas por hora
+      const entradasOrdenadas = entradas.sort((a, b) => {
+        const [horaA] = a.hora.split(':').map((num) => parseInt(num, 10));
+        const [horaB] = b.hora.split(':').map((num) => parseInt(num, 10));
+        return horaA - horaB;
+      });
+
+      // Recorrer las entradas del día para buscar el rango de horas
+      for (let i = 0; i < entradasOrdenadas.length; i++) {
+        const entrada = entradasOrdenadas[i];
+        const [horaExacta] = entrada.hora.split(':').map((num) => parseInt(num, 10));
+
+        // Si encontramos un evento "Aportación", aplicamos el fondo
+        if (entrada.estado.toLowerCase() === 'aportación' || (entrada.estado.toLowerCase() === 'despliegue' && !fondoAportacionAplicado)) {
+          estilo = { 'background-color': '#00BFBF', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+          fondoAportacionAplicado = true; // Marcamos que el fondo se ha aplicado
+        }
+
+        // Si el fondo "Aportación" ha sido aplicado, lo mantenemos activo hasta encontrar "fin de intervención"
+        if (fondoAportacionAplicado) {
+          // Si encontramos un evento "Fin de intervención", terminamos de aplicar el fondo
+          if (entrada.estado.toLowerCase() === 'fin de intervención') {
+            fondoAportacionAplicado = false; // Se desactiva el fondo
+            break; // Salimos del bucle
+          }
+          continue; // Si el fondo ya está aplicado, lo mantenemos hasta encontrar el "fin de intervención"
+        }
+
+        // Si el horaExacta es igual a horaIndex
+        if (horaExacta === horaIndex) {
+          estilo = this.getEstiloPorEstadoFilaMediosExtincionExtraordinariosNacionales(entrada.estado);
+
+          //
+          // **Solo pintar el icono si hay una aportación**
+          if (!this.tieneAportacion(this.filaMediosExtincionExtraordinariosNacionales)) {
+            estilo = { 'background-color': 'transparent', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+          }
+          //
+
+          return estilo;
+        } else if (
+          horaExacta <= horaIndex &&
+          (i === entradasOrdenadas.length - 1 || horaIndex < parseInt(entradasOrdenadas[i + 1].hora.split(':')[0], 10))
+        ) {
+          return estilo;
+        }
+      }
+
+      // Si no se encuentra un evento "fin de intervención", mantenemos el fondo hasta el final del día
+      if (fondoAportacionAplicado) {
+        return estilo; // Retorna el estilo con fondo aún aplicado
+      }
+    }
+
+    // Si no se encontró un color en el día actual, buscar en días anteriores
+    for (let i = fechas.indexOf(fecha) - 1; i >= 0; i--) {
+      const fechaAnterior = fechas[i];
+      const entradasAnteriores = this.filaMediosExtincionExtraordinariosNacionalesDiasCompletos.get(fechaAnterior);
+
+      if (entradasAnteriores && entradasAnteriores.length > 0) {
+        // Obtener la última entrada del día anterior
+        const ultimaEntrada = entradasAnteriores[entradasAnteriores.length - 1];
+        if (ultimaEntrada.estado.toLowerCase() === 'aportación') {
+          estilo = { 'background-color': '#00BFBF', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+          break; // Salimos del bucle si encontramos "aportación" en días anteriores
+        }
+      }
+    }
+
+    return estilo;
+  }
+
+  tieneAportacion(filaMediosExtincionExtraordinariosNacionales: Map<string, { hora: string; estado: string }[]>): boolean {
+    for (const entradas of filaMediosExtincionExtraordinariosNacionales.values()) {
+      if (entradas.some((entrada) => entrada.estado.toLowerCase() === 'aportación')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // FIN TEST
+
+  get filaMediosExtincionExtraordinariosNacionalesDiasCompletos(): Map<string, { hora: string; estado: string }[]> {
     const completo = new Map<string, { hora: string; estado: string }[]>();
 
     // Iteramos sobre todas las fechas en filaDias
@@ -1562,6 +1735,55 @@ export class FireEditComponent implements OnInit {
     return completo;
   }
 
+  getEstiloPorEstadoFilaMediosExtincionExtraordinariosNacionales(estado: string): { [key: string]: string } {
+    estado = estado.toLowerCase();
+    switch (estado) {
+      case 'solicitud':
+        return {
+          'background-image': 'url(/assets/img/movilizaciones/m-solicitud.svg)',
+          'background-size': 'contain',
+          'background-repeat': 'no-repeat',
+          position: 'absolute',
+          top: '2px',
+          left: '0',
+          width: '100%',
+          height: '100%',
+        };
+      /*
+      case 'tramitación':
+        return {
+          'background-image': 'url(/assets/img/movilizaciones/m-tramitacion.svg)',
+          'background-size': 'contain',
+          'background-repeat': 'no-repeat',
+          position: 'absolute',
+          top: '2px',
+          left: '0',
+          width: '100%',
+          height: '100%',
+        };
+        */
+      case 'ofrecimiento':
+        return {
+          'background-image': 'url(/assets/img/movilizaciones/m-ofrecimiento.svg)',
+          'background-size': 'contain',
+          'background-repeat': 'no-repeat',
+          position: 'absolute',
+          top: '2px',
+          left: '0',
+          width: '100%',
+          height: '100%',
+        };
+      case 'aportación':
+        return { 'background-color': '#00BFBF', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+      case 'despliegue':
+        return { 'background-color': '#00BFBF', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+      case 'fin de intervención':
+        return { 'background-color': 'transparent', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+      default:
+        return { 'background-color': 'transparent', position: 'absolute', top: '8px', left: '0', width: '100%', height: '30%' };
+    }
+  }
+
   /****************************************************** */
   /* Fin Fila Medios extinción extraordinarios nacionales */
   /****************************************************** */
@@ -1570,11 +1792,11 @@ export class FireEditComponent implements OnInit {
   /*   Fila Medios extinción extraordinarios internacionales   */
   /*************************************************************/
   async cargarFilaEMediosExtincionExtraordinariosInternacionales() {
-    this.filaMediosExtincionExtraordinariosInternacionales.set('03-02-2025', [
+    this.filaMediosExtincionExtraordinariosInternacionales.set('14-02-2025', [
       { hora: '09:15', estado: 'AVION' },
       { hora: '16:20', estado: 'BRIGADAS' },
     ]);
-    this.filaMediosExtincionExtraordinariosInternacionales.set('04-02-2025', [{ hora: '04:15', estado: 'BRIGADAS' }]);
+    this.filaMediosExtincionExtraordinariosInternacionales.set('15-02-2025', [{ hora: '04:15', estado: 'BRIGADAS' }]);
   }
 
   /*

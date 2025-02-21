@@ -46,6 +46,10 @@
   padding-left: 15%;
 }
 
+.submenu .submenu-subitem {
+  padding-left: 28%;
+}
+
 .user-label {
   width: calc(100% - 16px); /* Resta un pequeño margen para evitar el desbordamiento */
   max-width: 100%; /* Asegura que no se pase del contenedor */
@@ -55,6 +59,10 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box; /* Incluye padding/border en el ancho total */
+}
+
+.mdc-list-item__primary-text {
+  font-size: 0.9rem;
 }
 // FIN PCD
 
