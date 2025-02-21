@@ -21,7 +21,7 @@
         </mat-form-field>
       </div>
 
-      <app-step1 *ngIf="getForm('idTipoNotificacion')?.value?.id === 1" [formGroup]="getFormGroup('paso1')" [dataMaestros]="dataMaestros"></app-step1>
+      <app-step1 *ngIf="getForm('idTipoNotificacion')?.value?.id === 1" [formGroup]="getFormGroup('paso1')" [dataMaestros]="dataMaestros" ></app-step1>
       <app-step2 *ngIf="getForm('idTipoNotificacion')?.value?.id === 2" [formGroup]="getFormGroup('paso2')" [dataMaestros]="dataMaestros"></app-step2>
       <app-step3 *ngIf="getForm('idTipoNotificacion')?.value?.id === 3" [formGroup]="getFormGroup('paso3')" [dataMaestros]="dataMaestros"></app-step3>
       <!-- <app-step4 *ngIf="getForm('idTipoNotificacion')?.value?.id === 4" [formGroup]="getFormGroup('paso4')" [dataMaestros]="dataMaestros"></app-step4> -->
@@ -33,7 +33,7 @@
       <div class="row add-button-row" fxLayout="row" fxLayoutAlign="end center">
         <button mat-flat-button color="primary">
           <mat-icon>add</mat-icon>
-          Agregar
+          {{ btnGuardar }}
         </button>
       </div>
     </div>
@@ -51,13 +51,13 @@
         <th mat-header-cell *matHeaderCellDef>Situación</th>
         <td mat-cell *matCellDef="let movilizacion">
           <ng-container *ngFor="let paso of movilizacion.Pasos">
-            <img src="/assets/img/movilizaciones/m-solicitud.svg" *ngIf="paso.TipoPaso === 1" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-tramitacion.svg" *ngIf="paso.TipoPaso === 2" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-ofrecimiento.svg" *ngIf="paso.TipoPaso === 3" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-aportacion.svg" *ngIf="paso.TipoPaso === 5" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-despliegue.svg" *ngIf="paso.TipoPaso === 6" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-fin.svg" *ngIf="paso.TipoPaso === 7" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-llegada.svg" *ngIf="paso.TipoPaso === 8" />
+            <img src="/assets/img/movilizaciones/m-solicitud.svg" *ngIf="paso.TipoPaso === 1" appTooltip="Solicitud recibida" (click)="editarPaso(paso)"/>
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-tramitacion.svg" *ngIf="paso.TipoPaso === 2" appTooltip="Tramitación enviada"/>
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-ofrecimiento.svg" *ngIf="paso.TipoPaso === 3" appTooltip="Ofrecimeinto recibido" />
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-aportacion.svg" *ngIf="paso.TipoPaso === 5" appTooltip="Aportación confirmada" />
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-despliegue.svg" *ngIf="paso.TipoPaso === 6" appTooltip="Despliegue iniciado"/>
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-fin.svg" *ngIf="paso.TipoPaso === 7" appTooltip="Repliegue notificado"/>
+            <img class="padding-icons" src="/assets/img/movilizaciones/m-llegada.svg" *ngIf="paso.TipoPaso === 8" appTooltip="Llegada a base" />
           </ng-container>
         </td>
       </ng-container>
@@ -70,10 +70,10 @@
       <ng-container matColumnDef="opciones">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let movilizacion; let i = index"> 
-          <button mat-icon-button (click)="cargarPaso(movilizacion)" aria-label="Cargar paso">
+          <button mat-icon-button (click)="cargarPaso(movilizacion)" aria-label="Cargar paso" appTooltip="Nuevo paso">
             <img src="/assets/img/movilizaciones/m-pasos.svg" alt="Cargar pasos" />
           </button>
-          <img src="/assets/img/movilizaciones/m-cancelar.svg" alt="edit-btn"  (click)="eliminarItem(i)" />
+          <img src="/assets/img/movilizaciones/m-cancelar.svg" alt="edit-btn"  (click)="eliminarItem(i)" appTooltip="Eliminar" />
         </td>
       </ng-container>
 
@@ -83,8 +83,8 @@
   </div>
 
   <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <div *ngIf="esUltimo" fxFlex="none">
-      <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
+    <div *ngIf="esUltimo && hasTipoPaso1OrLastStep8(movilizacionService.dataMovilizacion())" fxFlex="none">
+      <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar {{ hasTipoPaso1OrLastStep8(movilizacionService.dataMovilizacion())}}</button>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxFlex="auto">
       <button mat-flat-button color="accent" (click)="closeModal()">Volver</button>

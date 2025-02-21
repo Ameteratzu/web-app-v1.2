@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { Capacidad, GenericMaster } from '../../../../types/actions-relevant.type';
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
@@ -45,6 +45,7 @@ export class Step5Component {
   @Input() dataMaestros: any;
   public capacidad = signal<Capacidad[]>([]);
   public tipoAdmin = signal<GenericMaster[]>([]);
+  showMedioNoCatalogado = false;
 
   async ngOnInit() {
     this.capacidad.set(this.dataMaestros.capacidades);
@@ -54,5 +55,22 @@ export class Step5Component {
 
   getForm(controlName: string): FormControl {
     return this.formGroup.get(controlName) as FormControl;
+  }
+
+  loadMedio(event: any) {
+    console.log('🚀 ~ Step5Component ~ loadMedio ~ event:', event);
+    const id = event.value.id;
+
+    const medioControl = this.formGroup.get('MedioNoCatalogado');
+    if (id === 92) {
+      medioControl?.enable();
+      medioControl?.setValidators(Validators.required);
+      this.showMedioNoCatalogado = true;
+    } else {
+      this.showMedioNoCatalogado = false;
+      medioControl?.disable();
+      medioControl?.clearValidators();
+    }
+    medioControl?.updateValueAndValidity();
   }
 }
