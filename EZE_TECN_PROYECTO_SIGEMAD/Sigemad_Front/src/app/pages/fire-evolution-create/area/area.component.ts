@@ -145,9 +145,9 @@ export class AreaComponent {
     this.onlyView = false;
     this.defaultPolygon = this.polygon(),
 
-    this.spinner.hide();
+      this.spinner.hide();
   }
-   
+
   async loadMunicipalities(event: any) {
     this.spinner.show();
     const province_id = event.value;
@@ -170,7 +170,6 @@ export class AreaComponent {
     if (this.formData.valid) {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
-        this.defaultPolygon = [];
         data.geoPosicion = {
           type: 'Polygon',
           coordinates: [this.polygon()],
@@ -191,7 +190,7 @@ export class AreaComponent {
       this.municipalities.set(municipalities);
       this.formData.get('municipio')?.setValue(this.fire.municipio.id);
       this.formData.patchValue({
-        fechaHora: new Date(), 
+        fechaHora: new Date(),
       });
 
     } else {
@@ -204,13 +203,6 @@ export class AreaComponent {
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       if (this.editData) {
-        if (this.index != -1 && this.index < this.editData.areaAfectadas.length) {
-           const geoPosicion = {  
-            type: 'Polygon',
-            coordinates: [this.polygon()],
-          };
-          this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
-        }
         this.save.emit({ save: false, delete: false, close: false, update: true });
       }
     }
@@ -256,7 +248,7 @@ export class AreaComponent {
     if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
       this.formData.get('municipio')?.setValue(data.municipio.id);
-      if(data.entidadMenor){
+      if (data.entidadMenor) {
         this.formData.get('entidadMenor')?.setValue(data.entidadMenor.id);
       }
     } else {
@@ -319,7 +311,13 @@ export class AreaComponent {
   }
 
   onSave(features: Feature<Geometry>[]) {
-    console.log('Datos guardados:', features);
     this.polygon.set(features);
+    if (this.index != -1) {
+      const geoPosicion = {
+        type: 'Polygon',
+        coordinates: [this.polygon()],
+      };
+      this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
+    }
   }
 }

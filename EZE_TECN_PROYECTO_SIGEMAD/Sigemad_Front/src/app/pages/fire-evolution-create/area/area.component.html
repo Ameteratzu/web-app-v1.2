@@ -128,9 +128,9 @@
     </div>
   </div>
 
-  <div class="map-container" *ngIf="selectedMunicipio">
+  <div class="map-container">
     <app-map-create [municipio]="selectedMunicipio" [listaMunicipios]="listaMunicipios" [onlyView]="onlyView"
-      [polygon]="defaultPolygon" [close]="false" (save)="onSave($event)">
+      [polygon]="defaultPolygon" [close]="false" (save)="onSave($event)" *ngIf="selectedMunicipio">
     </app-map-create>
   </div>
 </div>
