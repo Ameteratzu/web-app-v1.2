@@ -100,7 +100,7 @@ export class FireCreateEdit implements OnInit {
     private router: Router,
 
     @Inject(MAT_DIALOG_DATA) public data: { fire: any }
-  ) {}
+  ) { }
 
   //public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
@@ -330,6 +330,7 @@ export class FireCreateEdit implements OnInit {
       maxHeight: '780px',
       data: {
         municipio: municipioSelected,
+        onlyView: true,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.polygon(),
         close: true,

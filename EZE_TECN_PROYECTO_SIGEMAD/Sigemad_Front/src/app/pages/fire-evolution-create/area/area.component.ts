@@ -142,7 +142,7 @@ export class AreaComponent {
 
     this.selectedMunicipio = this.municipalities().find((item) => item.id == this.formData.value.municipio);
     this.listaMunicipios = this.municipalities();
-    this.onlyView = false;
+    this.onlyView = true;
     this.defaultPolygon = this.polygon(),
 
       this.spinner.hide();

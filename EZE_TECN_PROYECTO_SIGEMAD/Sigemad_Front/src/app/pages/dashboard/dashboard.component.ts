@@ -13,6 +13,7 @@ import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
 import { Control, defaults as defaultControls, FullScreen, ScaleLine, ZoomToExtent } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import SearchNominatim from 'ol-ext/control/SearchNominatim';
 import proj4 from 'proj4';
 
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
@@ -123,6 +124,15 @@ export class DashboardComponent {
     this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
+
+    this.map.addControl(new SearchNominatim({
+      placeholder: 'Buscar ubicación...',
+      onselect: (event: any) => {
+        const coordenadas = event.coordinate;
+        this.map.getView().setCenter(coordenadas);
+        this.map.getView().setZoom(14);
+      }
+    }));
 
     this.addZoomCanariasPeninsula();
 
