@@ -212,7 +212,7 @@ export class FireEditComponent implements OnInit {
       denomination: this.fire.denominacion,
       province: this.fire.idProvincia,
       municipality: this.fire.municipio,
-      startDate: moment(this.fire.fechaInicio).format('DD/MM/YYYY'),
+      startDate: moment(this.fire.fechaInicio).format('DD/MM/YYYY HH:mm'),
       event: this.fire.idClaseSuceso,
       generalNote: this.fire.notaGeneral,
       idEstado: this.fire.idEstadoSuceso,

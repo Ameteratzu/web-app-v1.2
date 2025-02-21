@@ -22,6 +22,8 @@ import moment from 'moment';
 import { OpePeriodosService } from '../../../../../../services/ope-periodos.service';
 import { LocalFiltrosOpePeriodos } from '../../../../../../services/local-filtro-ope-periodos.service';
 import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
+import { ComparativeDateService } from '../../../../../../services/comparative-date.service';
+import { ComparativeDate } from '../../../../../../types/comparative-date.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -72,6 +74,9 @@ export class OpePeriodoFilterFormComponent implements OnInit {
 
   public filtrosOpePeriodosService = inject(LocalFiltrosOpePeriodos);
   public opePeriodosService = inject(OpePeriodosService);
+  public comparativeDateService = inject(ComparativeDateService);
+
+  public comparativeDates = signal<ComparativeDate[]>([]);
 
   public menuItemActiveService = inject(MenuItemActiveService);
   private dialog = inject(MatDialog);
@@ -91,16 +96,20 @@ export class OpePeriodoFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
 
-    const { denominacion, fechaInicio, fechaFin } = this.filtros();
+    const { denominacion, fechaInicio, fechaFin, between } = this.filtros();
 
     this.formData = new FormGroup({
       denominacion: new FormControl(denominacion ?? ''),
+      between: new FormControl(between ?? 1),
       fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
       fechaFin: new FormControl(fechaFin ?? moment().toDate()),
     });
 
     //this.clearFormFilter();
     this.menuItemActiveService.set.emit('/ope-periodos');
+
+    const comparativeDates = await this.comparativeDateService.get();
+    this.comparativeDates.set(comparativeDates);
 
     this.onSubmit();
   }
@@ -126,7 +135,7 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingChange.emit(true);
 
-    const { fechaInicio, fechaFin, denominacion, between } = this.formData.value;
+    const { between, fechaInicio, fechaFin, denominacion } = this.formData.value;
 
     const opePeriodos = await this.opePeriodosService.get({
       IdComparativoFecha: between,
@@ -171,5 +180,9 @@ export class OpePeriodoFilterFormComponent implements OnInit {
         this.onSubmit();
       }
     });
+  }
+
+  changeBetween(event: any) {
+    this.showDateEnd.set(event.value === 1 || event.value === 5 ? true : false);
   }
 }

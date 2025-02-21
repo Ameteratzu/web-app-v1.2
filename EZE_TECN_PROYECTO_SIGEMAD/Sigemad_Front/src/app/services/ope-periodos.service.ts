@@ -30,7 +30,6 @@ export class OpePeriodosService {
       url: URLBASE,
       params: query,
     });
-
     return firstValueFrom(this.http.get<ApiResponse<OpePeriodo[]>>(endpoint).pipe((response) => response));
   }
 

@@ -8,9 +8,19 @@
       </mat-expansion-panel-header>
       <!-- Fila 1 -->
       <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
-        <mat-form-field appearance="fill" fxFlex="20">
+        <mat-form-field appearance="fill" fxFlex="25">
           <mat-label>Denominación</mat-label>
           <input matInput [formControl]="getForm('denominacion')" placeholder="Ingresa texto" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex="25">
+          <mat-label>Rango de fechas</mat-label>
+          <mat-select [formControl]="getForm('between')" (selectionChange)="changeBetween($event)">
+            <mat-option *ngFor="let option of comparativeDates()" [value]="option.id">
+              {{ option.descripcion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formData.get('between')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25" class="mb-3">

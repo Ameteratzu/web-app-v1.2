@@ -8,13 +8,11 @@ public class OpePeriodosForCountingSpecification : BaseSpecification<OpePeriodo>
 {
     public OpePeriodosForCountingSpecification(OpePeriodosSpecificationParams request)
         : base(opePeriodo =>
-        (string.IsNullOrEmpty(request.Search) || opePeriodo.Denominacion.Contains(request.Search)) &&
+        (string.IsNullOrEmpty(request.Denominacion) || opePeriodo.Denominacion.Contains(request.Denominacion)) &&
         (!request.Id.HasValue || opePeriodo.Id == request.Id) &&
         (opePeriodo.Borrado != true)
         )
     {
-   
-
 
     }
 }
