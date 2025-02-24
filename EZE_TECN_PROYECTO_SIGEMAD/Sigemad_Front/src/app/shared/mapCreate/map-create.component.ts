@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -49,7 +48,7 @@ const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule, DragDropModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
