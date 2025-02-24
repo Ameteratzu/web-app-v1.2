@@ -18,7 +18,7 @@ import { Territory } from '../../../../types/territory.type';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, NativeDateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -73,7 +73,6 @@ const MY_DATE_FORMATS = {
     FlexLayoutModule,
     MatExpansionModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     NgxSpinnerModule,
     TooltipDirective,
     DragDropModule,
@@ -226,7 +225,7 @@ export class FireCreateEdit implements OnInit {
         type: 'Polygon',
         coordinates: [this.polygon() ?? ''],
       };
-        console.log("🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():", this.polygon())
+      console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.polygon());
 
       if (this.data.fire?.id) {
         data.id = this.data.fire.id;
@@ -333,6 +332,7 @@ export class FireCreateEdit implements OnInit {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.polygon(),
+        close: true,
       },
     });
 

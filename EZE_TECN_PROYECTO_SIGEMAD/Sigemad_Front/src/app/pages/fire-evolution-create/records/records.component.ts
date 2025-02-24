@@ -148,7 +148,7 @@ export class RecordsComponent implements OnInit {
       phases: [this.formDataSignal().phases],
       nivel: [this.formDataSignal().nivel],
       operativa: [this.formDataSignal().operativa],
-      afectada: [this.formDataSignal().afectada],
+      afectada: [this.formDataSignal().afectada, Validators.min(0)],
     });
     this.formData.get('end_date')?.disable();
 

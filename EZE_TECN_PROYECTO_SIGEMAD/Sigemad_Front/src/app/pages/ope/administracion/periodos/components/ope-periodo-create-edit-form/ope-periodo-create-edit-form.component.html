@@ -1,0 +1,41 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="title">
+  {{ data.opePeriodo?.id ? 'Modificar' : 'Crear' }} Periodo
+</h2>
+
+<form [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Denominacion -->
+      <mat-form-field appearance="fill" fxFlex="100" class="mb-3">
+        <mat-label>Denominación</mat-label>
+        <input matInput placeholder="Denominación" formControlName="denomination" />
+        <mat-error *ngIf="formData.get('denomination')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha y hora de inicio -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Fecha y Hora de inicio</mat-label>
+        <input matInput placeholder="Fecha inicio" formControlName="startDateTime" type="datetime-local" />
+        <mat-error *ngIf="formData.get('startDateTime')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha y hora de fin -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Fecha y Hora de fin</mat-label>
+        <input matInput placeholder="Fecha fin" formControlName="endDateTime" type="datetime-local" />
+        <mat-error *ngIf="formData.get('endDateTime')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="width: 100%" class="button-container">
+    <!-- Botón Buscar -->
+    <button mat-raised-button (click)="closeModal()" color="primary" aria-label="Buscar" class="custom-button" type="button">Cancelar</button>
+
+    <!-- Botón Filtro -->
+    <button mat-flat-button color="primary" type="submit" aria-label="Guardar" class="custom-button">Guardar</button>
+  </mat-dialog-actions>
+</form>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

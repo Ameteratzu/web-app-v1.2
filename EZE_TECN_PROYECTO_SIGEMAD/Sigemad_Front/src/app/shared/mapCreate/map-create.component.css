@@ -3,8 +3,9 @@
 }
 
 #map {
-  height: 600px;
-  width: 600px;
+  height: 95%;
+  width: 90%;
+ 
 }
 
 .m-30 {
@@ -59,7 +60,8 @@ button {
 }
 
 .coordinate-search {
-  margin-bottom: 20px;
+  margin-top: -50px;
+  margin-bottom: 5px;
   display: flex;
   align-items: center;
   gap: 10px;

@@ -86,8 +86,8 @@ export class DashboardComponent {
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
-      center: [-400000, 4900000],
-      zoom: 6,
+      center: [-225030.611272, 4290257.523590],
+      zoom: 5.53,
       extent: [-4500000, 3000000, 2500000, 6500000]
     });
 
@@ -105,10 +105,22 @@ export class DashboardComponent {
       view: this.view,
     });
 
-    this.map.addControl(new LayerSwitcher({
+    const layersSwitcher = new LayerSwitcher({
       mouseover: true,
       show_progress: true,
-    }));
+      trash: true,
+    });
+
+    layersSwitcher.tip = {
+      up: 'Arriba/Abajo',
+      down: 'Arriba/Abajo',
+      info: 'Información',
+      extent: 'Extensión',
+      trash: 'Eliminar',
+      plus: 'Expandir/Contraer',
+    };
+
+    this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
 
@@ -382,8 +394,8 @@ export class DashboardComponent {
       } else {
         // Zoom a Península
         this.map.getView().animate({
-          center: [-400000, 4900000],
-          zoom: 6,
+          center: [-319201, 4834489],
+          zoom: 6.5,
           duration: 1000
         });
       }

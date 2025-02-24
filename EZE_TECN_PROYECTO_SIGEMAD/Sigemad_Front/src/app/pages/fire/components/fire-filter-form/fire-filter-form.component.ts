@@ -133,7 +133,6 @@ export class FireFilterFormComponent implements OnInit {
   public situationsEquivalent = signal<SituationsEquivalent[]>([]);
 
   public eventTypes = signal<Event[]>([]);
-  
 
   public showDateEnd = signal<boolean>(true);
 
@@ -174,7 +173,7 @@ export class FireFilterFormComponent implements OnInit {
       provincia,
       fechaInicio,
       fechaFin,
-      eventTypes
+      eventTypes,
     } = this.filtros();
 
     this.formData = new FormGroup({
@@ -325,7 +324,7 @@ export class FireFilterFormComponent implements OnInit {
       fechaInicio,
       fechaFin,
       name,
-      eventTypes
+      eventTypes,
     } = this.formData.value;
 
     const fires = await this.fireService.get({
@@ -343,7 +342,7 @@ export class FireFilterFormComponent implements OnInit {
       FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
       denominacion: name,
       search: name,
-      idClaseSuceso: eventTypes
+      idClaseSuceso: eventTypes,
     });
     this.filtrosIncendioService.setFilters(this.formData.value);
     this.fires = fires;
@@ -369,7 +368,7 @@ export class FireFilterFormComponent implements OnInit {
       affectedArea: '',
       situationEquivalent: '',
       name: '',
-      eventTypes: 1
+      eventTypes: 1,
     });
   }
 
