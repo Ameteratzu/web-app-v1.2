@@ -8,9 +8,12 @@ public class UpdateOpePeriodoCommand : IRequest
 {
     public int Id { get; set; }
  
-    public string Denominacion { get; set; }
+    public string Nombre { get; set; }
 
-    public DateTime FechaInicio { get; set; }
-    public DateTime FechaFin { get; set; }
+    public DateTime fechaInicioFaseSalida { get; set; }
+    public DateTime fechaFinFaseSalida { get; set; }
+
+    public DateTime fechaInicioFaseRetorno { get; set; }
+    public DateTime fechaFinFaseRetorno { get; set; }
 
 }

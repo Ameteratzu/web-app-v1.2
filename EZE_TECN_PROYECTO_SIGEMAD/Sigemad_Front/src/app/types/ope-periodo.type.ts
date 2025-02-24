@@ -1,6 +1,8 @@
 export type OpePeriodo = {
   id: number;
-  denominacion: string;
-  fechaInicio: string;
-  fechaFin: string;
+  nombre: string;
+  fechaInicioFaseSalida: string;
+  fechaFinFaseSalida: string;
+  fechaInicioFaseRetorno: string;
+  fechaFinFaseRetorno: string;
 };

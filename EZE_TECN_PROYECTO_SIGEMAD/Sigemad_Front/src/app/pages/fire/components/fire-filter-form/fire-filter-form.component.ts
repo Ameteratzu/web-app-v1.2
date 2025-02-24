@@ -87,6 +87,10 @@ const MY_DATE_FORMATS = {
   styleUrl: './fire-filter-form.component.scss',
 })
 export class FireFilterFormComponent implements OnInit {
+  // PCD
+
+  // FIN PCD
+
   @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
   @Input() isLoading: boolean = true;

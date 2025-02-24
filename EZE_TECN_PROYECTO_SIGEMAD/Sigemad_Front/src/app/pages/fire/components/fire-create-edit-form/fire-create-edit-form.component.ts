@@ -137,8 +137,12 @@ export class FireCreateEdit implements OnInit {
       province: new FormControl('', Validators.required),
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
-      startDate: new FormControl(new Date(), Validators.required),
-      startTime: new FormControl(null, Validators.required),
+      //startDate: new FormControl(new Date(), Validators.required),
+      //startTime: new FormControl(null, Validators.required),
+      // PCD
+      startDateTime: new FormControl(new Date(), Validators.required),
+      // FIN PCD
+
       eventStatus: new FormControl('', Validators.required),
       generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
@@ -167,8 +171,12 @@ export class FireCreateEdit implements OnInit {
         denomination: this.data.fire.denominacion,
         province: this.data.fire.idProvincia,
         municipality: this.data.fire.idMunicipio,
-        startDate: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD'),
-        startTime: moment(this.data.fire.fechaInicio).format('HH:mm'),
+        //startDate: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD'),
+        //startTime: moment(this.data.fire.fechaInicio).format('HH:mm'),
+        // PCD
+        startDateTime: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD HH:mm'),
+        // FIN PCD
+
         generalNote: this.data.fire.notaGeneral,
         classEvent: this.data.fire.idClaseSuceso,
         eventStatus: this.data.fire.idEstadoSuceso,

@@ -94,18 +94,21 @@ export class OpePeriodoCreateEdit implements OnInit {
 
   async ngOnInit() {
     this.formData = new FormGroup({
-      denomination: new FormControl('', Validators.required),
-      startDateTime: new FormControl(null, Validators.required),
-      endDateTime: new FormControl(null, Validators.required),
+      nombre: new FormControl('', Validators.required),
+      fechaInicioFaseSalida: new FormControl(null, Validators.required),
+      fechaFinFaseSalida: new FormControl(null, Validators.required),
+      fechaInicioFaseRetorno: new FormControl(null, Validators.required),
+      fechaFinFaseRetorno: new FormControl(null, Validators.required),
     });
 
     if (this.data.opePeriodo?.id) {
       this.formData.patchValue({
         id: this.data.opePeriodo.id,
-        denomination: this.data.opePeriodo.denominacion,
-
-        startDateTime: moment(this.data.opePeriodo.fechaInicio).format('YYYY-MM-DD HH:mm'),
-        endDateTime: moment(this.data.opePeriodo.fechaFin).format('YYYY-MM-DD HH:mm'),
+        nombre: this.data.opePeriodo.nombre,
+        fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicio).format('YYYY-MM-DD HH:mm'),
+        fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFin).format('YYYY-MM-DD HH:mm'),
+        fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicio).format('YYYY-MM-DD HH:mm'),
+        fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFin).format('YYYY-MM-DD HH:mm'),
       });
     }
   }

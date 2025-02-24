@@ -4,9 +4,11 @@ GO
 
 CREATE TABLE [dbo].[OpePeriodo](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Denominacion] [nvarchar](255) NOT NULL,
-	[FechaInicio] [datetime2](7) NOT NULL,
-	[FechaFin] [datetime2](7) NOT NULL,
+	[Nombre] [nvarchar](255) NOT NULL,
+	[FechaInicioFaseSalida] [datetime2](7) NOT NULL,
+	[FechaFinFaseSalida] [datetime2](7) NOT NULL,
+	[FechaInicioFaseRetorno] [datetime2](7) NOT NULL,
+	[FechaFinFaseRetorno] [datetime2](7) NOT NULL,
 	[FechaCreacion] [datetime2](7) NOT NULL,
 	[CreadoPor] [uniqueidentifier] NULL,
 	[FechaModificacion] [datetime2](7) NULL,
