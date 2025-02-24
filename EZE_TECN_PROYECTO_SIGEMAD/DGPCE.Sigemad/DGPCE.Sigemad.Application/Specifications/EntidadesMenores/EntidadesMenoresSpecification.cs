@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DGPCE.Sigemad.Application.Specifications.EntidadesMenores;
-public class EntidadesMenoresActiveByIdMunicipioSpecification : BaseSpecification<EntidadMenor>
+public class EntidadesMenoresSpecification : BaseSpecification<EntidadMenor>
 {
-    public EntidadesMenoresActiveByIdMunicipioSpecification(int idMunicipio)
-        : base(i => i.IdMunicipio == idMunicipio && i.Borrado == false)
+    public EntidadesMenoresSpecification()
+     : base(i =>i.Borrado == false)
     {
         AddOrderBy(i => i.Descripcion); // Ordenación por defecto
     }
