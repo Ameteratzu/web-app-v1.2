@@ -134,7 +134,7 @@ export class RecordsComponent implements OnInit {
 
     this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
-    this.formData = this.fb.group({
+    this.formData = await this.fb.group({
       inputOutput: [this.formDataSignal().inputOutput, Validators.required],
       startDate: [this.formDataSignal().startDate, Validators.required],
       media: [this.formDataSignal().media, Validators.required],
@@ -157,10 +157,6 @@ export class RecordsComponent implements OnInit {
         const { end_date, ...rest } = this.formDataSignal();
         this.formData.patchValue(rest, { emitEvent: false });
       });
-
-      // this.formData.valueChanges.subscribe((values) => {
-      //   this.formDataSignal.set({ ...this.formDataSignal(), ...values });
-      // });
     });
 
     this.formData.get('phases')?.disable();
@@ -169,10 +165,15 @@ export class RecordsComponent implements OnInit {
 
     if (this.editData) {
       if (this.evolutionSevice.dataRecords().length === 0) {
-        // this.evolutionSevice.dataRecords.update((records) => [this.editData, ...records]);
         this.updateFormWithJson(this.editData);
       }
     } else {
+      this.formDataSignal.set({
+        ...this.formDataSignal(),
+        startDate: this.getCurrentDateTimeString(),
+      });
+      const startDateControl = this.formData.get('startDate');
+      startDateControl?.patchValue(this.getCurrentDateTimeString());
       this.updateEndDate(this.estadoIncendio);
     }
     this.spinner.hide();
@@ -346,6 +347,11 @@ export class RecordsComponent implements OnInit {
     if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
+  }
+
+  private getCurrentDateTimeString(): string {
+    const now = new Date();
+    return now.toISOString().substring(0, 16);
   }
 
   showToast() {
