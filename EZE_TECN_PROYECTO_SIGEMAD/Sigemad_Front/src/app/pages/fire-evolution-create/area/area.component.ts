@@ -30,6 +30,9 @@ import { MinorEntity } from '../../../types/minor-entity.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
+import { readFileAsArrayBuffer, readFileAsText } from '../../../shared/utils/file-utils';
+import shp from 'shpjs';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -61,6 +64,7 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     NgxSpinnerModule,
     MapCreateComponent,
+    NgxFileDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -104,6 +108,11 @@ export class AreaComponent {
   onlyView: any = null;
   defaultPolygon: any;
   index = 0;
+
+  file: File | null = null;
+  public files: NgxFileDropEntry[] = [];
+  fileFlag: boolean = false;
+  fileContent: string | null = null;
 
   async ngOnInit() {
 
@@ -319,5 +328,54 @@ export class AreaComponent {
       };
       this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
     }
+  }
+
+  public dropped(files: NgxFileDropEntry[]) {
+    for (const droppedFile of files) {
+      if (droppedFile.fileEntry.isFile) {
+
+        if (droppedFile.fileEntry.name.endsWith('.zip')) {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file(async (file: File) => {
+            this.file = file;
+            this.fileFlag = true;
+
+            const fileContent = await readFileAsArrayBuffer(file);
+            const geojson = await shp(fileContent);
+            console.log(geojson);
+
+            this.formData.patchValue({ file });
+            this.onFileSelected(JSON.stringify(geojson));
+          });
+        } else {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file(async (file: File) => {
+            this.file = file;
+            this.fileFlag = true;
+
+            const fileContent = await readFileAsText(file);
+            this.formData.patchValue({ file });
+
+            this.onFileSelected(fileContent);
+          });
+        }
+      } else {
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+
+  onFileSelected(fileContent: string) {
+    this.fileContent = fileContent;
+    //this.save.emit({ save: true, delete: false, close: false, update: false });
+  }
+
+  public fileOver(event: any) {
+    console.log('File over event:', event);
+  }
+
+  public fileLeave(event: any) {
+    console.log('File leave event:', event);
   }
 }

@@ -44,10 +44,14 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field class="input" fxFlex="60%">
-            <mat-label>Fichero georeferenciado</mat-label>
-            <input matInput [formControl]="getForm('fichero')" placeholder="Ingresa texto" required />
-          </mat-form-field>
+          <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)"
+            (onFileLeave)="fileLeave($event)">
+            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+              Arrastra y suelta aquí el 'Fichero georeferenciado' o haz clic para seleccionarlo
+              <button type="button" (click)="openFileSelector()">Seleccionar Archivo</button>
+            </ng-template>
+          </ngx-file-drop>
+
         </div>
 
         <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
@@ -130,7 +134,8 @@
 
   <div class="map-container">
     <app-map-create [municipio]="selectedMunicipio" [listaMunicipios]="listaMunicipios" [onlyView]="onlyView"
-      [polygon]="defaultPolygon" [close]="false" (save)="onSave($event)" *ngIf="selectedMunicipio">
+      [polygon]="defaultPolygon" [close]="false" [fileContent]="fileContent" (save)="onSave($event)"
+      *ngIf="selectedMunicipio">
     </app-map-create>
   </div>
 </div>

@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -27,20 +28,20 @@ import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
 import Overlay from 'ol/Overlay';
 import GeoJSON from 'ol/format/GeoJSON';
+import KML from 'ol/format/KML';
+import { unzip } from 'unzipit';
+import proj4 from 'proj4';
+import { fromLonLat, toLonLat } from 'ol/proj';
 
 import Bar from 'ol-ext/control/Bar';
 import Toggle from 'ol-ext/control/Toggle';
 import SearchNominatim from 'ol-ext/control/SearchNominatim';
-import proj4 from 'proj4';
-import { fromLonLat, toLonLat } from 'ol/proj';
 
 import { MunicipalityService } from '../../services/municipality.service';
 import { Municipality } from '../../types/municipality.type';
 
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { format } from 'ol/coordinate';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -58,6 +59,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
   @Input() onlyView: any = null;
   @Input() polygon: any;
   @Input() close: boolean = true;
+  @Input() fileContent: string | null = null;
 
   @Output() save = new EventEmitter<Feature<Geometry>[]>();
 
@@ -116,6 +118,9 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (changes['municipio'] && changes['municipio'].currentValue && this.source) {
       //this.updateMapWithMunicipio(changes['municipio'].currentValue);
       this.highlightSelectedMunicipio(changes['municipio'].currentValue.descripcion);
+    }
+    if (changes['fileContent'] && changes['fileContent'].currentValue) {
+      this.loadFileContent(changes['fileContent'].currentValue);
     }
   }
 
@@ -203,6 +208,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     this.map.addControl(new SearchNominatim({
       placeholder: 'Buscar ubicación...',
+      title: 'Buscar en el mapa',
       onselect: (event: any) => {
         const coordenadas = event.coordinate;
         this.map.getView().setCenter(coordenadas);
@@ -379,7 +385,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     return new LayerGroup({
       properties: { title: 'Incendios', openInLayerSwitcher: true },
       // layers: [this.layerMunicipio, this.layerAreasAfectadas, this.highLightMunicipio],
-      layers: [this.highLightMunicipio],
+      layers: [this.highLightMunicipio, this.layerAreasAfectadas],
     });
   }
 
@@ -607,6 +613,35 @@ export class MapCreateComponent implements OnInit, OnChanges {
             })
             .catch(error => console.error('Error al obtener FeatureInfo:', error));
         }
+      }
+    }
+  }
+
+  async loadFileContent(fileContent: string) {
+    if (fileContent) {
+      let features;
+      if (fileContent.includes('FeatureCollection')) {
+        // Es un GeoJSON
+        // const geojsonData = JSON.parse(fileContent);
+        const geojsonFormat = new GeoJSON();
+        features = geojsonFormat.readFeatures(fileContent, {
+          featureProjection: 'EPSG:3857',
+        });
+      } else if (fileContent.includes('<kml')) {
+        // Es un KML
+        const kmlFormat = new KML();
+        features = kmlFormat.readFeatures(fileContent, {
+          featureProjection: 'EPSG:3857',
+        });
+      } else {
+        // Podría ser un archivo comprimido (SHP)
+        const { entries } = await unzip(fileContent);
+        // Procesar el archivo SHP aquí
+      }
+
+      if (features) {
+        this.source.clear();
+        this.source.addFeatures(features);
       }
     }
   }
