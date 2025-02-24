@@ -46,11 +46,12 @@ export class Step5Component {
   public capacidad = signal<Capacidad[]>([]);
   public tipoAdmin = signal<GenericMaster[]>([]);
   showMedioNoCatalogado = false;
+  showTipoAdmin = false;
 
   async ngOnInit() {
     this.capacidad.set(this.dataMaestros.capacidades);
     this.tipoAdmin.set(this.dataMaestros.tipoAdmin);
-    console.log('🚀 ~ Step5Component ~ ngOnInit ~  this.capacidad:', this.capacidad());
+    console.log('🚀 ~ Step5Component ~ ngOnInit ~  this.tipoAdmin:', this.tipoAdmin());
   }
 
   getForm(controlName: string): FormControl {
@@ -58,14 +59,25 @@ export class Step5Component {
   }
 
   loadMedio(event: any) {
-    console.log('🚀 ~ Step5Component ~ loadMedio ~ event:', event);
     const id = event.value.id;
+
+    const tipoAdminId = event?.value?.entidad?.organismo?.administracion?.tipoAdministracion?.id;
+
+    const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === tipoAdminId);
+    const controlTipoAdmin = this.formGroup.get('IdTipoAdministracion');
+    if (foundTipoAdmin) {
+      controlTipoAdmin?.setValue(foundTipoAdmin);
+      controlTipoAdmin?.disable();
+    }
 
     const medioControl = this.formGroup.get('MedioNoCatalogado');
     if (id === 92) {
       medioControl?.enable();
       medioControl?.setValidators(Validators.required);
       this.showMedioNoCatalogado = true;
+      controlTipoAdmin?.clearValidators();
+      controlTipoAdmin?.enable(); 
+      controlTipoAdmin?.updateValueAndValidity();
     } else {
       this.showMedioNoCatalogado = false;
       medioControl?.disable();

@@ -147,17 +147,17 @@ export class MobilizationComponent {
         Observaciones2: [''],
       }),
       paso3: this.fb.group({
-        TitularMedio3: [''],
+        TitularMedio3: ['', Validators.required],
         GestionCECOD: [false],
         FechaHoraOfrecimiento: [new Date(), Validators.required],
-        Descripcion3: [''],
+        Descripcion3: ['', Validators.required],
         FechaHoraDisponibilidad: [null],
         Observaciones3: [''],
       }),
       paso5: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [{ value: '', disabled: true }],
-        IdTipoAdministracion: [null],
+        IdTipoAdministracion: [null, Validators.required],
         TitularMedio5: [''],
         FechaHoraAportacion: [new Date(), null],
         Descripcion5: [''],
@@ -165,7 +165,7 @@ export class MobilizationComponent {
       paso6: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraDespliegue: [new Date(), null],
+        FechaHoraDespliegue: [new Date(), Validators.required],
         FechaHoraInicioIntervencion: [null],
         Descripcion6: [''],
         Observaciones6: [''],
@@ -173,13 +173,13 @@ export class MobilizationComponent {
       paso7: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraInicioIntervencion: [new Date(), null],
+        FechaHoraInicioIntervencion: [new Date(), Validators.required],
         Observaciones7: [''],
       }),
       paso8: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraLlegada: [new Date(), null],
+        FechaHoraLlegada: [new Date(), Validators.required],
         Observaciones8: [''],
       }),
     });
