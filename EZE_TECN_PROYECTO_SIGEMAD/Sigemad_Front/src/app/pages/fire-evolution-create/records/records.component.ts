@@ -77,7 +77,7 @@ export class RecordsComponent implements OnInit {
 
   formDataSignal = signal({
     inputOutput: 1,
-    startDate: new Date(),
+    startDate: '',
     media: 1,
     originDestination: <OriginDestination[]>[],
     datetimeUpdate: new Date(),
@@ -184,9 +184,17 @@ export class RecordsComponent implements OnInit {
       return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
     };
 
+    const rawDate: string = json.registro?.fechaHoraEvolucion || '';
+    let dateValue: Date = new Date();
+    if (rawDate) {
+      dateValue = new Date(rawDate);
+    }
+
+    const formattedDate = dateValue.toISOString().substring(0, 16);
+
     this.formDataSignal.set({
       inputOutput: json.registro?.entradaSalida?.id || '',
-      startDate: json.registro?.fechaHoraEvolucion ? new Date(json.registro.fechaHoraEvolucion) : new Date(),
+      startDate: formattedDate,
       media: json.registro?.medio?.id || '',
       originDestination: procedenciasSelecteds(),
       datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
@@ -230,12 +238,12 @@ export class RecordsComponent implements OnInit {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-      // formValues.end_date;
+
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
         idSuceso: this.data.idIncendio,
         registro: {
-          fechaHoraEvolucion: formValues.startDate.toISOString(),
+          fechaHoraEvolucion: new Date(formValues.startDate).toISOString(),
           idEntradaSalida: formValues.inputOutput,
           idMedio: formValues.media,
           registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
