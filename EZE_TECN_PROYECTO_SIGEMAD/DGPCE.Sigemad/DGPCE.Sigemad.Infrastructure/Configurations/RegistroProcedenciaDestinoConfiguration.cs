@@ -13,10 +13,7 @@ public class RegistroProcedenciaDestinoConfiguration : IEntityTypeConfiguration<
 
         builder.ToTable("Registro_ProcedenciaDestino");
 
-        builder.HasKey(e => e.Id);
-
-        builder.Property(e => e.Id)
-              .ValueGeneratedOnAdd();
+        builder.HasKey(e => new {e.IdRegistro, e.IdProcedenciaDestino});
 
         builder.HasOne(rpd => rpd.Registro)
             .WithMany(r => r.ProcedenciaDestinos)

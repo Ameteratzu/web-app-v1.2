@@ -108,18 +108,13 @@ public class MappingProfile : Profile
         CreateMap<DatoPrincipal, DatoPrincipalEvolucionDto>();
         CreateMap<Parametro, ParametroEvolucionDto>();
 
-
-        //TODO: CORREGIR PORQUE SE CAMBIO TABLAS DE EVOLUCIONES
-        //CreateMap<UpdateEvolucionCommand, Evolucion>()
-        //  .ForMember(dest => dest.EvolucionProcedenciaDestinos, opt => opt.MapFrom(src => MapEvolucionProcedenciaDestinos(src.EvolucionProcedenciaDestinos)));
-
-
         CreateMap<ManageEvolucionCommand, Evolucion>();
+
+        CreateMap<Registro, CreateRegistroCommand>()
+            .ForMember(dest => dest.RegistroProcedenciasDestinos, opt => opt.MapFrom(src => src.ProcedenciaDestinos.Select(p => p.IdProcedenciaDestino)));
+
         CreateMap<CreateRegistroCommand, Registro>()
-            .ForMember(dest => dest.ProcedenciaDestinos,
-            opt => opt.MapFrom(src => src.RegistroProcedenciasDestinos.Select(p => new RegistroProcedenciaDestino { IdProcedenciaDestino = p })));
-
-
+            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom<CustomRegistroProcedimientoDestinoResolver>());
 
         CreateMap<ApplicationUser, ApplicationUserVm>();
 
@@ -163,8 +158,14 @@ public class MappingProfile : Profile
         CreateMap<ManageDetalleIntervencionMedioDto, DetalleIntervencionMedio>();
 
         CreateMap<IntervencionMedio, ManageIntervencionMedioDto>();
+        CreateMap<IntervencionMedio, IntervencionMedioDto>();
         CreateMap<DetalleIntervencionMedio, ManageDetalleIntervencionMedioDto>();
+        CreateMap<DetalleIntervencionMedio, DetalleIntervencionMedioDto>();
+        CreateMap<MediosCapacidad, MediosCapacidadDto>();
+        CreateMap<TipoCapacidad, TipoCapacidadDto>();
+        CreateMap<TipoMedio, TipoMedioDto>();
 
+        CreateMap<TitularidadMedio, TitularidadMedioDto>();
 
         CreateMap<CreateOrUpdateAreaAfectadaDto, AreaAfectada>();
         CreateMap<AreaAfectada, CreateOrUpdateAreaAfectadaDto>();
@@ -218,40 +219,15 @@ public class MappingProfile : Profile
 
         CreateMap<ManageDeclaracionZAGEPDto, DeclaracionZAGEP>();
 
-
-
-
-
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();
-        CreateMap<CreateRegistroCommand, Registro>()
-            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.Ignore())
-            .AfterMap((src, dest) =>
-            {
-                var ids = src.RegistroProcedenciasDestinos.ToHashSet();
 
-                // Eliminar los registros que no están en la lista de IDs
-                dest.ProcedenciaDestinos.RemoveAll(pd => !ids.Contains(pd.IdProcedenciaDestino));
-
-                // Actualizar o agregar los registros
-                foreach (var id in ids)
-                {
-                    var existing = dest.ProcedenciaDestinos.FirstOrDefault(pd => pd.IdProcedenciaDestino == id);
-                    if (existing == null)
-                    {
-                        dest.ProcedenciaDestinos.Add(new RegistroProcedenciaDestino { IdProcedenciaDestino = id });
-                    }
-                    else if (existing.Borrado)
-                    {
-                        existing.Borrado = false;
-                    }
-                }
-            });
-
-
+        CreateMap<Parametro, CreateParametroCommand>();
         CreateMap<CreateParametroCommand, Parametro>();
 
         CreateMap<CreateDatoPrincipalCommand, DatoPrincipal>();
+        CreateMap<DatoPrincipal, CreateDatoPrincipalCommand>();
+
         CreateMap<Documentacion, DocumentacionVm>()
            .ForMember(dest => dest.DetalleDocumentaciones, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 

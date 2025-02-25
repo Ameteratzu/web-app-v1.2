@@ -5,17 +5,36 @@ public class EvolucionWithFilteredDataSpecification : BaseSpecification<Evolucio
 {
     public EvolucionWithFilteredDataSpecification(
         int id,
+        List<int> idsParametro,
         List<int> idsAreaAfectada,
         List<int> idsConsecuenciaActuacion,
         List<int> idsIntervencionMedio,
-        bool includeRegistroParametro = false,
+        bool includeRegistro = false,
+        bool includeDatoPrincipal = false,
         bool esFoto = false)
         : base(e => e.Id == id && e.EsFoto == esFoto && e.Borrado == false)
     {
-        if (includeRegistroParametro)
+        if(idsParametro.Any())
         {
-            AddInclude(e => e.Registro);
-            AddInclude(e => e.Parametro);
+            AddInclude(e => e.Parametros.Where(parametro => idsParametro.Contains(parametro.Id) && !parametro.Borrado));
+            AddInclude("Parametros.PlanEmergencia");
+            AddInclude("Parametros.FaseEmergencia");
+            AddInclude("Parametros.PlanSituacion");
+            AddInclude("Parametros.SituacionEquivalente");
+            AddInclude("Parametros.EstadoIncendio");
+        }
+
+        if (includeRegistro)
+        {
+            AddInclude(i => i.Registro);
+            AddInclude(i => i.Registro.Medio);
+            AddInclude(i => i.Registro.EntradaSalida);
+            AddInclude(i => i.Registro.ProcedenciaDestinos);
+            AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
+        }
+
+        if (includeDatoPrincipal)
+        {
             AddInclude(e => e.DatoPrincipal);
         }
 

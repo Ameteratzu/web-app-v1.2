@@ -48,17 +48,19 @@ CREATE TABLE dbo.Registro (
 );
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
-	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdRegistro int NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
-	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
-    ---
+	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	IdRegistro INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+	IdProcedenciaDestino INT NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
+    -- Audit Fields
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
     CreadoPor UNIQUEIDENTIFIER NULL,
     FechaModificacion DATETIME2(7) NULL,
     ModificadoPor UNIQUEIDENTIFIER NULL,
     FechaEliminacion DATETIME2(7) NULL,
     EliminadoPor UNIQUEIDENTIFIER NULL,
-    Borrado BIT NOT NULL DEFAULT 0
+    Borrado BIT NOT NULL DEFAULT 0,
+    -- Composite Primary Key
+    CONSTRAINT PK_Registro_ProcedenciaDestino PRIMARY KEY (IdRegistro, IdProcedenciaDestino)
 );
 
 CREATE TABLE dbo.DatoPrincipal (
@@ -79,8 +81,10 @@ CREATE TABLE dbo.DatoPrincipal (
 
 
 CREATE TABLE dbo.Parametro (
-	Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
-    IdEstadoIncendio int NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
+	--Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+    IdEstadoIncendio INT NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),
     FechaFinal DATETIME2(7) NULL,
     IdPlanEmergencia INT NULL FOREIGN KEY REFERENCES PlanEmergencia(Id),
     IdFaseEmergencia INT NULL FOREIGN KEY REFERENCES FaseEmergencia(Id),

@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
+using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,41 +20,73 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
     private readonly ILogger<ManageEvolucionCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IRegistroActualizacionService _registroActualizacionService;
 
 
     public ManageEvolucionCommandHandler(
         ILogger<ManageEvolucionCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IMapper mapper,
+        IRegistroActualizacionService registroActualizacionService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _registroActualizacionService = registroActualizacionService;
     }
 
     public async Task<ManageEvolucionResponse> Handle(ManageEvolucionCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation(nameof(ManageEvolucionCommandHandler) + " - BEGIN");
 
-        if (request.Registro != null)
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
+        await ComprobarRegistro(request.Registro);
+        await ValidarProcedenciasDestinos(request.Registro.RegistroProcedenciasDestinos);
+        await ComprobarParametros(request.Parametro);
+
+        await _unitOfWork.BeginTransactionAsync();
+
+        try
         {
-            await ComprobarRegistro(request.Registro);
-        }
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<Evolucion>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.Evolucion);
 
-        if (request.Parametro != null)
+            var evolucion = await GetOrCreateEvolucion(request, registroActualizacion);
+
+            var parametrosOriginales = evolucion.Parametros.ToDictionary(d => d.Id, d => _mapper.Map<CreateParametroCommand>(d));
+            var registroOriginal = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
+            var datoPrincipalOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
+
+            MapAndSaveEvolucion(request, evolucion, registroActualizacion.Id);
+
+            //No hay listas para eliminar objeto
+            await SaveEvolucion(evolucion);
+
+            MapAndSaveRegistroActualizacion(registroActualizacion, evolucion, registroOriginal, datoPrincipalOriginal);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                Evolucion, Parametro, CreateParametroCommand>(
+                registroActualizacion,
+                evolucion,
+                ApartadoRegistroEnum.Parametro,
+                new List<int>(), parametrosOriginales);
+
+            await _unitOfWork.CommitAsync();
+
+            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+            return new ManageEvolucionResponse
+            {
+                Id = evolucion.Id,
+                IdRegistroActualizacion = registroActualizacion.Id
+            };
+
+        }
+        catch (Exception ex)
         {
-            await ComprobarParametros(request.Parametro);
+            await _unitOfWork.RollbackAsync();
+            _logger.LogError(ex, "Error en la transacción de CreateOrUpdateDireccionCommandHandler");
+            throw;
         }
-
-        if (request.Registro != null && request.Registro.RegistroProcedenciasDestinos != null)
-        {
-            await ValidarProcedenciasDestinos(request.Registro.RegistroProcedenciasDestinos);
-        }
-
-        var idEvolucion = await ProcesarEvolucion(request);
-
-        _logger.LogInformation($"{nameof(ManageEvolucionCommandHandler)} - END");
-        return new ManageEvolucionResponse { Id = idEvolucion };
     }
 
 
@@ -109,7 +145,7 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             }
         }
 
-        if(request.IdSituacionEquivalente.HasValue)
+        if (request.IdSituacionEquivalente.HasValue)
         {
             var situacionEquivalente = await _unitOfWork.Repository<SituacionEquivalente>().GetByIdAsync(request.IdSituacionEquivalente.Value);
             if (situacionEquivalente is null || situacionEquivalente.Obsoleto)
@@ -138,67 +174,231 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
         }
     }
 
-    private async Task<int> ProcesarEvolucion(ManageEvolucionCommand request)
+    private async Task<Evolucion> GetOrCreateEvolucion(ManageEvolucionCommand request, RegistroActualizacion registroActualizacion)
     {
-        Evolucion evolucion = null;
-        var result = 0;
-
-        if (request.IdEvolucion.HasValue && request.IdEvolucion.Value > 0)
+        if (registroActualizacion.IdReferencia > 0)
         {
-            evolucion = await ObtenerEvolucionExistente(request.IdEvolucion.Value);
+            List<int> idsParametro = new List<int>();
+            List<int> idsAreaAfectada = new List<int>();
+            List<int> idsConsecuenciaActuacion = new List<int>();
+            List<int> idsIntervencionMedio = new List<int>();
 
-            if (request.DatoPrincipal is null && request.Parametro is null && request.Registro is null)
+            bool includeRegistro = false;
+            bool includeDatoPrincipal = false;
+
+            foreach (var detalle in registroActualizacion.DetallesRegistro)
             {
-                _unitOfWork.Repository<Evolucion>().DeleteEntity(evolucion);
+                if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro)
+                {
+                    includeRegistro = true;
+                } 
+                else if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.DatoPrincipal)
+                {
+                    includeDatoPrincipal = true;
+                }
+                else if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.Parametro)
+                {
+                    idsParametro.Add(detalle.IdReferencia);
+                }
+            }
+
+            // Buscar la Evolucion por IdReferencia
+            var evolucion = await _unitOfWork.Repository<Evolucion>()
+                .GetByIdWithSpec(new EvolucionWithFilteredDataSpecification(
+                    registroActualizacion.IdReferencia, 
+                    idsParametro, 
+                    idsAreaAfectada,
+                    idsConsecuenciaActuacion, 
+                    idsIntervencionMedio,
+                    includeRegistro,
+                    includeDatoPrincipal,
+                    esFoto: false
+                ));
+
+            if (evolucion is null || evolucion.Borrado)
+                throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de Evolucion");
+
+            return evolucion;
+        }
+
+        // Validar si ya existe un registro de Evolucion para este suceso
+        var spec = new EvolucionWithRegistroSpecification(new EvolucionSpecificationParams { IdSuceso = request.IdSuceso });
+        var evolucionExistente = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(spec);
+
+        return evolucionExistente ?? new Evolucion { IdSuceso = request.IdSuceso, EsFoto = false };
+    }
+
+    private void MapAndSaveEvolucion(ManageEvolucionCommand request, Evolucion evolucion, int? idRegistroActualizacion)
+    {
+        if (request.Registro != null)
+        {
+            if (evolucion.Registro != null)
+            {
+                var copiaOriginal = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
+                var copiaNueva = _mapper.Map<CreateRegistroCommand>(request.Registro);
+                if (!copiaOriginal.Equals(copiaNueva))
+                {
+                    _mapper.Map(request.Registro, evolucion.Registro);
+                    evolucion.Borrado = false;
+                }
             }
             else
             {
-                _mapper.Map(request, evolucion, typeof(CreateRegistroCommand), typeof(Evolucion));
-                _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+                evolucion.Registro = _mapper.Map<Registro>(request.Registro);
             }
+        }
 
-            result = await _unitOfWork.Complete();
-            return evolucion.Id;
+        if (request.DatoPrincipal != null)
+        {
+            if (evolucion.DatoPrincipal != null)
+            {
+                var copiaOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
+                var copiaNueva = _mapper.Map<CreateDatoPrincipalCommand>(request.DatoPrincipal);
+                if (!copiaOriginal.Equals(copiaNueva))
+                {
+                    _mapper.Map(request.DatoPrincipal, evolucion.DatoPrincipal);
+                }
+            }
+            else
+            {
+                evolucion.DatoPrincipal = _mapper.Map<DatoPrincipal>(request.DatoPrincipal);
+            }
+        }
+
+        if (request.Parametro != null)
+        {
+            if (idRegistroActualizacion.HasValue && idRegistroActualizacion.Value > 0)
+            {
+                //Actualizar el parametro
+                var parametroExistente = evolucion.Parametros.FirstOrDefault(p => p.Id == request.Parametro.Id);
+                if (parametroExistente != null)
+                {
+                    _mapper.Map(request.Parametro, parametroExistente);
+                }
+                else
+                {
+                    //Agregar el parametro
+                    evolucion.Parametros.Add(_mapper.Map<Parametro>(request.Parametro));
+                }
+
+            }
+            else
+            {
+                //Agregar el parametro
+                evolucion.Parametros.Add(_mapper.Map<Parametro>(request.Parametro));
+            }
+        }
+    }
+
+    private async Task SaveEvolucion(Evolucion evolucion)
+    {
+        if (evolucion.Id > 0)
+        {
+            _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
         }
         else
         {
-            return await CrearNuevaEvolucion(request);
+            _unitOfWork.Repository<Evolucion>().AddEntity(evolucion);
         }
+
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar la Evolucion");
     }
 
-    private async Task<Evolucion> ObtenerEvolucionExistente(int idEvolucion)
+    private void MapAndSaveRegistroActualizacion(
+        RegistroActualizacion registroActualizacion,
+        Evolucion evolucion,
+        CreateRegistroCommand originalRegistro,
+        CreateDatoPrincipalCommand originalDatoPrincipal)
     {
-        var evolucionSpec = new EvolucionSpecificationParams() { Id = idEvolucion };
-        var evolucion = await _unitOfWork.Repository<Evolucion>().GetByIdWithSpec(new EvolucionSpecification(evolucionSpec));
+        registroActualizacion.IdReferencia = evolucion.Id;
 
-        if (evolucion is null)
+
+        // Agregar registro de registro
+        DetalleRegistroActualizacion detalleRegistro = new()
         {
-            _logger.LogWarning($"request.IdEvolucion: {idEvolucion}, no encontrado");
-            throw new NotFoundException(nameof(Evolucion), idEvolucion);
+            IdApartadoRegistro = (int)ApartadoRegistroEnum.Registro,
+            IdReferencia = evolucion.Registro.Id,
+        };
+
+        var copiaNuevoRegistro = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
+        if (originalRegistro == null && copiaNuevoRegistro != null)
+        {
+            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Creado;
+        }
+        else if (originalRegistro.Equals(copiaNuevoRegistro))
+        {
+            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
+        }
+        else
+        {
+            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
         }
 
-        return evolucion;
+        var detallePrevioRegistro = registroActualizacion.DetallesRegistro
+            .FirstOrDefault(d => d.IdReferencia == evolucion.Registro.Id && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro);
+
+        if (detallePrevioRegistro != null)
+        {
+            if (!originalRegistro.Equals(copiaNuevoRegistro))
+            {
+                if (detallePrevioRegistro.IdEstadoRegistro == EstadoRegistroEnum.Creado ||
+                    detallePrevioRegistro.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado)
+                {
+                    detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.CreadoYModificado;
+                }
+
+                detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
+            }
+            detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
+        }
+        else
+        {
+            registroActualizacion.DetallesRegistro.Add(detalleRegistro);
+        }
+
+        //--------------------------------------------------------------------------------------
+        // Agregar registro de dato principal
+        DetalleRegistroActualizacion detalleRegistroDato = new()
+        {
+            IdApartadoRegistro = (int)ApartadoRegistroEnum.DatoPrincipal,
+            IdReferencia = evolucion.DatoPrincipal.Id,
+        };
+
+        var copiaNuevoDato = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
+        if (originalDatoPrincipal == null && copiaNuevoDato != null)
+        {
+            detalleRegistroDato.IdEstadoRegistro = EstadoRegistroEnum.Creado;
+        }
+        else if (originalDatoPrincipal.Equals(copiaNuevoDato))
+        {
+            detalleRegistroDato.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
+        }
+        else
+        {
+            detalleRegistroDato.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
+        }
+
+        var detallePrevioDato = registroActualizacion.DetallesRegistro
+            .FirstOrDefault(d => d.IdReferencia == evolucion.DatoPrincipal.Id && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.DatoPrincipal);
+
+        if (detallePrevioDato != null)
+        {
+            if (!originalDatoPrincipal.Equals(copiaNuevoDato))
+            {
+                if (detallePrevioDato.IdEstadoRegistro == EstadoRegistroEnum.Creado ||
+                    detallePrevioDato.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado)
+                {
+                    detallePrevioDato.IdEstadoRegistro = EstadoRegistroEnum.CreadoYModificado;
+                }
+
+                detallePrevioDato.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
+            }
+            detallePrevioDato.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
+        }
+        else
+        {
+            registroActualizacion.DetallesRegistro.Add(detalleRegistroDato);
+        }
     }
-
-    private async Task<int> CrearNuevaEvolucion(ManageEvolucionCommand request)
-    {
-        var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
-        if (suceso is null || suceso.Borrado)
-        {
-            _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-            throw new NotFoundException(nameof(Suceso), request.IdSuceso);
-        }
-
-        var evolucionEntity = _mapper.Map<Evolucion>(request);
-        _unitOfWork.Repository<Evolucion>().AddEntity(evolucionEntity);
-        var result = await _unitOfWork.Complete();
-
-        if (result <= 0)
-        {
-            throw new Exception("No se pudo llevar a cabo la operacion para insertar, actualizar o eliminar los datos de la evolución");
-        }
-
-        return evolucionEntity.Id;
-    }
-
 }

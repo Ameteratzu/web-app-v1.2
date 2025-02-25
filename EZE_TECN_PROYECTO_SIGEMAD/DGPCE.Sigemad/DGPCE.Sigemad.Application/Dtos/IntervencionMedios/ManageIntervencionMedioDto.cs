@@ -60,7 +60,7 @@ public class ManageIntervencionMedioDto : IEquatable<ManageIntervencionMedioDto>
         IdTitularidadMedio,
         Titular ?? string.Empty,
         FechaHoraInicio
-    );
+        );
 
         hash = HashCode.Combine(
             hash,

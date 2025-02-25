@@ -118,9 +118,10 @@ public class RegistroActualizacionService : IRegistroActualizacionService
             {
                 foreach (E item in lista)
                 {
-                    var estado = GetEstadoRegistro<E, G>(item, registroActualizacion.DetallesRegistro, entidadesOriginales, referenciasParaEliminar);
+                    var estado = GetEstadoRegistro<E, G>(item, apartadoRegistro, registroActualizacion.DetallesRegistro, entidadesOriginales, referenciasParaEliminar);
 
-                    var detalleExistente = registroActualizacion.DetallesRegistro.FirstOrDefault(d => d.IdReferencia == item.Id);
+                    var detalleExistente = registroActualizacion.DetallesRegistro
+                        .FirstOrDefault(d => d.IdReferencia == item.Id && d.IdApartadoRegistro == (int)apartadoRegistro);
 
                     if (detalleExistente != null)
                     {
@@ -162,6 +163,7 @@ public class RegistroActualizacionService : IRegistroActualizacionService
 
     private EstadoRegistroEnum GetEstadoRegistro<E, G>(
     E entidad,
+    ApartadoRegistroEnum apartadoRegistro,
     IEnumerable<DetalleRegistroActualizacion> detallesPrevios,
     Dictionary<int, G> entidadesOriginales,
     List<int> referenciasParaEliminar)
@@ -178,7 +180,8 @@ public class RegistroActualizacionService : IRegistroActualizacionService
             return EstadoRegistroEnum.Creado;
         }
 
-        var detallePrevio = detallesPrevios.FirstOrDefault(d => d.IdReferencia == entidad.Id);
+        var detallePrevio = detallesPrevios
+            .FirstOrDefault(d => d.IdReferencia == entidad.Id && d.IdApartadoRegistro == (int)apartadoRegistro);
 
         var copiaOriginal = entidadesOriginales[entidad.Id];
         var copiaNueva = _mapper.Map<G>(entidad);

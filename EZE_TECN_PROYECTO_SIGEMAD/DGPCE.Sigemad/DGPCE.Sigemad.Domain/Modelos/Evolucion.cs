@@ -13,7 +13,7 @@ public class Evolucion : BaseDomainModel<int>
     public virtual Registro Registro { get; set; }
     
     public virtual DatoPrincipal DatoPrincipal { get; set; }
-    public virtual Parametro Parametro { get; set; }
+    public List<Parametro> Parametros { get; set; } = new();
 
     public List<AreaAfectada> AreaAfectadas { get; set; } = new();
     public List<ImpactoEvolucion> Impactos { get; set; } = new();

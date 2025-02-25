@@ -22,6 +22,7 @@ public class Parametro : BaseDomainModel<int>
     public virtual SituacionEquivalente SituacionEquivalente { get; set; } = null!;
 
 
+    public int IdEvolucion { get; set; }
     public virtual Evolucion Evolucion { get; set; } = null!;
 
     public virtual EstadoIncendio EstadoIncendio { get; set; } = null!;

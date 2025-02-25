@@ -3,5 +3,6 @@
     public class ManageEvolucionResponse
     {
         public int Id { get; set; }
+        public int IdRegistroActualizacion { get; set; }
     }
 }

@@ -85,6 +85,7 @@ public class ManageIntervencionMedioCommandHandler : IRequestHandler<ManageInter
     {
         if (registroActualizacion.IdReferencia > 0)
         {
+            List<int> idsParametro = new List<int>();
             List<int> idsAreaAfectada = new List<int>();
             List<int> idsConsecuenciaActuacion = new List<int>();
             List<int> idsIntervencionMedio = new List<int>();
@@ -99,10 +100,16 @@ public class ManageIntervencionMedioCommandHandler : IRequestHandler<ManageInter
 
             // Buscar la Evolucion por IdReferencia
             var evolucion = await _unitOfWork.Repository<Evolucion>()
-                .GetByIdWithSpec(new EvolucionWithFilteredDataSpecification(registroActualizacion.IdReferencia, idsAreaAfectada,
-                idsConsecuenciaActuacion, idsIntervencionMedio,
-                esFoto: false,
-                includeRegistroParametro: false));
+                .GetByIdWithSpec(new EvolucionWithFilteredDataSpecification(
+                    registroActualizacion.IdReferencia, 
+                    idsParametro, 
+                    idsAreaAfectada,
+                    idsConsecuenciaActuacion, 
+                    idsIntervencionMedio,
+                    includeRegistro: false,
+                    includeDatoPrincipal: false,
+                    esFoto: false
+                ));
 
             if (evolucion is null || evolucion.Borrado)
                 throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de Evolucion");
