@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +8,8 @@ import { Capacidad, GenericMaster } from '../../../../types/actions-relevant.typ
 import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { ActionsRelevantService } from '../../../../services/actions-relevant.service';
+import { PasoAportacion } from '../../../../types/mobilization.type';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -44,10 +46,27 @@ export class Step7Component {
   @Input() formGroup!: FormGroup;
   @Input() dataMaestros: any;
   public capacidad = signal<Capacidad[]>([]);
+  public movilizacionService = inject(ActionsRelevantService);
+  showMedio: boolean = false;
 
   async ngOnInit() {
     this.capacidad.set(this.dataMaestros.capacidades);
-    console.log('🚀 ~ Step5Component ~ ngOnInit ~  this.capacidad:', this.capacidad());
+    const pasosTipo5 = this.movilizacionService
+      .dataMovilizacion()
+      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 5)));
+
+    const pasoAportacion = pasosTipo5[0] as PasoAportacion;
+
+    const foundCapacidad = this.capacidad().find((item) => item.id === pasoAportacion.IdCapacidad);
+    const capacidadForm = this.formGroup.get('IdCapacidad');
+    capacidadForm?.setValue(foundCapacidad);
+    capacidadForm?.disable();
+    if(pasoAportacion.IdCapacidad === 92){
+      this.showMedio = true;
+      const medioForm = this.formGroup.get('MedioNoCatalogado');
+      medioForm?.setValue(pasoAportacion.MedioNoCatalogado);
+      medioForm?.disable();
+    }
   }
 
   getForm(controlName: string): FormControl {

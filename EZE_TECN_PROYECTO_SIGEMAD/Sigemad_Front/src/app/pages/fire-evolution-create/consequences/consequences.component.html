@@ -46,7 +46,7 @@
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
         <mat-form-field class="input" fxFlex="20%">
           <mat-label>Número</mat-label>
-          <input matInput [formControl]="getForm('numero')" type="number" required />
+          <input matInput [formControl]="getForm('numero')" type="number" required (keypress)="allowOnlyNumbers($event)" />
           <mat-error *ngIf="formData.get('numero')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 

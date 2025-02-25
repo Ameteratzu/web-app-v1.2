@@ -1,0 +1,100 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="title">
+  {{ data.opePeriodo?.id ? 'Modificar' : 'Crear' }} Periodo
+</h2>
+
+<form [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Nombre -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre del periodo" formControlName="nombre" />
+        <mat-error *ngIf="formData.get('nombre')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Tipo de periodo -->
+      <!--
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Tipo periodo</mat-label>
+        <mat-select [formControl]="getForm('tipoPeriodo')">
+          <option>Test</option>
+          <option>Test2</option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('territory')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+      -->
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Fecha y hora de inicio  fase salida-->
+      <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
+        <mat-label>Fecha inicio fase salida</mat-label>
+        <input
+          matInput
+          placeholder="Fecha inicio fase salida"
+          formControlName="fechaInicioFaseSalida"
+          type="datetime-local"
+          [min]="'2000-01-01T00:00'"
+          [max]="'2099-12-31T23:59'"
+        />
+        <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha y hora de fin fase salida -->
+      <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
+        <mat-label>Fecha fin fase salida</mat-label>
+        <input
+          matInput
+          placeholder="Fecha fin fase salida"
+          formControlName="fechaFinFaseSalida"
+          type="datetime-local"
+          [min]="'2000-01-01T00:00'"
+          [max]="'2099-12-31T23:59'"
+        />
+        <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha y hora de inicio  fase retorno-->
+      <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
+        <mat-label>Fecha inicio fase retorno</mat-label>
+        <input
+          matInput
+          placeholder="Fecha inicio fase retorno"
+          formControlName="fechaInicioFaseRetorno"
+          type="datetime-local"
+          [min]="'2000-01-01T00:00'"
+          [max]="'2099-12-31T23:59'"
+        />
+        <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha y hora de fin fase retorno -->
+      <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
+        <mat-label>Fecha fin fase retorno</mat-label>
+        <input
+          matInput
+          placeholder="Fecha fin fase retorno"
+          formControlName="fechaFinFaseRetorno"
+          type="datetime-local"
+          [min]="'2000-01-01T00:00'"
+          [max]="'2099-12-31T23:59'"
+        />
+        <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="width: 100%" class="button-container">
+    <!-- Botón Buscar -->
+    <button mat-raised-button (click)="closeModal()" color="primary" aria-label="Buscar" class="custom-button" type="button">Cancelar</button>
+
+    <!-- Botón Filtro -->
+    <button mat-flat-button color="primary" type="submit" aria-label="Guardar" class="custom-button">Guardar</button>
+  </mat-dialog-actions>
+</form>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

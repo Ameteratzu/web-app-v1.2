@@ -1,12 +1,12 @@
 <div fxLayout="column" fxLayoutGap="16px" class="filter-container">
   <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch">
-    <mat-form-field appearance="fill" fxFlex="20">
+    <mat-form-field appearance="fill" fxFlex="25">
       <mat-label>Denominación</mat-label>
       <input matInput [formControl]="getForm('denomination')" />
     </mat-form-field>
 
-    <mat-form-field appearance="fill" fxFlex="20">
-      <mat-label>Ubicación</mat-label>
+    <mat-form-field appearance="fill" fxFlex="25">
+      <mat-label>Municipio</mat-label>
       <input matInput [formControl]="getForm('ubicacion')" />
     </mat-form-field>
 
@@ -16,20 +16,22 @@
       src="/assets/img/location-btn.svg"
       alt="location-btn"
       class="pin-location"
-      matTooltip="Mapa de ubicación"
+      matTooltip="Mapa de situación"
     />
 
+    <!--
     <mat-form-field appearance="fill" fxFlex="20">
       <mat-label>Clase de suceso</mat-label>
       <input matInput [formControl]="getForm('suceso')" />
     </mat-form-field>
+    -->
 
-    <mat-form-field appearance="fill" fxFlex="20">
+    <mat-form-field appearance="fill" fxFlex="25">
       <mat-label>Fecha de inicio</mat-label>
       <input matInput [formControl]="getForm('startDate')" />
     </mat-form-field>
 
-    <mat-form-field appearance="fill" fxFlex="20">
+    <mat-form-field appearance="fill" fxFlex="25">
       <mat-label>Estado del suceso</mat-label>
       <input matInput [formControl]="getForm('estado')" />
     </mat-form-field>
@@ -75,7 +77,7 @@
     <button (click)="toggleVistaTabla()" flat-button>Alternar vista (completa/detallada)</button>
   </ng-container>
   <div fxLayout="column" fxLayoutGap="16px" class="filter-container">
-    <!--<img class="w-100" src="/assets/img/graph.svg" alt="graph" />-->
+    <img class="w-100" src="/assets/img/graph.svg" alt="graph" />
 
     <!-- GRÁFICO HISTÓRICO -->
     <div class="tabla-contenedor-historico">
@@ -153,7 +155,7 @@
                     >
                       <!--{{ horaIndex }}-->
                     </div>
-                    <div class="tercer-borde"></div>
+                    <div *ngIf="horaIndex !== 23" class="tercer-borde"></div>
                   </td>
                 </ng-container>
               </ng-container>
@@ -258,13 +260,14 @@
 
           <ng-container *ngIf="filaMediosExtincionExtraordinariosNacionales.size > 0">
             <tr id="filaMediosExtincionExtraOrdinariosNacionales" style="height: 20px">
-              <ng-container *ngFor="let entry of filaMediosExtincionOrdinariosNacionalesDiasCompletos | keyvalue; let diaIndex = index">
+              <ng-container *ngFor="let entry of filaMediosExtincionExtraordinariosNacionalesDiasCompletos | keyvalue; let diaIndex = index">
                 <ng-container *ngFor="let hour of [].constructor(24); let horaIndex = index">
                   <td
                     [id]="'filaMediosExtincionOrdinarios' + entry.key + '_' + horaIndex"
                     class="hora-celda"
                     style="position: relative; text-align: center; padding: 8px"
                   >
+                    <!--
                     <div
                       [ngStyle]="{
                         'background-color': getBackgroundColorFilaMediosExtincionExtraordinariosNacionales(entry.key, horaIndex),
@@ -275,6 +278,12 @@
                         height: '30%',
                       }"
                     >
+                    -->
+
+                    <!-- PCD-->
+                    <div [ngStyle]="getEstiloFilaMediosExtincionExtraordinariosNacionales(entry.key, horaIndex)">
+                      <!-- FIN PCD-->
+
                       <!--{{ horaIndex }}-->
                     </div>
                   </td>

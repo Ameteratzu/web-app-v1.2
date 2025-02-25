@@ -27,7 +27,7 @@ public class EntidadesMenoresController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todas la lista general de tipos de entidad menor")]
-    public async Task<ActionResult<IReadOnlyList<ClaseSuceso>>> GetAll()
+    public async Task<ActionResult<IReadOnlyList<EntidadMenorVm>>> GetAll()
     {
         var query = new GetEntidadMenorListQuery();
         var listado = await _mediator.Send(query);

@@ -25,7 +25,7 @@ export class EvolutionService {
     const body = {
       idTecnico: '550E683E-0458-43E8-A6E6-20887DC2BDDD',
       idIncendio: data.fire_id,
-      fechaHoraEvolucion: data.startDate,
+      fechaHoraEvolucion: data.startDateTime,
       idEntradaSalida: data.inputOutput,
       idMedio: data.media,
       idTipoRegistro: 1,
@@ -129,7 +129,7 @@ export class EvolutionService {
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }
-  
+
   deleteConse(id: number) {
     const endpoint = `/evoluciones/${id}`;
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
