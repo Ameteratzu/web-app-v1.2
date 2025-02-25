@@ -13,8 +13,16 @@
 
         <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
           <mat-label>Fecha y Hora</mat-label>
-          <input matInput placeholder="Fecha y hora" formControlName="startDate" type="datetime-local" />
+          <input
+            matInput
+            placeholder="Fecha y hora"
+            formControlName="startDate"
+            type="datetime-local"
+            [min]="'2000-01-01T00:00'"
+            [max]="'2099-12-31T23:59'"
+          />
           <mat-error *ngIf="formData.get('startDate')?.hasError('required')">Este campo es obligatorio.</mat-error>
+          <mat-error *ngIf="formData.get('startDate')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input spaced-input" fxFlex="25%">
@@ -78,7 +86,7 @@
       <div class="row" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
         <mat-form-field class="input spaced-input" fxFlex="25%">
           <mat-label>Estado del incendio</mat-label>
-          <mat-select formControlName="status"  (selectionChange)="selectStatus($event)">
+          <mat-select formControlName="status" (selectionChange)="selectStatus($event)">
             <mat-option *ngFor="let op of status()" [value]="op.id">
               {{ op.descripcion }}
             </mat-option>

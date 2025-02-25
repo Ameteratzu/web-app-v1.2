@@ -33,10 +33,10 @@ export class OpePeriodosService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd  h:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd  h:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd  h:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd  h:mm:ss'),
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,10 +54,10 @@ export class OpePeriodosService {
     const body = {
       id: data.id,
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd h:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd h:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd h:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd h:mm:ss'),
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
 
     return firstValueFrom(

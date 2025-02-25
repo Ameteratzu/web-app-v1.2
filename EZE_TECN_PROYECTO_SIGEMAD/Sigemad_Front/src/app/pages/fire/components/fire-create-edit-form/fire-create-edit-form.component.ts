@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
@@ -41,6 +41,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // PCD
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FechaValidator } from '../../../../shared/validators/fecha-validator';
 // FIN PCD
 
 const MY_DATE_FORMATS = {
@@ -140,7 +141,8 @@ export class FireCreateEdit implements OnInit {
       //startDate: new FormControl(new Date(), Validators.required),
       //startTime: new FormControl(null, Validators.required),
       // PCD
-      startDateTime: new FormControl(new Date(), Validators.required),
+      //startDateTime: new FormControl(new Date(), Validators.required),
+      startDateTime: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
       // FIN PCD
 
       eventStatus: new FormControl('', Validators.required),
@@ -357,4 +359,8 @@ export class FireCreateEdit implements OnInit {
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
   }
+
+  // PCD
+
+  // FIN PCD
 }

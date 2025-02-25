@@ -86,7 +86,7 @@ export class PeriodosTableComponent implements OnChanges {
   }
 
   getFechaFormateada(fecha: any) {
-    return moment(fecha).format('DD/MM/yyyy hh:mm');
+    return moment(fecha).format('DD/MM/yyyy HH:mm');
   }
 
   goModalEdit(opePeriodo: OpePeriodo) {

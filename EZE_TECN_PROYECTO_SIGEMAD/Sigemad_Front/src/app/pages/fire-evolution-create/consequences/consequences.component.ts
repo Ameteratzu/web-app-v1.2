@@ -349,13 +349,9 @@ export class ConsequencesComponent {
 
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
-
-    // Permitir teclas de control como Backspace, Tab, etc.
     if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27) {
-      return; // Permite el backspace, tab, enter y escape
+      return;
     }
-
-    // Solo permite números (códigos 48-57) y previene el punto (46) y cualquier otro carácter
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }

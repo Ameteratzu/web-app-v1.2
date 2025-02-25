@@ -3,7 +3,7 @@ import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, On
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,18 +28,9 @@ import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { SituationPlan } from '../../../types/situation-plan.type';
 import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
 import { TypesPlans } from '../../../types/types-plans.type';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_DATE_FORMATS } from '../../../types/date-formats';
+import { FechaValidator } from '../../../shared/validators/fecha-validator';
 
 @Component({
   selector: 'app-records',
@@ -63,7 +54,7 @@ const MY_DATE_FORMATS = {
   templateUrl: './records.component.html',
   styleUrl: './records.component.scss',
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
 })
@@ -136,7 +127,7 @@ export class RecordsComponent implements OnInit {
 
     this.formData = await this.fb.group({
       inputOutput: [this.formDataSignal().inputOutput, Validators.required],
-      startDate: [this.formDataSignal().startDate, Validators.required],
+      startDate: [this.formDataSignal().startDate, [Validators.required, FechaValidator.validarFecha]],
       media: [this.formDataSignal().media, Validators.required],
       originDestination: [this.formDataSignal().originDestination, Validators.required],
       datetimeUpdate: [this.formDataSignal().datetimeUpdate, Validators.required],

@@ -47,18 +47,8 @@ import { SucesosRelacionadosService } from '../../../../services/sucesos-relacio
 
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_DATE_FORMATS } from '../../../../types/date-formats';
 
 @Component({
   selector: 'app-fire-related-event-form',
@@ -83,7 +73,7 @@ const MY_DATE_FORMATS = {
     NgxSpinnerModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './fire-related-event-form.component.html',

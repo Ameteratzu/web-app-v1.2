@@ -24,6 +24,7 @@ import { AlertService } from '../../../../../../shared/alert/alert.service';
 import { LocalFiltrosOpePeriodos } from '../../../../../../services/local-filtro-ope-periodos.service';
 import { OpePeriodosService } from '../../../../../../services/ope-periodos.service';
 import moment from 'moment';
+import { FechaValidator } from '../../../../../../shared/validators/fecha-validator';
 // FIN PCD
 
 const MY_DATE_FORMATS = {
@@ -95,20 +96,20 @@ export class OpePeriodoCreateEdit implements OnInit {
   async ngOnInit() {
     this.formData = new FormGroup({
       nombre: new FormControl('', Validators.required),
-      fechaInicioFaseSalida: new FormControl(null, Validators.required),
-      fechaFinFaseSalida: new FormControl(null, Validators.required),
-      fechaInicioFaseRetorno: new FormControl(null, Validators.required),
-      fechaFinFaseRetorno: new FormControl(null, Validators.required),
+      fechaInicioFaseSalida: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
+      fechaFinFaseSalida: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
+      fechaInicioFaseRetorno: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
+      fechaFinFaseRetorno: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
     });
 
     if (this.data.opePeriodo?.id) {
       this.formData.patchValue({
         id: this.data.opePeriodo.id,
         nombre: this.data.opePeriodo.nombre,
-        fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicio).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFin).format('YYYY-MM-DD HH:mm'),
-        fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicio).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFin).format('YYYY-MM-DD HH:mm'),
+        fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
+        fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
+        fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicioFaseRetorno).format('YYYY-MM-DD HH:mm'),
+        fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFinFaseRetorno).format('YYYY-MM-DD HH:mm'),
       });
     }
   }
