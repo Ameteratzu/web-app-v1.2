@@ -15,15 +15,15 @@ public class UpdateOpePeriodoCommandValidator : AbstractValidator<UpdateOpePerio
             .NotNull().WithMessage(localizer["IdObligatorio"]);
 
 
-        RuleFor(p => p.Denominacion)
+        RuleFor(p => p.Nombre)
             .NotEmpty().WithMessage(localizer["DenominacionNoVacio"])
             .NotNull().WithMessage(localizer["DenominacionObligatorio"])
             .MaximumLength(255).WithMessage(localizer["DenominacionMaxLength"]);
 
-        RuleFor(p => p.FechaInicio)
+        RuleFor(p => p.fechaInicioFaseSalida)
             .NotEmpty().WithMessage(localizer["FechaInicioObligatorio"]);
 
-        RuleFor(p => p.FechaFin)
+        RuleFor(p => p.fechaFinFaseSalida)
             .NotEmpty().WithMessage(localizer["FechaFinObligatorio"]);
 
 

@@ -47,18 +47,8 @@ import { MasterDataEvolutionsService } from '../../../../services/master-data-ev
 import { SituationsEquivalent } from '../../../../types/situations-equivalent.type';
 import { EventService } from '../../../../services/event.service';
 import { Event } from '../../../../types/event.type';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_DATE_FORMATS } from '../../../../types/date-formats';
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -80,13 +70,17 @@ const MY_DATE_FORMATS = {
     MatDialogModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './fire-filter-form.component.html',
   styleUrl: './fire-filter-form.component.scss',
 })
 export class FireFilterFormComponent implements OnInit {
+  // PCD
+
+  // FIN PCD
+
   @Input() fires: ApiResponse<Fire[]> | undefined;
   @Input() filtros: any;
   @Input() isLoading: boolean = true;

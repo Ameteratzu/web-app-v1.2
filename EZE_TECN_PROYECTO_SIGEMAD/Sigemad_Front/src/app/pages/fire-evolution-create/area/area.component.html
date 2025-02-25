@@ -4,6 +4,7 @@
       <div>
         <h3 class="title">ÁREA AFECTADA</h3>
         <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+          <!--
           <mat-form-field appearance="fill" fxFlex="20%" class="mb-3">
             <mat-label>Fecha y hora</mat-label>
             <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaHora')" />
@@ -11,8 +12,24 @@
             <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
+          -->
 
-          <mat-form-field appearance="fill" fxFlex="50%">
+          <!-- PCD -->
+          <mat-form-field appearance="fill" fxFlex="40%" class="mb-3">
+            <mat-label>Fecha y hora</mat-label>
+            <input
+              matInput
+              placeholder="Fecha y hora"
+              formControlName="fechaHora"
+              type="datetime-local"
+              [min]="'2000-01-01T00:00'"
+              [max]="'2099-12-31T23:59'"
+            />
+            <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">Este campo es obligatorio.</mat-error>
+          </mat-form-field>
+          <!-- FIN PCD -->
+
+          <mat-form-field appearance="fill" fxFlex="20%">
             <mat-label>Provincia</mat-label>
             <mat-select [formControl]="getForm('provincia')" (selectionChange)="loadMunicipalities($event)">
               <mat-option *ngFor="let option of provinces()" [value]="option.id">
@@ -22,10 +39,9 @@
             <mat-error *ngIf="formData.get('provincia')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="fill" fxFlex="40%">
+          <mat-form-field appearance="fill" fxFlex="30%">
             <mat-label>Municipio</mat-label>
-            <mat-select [formControl]="getForm('municipio')"
-              (selectionChange)="onChangeMunicipio($event); loadMinor($event)">
+            <mat-select [formControl]="getForm('municipio')" (selectionChange)="onChangeMunicipio($event); loadMinor($event)">
               <mat-option *ngFor="let option of municipalities()" [value]="option.id">
                 {{ option.descripcion }}
               </mat-option>
@@ -78,27 +94,26 @@
         <ng-container matColumnDef="procendenciaDestino">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
           <td mat-cell *matCellDef="let coordinacionData">
-            {{ isInteger(coordinacionData.provincia) ? getProvincesById(coordinacionData.provincia) :
-            coordinacionData.provincia?.descripcion }}
+            {{ isInteger(coordinacionData.provincia) ? getProvincesById(coordinacionData.provincia) : coordinacionData.provincia?.descripcion }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="descripcion">
           <th mat-header-cell *matHeaderCellDef>Municipio</th>
           <td mat-cell *matCellDef="let coordinacionData">
-            {{ isInteger(coordinacionData.municipio) ? getMunicipalitiesById(coordinacionData.municipio) :
-            coordinacionData.municipio?.descripcion }}
+            {{ isInteger(coordinacionData.municipio) ? getMunicipalitiesById(coordinacionData.municipio) : coordinacionData.municipio?.descripcion }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fichero">
           <th mat-header-cell *matHeaderCellDef>Entidad menor</th>
           <td mat-cell *matCellDef="let coordinacionData">
-            {{ coordinacionData.entidadMenor
-            ? isInteger(coordinacionData.entidadMenor)
-            ? getMinorById(coordinacionData.entidadMenor)
-            : coordinacionData.entidadMenor.descripcion
-            : 'Sin identidad menor'
+            {{
+              coordinacionData.entidadMenor
+                ? isInteger(coordinacionData.entidadMenor)
+                  ? getMinorById(coordinacionData.entidadMenor)
+                  : coordinacionData.entidadMenor.descripcion
+                : 'Sin identidad menor'
             }}
           </td>
         </ng-container>
@@ -129,8 +144,14 @@
   </div>
 
   <div class="map-container">
-    <app-map-create [municipio]="selectedMunicipio" [listaMunicipios]="listaMunicipios" [onlyView]="onlyView"
-      [polygon]="defaultPolygon" [close]="false" (save)="onSave($event)" *ngIf="selectedMunicipio">
-    </app-map-create>
+    <app-map-create
+      [municipio]="selectedMunicipio"
+      [listaMunicipios]="listaMunicipios"
+      [onlyView]="onlyView"
+      [polygon]="defaultPolygon"
+      [close]="false"
+      (save)="onSave($event)"
+      *ngIf="selectedMunicipio"
+    ></app-map-create>
   </div>
 </div>
