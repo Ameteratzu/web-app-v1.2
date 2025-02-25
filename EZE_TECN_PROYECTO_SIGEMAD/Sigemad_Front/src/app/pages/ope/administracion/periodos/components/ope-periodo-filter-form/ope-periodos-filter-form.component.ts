@@ -96,13 +96,15 @@ export class OpePeriodoFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
 
-    const { denominacion, fechaInicio, fechaFin, between } = this.filtros();
+    const { nombre, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, between } = this.filtros();
 
     this.formData = new FormGroup({
-      denominacion: new FormControl(denominacion ?? ''),
+      nombre: new FormControl(nombre ?? ''),
       between: new FormControl(between ?? 1),
-      fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
-      fechaFin: new FormControl(fechaFin ?? moment().toDate()),
+      fechaInicioFaseSalida: new FormControl(fechaInicioFaseSalida ?? moment().subtract(4, 'days').toDate()),
+      fechaFinFaseSalida: new FormControl(fechaFinFaseSalida ?? moment().toDate()),
+      fechaInicioFaseRetorno: new FormControl(fechaInicioFaseRetorno ?? moment().subtract(4, 'days').toDate()),
+      fechaFinFaseRetorno: new FormControl(fechaFinFaseRetorno ?? moment().toDate()),
     });
 
     //this.clearFormFilter();
@@ -135,13 +137,15 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingChange.emit(true);
 
-    const { between, fechaInicio, fechaFin, denominacion } = this.formData.value;
+    const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
 
     const opePeriodos = await this.opePeriodosService.get({
       IdComparativoFecha: between,
-      FechaInicio: moment(fechaInicio).format('YYYY-MM-DD'),
-      FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
-      denominacion: denominacion,
+      fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
+      fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
+      fechaInicioFaseRetorno: moment(fechaInicioFaseRetorno).format('YYYY-MM-DD'),
+      fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
+      nombre: nombre,
     });
     this.filtrosOpePeriodosService.setFilters(this.formData.value);
     this.opePeriodos = opePeriodos;
@@ -154,9 +158,11 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     this.formData.reset();
     this.formData.patchValue({
       between: 1,
-      fechaInicio: moment().subtract(4, 'days').toDate(),
-      fechaFin: moment().toDate(),
-      denominacion: '',
+      fechaInicioFaseSalida: moment().subtract(4, 'days').toDate(),
+      fechaFinFaseSalida: moment().toDate(),
+      fechaInicioFaseRetorno: moment().subtract(4, 'days').toDate(),
+      fechaFinFaseRetorno: moment().toDate(),
+      nombre: '',
     });
   }
 

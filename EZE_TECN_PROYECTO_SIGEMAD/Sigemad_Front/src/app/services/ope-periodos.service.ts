@@ -2,10 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-
 import { ApiResponse } from '../types/api-response.type';
-import { FireDetail, FireDetailResponse } from '../types/fire-detail.type';
-import { Fire } from '../types/fire.type';
 import { OpePeriodo } from '../types/ope-periodo.type';
 
 @Injectable({ providedIn: 'root' })
@@ -35,9 +32,11 @@ export class OpePeriodosService {
 
   post(data: any) {
     const body = {
-      denominacion: data.denomination,
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd  h:mm:ss'),
-      fechaFin: this.datepipe.transform(data.endDateTime, 'yyyy-MM-dd  h:mm:ss'),
+      nombre: data.nombre,
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,9 +53,11 @@ export class OpePeriodosService {
   update(data: any) {
     const body = {
       id: data.id,
-      denominacion: data.denomination,
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd h:mm:ss'),
-      fechaFin: this.datepipe.transform(data.endDateTime, 'yyyy-MM-dd h:mm:ss'),
+      nombre: data.nombre,
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
 
     return firstValueFrom(
