@@ -7,10 +7,8 @@ internal class DetalleOtraInformacion_ProcedenciaDestinoConfiguration : IEntityT
 {
     public void Configure(EntityTypeBuilder<DetalleOtraInformacion_ProcedenciaDestino> builder)
     {
-        builder.HasKey(e => e.Id).HasName("DetalleOtraInformacion_ProcedenciaDestino_PK");
         builder.ToTable("DetalleOtraInformacion_ProcedenciaDestino");
-        builder.Property(e => e.Id)
-            .UseIdentityColumn();
+        builder.HasKey(e => new { e.IdProcedenciaDestino, e.IdDetalleOtraInformacion });
         builder.Property(e => e.IdDetalleOtraInformacion)
             .IsRequired();
         builder.Property(e => e.IdProcedenciaDestino)

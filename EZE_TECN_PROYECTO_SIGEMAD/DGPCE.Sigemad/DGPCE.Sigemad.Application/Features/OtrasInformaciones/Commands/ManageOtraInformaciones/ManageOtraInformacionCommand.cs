@@ -4,7 +4,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
 public class ManageOtraInformacionCommand: IRequest<ManageOtraInformacionResponse>
 {
-    public int? IdOtraInformacion { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
     public List<CreateDetalleOtraInformacionDto> Lista { get; set; }
 }

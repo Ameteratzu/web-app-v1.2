@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtraInformacion;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
-using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtrasInformacionesList;
+using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Queries.GetOtraInformacion;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,34 +31,50 @@ public class OtraInformacionController : ControllerBase
     //    return CreatedAtAction(nameof(GetOtraInformacionById), new { id = response.Id }, response);
     //}
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerOperation(Summary = "Obtener otra información mediante Id")]
-    public async Task<ActionResult<OtraInformacionDto>> GetOtraInformacionById(int id)
-    {
-        var query = new GetOtraInformacionByIdQuery(id);
-        var otraInformacion = await _mediator.Send(query);
+    //[HttpGet("{id}")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //[SwaggerOperation(Summary = "Obtener otra información mediante Id")]
+    //public async Task<ActionResult<OtraInformacionDto>> GetOtraInformacionById(int id)
+    //{
+    //    var query = new GetOtraInformacionByIdQuery(id);
+    //    var otraInformacion = await _mediator.Send(query);
 
-        if (otraInformacion == null)
+    //    if (otraInformacion == null)
+    //    {
+    //        return NotFound();
+    //    }
+    //    return Ok(otraInformacion);
+    //}
+
+
+    [HttpGet]
+    public async Task<ActionResult<OtraInformacionDto>> GetotrasInformaciones(
+    [FromQuery] int? idRegistroActualizacion,
+    [FromQuery] int idSuceso)
+    {
+        var query = new GetOtraInformacionQuery
         {
-            return NotFound();
-        }
-        return Ok(otraInformacion);
+            IdRegistroActualizacion = idRegistroActualizacion,
+            IdSuceso = idSuceso
+        };
+
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
-    [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerOperation(Summary = "Eliminar un detalle de otra información mediante Id")]
-    public async Task<ActionResult> Delete(int id)
-    {
-        var command = new DeleteOtraInformationQuery(id);
-        await _mediator.Send(command);
-        return NoContent();
-    }
+    //[HttpDelete("{id}")]
+    //[ProducesResponseType(StatusCodes.Status204NoContent)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //[SwaggerOperation(Summary = "Eliminar un detalle de otra información mediante Id")]
+    //public async Task<ActionResult> Delete(int id)
+    //{
+    //    var command = new DeleteOtraInformationQuery(id);
+    //    await _mediator.Send(command);
+    //    return NoContent();
+    //}
 
     //[HttpDelete("detalles/{idDetalleOtraInformacion}")]
     //[ProducesResponseType(StatusCodes.Status204NoContent)]
