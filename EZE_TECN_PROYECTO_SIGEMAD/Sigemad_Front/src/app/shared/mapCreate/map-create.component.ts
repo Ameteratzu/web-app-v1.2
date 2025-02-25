@@ -40,6 +40,7 @@ import { Municipality } from '../../types/municipality.type';
 
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -47,7 +48,7 @@ const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
 @Component({
   selector: 'app-map-create',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, FlexLayoutModule, DragDropModule],
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
