@@ -83,6 +83,10 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
             modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
             modelBuilder.Entity<GrupoMedio>().ToTable(nameof(GrupoMedio));
+
+            // PCD
+            modelBuilder.Entity<OpePeriodo>().ToTable(nameof(OpePeriodo));
+            // FIN PCD
         }
 
         public DbSet<TipoSuceso> TiposSuceso { get; set; }
@@ -178,5 +182,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<MediosCapacidad> MediosCapacidads { get; set; }
 
 
+
+        // PCD
+        public DbSet<OpePeriodo> OpePeriodos { get; set; }
+        // FIN PCD
     }
 }

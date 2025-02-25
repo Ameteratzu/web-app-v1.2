@@ -115,7 +115,13 @@ p {
   align-items: center;
   justify-content: center;
   margin-bottom: 0px;
-  height: 20px;
+  height: 1.2rem;
+}
+
+.icono-leyenda {
+  width: 1.1rem; /* 5% del ancho de la pantalla */
+  max-width: 100px; /* Límite para que no sea demasiado grande */
+  height: auto; /* Mantiene la proporción */
 }
 
 #tablaHistorico {
@@ -188,11 +194,5 @@ p {
 #tablaHistorico.vista-general {
   table-layout: fixed;
   overflow-x: auto;
-}
-
-.icono-leyenda {
-  width: 1.2vw; /* 5% del ancho de la pantalla */
-  max-width: 100px; /* Límite para que no sea demasiado grande */
-  height: auto; /* Mantiene la proporción */
 }
 /*  FIN PCD */

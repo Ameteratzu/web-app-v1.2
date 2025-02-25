@@ -13,6 +13,7 @@ import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
 import { Control, defaults as defaultControls, FullScreen, ScaleLine, ZoomToExtent } from 'ol/control';
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
+import SearchNominatim from 'ol-ext/control/SearchNominatim';
 import proj4 from 'proj4';
 
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
@@ -86,8 +87,8 @@ export class DashboardComponent {
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
-      center: [-400000, 4900000],
-      zoom: 6,
+      center: [-225030.611272, 4290257.523590],
+      zoom: 5.53,
       extent: [-4500000, 3000000, 2500000, 6500000]
     });
 
@@ -105,12 +106,33 @@ export class DashboardComponent {
       view: this.view,
     });
 
-    this.map.addControl(new LayerSwitcher({
+    const layersSwitcher = new LayerSwitcher({
       mouseover: true,
       show_progress: true,
-    }));
+      trash: true,
+    });
+
+    layersSwitcher.tip = {
+      up: 'Arriba/Abajo',
+      down: 'Arriba/Abajo',
+      info: 'Información',
+      extent: 'Extensión',
+      trash: 'Eliminar',
+      plus: 'Expandir/Contraer',
+    };
+
+    this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
+
+    this.map.addControl(new SearchNominatim({
+      placeholder: 'Buscar ubicación...',
+      onselect: (event: any) => {
+        const coordenadas = event.coordinate;
+        this.map.getView().setCenter(coordenadas);
+        this.map.getView().setZoom(14);
+      }
+    }));
 
     this.addZoomCanariasPeninsula();
 
@@ -382,8 +404,8 @@ export class DashboardComponent {
       } else {
         // Zoom a Península
         this.map.getView().animate({
-          center: [-400000, 4900000],
-          zoom: 6,
+          center: [-319201, 4834489],
+          zoom: 6.5,
           duration: 1000
         });
       }

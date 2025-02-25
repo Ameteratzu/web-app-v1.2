@@ -9,7 +9,7 @@
       <mat-error *ngIf="formGroup.get('IdCapacidad')?.hasError('required')">Este campo es obligatorio.</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="input full-width-input" fxFlex="30%">
+    <mat-form-field class="input full-width-input" fxFlex="30%" *ngIf="showMedio">
       <mat-label>Medio no catalogado</mat-label>
       <input matInput [formControl]="getForm('MedioNoCatalogado')" placeholder="Ingresa texto" />
       <mat-error *ngIf="formGroup.get('MedioNoCatalogado')?.hasError('required')">Este campo es obligatorio.</mat-error>

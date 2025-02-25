@@ -55,9 +55,12 @@ using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
+using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.CreateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.UpdateOpePeriodos;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
+using DGPCE.Sigemad.Application.Features.Periodos.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
@@ -412,6 +415,12 @@ public class MappingProfile : Profile
         CreateMap<Entidad, EntidadDto>();
         CreateMap<TipoCapacidad, TipoCapacidadDto>();
         CreateMap<Capacidad, CapacidadDto>();
+
+        // PCD
+        CreateMap<OpePeriodo, OpePeriodoVm>();
+        CreateMap<CreateOpePeriodoCommand, OpePeriodo>();
+        CreateMap<UpdateOpePeriodoCommand, OpePeriodo>();
+        // FIN PCD
 
     }
 
