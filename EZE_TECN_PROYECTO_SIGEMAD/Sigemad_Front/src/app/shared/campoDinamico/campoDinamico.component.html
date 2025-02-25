@@ -4,10 +4,25 @@
       <div fxFlex="32%" class="campo">
         <!-- Campo tipo Text y Number -->
 
+        <!--
         <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Text' || field.tipoCampo === 'Number'">
           <mat-label>{{ field.label }}</mat-label>
           <input matInput [type]="field.tipoCampo === 'Number' ? 'number' : 'text'" [formControlName]="field.campo" />
         </mat-form-field>
+        -->
+
+        <!-- PCD -->
+        <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Text' || field.tipoCampo === 'Number'">
+          <mat-label>{{ field.label }}</mat-label>
+          <input
+            matInput
+            [type]="field.tipoCampo === 'Number' ? 'number' : 'text'"
+            [formControlName]="field.campo"
+            (keypress)="field.tipoCampo === 'Number' ? allowOnlyNumbers($event) : null"
+            [min]="field.tipoCampo === 'Number' ? 0 : null"
+          />
+        </mat-form-field>
+        <!-- FIN  PCD -->
 
         <!-- Campo tipo Date o DateTime -->
         <mat-form-field class="input spaced-input full-width" *ngIf="field.tipoCampo === 'Date' || field.tipoCampo === 'Datetime'">

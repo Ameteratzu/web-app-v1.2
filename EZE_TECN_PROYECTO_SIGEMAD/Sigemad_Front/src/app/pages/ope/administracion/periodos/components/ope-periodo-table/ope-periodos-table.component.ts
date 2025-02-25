@@ -42,7 +42,14 @@ export class PeriodosTableComponent implements OnChanges {
   public opePeriodosService = inject(OpePeriodosService);
   public routenav = inject(Router);
 
-  public displayedColumns: string[] = ['denominacion', 'fechaInicio', 'fechaFin', 'opciones'];
+  public displayedColumns: string[] = [
+    'nombre',
+    'fechaInicioFaseSalida',
+    'fechaFinFaseSalida',
+    'fechaInicioFaseRetorno',
+    'fechaFinFaseRetorno',
+    'opciones',
+  ];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['opePeriodos'] && this.opePeriodos) {
@@ -78,8 +85,8 @@ export class PeriodosTableComponent implements OnChanges {
     });
   }
 
-  getFechaInicio(fecha: any) {
-    return moment(fecha).format('DD/MM/yyyy hh:mm');
+  getFechaFormateada(fecha: any) {
+    return moment(fecha).format('DD/MM/yyyy HH:mm');
   }
 
   goModalEdit(opePeriodo: OpePeriodo) {

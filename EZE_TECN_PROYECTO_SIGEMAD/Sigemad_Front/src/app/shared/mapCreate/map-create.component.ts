@@ -28,7 +28,6 @@ import { getTopLeft } from 'ol/extent';
 import Overlay from 'ol/Overlay';
 import GeoJSON from 'ol/format/GeoJSON';
 import KML from 'ol/format/KML';
-import { unzip } from 'unzipit';
 import proj4 from 'proj4';
 import { fromLonLat, toLonLat } from 'ol/proj';
 
@@ -451,14 +450,11 @@ export class MapCreateComponent implements OnInit, OnChanges {
     });
 
     this.drawPoint.on('drawend', (e) => {
-      console.log('draw', e.feature);
-
       let format = new WKT();
       let wkt = format.writeFeature(e.feature, {
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857',
       });
-      console.log('json:', wkt);
     });
 
     //drawBar.addControl(tgPoint);
@@ -560,37 +556,47 @@ export class MapCreateComponent implements OnInit, OnChanges {
       const center = this.map.getView().getCenter();
       const resolution = this.map.getView().getResolution();
       if (center && resolution) {
+        const radius = 1000; // Radio en metros
+
+        const newExtent = [
+          center[0] - radius, center[1] - radius,
+          center[0] + radius, center[1] + radius
+        ];
+
         const url = source.getFeatureInfoUrl(
-          center,
+          newExtent,
           resolution,
           'EPSG:3857',
-          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1 }
+          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 10 }
         );
         if (url) {
           fetch(url)
             .then(response => response.json())
             .then(data => {
-              console.log('FeatureInfo Data:', data);
-
               // Función para normalizar y limpiar el nombre del municipio
               const normalizeString = (str: string) => {
                 return str
                   .toLowerCase()
                   .normalize('NFD') // Normaliza la cadena
                   .replace(/[\u0300-\u036f]/g, '') // Elimina acentos
-                  .replace(/\b(el|la|los|las)\b/g, '') // Elimina artículos
+                  .replace(/\b(el|la|los|las|as|os|de|del|y|a|o|l|els|les)\b/g, '') // Elimina artículos y preposiciones
+                  .replace(/\b(general)\b/g, '') // casos especiales
+                  .replace(/guipuzkoa/g, 'guipuzcoa') // casos especiales
+                  .replace(/araba/g, 'alava') // casos especiales
                   .replace(/[^a-z0-9\s]/g, '') // Elimina caracteres especiales
+                  .replace(/\s+/g, ' ') // Elimina espacios en blanco duplicados
                   .trim(); // Elimina espacios en blanco al inicio y al final
               };
 
               const normalizedMunicipio = normalizeString(municipio);
 
-              const feature = data.features.find((f: any) =>
-                normalizeString(f.properties.NAMEUNIT).includes(normalizedMunicipio)
-              );
+              const feature = data.features.find((f: any) => {
+                // console.info('f.properties.NAMEUNIT normalizado: ', normalizeString(f.properties.NAMEUNIT));
+                // console.info('normalizedMunicipio: ', normalizedMunicipio);
+                return normalizeString(f.properties.NAMEUNIT).includes(normalizedMunicipio)
+              });
 
               if (feature) {
-                console.log('Feature encontrado:', feature);
                 const highlightStyle = new Style({
                   stroke: new Stroke({
                     color: 'rgb(255, 128, 0)',
@@ -598,14 +604,22 @@ export class MapCreateComponent implements OnInit, OnChanges {
                   }),
                 });
 
-                const coordinates = feature.geometry.coordinates[0];
-                console.log('Coordinates:', coordinates);
+                const coordinates = feature.geometry.coordinates;
 
-                const olFeature = new Feature({
-                  geometry: new Polygon(coordinates),
+                coordinates.forEach((polygonCoords: any) => {
+                  const olFeature = new Feature({
+                    geometry: new Polygon(polygonCoords), // Crear un nuevo polígono para cada conjunto de coordenadas
+                  });
+
+                  olFeature.setStyle(new Style({
+                    stroke: new Stroke({
+                      color: 'rgb(255, 128, 0)', // Color del borde
+                      width: 5,
+                    }),
+                  }));
+
+                  this.highLightMunicipio.getSource()?.addFeature(olFeature);
                 });
-                olFeature.setStyle(highlightStyle);
-                this.highLightMunicipio.getSource()?.addFeature(olFeature);
               } else {
                 console.warn('No se encontró el feature para el municipio:', municipio);
               }
@@ -621,7 +635,6 @@ export class MapCreateComponent implements OnInit, OnChanges {
       let features;
       if (fileContent.includes('FeatureCollection')) {
         // Es un GeoJSON
-        // const geojsonData = JSON.parse(fileContent);
         const geojsonFormat = new GeoJSON();
         features = geojsonFormat.readFeatures(fileContent, {
           featureProjection: 'EPSG:3857',
@@ -632,10 +645,6 @@ export class MapCreateComponent implements OnInit, OnChanges {
         features = kmlFormat.readFeatures(fileContent, {
           featureProjection: 'EPSG:3857',
         });
-      } else {
-        // Podría ser un archivo comprimido (SHP)
-        const { entries } = await unzip(fileContent);
-        // Procesar el archivo SHP aquí
       }
 
       if (features) {

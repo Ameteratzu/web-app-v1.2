@@ -3,7 +3,7 @@ import { Component, effect, EnvironmentInjector, EventEmitter, inject, Input, On
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,18 +28,9 @@ import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { SituationPlan } from '../../../types/situation-plan.type';
 import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
 import { TypesPlans } from '../../../types/types-plans.type';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_DATE_FORMATS } from '../../../types/date-formats';
+import { FechaValidator } from '../../../shared/validators/fecha-validator';
 
 @Component({
   selector: 'app-records',
@@ -63,7 +54,7 @@ const MY_DATE_FORMATS = {
   templateUrl: './records.component.html',
   styleUrl: './records.component.scss',
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
 })
@@ -77,7 +68,7 @@ export class RecordsComponent implements OnInit {
 
   formDataSignal = signal({
     inputOutput: 1,
-    startDate: new Date(),
+    startDate: '',
     media: 1,
     originDestination: <OriginDestination[]>[],
     datetimeUpdate: new Date(),
@@ -134,9 +125,9 @@ export class RecordsComponent implements OnInit {
 
     this.estadoIncendio ? (this.formDataSignal().status = this.estadoIncendio) : 0;
 
-    this.formData = this.fb.group({
+    this.formData = await this.fb.group({
       inputOutput: [this.formDataSignal().inputOutput, Validators.required],
-      startDate: [this.formDataSignal().startDate, Validators.required],
+      startDate: [this.formDataSignal().startDate, [Validators.required, FechaValidator.validarFecha]],
       media: [this.formDataSignal().media, Validators.required],
       originDestination: [this.formDataSignal().originDestination, Validators.required],
       datetimeUpdate: [this.formDataSignal().datetimeUpdate, Validators.required],
@@ -157,10 +148,6 @@ export class RecordsComponent implements OnInit {
         const { end_date, ...rest } = this.formDataSignal();
         this.formData.patchValue(rest, { emitEvent: false });
       });
-
-      // this.formData.valueChanges.subscribe((values) => {
-      //   this.formDataSignal.set({ ...this.formDataSignal(), ...values });
-      // });
     });
 
     this.formData.get('phases')?.disable();
@@ -169,10 +156,15 @@ export class RecordsComponent implements OnInit {
 
     if (this.editData) {
       if (this.evolutionSevice.dataRecords().length === 0) {
-        // this.evolutionSevice.dataRecords.update((records) => [this.editData, ...records]);
         this.updateFormWithJson(this.editData);
       }
     } else {
+      this.formDataSignal.set({
+        ...this.formDataSignal(),
+        startDate: this.getCurrentDateTimeString(),
+      });
+      const startDateControl = this.formData.get('startDate');
+      startDateControl?.patchValue(this.getCurrentDateTimeString());
       this.updateEndDate(this.estadoIncendio);
     }
     this.spinner.hide();
@@ -184,9 +176,17 @@ export class RecordsComponent implements OnInit {
       return this.originDestinations().filter((procedencia: OriginDestination) => idsABuscar.includes(procedencia.id));
     };
 
+    const rawDate: string = json.registro?.fechaHoraEvolucion || '';
+    let dateValue: Date = new Date();
+    if (rawDate) {
+      dateValue = new Date(rawDate);
+    }
+
+    const formattedDate = dateValue.toISOString().substring(0, 16);
+
     this.formDataSignal.set({
       inputOutput: json.registro?.entradaSalida?.id || '',
-      startDate: json.registro?.fechaHoraEvolucion ? new Date(json.registro.fechaHoraEvolucion) : new Date(),
+      startDate: formattedDate,
       media: json.registro?.medio?.id || '',
       originDestination: procedenciasSelecteds(),
       datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
@@ -230,12 +230,12 @@ export class RecordsComponent implements OnInit {
     this.spinner.show();
     if (this.formData.valid) {
       const formValues = this.formData.value;
-      // formValues.end_date;
+
       const newRecord: EvolucionIncendio = {
         idEvolucion: null,
         idSuceso: this.data.idIncendio,
         registro: {
-          fechaHoraEvolucion: formValues.startDate.toISOString(),
+          fechaHoraEvolucion: new Date(formValues.startDate).toISOString(),
           idEntradaSalida: formValues.inputOutput,
           idMedio: formValues.media,
           registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
@@ -338,6 +338,11 @@ export class RecordsComponent implements OnInit {
     if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
     }
+  }
+
+  private getCurrentDateTimeString(): string {
+    const now = new Date();
+    return now.toISOString().substring(0, 16);
   }
 
   showToast() {

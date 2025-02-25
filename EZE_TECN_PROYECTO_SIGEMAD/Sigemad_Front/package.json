@@ -22,6 +22,7 @@
     "@angular/flex-layout": "^15.0.0-beta.42",
     "@angular/forms": "^18.0.0",
     "@angular/material": "^18.00",
+    "@angular/material-moment-adapter": "^18.1.0",
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",

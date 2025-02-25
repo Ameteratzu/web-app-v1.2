@@ -39,6 +39,7 @@ import {
   PasoSolicitud,
   PasoTramitacion,
 } from '../../../types/mobilization.type';
+import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -77,6 +78,7 @@ const MY_DATE_FORMATS = {
     Step6Component,
     Step7Component,
     Step8Component,
+    TooltipDirective
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -122,6 +124,7 @@ export class MobilizationComponent {
   public pasoIntervencion!: PasoIntervencion;
   public pasoLlegada!: PasoLlegadaBase;
   public movilizacionSeleccionada?: Movilizacion;
+  public btnGuardar = "Nueva solicitud";
 
   async ngOnInit() {
     this.tiposGestion.set(this.dataMaestros.tiposGestion);
@@ -144,17 +147,17 @@ export class MobilizationComponent {
         Observaciones2: [''],
       }),
       paso3: this.fb.group({
-        TitularMedio3: [''],
+        TitularMedio3: ['', Validators.required],
         GestionCECOD: [false],
         FechaHoraOfrecimiento: [new Date(), Validators.required],
-        Descripcion3: [''],
+        Descripcion3: ['', Validators.required],
         FechaHoraDisponibilidad: [null],
         Observaciones3: [''],
       }),
       paso5: this.fb.group({
         IdCapacidad: [null, Validators.required],
-        MedioNoCatalogado: [''],
-        IdTipoAdministracion: [null],
+        MedioNoCatalogado: [{ value: '', disabled: true }],
+        IdTipoAdministracion: [null, Validators.required],
         TitularMedio5: [''],
         FechaHoraAportacion: [new Date(), null],
         Descripcion5: [''],
@@ -162,7 +165,7 @@ export class MobilizationComponent {
       paso6: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraDespliegue: [new Date(), null],
+        FechaHoraDespliegue: [new Date(), Validators.required],
         FechaHoraInicioIntervencion: [null],
         Descripcion6: [''],
         Observaciones6: [''],
@@ -170,13 +173,13 @@ export class MobilizationComponent {
       paso7: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraInicioIntervencion: [new Date(), null],
+        FechaHoraInicioIntervencion: [new Date(), Validators.required],
         Observaciones7: [''],
       }),
       paso8: this.fb.group({
         IdCapacidad: [null, Validators.required],
         MedioNoCatalogado: [''],
-        FechaHoraLlegada: [new Date(), null],
+        FechaHoraLlegada: [new Date(), Validators.required],
         Observaciones8: [''],
       }),
     });
@@ -285,14 +288,17 @@ export class MobilizationComponent {
         };
 
         this.movilizacionService.dataMovilizacion.set([mappedMobilizaciones]);
-        console.log("🚀 ~ MobilizationComponent ~ ngOnInit ~ this.movilizacionService.dataMovilizacion:", this.movilizacionService.dataMovilizacion())
-    
+        console.log(
+          '🚀 ~ MobilizationComponent ~ ngOnInit ~ this.movilizacionService.dataMovilizacion:',
+          this.movilizacionService.dataMovilizacion()
+        );
       }
-       }
+    }
     this.spinner.hide();
   }
 
   async onSubmit(formDirective: FormGroupDirective): Promise<void> {
+    this.btnGuardar = "Nueva solicitud"
     const pasoActual = this.formData.get('idTipoNotificacion')?.value.id;
     if (pasoActual === undefined || pasoActual === null) {
       console.error('No se ha seleccionado un paso válido.');
@@ -301,9 +307,8 @@ export class MobilizationComponent {
 
     const actuaciones = this.getOrCreateActuacion();
     const movilizaciones = actuaciones[0].Movilizaciones;
-    console.log("🚀 ~ MobilizationComponent ~ onSubmit ~ pasoActual:", pasoActual)
+    console.log('🚀 ~ MobilizationComponent ~ onSubmit ~ pasoActual:', pasoActual);
     switch (pasoActual) {
-      
       case 1:
         if (!this.procesarPaso1()) return;
         this.agregarNuevaMovilizacion(movilizaciones, this.pasoSolicitud);
@@ -362,13 +367,13 @@ export class MobilizationComponent {
     }
 
     this.onReset(formDirective);
-    console.log("🚀 ~ MobilizationComponent ~ onSubmit ~ actuacionRelevante: ActuacionRelevante.IdActuacionRelevante:", this.editData)
+    console.log('🚀 ~ MobilizationComponent ~ onSubmit ~ actuacionRelevante: ActuacionRelevante.IdActuacionRelevante:', this.editData);
     const actuacionRelevante: ActuacionRelevante = {
       IdActuacionRelevante: this.editData?.id ?? 0,
       IdSuceso: this.data.idIncendio,
       Movilizaciones: movilizaciones,
     };
-    
+
     this.movilizacionService.dataMovilizacion.set([actuacionRelevante]);
     console.log('Datos actualizados:', this.movilizacionService.dataMovilizacion());
   }
@@ -503,7 +508,15 @@ export class MobilizationComponent {
   }
 
   private procesarPaso5(): boolean {
-    const pasoValido = (this.formData.get('paso5.IdCapacidad')?.valid ?? false) && (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
+
+    let pasoValido = (this.formData.get('paso5.IdCapacidad')?.valid ?? false) && (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
+
+    const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
+    const capacidadId = capacidadValue?.id;
+
+    if (capacidadId === 92) {
+      pasoValido = pasoValido && (this.formData.get('paso5.MedioNoCatalogado')?.valid ?? false);
+    }
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -599,6 +612,7 @@ export class MobilizationComponent {
   }
 
   cargarPaso(movilizacion: Movilizacion) {
+    this.btnGuardar = "Guardar";
     this.movilizacionSeleccionada = movilizacion;
     const pasoActual = this.getMaxTipoPaso(movilizacion);
     this.loadTipo(pasoActual);
@@ -683,6 +697,43 @@ export class MobilizationComponent {
     this.tiposGestion.set(tipos);
 
     this.spinner.hide();
+  }
+
+  editarPaso(paso: any): void {
+    console.log("🚀 ~ MobilizationComponent ~ editarPaso ~ paso:", paso)
+    if (paso.TipoPaso === 1) {
+      const procedenciaSeleccionada = this.dataMaestros.procedencia.find((proc: any) => proc.id === paso.IdProcedenciaMedio);
+      if (!procedenciaSeleccionada) {
+        return;
+      }
+
+      this.formData.get('idTipoNotificacion')?.patchValue({ id: 1 });
+      this.formData.get('paso1')?.patchValue({
+        IdProcedenciaMedio: procedenciaSeleccionada,
+        AutoridadSolicitante: paso.AutoridadSolicitante,
+        FechaHoraSolicitud: new Date(paso.FechaHoraSolicitud),
+        Descripcion: paso.Descripcion,
+        Observaciones: paso.Observaciones
+      });
+    } else {
+      console.error('El paso recibido no corresponde al Paso 1');
+    }
+  }
+
+  hasTipoPaso1OrLastStep8(actuaciones: ActuacionRelevante[]): boolean {
+    return actuaciones.some(actuacion =>
+      actuacion.Movilizaciones.some(movilizacion => {
+        const pasos = movilizacion.Pasos;
+        if (!pasos || pasos.length === 0) {
+          return false;
+        }
+        if (pasos.length === 1) {
+          return pasos[0].TipoPaso === 1;
+        } else {
+          return pasos[pasos.length - 1].TipoPaso === 8;
+        }
+      })
+    );
   }
 
   getForm(atributo: string): any {
