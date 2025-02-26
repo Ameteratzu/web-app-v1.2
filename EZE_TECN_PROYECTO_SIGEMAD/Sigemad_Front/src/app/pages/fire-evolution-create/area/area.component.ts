@@ -331,9 +331,9 @@ export class AreaComponent {
   }
 
   public dropped(files: NgxFileDropEntry[]) {
+    this.spinner.show();
     for (const droppedFile of files) {
       if (droppedFile.fileEntry.isFile) {
-
         if (droppedFile.fileEntry.name.endsWith('.zip')) {
           const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
           fileEntry.file(async (file: File) => {
@@ -364,6 +364,7 @@ export class AreaComponent {
         console.log(droppedFile.relativePath, fileEntry);
       }
     }
+    this.spinner.hide();
   }
 
   onFileSelected(fileContent: string) {

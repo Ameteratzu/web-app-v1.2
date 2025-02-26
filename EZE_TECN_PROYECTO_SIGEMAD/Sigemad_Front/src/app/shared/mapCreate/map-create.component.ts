@@ -30,6 +30,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import KML from 'ol/format/KML';
 import proj4 from 'proj4';
 import { fromLonLat, toLonLat } from 'ol/proj';
+import { transform } from 'ol/proj';
 
 import Bar from 'ol-ext/control/Bar';
 import Toggle from 'ol-ext/control/Toggle';
@@ -651,6 +652,23 @@ export class MapCreateComponent implements OnInit, OnChanges {
       if (features) {
         this.source.clear();
         this.source.addFeatures(features);
+
+        const coordinates = features.map((feature: any) => {
+          const geometry = feature.getGeometry();
+          if (geometry) {
+            // Obtener las coordenadas y transformarlas a WGS84
+            const coords = geometry.getCoordinates();
+            const coordsTrans = coords[0].map((coord: number[]) =>
+              transform(coord, 'EPSG:3857', 'EPSG:4326')
+            );
+            console.info('coordsTrans: ', coordsTrans);
+            return coordsTrans;
+          }
+          return [];
+        });
+
+        this.coords = coordinates[0];
+        this.save.emit(this.coords);
       }
     }
   }
