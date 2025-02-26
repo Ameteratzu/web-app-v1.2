@@ -1,5 +1,5 @@
 // fecha-validator.ts
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 export class FechaValidator {
   static validarFecha(control: AbstractControl): { [key: string]: boolean } | null {
@@ -12,5 +12,29 @@ export class FechaValidator {
 
     // Si todo es válido, devolvemos null
     return null;
+  }
+
+  static validarFechaFinPosteriorFechaInicio(fechaInicioKey: string, fechaFinKey: string) {
+    return (form: AbstractControl): ValidationErrors | null => {
+      const fechaInicio = form.get(fechaInicioKey)?.value;
+      const fechaFin = form.get(fechaFinKey)?.value;
+
+      if (!fechaInicio || !fechaFin) {
+        return null; // No validamos si alguna fecha está vacía
+      }
+
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+
+      if (fin <= inicio) {
+        // Asigna el error directamente al FormControl correspondiente
+        form.get(fechaFinKey)?.setErrors({ fechaFinInvalida: true });
+        return { fechaFinInvalida: true };
+      }
+
+      // Si no hay error, se limpia cualquier error previamente establecido
+      form.get(fechaFinKey)?.setErrors(null);
+      return null;
+    };
   }
 }

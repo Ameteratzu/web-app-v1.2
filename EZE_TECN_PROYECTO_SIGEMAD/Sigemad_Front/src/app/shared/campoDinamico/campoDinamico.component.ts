@@ -43,6 +43,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { UtilsService } from '../services/utils.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -90,6 +91,8 @@ export class CampoDinamico implements OnInit {
 
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
+
+  public utilsService = inject(UtilsService);
 
   formGroup: FormGroup = this.fb.group({});
 
@@ -169,16 +172,4 @@ export class CampoDinamico implements OnInit {
 
     mapModalRef.componentInstance.section = section;
   }
-
-  // PCD
-  allowOnlyNumbers(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27) {
-      return;
-    }
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
-  }
-  // FIN PCD
 }

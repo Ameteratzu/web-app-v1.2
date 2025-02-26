@@ -14,28 +14,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MenuItemActiveService } from '../../../../../../services/menu-item-active.service';
+import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '../../../../../../types/api-response.type';
-import { OpePeriodo } from '../../../../../../types/ope-periodo.type';
-import { FormFieldComponent } from '../../../../../../shared/Inputs/field.component';
+import { OpePeriodo } from '../../../../../../types/ope/ope-periodo.type';
+import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpePeriodosService } from '../../../../../../services/ope-periodos.service';
-import { LocalFiltrosOpePeriodos } from '../../../../../../services/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos.service';
 import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
-import { ComparativeDateService } from '../../../../../../services/comparative-date.service';
+import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '../../../../../../types/comparative-date.type';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'app-ope-periodo-filter-form',
@@ -57,7 +47,7 @@ const MY_DATE_FORMATS = {
     MatDialogModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './ope-periodos-filter-form.component.html',
