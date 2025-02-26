@@ -33,11 +33,11 @@
           placeholder="Fecha inicio fase salida"
           formControlName="fechaInicioFaseSalida"
           type="datetime-local"
-          [min]="'2000-01-01T00:00'"
-          [max]="'2099-12-31T23:59'"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
         />
         <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
 
       <!-- Fecha y hora de fin fase salida -->
@@ -48,11 +48,14 @@
           placeholder="Fecha fin fase salida"
           formControlName="fechaFinFaseSalida"
           type="datetime-local"
-          [min]="'2000-01-01T00:00'"
-          [max]="'2099-12-31T23:59'"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
         />
         <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaFinInvalida')">
+          La fecha de fin debe ser posterior a la fecha de inicio.
+        </mat-error>
       </mat-form-field>
 
       <!-- Fecha y hora de inicio  fase retorno-->
@@ -63,11 +66,11 @@
           placeholder="Fecha inicio fase retorno"
           formControlName="fechaInicioFaseRetorno"
           type="datetime-local"
-          [min]="'2000-01-01T00:00'"
-          [max]="'2099-12-31T23:59'"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
         />
         <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
 
       <!-- Fecha y hora de fin fase retorno -->
@@ -78,11 +81,14 @@
           placeholder="Fecha fin fase retorno"
           formControlName="fechaFinFaseRetorno"
           type="datetime-local"
-          [min]="'2000-01-01T00:00'"
-          [max]="'2099-12-31T23:59'"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
         />
         <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaFinInvalida')">
+          La fecha de fin debe ser posterior a la fecha de inicio.
+        </mat-error>
       </mat-form-field>
     </div>
   </mat-dialog-content>

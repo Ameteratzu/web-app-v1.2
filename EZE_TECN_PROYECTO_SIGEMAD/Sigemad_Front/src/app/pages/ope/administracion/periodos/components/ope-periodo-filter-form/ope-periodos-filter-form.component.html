@@ -25,34 +25,34 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20" class="mb-3">
-          <mat-label>{{ showDateEnd() ? 'Fecha inicio fase salida' : 'Fecha' }}</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaInicioFaseSalida')" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-label>{{ showDateEnd() ? 'Fecha inicio fase salida' : 'Fecha salida' }}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicioFaseSalida" [formControl]="getForm('fechaInicioFaseSalida')" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioFaseSalida"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicioFaseSalida></mat-datepicker>
           <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20" class="mb-3" [ngStyle]="{ visibility: showDateEnd() ? 'visible' : 'hidden' }">
           <mat-label>Fecha fin fase salida</mat-label>
-          <input matInput [matDatepicker]="picker2" [formControl]="getForm('fechaFinFaseSalida')" />
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
+          <input matInput [matDatepicker]="pickerFechaFinFaseSalida" [formControl]="getForm('fechaFinFaseSalida')" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaFinFaseSalida"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaFinFaseSalida></mat-datepicker>
           <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20" class="mb-3">
-          <mat-label>{{ showDateEnd() ? 'Fecha inicio fase salida' : 'Fecha' }}</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="getForm('fechaInicioFaseRetorno')" />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <mat-label>{{ showDateEnd() ? 'Fecha inicio fase retorno' : 'Fecha retorno' }}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaInicioFaseRetorno" [formControl]="getForm('fechaInicioFaseRetorno')" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioFaseRetorno"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaInicioFaseRetorno></mat-datepicker>
           <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="20" class="mb-3" [ngStyle]="{ visibility: showDateEnd() ? 'visible' : 'hidden' }">
-          <mat-label>Fecha fin fase salida</mat-label>
-          <input matInput [matDatepicker]="picker2" [formControl]="getForm('fechaFinFaseRetorno')" />
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
+          <mat-label>Fecha fin fase retorno</mat-label>
+          <input matInput [matDatepicker]="pickerFechaFinFaseRetorno" [formControl]="getForm('fechaFinFaseRetorno')" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaFinFaseRetorno"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaFinFaseRetorno></mat-datepicker>
           <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
         </mat-form-field>
       </div>
