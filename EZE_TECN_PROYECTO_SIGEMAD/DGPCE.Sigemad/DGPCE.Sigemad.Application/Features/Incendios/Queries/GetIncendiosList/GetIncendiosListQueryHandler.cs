@@ -50,6 +50,7 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
             Data = incendioVmList,
             PageCount = totalPages,
             PageIndex = request.PageIndex,
+            PageIndex = request.PageIndex,
             PageSize = request.PageSize
         };
 

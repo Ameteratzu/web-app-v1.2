@@ -9,7 +9,7 @@ public class ActuacionRelevanteDGPCEActiveByIdSpecification : BaseSpecification<
      (!request.IdSuceso.HasValue || ActuacionRelevanteDGPCyE.IdSuceso == request.IdSuceso) &&
      (ActuacionRelevanteDGPCyE.Borrado == false))
     {
-        if (request.Id.HasValue)
+        if (request.Id.HasValue || request.IdSuceso.HasValue)
         {
             AddInclude(d => d.EmergenciaNacional);
 
@@ -21,10 +21,14 @@ public class ActuacionRelevanteDGPCEActiveByIdSpecification : BaseSpecification<
             AddInclude(d => d.DeclaracionesZAGEP.Where(dir => !dir.Borrado));
 
             AddInclude(d => d.ActivacionSistemas.Where(dir => !dir.Borrado));
+            AddInclude("ActivacionSistemas.TipoSistemaEmergencia");
+            AddInclude("ActivacionSistemas.ModoActivacion");
 
             AddInclude(d => d.ConvocatoriasCECOD.Where(dir => !dir.Borrado));
 
             AddInclude(d => d.NotificacionesEmergencias.Where(dir => !dir.Borrado));
+            AddInclude("NotificacionesEmergencias.TipoNotificacion");
+
             AddInclude(d => d.MovilizacionMedios.Where(dir => !dir.Borrado));
 
 

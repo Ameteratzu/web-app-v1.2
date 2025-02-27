@@ -14,4 +14,7 @@ public class ConvocatoriaCECODDto
     public string Convocados { get; set; }
     public string? Participantes { get; set; }
     public string? Observaciones { get; set; }
+
+    public bool EsEliminable { get; set; }
+
 }
