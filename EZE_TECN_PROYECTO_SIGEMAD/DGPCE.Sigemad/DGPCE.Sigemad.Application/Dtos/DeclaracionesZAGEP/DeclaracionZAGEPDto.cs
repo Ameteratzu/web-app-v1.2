@@ -11,4 +11,6 @@ public class DeclaracionZAGEPDto
     public DateOnly FechaSolicitud { get; set; }
     public string Denominacion { get; set; }
     public string? Observaciones { get; set; } = null;
+    public bool EsEliminable { get; set; }
+
 }

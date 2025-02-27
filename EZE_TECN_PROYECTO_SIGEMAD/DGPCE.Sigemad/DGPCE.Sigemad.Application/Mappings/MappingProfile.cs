@@ -246,10 +246,11 @@ public class MappingProfile : Profile
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
 
-        CreateMap<ManageEmergenciasNacionalesCommand, ActuacionRelevanteDGPCE>()
-          .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
+        //CreateMap<ManageEmergenciasNacionalesCommand, ActuacionRelevanteDGPCE>()
+        //  .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante));
 
         CreateMap<ManageEmergenciaNacionalDto, EmergenciaNacional>();
+        CreateMap<EmergenciaNacional, ManageEmergenciaNacionalDto>();
 
 
         CreateMap<ManageDeclaracionesZAGEPCommand, ActuacionRelevanteDGPCE>()

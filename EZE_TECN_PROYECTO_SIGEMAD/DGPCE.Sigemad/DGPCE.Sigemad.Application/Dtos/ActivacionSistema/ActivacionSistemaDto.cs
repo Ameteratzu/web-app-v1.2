@@ -31,4 +31,7 @@ public class ActivacionSistemaDto
     public string? Peticiones { get; set; }
 
     public string? MediosCapacidades { get; set; }
+
+    public bool EsEliminable { get; set; }
+
 }
