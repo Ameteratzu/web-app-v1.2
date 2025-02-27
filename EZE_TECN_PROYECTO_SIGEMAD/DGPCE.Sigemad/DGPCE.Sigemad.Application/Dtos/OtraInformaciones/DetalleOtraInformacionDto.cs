@@ -11,5 +11,8 @@ public class DetalleOtraInformacionDto
 
     public List<ProcedenciaDestino> ProcedenciasDestinos { get; set; } = new();
 
+    public bool EsEliminable { get; set; }
+
+
 
 }
