@@ -194,9 +194,13 @@ public class MappingProfile : Profile
         CreateMap<OtraInformacion, OtraInformacionDto>()
             .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.DetallesOtraInformacion));
 
+
+
         CreateMap<DetalleOtraInformacion, DetalleOtraInformacionDto>()
             .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.ProcedenciaDestino)));
 
+        CreateMap<DetalleOtraInformacion, CreateDetalleOtraInformacionDto>()
+    .ForMember(dest => dest.IdsProcedenciasDestinos, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino)));
 
         CreateMap<DetalleOtraInformacion, OtraInformacionVm>()
             .ForMember(dest => dest.FechaHora, opt => opt.MapFrom(src => src.FechaHora))
@@ -205,8 +209,39 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Observaciones, opt => opt.MapFrom(src => src.Observaciones))
             .ForMember(dest => dest.IdsProcedenciaDestino, opt => opt.MapFrom(src => src.ProcedenciasDestinos.Select(pd => pd.IdProcedenciaDestino).ToList()));
 
+        
+
         CreateMap<CreateDetalleOtraInformacionDto, DetalleOtraInformacion>()
-            .ForMember(dest => dest.ProcedenciasDestinos, opt => opt.MapFrom(src => src.IdsProcedenciasDestinos.Select(id => new DetalleOtraInformacion_ProcedenciaDestino { IdProcedenciaDestino = id }).ToList()));
+                .AfterMap((src, dest, context) =>
+                {
+                    var existingIds = dest.ProcedenciasDestinos.Select(dpd => dpd.IdProcedenciaDestino).ToList();
+                    var newIds = src.IdsProcedenciasDestinos ?? new List<int>();
+
+                    // Eliminar los que no están en la nueva lista
+                    var toRemove = dest.ProcedenciasDestinos.Where(dpd => !newIds.Contains(dpd.IdProcedenciaDestino)).ToList();
+                    foreach (var item in toRemove)
+                    {
+                        dest.ProcedenciasDestinos.Remove(item);
+                    }
+
+                    // Agregar o reactivar los nuevos que no están en la lista existente
+                    foreach (var id in newIds)
+                    {
+                        var existing = dest.ProcedenciasDestinos.FirstOrDefault(dpd => dpd.IdProcedenciaDestino == id);
+                        if (existing == null)
+                        {
+                            dest.ProcedenciasDestinos.Add(new DetalleOtraInformacion_ProcedenciaDestino
+                            {
+                                IdProcedenciaDestino = id,
+                                IdDetalleOtraInformacion = dest.Id
+                            });
+                        }
+                        else if (existing.Borrado)
+                        {
+                            existing.Borrado = false;
+                        }
+                    }
+                });
 
         CreateMap<RegistroProcedenciaDestino, RegistroProcedenciaDestinoVm>();
 
