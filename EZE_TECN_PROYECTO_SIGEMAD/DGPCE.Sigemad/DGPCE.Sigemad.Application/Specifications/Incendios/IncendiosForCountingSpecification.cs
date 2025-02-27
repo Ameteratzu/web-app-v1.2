@@ -20,23 +20,23 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         )
     {
 
-        if (request.IdEstadoIncendio.HasValue)
-        {
+        //if (request.IdEstadoIncendio.HasValue)
+        //{
 
-            AddInclude(i => i.Suceso);
-            AddInclude(i => i.Suceso.Evoluciones);
+        //    AddInclude(i => i.Suceso);
+        //    AddInclude(i => i.Suceso.Evoluciones);
 
-            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
-        }
+        //    AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
+        //}
 
 
-        if (request.IdSituacionEquivalente.HasValue)
-        {
-            AddCriteria(i => i.Suceso.Evoluciones
-              .OrderByDescending(e => e.FechaCreacion)
-              .Take(1)
-              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
-        }
+        //if (request.IdSituacionEquivalente.HasValue)
+        //{
+        //    AddCriteria(i => i.Suceso.Evoluciones
+        //      .OrderByDescending(e => e.FechaCreacion)
+        //      .Take(1)
+        //      .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
+        //}
 
         AddInclude("Suceso.Evoluciones.Parametro.SituacionEquivalente");
 

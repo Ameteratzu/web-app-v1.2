@@ -14,4 +14,6 @@ public class ActivacionPlanEmergenciaDto
     public string Autoridad { get; set; }
     public string? Observaciones { get; set; }
     public ArchivoDto? Archivo { get; set; }
+    public bool EsEliminable { get; set; }
+
 }

@@ -96,7 +96,9 @@ CREATE TABLE ActuacionRelevanteDGPCE (
 	ModificadoPor UNIQUEIDENTIFIER NULL,
 	FechaEliminacion DATETIME2(7) NULL,
 	EliminadoPor UNIQUEIDENTIFIER NULL,
-	Borrado BIT NOT NULL DEFAULT 0
+	Borrado BIT NOT NULL DEFAULT 0,
+
+	CONSTRAINT UQ_ActuacionRelevanteDGPCE_IdSuceso UNIQUE (IdSuceso)
 );
 
 

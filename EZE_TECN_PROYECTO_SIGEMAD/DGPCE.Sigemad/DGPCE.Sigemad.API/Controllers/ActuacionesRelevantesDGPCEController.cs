@@ -5,16 +5,19 @@ using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
+using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Queries;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
 using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Commands.DeleteActuacionRelevante;
 using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Quereis.ActuacionesRelevantesById;
 using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Queries.GetEvolucion;
 using DGPCE.Sigemad.Application.Features.MovilizacionMedios.Commands.ManageMovilizacionMedios;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
 using MediatR;
@@ -125,6 +128,20 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
 
         var response = await _mediator.Send(command);
         return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<ActuacionRelevanteDGPCEDto>> GetEvolucion(
+    [FromQuery] int? idRegistroActualizacion,
+    [FromQuery] int idSuceso)
+    {
+        var query = new GetActuacionRelevanteQuery
+        {
+            IdRegistroActualizacion = idRegistroActualizacion,
+            IdSuceso = idSuceso
+        };
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpPost("declaraciones-zagep/lista")]

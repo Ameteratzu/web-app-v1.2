@@ -18,13 +18,13 @@ public class DetalleEvolucionById : BaseSpecification<Evolucion>
         AddInclude(i => i.Registro.ProcedenciaDestinos.Where(a => !a.Borrado));
         AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
 
-        AddCriteria(i => i.DatoPrincipal != null ? i.Parametro.Borrado == false : true);
-        AddInclude(i => i.Parametro);
-        AddInclude(i => i.Parametro.EstadoIncendio);
-        AddInclude(i => i.Parametro.FaseEmergencia);
-        AddInclude(i => i.Parametro.PlanEmergencia);
-        AddInclude(i => i.Parametro.PlanSituacion);
-        AddInclude(i => i.Parametro.SituacionEquivalente);
+        //AddCriteria(i => i.DatoPrincipal != null ? i.Parametro.Borrado == false : true);
+        //AddInclude(i => i.Parametro);
+        //AddInclude(i => i.Parametro.EstadoIncendio);
+        //AddInclude(i => i.Parametro.FaseEmergencia);
+        //AddInclude(i => i.Parametro.PlanEmergencia);
+        //AddInclude(i => i.Parametro.PlanSituacion);
+        //AddInclude(i => i.Parametro.SituacionEquivalente);
 
         AddCriteria(i => i.DatoPrincipal != null ? i.DatoPrincipal.Borrado == false : true);
         AddInclude(i => i.DatoPrincipal);

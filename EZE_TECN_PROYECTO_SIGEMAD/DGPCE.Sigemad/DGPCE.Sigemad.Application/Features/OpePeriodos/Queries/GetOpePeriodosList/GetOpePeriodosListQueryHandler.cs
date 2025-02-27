@@ -58,7 +58,7 @@ namespace DGPCE.Sigemad.Application.Features.Periodos.Queries.GetPeriodosList
                 Count = totalOpePeriodos,
                 Data = opePeriodoVmList,
                 PageCount = totalPages,
-                Page = request.Page,
+                PageIndex = request.PageIndex,
                 PageSize = request.PageSize
             };
 
