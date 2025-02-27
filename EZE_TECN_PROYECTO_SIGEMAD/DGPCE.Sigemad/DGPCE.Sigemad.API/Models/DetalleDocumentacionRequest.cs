@@ -15,9 +15,8 @@ public class DetalleDocumentacionRequest
     [Required]
     public int IdTipoDocumento { get; set; }
 
-    [Required]
     [MaxLength(500)]
-    public string Descripcion { get; set; }
+    public string? Descripcion { get; set; }
 
     public IFormFile? Archivo { get; set; }
 

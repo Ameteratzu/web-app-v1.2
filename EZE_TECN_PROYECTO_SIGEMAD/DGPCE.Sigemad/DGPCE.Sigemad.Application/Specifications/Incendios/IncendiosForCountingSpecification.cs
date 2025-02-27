@@ -22,7 +22,7 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         if (request.IdEstadoIncendio.HasValue)
         {
             AddInclude(i => i.Suceso);
-            AddInclude(i => i.Suceso.Evoluciones);
+            //AddInclude(i => i.Suceso.Evoluciones);
 
             AddCriteria(i => i.Suceso.Evoluciones
                 .Where(e => e.EsFoto == false && e.Borrado == false)

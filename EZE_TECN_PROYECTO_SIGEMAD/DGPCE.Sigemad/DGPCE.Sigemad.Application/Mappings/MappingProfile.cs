@@ -5,6 +5,7 @@ using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Archivos;
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.CaracterMedios;
+using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
 using DGPCE.Sigemad.Application.Dtos.CoordinacionesPMA;
@@ -236,6 +237,18 @@ public class MappingProfile : Profile
 
         CreateMap<Documentacion, DocumentacionDto>()
              .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
+
+
+        CreateMap<DetalleDocumentacion, DetalleDocumentacionDto>()
+                .ForMember(dest => dest.IdsProcedenciasDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado!).Select(p => p.IdProcedenciaDestino).ToList()));
+                ;
+
+
+
+        CreateMap<Archivo, FileDto>()
+            .ForMember(dest => dest.FileName, opt => opt.MapFrom(src => src.NombreOriginal))
+             .ForMember(dest => dest.ContentType, opt => opt.MapFrom(src => src.Tipo))
+             .ForMember(dest => dest.Extension, opt => opt.MapFrom(src => src.Extension));
 
         CreateMap<DetalleDocumentacionDto, DetalleDocumentacion>()
             .ForMember(dest => dest.IdArchivo, opt => opt.Ignore())
