@@ -18,7 +18,7 @@
           <mat-form-field appearance="fill" fxFlex="40%" class="mb-3">
             <mat-label>Fecha y hora</mat-label>
             <input matInput placeholder="Fecha y hora" formControlName="fechaHora" type="datetime-local"
-              [min]="'2000-01-01T00:00'" [max]="'2099-12-31T23:59'" />
+              min="2000-01-01T00:00" max="2099-12-31T23:59" />
             <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
           <!-- FIN PCD -->

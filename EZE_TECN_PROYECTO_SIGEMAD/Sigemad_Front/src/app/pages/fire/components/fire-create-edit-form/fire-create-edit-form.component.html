@@ -57,11 +57,11 @@
           placeholder="Fecha inicio"
           formControlName="startDateTime"
           type="datetime-local"
-          [min]="'2000-01-01T00:00'"
-          [max]="'2099-12-31T23:59'"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
         />
         <mat-error *ngIf="formData.get('startDateTime')?.hasError('required')">Este campo es obligatorio.</mat-error>
-        <mat-error *ngIf="formData.get('startDateTime')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('startDateTime')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
       <!-- FIN PCD -->
     </div>

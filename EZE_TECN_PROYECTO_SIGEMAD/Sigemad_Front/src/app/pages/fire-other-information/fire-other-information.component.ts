@@ -24,6 +24,7 @@ import { FireDetail } from '../../types/fire-detail.type';
 import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FechaValidator } from '../../shared/validators/fecha-validator';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -39,8 +40,11 @@ const MY_DATE_FORMATS = {
 
 interface FormType {
   id?: string;
-  fecha: Date;
-  hora: any;
+  //fecha: Date;
+  //hora: any;
+  // PCD
+  fechaHora: Date;
+  // FIN PCD
   procendenciaDestino: { id: string; descripcion: string }[];
   medio: { id: string; descripcion: string };
   asunto: string;
@@ -109,12 +113,16 @@ export class FireOtherInformationComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['fecha', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
 
   async ngOnInit() {
     this.formData = this.fb.group({
-      fecha: [moment().toDate(), Validators.required],
-      hora: [moment().format('HH:mm'), Validators.required],
+      //fecha: [moment().toDate(), Validators.required],
+      //hora: [moment().format('HH:mm'), Validators.required],
+      // PCD
+      fechaHora: [moment().format('YYYY-MM-DD HH:mm'), [Validators.required, FechaValidator.validarFecha]],
+      // FIN PCD
+
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
       asunto: [''],
@@ -139,8 +147,11 @@ export class FireOtherInformationComponent implements OnInit {
     const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
       id: otraInformacion.id,
       asunto: otraInformacion.asunto,
-      fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
-      hora: moment(otraInformacion.fechaHora).format('HH:mm'),
+      //fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
+      //hora: moment(otraInformacion.fechaHora).format('HH:mm'),
+      // PCD
+      fechaHora: moment(otraInformacion.fechaHora).format('YYYY-MM-DD HH:mm'),
+      // FIN PCD
       medio: otraInformacion.medio,
       observaciones: otraInformacion.observaciones,
       procendenciaDestino: otraInformacion.procedenciasDestinos,
@@ -164,8 +175,11 @@ export class FireOtherInformationComponent implements OnInit {
 
       formDirective.resetForm();
       this.formData.reset({
-        fecha: moment().toDate(),
-        hora: moment().format('HH:mm'),
+        //fecha: moment().toDate(),
+        //hora: moment().format('HH:mm'),
+        // PCD
+        fechaHora: moment().format('YYYY-MM-DD HH:mm'),
+        // FIN PCD
       });
     } else {
       this.formData.markAllAsTouched();
@@ -199,7 +213,10 @@ export class FireOtherInformationComponent implements OnInit {
     const arrayToSave = this.dataOtherInformation().map((item) => {
       return {
         id: item.id ?? null,
-        fechaHora: this.getFechaHora(item.fecha, item.hora),
+        //fechaHora: this.getFechaHora(item.fecha, item.hora),
+        // PCD
+        fechaHora: moment(item.fechaHora).format('MM/DD/YY HH:mm'),
+        // FIN PCD
         idMedio: item.medio?.id ?? null,
         asunto: item.asunto,
         observaciones: item.observaciones,
@@ -364,7 +381,7 @@ export class FireOtherInformationComponent implements OnInit {
   }
 
   getFormatdate(date: any) {
-    return moment(date).format('DD/MM/YY');
+    return moment(date).format('DD/MM/YY HH:mm');
   }
 
   closeModal(params?: any) {

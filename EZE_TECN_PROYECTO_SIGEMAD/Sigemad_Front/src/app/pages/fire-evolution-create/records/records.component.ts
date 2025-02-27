@@ -31,6 +31,7 @@ import { TypesPlans } from '../../../types/types-plans.type';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_DATE_FORMATS } from '../../../types/date-formats';
 import { FechaValidator } from '../../../shared/validators/fecha-validator';
+import { UtilsService } from '../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-records',
@@ -89,6 +90,7 @@ export class RecordsComponent implements OnInit {
   public evolutionSevice = inject(EvolutionService);
   private spinner = inject(NgxSpinnerService);
   public toast = inject(MatSnackBar);
+  public utilsService = inject(UtilsService);
 
   formData!: FormGroup;
   private environmentInjector = inject(EnvironmentInjector);
@@ -331,13 +333,6 @@ export class RecordsComponent implements OnInit {
 
   getFormatdate(date: any) {
     return moment(date).format('DD/MM/YY');
-  }
-
-  allowOnlyNumbersAndDecimal(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode !== 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-      event.preventDefault();
-    }
   }
 
   private getCurrentDateTimeString(): string {

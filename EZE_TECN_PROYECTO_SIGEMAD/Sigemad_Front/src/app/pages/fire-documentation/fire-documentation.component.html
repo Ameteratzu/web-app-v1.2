@@ -16,9 +16,9 @@
       <div>
         <h3 class="title">Documentación</h3>
         <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
+          <!--
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Fecha</mat-label>
-
             <input matInput [matDatepicker]="picker" formControlName="fecha" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -27,10 +27,26 @@
 
           <mat-form-field class="input spaced-input" fxFlex="25%">
             <mat-label>Hora</mat-label>
-
             <input matInput formControlName="hora" type="time" />
             <mat-error *ngIf="formData.get('hora')?.hasError('required')">Este campo es obligatorio.</mat-error>
           </mat-form-field>
+          -->
+
+          <!-- PCD -->
+          <mat-form-field class="input spaced-input" fxFlex="50%">
+            <mat-label>Fecha y hora</mat-label>
+            <input
+              matInput
+              placeholder="Fecha y hora"
+              formControlName="fechaHora"
+              type="datetime-local"
+              min="2000-01-01T00:00"
+              max="2099-12-31T23:59"
+            />
+            <mat-error *ngIf="formData.get('fechaHora')?.hasError('required')">Este campo es obligatorio.</mat-error>
+            <mat-error *ngIf="formData.get('fechaHora')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
+          </mat-form-field>
+          <!-- FIN PCD -->
         </div>
 
         <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
