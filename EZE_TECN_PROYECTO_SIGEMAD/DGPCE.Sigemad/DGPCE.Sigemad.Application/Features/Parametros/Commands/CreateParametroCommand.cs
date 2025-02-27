@@ -1,6 +1,7 @@
 ﻿namespace DGPCE.Sigemad.Application.Features.Parametros.Commands;
 public class CreateParametroCommand
 {
+    public int? Id { get; set; }
     public int IdEstadoIncendio { get; set; }
     public DateTime? FechaFinal { get; set; }
     public decimal? SuperficieAfectadaHectarea { get; set; }

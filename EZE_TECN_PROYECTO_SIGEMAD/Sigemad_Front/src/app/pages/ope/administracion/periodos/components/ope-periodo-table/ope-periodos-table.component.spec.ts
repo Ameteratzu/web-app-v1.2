@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PeriodosTableComponent } from './ope-periodos-table.component';
+import { OpePeriodosTableComponent } from './ope-periodos-table.component';
 
-describe('PeriodosTableComponent', () => {
-  let component: PeriodosTableComponent;
-  let fixture: ComponentFixture<PeriodosTableComponent>;
+describe('OpePeriodosTableComponent', () => {
+  let component: OpePeriodosTableComponent;
+  let fixture: ComponentFixture<OpePeriodosTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PeriodosTableComponent],
+      imports: [OpePeriodosTableComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PeriodosTableComponent);
+    fixture = TestBed.createComponent(OpePeriodosTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

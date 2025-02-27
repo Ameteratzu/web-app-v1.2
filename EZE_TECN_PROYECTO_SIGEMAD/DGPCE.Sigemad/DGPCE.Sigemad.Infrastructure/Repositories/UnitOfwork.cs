@@ -1,6 +1,8 @@
 ﻿
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections;
 
 namespace DGPCE.Sigemad.Infrastructure.Repositories;
@@ -9,6 +11,8 @@ public class UnitOfWork : IUnitOfWork
 {
     private Hashtable _repositories;
     private readonly SigemadDbContext _context;
+    private IDbContextTransaction _currentTransaction;
+
 
     public UnitOfWork(SigemadDbContext context)
     {
@@ -16,6 +20,26 @@ public class UnitOfWork : IUnitOfWork
     }
 
     public SigemadDbContext SigemadDbContext => _context;
+
+    // Iniciar Transacción
+    public async Task BeginTransactionAsync()
+    {
+        if (_currentTransaction == null)
+        {
+            _currentTransaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted);
+        }
+    }
+
+    // Confirmar Transacción
+    public async Task CommitAsync()
+    {
+        if (_currentTransaction != null)
+        {
+            await _currentTransaction.CommitAsync();
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
+    }
 
     public async Task<int> Complete()
     {
@@ -26,6 +50,17 @@ public class UnitOfWork : IUnitOfWork
         catch (Exception ex)
         {
             throw;
+        }
+    }
+
+    // Revertir Transacción
+    public async Task RollbackAsync()
+    {
+        if (_currentTransaction != null)
+        {
+            await _currentTransaction.RollbackAsync();
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
         }
     }
 

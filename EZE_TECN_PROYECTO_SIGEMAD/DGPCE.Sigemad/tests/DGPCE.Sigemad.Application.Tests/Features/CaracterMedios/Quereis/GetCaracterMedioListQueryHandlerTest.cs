@@ -1,6 +1,7 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using AutoMapper;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.CaracterMedios.Quereis.GetCaracterMediosList;
-using DGPCE.Sigemad.Application.Features.ClasificacionMedios.Quereis.GetClasificacionMediosList;
+using DGPCE.Sigemad.Application.Mappings;
 using DGPCE.Sigemad.Domain.Modelos;
 using FluentAssertions;
 using Moq;
@@ -16,7 +17,14 @@ public class GetCaracterMedioListQueryHandlerTest
     public GetCaracterMedioListQueryHandlerTest()
     {
         _unitOfWorkMock = new Mock<IUnitOfWork>();
-        _handler = new GetCaracterMediosListQueryHandler(_unitOfWorkMock.Object);
+
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
+        var mapper = config.CreateMapper();
+
+        _handler = new GetCaracterMediosListQueryHandler(_unitOfWorkMock.Object, mapper);
     }
 
 

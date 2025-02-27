@@ -3,9 +3,14 @@
 namespace DGPCE.Sigemad.Application.Specifications.DireccionCoordinacionEmergencias;
 public class DireccionCoordinacionEmergenciaWithCoordinacionPma : BaseSpecification<DireccionCoordinacionEmergencia>
 {
-    public DireccionCoordinacionEmergenciaWithCoordinacionPma(int id)
-        : base(d => d.Id == id && d.Borrado == false)
+    public DireccionCoordinacionEmergenciaWithCoordinacionPma(DireccionCoordinacionEmergenciaParams @params)
+        : base(d =>
+        (!@params.Id.HasValue || d.Id == @params.Id) &&
+        (!@params.IdSuceso.HasValue || d.IdSuceso == @params.IdSuceso) &&
+         d.Borrado == false)
     {
         AddInclude(d => d.CoordinacionesPMA);
+        AddInclude("CoordinacionesPMA.Provincia");
+        AddInclude("CoordinacionesPMA.Municipio");
     }
 }

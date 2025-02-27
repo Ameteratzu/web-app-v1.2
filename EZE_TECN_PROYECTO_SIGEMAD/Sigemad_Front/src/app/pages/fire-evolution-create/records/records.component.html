@@ -18,11 +18,11 @@
             placeholder="Fecha y hora"
             formControlName="startDate"
             type="datetime-local"
-            [min]="'2000-01-01T00:00'"
-            [max]="'2099-12-31T23:59'"
+            min="2000-01-01T00:00"
+            max="2099-12-31T23:59"
           />
           <mat-error *ngIf="formData.get('startDate')?.hasError('required')">Este campo es obligatorio.</mat-error>
-          <mat-error *ngIf="formData.get('startDate')?.hasError('fechaInvalida')">En valor de la fecha no es válido.</mat-error>
+          <mat-error *ngIf="formData.get('startDate')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input spaced-input" fxFlex="25%">
@@ -145,7 +145,7 @@
             [formControl]="getForm('afectada')"
             type="number"
             placeholder="Ingresa área"
-            (keypress)="allowOnlyNumbersAndDecimal($event)"
+            (keypress)="utilsService.allowOnlyNumbersAndDecimal($event)"
           />
         </mat-form-field>
       </div>

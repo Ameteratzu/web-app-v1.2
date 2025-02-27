@@ -4,11 +4,11 @@
     {
         public string? Sort { get; set; }
 
-        private int _page = 1;
-        public int Page
+        private int _pageIndex = 0;
+        public int PageIndex
         {
-            get => _page;
-            set => _page = (value < 1) ? 1 : value;
+            get => _pageIndex;
+            set => _pageIndex = (value < 0) ? 0 : value;
         }
 
         private const int MaxPageSize = 50;
@@ -17,7 +17,7 @@
         public int PageSize
         {
             get => _pageSize;
-            set => _pageSize = (value > MaxPageSize && value != 9999) ? MaxPageSize : value;
+            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
 
         public string? Search { get; set; }

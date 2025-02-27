@@ -17,5 +17,10 @@ public class SucesoConfiguration : IEntityTypeConfiguration<Suceso>
         builder.HasOne(d => d.TipoSuceso).WithMany()
             .HasForeignKey(d => d.IdTipo)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(e => e.RegistroActualizaciones)
+            .WithOne(e => e.Suceso)
+            .HasForeignKey(e => e.IdSuceso)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

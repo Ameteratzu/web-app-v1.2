@@ -1,0 +1,48 @@
+meta {
+  name: Crear
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{Server}}/api/v1/evoluciones/intervenciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "IdRegistroActualizacion": 0,
+    "IdSuceso": 1,
+    "Intervenciones": [
+      {
+        "id": null,
+        "idCaracterMedio": 1,
+        "descripcion": "intervencion #1",
+        "medioNoCatalogado": "string",
+        "numeroCapacidades": 0,
+        "idTitularidadMedio": 1,
+        "titular": "string",
+        "fechaHoraInicio": "2025-02-18T03:26:09.019Z",
+        "fechaHoraFin": "2025-02-18T03:26:09.019Z",
+        "idProvincia": 1,
+        "idMunicipio": 1001,
+        "observaciones": "string",
+        "detalleIntervencionMedios": [
+          {
+            "idMediosCapacidad": 1,
+            "numeroIntervinientes": 1
+          }
+        ]
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdEvolucion: res.body.idEvolucion
+}
+
+assert {
+  res.status: eq 200
+}

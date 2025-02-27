@@ -1,15 +1,14 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.CoordinacionCecopis;
+using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
 using DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Delete;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.DireccionCoordinacionEmergenciasById;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionEmergencia;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
-using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace DGPCE.Sigemad.API.Controllers;
@@ -37,17 +36,21 @@ public class DireccionCoordinacionEmergenciasController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerOperation(Summary = "Obtener DireccionCoordinacionEmergencia mediante id")]
-    public async Task<ActionResult<DireccionCoordinacionEmergencia>> GetDireccionCoordinacionEmergencianById(int id)
+    [HttpGet]
+    public async Task<ActionResult<DireccionCoordinacionEmergenciaDto>> GetDireccionCoordinacionEmergencia(
+    [FromQuery] int? idRegistroActualizacion,
+    [FromQuery] int idSuceso)
     {
-        var query = new GetDireccionCoordinacionEmergenciasById(id);
-        var impacto = await _mediator.Send(query);
-        return Ok(impacto);
+        var query = new GetDireccionCoordinacionEmergenciaQuery
+        {
+            IdRegistroActualizacion = idRegistroActualizacion,
+            IdSuceso = idSuceso
+        };
+
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
+
 
     [HttpPost("direcciones")]
     [ProducesResponseType((int)HttpStatusCode.Created)]

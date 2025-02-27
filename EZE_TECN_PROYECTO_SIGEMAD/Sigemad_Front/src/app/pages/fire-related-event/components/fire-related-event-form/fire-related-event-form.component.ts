@@ -226,6 +226,7 @@ export class FireRelatedEventForm implements OnInit {
     }
   }
 
+  /*
   getCountryByTerritory(country: any, territory: any) {
     if (territory == 1) {
       return country;
@@ -236,6 +237,7 @@ export class FireRelatedEventForm implements OnInit {
       }
     }
   }
+  */
 
   async changeTerritory(event: any) {
     this.formData.patchValue({

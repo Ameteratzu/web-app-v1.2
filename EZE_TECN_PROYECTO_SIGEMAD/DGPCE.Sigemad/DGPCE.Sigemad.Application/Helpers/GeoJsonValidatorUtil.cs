@@ -21,4 +21,14 @@ public static class GeoJsonValidatorUtil
         return true;
     }
 
+    public static bool AreGeometriesEqual(Geometry geo1, Geometry geo2)
+    {
+        if (geo1 == null && geo2 == null)
+            return true; // Ambas son nulas, se consideran iguales
+
+        if (geo1 == null || geo2 == null)
+            return false; // Solo una es nula, no son iguales
+
+        return geo1.EqualsExact(geo2);
+    }
 }

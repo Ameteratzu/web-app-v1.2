@@ -2,4 +2,5 @@
 public class ManageImpactoResponse
 {
     public int IdEvolucion { get; set; }
+    public int IdRegistroActualizacion { get; set; }
 }

@@ -18,7 +18,7 @@
             matInput
             [type]="field.tipoCampo === 'Number' ? 'number' : 'text'"
             [formControlName]="field.campo"
-            (keypress)="field.tipoCampo === 'Number' ? allowOnlyNumbers($event) : null"
+            (keypress)="field.tipoCampo === 'Number' ? utilsService.allowOnlyNumbers($event) : null"
             [min]="field.tipoCampo === 'Number' ? 0 : null"
           />
         </mat-form-field>
