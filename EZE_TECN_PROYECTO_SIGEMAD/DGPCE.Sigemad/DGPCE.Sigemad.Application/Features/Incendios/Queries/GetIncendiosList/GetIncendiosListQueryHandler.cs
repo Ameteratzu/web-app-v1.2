@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
+using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
-using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -45,68 +44,7 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
         var specCount = new IncendiosForCountingSpecification(request);
         var totalIncendios = await _unitOfWork.Repository<Incendio>().CountAsync(specCount);
 
-        var incendioVmList = new List<IncendioVm>();
-
-        foreach (var item in incendios)
-        {
-            var incencioVm = new IncendioVm();
-
-            if (item.IdTerritorio == (int)TipoTerritorio.Extranjero)
-            {
-                item.Ubicacion = $"{item.Pais.Descripcion}";
-            }
-            else
-            {
-                item.Ubicacion = $"{item.Municipio.Descripcion} ({item.Provincia.Descripcion})";
-            }
-
-            _mapper.Map(item, incencioVm);
-
-            var registros = await _getRegistrosSucesos.Handle(new GetRegistrosPorSucesoQuery { IdSuceso = item.IdSuceso,PageSize = 1000}, cancellationToken);
-
-            if (registros.Data != null && registros.Data.Count > 0)
-            {
-                var ultimoRegistro = registros.Data
-                     .Where(r => r.EsUltimoRegistro)
-                     .OrderByDescending(r => r.FechaHora)
-                     .FirstOrDefault();
-
-                incencioVm.FechaUltimoRegistro = ultimoRegistro != null ? ultimoRegistro.FechaHora : null;
-            }
-
-            if (item.Suceso.Evoluciones != null) { 
-
-                string? maxSop;
-                List<Evolucion> evoluciones;
-
-                evoluciones = item.Suceso.Evoluciones;
-
-                var evolucionItem = evoluciones
-                             .OrderByDescending(e => e.FechaCreacion)
-                             .FirstOrDefault();
-
-                if (evolucionItem != null && evolucionItem.Parametro != null && !evolucionItem.Parametro.Borrado && evolucionItem.Parametro.IdSituacionEquivalente != null)
-                {
-                    incencioVm.Sop = evolucionItem
-                                         .Parametro
-                                         .SituacionEquivalente
-                                         .Descripcion;
-                }
-
-                maxSop = evoluciones
-                             .Where(e => !e.Borrado && e.Parametro != null && !e.Parametro.Borrado && e.Parametro.SituacionEquivalente != null)
-                             .OrderBy(e => e.Parametro.SituacionEquivalente.Prioridad)
-                             .Select(e => e.Parametro.SituacionEquivalente.Descripcion)
-                             .FirstOrDefault();
-
-                incencioVm.MaxSop = maxSop;
-
-            }
-        
-            incendioVmList.Add(incencioVm);
-        }
-
-
+        List<IncendioVm> incendioVmList = (await Task.WhenAll(incendios.Select(i => MapIncendioVmAsync(i, cancellationToken)))).ToList();
 
         var rounded = Math.Ceiling(Convert.ToDecimal(totalIncendios) / Convert.ToDecimal(request.PageSize));
         var totalPages = Convert.ToInt32(rounded);
@@ -116,11 +54,73 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
             Count = totalIncendios,
             Data = incendioVmList,
             PageCount = totalPages,
-            Page = request.Page,
+            PageIndex = request.PageIndex,
             PageSize = request.PageSize
         };
 
         _logger.LogInformation($"{nameof(GetIncendiosListQueryHandler)} - END");
         return pagination;
+    }
+
+    private async Task<IncendioVm> MapIncendioVmAsync(Incendio item, CancellationToken cancellationToken)
+    {
+        var incendioVm = _mapper.Map<IncendioVm>(item);
+        incendioVm.Ubicacion = ObtenerUbicacion(item);
+
+        var registrosTask = _getRegistrosSucesos.Handle(
+            new GetRegistrosPorSucesoQuery { IdSuceso = item.IdSuceso, PageSize = 1000 },
+            cancellationToken
+        );
+
+        var ultimoRegistroTask = TryGetUltimoRegistroAsync(registrosTask);
+        var parametrosTask = ObtenerParametrosAsync(item);
+
+        // Esperar la ejecución de ambas tareas
+        await Task.WhenAll(ultimoRegistroTask, parametrosTask);
+
+        // Obtener los resultados de cada tarea
+        var ultimoRegistro = await ultimoRegistroTask;
+        var (ultimaSituacionOperativa, maximaSituacionOperativa) = await parametrosTask;
+
+        incendioVm.FechaUltimoRegistro = ultimoRegistro?.FechaHora;
+        incendioVm.Sop = ultimaSituacionOperativa;
+        incendioVm.MaxSop = maximaSituacionOperativa;
+
+        return incendioVm;
+    }
+
+    private static string ObtenerUbicacion(Incendio item) =>
+        item.IdTerritorio == (int)TipoTerritorio.Extranjero
+            ? item.Pais.Descripcion
+            : $"{item.Municipio.Descripcion} ({item.Provincia.Descripcion})";
+
+    private async Task<RegistroActualizacionDto?> TryGetUltimoRegistroAsync(Task<PaginationVm<RegistroActualizacionDto>> registrosTask)
+    {
+        var registros = await registrosTask;
+        return registros?.Data?
+            .Where(r => r.EsUltimoRegistro)
+            .OrderByDescending(r => r.FechaHora)
+            .FirstOrDefault();
+    }
+
+    private Task<(string? UltimaSituacionOperativa, string? MaximaSituacionOperativa)> ObtenerParametrosAsync(Incendio item)
+    {
+        Evolucion? evolucion = item.Suceso?.Evolucion;
+        if (evolucion == null) return Task.FromResult<(string?, string?)>((null, null));
+
+        var parametros = evolucion.Parametros
+            .Where(p => !p.Borrado && p.IdSituacionEquivalente != null)
+            .ToList();
+
+        var ultimaSituacionOperativa = parametros
+            .OrderByDescending(p => p.FechaCreacion)
+            .FirstOrDefault()?.SituacionEquivalente?.Descripcion;
+
+        var maximaSituacionOperativa = parametros
+            .OrderBy(p => p.SituacionEquivalente.Prioridad)
+            .Select(p => p.SituacionEquivalente.Descripcion)
+            .FirstOrDefault();
+
+        return Task.FromResult((ultimaSituacionOperativa, maximaSituacionOperativa));
     }
 }

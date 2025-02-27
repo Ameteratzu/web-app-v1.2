@@ -11,6 +11,7 @@ public class Suceso: BaseDomainModel<int>
         OtraInformaciones = new();
         SucesoRelacionados = new();
         ActuacionesRelevantes = new();
+        Evoluciones = new();
     }
 
     public int IdTipo { get; set; }
@@ -21,7 +22,8 @@ public class Suceso: BaseDomainModel<int>
 
 
     // Datos del suceso
-    public virtual Evolucion Evolucion { get; set; }
+    public virtual List<Evolucion> Evoluciones { get; set; }
+    public virtual Evolucion Evolucion => Evoluciones.FirstOrDefault(e => e.EsFoto == false);
     public virtual DireccionCoordinacionEmergencia DireccionCoordinacionEmergencia { get; set; }
     public virtual List<Documentacion> Documentaciones { get; set; }
     public virtual List<OtraInformacion> OtraInformaciones { get; set; }

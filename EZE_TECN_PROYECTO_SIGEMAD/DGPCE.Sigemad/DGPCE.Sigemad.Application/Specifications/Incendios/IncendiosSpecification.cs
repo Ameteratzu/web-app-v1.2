@@ -22,23 +22,29 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
 
         if (request.IdEstadoIncendio.HasValue)
         {
-
-            AddInclude(i => i.Suceso);
             AddInclude(i => i.Suceso.Evoluciones);
 
-            AddCriteria(i => i.Suceso.Evoluciones.Any(e => !e.Borrado && e.Parametro.IdEstadoIncendio == request.IdEstadoIncendio.Value));
+            AddCriteria(i => i.Suceso.Evoluciones
+                .Where(e => e.EsFoto == false && e.Borrado == false)
+                .SelectMany(e => e.Parametros)
+                .OrderByDescending(p => p.FechaCreacion)
+                .Take(1) // Solo tomar 1 registro
+                .Any(p => p.IdEstadoIncendio == request.IdEstadoIncendio.Value));
         }
-
 
         if (request.IdSituacionEquivalente.HasValue)
         {
+            AddInclude(i => i.Suceso.Evoluciones);
+
             AddCriteria(i => i.Suceso.Evoluciones
-              .OrderByDescending(e => e.FechaCreacion)
-              .Take(1)
-              .Any(e => !e.Borrado && e.Parametro.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
+                .Where(e => e.EsFoto == false && e.Borrado == false)
+                .SelectMany(e => e.Parametros)
+                .OrderByDescending(p => p.FechaCreacion)
+                .Take(1) // Solo tomar 1 registro
+                .Any(p => p.IdSituacionEquivalente == request.IdSituacionEquivalente.Value));
         }
 
-        AddInclude("Suceso.Evoluciones.Parametro.SituacionEquivalente");
+        AddInclude("Suceso.Evoluciones.Parametros.SituacionEquivalente");
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
         {
@@ -60,18 +66,72 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
             switch (request.IdComparativoFecha.Value)
             {
                 case ComparacionTipos.IgualA:
-                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) == request.FechaInicio);
+
+                    AddCriteria(i => i.Suceso.Evoluciones
+                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    .Select(e => e.Registro.FechaHoraEvolucion)
+                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    .FirstOrDefault() != null &&
+                    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        .Select(e => e.Registro.FechaHoraEvolucion)
+                        .OrderByDescending(fecha => fecha)
+                        .FirstOrDefault().Value) == request.FechaInicio);
                     break;
+
                 case ComparacionTipos.MayorQue:
-                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaInicio);
+
+                    AddCriteria(i => i.Suceso.Evoluciones
+                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    .Select(e => e.Registro.FechaHoraEvolucion)
+                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    .FirstOrDefault() != null &&
+                    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        .Select(e => e.Registro.FechaHoraEvolucion)
+                        .OrderByDescending(fecha => fecha)
+                        .FirstOrDefault().Value) > request.FechaInicio);
                     break;
+
                 case ComparacionTipos.MenorQue:
-                    AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio);
+                    AddCriteria(i => i.Suceso.Evoluciones
+                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    .Select(e => e.Registro.FechaHoraEvolucion)
+                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    .FirstOrDefault() != null &&
+                    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        .Select(e => e.Registro.FechaHoraEvolucion)
+                        .OrderByDescending(fecha => fecha)
+                        .FirstOrDefault().Value) < request.FechaInicio);
+
+                    //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio);
                     break;
                 case ComparacionTipos.Entre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaCreacion) <= request.FechaFin);
+                        AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        .Select(e => e.Registro.FechaHoraEvolucion)
+                        .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                        .FirstOrDefault() != null &&
+
+                            (
+                            DateOnly.FromDateTime(i.Suceso.Evoluciones
+                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                            .Select(e => e.Registro.FechaHoraEvolucion)
+                            .OrderByDescending(fecha => fecha)
+                            .FirstOrDefault().Value) >= request.FechaInicio &&
+
+                            DateOnly.FromDateTime(i.Suceso.Evoluciones
+                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                            .Select(e => e.Registro.FechaHoraEvolucion)
+                            .OrderByDescending(fecha => fecha)
+                            .FirstOrDefault().Value) <= request.FechaInicio
+                            )
+                        );
+
+                        //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaCreacion) <= request.FechaFin);
                     }
                     else
                     {
@@ -81,7 +141,28 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                 case ComparacionTipos.NoEntre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaFin);
+                        AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        .Select(e => e.Registro.FechaHoraEvolucion)
+                        .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                        .FirstOrDefault() != null &&
+
+                            (
+                            DateOnly.FromDateTime(i.Suceso.Evoluciones
+                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                            .Select(e => e.Registro.FechaHoraEvolucion)
+                            .OrderByDescending(fecha => fecha)
+                            .FirstOrDefault().Value) < request.FechaInicio ||
+
+                            DateOnly.FromDateTime(i.Suceso.Evoluciones
+                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                            .Select(e => e.Registro.FechaHoraEvolucion)
+                            .OrderByDescending(fecha => fecha)
+                            .FirstOrDefault().Value) > request.FechaInicio
+                            )
+                        );
+
+                        //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaFin);
                     }
                     else
                     {
@@ -161,12 +242,12 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
                     {
                         throw new ArgumentException("Las fechas de inicio y fin deben ser proporcionadas para la comparación 'No Entre'");
                     }
-                    break;                                         
+                    break;
                 default:
                     throw new ArgumentException("Operador de comparar fechas no válido");
             }
         }
-        
+
 
 
 

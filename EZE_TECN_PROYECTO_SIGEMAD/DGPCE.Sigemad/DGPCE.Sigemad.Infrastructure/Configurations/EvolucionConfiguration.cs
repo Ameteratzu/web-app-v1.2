@@ -69,10 +69,14 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
 
         // Relación uno a uno con Suceso
         builder.HasOne(d => d.Suceso)
-            .WithOne(s => s.Evolucion)
-            .HasForeignKey<Evolucion>(d => d.IdSuceso)
+            .WithMany(s => s.Evoluciones)
+            .HasForeignKey(d => d.IdSuceso)
             .OnDelete(DeleteBehavior.Restrict); // Evita eliminación en cascada
 
+        // Índice Único: Solo una Evolución con `EsFoto = 0` por `IdSuceso`
+        builder.HasIndex(e => new { e.IdSuceso, e.EsFoto })
+            .IsUnique()
+            .HasFilter("EsFoto = 0");
     }
 }
 
