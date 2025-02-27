@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
 using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -18,18 +16,15 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
     private readonly ILogger<GetIncendiosListQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly GetRegistrosPorSucesoQueryHandler _getRegistrosSucesos;
 
     public GetIncendiosListQueryHandler(
         ILogger<GetIncendiosListQueryHandler> logger,
         IUnitOfWork unitOfWork,
-        GetRegistrosPorSucesoQueryHandler getRegistrosSucesos,
         IMapper mapper
         )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _getRegistrosSucesos = getRegistrosSucesos;
         _mapper = mapper;
     }
 
@@ -67,22 +62,11 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
         var incendioVm = _mapper.Map<IncendioVm>(item);
         incendioVm.Ubicacion = ObtenerUbicacion(item);
 
-        var registrosTask = _getRegistrosSucesos.Handle(
-            new GetRegistrosPorSucesoQuery { IdSuceso = item.IdSuceso, PageSize = 1000 },
-            cancellationToken
-        );
+        RegistroActualizacion? ultimoRegistro = TryGetUltimoRegistro(item.Suceso.RegistroActualizaciones);
 
-        var ultimoRegistroTask = TryGetUltimoRegistroAsync(registrosTask);
-        var parametrosTask = ObtenerParametrosAsync(item);
+        (string? ultimaSituacionOperativa, string? maximaSituacionOperativa) = await ObtenerParametrosAsync(item);
 
-        // Esperar la ejecución de ambas tareas
-        await Task.WhenAll(ultimoRegistroTask, parametrosTask);
-
-        // Obtener los resultados de cada tarea
-        var ultimoRegistro = await ultimoRegistroTask;
-        var (ultimaSituacionOperativa, maximaSituacionOperativa) = await parametrosTask;
-
-        incendioVm.FechaUltimoRegistro = ultimoRegistro?.FechaHora;
+        incendioVm.FechaUltimoRegistro = ultimoRegistro?.FechaCreacion;
         incendioVm.Sop = ultimaSituacionOperativa;
         incendioVm.MaxSop = maximaSituacionOperativa;
 
@@ -94,12 +78,10 @@ public class GetIncendiosListQueryHandler : IRequestHandler<GetIncendiosListQuer
             ? item.Pais.Descripcion
             : $"{item.Municipio.Descripcion} ({item.Provincia.Descripcion})";
 
-    private async Task<RegistroActualizacionDto?> TryGetUltimoRegistroAsync(Task<PaginationVm<RegistroActualizacionDto>> registrosTask)
+    private RegistroActualizacion? TryGetUltimoRegistro(List<RegistroActualizacion> registros)
     {
-        var registros = await registrosTask;
-        return registros?.Data?
-            .Where(r => r.EsUltimoRegistro)
-            .OrderByDescending(r => r.FechaHora)
+        return registros?
+            .OrderByDescending(r => r.FechaCreacion)
             .FirstOrDefault();
     }
 

@@ -45,6 +45,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         }
 
         AddInclude("Suceso.Evoluciones.Parametros.SituacionEquivalente");
+        AddInclude(i => i.Suceso.RegistroActualizaciones);
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
         {
