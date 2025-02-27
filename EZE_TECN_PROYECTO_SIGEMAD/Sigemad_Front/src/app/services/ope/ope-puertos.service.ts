@@ -2,17 +2,14 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-
-import { ApiResponse } from '../types/api-response.type';
-import { FireDetail, FireDetailResponse } from '../types/fire-detail.type';
-import { Fire } from '../types/fire.type';
-import { OpePeriodo } from '../types/ope-periodo.type';
+import { ApiResponse } from '../../types/api-response.type';
+import { OpePuerto } from '../../types/ope/ope-puerto.type';
 
 @Injectable({ providedIn: 'root' })
-export class OpePeriodosService {
+export class OpePuertosService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  public endpoint = '/ope-periodos';
+  public endpoint = '/ope-puertos';
 
   generateUrlWitchParams({ url, params }: any) {
     return Object.keys(params).reduce((prev: any, key: any, index: any) => {
@@ -24,20 +21,22 @@ export class OpePeriodosService {
   }
 
   get(query: any = '') {
-    const URLBASE = '/ope-periodos?Sort=desc&PageSize=15';
+    const URLBASE = '/ope-puertos?Sort=desc&PageSize=15';
 
     const endpoint = this.generateUrlWitchParams({
       url: URLBASE,
       params: query,
     });
-    return firstValueFrom(this.http.get<ApiResponse<OpePeriodo[]>>(endpoint).pipe((response) => response));
+    return firstValueFrom(this.http.get<ApiResponse<OpePuerto[]>>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {
     const body = {
-      denominacion: data.denomination,
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd  h:mm:ss'),
-      fechaFin: this.datepipe.transform(data.endDateTime, 'yyyy-MM-dd  h:mm:ss'),
+      nombre: data.nombre,
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,9 +53,11 @@ export class OpePeriodosService {
   update(data: any) {
     const body = {
       id: data.id,
-      denominacion: data.denomination,
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd h:mm:ss'),
-      fechaFin: this.datepipe.transform(data.endDateTime, 'yyyy-MM-dd h:mm:ss'),
+      nombre: data.nombre,
+      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
+      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
     };
 
     return firstValueFrom(
@@ -72,7 +73,7 @@ export class OpePeriodosService {
   }
 
   delete(id: number) {
-    const endpoint = `/ope-periodos/${id}`;
+    const endpoint = `/ope-puertos/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }

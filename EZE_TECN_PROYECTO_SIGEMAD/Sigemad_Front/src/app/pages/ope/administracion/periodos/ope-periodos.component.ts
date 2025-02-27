@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PeriodosTableComponent } from './components/ope-periodo-table/ope-periodos-table.component';
+import { OpePeriodosTableComponent } from './components/ope-periodo-table/ope-periodos-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
-import { OpePeriodo } from '../../../../types/ope-periodo.type';
+import { OpePeriodo } from '../../../../types/ope/ope-periodo.type';
 import { OpePeriodoFilterFormComponent } from './components/ope-periodo-filter-form/ope-periodos-filter-form.component';
-import { OpePeriodosService } from '../../../../services/ope-periodos.service';
-import { LocalFiltrosOpePeriodos } from '../../../../services/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '../../../../services/ope/ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '../../../../services/ope/local-filtro-ope-periodos.service';
 
 @Component({
   selector: 'app-ope-periodos',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, PeriodosTableComponent, OpePeriodoFilterFormComponent],
+  imports: [CommonModule, RouterOutlet, OpePeriodosTableComponent, OpePeriodoFilterFormComponent],
   templateUrl: './ope-periodos.component.html',
   styleUrl: './ope-periodos.component.scss',
 })

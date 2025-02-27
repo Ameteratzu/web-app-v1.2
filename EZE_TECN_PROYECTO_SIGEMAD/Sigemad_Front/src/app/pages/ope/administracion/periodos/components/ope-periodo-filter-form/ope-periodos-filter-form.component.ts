@@ -14,28 +14,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MenuItemActiveService } from '../../../../../../services/menu-item-active.service';
+import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '../../../../../../types/api-response.type';
-import { OpePeriodo } from '../../../../../../types/ope-periodo.type';
-import { FormFieldComponent } from '../../../../../../shared/Inputs/field.component';
+import { OpePeriodo } from '../../../../../../types/ope/ope-periodo.type';
+import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpePeriodosService } from '../../../../../../services/ope-periodos.service';
-import { LocalFiltrosOpePeriodos } from '../../../../../../services/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos.service';
 import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
-import { ComparativeDateService } from '../../../../../../services/comparative-date.service';
+import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '../../../../../../types/comparative-date.type';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL',
-  },
-  display: {
-    dateInput: 'LL',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'app-ope-periodo-filter-form',
@@ -57,7 +47,7 @@ const MY_DATE_FORMATS = {
     MatDialogModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   templateUrl: './ope-periodos-filter-form.component.html',
@@ -96,13 +86,15 @@ export class OpePeriodoFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
 
-    const { denominacion, fechaInicio, fechaFin, between } = this.filtros();
+    const { nombre, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, between } = this.filtros();
 
     this.formData = new FormGroup({
-      denominacion: new FormControl(denominacion ?? ''),
+      nombre: new FormControl(nombre ?? ''),
       between: new FormControl(between ?? 1),
-      fechaInicio: new FormControl(fechaInicio ?? moment().subtract(4, 'days').toDate()),
-      fechaFin: new FormControl(fechaFin ?? moment().toDate()),
+      fechaInicioFaseSalida: new FormControl(fechaInicioFaseSalida ?? moment().subtract(4, 'days').toDate()),
+      fechaFinFaseSalida: new FormControl(fechaFinFaseSalida ?? moment().toDate()),
+      fechaInicioFaseRetorno: new FormControl(fechaInicioFaseRetorno ?? moment().subtract(4, 'days').toDate()),
+      fechaFinFaseRetorno: new FormControl(fechaFinFaseRetorno ?? moment().toDate()),
     });
 
     //this.clearFormFilter();
@@ -135,13 +127,15 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingChange.emit(true);
 
-    const { between, fechaInicio, fechaFin, denominacion } = this.formData.value;
+    const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
 
     const opePeriodos = await this.opePeriodosService.get({
       IdComparativoFecha: between,
-      FechaInicio: moment(fechaInicio).format('YYYY-MM-DD'),
-      FechaFin: moment(fechaFin).format('YYYY-MM-DD'),
-      denominacion: denominacion,
+      fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
+      fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
+      fechaInicioFaseRetorno: moment(fechaInicioFaseRetorno).format('YYYY-MM-DD'),
+      fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
+      nombre: nombre,
     });
     this.filtrosOpePeriodosService.setFilters(this.formData.value);
     this.opePeriodos = opePeriodos;
@@ -154,9 +148,11 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     this.formData.reset();
     this.formData.patchValue({
       between: 1,
-      fechaInicio: moment().subtract(4, 'days').toDate(),
-      fechaFin: moment().toDate(),
-      denominacion: '',
+      fechaInicioFaseSalida: moment().subtract(4, 'days').toDate(),
+      fechaFinFaseSalida: moment().toDate(),
+      fechaInicioFaseRetorno: moment().subtract(4, 'days').toDate(),
+      fechaFinFaseRetorno: moment().toDate(),
+      nombre: '',
     });
   }
 

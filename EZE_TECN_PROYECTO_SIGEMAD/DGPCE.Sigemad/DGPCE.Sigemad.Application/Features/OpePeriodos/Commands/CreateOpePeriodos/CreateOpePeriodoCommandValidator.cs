@@ -8,16 +8,22 @@ public class CreateOpePeriodoCommandValidator : AbstractValidator<CreateOpePerio
 {
     public CreateOpePeriodoCommandValidator(IStringLocalizer<ValidationMessages> localizer)
     {
-        RuleFor(p => p.Denominacion)
-            .NotEmpty().WithMessage(localizer["DenominacionNoVacio"])
-            .NotNull().WithMessage(localizer["DenominacionObligatorio"])
-            .MaximumLength(255).WithMessage(localizer["DenominacionMaxLength"]);
+        RuleFor(p => p.Nombre)
+            .NotEmpty().WithMessage(localizer["NombreNoVacio"])
+            .NotNull().WithMessage(localizer["NombreObligatorio"])
+            .MaximumLength(255).WithMessage(localizer["NombreMaxLength"]);
 
-        RuleFor(p => p.FechaInicio)
-            .NotEmpty().WithMessage(localizer["FechaInicioObligatorio"]);
+        RuleFor(p => p.FechaInicioFaseSalida)
+            .NotEmpty().WithMessage(localizer["FechaInicioFaseSalidaObligatorio"]);
 
-        RuleFor(p => p.FechaFin)
-            .NotEmpty().WithMessage(localizer["FechaFinObligatorio"]);
+        RuleFor(p => p.FechaFinFaseSalida)
+            .NotEmpty().WithMessage(localizer["FechaFinFaseSalidaObligatorio"]);
+
+        RuleFor(p => p.FechaInicioFaseRetorno)
+           .NotEmpty().WithMessage(localizer["FechaInicioFaseRetornoObligatorio"]);
+
+        RuleFor(p => p.FechaFinFaseRetorno)
+            .NotEmpty().WithMessage(localizer["FechaFinFaseRetornoObligatorio"]);
 
     }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CountryService } from '../../../../services/country.service';
 import { EventService } from '../../../../services/event.service';
@@ -41,6 +41,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // PCD
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FechaValidator } from '../../../../shared/validators/fecha-validator';
 // FIN PCD
 
 const MY_DATE_FORMATS = {
@@ -137,8 +138,13 @@ export class FireCreateEdit implements OnInit {
       province: new FormControl('', Validators.required),
       municipality: new FormControl('', Validators.required),
       denomination: new FormControl('', Validators.required),
-      startDate: new FormControl(new Date(), Validators.required),
-      startTime: new FormControl(null, Validators.required),
+      //startDate: new FormControl(new Date(), Validators.required),
+      //startTime: new FormControl(null, Validators.required),
+      // PCD
+      //startDateTime: new FormControl(new Date(), Validators.required),
+      startDateTime: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+      // FIN PCD
+
       eventStatus: new FormControl('', Validators.required),
       generalNote: new FormControl(''),
       //Foreign No se utiliza actualmente
@@ -167,8 +173,12 @@ export class FireCreateEdit implements OnInit {
         denomination: this.data.fire.denominacion,
         province: this.data.fire.idProvincia,
         municipality: this.data.fire.idMunicipio,
-        startDate: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD'),
-        startTime: moment(this.data.fire.fechaInicio).format('HH:mm'),
+        //startDate: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD'),
+        //startTime: moment(this.data.fire.fechaInicio).format('HH:mm'),
+        // PCD
+        startDateTime: moment(this.data.fire.fechaInicio).format('YYYY-MM-DD HH:mm'),
+        // FIN PCD
+
         generalNote: this.data.fire.notaGeneral,
         classEvent: this.data.fire.idClaseSuceso,
         eventStatus: this.data.fire.idEstadoSuceso,
@@ -350,4 +360,8 @@ export class FireCreateEdit implements OnInit {
   getForm(atributo: string): any {
     return this.formData.controls[atributo];
   }
+
+  // PCD
+
+  // FIN PCD
 }

@@ -30,6 +30,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 
 import { CampoDinamico } from '../../../shared/campoDinamico/campoDinamico.component';
+import { UtilsService } from '../../../shared/services/utils.service';
 const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -90,6 +91,8 @@ export class ConsequencesComponent {
   private municipalityService = inject(MunicipalityService);
   private tiposImpactoService = inject(ImpactTypeService);
   private consecuenciaService = inject(ConsequenceService);
+
+  public utilsService = inject(UtilsService);
 
   public polygon = signal<any>([]);
 
@@ -345,19 +348,5 @@ export class ConsequencesComponent {
 
   delete() {
     this.save.emit({ save: false, delete: true, close: false, update: false });
-  }
-
-  allowOnlyNumbers(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-
-    // Permitir teclas de control como Backspace, Tab, etc.
-    if (charCode === 8 || charCode === 9 || charCode === 13 || charCode === 27) {
-      return; // Permite el backspace, tab, enter y escape
-    }
-
-    // Solo permite números (códigos 48-57) y previene el punto (46) y cualquier otro carácter
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
-    }
   }
 }
