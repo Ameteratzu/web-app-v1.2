@@ -30,7 +30,6 @@ import GeoJSON from 'ol/format/GeoJSON';
 import KML from 'ol/format/KML';
 import proj4 from 'proj4';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import { transform } from 'ol/proj';
 
 import Bar from 'ol-ext/control/Bar';
 import Toggle from 'ol-ext/control/Toggle';
@@ -656,18 +655,27 @@ export class MapCreateComponent implements OnInit, OnChanges {
         const coordinates = features.map((feature: any) => {
           const geometry = feature.getGeometry();
           if (geometry) {
-            // Obtener las coordenadas y transformarlas a WGS84
-            const coords = geometry.getCoordinates();
-            const coordsTrans = coords[0].map((coord: number[]) =>
-              transform(coord, 'EPSG:3857', 'EPSG:4326')
+            let coords = geometry.getCoordinates();
+            // Si el array de coordenadas tiene más de 2 niveles, se guarda solo el primer nivel
+            if (Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
+              coords = coords[0];
+            }
+            const coordsTrans = coords.map((coord: number[]) =>
+              toLonLat(coord)
             );
-            console.info('coordsTrans: ', coordsTrans);
+            //console.info('coordsTrans: ', coordsTrans);
             return coordsTrans;
           }
           return [];
         });
 
-        this.coords = coordinates[0];
+        coordinates[0].forEach((subArray: any) => {
+          if (subArray.length === 3) {
+            subArray.splice(2, 1); // Eliminar el tercer valor si existe
+          }
+        });
+
+        this.coords = coordinates[0]; // solo se guarda el primer array de coordenadas
         this.save.emit(this.coords);
       }
     }
