@@ -6,10 +6,141 @@
   <mat-dialog-content>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
       <!-- Nombre -->
-      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+      <mat-form-field appearance="fill" fxFlex="40" class="mb-3">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre de la línea marítima" formControlName="nombre" />
         <mat-error *ngIf="formData.get('nombre')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Origen -->
+      <mat-form-field appearance="fill" fxFlex="30" class="mb-3">
+        <mat-label>Origen</mat-label>
+        <input matInput placeholder="Origen de la línea marítima" formControlName="origen" />
+        <mat-error *ngIf="formData.get('origen')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Destino -->
+      <mat-form-field appearance="fill" fxFlex="30" class="mb-3">
+        <mat-label>Destino</mat-label>
+        <input matInput placeholder="Destino de la línea marítima" formControlName="destino" />
+        <mat-error *ngIf="formData.get('destino')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Fase -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Fase</mat-label>
+        <mat-select [formControl]="getForm('fase')">
+          <mat-option [value]="'Salida'">Salida</mat-option>
+          <mat-option [value]="'Retorno'">Retorno</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('fase')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha validez desde -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Fecha validez desde</mat-label>
+        <input
+          matInput
+          placeholder="Fecha validez desde"
+          formControlName="fechaValidezDesde"
+          type="datetime-local"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
+        />
+        <mat-error *ngIf="formData.get('fechaValidezDesde')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaValidezDesde')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
+      </mat-form-field>
+
+      <!-- Fecha validez hasta -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Fecha validez hasta</mat-label>
+        <input
+          matInput
+          placeholder="Fecha validez hasta"
+          formControlName="fechaValidezHasta"
+          type="datetime-local"
+          min="2000-01-01T00:00"
+          max="2099-12-31T23:59"
+        />
+        <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
+        <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('fechaFinInvalida')">
+          La fecha de fin debe ser posterior a la fecha de inicio.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Nº de rotaciones -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº rotaciones</mat-label>
+        <input
+          matInput
+          [formControl]="getForm('numeroRotaciones')"
+          type="number"
+          required
+          (keypress)="utilsService.allowOnlyNumbers($event)"
+          min="0"
+        />
+        <mat-error *ngIf="formData.get('numeroRotaciones')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nº de pasajeros -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº pasajeros</mat-label>
+        <input
+          matInput
+          [formControl]="getForm('numeroPasajeros')"
+          type="number"
+          required
+          (keypress)="utilsService.allowOnlyNumbers($event)"
+          min="0"
+        />
+        <mat-error *ngIf="formData.get('numeroPasajeros')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nº de turismos -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº turismos</mat-label>
+        <input matInput [formControl]="getForm('numeroTurismos')" type="number" required (keypress)="utilsService.allowOnlyNumbers($event)" min="0" />
+        <mat-error *ngIf="formData.get('numeroTurismos')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nº de autocares -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº autocares</mat-label>
+        <input
+          matInput
+          [formControl]="getForm('numeroAutocares')"
+          type="number"
+          required
+          (keypress)="utilsService.allowOnlyNumbers($event)"
+          min="0"
+        />
+        <mat-error *ngIf="formData.get('numeroAutocares')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nº de camiones -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº camiones</mat-label>
+        <input matInput [formControl]="getForm('numeroCamiones')" type="number" required (keypress)="utilsService.allowOnlyNumbers($event)" min="0" />
+        <mat-error *ngIf="formData.get('numeroCamiones')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nº total de vehículos -->
+      <mat-form-field class="input" fxFlex="20" class="mb-3">
+        <mat-label>Nº total vehículos</mat-label>
+        <input
+          matInput
+          [formControl]="getForm('numeroTotalVehiculos')"
+          type="number"
+          required
+          (keypress)="utilsService.allowOnlyNumbers($event)"
+          min="0"
+        />
+        <mat-error *ngIf="formData.get('numeroTotalVehiculos')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
   </mat-dialog-content>

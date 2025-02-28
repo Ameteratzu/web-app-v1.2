@@ -16,8 +16,8 @@
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Fase</mat-label>
         <mat-select [formControl]="getForm('fase')">
-          <mat-option [value]="'Fase 1'">Fase 1</mat-option>
-          <mat-option [value]="'Fase 2'">Fase 2</mat-option>
+          <mat-option [value]="'Salida'">Salida</mat-option>
+          <mat-option [value]="'Retorno'">Retorno</mat-option>
         </mat-select>
         <mat-error *ngIf="formData.get('fase')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
@@ -27,8 +27,8 @@
       <!-- Territorio -->
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Territorio</mat-label>
-        <mat-select formControlName="territory" (selectionChange)="changeTerritory($event)">
-          <mat-option *ngFor="let option of listadoTerritorio()" [value]="option.id">
+        <mat-select [formControl]="getForm('territory')" (selectionChange)="changeTerritory($event)">
+          <mat-option *ngFor="let option of territories()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
@@ -38,7 +38,7 @@
       <!-- País -->
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>País</mat-label>
-        <mat-select formControlName="country">
+        <mat-select [formControl]="getForm('country')" (selectionChange)="loadCommunities()">
           <mat-option *ngFor="let option of filteredCountries()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
@@ -50,35 +50,35 @@
       <!-- CCAA -->
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>CCAA</mat-label>
-        <mat-select formControlName="CCAA" (selectionChange)="loadProvinces($event)">
-          <mat-option *ngFor="let option of listadoCCAA()" [value]="option">
+        <mat-select [formControl]="getForm('autonomousCommunity')" (selectionChange)="loadProvinces($event)">
+          <mat-option *ngFor="let option of autonomousCommunities()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formData.get('CCAA')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('autonomousCommunity')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
       <!-- Provincia -->
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Provincia</mat-label>
-        <mat-select formControlName="province" (selectionChange)="loadMunicipios($event)">
-          <mat-option *ngFor="let option of listadoProvincia()" [value]="option">
+        <mat-select [formControl]="getForm('provincia')" (selectionChange)="loadMunicipios($event)">
+          <mat-option *ngFor="let option of provinces()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formData.get('province')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('provincia')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
       <!-- Municipio -->
       <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
         <mat-label>Municipio</mat-label>
-        <mat-select formControlName="minicipality">
-          <mat-option *ngFor="let option of listadoMunicipio()" [value]="option">
+        <mat-select formControlName="municipality">
+          <mat-option *ngFor="let option of municipalities()" [value]="option.id">
             {{ option.descripcion }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="formData.get('minicipality')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('municipality')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
       <!-- Coordenada UTM X -->
@@ -111,7 +111,7 @@
         <mat-error *ngIf="formData.get('fechaValidezDesde')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
 
-      <!-- Fecha validez desde -->
+      <!-- Fecha validez hasta -->
       <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
         <mat-label>Fecha validez hasta</mat-label>
         <input
@@ -131,9 +131,9 @@
 
       <!-- Capacidad -->
       <mat-form-field class="input" fxFlex="31" class="mb-3">
-        <mat-label>Número</mat-label>
-        <input matInput [formControl]="getForm('numero')" type="number" required (keypress)="utilsService.allowOnlyNumbers($event)" min="0" />
-        <mat-error *ngIf="formData.get('numero')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-label>Capacidad</mat-label>
+        <input matInput [formControl]="getForm('capacidad')" type="number" required (keypress)="utilsService.allowOnlyNumbers($event)" min="0" />
+        <mat-error *ngIf="formData.get('capacidad')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
   </mat-dialog-content>

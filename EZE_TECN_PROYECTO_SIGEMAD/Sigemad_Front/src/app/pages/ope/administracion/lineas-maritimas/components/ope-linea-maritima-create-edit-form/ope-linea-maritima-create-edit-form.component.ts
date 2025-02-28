@@ -25,6 +25,7 @@ import { OpeLineasMaritimasService } from '@services/ope/ope-lineas-maritimas.se
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
 import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/local-filtro-ope-lineas-maritimas.service';
+import { UtilsService } from '@shared/services/utils.service';
 // FIN PCD
 
 const MY_DATE_FORMATS = {
@@ -91,22 +92,26 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
 
   //PCD
   public snackBar = inject(MatSnackBar);
+  public utilsService = inject(UtilsService);
   // FIN PCD
 
   async ngOnInit() {
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
-        fechaInicioFaseSalida: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
-        fechaFinFaseSalida: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
-        fechaInicioFaseRetorno: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
-        fechaFinFaseRetorno: new FormControl(null, [Validators.required, FechaValidator.validarFecha]),
+        origen: new FormControl('', Validators.required),
+        destino: new FormControl('', Validators.required),
+        fechaValidezDesde: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        fechaValidezHasta: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        numeroRotaciones: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        numeroPasajeros: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        numeroTurismos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        numeroAutocares: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        numeroCamiones: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        numeroTotalVehiculos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
       },
       {
-        validators: [
-          FechaValidator.validarFechaFinPosteriorFechaInicio('fechaInicioFaseSalida', 'fechaFinFaseSalida'),
-          FechaValidator.validarFechaFinPosteriorFechaInicio('fechaInicioFaseRetorno', 'fechaFinFaseRetorno'),
-        ],
+        validators: [FechaValidator.validarFechaFinPosteriorFechaInicio('fechaValidezDesde', 'fechaValidezHasta')],
       }
     );
 
@@ -114,10 +119,16 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
       this.formData.patchValue({
         id: this.data.opeLineaMaritima.id,
         nombre: this.data.opeLineaMaritima.nombre,
-        fechaInicioFaseSalida: moment(this.data.opeLineaMaritima.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseSalida: moment(this.data.opeLineaMaritima.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaInicioFaseRetorno: moment(this.data.opeLineaMaritima.fechaInicioFaseRetorno).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseRetorno: moment(this.data.opeLineaMaritima.fechaFinFaseRetorno).format('YYYY-MM-DD HH:mm'),
+        origen: this.data.opeLineaMaritima.nombre,
+        destino: this.data.opeLineaMaritima.nombre,
+        fechaValidezDesde: moment(this.data.opeLineaMaritima.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
+        fechaValidezHasta: moment(this.data.opeLineaMaritima.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
+        numeroRotaciones: this.data.opeLineaMaritima.numeroRotaciones,
+        numeroPasajeros: this.data.opeLineaMaritima.numeroPasajeros,
+        numeroTurismos: this.data.opeLineaMaritima.numeroTurismos,
+        numeroAutocares: this.data.opeLineaMaritima.numeroAutocares,
+        numeroCamiones: this.data.opeLineaMaritima.numeroCamiones,
+        numeroTotalVehiculos: this.data.opeLineaMaritima.numeroTotalVehiculos,
       });
     }
   }

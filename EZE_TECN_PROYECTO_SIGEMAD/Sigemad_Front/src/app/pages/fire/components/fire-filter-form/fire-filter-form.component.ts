@@ -49,6 +49,7 @@ import { EventService } from '../../../../services/event.service';
 import { Event } from '../../../../types/event.type';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_DATE_FORMATS } from '../../../../types/date-formats';
+import { COUNTRIES_ID } from '@type/constants';
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -88,12 +89,6 @@ export class FireFilterFormComponent implements OnInit {
   @Output() firesChange = new EventEmitter<ApiResponse<Fire[]>>();
   @Output() isLoadingChange = new EventEmitter<boolean>();
   @Output() refreshFilterFormChange = new EventEmitter<boolean>();
-
-  COUNTRIES_ID = {
-    PORTUGAL: 1,
-    SPAIN: 60,
-    FRANCE: 65,
-  };
 
   public filtrosIncendioService = inject(LocalFiltrosIncendio);
 
@@ -175,7 +170,7 @@ export class FireFilterFormComponent implements OnInit {
       territory: new FormControl(territory ?? 1),
       autonomousCommunity: new FormControl(autonomousCommunity ?? ''),
       province: new FormControl(province ?? ''),
-      country: new FormControl(country ?? this.COUNTRIES_ID.SPAIN),
+      country: new FormControl(country ?? COUNTRIES_ID.SPAIN),
       municipality: new FormControl(municipality ?? ''),
       fireStatus: new FormControl(initFireStatus ?? ''),
       episode: new FormControl(episode ?? ''),
@@ -242,6 +237,8 @@ export class FireFilterFormComponent implements OnInit {
     panel.toggle();
   }
 
+  // NO SE USA
+  /*
   getCountryByTerritory(country: any, territory: any) {
     if (territory == 1) {
       return country;
@@ -252,15 +249,16 @@ export class FireFilterFormComponent implements OnInit {
       }
     }
   }
+  */
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      country: event.value == 1 ? COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
-    this.loadCommunities(event.value == 1 ? this.COUNTRIES_ID.SPAIN : '9999');
+    this.loadCommunities(event.value == 1 ? COUNTRIES_ID.SPAIN : '9999');
     if (event.value == 1) {
       this.filteredCountries.set(this.listaPaisesNacionales());
     }
@@ -351,7 +349,7 @@ export class FireFilterFormComponent implements OnInit {
       between: 1,
       move: 1,
       territory: 1,
-      country: this.COUNTRIES_ID.SPAIN,
+      country: COUNTRIES_ID.SPAIN,
       fechaInicio: moment().subtract(4, 'days').toDate(),
       fechaFin: moment().toDate(),
       autonomousCommunity: '',
