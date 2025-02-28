@@ -69,5 +69,6 @@ INSERT INTO dbo.Menu (Id, Nombre, Tipo, IdGrupo, NumOrden, Ruta, Icono, ColorRgb
 (66, 'Plan de flota. Funcionalidades', 'item', 64, 2, '/ope-planificacion-plan-flota-funcionalidades', '', ''),
 (67, '	Participantes AGE', 'item', 64, 3, '/ope-planificacion-participantes-age', '', ''),
 (68, 'Incidencias', 'item', 16, 6, NULL, NULL, NULL),
-(69, 'Incidencias. Datos de inicio', 'item', 68, 1, '/ope-incidencias-datos-inicio', '', '');
-
+(69, 'Incidencias. Datos de inicio', 'item', 68, 1, '/ope-incidencias-datos-inicio', '', ''),
+(70, 'Informes', 'item', 16, 7, NULL, NULL, NULL),
+(71, 'Informe de prueba', 'item', 70, 1, '/ope-informes-prueba', '', '');

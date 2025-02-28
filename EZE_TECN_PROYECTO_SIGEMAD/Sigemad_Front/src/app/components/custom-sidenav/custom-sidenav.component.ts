@@ -5,11 +5,11 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { ChangeDetectorRef, Component, inject, signal, Input, computed, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
-import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../types/menu.types';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../services/auth.service';
+import { MenuService } from '@services/menu.service';
 
 @Component({
   selector: 'app-custom-sidenav',
@@ -113,6 +113,8 @@ export class CustomSidenavComponent {
     '/ope-planificacion-participantes-age': 'ope-planificacion-participantes-age',
     // OPE - INCIDENCIAS
     '/ope-incidencias-datos-inicio': 'ope-incidencias-datos-inicio',
+    // OPE - INFORMES
+    '/ope-informes-prueba': 'ope-informes-prueba',
     // FIN PCD
   };
 
@@ -143,10 +145,10 @@ export class CustomSidenavComponent {
       // PCD
       // OPE - ADMINISTRACIÓN
       { name: 'ope-administracion-periodos', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-puertos', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-lineas-maritimas', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-fronteras', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-puntos-control-carreteras', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-puertos', path: '/assets/img/ope.svg' },
+      { name: 'ope-administracion-lineas-maritimas', path: '/assets/img/ope.svg' },
+      { name: 'ope-administracion-fronteras', path: '/assets/img/users.svg' },
+      { name: 'ope-administracion-puntos-control-carreteras', path: '/assets/img/floods.svg' },
       { name: 'ope-administracion-areas-descanso', path: '/assets/img/config.svg' },
       { name: 'ope-administracion-areas-estacionamiento', path: '/assets/img/config.svg' },
       { name: 'ope-administracion-ocupacion-areas-estacionamiento', path: '/assets/img/config.svg' },
@@ -186,6 +188,8 @@ export class CustomSidenavComponent {
       { name: 'ope-planificacion-participantes-age', path: '/assets/img/floods.svg' },
       // OPE - INCIDENCIAS
       { name: 'ope-incidencias-datos-inicio', path: '/assets/img/dangerous-goods.svg' },
+      // OPE - INFORMES
+      { name: 'ope-informes-prueba', path: '/assets/img/catalogs.svg' },
       // FIN PCD
     ];
 

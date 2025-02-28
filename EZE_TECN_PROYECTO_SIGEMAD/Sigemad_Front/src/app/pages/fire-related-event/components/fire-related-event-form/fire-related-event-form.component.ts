@@ -49,6 +49,7 @@ import { AlertService } from '../../../../shared/alert/alert.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_DATE_FORMATS } from '../../../../types/date-formats';
+import { COUNTRIES_ID } from '@type/constants';
 
 @Component({
   selector: 'app-fire-related-event-form',
@@ -85,12 +86,6 @@ export class FireRelatedEventForm implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
 
   @ViewChild(MatSort) sort!: MatSort;
-
-  COUNTRIES_ID = {
-    PORTUGAL: 1,
-    SPAIN: 60,
-    FRANCE: 65,
-  };
 
   private spinner = inject(NgxSpinnerService);
   private alertService = inject(AlertService);
@@ -168,7 +163,7 @@ export class FireRelatedEventForm implements OnInit {
         name: new FormControl(''),
         claseSuceco: new FormControl(1),
         territory: new FormControl(1),
-        country: new FormControl(this.COUNTRIES_ID.SPAIN),
+        country: new FormControl(COUNTRIES_ID.SPAIN),
         CCAA: new FormControl(''),
         province: new FormControl(''),
         minicipality: new FormControl(''),
@@ -241,12 +236,12 @@ export class FireRelatedEventForm implements OnInit {
 
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      country: event.value == 1 ? COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
-    this.loadCommunities(event.value.id == 1 ? this.COUNTRIES_ID.SPAIN : '9999');
+    this.loadCommunities(event.value.id == 1 ? COUNTRIES_ID.SPAIN : '9999');
     if (event.value == 1) {
       this.filteredCountries.set(this.listaPaisesNacionales());
     }
@@ -467,7 +462,7 @@ export class FireRelatedEventForm implements OnInit {
       between: 1,
       move: 1,
       territory: 1,
-      country: this.COUNTRIES_ID.SPAIN,
+      country: COUNTRIES_ID.SPAIN,
       fechaInicio: moment().subtract(4, 'days').toDate(),
       fechaFin: moment().toDate(),
       autonomousCommunity: '',

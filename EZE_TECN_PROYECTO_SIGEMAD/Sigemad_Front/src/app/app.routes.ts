@@ -8,6 +8,7 @@ import { LayoutBaseComponent } from './shared/layouts/layout-base.component';
 import { OpePeriodosComponent } from './pages/ope/administracion/periodos/ope-periodos.component';
 import { OpePuertosComponent } from './pages/ope/administracion/puertos/ope-puertos.component';
 import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-maritimas/ope-lineas-maritimas.component';
+import { OpeFronterasComponent } from './pages/ope/administracion/fronteras/ope-fronteras.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -44,7 +45,7 @@ export const routes: Routes = [
         component: OpeLineasMaritimasComponent,
         data: { breadcrumb: 'Administración de líneas marítimas' },
       },
-      { path: 'ope-administracion-fronteras', component: OpePeriodosComponent, data: { breadcrumb: 'Administración de fronteras' } },
+      { path: 'ope-administracion-fronteras', component: OpeFronterasComponent, data: { breadcrumb: 'Administración de fronteras' } },
 
       {
         path: 'ope-administracion-puntos-control-carreteras',
@@ -223,6 +224,12 @@ export const routes: Routes = [
         path: 'ope-incidencias-datos-inicio',
         component: OpePeriodosComponent,
         data: { breadcrumb: 'Incidencias. Datos de inicio' },
+      },
+      // OPE - INFORMES
+      {
+        path: 'ope-informes-prueba',
+        component: OpePeriodosComponent,
+        data: { breadcrumb: 'Informe de prueba' },
       },
       // FIN PCD
 

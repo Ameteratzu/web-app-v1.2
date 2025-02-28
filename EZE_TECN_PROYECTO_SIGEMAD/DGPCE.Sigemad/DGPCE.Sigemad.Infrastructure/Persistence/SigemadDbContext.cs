@@ -86,7 +86,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
 
             // PCD
-            modelBuilder.Entity<OpePeriodo>().ToTable(nameof(OpePeriodo));
+            //modelBuilder.Entity<OpePeriodo>().ToTable(nameof(OpePeriodo));
+            modelBuilder.Entity<OpePeriodo>().ToTable("OPE_Periodo");
             // FIN PCD
         }
 
