@@ -254,10 +254,10 @@ public class MappingProfile : Profile
 
 
         CreateMap<ManageDeclaracionesZAGEPCommand, ActuacionRelevanteDGPCE>()
-       .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
        .ForMember(dest => dest.DeclaracionesZAGEP, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageDeclaracionZAGEPDto, DeclaracionZAGEP>();
+        CreateMap<DeclaracionZAGEP, ManageDeclaracionZAGEPDto>();
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
         CreateMap<CreateFileCommand, Archivo>();

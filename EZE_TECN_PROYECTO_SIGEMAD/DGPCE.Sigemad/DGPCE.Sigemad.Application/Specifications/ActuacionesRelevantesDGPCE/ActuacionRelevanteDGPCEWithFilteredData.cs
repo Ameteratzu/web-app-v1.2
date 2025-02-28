@@ -27,7 +27,7 @@ public class ActuacionRelevanteDGPCEWithFilteredData : BaseSpecification<Actuaci
 
         if (idsDeclaracionesZAGEP.Any())
         {
-            AddInclude(d => d.DeclaracionesZAGEP.Where(declaracionZagep => idsActivacionPlanEmergencias.Contains(declaracionZagep.Id) && !declaracionZagep.Borrado));
+            AddInclude(d => d.DeclaracionesZAGEP.Where(declaracionZagep => idsDeclaracionesZAGEP.Contains(declaracionZagep.Id) && !declaracionZagep.Borrado));
         }
 
         if (idsActivacionSistemas.Any())
