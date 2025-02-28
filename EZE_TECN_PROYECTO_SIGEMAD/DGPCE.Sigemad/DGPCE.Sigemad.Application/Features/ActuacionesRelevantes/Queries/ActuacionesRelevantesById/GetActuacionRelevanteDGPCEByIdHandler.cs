@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 
-namespace DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Quereis.ActuacionesRelevantesById;
+namespace DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Queries.ActuacionesRelevantesById;
 public class GetActuacionRelevanteDGPCEByIdHandler : IRequestHandler<GetActuacionRelevanteDGPCEById, ActuacionRelevanteDGPCEDto>
 {
     private readonly IUnitOfWork _unitOfWork;

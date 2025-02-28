@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Queries;
+namespace DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Queries;
 public class GetActuacionRelevanteQueryHandler : IRequestHandler<GetActuacionRelevanteQuery, ActuacionRelevanteDGPCEDto>
 {
     private readonly ILogger<GetActuacionRelevanteQueryHandler> _logger;
