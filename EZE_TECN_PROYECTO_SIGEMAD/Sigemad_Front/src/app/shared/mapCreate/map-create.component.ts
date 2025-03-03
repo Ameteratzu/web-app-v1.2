@@ -621,6 +621,12 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
                   this.highLightMunicipio.getSource()?.addFeature(olFeature);
                 });
+
+                // Ajustar el zoom para ver el municipio completo
+                const extent = this.highLightMunicipio.getSource()?.getExtent();
+                if (extent) {
+                  this.map.getView().fit(extent, { duration: 1000, padding: [50, 50, 50, 50] });
+                }
               } else {
                 console.warn('No se encontró el feature para el municipio:', municipio);
               }
