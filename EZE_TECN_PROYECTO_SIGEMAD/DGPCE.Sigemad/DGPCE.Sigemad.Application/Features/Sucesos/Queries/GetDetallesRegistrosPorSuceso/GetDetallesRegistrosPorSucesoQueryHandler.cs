@@ -64,6 +64,7 @@ public class GetDetallesRegistrosPorSucesoQueryHandler : IRequestHandler<GetDeta
         List<DetalleRegistroActualizacionDto> detallesDtos = registros.Select(r => new DetalleRegistroActualizacionDto
         {
             Id = r.Id,
+            IdRegistro = r.IdRegistroActualizacion,
             FechaHora = r.FechaCreacion,
             Ambito = r.Ambito,
             Accion = GetDescripcionAccion(r.IdEstadoRegistro),
