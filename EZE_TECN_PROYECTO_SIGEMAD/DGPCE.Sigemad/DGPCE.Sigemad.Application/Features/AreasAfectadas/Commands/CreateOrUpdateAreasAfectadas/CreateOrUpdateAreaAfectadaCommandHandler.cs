@@ -157,7 +157,10 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
 
     private async Task ValidateEntidadMenor(CreateOrUpdateAreaAfectadaCommand request)
     {
-        var idsEntidadMenor = request.AreasAfectadas.Where(a => a.IdEntidadMenor.HasValue).Select(d => d.IdMunicipio).Distinct();
+        var idsEntidadMenor = request.AreasAfectadas
+        .Where(a => a.IdEntidadMenor.HasValue)
+        .Select(d => d.IdEntidadMenor.Value) // Asegurar el uso de Value ya que es un Nullable<int>
+        .Distinct() ?? Enumerable.Empty<int>();
 
         if (!idsEntidadMenor.Any()) return;
 

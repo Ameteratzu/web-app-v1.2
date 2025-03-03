@@ -9,6 +9,9 @@ public class DetalleRegistroActualizacion: BaseDomainModel<int>
     public int IdReferencia { get; set; } // ID del registro en Direccion, CoordinacionCecopi, CoordinacionPMA
     public EstadoRegistroEnum IdEstadoRegistro { get; set; } // 🔹 Ahora es un `enum`
 
+    public string Ambito { get; set; }
+    public string Descripcion { get; set; }
+
 
     public RegistroActualizacion RegistroActualizacion { get; set; }
     public ApartadoRegistro ApartadoRegistro { get; set; }
