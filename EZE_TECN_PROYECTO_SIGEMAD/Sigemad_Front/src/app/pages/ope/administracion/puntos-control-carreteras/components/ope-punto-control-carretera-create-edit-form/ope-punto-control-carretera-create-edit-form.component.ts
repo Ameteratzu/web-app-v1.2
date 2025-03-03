@@ -17,8 +17,8 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AlertService } from '@shared/alert/alert.service';
-import { LocalFiltrosOpeAreasDescanso } from '@services/ope/local-filtro-ope-areas-descanso.service';
-import { OpeAreasDescansoService } from '@services/ope/ope-areas-descanso.service';
+import { LocalFiltrosOpePuntosControlCarreteras } from '@services/ope/local-filtro-ope-puntos-control-carreteras.service';
+import { OpePuntosControlCarreterasService } from '@services/ope/ope-puntos-control-carreteras.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
 import { FORMATO_FECHA } from '../../../../../../types/date-formats';
@@ -36,7 +36,7 @@ import { AutonomousCommunity } from '@type/autonomous-community.type';
 import { COUNTRIES_ID } from '@type/constants';
 
 @Component({
-  selector: 'ope-area-descanso-create-edit',
+  selector: 'ope-punto-control-carretera-create-edit',
   standalone: true,
   imports: [
     CommonModule,
@@ -60,14 +60,14 @@ import { COUNTRIES_ID } from '@type/constants';
     { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
-  templateUrl: './ope-area-descanso-create-edit-form.component.html',
-  styleUrl: './ope-area-descanso-create-edit-form.component.scss',
+  templateUrl: './ope-punto-control-carretera-create-edit-form.component.html',
+  styleUrl: './ope-punto-control-carretera-create-edit-form.component.scss',
 })
-export class OpeAreaDescansoCreateEdit implements OnInit {
+export class OpePuntoControlCarreteraCreateEdit implements OnInit {
   constructor(
-    private filtrosOpeAreasDescansoService: LocalFiltrosOpeAreasDescanso,
-    private opeAreasDescansoService: OpeAreasDescansoService,
-    public dialogRef: MatDialogRef<OpeAreaDescansoCreateEdit>,
+    private filtrosOpePuntosControlCarreterasService: LocalFiltrosOpePuntosControlCarreteras,
+    private opePuntosControlCarreterasService: OpePuntosControlCarreterasService,
+    public dialogRef: MatDialogRef<OpePuntoControlCarreteraCreateEdit>,
     private matDialog: MatDialog,
     public alertService: AlertService,
     private router: Router,
@@ -78,7 +78,7 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
     private provinceService: ProvinceService,
     private municipioService: MunicipalityService,
 
-    @Inject(MAT_DIALOG_DATA) public data: { opeAreaDescanso: any }
+    @Inject(MAT_DIALOG_DATA) public data: { opePuntoControlCarretera: any }
   ) {}
 
   public filteredCountries = signal<Countries[]>([]);
@@ -104,7 +104,6 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
 
   async ngOnInit() {
     this.formData = new FormGroup({
-      tipo: new FormControl('', Validators.required),
       nombre: new FormControl('', Validators.required),
       autonomousCommunity: new FormControl(''),
       CCAA: new FormControl(''),
@@ -114,29 +113,28 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
       carreteraPK: new FormControl('', Validators.required),
       coordenadaUTM_X: new FormControl('', Validators.required),
       coordenadaUTM_Y: new FormControl('', Validators.required),
-      capacidad: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
-      estadoOcupacion: new FormControl('', Validators.required),
+      transitoMedioVehiculos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+      transitoAltoVehiculos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
     });
 
-    if (!this.data.opeAreaDescanso?.id) {
+    if (!this.data.opePuntoControlCarretera?.id) {
       this.formData.get('municipality')?.disable();
       this.formData.get('provincia')?.disable();
     }
 
-    if (this.data.opeAreaDescanso?.id) {
-      //this.loadMunicipalities({ value: this.data.opeAreaDescanso.idProvincia });
+    if (this.data.opePuntoControlCarretera?.id) {
+      //this.loadMunicipalities({ value: this.data.opePuntoControlCarretera.idProvincia });
       this.formData.patchValue({
-        id: this.data.opeAreaDescanso.id,
-        tipo: this.data.opeAreaDescanso.nombre,
-        nombre: this.data.opeAreaDescanso.nombre,
-        autonomousCommunity: this.data.opeAreaDescanso.idCcaa,
-        province: this.data.opeAreaDescanso.idProvincia,
-        municipality: this.data.opeAreaDescanso.idMunicipio,
-        carreteraPK: this.data.opeAreaDescanso.carreteraPK,
-        coordenadaUTM_X: this.data.opeAreaDescanso.coordenadaUTM_X,
-        coordenadaUTM_Y: this.data.opeAreaDescanso.coordenadaUTM_Y,
-        capacidad: this.data.opeAreaDescanso.capacidad,
-        estadoOcupacion: this.data.opeAreaDescanso.estadoOcupacion,
+        id: this.data.opePuntoControlCarretera.id,
+        nombre: this.data.opePuntoControlCarretera.nombre,
+        autonomousCommunity: this.data.opePuntoControlCarretera.idCcaa,
+        province: this.data.opePuntoControlCarretera.idProvincia,
+        municipality: this.data.opePuntoControlCarretera.idMunicipio,
+        carreteraPK: this.data.opePuntoControlCarretera.carreteraPK,
+        coordenadaUTM_X: this.data.opePuntoControlCarretera.coordenadaUTM_X,
+        coordenadaUTM_Y: this.data.opePuntoControlCarretera.coordenadaUTM_Y,
+        transitoMedioVehiculos: this.data.opePuntoControlCarretera.transitoMedioVehiculos,
+        transitoAltoVehiculos: this.data.opePuntoControlCarretera.transitoAltoVehiculos,
       });
     }
 
@@ -171,9 +169,9 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
 
       //const municipio = this.municipalities().find((item) => item.id === data.municipality);
 
-      if (this.data.opeAreaDescanso?.id) {
-        data.id = this.data.opeAreaDescanso.id;
-        await this.opeAreasDescansoService
+      if (this.data.opePuntoControlCarretera?.id) {
+        data.id = this.data.opePuntoControlCarretera.id;
+        await this.opePuntosControlCarreterasService
           .update(data)
           .then((response) => {
             // PCD
@@ -195,7 +193,7 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
             console.error('Error', error);
           });
       } else {
-        await this.opeAreasDescansoService
+        await this.opePuntosControlCarreterasService
           .post(data)
           .then((response) => {
             this.snackBar

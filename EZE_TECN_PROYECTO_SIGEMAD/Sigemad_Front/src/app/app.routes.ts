@@ -10,6 +10,7 @@ import { OpePuertosComponent } from './pages/ope/administracion/puertos/ope-puer
 import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-maritimas/ope-lineas-maritimas.component';
 import { OpeFronterasComponent } from './pages/ope/administracion/fronteras/ope-fronteras.component';
 import { OpeAreasDescansoComponent } from './pages/ope/administracion/areas-descanso/ope-areas-descanso.component';
+import { OpePuntosControlCarreterasComponent } from './pages/ope/administracion/puntos-control-carreteras/ope-puntos-control-carreteras.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -50,7 +51,7 @@ export const routes: Routes = [
 
       {
         path: 'ope-administracion-puntos-control-carreteras',
-        component: OpePeriodosComponent,
+        component: OpePuntosControlCarreterasComponent,
         data: { breadcrumb: 'Puntos de Control en carreteras' },
       },
       {
