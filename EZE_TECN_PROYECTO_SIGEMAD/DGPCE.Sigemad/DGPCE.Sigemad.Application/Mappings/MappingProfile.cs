@@ -355,10 +355,10 @@ public class MappingProfile : Profile
 
 
         CreateMap<ManageConvocatoriaCECODCommand, ActuacionRelevanteDGPCE>()
-           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
            .ForMember(dest => dest.ConvocatoriasCECOD, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageConvocatoriaCECODDto, ConvocatoriaCECOD>();
+        CreateMap<ConvocatoriaCECOD, ManageConvocatoriaCECODDto>();
 
         CreateMap<ConvocatoriaCECOD, ConvocatoriaCECODDto>();
         CreateMap<ActivacionSistema, ActivacionSistemaDto>();

@@ -40,8 +40,6 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
         await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
         await _unitOfWork.BeginTransactionAsync();
 
-  ;
-
         try
         {
             RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<ActuacionRelevanteDGPCE>(
@@ -77,7 +75,7 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
         catch (Exception ex)
         {
             await _unitOfWork.RollbackAsync();
-            _logger.LogError(ex, "Error en la transacción de CreateOrUpdateDireccionCommandHandler");
+            _logger.LogError(ex, "Error en la transacción de ManageDeclaracionZAGEPResponse");
             throw;
         }
     }
