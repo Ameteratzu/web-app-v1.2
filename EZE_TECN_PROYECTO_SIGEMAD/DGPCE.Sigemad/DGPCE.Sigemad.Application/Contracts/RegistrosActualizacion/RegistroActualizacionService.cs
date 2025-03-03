@@ -130,11 +130,16 @@ public class RegistroActualizacionService : IRegistroActualizacionService
                     }
                     else
                     {
+
+                        (string ambito, string descripcion) =  GetAmbitoYDescripcion<E>(item);
+
                         registroActualizacion.DetallesRegistro.Add(new DetalleRegistroActualizacion
                         {
                             IdApartadoRegistro = (int)apartadoRegistro,
                             IdReferencia = item.Id,
-                            IdEstadoRegistro = estado
+                            IdEstadoRegistro = estado,
+                            Ambito = ambito,
+                            Descripcion = descripcion
                         });
 
                         if (estado == EstadoRegistroEnum.Creado)
@@ -204,6 +209,103 @@ public class RegistroActualizacionService : IRegistroActualizacionService
         }
 
         return EstadoRegistroEnum.Modificado;
+    }
+
+    public (string ambito, string descripcion) GetAmbitoYDescripcion<T>(T entidad)
+    {
+        var ambito = string.Empty;
+        var descripcion = string.Empty;
+
+        if(entidad == null)
+        {
+            return (ambito, descripcion);
+        }
+
+        switch(entidad)
+        {
+            case Parametro parametro:
+                ambito = "Parám. Estado - Situacion Equivalente - Superficie Afectada";
+                descripcion = $"{parametro.EstadoIncendio.Descripcion} - {parametro.SituacionEquivalente.Descripcion} - {parametro.SuperficieAfectadaHectarea}";
+                break;
+
+            case IntervencionMedio intervencionMedio:
+                ambito = "Intervención de medios";
+                descripcion = $"{intervencionMedio.CaracterMedio.Descripcion} [{intervencionMedio.FechaHoraFin} - {intervencionMedio.FechaHoraFin}]";
+                break;
+
+            case ImpactoEvolucion impactoEvolucion:
+                ambito = "Tipo impacto";
+                descripcion = $"{impactoEvolucion.ImpactoClasificado.Descripcion} [{impactoEvolucion.Numero}]";
+                break;
+
+            case AreaAfectada areaAfectada:
+                ambito = "Área afectada";
+                descripcion = $"{areaAfectada.Municipio.Descripcion} ({areaAfectada.Provincia.Descripcion})";
+                break;
+
+            case Direccion direccion:
+                ambito = "Dirección";
+                descripcion = $"{direccion.FechaInicio} - {direccion.FechaFin}";
+                break;
+
+            case CoordinacionCecopi coordinacionCecopi:
+                ambito = "Coord. CECOPI";
+                descripcion = $"{coordinacionCecopi.FechaInicio} - {coordinacionCecopi.FechaFin}";
+                break;
+
+            case CoordinacionPMA coordinacionPMA:
+                ambito = "Coord. PMA";
+                descripcion = $"{coordinacionPMA.FechaInicio}";
+                break;
+
+            // TODO: Add more cases
+            case MovilizacionMedio movilizacionMedio:
+                ambito = "Movilización de medios";
+                descripcion = $"{movilizacionMedio.Solicitante}";
+                break;
+
+            case ConvocatoriaCECOD convocatoriaCECOD:
+                ambito = "Convocatoria CECODI";
+                descripcion = $"{convocatoriaCECOD.FechaInicio} - {convocatoriaCECOD.FechaFin}";
+                break;
+
+             case ActivacionPlanEmergencia activacionPlanEmergencia:
+                ambito = "Activ. Plan";
+                descripcion = $"{activacionPlanEmergencia.TipoPlan.Descripcion} [{activacionPlanEmergencia.FechaInicio} - {activacionPlanEmergencia.FechaFin}]";
+                break;
+
+             case NotificacionEmergencia notificacionEmergencia:
+                ambito = "Notificación oficial";
+                descripcion = $"{notificacionEmergencia.TipoNotificacion.Descripcion} [{notificacionEmergencia.FechaHoraNotificacion}]";
+                break;
+
+             case ActivacionSistema activacionSistema:
+                ambito = "Activ. de sistemas";
+                descripcion = $"{activacionSistema.TipoSistemaEmergencia.Descripcion} [{activacionSistema.FechaHoraActivacion}]";
+                break;
+             
+             case DeclaracionZAGEP declaracionZAGEP:
+                ambito = "Declaración ZAGEP";
+                descripcion = $"{declaracionZAGEP.FechaSolicitud}";
+                break;
+
+             case EmergenciaNacional emergenciaNacional:
+                ambito = "Emergencia nacional";
+                descripcion = $"{emergenciaNacional.Autoridad} [{emergenciaNacional.FechaHoraSolicitud} - {emergenciaNacional.FechaHoraDeclaracion}]";
+                break;
+
+            case DetalleDocumentacion documentacion:
+                ambito = "Documentación";
+                descripcion = $"Procedencia [{documentacion.Archivo.NombreOriginal}]";
+                break;
+
+            case DetalleOtraInformacion detalleOtraInformacion:
+                ambito = "Otra información";
+                descripcion = $"Procedencia [{detalleOtraInformacion.Asunto}]";
+                break;
+        }
+
+        return (ambito, descripcion);
     }
 
 }
