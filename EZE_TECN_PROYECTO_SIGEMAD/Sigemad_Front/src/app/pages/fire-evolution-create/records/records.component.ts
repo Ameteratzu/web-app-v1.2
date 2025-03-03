@@ -29,7 +29,7 @@ import { SituationPlan } from '../../../types/situation-plan.type';
 import { SituationsEquivalent } from '../../../types/situations-equivalent.type';
 import { TypesPlans } from '../../../types/types-plans.type';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MY_DATE_FORMATS } from '../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../types/date-formats';
 import { FechaValidator } from '../../../shared/validators/fecha-validator';
 import { UtilsService } from '../../../shared/services/utils.service';
 
@@ -56,7 +56,7 @@ import { UtilsService } from '../../../shared/services/utils.service';
   styleUrl: './records.component.scss',
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class RecordsComponent implements OnInit {

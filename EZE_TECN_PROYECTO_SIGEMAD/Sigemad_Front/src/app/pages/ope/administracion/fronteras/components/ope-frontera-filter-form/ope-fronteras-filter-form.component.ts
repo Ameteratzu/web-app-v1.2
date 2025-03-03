@@ -16,7 +16,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '@type/api-response.type';
-import { OpeFrontera } from '@type/ope/ope-frontera.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
 import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
@@ -24,8 +23,9 @@ import { LocalFiltrosOpeFronteras } from '@services/ope/local-filtro-ope-fronter
 import { OpeFronteraCreateEdit } from '../ope-frontera-create-edit-form/ope-frontera-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '@type/comparative-date.type';
-import { MY_DATE_FORMATS } from '@type/date-formats';
+import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { OpeFrontera } from '@type/ope/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-frontera-filter-form',
@@ -48,7 +48,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-fronteras-filter-form.component.html',
   styleUrl: './ope-fronteras-filter-form.component.scss',

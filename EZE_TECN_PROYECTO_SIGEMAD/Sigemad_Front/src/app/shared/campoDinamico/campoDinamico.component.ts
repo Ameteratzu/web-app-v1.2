@@ -45,7 +45,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { UtilsService } from '../services/utils.service';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -80,7 +80,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './campoDinamico.component.html',
   styleUrl: './campoDinamico.component.css',

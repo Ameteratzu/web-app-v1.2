@@ -23,7 +23,7 @@ import { OpeLineasMaritimasService } from '@services/ope/ope-lineas-maritimas.se
 import { OpeLineaMaritimaCreateEdit } from '../ope-linea-maritima-create-edit-form/ope-linea-maritima-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '../../../../../../types/comparative-date.type';
-import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../../../../types/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/local-filtro-ope-lineas-maritimas.service';
 
@@ -48,7 +48,7 @@ import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/local-filtro-ope-l
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-lineas-maritimas-filter-form.component.html',
   styleUrl: './ope-lineas-maritimas-filter-form.component.scss',

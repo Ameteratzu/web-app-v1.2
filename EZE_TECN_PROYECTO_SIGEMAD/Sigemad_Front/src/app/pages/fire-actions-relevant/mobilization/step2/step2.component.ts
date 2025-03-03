@@ -10,7 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { GenericMaster } from '../../../../types/actions-relevant.type';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -33,13 +33,13 @@ const MY_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ],
   templateUrl: './step2.component.html',
   styleUrl: './step2.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class Step2Component {

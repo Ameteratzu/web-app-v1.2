@@ -1,0 +1,105 @@
+<h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="title">
+  {{ data.opeAreaDescanso?.id ? 'Modificar' : 'Crear' }} área de descanso
+</h2>
+
+<form [formGroup]="formData" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Tipo -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Tipo</mat-label>
+        <mat-select [formControl]="getForm('tipo')">
+          <mat-option [value]="'Área de descanso'">Área de descanso</mat-option>
+          <mat-option [value]="'Punto de información'">Punto de información</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('tipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Nombre -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre del area de descanso" formControlName="nombre" />
+        <mat-error *ngIf="formData.get('nombre')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- CCAA -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>CCAA</mat-label>
+        <mat-select [formControl]="getForm('autonomousCommunity')" (selectionChange)="loadProvinces($event)">
+          <mat-option *ngFor="let option of autonomousCommunities()" [value]="option.id">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('autonomousCommunity')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Provincia -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Provincia</mat-label>
+        <mat-select [formControl]="getForm('provincia')" (selectionChange)="loadMunicipios($event)">
+          <mat-option *ngFor="let option of provinces()" [value]="option.id">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('provincia')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+      <!-- Municipio -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Municipio</mat-label>
+        <mat-select formControlName="municipality">
+          <mat-option *ngFor="let option of municipalities()" [value]="option.id">
+            {{ option.descripcion }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('municipality')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Carretera y punto kilométrico -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Carretera y punto kilométrico</mat-label>
+        <input matInput placeholder="Carretera y punto kilométrico" formControlName="carreteraPK" />
+        <mat-error *ngIf="formData.get('carreteraPK')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Coordenada UTM X -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Coordenada UTM X</mat-label>
+        <input matInput placeholder="Coordenada UTM X" formControlName="coordenadaUTM_X" />
+        <mat-error *ngIf="formData.get('coordenadaUTM_X')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Coordenada UTM Y -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Coordenada UTM Y</mat-label>
+        <input matInput placeholder="Coordenada UTM Y" formControlName="coordenadaUTM_Y" />
+        <mat-error *ngIf="formData.get('coordenadaUTM_Y')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Estado de ocupación -->
+      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+        <mat-label>Estado de ocupación</mat-label>
+        <mat-select [formControl]="getForm('estadoOcupacion')">
+          <mat-option [value]="'Baja'">Baja</mat-option>
+          <mat-option [value]="'Media'">Media</mat-option>
+          <mat-option [value]="'Alta'">Alta</mat-option>
+          <mat-option [value]="'Muy Alta'">Muy Alta</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('tipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="16px" style="width: 100%" class="button-container">
+    <!-- Botón Buscar -->
+    <button mat-raised-button (click)="closeModal()" color="primary" aria-label="Buscar" class="custom-button" type="button">Cancelar</button>
+
+    <!-- Botón Filtro -->
+    <button mat-flat-button color="primary" type="submit" aria-label="Guardar" class="custom-button">Guardar</button>
+  </mat-dialog-actions>
+</form>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-atom" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

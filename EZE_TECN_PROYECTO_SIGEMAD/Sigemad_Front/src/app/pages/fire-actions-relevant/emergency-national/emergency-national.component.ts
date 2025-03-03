@@ -17,7 +17,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActionsRelevantService } from '../../../services/actions-relevant.service';
 import { EmergenciaNacional } from '../../../types/actions-relevant.type';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -49,7 +49,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './emergency-national.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class EmergencyNationalComponent {

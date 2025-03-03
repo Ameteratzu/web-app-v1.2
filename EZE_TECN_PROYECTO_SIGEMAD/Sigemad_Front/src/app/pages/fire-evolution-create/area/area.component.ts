@@ -31,7 +31,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -64,7 +64,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './area.component.html',
   styleUrl: './area.component.scss',
@@ -106,7 +106,6 @@ export class AreaComponent {
   index = 0;
 
   async ngOnInit() {
-
     this.selectedMunicipio = null;
 
     const provinces = await this.provinceService.get();
@@ -143,9 +142,7 @@ export class AreaComponent {
     this.selectedMunicipio = this.municipalities().find((item) => item.id == this.formData.value.municipio);
     this.listaMunicipios = this.municipalities();
     this.onlyView = true;
-    this.defaultPolygon = this.polygon(),
-
-      this.spinner.hide();
+    (this.defaultPolygon = this.polygon()), this.spinner.hide();
   }
 
   async loadMunicipalities(event: any) {
@@ -192,7 +189,6 @@ export class AreaComponent {
       this.formData.patchValue({
         fechaHora: new Date(),
       });
-
     } else {
       this.formData.markAllAsTouched();
     }

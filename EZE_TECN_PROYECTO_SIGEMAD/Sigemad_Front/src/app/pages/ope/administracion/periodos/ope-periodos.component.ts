@@ -5,8 +5,8 @@ import { OpePeriodosTableComponent } from './components/ope-periodo-table/ope-pe
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpePeriodo } from '../../../../types/ope/ope-periodo.type';
 import { OpePeriodoFilterFormComponent } from './components/ope-periodo-filter-form/ope-periodos-filter-form.component';
-import { OpePeriodosService } from '../../../../services/ope/ope-periodos.service';
-import { LocalFiltrosOpePeriodos } from '../../../../services/ope/local-filtro-ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/ope-periodos.service';
 
 @Component({
   selector: 'app-ope-periodos',

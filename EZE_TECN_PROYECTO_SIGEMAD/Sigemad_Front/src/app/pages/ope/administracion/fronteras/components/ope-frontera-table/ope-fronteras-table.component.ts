@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpeFrontera } from '../../../../../../types/ope/ope-frontera.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -14,6 +13,7 @@ import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OpeFrontera } from '@type/ope/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-fronteras-table',

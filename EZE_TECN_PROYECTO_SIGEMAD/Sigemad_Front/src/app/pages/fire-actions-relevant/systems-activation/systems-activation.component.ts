@@ -21,7 +21,7 @@ import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { GenericMaster } from '../../../types/actions-relevant.type';
 import { _isNumberValue } from '@angular/cdk/coercion';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -53,7 +53,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './systems-activation.component.html',
   styleUrl: './systems-activation.component.scss',
@@ -91,8 +91,8 @@ export class SystemsActivationComponent {
       idTipoSistemaEmergencia: [null, Validators.required],
       fechaHoraActivacion: [new Date(), Validators.required],
       fechaHoraActualizacion: [new Date(), Validators.required],
-      autoridad: ['', ],
-      descripcionSolicitud: ['', ],
+      autoridad: [''],
+      descripcionSolicitud: [''],
       observaciones: [''],
       idModoActivacion: [null],
       fechaActivacion: [null],
@@ -167,12 +167,13 @@ export class SystemsActivationComponent {
     var ob = this.tiposActivacion().find((tipo) =>
       typeof data.idTipoSistemaEmergencia === 'number' ? tipo.id === data.idTipoSistemaEmergencia : tipo.id === data.idTipoSistemaEmergencia.id
     );
-    console.log("🚀 ~ SystemsActivationComponent ~ seleccionarItem ~ this.modosActivacion():", this.modosActivacion())
-    var ob2 = this.modosActivacion().find((tipo) =>
-      typeof data.idModoActivacion === 'number' ? tipo.id === data.idModoActivacion : tipo.id === data.idModoActivacion?.id
-    ) ?? null;
+    console.log('🚀 ~ SystemsActivationComponent ~ seleccionarItem ~ this.modosActivacion():', this.modosActivacion());
+    var ob2 =
+      this.modosActivacion().find((tipo) =>
+        typeof data.idModoActivacion === 'number' ? tipo.id === data.idModoActivacion : tipo.id === data.idModoActivacion?.id
+      ) ?? null;
 
-    console.log("🚀 ~ SystemsActivationComponent ~ seleccionarItem ~ ob2:", ob2)
+    console.log('🚀 ~ SystemsActivationComponent ~ seleccionarItem ~ ob2:', ob2);
     this.mostrarCamposAdicionales.set(ob?.id ?? 0);
     this.formData.get('idTipoSistemaEmergencia')?.setValue(ob);
     this.formData.get('fechaHoraActivacion')?.setValue(data.fechaHoraActivacion);
@@ -194,7 +195,7 @@ export class SystemsActivationComponent {
   async loadTipo(event: any) {
     this.spinner.show();
     const tipo_id = event?.value?.id ?? event.id;
-    console.log("🚀 ~ SystemsActivationComponent ~ loadTipo ~ tipo_id:", tipo_id)
+    console.log('🚀 ~ SystemsActivationComponent ~ loadTipo ~ tipo_id:', tipo_id);
     this.mostrarCamposAdicionales.set(tipo_id);
 
     this.formData.patchValue({
@@ -206,9 +207,9 @@ export class SystemsActivationComponent {
       fechaHoraPeticion: null,
       fechaAceptacion: null,
       peticiones: '',
-      mediosCapacidades: ''
+      mediosCapacidades: '',
     });
-   
+
     this.spinner.hide();
   }
 
@@ -232,7 +233,7 @@ export class SystemsActivationComponent {
     return tipo.descripcion;
   }
 
-  cleanSelect(){
+  cleanSelect() {
     this.formData.get('idModoActivacion')?.setValue(null);
   }
 

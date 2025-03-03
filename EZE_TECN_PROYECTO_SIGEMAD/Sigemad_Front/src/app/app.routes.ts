@@ -9,6 +9,7 @@ import { OpePeriodosComponent } from './pages/ope/administracion/periodos/ope-pe
 import { OpePuertosComponent } from './pages/ope/administracion/puertos/ope-puertos.component';
 import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-maritimas/ope-lineas-maritimas.component';
 import { OpeFronterasComponent } from './pages/ope/administracion/fronteras/ope-fronteras.component';
+import { OpeAreasDescansoComponent } from './pages/ope/administracion/areas-descanso/ope-areas-descanso.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -54,8 +55,8 @@ export const routes: Routes = [
       },
       {
         path: 'ope-administracion-areas-descanso',
-        component: OpePeriodosComponent,
-        data: { breadcrumb: 'Áreas de descanso y puntos de información en carreterass' },
+        component: OpeAreasDescansoComponent,
+        data: { breadcrumb: 'Áreas de descanso y puntos de información en carreteras' },
       },
       { path: 'ope-administracion-areas-estacionamiento', component: OpePeriodosComponent, data: { breadcrumb: 'Áreas de estacionamiento' } },
       {

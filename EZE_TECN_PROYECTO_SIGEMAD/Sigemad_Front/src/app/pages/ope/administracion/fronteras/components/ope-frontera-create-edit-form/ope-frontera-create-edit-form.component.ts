@@ -21,7 +21,7 @@ import { LocalFiltrosOpeFronteras } from '@services/ope/local-filtro-ope-fronter
 import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
-import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../../../../types/date-formats';
 import { UtilsService } from '@shared/services/utils.service';
 import { ProvinceService } from '@services/province.service';
 import { MunicipalityService } from '@services/municipality.service';
@@ -58,7 +58,7 @@ import { COUNTRIES_ID } from '@type/constants';
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-frontera-create-edit-form.component.html',
   styleUrl: './ope-frontera-create-edit-form.component.scss',

@@ -43,12 +43,13 @@
         <mat-label>Fecha validez desde</mat-label>
         <input
           matInput
-          placeholder="Fecha validez desde"
-          formControlName="fechaValidezDesde"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaValidezDesde"
+          [formControl]="getForm('fechaValidezDesde')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaValidezDesde"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaValidezDesde></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaValidezDesde')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaValidezDesde')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
@@ -58,12 +59,13 @@
         <mat-label>Fecha validez hasta</mat-label>
         <input
           matInput
-          placeholder="Fecha validez hasta"
-          formControlName="fechaValidezHasta"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaValidezHasta"
+          [formControl]="getForm('fechaValidezHasta')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaValidezHasta"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaValidezHasta></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
         <mat-error *ngIf="formData.get('fechaValidezHasta')?.hasError('fechaFinInvalida')">
