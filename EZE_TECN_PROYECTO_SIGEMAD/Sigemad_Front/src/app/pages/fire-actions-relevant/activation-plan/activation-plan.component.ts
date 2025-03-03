@@ -31,7 +31,7 @@ import { GenericMaster } from '../../../types/actions-relevant.type';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { _isNumberValue } from '@angular/cdk/coercion';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -79,7 +79,7 @@ interface FormType {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class ActivationPlanComponent implements OnInit {

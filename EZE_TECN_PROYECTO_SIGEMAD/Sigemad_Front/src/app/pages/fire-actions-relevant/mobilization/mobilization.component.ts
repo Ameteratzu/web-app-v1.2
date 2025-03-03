@@ -41,7 +41,7 @@ import {
 } from '../../../types/mobilization.type';
 import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -78,11 +78,11 @@ const MY_DATE_FORMATS = {
     Step6Component,
     Step7Component,
     Step8Component,
-    TooltipDirective
+    TooltipDirective,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './mobilization.component.html',
   styleUrl: './mobilization.component.scss',
@@ -124,7 +124,7 @@ export class MobilizationComponent {
   public pasoIntervencion!: PasoIntervencion;
   public pasoLlegada!: PasoLlegadaBase;
   public movilizacionSeleccionada?: Movilizacion;
-  public btnGuardar = "Nueva solicitud";
+  public btnGuardar = 'Nueva solicitud';
 
   async ngOnInit() {
     this.tiposGestion.set(this.dataMaestros.tiposGestion);
@@ -298,7 +298,7 @@ export class MobilizationComponent {
   }
 
   async onSubmit(formDirective: FormGroupDirective): Promise<void> {
-    this.btnGuardar = "Nueva solicitud"
+    this.btnGuardar = 'Nueva solicitud';
     const pasoActual = this.formData.get('idTipoNotificacion')?.value.id;
     if (pasoActual === undefined || pasoActual === null) {
       console.error('No se ha seleccionado un paso válido.');
@@ -508,7 +508,6 @@ export class MobilizationComponent {
   }
 
   private procesarPaso5(): boolean {
-
     let pasoValido = (this.formData.get('paso5.IdCapacidad')?.valid ?? false) && (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
 
     const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
@@ -612,7 +611,7 @@ export class MobilizationComponent {
   }
 
   cargarPaso(movilizacion: Movilizacion) {
-    this.btnGuardar = "Guardar";
+    this.btnGuardar = 'Guardar';
     this.movilizacionSeleccionada = movilizacion;
     const pasoActual = this.getMaxTipoPaso(movilizacion);
     this.loadTipo(pasoActual);
@@ -700,7 +699,7 @@ export class MobilizationComponent {
   }
 
   editarPaso(paso: any): void {
-    console.log("🚀 ~ MobilizationComponent ~ editarPaso ~ paso:", paso)
+    console.log('🚀 ~ MobilizationComponent ~ editarPaso ~ paso:', paso);
     if (paso.TipoPaso === 1) {
       const procedenciaSeleccionada = this.dataMaestros.procedencia.find((proc: any) => proc.id === paso.IdProcedenciaMedio);
       if (!procedenciaSeleccionada) {
@@ -713,7 +712,7 @@ export class MobilizationComponent {
         AutoridadSolicitante: paso.AutoridadSolicitante,
         FechaHoraSolicitud: new Date(paso.FechaHoraSolicitud),
         Descripcion: paso.Descripcion,
-        Observaciones: paso.Observaciones
+        Observaciones: paso.Observaciones,
       });
     } else {
       console.error('El paso recibido no corresponde al Paso 1');
@@ -721,8 +720,8 @@ export class MobilizationComponent {
   }
 
   hasTipoPaso1OrLastStep8(actuaciones: ActuacionRelevante[]): boolean {
-    return actuaciones.some(actuacion =>
-      actuacion.Movilizaciones.some(movilizacion => {
+    return actuaciones.some((actuacion) =>
+      actuacion.Movilizaciones.some((movilizacion) => {
         const pasos = movilizacion.Pasos;
         if (!pasos || pasos.length === 0) {
           return false;

@@ -20,7 +20,7 @@ import { ActionsRelevantService } from '../../../services/actions-relevant.servi
 import { CoordinationAddress } from '../../../types/coordination-address';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -52,7 +52,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './zagep.component.html',
   styleUrl: './zagep.component.scss',
@@ -71,7 +71,6 @@ export class ZagepComponent {
   public matDialog = inject(MatDialog);
   private spinner = inject(NgxSpinnerService);
 
-
   public displayedColumns: string[] = ['fechaSolicitud', 'denominacion', 'opciones'];
 
   formData!: FormGroup;
@@ -81,13 +80,12 @@ export class ZagepComponent {
   public dataSource = new MatTableDataSource<any>([]);
 
   async ngOnInit() {
-
     this.formData = this.fb.group({
       fechaSolicitud: [new Date(), Validators.required],
       denominacion: [''],
-      observaciones: ['']
+      observaciones: [''],
     });
-  
+
     if (this.editData) {
       if (this.zagepService.dataZagep().length === 0) {
         this.zagepService.dataZagep.set(this.editData.declaracionesZAGEP);
@@ -109,22 +107,21 @@ export class ZagepComponent {
         fechaHora: new Date(),
       });
       this.formData.reset();
-    
-      // this.formData.patchValue({
-      //   fechaHora: new Date(), 
-      // });
 
+      // this.formData.patchValue({
+      //   fechaHora: new Date(),
+      // });
     } else {
       this.formData.markAllAsTouched();
     }
   }
 
   async sendDataToEndpoint() {
-    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.zagepService.dataZagep().length:", this.zagepService.dataZagep().length)
-    console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
+    console.log('🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.zagepService.dataZagep().length:', this.zagepService.dataZagep().length);
+    console.log('🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:', this.editData);
     if (this.zagepService.dataZagep().length > 0 && !this.editData) {
-      console.log("🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:", this.editData)
-      
+      console.log('🚀 ~ ZagepComponent ~ sendDataToEndpoint ~ this.editData:', this.editData);
+
       this.save.emit({ save: true, delete: false, close: false, update: false });
     } else {
       if (this.editData) {

@@ -48,7 +48,7 @@ import { SucesosRelacionadosService } from '../../../../services/sucesos-relacio
 import { AlertService } from '../../../../shared/alert/alert.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MY_DATE_FORMATS } from '../../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../../types/date-formats';
 import { COUNTRIES_ID } from '@type/constants';
 
 @Component({
@@ -75,7 +75,7 @@ import { COUNTRIES_ID } from '@type/constants';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './fire-related-event-form.component.html',
   styleUrl: './fire-related-event-form.component.scss',

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpePeriodo } from '../../../../../../types/ope/ope-periodo.type';
+import { OpeAreaDescanso } from '../../../../../../types/ope/ope-area-descanso.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -8,28 +8,28 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
+import { OpeAreaDescansoCreateEdit } from '../ope-area-descanso-create-edit-form/ope-area-descanso-create-edit-form.component';
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { OpeAreasDescansoService } from '@services/ope/ope-areas-descanso.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-ope-periodos-table',
+  selector: 'app-ope-areas-descanso-table',
   standalone: true,
   imports: [MatProgressSpinnerModule, MatPaginatorModule, MatTableModule, CommonModule, TooltipDirective],
-  templateUrl: './ope-periodos-table.component.html',
-  styleUrl: './ope-periodos-table.component.scss',
+  templateUrl: './ope-areas-descanso-table.component.html',
+  styleUrl: './ope-areas-descanso-table.component.scss',
 })
-export class OpePeriodosTableComponent implements OnChanges {
-  @Input() opePeriodos: OpePeriodo[] = [];
+export class OpeAreasDescansoTableComponent implements OnChanges {
+  @Input() opeAreasDescanso: OpeAreaDescanso[] = [];
   @Input() isLoading: boolean = true;
   @Input() refreshFilterForm: boolean = true;
 
   @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
-  public dataSource = new MatTableDataSource<OpePeriodo>([]);
+  public dataSource = new MatTableDataSource<OpeAreaDescanso>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public router = inject(Router);
@@ -39,7 +39,7 @@ export class OpePeriodosTableComponent implements OnChanges {
   public renderer = inject(Renderer2);
   public alertService = inject(AlertService);
   public snackBar = inject(MatSnackBar);
-  public opePeriodosService = inject(OpePeriodosService);
+  public opeAreasDescansoService = inject(OpeAreasDescansoService);
   public routenav = inject(Router);
 
   public displayedColumns: string[] = [
@@ -52,8 +52,8 @@ export class OpePeriodosTableComponent implements OnChanges {
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['opePeriodos'] && this.opePeriodos) {
-      this.dataSource.data = this.opePeriodos;
+    if (changes['opeAreasDescanso'] && this.opeAreasDescanso) {
+      this.dataSource.data = this.opeAreasDescanso;
     }
   }
 
@@ -62,19 +62,19 @@ export class OpePeriodosTableComponent implements OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  goToEdit(periodo: OpePeriodo) {
+  goToEdit(areaDescanso: OpeAreaDescanso) {
     //this.router.navigate([`fire/fire-national-edit/1`]);
   }
 
-  goToEditPeriodo(opePeriodo: OpePeriodo) {}
+  goToEditAreaDescanso(opeAreaDescanso: OpeAreaDescanso) {}
 
   goModal() {
-    const dialogRef = this.dialog.open(OpePeriodoCreateEdit, {
+    const dialogRef = this.dialog.open(OpeAreaDescansoCreateEdit, {
       width: '90vw',
       height: '90vh',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - Periodo',
+        title: 'Nuevo - AreaDescanso',
       },
     });
 
@@ -86,16 +86,16 @@ export class OpePeriodosTableComponent implements OnChanges {
   }
 
   getFechaFormateada(fecha: any) {
-    return moment(fecha).format('DD/MM/yyyy');
+    return moment(fecha).format('DD/MM/yyyy HH:mm');
   }
 
-  goModalEdit(opePeriodo: OpePeriodo) {
-    const dialogRef = this.dialog.open(OpePeriodoCreateEdit, {
+  goModalEdit(opeAreaDescanso: OpeAreaDescanso) {
+    const dialogRef = this.dialog.open(OpeAreaDescansoCreateEdit, {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Modificar - Periodo.',
-        opePeriodo: opePeriodo,
+        title: 'Modificar - AreaDescanso.',
+        opeAreaDescanso: opeAreaDescanso,
       },
     });
 
@@ -107,7 +107,7 @@ export class OpePeriodosTableComponent implements OnChanges {
   }
 
   //
-  async deleteOpePeriodo(idOpePeriodo: number) {
+  async deleteOpeAreaDescanso(idOpeAreaDescanso: number) {
     this.alertService
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
@@ -126,7 +126,7 @@ export class OpePeriodosTableComponent implements OnChanges {
           const toolbar = document.querySelector('mat-toolbar');
           this.renderer.setStyle(toolbar, 'z-index', '1');
 
-          await this.opePeriodosService.delete(idOpePeriodo);
+          await this.opeAreasDescansoService.delete(idOpeAreaDescanso);
           setTimeout(() => {
             //PCD
             this.snackBar
@@ -138,8 +138,8 @@ export class OpePeriodosTableComponent implements OnChanges {
               })
               .afterDismissed()
               .subscribe(() => {
-                this.routenav.navigate(['/ope-administracion-periodos']).then(() => {
-                  window.location.href = '/ope-administracion-periodos';
+                this.routenav.navigate(['/ope-administracion-areasDescanso']).then(() => {
+                  window.location.href = '/ope-administracion-areasDescanso';
                 });
                 this.spinner.hide();
               });

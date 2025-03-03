@@ -26,19 +26,10 @@ import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
 import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/local-filtro-ope-lineas-maritimas.service';
 import { UtilsService } from '@shared/services/utils.service';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
+import { FORMATO_FECHA } from '@type/date-formats';
 // FIN PCD
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL', // Definir el formato de entrada
-  },
-  display: {
-    dateInput: 'LL', // Definir cómo mostrar la fecha
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'ope-lineaMaritima-create-edit',
@@ -64,8 +55,8 @@ const MY_DATE_FORMATS = {
     DragDropModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-linea-maritima-create-edit-form.component.html',
   styleUrl: './ope-linea-maritima-create-edit-form.component.scss',
@@ -93,6 +84,8 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
   //PCD
   public snackBar = inject(MatSnackBar);
   public utilsService = inject(UtilsService);
+  public fechaMinimaDatePicker = FECHA_MINIMA_DATEPICKER;
+  public fechaMaximaDatePicker = FECHA_MAXIMA_DATEPICKER;
   // FIN PCD
 
   async ngOnInit() {
@@ -101,8 +94,8 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
         nombre: new FormControl('', Validators.required),
         origen: new FormControl('', Validators.required),
         destino: new FormControl('', Validators.required),
-        fechaValidezDesde: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-        fechaValidezHasta: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        fechaValidezDesde: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
+        fechaValidezHasta: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         numeroRotaciones: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
         numeroPasajeros: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
         numeroTurismos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
@@ -121,8 +114,8 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
         nombre: this.data.opeLineaMaritima.nombre,
         origen: this.data.opeLineaMaritima.nombre,
         destino: this.data.opeLineaMaritima.nombre,
-        fechaValidezDesde: moment(this.data.opeLineaMaritima.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaValidezHasta: moment(this.data.opeLineaMaritima.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
+        fechaValidezDesde: moment(this.data.opeLineaMaritima.fechaInicioFaseSalida).format('YYYY-MM-DD'),
+        fechaValidezHasta: moment(this.data.opeLineaMaritima.fechaFinFaseSalida).format('YYYY-MM-DD'),
         numeroRotaciones: this.data.opeLineaMaritima.numeroRotaciones,
         numeroPasajeros: this.data.opeLineaMaritima.numeroPasajeros,
         numeroTurismos: this.data.opeLineaMaritima.numeroTurismos,

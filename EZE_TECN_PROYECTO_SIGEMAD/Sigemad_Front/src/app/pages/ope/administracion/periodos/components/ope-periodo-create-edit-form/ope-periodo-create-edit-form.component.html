@@ -25,32 +25,34 @@
       -->
     </div>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
-      <!-- Fecha y hora de inicio  fase salida-->
+      <!-- Fecha de inicio  fase salida-->
       <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
         <mat-label>Fecha inicio fase salida</mat-label>
         <input
           matInput
-          placeholder="Fecha inicio fase salida"
-          formControlName="fechaInicioFaseSalida"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaInicioFaseSalida"
+          [formControl]="getForm('fechaInicioFaseSalida')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioFaseSalida"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaInicioFaseSalida></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaInicioFaseSalida')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
 
-      <!-- Fecha y hora de fin fase salida -->
+      <!-- Fecha de fin fase salida -->
       <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
         <mat-label>Fecha fin fase salida</mat-label>
         <input
           matInput
-          placeholder="Fecha fin fase salida"
-          formControlName="fechaFinFaseSalida"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaFinFaseSalida"
+          [formControl]="getForm('fechaFinFaseSalida')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaFinFaseSalida"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaFinFaseSalida></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
         <mat-error *ngIf="formData.get('fechaFinFaseSalida')?.hasError('fechaFinInvalida')">
@@ -58,17 +60,18 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Fecha y hora de inicio  fase retorno-->
+      <!-- Fecha de inicio fase retorno -->
       <mat-form-field appearance="fill" fxFlex="25" class="mb-3">
         <mat-label>Fecha inicio fase retorno</mat-label>
         <input
           matInput
-          placeholder="Fecha inicio fase retorno"
-          formControlName="fechaInicioFaseRetorno"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaInicioFaseRetorno"
+          [formControl]="getForm('fechaInicioFaseRetorno')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaInicioFaseRetorno"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaInicioFaseRetorno></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaInicioFaseRetorno')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
       </mat-form-field>
@@ -78,12 +81,13 @@
         <mat-label>Fecha fin fase retorno</mat-label>
         <input
           matInput
-          placeholder="Fecha fin fase retorno"
-          formControlName="fechaFinFaseRetorno"
-          type="datetime-local"
-          min="2000-01-01T00:00"
-          max="2099-12-31T23:59"
+          [matDatepicker]="pickerFechaFinFaseRetorno"
+          [formControl]="getForm('fechaFinFaseRetorno')"
+          [min]="fechaMinimaDatePicker"
+          [max]="fechaMaximaDatePicker"
         />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaFinFaseRetorno"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaFinFaseRetorno></mat-datepicker>
         <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('required')">Este campo es obligatorio.</mat-error>
         <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
         <mat-error *ngIf="formData.get('fechaFinFaseRetorno')?.hasError('fechaFinInvalida')">

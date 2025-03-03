@@ -5,8 +5,8 @@ import { OpeFronterasTableComponent } from './components/ope-frontera-table/ope-
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpeFronteraFilterFormComponent } from './components/ope-frontera-filter-form/ope-fronteras-filter-form.component';
 import { LocalFiltrosOpeFronteras } from '../../../../services/ope/local-filtro-ope-fronteras.service';
-import { OpeFrontera } from '../../../../types/ope/ope-frontera.type';
 import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
+import { OpeFrontera } from '@type/ope/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-fronteras',

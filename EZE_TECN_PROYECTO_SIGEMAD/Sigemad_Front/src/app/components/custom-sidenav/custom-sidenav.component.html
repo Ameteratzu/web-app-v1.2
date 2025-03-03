@@ -62,7 +62,7 @@
       -->
           <mat-icon *ngIf="iconMap[subItem.ruta]" matListItemIcon [svgIcon]="iconMap[subItem.ruta]"></mat-icon>
           <mat-icon *ngIf="subItem.subItems?.length" matListItemIcon>
-            {{ item.isOpen ? 'expand_less' : 'expand_more' }}
+            {{ subItem.isOpen ? 'expand_less' : 'expand_more' }}
           </mat-icon>
           <span matListItemTitle>{{ subItem.nombre }}</span>
         </a>

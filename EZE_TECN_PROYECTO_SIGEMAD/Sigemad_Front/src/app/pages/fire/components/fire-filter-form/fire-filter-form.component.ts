@@ -48,7 +48,7 @@ import { SituationsEquivalent } from '../../../../types/situations-equivalent.ty
 import { EventService } from '../../../../services/event.service';
 import { Event } from '../../../../types/event.type';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MY_DATE_FORMATS } from '../../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../../types/date-formats';
 import { COUNTRIES_ID } from '@type/constants';
 
 @Component({
@@ -72,7 +72,7 @@ import { COUNTRIES_ID } from '@type/constants';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './fire-filter-form.component.html',
   styleUrl: './fire-filter-form.component.scss',

@@ -210,6 +210,7 @@ export class CustomSidenavComponent {
    */
 
   //
+  /*
   toggleSubmenu(item: any, level: number): void {
     // Si el item tiene una ruta, se realiza la redirección
     if (item.ruta) {
@@ -221,15 +222,83 @@ export class CustomSidenavComponent {
       // Primer nivel (menú principal)
       if (this.expandedMenuId === item.id) {
         this.expandedMenuId = null; // Contraemos el submenú principal
+        //
+        item.isOpen = false;
+        //
       } else {
         this.expandedMenuId = item.id; // Expandimos el submenú principal
+        //
+        item.isOpen = true;
+        //
       }
     } else if (level === 2) {
       // Segundo nivel (submenú)
       if (this.expandedSubMenuId === item.id) {
         this.expandedSubMenuId = null; // Contraemos el submenú
+        //
+        item.isOpen = false;
+        //
       } else {
         this.expandedSubMenuId = item.id; // Expandimos el submenú
+        //
+        item.isOpen = true;
+        //
+      }
+    }
+  }
+  */
+
+  toggleSubmenu(item: any, level: number): void {
+    if (item.ruta) {
+      this.redirectTo(item);
+      return;
+    }
+
+    if (level === 1) {
+      if (this.expandedMenuId === item.id) {
+        this.expandedMenuId = null;
+        item.isOpen = false;
+      } else {
+        this.expandedMenuId = item.id;
+        item.isOpen = true;
+
+        const menuItems = this.menuBack();
+        if (menuItems?.length) {
+          menuItems.forEach((subItem: any) => {
+            if (subItem.id !== item.id) {
+              subItem.isOpen = false;
+            }
+          });
+
+          menuItems.forEach((subItem: any) => {
+            if (subItem?.subItems?.length) {
+              subItem.subItems.forEach((subSubItem: any) => {
+                subSubItem.isOpen = false;
+              });
+            }
+          });
+        }
+      }
+    } else if (level === 2) {
+      if (this.expandedSubMenuId === item.id) {
+        this.expandedSubMenuId = null;
+        item.isOpen = false;
+      } else {
+        this.expandedSubMenuId = item.id;
+        item.isOpen = true;
+
+        const menuItems = this.menuBack();
+        if (menuItems?.length) {
+          menuItems.forEach((subItem: any) => {
+            if (subItem?.subItems?.length) {
+              subItem.subItems.forEach((subSubItem: any) => {
+                if (subSubItem.id !== item.id) {
+                  subSubItem.isOpen = false;
+                }
+              });
+            }
+          });
+        }
       }
     }
   }

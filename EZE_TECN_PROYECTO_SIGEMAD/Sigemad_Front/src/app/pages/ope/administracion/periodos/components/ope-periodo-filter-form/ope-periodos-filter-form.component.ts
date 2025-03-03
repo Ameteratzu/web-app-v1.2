@@ -24,7 +24,7 @@ import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos
 import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '../../../../../../types/comparative-date.type';
-import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+import { FORMATO_FECHA } from '../../../../../../types/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
@@ -48,7 +48,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-periodos-filter-form.component.html',
   styleUrl: './ope-periodos-filter-form.component.scss',

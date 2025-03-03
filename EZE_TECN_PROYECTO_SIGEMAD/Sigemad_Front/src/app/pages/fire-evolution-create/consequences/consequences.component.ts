@@ -31,7 +31,7 @@ import { Province } from '../../../types/province.type';
 
 import { CampoDinamico } from '../../../shared/campoDinamico/campoDinamico.component';
 import { UtilsService } from '../../../shared/services/utils.service';
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -68,7 +68,7 @@ const MY_DATE_FORMATS = {
   ],*/
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './consequences.component.html',
   styleUrl: './consequences.component.scss',

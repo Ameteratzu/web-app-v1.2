@@ -86,7 +86,7 @@ export class OpeLineasMaritimasTableComponent implements OnChanges {
   }
 
   getFechaFormateada(fecha: any) {
-    return moment(fecha).format('DD/MM/yyyy HH:mm');
+    return moment(fecha).format('DD/MM/yyyy');
   }
 
   goModalEdit(opeLineaMaritima: OpeLineaMaritima) {

@@ -16,19 +16,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '@type/api-response.type';
-import { OpePuerto } from '@type/ope/ope-puerto.type';
+import { OpeAreaDescanso } from '@type/ope/ope-area-descanso.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpePuertosService } from '@services/ope/ope-puertos.service';
-import { LocalFiltrosOpePuertos } from '@services/ope/local-filtro-ope-puertos.service';
-import { OpePuertoCreateEdit } from '../ope-puerto-create-edit-form/ope-puerto-create-edit-form.component';
+import { OpeAreasDescansoService } from '@services/ope/ope-areas-descanso.service';
+import { LocalFiltrosOpeAreasDescanso } from '@services/ope/local-filtro-ope-areas-descanso.service';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '@type/comparative-date.type';
 import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { OpeAreaDescansoCreateEdit } from '../ope-area-descanso-create-edit-form/ope-area-descanso-create-edit-form.component';
 
 @Component({
-  selector: 'app-ope-puerto-filter-form',
+  selector: 'app-ope-area-descanso-filter-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -50,20 +50,20 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
-  templateUrl: './ope-puertos-filter-form.component.html',
-  styleUrl: './ope-puertos-filter-form.component.scss',
+  templateUrl: './ope-areas-descanso-filter-form.component.html',
+  styleUrl: './ope-areas-descanso-filter-form.component.scss',
 })
-export class OpePuertoFilterFormComponent implements OnInit {
-  @Input() opePuertos: ApiResponse<OpePuerto[]> | undefined;
+export class OpeAreaDescansoFilterFormComponent implements OnInit {
+  @Input() opeAreasDescanso: ApiResponse<OpeAreaDescanso[]> | undefined;
   @Input() filtros: any;
   @Input() isLoading: boolean = true;
   @Input() refreshFilterForm: boolean = true;
-  @Output() opePuertosChange = new EventEmitter<ApiResponse<OpePuerto[]>>();
+  @Output() opeAreasDescansoChange = new EventEmitter<ApiResponse<OpeAreaDescanso[]>>();
   @Output() isLoadingChange = new EventEmitter<boolean>();
   @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
-  public filtrosOpePuertosService = inject(LocalFiltrosOpePuertos);
-  public opePuertosService = inject(OpePuertosService);
+  public filtrosOpeAreasDescansoService = inject(LocalFiltrosOpeAreasDescanso);
+  public opeAreasDescansoService = inject(OpeAreasDescansoService);
   public comparativeDateService = inject(ComparativeDateService);
 
   public comparativeDates = signal<ComparativeDate[]>([]);
@@ -98,7 +98,7 @@ export class OpePuertoFilterFormComponent implements OnInit {
     });
 
     //this.clearFormFilter();
-    this.menuItemActiveService.set.emit('/ope-puertos');
+    this.menuItemActiveService.set.emit('/ope-areas-descanso');
 
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
@@ -117,7 +117,7 @@ export class OpePuertoFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.opePuertosChange.emit({
+    this.opeAreasDescansoChange.emit({
       count: 0,
       page: 1,
       pageSize: 10,
@@ -129,7 +129,7 @@ export class OpePuertoFilterFormComponent implements OnInit {
 
     const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
 
-    const opePuertos = await this.opePuertosService.get({
+    const opeAreasDescanso = await this.opeAreasDescansoService.get({
       IdComparativoFecha: between,
       fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
       fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
@@ -137,9 +137,9 @@ export class OpePuertoFilterFormComponent implements OnInit {
       fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
       nombre: nombre,
     });
-    this.filtrosOpePuertosService.setFilters(this.formData.value);
-    this.opePuertos = opePuertos;
-    this.opePuertosChange.emit(this.opePuertos);
+    this.filtrosOpeAreasDescansoService.setFilters(this.formData.value);
+    this.opeAreasDescanso = opeAreasDescanso;
+    this.opeAreasDescansoChange.emit(this.opeAreasDescanso);
     this.isLoadingChange.emit(false);
     this.isLoading = false;
   }
@@ -161,11 +161,11 @@ export class OpePuertoFilterFormComponent implements OnInit {
   }
 
   goModal() {
-    const dialogRef = this.dialog.open(OpePuertoCreateEdit, {
+    const dialogRef = this.dialog.open(OpeAreaDescansoCreateEdit, {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos Puerto',
+        title: 'Nuevo - Datos AreaDescanso',
         fire: {},
       },
     });
