@@ -27,12 +27,13 @@ import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
 import Overlay from 'ol/Overlay';
 import GeoJSON from 'ol/format/GeoJSON';
+import KML from 'ol/format/KML';
+import proj4 from 'proj4';
+import { fromLonLat, toLonLat } from 'ol/proj';
 
 import Bar from 'ol-ext/control/Bar';
 import Toggle from 'ol-ext/control/Toggle';
 import SearchNominatim from 'ol-ext/control/SearchNominatim';
-import proj4 from 'proj4';
-import { fromLonLat, toLonLat } from 'ol/proj';
 
 import { MunicipalityService } from '../../services/municipality.service';
 import { Municipality } from '../../types/municipality.type';
@@ -40,7 +41,6 @@ import { Municipality } from '../../types/municipality.type';
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { format } from 'ol/coordinate';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -58,6 +58,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
   @Input() onlyView: any = null;
   @Input() polygon: any;
   @Input() close: boolean = true;
+  @Input() fileContent: string | null = null;
 
   @Output() save = new EventEmitter<Feature<Geometry>[]>();
 
@@ -116,6 +117,9 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (changes['municipio'] && changes['municipio'].currentValue && this.source) {
       //this.updateMapWithMunicipio(changes['municipio'].currentValue);
       this.highlightSelectedMunicipio(changes['municipio'].currentValue.descripcion);
+    }
+    if (changes['fileContent'] && changes['fileContent'].currentValue) {
+      this.loadFileContent(changes['fileContent'].currentValue);
     }
   }
 
@@ -203,6 +207,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     this.map.addControl(new SearchNominatim({
       placeholder: 'Buscar ubicación...',
+      title: 'Buscar en el mapa',
       onselect: (event: any) => {
         const coordenadas = event.coordinate;
         this.map.getView().setCenter(coordenadas);
@@ -379,7 +384,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     return new LayerGroup({
       properties: { title: 'Incendios', openInLayerSwitcher: true },
       // layers: [this.layerMunicipio, this.layerAreasAfectadas, this.highLightMunicipio],
-      layers: [this.highLightMunicipio],
+      layers: [this.highLightMunicipio, this.layerAreasAfectadas],
     });
   }
 
@@ -616,12 +621,68 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
                   this.highLightMunicipio.getSource()?.addFeature(olFeature);
                 });
+
+                // Ajustar el zoom para ver el municipio completo
+                const extent = this.highLightMunicipio.getSource()?.getExtent();
+                if (extent) {
+                  this.map.getView().fit(extent, { duration: 1000, padding: [50, 50, 50, 50] });
+                }
               } else {
                 console.warn('No se encontró el feature para el municipio:', municipio);
               }
             })
             .catch(error => console.error('Error al obtener FeatureInfo:', error));
         }
+      }
+    }
+  }
+
+  async loadFileContent(fileContent: string) {
+    if (fileContent) {
+      let features;
+      if (fileContent.includes('FeatureCollection')) {
+        // Es un GeoJSON
+        const geojsonFormat = new GeoJSON();
+        features = geojsonFormat.readFeatures(fileContent, {
+          featureProjection: 'EPSG:3857',
+        });
+      } else if (fileContent.includes('<kml')) {
+        // Es un KML
+        const kmlFormat = new KML();
+        features = kmlFormat.readFeatures(fileContent, {
+          featureProjection: 'EPSG:3857',
+        });
+      }
+
+      if (features) {
+        this.source.clear();
+        this.source.addFeatures(features);
+
+        const coordinates = features.map((feature: any) => {
+          const geometry = feature.getGeometry();
+          if (geometry) {
+            let coords = geometry.getCoordinates();
+            // Si el array de coordenadas tiene más de 2 niveles, se guarda solo el primer nivel
+            if (Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
+              coords = coords[0];
+            }
+            const coordsTrans = coords.map((coord: number[]) =>
+              toLonLat(coord)
+            );
+            //console.info('coordsTrans: ', coordsTrans);
+            return coordsTrans;
+          }
+          return [];
+        });
+
+        coordinates[0].forEach((subArray: any) => {
+          if (subArray.length === 3) {
+            subArray.splice(2, 1); // Eliminar el tercer valor si existe
+          }
+        });
+
+        this.coords = coordinates[0]; // solo se guarda el primer array de coordenadas
+        this.save.emit(this.coords);
       }
     }
   }

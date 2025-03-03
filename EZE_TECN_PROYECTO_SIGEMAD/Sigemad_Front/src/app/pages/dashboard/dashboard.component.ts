@@ -127,6 +127,7 @@ export class DashboardComponent {
 
     this.map.addControl(new SearchNominatim({
       placeholder: 'Buscar ubicación...',
+      title: 'Buscar en el mapa',
       onselect: (event: any) => {
         const coordenadas = event.coordinate;
         this.map.getView().setCenter(coordenadas);
