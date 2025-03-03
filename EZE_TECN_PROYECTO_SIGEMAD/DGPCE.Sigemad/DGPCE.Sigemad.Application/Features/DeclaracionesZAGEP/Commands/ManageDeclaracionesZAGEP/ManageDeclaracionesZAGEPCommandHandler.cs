@@ -48,11 +48,11 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
             ActuacionRelevanteDGPCE actuacion = await GetOrCreateActuacionRelevante(request, registroActualizacion);
 
             var declaracionesOriginales = actuacion.DeclaracionesZAGEP.ToDictionary(d => d.Id, d => _mapper.Map<ManageDeclaracionZAGEPDto>(d));
-            MapAndSaveDirecciones(request, actuacion);
+            MapAndSaveDeclaraciones(request, actuacion);
 
             var declaracionesParaEliminar = await DeleteLogicalDeclaraciones(request, actuacion, registroActualizacion.Id);
 
-            await SaveDireccionAcuacion(actuacion);
+            await SaveActuacion(actuacion);
 
             await _registroActualizacionService.SaveRegistroActualizacion<
                 ActuacionRelevanteDGPCE, DeclaracionZAGEP, ManageDeclaracionZAGEPDto>(
@@ -82,7 +82,7 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
 
 
 
-    private async Task SaveDireccionAcuacion(ActuacionRelevanteDGPCE actuacion)
+    private async Task SaveActuacion(ActuacionRelevanteDGPCE actuacion)
     {
         if (actuacion.Id > 0)
         {
@@ -138,7 +138,7 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
     }
 
 
-    private void MapAndSaveDirecciones(ManageDeclaracionesZAGEPCommand request, ActuacionRelevanteDGPCE actuacion)
+    private void MapAndSaveDeclaraciones(ManageDeclaracionesZAGEPCommand request, ActuacionRelevanteDGPCE actuacion)
     {
         foreach (var declaracionDto in request.Detalles)
         {
@@ -225,9 +225,9 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
         }
 
         // Validar si ya existe un registro de Dirección y Coordinación de Emergencia para este suceso
-        var specSuceso = new ActuacionRelevanteDGPCEWithEmergenciaNacional(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
-        var emergenciaNacionalExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
+        var specSuceso = new ActuacionRelevanteDGPCEWithDeclaracionesZAGEP(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
+        var declaracionZAGEPExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
 
-        return emergenciaNacionalExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
+        return declaracionZAGEPExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
     }
 }

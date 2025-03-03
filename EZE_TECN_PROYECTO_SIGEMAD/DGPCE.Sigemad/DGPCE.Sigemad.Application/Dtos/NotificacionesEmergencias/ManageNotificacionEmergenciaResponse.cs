@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 namespace DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 public class ManageNotificacionEmergenciaResponse
 {
+    public int IdRegistroActualizacion { get; set; }
     public int IdActuacionRelevante { get; set; }
 }

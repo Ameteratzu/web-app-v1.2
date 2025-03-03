@@ -375,8 +375,9 @@ public class MappingProfile : Profile
         CreateMap<NotificacionEmergencia, NotificacionEmergenciaDto>();
         CreateMap<ManageNotificacionEmergenciaDto, NotificacionEmergencia>();
 
+        CreateMap<NotificacionEmergencia, ManageNotificacionEmergenciaDto>();
+
         CreateMap<ManageNotificacionEmergenciaCommand, ActuacionRelevanteDGPCE>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
             .ForMember(dest => dest.NotificacionesEmergencias, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ActuacionRelevanteDGPCE, ActuacionRelevanteDGPCEDto>();

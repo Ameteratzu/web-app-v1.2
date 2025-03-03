@@ -45,11 +45,11 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
             ActuacionRelevanteDGPCE actuacion = await GetOrCreateActuacionRelevante(request, registroActualizacion);
 
             var convocatoriasOriginales = actuacion.ConvocatoriasCECOD.ToDictionary(d => d.Id, d => _mapper.Map<ManageConvocatoriaCECODDto>(d));
-            MapAndSaveDirecciones(request, actuacion);
+            MapAndSaveConvocatorias(request, actuacion);
 
-            var convocatoriasParaEliminar = await DeleteLogicalDeclaraciones(request, actuacion, registroActualizacion.Id);
+            var convocatoriasParaEliminar = await DeleteLogicalConvocatorias(request, actuacion, registroActualizacion.Id);
 
-            await SaveDireccionAcuacion(actuacion);
+            await SaveActuacion(actuacion);
 
             await _registroActualizacionService.SaveRegistroActualizacion<
                 ActuacionRelevanteDGPCE, ConvocatoriaCECOD, ManageConvocatoriaCECODDto>(
@@ -79,7 +79,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
 
 
 
-    private async Task SaveDireccionAcuacion(ActuacionRelevanteDGPCE actuacion)
+    private async Task SaveActuacion(ActuacionRelevanteDGPCE actuacion)
     {
         if (actuacion.Id > 0)
         {
@@ -94,7 +94,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
             throw new Exception("No se pudo insertar/actualizar la ActuacionRelevanteDGPCE");
     }
 
-    private async Task<List<int>> DeleteLogicalDeclaraciones(ManageConvocatoriaCECODCommand request, ActuacionRelevanteDGPCE actuacion, int idRegistroActualizacion)
+    private async Task<List<int>> DeleteLogicalConvocatorias(ManageConvocatoriaCECODCommand request, ActuacionRelevanteDGPCE actuacion, int idRegistroActualizacion)
     {
         if (actuacion.Id > 0)
         {
@@ -135,7 +135,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
     }
 
 
-    private void MapAndSaveDirecciones(ManageConvocatoriaCECODCommand request, ActuacionRelevanteDGPCE actuacion)
+    private void MapAndSaveConvocatorias(ManageConvocatoriaCECODCommand request, ActuacionRelevanteDGPCE actuacion)
     {
         foreach (var declaracionDto in request.Detalles)
         {
@@ -211,7 +211,7 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
                 }
             }
 
-            // Buscar la Dirección y Coordinación de Emergencia por IdReferencia
+            // Buscar la convocatoria CECOD por IdReferencia
             var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>()
                 .GetByIdWithSpec(new ActuacionRelevanteDGPCEWithFilteredData(registroActualizacion.IdReferencia, idsActivacionPlanEmergencias, idsDeclaracionesZAGEP, idsActivacionSistemas, idsConvocatoriasCECOD, idsNotificacionesEmergencias, idsMovilizacionMedios, includeEmergenciaNacional));
 
@@ -221,11 +221,11 @@ public class ManageConvocatoriaCECODCommandHandler : IRequestHandler<ManageConvo
             return actuacionRelevante;
         }
 
-        // Validar si ya existe un registro de Dirección y Coordinación de Emergencia para este suceso
-        var specSuceso = new ActuacionRelevanteDGPCEWithEmergenciaNacional(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
-        var emergenciaNacionalExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
+        // Validar si ya existe un registro de convocatoria CECOD para este suceso
+        var specSuceso = new ActuacionRelevanteDGPCEWithConvocatoriaCECOD(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
+        var convocatoriaCECODlExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
 
-        return emergenciaNacionalExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
+        return convocatoriaCECODlExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
     }
 
 }

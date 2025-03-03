@@ -1,8 +1,13 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
+using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Exceptions;
+using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
+using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 using DGPCE.Sigemad.Application.Specifications.ActuacionesRelevantesDGPCE;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,101 +19,152 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
     private readonly ILogger<ManageNotificacionEmergenciaHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IRegistroActualizacionService _registroActualizacionService;
 
     public ManageNotificacionEmergenciaHandler(
         ILogger<ManageNotificacionEmergenciaHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IRegistroActualizacionService registroActualizacionService
     )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _registroActualizacionService = registroActualizacionService;
     }
 
     public async Task<ManageNotificacionEmergenciaResponse> Handle(ManageNotificacionEmergenciaCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaHandler)} - BEGIN");
+        _logger.LogInformation($"{nameof(ManageConvocatoriaCECODCommandHandler)} - BEGIN");
 
-        var actuacionRelevante = await GetOrCreateActuacionRelevante(request);
-
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
         await ValidateTipoNotificacion(request);
+        await _unitOfWork.BeginTransactionAsync();
 
-        await MapAndSaveNotificacionEmergencia(request, actuacionRelevante);
-
-        await DeleteLogicalNotificacionEmergencia(request, actuacionRelevante);
-        await SaveActuacionRelevante(request, actuacionRelevante);
-
-        _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaHandler)} - END");
-        return new ManageNotificacionEmergenciaResponse { IdActuacionRelevante = actuacionRelevante.Id };
-    }
-
-    private async Task DeleteLogicalNotificacionEmergencia(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
-    {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante > 0)
+        try
         {
-            var idsEnRequest = request.Detalles
-                .Where(c => c.Id.HasValue && c.Id > 0)
-                .Select(c => c.Id)
-                .ToList();
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<ActuacionRelevanteDGPCE>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.ActuacionRelevante);
 
-            var itemsParaEliminar = actuacionRelevante.NotificacionesEmergencias
-                .Where(c => c.Id > 0 && c.Borrado == false && !idsEnRequest.Contains(c.Id))
-                .ToList();
+            ActuacionRelevanteDGPCE actuacion = await GetOrCreateActuacionRelevante(request, registroActualizacion);
 
-            foreach (var detalleAEliminar in itemsParaEliminar)
+            var notificacionesOriginales = actuacion.NotificacionesEmergencias.ToDictionary(d => d.Id, d => _mapper.Map<ManageNotificacionEmergenciaDto>(d));
+            MapAndSaveDirecciones(request, actuacion);
+
+            var notificacionesParaEliminar = await DeleteLogicalNotificaciones(request, actuacion, registroActualizacion.Id);
+
+            await SaveActuacion(actuacion);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                ActuacionRelevanteDGPCE, NotificacionEmergencia, ManageNotificacionEmergenciaDto>(
+                registroActualizacion,
+                actuacion,
+                ApartadoRegistroEnum.NotificacionesOficiales,
+                notificacionesParaEliminar, notificacionesOriginales);
+
+            await _unitOfWork.CommitAsync();
+
+            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+
+            return new ManageNotificacionEmergenciaResponse
             {
-                _unitOfWork.Repository<NotificacionEmergencia>().DeleteEntity(detalleAEliminar);
-            }
+                IdActuacionRelevante = actuacion.Id,
+                IdRegistroActualizacion = registroActualizacion.Id
+            };
+
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollbackAsync();
+            _logger.LogError(ex, "Error en la transacción de ManageConvocatoriaCECODCommandHandler");
+            throw;
         }
     }
 
-
-    private async Task SaveActuacionRelevante(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    private async Task SaveActuacion(ActuacionRelevanteDGPCE actuacion)
     {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
+        if (actuacion.Id > 0)
         {
-            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacionRelevante);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacion);
         }
         else
         {
-            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacionRelevante);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacion);
         }
 
-        var result = await _unitOfWork.Complete();
-        if (result <= 0)
-        {
-            throw new Exception("No se pudo insertar/actualizar los detalles de la notificación emergencia ");
-        }
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar la ActuacionRelevanteDGPCE");
     }
 
 
-    private async Task MapAndSaveNotificacionEmergencia(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    private async Task<List<int>> DeleteLogicalNotificaciones(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacion, int idRegistroActualizacion)
     {
-        foreach (var notificacionEmergenciaDto in request.Detalles)
+        if (actuacion.Id > 0)
         {
-            bool crearNueva = true;
+            var idsEnRequest = request.Detalles.Where(d => d.Id.HasValue && d.Id > 0).Select(d => d.Id).ToList();
+            var notificacionesEmergenciaParaEliminar = actuacion.NotificacionesEmergencias
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id))
+                .ToList();
 
-            if (notificacionEmergenciaDto.Id.HasValue && notificacionEmergenciaDto.Id > 0)
+            if (notificacionesEmergenciaParaEliminar.Count == 0)
             {
-                var notificacionEmergencia = actuacionRelevante.NotificacionesEmergencias!.FirstOrDefault(a => a.Id == notificacionEmergenciaDto.Id.Value);
-                if (notificacionEmergencia != null)
-                {
-                    // Actualizar datos existentes
-                    _mapper.Map(notificacionEmergenciaDto, notificacionEmergencia);
-                    notificacionEmergencia.Borrado = false;
-                    crearNueva = false;
-                }
+                return new List<int>();
             }
 
-            if (crearNueva)
-            {
-                // Crear nueva notificación emergencia
-                var nuevaNotificacionEmergencia = _mapper.Map<NotificacionEmergencia>(notificacionEmergenciaDto);
-                nuevaNotificacionEmergencia.Id = 0;
+            // Obtener el historial de creación de estas convocatorias
+            var idsnotificacionesEmergenciaParaEliminar = notificacionesEmergenciaParaEliminar.Select(d => d.Id).ToList();
+            var historialDirecciones = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
+                .GetAsync(d =>
+                idsnotificacionesEmergenciaParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.NotificacionesOficiales);
 
-                actuacionRelevante.NotificacionesEmergencias = actuacionRelevante.NotificacionesEmergencias != null ? actuacionRelevante.NotificacionesEmergencias : new List<NotificacionEmergencia>();
-                actuacionRelevante.NotificacionesEmergencias.Add(nuevaNotificacionEmergencia);
+            foreach (var declaracion in notificacionesEmergenciaParaEliminar)
+            {
+                var historial = historialDirecciones.FirstOrDefault(d =>
+                d.IdReferencia == declaracion.Id &&
+                (d.IdEstadoRegistro == EstadoRegistroEnum.Creado || d.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado));
+
+                if (historial == null || historial.IdRegistroActualizacion != idRegistroActualizacion)
+                {
+                    throw new BadRequestException($"La Notificacion Oficial con ID {declaracion.Id} solo puede eliminarse en el registro en que fue creada.");
+                }
+
+                _unitOfWork.Repository<NotificacionEmergencia>().DeleteEntity(declaracion);
+            }
+
+            return idsnotificacionesEmergenciaParaEliminar;
+        }
+
+        return new List<int>();
+    }
+
+
+    private void MapAndSaveDirecciones(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacion)
+    {
+        foreach (var notificacionDto in request.Detalles)
+        {
+            if (notificacionDto.Id.HasValue && notificacionDto.Id > 0)
+            {
+                var notificacionExistente = actuacion.NotificacionesEmergencias.FirstOrDefault(d => d.Id == notificacionDto.Id.Value);
+                if (notificacionExistente != null)
+                {
+                    var copiaOriginal = _mapper.Map<ManageNotificacionEmergenciaDto>(notificacionExistente);
+                    var copiaNueva = _mapper.Map<ManageNotificacionEmergenciaDto>(notificacionDto);
+
+                    if (!copiaOriginal.Equals(copiaNueva))
+                    {
+                        _mapper.Map(notificacionDto, notificacionExistente);
+                        notificacionExistente.Borrado = false;
+                    }
+                }
+                else
+                {
+                    actuacion.NotificacionesEmergencias.Add(_mapper.Map<NotificacionEmergencia>(notificacionDto));
+                }
+            }
+            else
+            {
+                actuacion.NotificacionesEmergencias.Add(_mapper.Map<NotificacionEmergencia>(notificacionDto));
             }
         }
     }
@@ -133,30 +189,67 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
         }
     }
 
-    private async Task<ActuacionRelevanteDGPCE> GetOrCreateActuacionRelevante(ManageNotificacionEmergenciaCommand request)
+    private async Task<ActuacionRelevanteDGPCE> GetOrCreateActuacionRelevante(ManageNotificacionEmergenciaCommand request, RegistroActualizacion registroActualizacion)
     {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
+        if (registroActualizacion.IdReferencia > 0)
         {
-            var spec = new ActuacionRelevanteDGPCESpecification(request.IdActuacionRelevante.Value);
-            var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(spec);
-            if (actuacionRelevante is null || actuacionRelevante.Borrado)
+            List<int> idsReferencias = new List<int>();
+            bool includeEmergenciaNacional = false;
+            List<int> idsActivacionPlanEmergencias = new List<int>();
+            List<int> idsDeclaracionesZAGEP = new List<int>();
+            List<int> idsActivacionSistemas = new List<int>();
+            List<int> idsConvocatoriasCECOD = new List<int>();
+            List<int> idsNotificacionesEmergencias = new List<int>();
+            List<int> idsMovilizacionMedios = new List<int>();
+
+            // Separar IdReferencia según su tipo
+            foreach (var detalle in registroActualizacion.DetallesRegistro)
             {
-                _logger.LogWarning($"request.IdActuacionRelevante: {request.IdActuacionRelevante}, no encontrado");
-                throw new NotFoundException(nameof(ActuacionRelevanteDGPCE), request.IdActuacionRelevante);
-            }
-            return actuacionRelevante;
-        }
-        else
-        {
-            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
-            if (suceso is null || suceso.Borrado)
-            {
-                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
+                switch (detalle.IdApartadoRegistro)
+                {
+                    case (int)ApartadoRegistroEnum.EmergenciaNacional:
+                        includeEmergenciaNacional = true;
+                        break;
+                    case (int)ApartadoRegistroEnum.ActivacionDePlanes:
+                        idsActivacionPlanEmergencias.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.DeclaracionZAGEP:
+                        idsDeclaracionesZAGEP.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.ActivacionDeSistemas:
+                        idsActivacionSistemas.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.ConvocatoriaCECOD:
+                        idsConvocatoriasCECOD.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.NotificacionesOficiales:
+                        idsNotificacionesEmergencias.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.MovilizacionMedios:
+                        idsMovilizacionMedios.Add(detalle.IdReferencia);
+                        break;
+                    default:
+                        idsReferencias.Add(detalle.IdReferencia);
+                        break;
+                }
             }
 
-            return new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
+            // Buscar la notificaciones oficiales por IdReferencia
+            var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>()
+                .GetByIdWithSpec(new ActuacionRelevanteDGPCEWithFilteredData(registroActualizacion.IdReferencia, idsActivacionPlanEmergencias, idsDeclaracionesZAGEP, idsActivacionSistemas, idsConvocatoriasCECOD, idsNotificacionesEmergencias, idsMovilizacionMedios, includeEmergenciaNacional));
+
+            if (actuacionRelevante is null || actuacionRelevante.Borrado)
+                throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de actuacionRelevanteDGPCE");
+
+            return actuacionRelevante;
         }
+
+        // Validar si ya existe un registro de notificaciones oficiales para este suceso
+        var specSuceso = new ActuacionRelevanteDGPCEWithNotificacionesOficiales(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
+        var notificacionOficialExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
+
+        return notificacionOficialExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
     }
+
 
 }
