@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
-using DGPCE.Sigemad.Application.Dtos.ConvocatoriasCECOD;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
@@ -36,7 +35,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
 
     public async Task<ManageNotificacionEmergenciaResponse> Handle(ManageNotificacionEmergenciaCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(ManageConvocatoriaCECODCommandHandler)} - BEGIN");
+        _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaHandler)} - BEGIN");
 
         await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
         await ValidateTipoNotificacion(request);
@@ -50,7 +49,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
             ActuacionRelevanteDGPCE actuacion = await GetOrCreateActuacionRelevante(request, registroActualizacion);
 
             var notificacionesOriginales = actuacion.NotificacionesEmergencias.ToDictionary(d => d.Id, d => _mapper.Map<ManageNotificacionEmergenciaDto>(d));
-            MapAndSaveDirecciones(request, actuacion);
+            MapAndSaveNotificaciones(request, actuacion);
 
             var notificacionesParaEliminar = await DeleteLogicalNotificaciones(request, actuacion, registroActualizacion.Id);
 
@@ -65,7 +64,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
 
             await _unitOfWork.CommitAsync();
 
-            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+            _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaResponse)} - END");
 
             return new ManageNotificacionEmergenciaResponse
             {
@@ -139,7 +138,7 @@ public class ManageNotificacionEmergenciaHandler : IRequestHandler<ManageNotific
     }
 
 
-    private void MapAndSaveDirecciones(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacion)
+    private void MapAndSaveNotificaciones(ManageNotificacionEmergenciaCommand request, ActuacionRelevanteDGPCE actuacion)
     {
         foreach (var notificacionDto in request.Detalles)
         {

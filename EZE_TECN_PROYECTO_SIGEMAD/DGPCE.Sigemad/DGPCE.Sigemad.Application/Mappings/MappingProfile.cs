@@ -367,10 +367,10 @@ public class MappingProfile : Profile
         CreateMap<EmergenciaNacional, EmergenciaNacionalDto>();
 
         CreateMap<ManageActivacionSistemaCommand, ActuacionRelevanteDGPCE>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdActuacionRelevante))
             .ForMember(dest => dest.ActivacionSistemas, opt => opt.MapFrom(src => src.Detalles));
 
         CreateMap<ManageActivacionSistemaDto, ActivacionSistema>();
+        CreateMap<ActivacionSistema, ManageActivacionSistemaDto>();
 
         CreateMap<NotificacionEmergencia, NotificacionEmergenciaDto>();
         CreateMap<ManageNotificacionEmergenciaDto, NotificacionEmergencia>();

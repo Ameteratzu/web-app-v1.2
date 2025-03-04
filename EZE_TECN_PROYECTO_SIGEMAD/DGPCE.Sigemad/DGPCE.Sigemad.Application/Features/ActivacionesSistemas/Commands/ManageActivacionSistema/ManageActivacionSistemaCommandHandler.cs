@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Dtos.ActivacionSistema;
+using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
+using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
+using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
 using DGPCE.Sigemad.Application.Specifications.ActuacionesRelevantesDGPCE;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,107 +20,219 @@ public class ManageActivacionSistemaCommandHandler : IRequestHandler<ManageActiv
     private readonly ILogger<ManageActivacionSistemaCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IRegistroActualizacionService _registroActualizacionService;
 
     public ManageActivacionSistemaCommandHandler(
         ILogger<ManageActivacionSistemaCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IRegistroActualizacionService registroActualizacionService
     )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _registroActualizacionService = registroActualizacionService;
     }
 
     public async Task<ManageActivacionSistemaResponse> Handle(ManageActivacionSistemaCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(ManageActivacionSistemaCommandHandler)} - BEGIN");
+        _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaHandler)} - BEGIN");
 
-        var actuacionRelevante = await GetOrCreateActuacionRelevante(request);
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
 
         await ValidateTipoSistemaEmergencia(request);
         await ValidateModosActivacion(request);
 
-        await MapAndSaveActivacionSistema(request, actuacionRelevante);
+        await _unitOfWork.BeginTransactionAsync();
 
-        await DeleteLogicalActivaciones(request, actuacionRelevante);
-        await SaveActuacionRelevante(request, actuacionRelevante);
-
-        _logger.LogInformation($"{nameof(ManageActivacionPlanEmergenciaCommandHandler)} - END");
-        return new ManageActivacionSistemaResponse { IdActuacionRelevante = actuacionRelevante.Id };
-    }
-
-
-    private async Task DeleteLogicalActivaciones(ManageActivacionSistemaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
-    {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante > 0)
+        try
         {
-            var idsEnRequest = request.Detalles
-                .Where(c => c.Id.HasValue && c.Id > 0)
-                .Select(c => c.Id)
-                .ToList();
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<ActuacionRelevanteDGPCE>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.ActuacionRelevante);
 
-            var itemsParaEliminar = actuacionRelevante.ActivacionSistemas
-                .Where(c => c.Id > 0 && c.Borrado == false && !idsEnRequest.Contains(c.Id))
-                .ToList();
+            ActuacionRelevanteDGPCE actuacion = await GetOrCreateActuacionRelevante(request, registroActualizacion);
 
-            foreach (var detalleAEliminar in itemsParaEliminar)
+            var activacionSistemasOriginales = actuacion.ActivacionSistemas.ToDictionary(d => d.Id, d => _mapper.Map<ManageActivacionSistemaDto>(d));
+            MapAndSaveActivaciones(request, actuacion);
+
+            var activacionesParaEliminar = await DeleteLogicalActivaciones(request, actuacion, registroActualizacion.Id);
+
+            await SaveActuacion(actuacion);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                ActuacionRelevanteDGPCE, ActivacionSistema, ManageActivacionSistemaDto>(
+                registroActualizacion,
+                actuacion,
+                ApartadoRegistroEnum.ActivacionDeSistemas,
+                activacionesParaEliminar, activacionSistemasOriginales);
+
+            await _unitOfWork.CommitAsync();
+
+            _logger.LogInformation($"{nameof(ManageNotificacionEmergenciaHandler)} - END");
+
+            return new ManageActivacionSistemaResponse
             {
-                _unitOfWork.Repository<ActivacionSistema>().DeleteEntity(detalleAEliminar);
-            }
+                IdActuacionRelevante = actuacion.Id,
+                IdRegistroActualizacion = registroActualizacion.Id
+            };
+
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollbackAsync();
+            _logger.LogError(ex, "Error en la transacción de ManageConvocatoriaCECODCommandHandler");
+            throw;
         }
     }
 
-
-    private async Task SaveActuacionRelevante(ManageActivacionSistemaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    private async Task SaveActuacion(ActuacionRelevanteDGPCE actuacion)
     {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
+        if (actuacion.Id > 0)
         {
-            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacionRelevante);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().UpdateEntity(actuacion);
         }
         else
         {
-            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacionRelevante);
+            _unitOfWork.Repository<ActuacionRelevanteDGPCE>().AddEntity(actuacion);
         }
 
-        var result = await _unitOfWork.Complete();
-        if (result <= 0)
-        {
-            throw new Exception("No se pudo insertar/actualizar los detalles de la activacion planes");
-        }
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar la ActuacionRelevanteDGPCE");
     }
 
 
-    private async Task MapAndSaveActivacionSistema(ManageActivacionSistemaCommand request, ActuacionRelevanteDGPCE actuacionRelevante)
+    private async Task<List<int>> DeleteLogicalActivaciones(ManageActivacionSistemaCommand request, ActuacionRelevanteDGPCE actuacion, int idRegistroActualizacion)
     {
-        foreach (var activacionSistemaDto in request.Detalles)
+        if (actuacion.Id > 0)
         {
-            bool crearNueva = true;
+            var idsEnRequest = request.Detalles.Where(d => d.Id.HasValue && d.Id > 0).Select(d => d.Id).ToList();
+            var activacionesSistemasParaEliminar = actuacion.ActivacionSistemas
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id))
+                .ToList();
 
-            if (activacionSistemaDto.Id.HasValue && activacionSistemaDto.Id > 0)
+            if (activacionesSistemasParaEliminar.Count == 0)
             {
-                var activacionSistema = actuacionRelevante.ActivacionSistemas!.FirstOrDefault(a => a.Id == activacionSistemaDto.Id.Value);
-                if (activacionSistema != null)
+                return new List<int>();
+            }
+
+            // Obtener el historial de creación de estas convocatorias
+            var idsactivacionesSistemasParaEliminar = activacionesSistemasParaEliminar.Select(d => d.Id).ToList();
+            var historialDirecciones = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
+                .GetAsync(d =>
+                idsactivacionesSistemasParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.ActivacionDeSistemas);
+
+            foreach (var declaracion in activacionesSistemasParaEliminar)
+            {
+                var historial = historialDirecciones.FirstOrDefault(d =>
+                d.IdReferencia == declaracion.Id &&
+                (d.IdEstadoRegistro == EstadoRegistroEnum.Creado || d.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado));
+
+                if (historial == null || historial.IdRegistroActualizacion != idRegistroActualizacion)
                 {
-                    // Actualizar datos existentes
-                    _mapper.Map(activacionSistemaDto, activacionSistema);
-                    activacionSistema.Borrado = false;
-                    crearNueva = false;
+                    throw new BadRequestException($"La Activacion Sistema con ID {declaracion.Id} solo puede eliminarse en el registro en que fue creada.");
+                }
+
+                _unitOfWork.Repository<ActivacionSistema>().DeleteEntity(declaracion);
+            }
+
+            return idsactivacionesSistemasParaEliminar;
+        }
+
+        return new List<int>();
+    }
+
+
+    private void MapAndSaveActivaciones(ManageActivacionSistemaCommand request, ActuacionRelevanteDGPCE actuacion)
+    {
+        foreach (var activacionDto in request.Detalles)
+        {
+            if (activacionDto.Id.HasValue && activacionDto.Id > 0)
+            {
+                var activacionExistente = actuacion.ActivacionSistemas.FirstOrDefault(d => d.Id == activacionDto.Id.Value);
+                if (activacionExistente != null)
+                {
+                    var copiaOriginal = _mapper.Map<ManageActivacionSistemaDto>(activacionExistente);
+                    var copiaNueva = _mapper.Map<ManageActivacionSistemaDto>(activacionDto);
+
+                    if (!copiaOriginal.Equals(copiaNueva))
+                    {
+                        _mapper.Map(activacionDto, activacionExistente);
+                        activacionExistente.Borrado = false;
+                    }
+                }
+                else
+                {
+                    actuacion.ActivacionSistemas.Add(_mapper.Map<ActivacionSistema>(activacionDto));
+                }
+            }
+            else
+            {
+                actuacion.ActivacionSistemas.Add(_mapper.Map<ActivacionSistema>(activacionDto));
+            }
+        }
+    }
+    private async Task<ActuacionRelevanteDGPCE> GetOrCreateActuacionRelevante(ManageActivacionSistemaCommand request, RegistroActualizacion registroActualizacion)
+    {
+        if (registroActualizacion.IdReferencia > 0)
+        {
+            List<int> idsReferencias = new List<int>();
+            bool includeEmergenciaNacional = false;
+            List<int> idsActivacionPlanEmergencias = new List<int>();
+            List<int> idsDeclaracionesZAGEP = new List<int>();
+            List<int> idsActivacionSistemas = new List<int>();
+            List<int> idsConvocatoriasCECOD = new List<int>();
+            List<int> idsNotificacionesEmergencias = new List<int>();
+            List<int> idsMovilizacionMedios = new List<int>();
+
+            // Separar IdReferencia según su tipo
+            foreach (var detalle in registroActualizacion.DetallesRegistro)
+            {
+                switch (detalle.IdApartadoRegistro)
+                {
+                    case (int)ApartadoRegistroEnum.EmergenciaNacional:
+                        includeEmergenciaNacional = true;
+                        break;
+                    case (int)ApartadoRegistroEnum.ActivacionDePlanes:
+                        idsActivacionPlanEmergencias.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.DeclaracionZAGEP:
+                        idsDeclaracionesZAGEP.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.ActivacionDeSistemas:
+                        idsActivacionSistemas.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.ConvocatoriaCECOD:
+                        idsConvocatoriasCECOD.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.NotificacionesOficiales:
+                        idsNotificacionesEmergencias.Add(detalle.IdReferencia);
+                        break;
+                    case (int)ApartadoRegistroEnum.MovilizacionMedios:
+                        idsMovilizacionMedios.Add(detalle.IdReferencia);
+                        break;
+                    default:
+                        idsReferencias.Add(detalle.IdReferencia);
+                        break;
                 }
             }
 
-            if (crearNueva)
-            {
-                // Crear nueva declaracion ZAGEP
-                var nuevaActivacionSistema = _mapper.Map<ActivacionSistema>(activacionSistemaDto);
-                nuevaActivacionSistema.Id = 0;
+            // Buscar la activacionSistema por IdReferencia
+            var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>()
+                .GetByIdWithSpec(new ActuacionRelevanteDGPCEWithFilteredData(registroActualizacion.IdReferencia, idsActivacionPlanEmergencias, idsDeclaracionesZAGEP, idsActivacionSistemas, idsConvocatoriasCECOD, idsNotificacionesEmergencias, idsMovilizacionMedios, includeEmergenciaNacional));
 
-                actuacionRelevante.ActivacionSistemas = actuacionRelevante.ActivacionSistemas != null ? actuacionRelevante.ActivacionSistemas : new List<ActivacionSistema>();
-                actuacionRelevante.ActivacionSistemas.Add(nuevaActivacionSistema);
-            }
+            if (actuacionRelevante is null || actuacionRelevante.Borrado)
+                throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de actuacionRelevanteDGPCE");
+
+            return actuacionRelevante;
         }
-    }
 
+        // Validar si ya existe un registro de activacionSistema para este suceso
+        var specSuceso = new ActuacionRelevanteDGPCEWithActivacionSistemas(new ActuacionRelevanteDGPCESpecificationParams { IdSuceso = request.IdSuceso });
+        var activacionSistemaExistente = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(specSuceso);
+
+        return activacionSistemaExistente ?? new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
+    }
 
 
     private async Task ValidateModosActivacion(ManageActivacionSistemaCommand request)
@@ -155,29 +272,5 @@ public class ManageActivacionSistemaCommandHandler : IRequestHandler<ManageActiv
         }
     }
 
-    private async Task<ActuacionRelevanteDGPCE> GetOrCreateActuacionRelevante(ManageActivacionSistemaCommand request)
-    {
-        if (request.IdActuacionRelevante.HasValue && request.IdActuacionRelevante.Value > 0)
-        {
-            var spec = new ActuacionRelevanteDGPCESpecification(request.IdActuacionRelevante.Value);
-            var actuacionRelevante = await _unitOfWork.Repository<ActuacionRelevanteDGPCE>().GetByIdWithSpec(spec);
-            if (actuacionRelevante is null || actuacionRelevante.Borrado)
-            {
-                _logger.LogWarning($"request.IdActuacionRelevante: {request.IdActuacionRelevante}, no encontrado");
-                throw new NotFoundException(nameof(ActuacionRelevanteDGPCE), request.IdActuacionRelevante);
-            }
-            return actuacionRelevante;
-        }
-        else
-        {
-            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
-            if (suceso is null || suceso.Borrado)
-            {
-                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
-            }
 
-            return new ActuacionRelevanteDGPCE { IdSuceso = request.IdSuceso };
-        }
-    }
 }
