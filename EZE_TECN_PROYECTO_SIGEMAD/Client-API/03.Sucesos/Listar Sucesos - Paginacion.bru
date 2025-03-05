@@ -5,14 +5,14 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/sucesos?Sort&Page=1&PageSize=10
+  url: {{Server}}/api/v1/sucesos?Sort&PageIndex=1&PageSize=10
   body: none
   auth: inherit
 }
 
 params:query {
   Sort: 
-  Page: 1
+  PageIndex: 1
   PageSize: 10
   ~Denominacion: Inc
   ~IdTerritorio: 1
