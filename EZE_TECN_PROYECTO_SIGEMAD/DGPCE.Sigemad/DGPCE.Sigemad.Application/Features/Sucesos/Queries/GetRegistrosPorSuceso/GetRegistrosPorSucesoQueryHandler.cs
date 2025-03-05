@@ -68,7 +68,11 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
         {
             Id = r.Id,
             FechaHora = r.FechaCreacion,
-            TipoRegistro = r.TipoRegistroActualizacion.Nombre,
+            TipoRegistro = new TipoRegistroDto
+            {
+                Id = r.TipoRegistroActualizacion.Id,
+                Nombre = r.TipoRegistroActualizacion.Nombre
+            },
             Apartados = string.Join(" / ", r.DetallesRegistro.Select(d => d.ApartadoRegistro.Nombre).Distinct().ToList()),
             Tecnico = nombresUsuarios.GetValueOrDefault(r.CreadoPor ?? Guid.Empty, "Desconocido"),
             EsUltimoRegistro = r.FechaCreacion == registros.Max(e => e.FechaCreacion)

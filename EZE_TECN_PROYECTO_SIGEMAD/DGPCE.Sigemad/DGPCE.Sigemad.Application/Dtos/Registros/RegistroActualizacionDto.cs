@@ -3,7 +3,7 @@ public class RegistroActualizacionDto
 {
     public int Id { get; set; }
     public DateTime FechaHora { get; set; }
-    public string TipoRegistro { get; set; } = string.Empty;
+    public TipoRegistroDto TipoRegistro { get; set; }
     public string Apartados { get; set; } = string.Empty;
     public string Tecnico { get; set; } = string.Empty;
 
