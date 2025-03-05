@@ -74,6 +74,7 @@ using DGPCE.Sigemad.Application.Features.ValidacionesImpacto.Vms;
 using DGPCE.Sigemad.Application.Mappings.Resolvers;
 using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 
 namespace DGPCE.Sigemad.Application.Mappings;
@@ -384,6 +385,14 @@ public class MappingProfile : Profile
 
         //Movilizaciones
         CreateMap<MovilizacionMedioDto, MovilizacionMedio>();
+
+        CreateMap<MovilizacionMedio, MovilizacionMedioDto>()
+            .ForMember(dest => dest.Pasos, opt => opt.MapFrom(src => src.Pasos.Select(p => new DatosPasoBase
+            {
+                Id = p.Id,
+                TipoPaso = (TipoPaso) p.IdPasoMovilizacion
+            })));
+        //.ForMember(dest => dest.Pasos, opt => opt.Ignore());
 
         CreateMap<MovilizacionMedio, MovilizacionMedioListaDto>()
             .ForMember(dest => dest.Pasos, opt => opt.Ignore())
