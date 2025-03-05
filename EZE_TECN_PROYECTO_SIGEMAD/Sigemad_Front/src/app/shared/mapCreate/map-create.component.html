@@ -1,12 +1,10 @@
-<div class="container gap-4 flex-column align-items-center justify-content-center p-4" cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div class="container gap-4 flex-column align-items-center justify-content-center p-4" cdkDrag
+  cdkDragRootElement=".cdk-overlay-pane">
   <!-- <span class="mapa-titulo" *ngIf="close">Mapa de ubicación</span> -->
 
   <div style="width: 100%">
-    <div
-      class="coordinate-search"
-      cdkDragHandle
-      style="width: 100%; display: flex; justify-content: center; align-items: center; height: auto; max-height: 100%"
-    >
+    <div class="coordinate-search" cdkDragHandle
+      style="width: 100%; display: flex; justify-content: center; align-items: center; height: auto; max-height: 100%">
       <span class="coordinates-display">{{ coordinates }}</span>
       <input type="text" id="utm-x" placeholder="UTM X" />
       <input type="text" id="utm-y" placeholder="UTM Y" />
@@ -25,7 +23,7 @@
 
   <div class="p-flex mt-20" *ngIf="data.onlyView">
     <div>
-      <button (click)="closeModal()" mat-flat-button color="secondary">Cerrar</button>
+      <button (click)="closeModal()" mat-flat-button color="secondary" autofocus>Cerrar</button>
     </div>
   </div>
 

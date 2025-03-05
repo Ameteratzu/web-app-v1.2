@@ -338,7 +338,7 @@ export class AreaComponent {
 
             const fileContent = await readFileAsArrayBuffer(file);
             const geojson = await shp(fileContent);
-            console.log(geojson);
+            //console.log(geojson);
 
             this.formData.patchValue({ file });
             this.onFileSelected(JSON.stringify(geojson));
@@ -357,7 +357,7 @@ export class AreaComponent {
         }
       } else {
         const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log(droppedFile.relativePath, fileEntry);
+        // console.log(droppedFile.relativePath, fileEntry);
       }
     }
     this.spinner.hide();
@@ -369,10 +369,10 @@ export class AreaComponent {
   }
 
   public fileOver(event: any) {
-    console.log('File over event:', event);
+    // console.log('File over event:', event);
   }
 
   public fileLeave(event: any) {
-    console.log('File leave event:', event);
+    // console.log('File leave event:', event);
   }
 }

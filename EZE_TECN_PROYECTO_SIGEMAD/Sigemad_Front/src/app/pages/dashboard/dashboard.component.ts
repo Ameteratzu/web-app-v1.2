@@ -84,12 +84,14 @@ export class DashboardComponent {
 
     const baseLayers = this.getBaseLayers();
 
+    const layersGroupAdmin = this.getAdminLayers();
+
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
       center: [-225030.611272, 4290257.523590],
       zoom: 5.53,
-      extent: [-4500000, 3000000, 2500000, 6500000]
+      extent: [-4000000, 2000000, 6000000, 20000000]
     });
 
     this.map = new Map({
@@ -102,7 +104,7 @@ export class DashboardComponent {
         new FullScreen({ tipLabel: 'Pantalla completa' }),
       ]),
       target: 'map',
-      layers: [baseLayers, layersGroupIncendios],
+      layers: [baseLayers, layersGroupAdmin, layersGroupIncendios],
       view: this.view,
     });
 
@@ -213,6 +215,64 @@ export class DashboardComponent {
     return baseLayers;
   }
 
+  getAdminLayers() {
+    const wmsLayersGroup = new LayerGroup({
+      properties: { title: 'Límites administrativos', openInLayerSwitcher: true },
+      layers: [
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'limites_autonomia',
+              TILED: true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { title: 'Límites autonómicos' },
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'limites_provincia',
+              TILED: true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { title: 'Límites provinciales' },
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'limites_municipio',
+              TILED: false,
+            },
+
+            serverType: 'geoserver',
+            //transition: 0,
+          }),
+          properties: { title: 'Límites municipales' },
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'nucleos_poblacion',
+              TILED: true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { id: 'nucleos_poblacion', title: 'Núcleos de población' },
+        })
+      ],
+    });
+    return wmsLayersGroup;
+  }
+
   getIncendiosLayers() {
     const wmsIncendiosActivos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -285,7 +345,8 @@ export class DashboardComponent {
         projection: 'EPSG:3857'
       }),
       properties: { 'title': 'AEMET riesgo península' },
-      opacity: 0.25
+      opacity: 0.25,
+      visible: false
     });
 
     const canariasExtent = transformExtent(
@@ -300,7 +361,8 @@ export class DashboardComponent {
         projection: 'EPSG:3857'
       }),
       properties: { 'title': 'AEMET riesgo Canarias' },
-      opacity: 0.25
+      opacity: 0.25,
+      visible: false
     });
 
     // const wmsIncendiosLimitesMunicipios = new TileWMS({

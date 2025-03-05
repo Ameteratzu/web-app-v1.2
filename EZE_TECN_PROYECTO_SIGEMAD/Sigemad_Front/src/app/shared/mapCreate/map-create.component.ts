@@ -296,7 +296,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
       source: new TileWMS({
         url: environment.urlGeoserver + 'wms?version=1.1.0',
         params: {
-          LAYERS: 'municipio_limites',
+          LAYERS: 'limites_municipio',
           TILED: true,
         },
         serverType: 'geoserver',
@@ -308,6 +308,32 @@ export class MapCreateComponent implements OnInit, OnChanges {
     const wmsLayersGroup = new LayerGroup({
       properties: { title: 'Límites administrativos', openInLayerSwitcher: true },
       layers: [
+
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'limites_autonomia',
+              TILED: true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { title: 'Límites autonómicos' },
+        }),
+        new TileLayer({
+          source: new TileWMS({
+            url: environment.urlGeoserver + 'wms?version=1.1.0',
+            params: {
+              LAYERS: 'limites_provincia',
+              TILED: true,
+            },
+            serverType: 'geoserver',
+            transition: 0,
+          }),
+          properties: { title: 'Límites provinciales' },
+        }),
+        this.layerLimitesMunicipio,
         new TileLayer({
           source: new TileWMS({
             url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -320,7 +346,6 @@ export class MapCreateComponent implements OnInit, OnChanges {
           }),
           properties: { id: 'nucleos_poblacion', title: 'Núcleos de población' },
         }),
-        this.layerLimitesMunicipio,
       ],
     });
     return wmsLayersGroup;
