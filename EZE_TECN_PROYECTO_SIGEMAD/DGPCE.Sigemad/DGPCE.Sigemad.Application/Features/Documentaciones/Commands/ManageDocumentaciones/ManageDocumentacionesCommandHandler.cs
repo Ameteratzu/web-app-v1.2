@@ -71,7 +71,7 @@ public class ManageDocumentacionesCommandHandler : IRequestHandler<ManageDocumen
 
             await _unitOfWork.CommitAsync();
 
-            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+            _logger.LogInformation($"{nameof(ManageDocumentacionesCommandHandler)} - END");
 
             return new CreateOrUpdateDocumentacionResponse
             {

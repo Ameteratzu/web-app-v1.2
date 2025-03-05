@@ -86,7 +86,7 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
         // Mapear desde el modelo de API al command
         var command = new ManageActivacionPlanEmergenciaCommand
         {
-            IdActuacionRelevante = request.IdActuacionRelevante,
+            IdRegistroActualizacion = request.IdRegistroActualizacion,
             IdSuceso = request.IdSuceso
         };
 

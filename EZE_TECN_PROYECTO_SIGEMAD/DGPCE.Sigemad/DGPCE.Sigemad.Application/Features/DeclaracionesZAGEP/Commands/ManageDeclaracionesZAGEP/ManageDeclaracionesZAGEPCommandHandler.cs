@@ -63,7 +63,7 @@ public class ManageDeclaracionesZAGEPCommandHandler : IRequestHandler<ManageDecl
 
             await _unitOfWork.CommitAsync();
 
-            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+            _logger.LogInformation($"{nameof(ManageDeclaracionesZAGEPCommandHandler)} - END");
 
             return new ManageDeclaracionZAGEPResponse
             {
