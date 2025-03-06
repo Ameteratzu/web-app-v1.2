@@ -211,10 +211,10 @@ public class RegistroActualizacionService : IRegistroActualizacionService
         return EstadoRegistroEnum.Modificado;
     }
 
-    public (string ambito, string descripcion) GetAmbitoYDescripcion<T>(T entidad)
+    public (string? ambito, string? descripcion) GetAmbitoYDescripcion<T>(T entidad)
     {
-        var ambito = string.Empty;
-        var descripcion = string.Empty;
+        string? ambito = null;
+        string? descripcion = null;
 
         if(entidad == null)
         {
@@ -223,10 +223,10 @@ public class RegistroActualizacionService : IRegistroActualizacionService
 
         switch(entidad)
         {
-            case Parametro parametro:
-                ambito = "Parám. Estado - Situacion Equivalente - Superficie Afectada";
-                descripcion = $"{parametro.EstadoIncendio.Descripcion} - {parametro.SituacionEquivalente.Descripcion} - {parametro.SuperficieAfectadaHectarea}";
-                break;
+            //case Parametro parametro:
+            //    ambito = "Parám. Estado - Situacion Equivalente - Superficie Afectada";
+            //    descripcion = $"{parametro.EstadoIncendio.Descripcion} - {parametro.SituacionEquivalente.Descripcion} - {parametro.SuperficieAfectadaHectarea}";
+            //    break;
 
             case IntervencionMedio intervencionMedio:
                 ambito = "Intervención de medios";
