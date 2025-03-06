@@ -49,7 +49,7 @@ CREATE TABLE DetalleRegistroActualizacion (
     IdApartadoRegistro INT NOT NULL FOREIGN KEY REFERENCES ApartadoRegistro(Id), 
     IdReferencia INT NOT NULL,  -- ID del registro en Direccion, CoordinacionCecopi, CoordinacionPMA
     IdEstadoRegistro INT NOT NULL FOREIGN KEY REFERENCES EstadoRegistro(Id), 
-    Ambito NVARCHAR(50) NOT NULL,
+    Ambito NVARCHAR(50) NULL,
     Descripcion NVARCHAR(MAX) NULL,
     --
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
