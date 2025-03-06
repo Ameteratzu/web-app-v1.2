@@ -9,6 +9,8 @@ CREATE TABLE SucesoRelacionado (
 	FechaEliminacion DATETIME2(7) NULL,
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
+
+	CONSTRAINT UQ_OtraInformacion_IdSuceso UNIQUE (IdSucesoPrincipal)
 );
 
 CREATE TABLE DetalleSucesoRelacionado (

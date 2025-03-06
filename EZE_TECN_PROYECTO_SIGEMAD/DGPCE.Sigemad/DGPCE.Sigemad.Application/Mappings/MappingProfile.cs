@@ -261,6 +261,7 @@ public class MappingProfile : Profile
         CreateMap<DeclaracionZAGEP, ManageDeclaracionZAGEPDto>();
 
         CreateMap<SucesoRelacionado, SucesoRelacionadoVm>();
+
         CreateMap<CreateFileCommand, Archivo>();
 
         CreateMap<Parametro, CreateParametroCommand>();
