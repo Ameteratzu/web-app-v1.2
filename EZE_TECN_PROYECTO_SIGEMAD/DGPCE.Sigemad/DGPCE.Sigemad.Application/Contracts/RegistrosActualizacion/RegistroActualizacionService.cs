@@ -126,6 +126,13 @@ public class RegistroActualizacionService : IRegistroActualizacionService
                     if (detalleExistente != null)
                     {
                         if (estado == EstadoRegistroEnum.Permanente) continue;
+
+                        if(estado == EstadoRegistroEnum.Eliminado)
+                        {
+                            estado = (detalleExistente.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado ||
+                            detalleExistente.IdEstadoRegistro == EstadoRegistroEnum.Creado) ? EstadoRegistroEnum.CreadoYEliminado : EstadoRegistroEnum.Eliminado;
+                        }
+
                         detalleExistente.IdEstadoRegistro = estado;
                     }
                     else

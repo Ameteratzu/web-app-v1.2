@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Dtos.SucesoRelacionados;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
+using DGPCE.Sigemad.Application.Specifications.RegistrosActualizaciones;
 using DGPCE.Sigemad.Application.Specifications.SucesosRelacionados;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
@@ -37,23 +37,23 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
         _logger.LogInformation($"{nameof(ManageSucesoRelacionadosCommandHandler)} - BEGIN");
 
         await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
-        await ValidateProcedenciasDestinosAsync( request);
+        await ValidateProcedenciasDestinosAsync(request);
 
         await _unitOfWork.BeginTransactionAsync();
 
         try
         {
-            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<OtraInformacion>(
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<SucesoRelacionado>(
                 request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.SucesosRelacionados);
 
             SucesoRelacionado sucesoRelacionado = await GetOrCreateSucesoRelacionado(request, registroActualizacion);
 
-            var detalleSucesosRelacionadosOriginales = sucesoRelacionado.DetalleSucesoRelacionados.ToDictionary(d => d.IdCabeceraSuceso, d => _mapper.Map<DetalleSucesoRelacionado>(d));
-         
-            var direccionesParaEliminar = MapAndSaveAndDeleteSucesosRelacionados(request, sucesoRelacionado);
+            (List<int> idsNuevos, List<int> idsEliminar, List<int> idsPermanentes) =
+                await MapAndSaveAndDeleteSucesosRelacionados(request, sucesoRelacionado, registroActualizacion.Id);
+
             await SaveSucesoRelacionado(sucesoRelacionado);
 
-            MapAndSaveRegistroActualizacion(registroActualizacion, sucesoRelacionado, request);
+            await MapAndSaveRegistroActualizacion(registroActualizacion, sucesoRelacionado, request, idsNuevos, idsEliminar, idsPermanentes);
 
             await _unitOfWork.CommitAsync();
 
@@ -76,54 +76,149 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
 
     }
 
-    private void MapAndSaveRegistroActualizacion(RegistroActualizacion registroActualizacion,SucesoRelacionado sucesoRelacionado,ManageSucesoRelacionadosCommand originalSucesoRelacionado)
-   {
+    private async Task MapAndSaveRegistroActualizacion(RegistroActualizacion registroActualizacion, SucesoRelacionado sucesoRelacionado, ManageSucesoRelacionadosCommand originalSucesoRelacionado,
+        List<int> idsNuevos, List<int> idsEliminar, List<int> idsPermanentes)
+    {
         registroActualizacion.IdReferencia = sucesoRelacionado.Id;
+        string ambito = "Sucesos Relacionados";
 
 
-        // Agregar registro de suceso
-        DetalleRegistroActualizacion detalleRegistro = new()
+        foreach (int idNuevo in idsNuevos)
         {
-            IdApartadoRegistro = (int)ApartadoRegistroEnum.SucesosRelacionados,
-            IdReferencia = sucesoRelacionado.Id,
-        };
+            var detalle = sucesoRelacionado.DetalleSucesoRelacionados.FirstOrDefault(s => s.IdSucesoAsociado == idNuevo);
+            string denominacion = await GetDescripcionTipoSuceso(detalle.SucesoAsociado.IdTipo, detalle.SucesoAsociado.TipoSuceso);
 
-        var copiaNuevoSuceso = _mapper.Map<ManageSucesoRelacionadosCommand>(sucesoRelacionado);
-        if (originalSucesoRelacionado == null && copiaNuevoSuceso != null)
-        {
-            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Creado;
-        }
-        else if (originalSucesoRelacionado.Equals(copiaNuevoSuceso))
-        {
-            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
-        }
-        else
-        {
-            detalleRegistro.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
-        }
-
-        var detallePrevioRegistro = registroActualizacion.DetallesRegistro
-            .FirstOrDefault(d => d.IdReferencia == sucesoRelacionado.Id && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro);
-
-        if (detallePrevioRegistro != null)
-        {
-            if (!originalSucesoRelacionado.Equals(copiaNuevoSuceso))
+            DetalleRegistroActualizacion detalleRegistro = new()
             {
-                if (detallePrevioRegistro.IdEstadoRegistro == EstadoRegistroEnum.Creado ||
-                    detallePrevioRegistro.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado)
-                {
-                    detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.CreadoYModificado;
-                }
-
-                detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.Modificado;
-            }
-            detallePrevioRegistro.IdEstadoRegistro = EstadoRegistroEnum.Permanente;
-        }
-        else
-        {
+                IdApartadoRegistro = (int)ApartadoRegistroEnum.SucesosRelacionados,
+                IdReferencia = idNuevo,
+                IdEstadoRegistro = EstadoRegistroEnum.Creado,
+                Ambito = ambito,
+                Descripcion = $"Denominación [{denominacion}]"
+            };
             registroActualizacion.DetallesRegistro.Add(detalleRegistro);
         }
+
+        foreach (int idEliminar in idsEliminar)
+        {
+            var registroExistente = registroActualizacion.DetallesRegistro
+                        .FirstOrDefault(d => d.IdReferencia == idEliminar && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.SucesosRelacionados);
+
+            var detalle = sucesoRelacionado.DetalleSucesoRelacionados.FirstOrDefault(s => s.IdSucesoAsociado == idEliminar);
+
+            if (registroExistente != null)
+            {
+                EstadoRegistroEnum estadoRegistro = (registroExistente.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado ||
+                    registroExistente.IdEstadoRegistro == EstadoRegistroEnum.Creado) ? EstadoRegistroEnum.CreadoYEliminado : EstadoRegistroEnum.Eliminado;
+                registroExistente.IdEstadoRegistro = estadoRegistro;
+            }
+            else
+            {
+                string denominacion = await GetDescripcionTipoSuceso(detalle.SucesoAsociado.IdTipo, detalle.SucesoAsociado.TipoSuceso);
+
+                DetalleRegistroActualizacion detalleRegistro = new()
+                {
+                    IdApartadoRegistro = (int)ApartadoRegistroEnum.SucesosRelacionados,
+                    IdReferencia = idEliminar,
+                    IdEstadoRegistro = EstadoRegistroEnum.Eliminado,
+                    Ambito = ambito,
+                    Descripcion = $"Denominación [{denominacion}]"
+                };
+                registroActualizacion.DetallesRegistro.Add(detalleRegistro);
+            }
+        }
+
+        foreach (int idPermanente in idsPermanentes)
+        {
+            var registroExistente = registroActualizacion.DetallesRegistro
+                        .FirstOrDefault(d => d.IdReferencia == idPermanente && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.SucesosRelacionados);
+
+            var detalle = sucesoRelacionado.DetalleSucesoRelacionados.FirstOrDefault(s => s.IdSucesoAsociado == idPermanente);
+
+            if (registroExistente == null)
+            {
+                string denominacion = await GetDescripcionTipoSuceso(detalle.SucesoAsociado.IdTipo, detalle.SucesoAsociado.TipoSuceso);
+
+                DetalleRegistroActualizacion detalleRegistro = new()
+                {
+                    IdApartadoRegistro = (int)ApartadoRegistroEnum.SucesosRelacionados,
+                    IdReferencia = idPermanente,
+                    IdEstadoRegistro = EstadoRegistroEnum.Permanente,
+                    Ambito = ambito,
+                    Descripcion = $"Denominación [{denominacion}]"
+                };
+                registroActualizacion.DetallesRegistro.Add(detalleRegistro);
+            }
+        }
+
+
+        if (registroActualizacion.Id > 0)
+        {
+            await ReflectNewRegistrosInFuture(
+                registroActualizacion,
+                ApartadoRegistroEnum.SucesosRelacionados,
+                sucesoRelacionado,
+                idsNuevos);
+
+            _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroActualizacion);
+        }
+        else
+        {
+            _unitOfWork.Repository<RegistroActualizacion>().AddEntity(registroActualizacion);
+        }
+
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar registros de actualizaciones");
     }
+
+    private async Task ReflectNewRegistrosInFuture(
+        RegistroActualizacion registroActualizacion,
+        ApartadoRegistroEnum apartadoRegistro,
+        SucesoRelacionado sucesoRelacionado,
+        List<int> nuevasReferenciasIds)
+    {
+        if (!nuevasReferenciasIds.Any()) return;
+
+        var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams
+        {
+            IdMinimo = registroActualizacion.Id,
+            IdSuceso = registroActualizacion.IdSuceso,
+            IdTipoRegistroActualizacion = registroActualizacion.IdTipoRegistroActualizacion
+        });
+        var registrosPosteriores = await _unitOfWork.Repository<RegistroActualizacion>().GetAllWithSpec(spec);
+        string ambito = "Sucesos Relacionados";
+
+        foreach (var registroPosterior in registrosPosteriores)
+        {
+            bool seActualizoRegistroPosterior = false;
+            var detallesPrevios = registroPosterior.DetallesRegistro;
+
+            foreach (var idReferencia in nuevasReferenciasIds)
+            {
+                if (detallesPrevios.Any(d => d.IdReferencia == idReferencia)) continue;
+
+                var detalle = sucesoRelacionado.DetalleSucesoRelacionados.FirstOrDefault(s => s.IdSucesoAsociado == idReferencia);
+                string denominacion = await GetDescripcionTipoSuceso(detalle.SucesoAsociado.IdTipo, detalle.SucesoAsociado.TipoSuceso);
+
+                var nuevoDetalle = new DetalleRegistroActualizacion
+                {
+                    IdRegistroActualizacion = registroPosterior.Id,
+                    IdApartadoRegistro = (int)apartadoRegistro,
+                    IdReferencia = idReferencia,
+                    IdEstadoRegistro = EstadoRegistroEnum.CreadoEnRegistroAnterior,
+                    Ambito = ambito,
+                    Descripcion = $"Denominación [{denominacion}]"
+                };
+
+                registroPosterior.DetallesRegistro.Add(nuevoDetalle);
+                seActualizoRegistroPosterior = true;
+            }
+
+            if (seActualizoRegistroPosterior)
+                _unitOfWork.Repository<RegistroActualizacion>().UpdateEntity(registroPosterior);
+        }
+    }
+
 
     private async Task SaveSucesoRelacionado(SucesoRelacionado sucesoRelacionado)
     {
@@ -140,16 +235,62 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
             throw new Exception("No se pudo insertar/actualizar el Suceso Relacionado");
     }
 
-    private List<int> MapAndSaveAndDeleteSucesosRelacionados(ManageSucesoRelacionadosCommand request, SucesoRelacionado sucesoRelacionado)
+    private async Task<(List<int> idsNuvos, List<int> idsAEliminar, List<int> idsPermanentes)> MapAndSaveAndDeleteSucesosRelacionados(
+        ManageSucesoRelacionadosCommand request,
+        SucesoRelacionado sucesoRelacionado,
+        int idRegistroActualizacion
+    )
     {
         // Manejo de DetalleSucesoRelacionado
         var idsExistentes = sucesoRelacionado.DetalleSucesoRelacionados
             .Select(d => d.IdSucesoAsociado)
             .ToList();
 
-        var idsNuevos = request.IdsSucesosAsociados.Except(idsExistentes).ToList();
-        var idsAEliminar = idsExistentes.Except(request.IdsSucesosAsociados).ToList();
+        // IDs recibidos en la request
+        var idsRequest = request.IdsSucesosAsociados.ToList();
 
+        // 1️⃣ IDs que deben agregarse (están en request pero no en la BD)
+        var idsNuevos = idsRequest.Except(idsExistentes).ToList();
+
+        // 2️⃣ IDs que deben eliminarse (están en la BD pero no en request)
+        var idsAEliminar = idsExistentes.Except(idsRequest).ToList();
+
+        // 3️⃣ IDs que permanecerán (ya existen y siguen estando en request)
+        var idsPermanentes = idsExistentes.Intersect(idsRequest).ToList();
+
+
+        if (sucesoRelacionado.Id > 0)
+        {
+            // *************************************************************************
+            // Eliminar los que no se enviaron en el listado
+
+            var historialSucesoRelacionados = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
+                .GetAsync(d =>
+                idsAEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.SucesosRelacionados);
+
+            foreach (var idEliminar in idsAEliminar)
+            {
+                var detalle = sucesoRelacionado.DetalleSucesoRelacionados
+                    .FirstOrDefault(d => d.IdSucesoAsociado == idEliminar);
+
+                if (detalle == null) continue;
+
+
+                var historial = historialSucesoRelacionados.FirstOrDefault(d =>
+                    d.IdReferencia == idEliminar &&
+                    (d.IdEstadoRegistro == EstadoRegistroEnum.Creado || d.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado));
+
+                if (historial == null || historial.IdRegistroActualizacion != idRegistroActualizacion)
+                {
+                    throw new BadRequestException($"Suceso asociado con ID {idEliminar} solo puede eliminarse en el registro en que fue creada.");
+                }
+
+                sucesoRelacionado.DetalleSucesoRelacionados.Remove(detalle);
+            }
+        }
+
+
+        // *************************************************************************
         // Agregar nuevos sucesos asociados
         foreach (var idNuevo in idsNuevos)
         {
@@ -159,20 +300,11 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
             });
         }
 
-        // Eliminar los que no se enviaron en el listado
-        foreach (var idEliminar in idsAEliminar)
-        {
-            var detalle = sucesoRelacionado.DetalleSucesoRelacionados
-                .FirstOrDefault(d => d.IdSucesoAsociado == idEliminar);
 
-            if (detalle != null)
-            {
-                sucesoRelacionado.DetalleSucesoRelacionados.Remove(detalle);
-            }
-        }
-
-        return idsAEliminar;
+        return (idsNuevos, idsAEliminar, idsPermanentes);
     }
+
+
 
     private async Task<SucesoRelacionado> GetOrCreateSucesoRelacionado(ManageSucesoRelacionadosCommand request, RegistroActualizacion registroActualizacion)
     {
@@ -233,6 +365,18 @@ public class ManageSucesoRelacionadosCommandHandler : IRequestHandler<ManageSuce
                 }
             }
         }
+    }
+
+    private async Task<string> GetDescripcionTipoSuceso(int idTipoSuceso, TipoSuceso tipoSuceso)
+    {
+        if (tipoSuceso != null)
+        {
+            return tipoSuceso.Descripcion;
+        }
+
+
+        var tipoSucesoEntity = await _unitOfWork.Repository<TipoSuceso>().GetByIdAsync(idTipoSuceso);
+        return tipoSucesoEntity.Descripcion;
     }
 
 

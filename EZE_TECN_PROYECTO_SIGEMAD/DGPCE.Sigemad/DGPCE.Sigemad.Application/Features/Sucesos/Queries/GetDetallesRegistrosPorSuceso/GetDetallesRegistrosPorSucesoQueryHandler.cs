@@ -95,6 +95,7 @@ public class GetDetallesRegistrosPorSucesoQueryHandler : IRequestHandler<GetDeta
             case EstadoRegistroEnum.Modificado:
             case EstadoRegistroEnum.CreadoYModificado:
                 return "Modificado";
+            case EstadoRegistroEnum.CreadoYEliminado:
             case EstadoRegistroEnum.Eliminado:
                 return "Eliminado";
         }

@@ -5,7 +5,8 @@ INSERT INTO EstadoRegistro (Id, Nombre) VALUES
 (3, 'Creado y Modificado'),
 (4, 'Modificado'),
 (5, 'Permanente'),
-(6, 'Eliminado');
+(6, 'Eliminado'),
+(7, 'Creado y Eliminado');
 
 
 -- Insertar Tipos de Registro

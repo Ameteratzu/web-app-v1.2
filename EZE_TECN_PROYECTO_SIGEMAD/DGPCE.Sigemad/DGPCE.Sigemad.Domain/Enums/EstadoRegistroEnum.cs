@@ -6,5 +6,6 @@ public enum EstadoRegistroEnum
     CreadoYModificado = 3,
     Modificado = 4,
     Permanente = 5,
-    Eliminado = 6
+    Eliminado = 6,
+    CreadoYEliminado = 7
 }

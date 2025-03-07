@@ -10,8 +10,13 @@ CREATE TABLE SucesoRelacionado (
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
 
-	CONSTRAINT UQ_OtraInformacion_IdSuceso UNIQUE (IdSucesoPrincipal)
+	--CONSTRAINT UQ_SucesoRelacionado_IdSuceso UNIQUE (IdSucesoPrincipal, Borrado)
 );
+
+SET QUOTED_IDENTIFIER ON;
+CREATE UNIQUE INDEX UQ_SucesoRelacionado_IdSuceso
+ON SucesoRelacionado(IdSucesoPrincipal)
+WHERE Borrado = 0;
 
 CREATE TABLE DetalleSucesoRelacionado (
     IdCabeceraSuceso INT NOT NULL FOREIGN KEY REFERENCES SucesoRelacionado(Id),
