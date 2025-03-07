@@ -16,15 +16,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '@type/api-response.type';
-import { OpePuerto } from '@type/ope/ope-puerto.type';
+import { OpePuerto } from '@type/ope/administracion/ope-puerto.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpePuertosService } from '@services/ope/ope-puertos.service';
-import { LocalFiltrosOpePuertos } from '@services/ope/local-filtro-ope-puertos.service';
+import { OpePuertosService } from '@services/ope/administracion/ope-puertos.service';
+import { LocalFiltrosOpePuertos } from '@services/ope/administracion/local-filtro-ope-puertos.service';
 import { OpePuertoCreateEdit } from '../ope-puerto-create-edit-form/ope-puerto-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '@type/comparative-date.type';
-import { MY_DATE_FORMATS } from '@type/date-formats';
+import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
@@ -48,7 +48,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-puertos-filter-form.component.html',
   styleUrl: './ope-puertos-filter-form.component.scss',

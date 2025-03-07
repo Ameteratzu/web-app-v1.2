@@ -9,7 +9,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -37,7 +37,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './step5.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class Step5Component {
@@ -76,7 +76,7 @@ export class Step5Component {
       medioControl?.setValidators(Validators.required);
       this.showMedioNoCatalogado = true;
       controlTipoAdmin?.clearValidators();
-      controlTipoAdmin?.enable(); 
+      controlTipoAdmin?.enable();
       controlTipoAdmin?.updateValueAndValidity();
     } else {
       this.showMedioNoCatalogado = false;

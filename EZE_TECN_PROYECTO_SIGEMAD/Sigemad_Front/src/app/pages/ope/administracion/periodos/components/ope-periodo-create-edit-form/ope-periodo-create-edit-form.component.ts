@@ -21,11 +21,14 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
-import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos.service';
-import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '@services/ope/administracion/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/administracion/ope-periodos.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
-import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
+
+import { FORMATO_FECHA } from '@type/date-formats';
+import { FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 // FIN PCD
 
 @Component({
@@ -52,8 +55,8 @@ import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
     DragDropModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-periodo-create-edit-form.component.html',
   styleUrl: './ope-periodo-create-edit-form.component.scss',
@@ -80,16 +83,18 @@ export class OpePeriodoCreateEdit implements OnInit {
 
   //PCD
   public snackBar = inject(MatSnackBar);
+  public fechaMinimaDatePicker = FECHA_MINIMA_DATEPICKER;
+  public fechaMaximaDatePicker = FECHA_MAXIMA_DATEPICKER;
   // FIN PCD
 
   async ngOnInit() {
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
-        fechaInicioFaseSalida: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-        fechaFinFaseSalida: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-        fechaInicioFaseRetorno: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-        fechaFinFaseRetorno: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        fechaInicioFaseSalida: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
+        fechaFinFaseSalida: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
+        fechaInicioFaseRetorno: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
+        fechaFinFaseRetorno: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
       },
       {
         validators: [
@@ -103,10 +108,10 @@ export class OpePeriodoCreateEdit implements OnInit {
       this.formData.patchValue({
         id: this.data.opePeriodo.id,
         nombre: this.data.opePeriodo.nombre,
-        fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicioFaseRetorno).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFinFaseRetorno).format('YYYY-MM-DD HH:mm'),
+        fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicioFaseSalida).format('YYYY-MM-DD'),
+        fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFinFaseSalida).format('YYYY-MM-DD'),
+        fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicioFaseRetorno).format('YYYY-MM-DD'),
+        fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFinFaseRetorno).format('YYYY-MM-DD'),
       });
     }
   }

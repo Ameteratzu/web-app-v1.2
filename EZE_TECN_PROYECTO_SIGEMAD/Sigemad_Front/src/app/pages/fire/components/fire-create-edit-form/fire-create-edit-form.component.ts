@@ -44,7 +44,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FechaValidator } from '../../../../shared/validators/fecha-validator';
 // FIN PCD
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL', // Definir el formato de entrada
   },
@@ -80,7 +80,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './fire-create-edit-form.component.html',
   styleUrl: './fire-create-edit-form.component.scss',
@@ -101,7 +101,7 @@ export class FireCreateEdit implements OnInit {
     private router: Router,
 
     @Inject(MAT_DIALOG_DATA) public data: { fire: any }
-  ) { }
+  ) {}
 
   //public filtrosIncendioService = inject(LocalFiltrosIncendio);
 

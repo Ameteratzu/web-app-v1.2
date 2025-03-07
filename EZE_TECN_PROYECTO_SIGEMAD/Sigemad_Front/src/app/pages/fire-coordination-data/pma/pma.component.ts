@@ -27,7 +27,7 @@ import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -61,7 +61,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './pma.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class PmaComponent {

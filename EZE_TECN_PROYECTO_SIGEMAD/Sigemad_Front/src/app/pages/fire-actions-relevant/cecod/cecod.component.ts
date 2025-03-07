@@ -19,7 +19,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { ActionsRelevantService } from '../../../services/actions-relevant.service';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -51,7 +51,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './cecod.component.html',
   styleUrl: './cecod.component.scss',
@@ -156,10 +156,10 @@ export class CecodComponent {
   }
 
   getFormatdate(date: any) {
-    if(date){
+    if (date) {
       return moment(date).format('DD/MM/YYYY');
-    }else{
-      return 'Sin fecha selecionada.'
+    } else {
+      return 'Sin fecha selecionada.';
     }
   }
 

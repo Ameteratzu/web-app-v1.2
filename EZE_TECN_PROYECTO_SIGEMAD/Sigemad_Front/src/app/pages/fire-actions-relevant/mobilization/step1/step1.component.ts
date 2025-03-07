@@ -9,7 +9,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -37,7 +37,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './step1.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class Step1Component {
@@ -47,13 +47,10 @@ export class Step1Component {
 
   async ngOnInit() {
     this.procedencia.set(this.dataMaestros.procedencia);
-    console.log("🚀 ~ Step1Component ~ getForm ~  this.formGroup:",  this.formGroup)
+    console.log('🚀 ~ Step1Component ~ getForm ~  this.formGroup:', this.formGroup);
   }
 
   getForm(controlName: string): FormControl {
     return this.formGroup.get(controlName) as FormControl;
   }
-
-  
-   
 }

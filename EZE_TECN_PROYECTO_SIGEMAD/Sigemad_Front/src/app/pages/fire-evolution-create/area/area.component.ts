@@ -30,8 +30,11 @@ import { MinorEntity } from '../../../types/minor-entity.type';
 import { Municipality } from '../../../types/municipality.type';
 import { Province } from '../../../types/province.type';
 import { SavePayloadModal } from '../../../types/save-payload-modal';
+import { FileSystemDirectoryEntry, FileSystemFileEntry, NgxFileDropEntry, NgxFileDropModule } from 'ngx-file-drop';
+import { readFileAsArrayBuffer, readFileAsText } from '../../../shared/utils/file-utils';
+import shp from 'shpjs';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -61,10 +64,11 @@ const MY_DATE_FORMATS = {
     MatIconModule,
     NgxSpinnerModule,
     MapCreateComponent,
+    NgxFileDropModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './area.component.html',
   styleUrl: './area.component.scss',
@@ -105,8 +109,12 @@ export class AreaComponent {
   defaultPolygon: any;
   index = 0;
 
-  async ngOnInit() {
+  file: File | null = null;
+  public files: NgxFileDropEntry[] = [];
+  fileFlag: boolean = false;
+  fileContent: string | null = null;
 
+  async ngOnInit() {
     this.selectedMunicipio = null;
 
     const provinces = await this.provinceService.get();
@@ -143,9 +151,7 @@ export class AreaComponent {
     this.selectedMunicipio = this.municipalities().find((item) => item.id == this.formData.value.municipio);
     this.listaMunicipios = this.municipalities();
     this.onlyView = true;
-    this.defaultPolygon = this.polygon(),
-
-      this.spinner.hide();
+    (this.defaultPolygon = this.polygon()), this.spinner.hide();
   }
 
   async loadMunicipalities(event: any) {
@@ -192,7 +198,6 @@ export class AreaComponent {
       this.formData.patchValue({
         fechaHora: new Date(),
       });
-
     } else {
       this.formData.markAllAsTouched();
     }
@@ -319,5 +324,55 @@ export class AreaComponent {
       };
       this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
     }
+  }
+
+  public dropped(files: NgxFileDropEntry[]) {
+    this.spinner.show();
+    for (const droppedFile of files) {
+      if (droppedFile.fileEntry.isFile) {
+        if (droppedFile.fileEntry.name.endsWith('.zip')) {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file(async (file: File) => {
+            this.file = file;
+            this.fileFlag = true;
+
+            const fileContent = await readFileAsArrayBuffer(file);
+            const geojson = await shp(fileContent);
+            //console.log(geojson);
+
+            this.formData.patchValue({ file });
+            this.onFileSelected(JSON.stringify(geojson));
+          });
+        } else {
+          const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+          fileEntry.file(async (file: File) => {
+            this.file = file;
+            this.fileFlag = true;
+
+            const fileContent = await readFileAsText(file);
+            this.formData.patchValue({ file });
+
+            this.onFileSelected(fileContent);
+          });
+        }
+      } else {
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        // console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+    this.spinner.hide();
+  }
+
+  onFileSelected(fileContent: string) {
+    this.fileContent = fileContent;
+    //this.save.emit({ save: true, delete: false, close: false, update: false });
+  }
+
+  public fileOver(event: any) {
+    // console.log('File over event:', event);
+  }
+
+  public fileLeave(event: any) {
+    // console.log('File leave event:', event);
   }
 }

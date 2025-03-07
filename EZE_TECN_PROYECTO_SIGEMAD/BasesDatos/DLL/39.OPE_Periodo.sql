@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS dbo.OpePeriodo;
+DROP TABLE IF EXISTS dbo.OPE_Periodo;
 GO
 
 
-CREATE TABLE [dbo].[OpePeriodo](
+CREATE TABLE [dbo].[OPE_Periodo](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,
 	[FechaInicioFaseSalida] [datetime2](7) NOT NULL,

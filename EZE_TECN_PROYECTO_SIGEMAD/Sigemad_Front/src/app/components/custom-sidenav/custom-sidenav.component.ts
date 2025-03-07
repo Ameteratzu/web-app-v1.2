@@ -5,11 +5,11 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { ChangeDetectorRef, Component, inject, signal, Input, computed, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItemActiveService } from '../../services/menu-item-active.service';
-import { MenuService } from '../../services/menu.service';
 import { Menu } from '../../types/menu.types';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../../services/auth.service';
+import { MenuService } from '@services/menu.service';
 
 @Component({
   selector: 'app-custom-sidenav',
@@ -83,7 +83,7 @@ export class CustomSidenavComponent {
     '/ope-nuevo-embarques-funcionalidades': 'ope-nuevo-embarques-funcionalidades',
     '/ope-nuevo-asistencias': 'ope-nuevo-asistencias',
     '/ope-nuevo-asistencias-funcionalidades': 'ope-nuevo-asistencias-funcionalidades',
-    '/ope-nuevo-fronteras': 'ope-nuevo-fronteras',
+    '/ope-nuevo-datos-fronteras': 'ope-nuevo-datos-fronteras',
     '/ope-nuevo-fronteras-funcionalidades': 'ope-nuevo-fronteras-funcionalidades',
     '/ope-nuevo-afluencia-puntos-control-carreteras': 'ope-nuevo-afluencia-puntos-control-carreteras',
     '/ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades': 'ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades',
@@ -113,6 +113,8 @@ export class CustomSidenavComponent {
     '/ope-planificacion-participantes-age': 'ope-planificacion-participantes-age',
     // OPE - INCIDENCIAS
     '/ope-incidencias-datos-inicio': 'ope-incidencias-datos-inicio',
+    // OPE - INFORMES
+    '/ope-informes-prueba': 'ope-informes-prueba',
     // FIN PCD
   };
 
@@ -143,10 +145,10 @@ export class CustomSidenavComponent {
       // PCD
       // OPE - ADMINISTRACIÓN
       { name: 'ope-administracion-periodos', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-puertos', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-lineas-maritimas', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-fronteras', path: '/assets/img/config.svg' },
-      { name: 'ope-administracion-puntos-control-carreteras', path: '/assets/img/config.svg' },
+      { name: 'ope-administracion-puertos', path: '/assets/img/ope.svg' },
+      { name: 'ope-administracion-lineas-maritimas', path: '/assets/img/ope.svg' },
+      { name: 'ope-administracion-fronteras', path: '/assets/img/users.svg' },
+      { name: 'ope-administracion-puntos-control-carreteras', path: '/assets/img/floods.svg' },
       { name: 'ope-administracion-areas-descanso', path: '/assets/img/config.svg' },
       { name: 'ope-administracion-areas-estacionamiento', path: '/assets/img/config.svg' },
       { name: 'ope-administracion-ocupacion-areas-estacionamiento', path: '/assets/img/config.svg' },
@@ -156,7 +158,7 @@ export class CustomSidenavComponent {
       { name: 'ope-nuevo-embarques-funcionalidades', path: '/assets/img/ope.svg' },
       { name: 'ope-nuevo-asistencias', path: '/assets/img/ope.svg' },
       { name: 'ope-nuevo-asistencias-funcionalidades', path: '/assets/img/ope.svg' },
-      { name: 'ope-nuevo-fronteras', path: '/assets/img/ope.svg' },
+      { name: 'ope-nuevo-datos-fronteras', path: '/assets/img/ope.svg' },
       { name: 'ope-nuevo-fronteras-funcionalidades', path: '/assets/img/ope.svg' },
       { name: 'ope-nuevo-afluencia-puntos-control-carreteras', path: '/assets/img/ope.svg' },
       { name: 'ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades', path: '/assets/img/ope.svg' },
@@ -186,6 +188,8 @@ export class CustomSidenavComponent {
       { name: 'ope-planificacion-participantes-age', path: '/assets/img/floods.svg' },
       // OPE - INCIDENCIAS
       { name: 'ope-incidencias-datos-inicio', path: '/assets/img/dangerous-goods.svg' },
+      // OPE - INFORMES
+      { name: 'ope-informes-prueba', path: '/assets/img/catalogs.svg' },
       // FIN PCD
     ];
 
@@ -206,6 +210,7 @@ export class CustomSidenavComponent {
    */
 
   //
+  /*
   toggleSubmenu(item: any, level: number): void {
     // Si el item tiene una ruta, se realiza la redirección
     if (item.ruta) {
@@ -217,15 +222,83 @@ export class CustomSidenavComponent {
       // Primer nivel (menú principal)
       if (this.expandedMenuId === item.id) {
         this.expandedMenuId = null; // Contraemos el submenú principal
+        //
+        item.isOpen = false;
+        //
       } else {
         this.expandedMenuId = item.id; // Expandimos el submenú principal
+        //
+        item.isOpen = true;
+        //
       }
     } else if (level === 2) {
       // Segundo nivel (submenú)
       if (this.expandedSubMenuId === item.id) {
         this.expandedSubMenuId = null; // Contraemos el submenú
+        //
+        item.isOpen = false;
+        //
       } else {
         this.expandedSubMenuId = item.id; // Expandimos el submenú
+        //
+        item.isOpen = true;
+        //
+      }
+    }
+  }
+  */
+
+  toggleSubmenu(item: any, level: number): void {
+    if (item.ruta) {
+      this.redirectTo(item);
+      return;
+    }
+
+    if (level === 1) {
+      if (this.expandedMenuId === item.id) {
+        this.expandedMenuId = null;
+        item.isOpen = false;
+      } else {
+        this.expandedMenuId = item.id;
+        item.isOpen = true;
+
+        const menuItems = this.menuBack();
+        if (menuItems?.length) {
+          menuItems.forEach((subItem: any) => {
+            if (subItem.id !== item.id) {
+              subItem.isOpen = false;
+            }
+          });
+
+          menuItems.forEach((subItem: any) => {
+            if (subItem?.subItems?.length) {
+              subItem.subItems.forEach((subSubItem: any) => {
+                subSubItem.isOpen = false;
+              });
+            }
+          });
+        }
+      }
+    } else if (level === 2) {
+      if (this.expandedSubMenuId === item.id) {
+        this.expandedSubMenuId = null;
+        item.isOpen = false;
+      } else {
+        this.expandedSubMenuId = item.id;
+        item.isOpen = true;
+
+        const menuItems = this.menuBack();
+        if (menuItems?.length) {
+          menuItems.forEach((subItem: any) => {
+            if (subItem?.subItems?.length) {
+              subItem.subItems.forEach((subSubItem: any) => {
+                if (subSubItem.id !== item.id) {
+                  subSubItem.isOpen = false;
+                }
+              });
+            }
+          });
+        }
       }
     }
   }

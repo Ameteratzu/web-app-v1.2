@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, inject, OnInit, signal, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -15,18 +15,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Geometry } from 'ol/geom';
-import Feature from 'ol/Feature';
-// PCD
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
-import { LocalFiltrosOpePuertos } from '@services/ope/local-filtro-ope-puertos.service';
-import { OpePuertosService } from '@services/ope/ope-puertos.service';
+import { LocalFiltrosOpePuertos } from '@services/ope/administracion/local-filtro-ope-puertos.service';
+import { OpePuertosService } from '@services/ope/administracion/ope-puertos.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
-import { MY_DATE_FORMATS } from '../../../../../../types/date-formats';
 import { UtilsService } from '@shared/services/utils.service';
 import { ProvinceService } from '@services/province.service';
 import { MunicipalityService } from '@services/municipality.service';
@@ -34,10 +30,13 @@ import { CountryService } from '@services/country.service';
 import { Province } from '@type/province.type';
 import { Municipality } from '@type/municipality.type';
 import { Countries } from '@type/country.type';
-import { MapCreateComponent } from '@shared/mapCreate/map-create.component';
 import { TerritoryService } from '@services/territory.service';
 import { AutonomousCommunityService } from '@services/autonomous-community.service';
-// FIN PCD
+import { Territory } from '@type/territory.type';
+import { AutonomousCommunity } from '@type/autonomous-community.type';
+import { COUNTRIES_ID, FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FORMATO_FECHA } from '@type/date-formats';
 
 @Component({
   selector: 'ope-puerto-create-edit',
@@ -47,7 +46,6 @@ import { AutonomousCommunityService } from '@services/autonomous-community.servi
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
-    FormFieldComponent,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -59,23 +57,16 @@ import { AutonomousCommunityService } from '@services/autonomous-community.servi
     MatDatepickerModule,
     MatNativeDateModule,
     NgxSpinnerModule,
-    TooltipDirective,
     DragDropModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './ope-puerto-create-edit-form.component.html',
   styleUrl: './ope-puerto-create-edit-form.component.scss',
 })
 export class OpePuertoCreateEdit implements OnInit {
-  COUNTRIES_ID = {
-    PORTUGAL: 1,
-    SPAIN: 60,
-    FRANCE: 65,
-  };
-
   constructor(
     private filtrosOpePuertosService: LocalFiltrosOpePuertos,
     private opePuertosService: OpePuertosService,
@@ -95,11 +86,10 @@ export class OpePuertoCreateEdit implements OnInit {
 
   public filteredCountries = signal<Countries[]>([]);
 
-  public listadoTerritorio = signal<any[]>([]);
-  public listadoPaises = signal<any[]>([]);
-  public listadoCCAA = signal<any[]>([]);
-  public listadoProvincia = signal<any[]>([]);
-  public listadoMunicipio = signal<any[]>([]);
+  public territories = signal<Territory[]>([]);
+  public autonomousCommunities = signal<AutonomousCommunity[]>([]);
+  public provinces = signal<Province[]>([]);
+  public municipalities = signal<Municipality[]>([]);
 
   public listaPaisesExtranjeros = signal<Countries[]>([]);
   public listaPaisesNacionales = signal<Countries[]>([]);
@@ -113,20 +103,26 @@ export class OpePuertoCreateEdit implements OnInit {
   //PCD
   public snackBar = inject(MatSnackBar);
   public utilsService = inject(UtilsService);
+  public fechaMinimaDatePicker = FECHA_MINIMA_DATEPICKER;
+  public fechaMaximaDatePicker = FECHA_MAXIMA_DATEPICKER;
   // FIN PCD
 
   async ngOnInit() {
-    this.spinner.show();
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
+        fase: new FormControl('', Validators.required),
         territory: new FormControl(1),
-        country: new FormControl(this.COUNTRIES_ID.SPAIN),
-        CCAA: new FormControl('', Validators.required),
-        province: new FormControl('', Validators.required),
+        country: new FormControl(COUNTRIES_ID.SPAIN),
+        autonomousCommunity: new FormControl(''),
+        CCAA: new FormControl(''),
+        province: new FormControl(''),
+        provincia: new FormControl(''),
         municipality: new FormControl('', Validators.required),
-        fechaValidezDesde: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-        fechaValidezHasta: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        coordenadaUTM_X: new FormControl('', Validators.required),
+        coordenadaUTM_Y: new FormControl('', Validators.required),
+        fechaValidezDesde: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
+        fechaValidezHasta: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         capacidad: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
       },
       {
@@ -136,6 +132,7 @@ export class OpePuertoCreateEdit implements OnInit {
 
     if (!this.data.opePuerto?.id) {
       this.formData.get('municipality')?.disable();
+      this.formData.get('provincia')?.disable();
     }
 
     if (this.data.opePuerto?.id) {
@@ -143,12 +140,14 @@ export class OpePuertoCreateEdit implements OnInit {
       this.formData.patchValue({
         id: this.data.opePuerto.id,
         nombre: this.data.opePuerto.nombre,
+        fase: this.data.opePuerto.nombre,
         province: this.data.opePuerto.idProvincia,
         municipality: this.data.opePuerto.idMunicipio,
-        fechaInicioFaseSalida: moment(this.data.opePuerto.fechaInicioFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseSalida: moment(this.data.opePuerto.fechaFinFaseSalida).format('YYYY-MM-DD HH:mm'),
-        fechaInicioFaseRetorno: moment(this.data.opePuerto.fechaInicioFaseRetorno).format('YYYY-MM-DD HH:mm'),
-        fechaFinFaseRetorno: moment(this.data.opePuerto.fechaFinFaseRetorno).format('YYYY-MM-DD HH:mm'),
+        coordenadaUTM_X: this.data.opePuerto.coordenadaUTM_X,
+        coordenadaUTM_Y: this.data.opePuerto.coordenadaUTM_Y,
+        fechaValidezDesde: moment(this.data.opePuerto.fechaInicioFaseSalida).format('YYYY-MM-DD'),
+        fechaValidezHasta: moment(this.data.opePuerto.fechaFinFaseSalida).format('YYYY-MM-DD'),
+        capacidad: this.data.opePuerto.capacidad,
       });
     }
 
@@ -160,11 +159,18 @@ export class OpePuertoCreateEdit implements OnInit {
     this.filteredCountries.set(countriesNacionales);
 
     const territories = await this.territoryService.get();
-    this.listadoTerritorio.set(territories);
+    this.territories.set(territories);
 
     await this.loadCommunities();
 
-    this.spinner.hide();
+    //this.onSubmit();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('refreshFilterForm' in changes) {
+      //this.onSubmit();
+      alert('aa');
+    }
   }
 
   async onSubmit() {
@@ -231,24 +237,15 @@ export class OpePuertoCreateEdit implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  async loadCommunities(country?: any) {
-    if (country === '9999') {
-      this.listadoCCAA.set([]);
-      return;
-    }
-    const autonomousCommunities = await this.autonomousCommunityService.getByCountry(country ?? this.formData.value.country);
-    this.listadoCCAA.set(autonomousCommunities);
-  }
-
   // para meter en uns servicio común
   async changeTerritory(event: any) {
     this.formData.patchValue({
-      country: event.value == 1 ? this.COUNTRIES_ID.SPAIN : '',
+      country: event.value == 1 ? COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
       province: '',
       municipality: '',
     });
-    this.loadCommunities(event.value.id == 1 ? this.COUNTRIES_ID.SPAIN : '9999');
+    this.loadCommunities(event.value == 1 ? COUNTRIES_ID.SPAIN : '9999');
     if (event.value == 1) {
       this.filteredCountries.set(this.listaPaisesNacionales());
     }
@@ -260,16 +257,30 @@ export class OpePuertoCreateEdit implements OnInit {
     }
   }
 
-  // para meter en uns servicio común
+  async loadCommunities(country?: any) {
+    if (country === '9999') {
+      this.autonomousCommunities.set([]);
+      this.formData.get('autonomousCommunity')?.disable();
+      this.formData.get('provincia')?.disable();
+      this.formData.get('municipality')?.disable();
+      return;
+    }
+    const autonomousCommunities = await this.autonomousCommunityService.getByCountry(country ?? this.formData.value.country);
+    this.autonomousCommunities.set(autonomousCommunities);
+    this.formData.get('autonomousCommunity')?.enable();
+  }
+
   async loadProvinces(event: any) {
-    const ac_id = event.value.id;
+    const ac_id = event.value;
     const provinces = await this.provinceService.get(ac_id);
-    this.listadoProvincia.set(provinces);
+    this.provinces.set(provinces);
+    this.formData.get('provincia')?.enable();
   }
 
   async loadMunicipios(event: any) {
-    const provinciaId = event.value.id;
+    const provinciaId = event.value;
     const municipios = await this.municipioService.get(provinciaId);
-    this.listadoMunicipio.set(municipios);
+    this.municipalities.set(municipios);
+    this.formData.get('municipality')?.enable();
   }
 }

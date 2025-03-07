@@ -21,7 +21,7 @@ import { SavePayloadModal } from '../../../types/save-payload-modal';
 import { GenericMaster } from '../../../types/actions-relevant.type';
 import { _isNumberValue } from '@angular/cdk/coercion';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -53,7 +53,7 @@ const MY_DATE_FORMATS = {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
@@ -152,21 +152,18 @@ export class NotificationsComponent {
   async seleccionarItem(index: number) {
     this.isCreate.set(index);
     const data = this.notificacionesService.dataNotificaciones()[index];
-    console.log("🚀 ~ NotificationsComponent ~ seleccionarItem ~ data:", data.idTipoNotificacion)
+    console.log('🚀 ~ NotificationsComponent ~ seleccionarItem ~ data:', data.idTipoNotificacion);
     // if (typeof data.idTipoNotificacion === 'number') {
-      var ob = this.tiposNotificaciones().find((tipo) => 
-        typeof data.idTipoNotificacion === 'number' 
-          ? tipo.id === data.idTipoNotificacion 
-          : tipo.id === data.idTipoNotificacion.id
-      );
+    var ob = this.tiposNotificaciones().find((tipo) =>
+      typeof data.idTipoNotificacion === 'number' ? tipo.id === data.idTipoNotificacion : tipo.id === data.idTipoNotificacion.id
+    );
 
-      this.formData.get('idTipoNotificacion')?.setValue(ob);
-
+    this.formData.get('idTipoNotificacion')?.setValue(ob);
 
     // }else{
     //   this.formData.get('idTipoNotificacion')?.setValue(data.idTipoNotificacion);
     // }
-   
+
     this.formData.get('fechaHoraNotificacion')?.setValue(data.fechaHoraNotificacion);
     this.formData.get('organosNotificados')?.setValue(data.organosNotificados);
     this.formData.get('ucpm')?.setValue(data.ucpm);

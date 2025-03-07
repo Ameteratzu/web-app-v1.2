@@ -41,7 +41,7 @@ import {
 } from '../../../types/mobilization.type';
 import { TooltipDirective } from '../../../shared/directive/tooltip/tooltip.directive';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -78,11 +78,11 @@ const MY_DATE_FORMATS = {
     Step6Component,
     Step7Component,
     Step8Component,
-    TooltipDirective
+    TooltipDirective,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
   templateUrl: './mobilization.component.html',
   styleUrl: './mobilization.component.scss',
@@ -543,7 +543,6 @@ export class MobilizationComponent {
   }
 
   private procesarPaso5(): boolean {
-
     let pasoValido = (this.formData.get('paso5.IdCapacidad')?.valid ?? false) && (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
 
     const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
@@ -647,7 +646,7 @@ export class MobilizationComponent {
   }
 
   cargarPaso(movilizacion: Movilizacion) {
-    this.btnGuardar = "Guardar";
+    this.btnGuardar = 'Guardar';
     this.movilizacionSeleccionada = movilizacion;
     const pasoActual = this.getMaxTipoPaso(movilizacion);
     this.loadTipo(pasoActual);
@@ -734,11 +733,9 @@ export class MobilizationComponent {
     this.spinner.hide();
   }
 
- 
-
   hasTipoPaso1OrLastStep8(actuaciones: ActuacionRelevante[]): boolean {
-    return actuaciones.some(actuacion =>
-      actuacion.Movilizaciones.some(movilizacion => {
+    return actuaciones.some((actuacion) =>
+      actuacion.Movilizaciones.some((movilizacion) => {
         const pasos = movilizacion.Pasos;
         if (!pasos || pasos.length === 0) {
           return false;

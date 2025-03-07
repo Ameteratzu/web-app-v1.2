@@ -25,18 +25,8 @@ import { Media } from '../../types/media.type';
 import { OriginDestination } from '../../types/origin-destination.type';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FechaValidator } from '../../shared/validators/fecha-validator';
-
-const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'LL', // Definir el formato de entrada
-  },
-  display: {
-    dateInput: 'LL', // Definir cómo mostrar la fecha
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FORMATO_FECHA } from '@type/date-formats';
 
 interface FormType {
   id?: string;
@@ -72,8 +62,8 @@ interface FormType {
     DragDropModule,
   ],
   providers: [
-    { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class FireOtherInformationComponent implements OnInit {

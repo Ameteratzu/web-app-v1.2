@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ActionsRelevantService } from '../../../../services/actions-relevant.service';
 import { PasoAportacion } from '../../../../types/mobilization.type';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -39,7 +39,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './step7.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class Step7Component {
@@ -61,7 +61,7 @@ export class Step7Component {
     const capacidadForm = this.formGroup.get('IdCapacidad');
     capacidadForm?.setValue(foundCapacidad);
     capacidadForm?.disable();
-    if(pasoAportacion.IdCapacidad === 92){
+    if (pasoAportacion.IdCapacidad === 92) {
       this.showMedio = true;
       const medioForm = this.formGroup.get('MedioNoCatalogado');
       medioForm?.setValue(pasoAportacion.MedioNoCatalogado);

@@ -2,14 +2,14 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { ApiResponse } from '../../types/api-response.type';
-import { OpePeriodo } from '../../types/ope/ope-periodo.type';
+import { ApiResponse } from '../../../types/api-response.type';
+import { OpePuntoControlCarretera } from '../../../types/ope/administracion/ope-punto-control-carretera.type';
 
 @Injectable({ providedIn: 'root' })
-export class OpePeriodosService {
+export class OpePuntosControlCarreterasService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  public endpoint = '/ope-periodos';
+  public endpoint = '/ope-puntos-control-carreteras';
 
   generateUrlWitchParams({ url, params }: any) {
     return Object.keys(params).reduce((prev: any, key: any, index: any) => {
@@ -21,13 +21,13 @@ export class OpePeriodosService {
   }
 
   get(query: any = '') {
-    const URLBASE = '/ope-periodos?Sort=desc&PageSize=15';
+    const URLBASE = '/ope-puntos-control-carreteras?Sort=desc&PageSize=15';
 
     const endpoint = this.generateUrlWitchParams({
       url: URLBASE,
       params: query,
     });
-    return firstValueFrom(this.http.get<ApiResponse<OpePeriodo[]>>(endpoint).pipe((response) => response));
+    return firstValueFrom(this.http.get<ApiResponse<OpePuntoControlCarretera[]>>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {
@@ -73,7 +73,7 @@ export class OpePeriodosService {
   }
 
   delete(id: number) {
-    const endpoint = `/ope-periodos/${id}`;
+    const endpoint = `/ope-puntos-control-carreteras/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }

@@ -23,7 +23,7 @@ import { CoordinationAddressService } from '../../../services/coordination-addre
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
-const MY_DATE_FORMATS = {
+const FORMATO_FECHA = {
   parse: {
     dateInput: 'LL',
   },
@@ -57,7 +57,7 @@ const MY_DATE_FORMATS = {
   styleUrl: './address.component.scss',
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
 })
 export class AddressComponent {

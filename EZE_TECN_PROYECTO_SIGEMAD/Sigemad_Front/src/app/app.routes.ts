@@ -8,6 +8,10 @@ import { LayoutBaseComponent } from './shared/layouts/layout-base.component';
 import { OpePeriodosComponent } from './pages/ope/administracion/periodos/ope-periodos.component';
 import { OpePuertosComponent } from './pages/ope/administracion/puertos/ope-puertos.component';
 import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-maritimas/ope-lineas-maritimas.component';
+import { OpeFronterasComponent } from './pages/ope/administracion/fronteras/ope-fronteras.component';
+import { OpeAreasDescansoComponent } from './pages/ope/administracion/areas-descanso/ope-areas-descanso.component';
+import { OpePuntosControlCarreterasComponent } from './pages/ope/administracion/puntos-control-carreteras/ope-puntos-control-carreteras.component';
+import { OpeDatosFronterasComponent } from './pages/ope/datos/fronteras/ope-datos-fronteras.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -44,17 +48,17 @@ export const routes: Routes = [
         component: OpeLineasMaritimasComponent,
         data: { breadcrumb: 'Administración de líneas marítimas' },
       },
-      { path: 'ope-administracion-fronteras', component: OpePeriodosComponent, data: { breadcrumb: 'Administración de fronteras' } },
+      { path: 'ope-administracion-fronteras', component: OpeFronterasComponent, data: { breadcrumb: 'Administración de fronteras' } },
 
       {
         path: 'ope-administracion-puntos-control-carreteras',
-        component: OpePeriodosComponent,
+        component: OpePuntosControlCarreterasComponent,
         data: { breadcrumb: 'Puntos de Control en carreteras' },
       },
       {
         path: 'ope-administracion-areas-descanso',
-        component: OpePeriodosComponent,
-        data: { breadcrumb: 'Áreas de descanso y puntos de información en carreterass' },
+        component: OpeAreasDescansoComponent,
+        data: { breadcrumb: 'Áreas de descanso y puntos de información en carreteras' },
       },
       { path: 'ope-administracion-areas-estacionamiento', component: OpePeriodosComponent, data: { breadcrumb: 'Áreas de estacionamiento' } },
       {
@@ -90,9 +94,9 @@ export const routes: Routes = [
         data: { breadcrumb: 'Asistencias. Funcionalidades' },
       },
       {
-        path: 'ope-nuevo-fronteras',
-        component: OpePeriodosComponent,
-        data: { breadcrumb: 'Fronteras' },
+        path: 'ope-nuevo-datos-fronteras',
+        component: OpeDatosFronterasComponent,
+        data: { breadcrumb: 'Datos de fronteras' },
       },
       {
         path: 'ope-nuevo-fronteras-funcionalidades',
@@ -223,6 +227,12 @@ export const routes: Routes = [
         path: 'ope-incidencias-datos-inicio',
         component: OpePeriodosComponent,
         data: { breadcrumb: 'Incidencias. Datos de inicio' },
+      },
+      // OPE - INFORMES
+      {
+        path: 'ope-informes-prueba',
+        component: OpePeriodosComponent,
+        data: { breadcrumb: 'Informe de prueba' },
       },
       // FIN PCD
 

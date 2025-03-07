@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpePuerto } from '../../../../../../types/ope/ope-puerto.type';
+import { OpePuerto } from '../../../../../../types/ope/administracion/ope-puerto.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { OpePuertoCreateEdit } from '../ope-puerto-create-edit-form/ope-puerto-c
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpePuertosService } from '@services/ope/ope-puertos.service';
+import { OpePuertosService } from '@services/ope/administracion/ope-puertos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -86,7 +86,7 @@ export class OpePuertosTableComponent implements OnChanges {
   }
 
   getFechaFormateada(fecha: any) {
-    return moment(fecha).format('DD/MM/yyyy HH:mm');
+    return moment(fecha).format('DD/MM/yyyy');
   }
 
   goModalEdit(opePuerto: OpePuerto) {
