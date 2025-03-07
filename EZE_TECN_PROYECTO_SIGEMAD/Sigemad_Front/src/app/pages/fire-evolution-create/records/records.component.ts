@@ -234,7 +234,7 @@ export class RecordsComponent implements OnInit {
       const formValues = this.formData.value;
 
       const newRecord: EvolucionIncendio = {
-        idEvolucion: null,
+        IdRegistroActualizacion: null,
         idSuceso: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: new Date(formValues.startDate).toISOString(),

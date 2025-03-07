@@ -78,16 +78,13 @@ export class FireCreateComponent implements OnInit {
   estado: number | undefined;
 
   async isToEditDocumentation() {
-    if (!this.data?.fireDetail?.id) {
-      if (this.data?.valoresDefecto) {
-        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data?.valoresDefecto));
-        this.estado = dataCordinacion.parametro?.estadoIncendio.id;
-      }
-      this.isDataReady = true;
-      return;
-    }
+    
 
-    const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.fireDetail.id));
+        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.idIncendio));
+        this.estado = dataCordinacion.parametro?.estadoIncendio.id;
+      
+      this.isDataReady = true;
+
 
     this.editData = dataCordinacion;
     this.isDataReady = true;
@@ -197,7 +194,7 @@ export class FireCreateComponent implements OnInit {
   async processData(): Promise<void> {
     if (this.evolutionSevice.dataRecords().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
-      this.idReturn ? (this.evolutionSevice.dataRecords()[0].idEvolucion = this.idReturn) : 0;
+      this.idReturn ? (this.evolutionSevice.dataRecords()[0].IdRegistroActualizacion = this.idReturn) : 0;
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
       this.idReturn = result.id;
     }

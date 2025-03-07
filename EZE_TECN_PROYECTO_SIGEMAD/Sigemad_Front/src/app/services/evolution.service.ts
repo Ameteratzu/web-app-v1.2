@@ -14,7 +14,7 @@ export class EvolutionService {
   public dataConse = signal<any[]>([]);
 
   get(fire_id: any) {
-    const endpoint = `/Evoluciones/${fire_id}`;
+    const endpoint = `/evoluciones?idSuceso=${fire_id}`;
 
     return firstValueFrom(this.http.get<Evolution[]>(endpoint).pipe((response) => response));
   }
@@ -120,7 +120,7 @@ export class EvolutionService {
   }
 
   getById(id: Number) {
-    let endpoint = `/Evoluciones/${id}`;
+    let endpoint = `/evoluciones?idSuceso=${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

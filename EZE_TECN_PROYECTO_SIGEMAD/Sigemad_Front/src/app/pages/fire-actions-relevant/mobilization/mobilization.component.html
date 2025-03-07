@@ -69,12 +69,14 @@
               src="/assets/img/movilizaciones/m-ofrecimiento.svg"
               *ngIf="paso.TipoPaso === 3"
               appTooltip="Ofrecimeinto recibido"
+              (click)="editarPaso(paso)"
             />
             <img
               class="padding-icons"
               src="/assets/img/movilizaciones/m-aportacion.svg"
               *ngIf="paso.TipoPaso === 5"
               appTooltip="Aportación confirmada"
+              (click)="editarPaso(paso)"
             />
             <img
               class="padding-icons"

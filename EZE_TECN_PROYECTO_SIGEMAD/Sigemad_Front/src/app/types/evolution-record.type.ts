@@ -2,7 +2,7 @@ import { OriginDestination } from './origin-destination.type';
 
 export interface EvolucionIncendio {
   idSuceso: number;
-  idEvolucion: any;
+  IdRegistroActualizacion: any;
   registro: Registro;
   datoPrincipal: DatoPrincipal;
   parametro: Parametro;

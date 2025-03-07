@@ -383,14 +383,37 @@ export class MobilizationComponent {
         }
         this.movilizacionSeleccionada.Pasos.push(this.pasoOfrecimiento);
         break;
-      case 5:
-        if (!this.procesarPaso5()) return;
-        if (!this.movilizacionSeleccionada) {
-          console.error('No se ha seleccionado una movilización para agregar el Paso 5.');
-          return;
-        }
-        this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
-        break;
+        case 5:
+          if (!this.procesarPaso5()) return;
+          if (this.editar) {
+            this.btnGuardar = 'Guardar';
+            if (this.movilizacionSeleccionada) {
+              const index = this.movilizacionSeleccionada.Pasos.findIndex(p => p.TipoPaso === 5);
+              if (index !== -1) {
+                this.movilizacionSeleccionada.Pasos[index] = this.pasoAportacion;
+              } else {
+                this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
+              }
+            } else if (movilizaciones.length > 0) {
+              const firstMov = movilizaciones[0];
+              const index = firstMov.Pasos.findIndex(p => p.TipoPaso === 5);
+              if (index !== -1) {
+                firstMov.Pasos[index] = this.pasoAportacion;
+              } else {
+                firstMov.Pasos.push(this.pasoAportacion);
+              }
+            } else {
+              console.error('No se encontró una movilización para editar el Paso 5.');
+              return;
+            }
+          } else {
+            if (!this.movilizacionSeleccionada) {
+              console.error('No se ha seleccionado una movilización para agregar el Paso 5.');
+              return;
+            }
+            this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
+          }
+          break;
       case 6:
         if (!this.procesarPaso6()) return;
         if (!this.movilizacionSeleccionada) {
@@ -569,7 +592,7 @@ export class MobilizationComponent {
 
     const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
     const capacidadId = capacidadValue?.id;
-
+    console.log("🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.formData.value:", this.formData.value)
     if (capacidadId === 92) {
       pasoValido = pasoValido && (this.formData.get('paso5.MedioNoCatalogado')?.valid ?? false);
     }
@@ -583,12 +606,16 @@ export class MobilizationComponent {
       Id: 0,
       TipoPaso: 5,
       IdCapacidad: this.formData.value.paso5.IdCapacidad?.id ?? 0,
+      
       MedioNoCatalogado: this.formData.value.paso5.MedioNoCatalogado || '',
-      IdTipoAdministracion: this.formData.value.paso5.IdTipoAdministracion?.id ?? 0,
+      IdTipoAdministracion: 1,
       TitularMedio: this.formData.value.paso5.TitularMedio5 || '',
       FechaHoraAportacion: new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString(),
       Descripcion: this.formData.value.paso5.Descripcion5 || '',
     };
+
+    console.log("🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.pasoAportacion:", this.pasoAportacion)
+      
 
     return true;
   }
@@ -830,6 +857,49 @@ export class MobilizationComponent {
           Observaciones2: paso.Observaciones,
         });
 
+      }
+    }else if (paso.TipoPaso === 3) {
+      if (paso.TipoPaso === 3) {
+        const destinoSeleccionado = this.dataMaestros.destinos.find((dest: any) => dest.id === paso.IdDestinoMedio);
+        if (!destinoSeleccionado) {
+          return;
+        }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 3 });
+        this.formData.get('paso3')?.patchValue({
+          TitularMedio3: paso.TitularMedio3, 
+          GestionCECOD: paso.GestionCECOD,
+          FechaHoraOfrecimiento: new Date(paso.FechaHoraOfrecimiento),
+          Descripcion3: paso.Descripcion,
+          FechaHoraDisponibilidad:  new Date(paso.FechaHoraDisponibilidad),
+          Observaciones3: paso.Observaciones,
+        });
+      }
+    }else if (paso.TipoPaso === 5) {
+      if (paso.TipoPaso === 5) {
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        if (!capacidadCeleccionada) {
+          return;
+        }
+
+        // const tipoAdminId = event?.value?.entidad?.organismo?.administracion?.tipoAdministracion?.id;
+
+        // const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === tipoAdminId);
+        // const controlTipoAdmin = this.formGroup.get('IdTipoAdministracion');
+        // if (foundTipoAdmin) {
+        //   controlTipoAdmin?.setValue(foundTipoAdmin);
+        //   controlTipoAdmin?.disable();
+        // }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 5 });
+        this.formData.get('paso5')?.patchValue({
+          IdCapacidad: capacidadCeleccionada, 
+          MedioNoCatalogado: paso.MedioNoCatalogado,
+          IdTipoAdministracion: paso.IdTipoAdministracion,
+          TitularMedio5: paso.TitularMedio,
+          FechaHoraAportacion:  new Date(paso.FechaHoraAportacion),
+          Descripcion5: paso.Descripcion,
+        });
       }
     }
   }
