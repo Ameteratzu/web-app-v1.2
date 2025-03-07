@@ -176,7 +176,7 @@ export class FireFilterFormComponent implements OnInit {
       episode: new FormControl(episode ?? ''),
       situationEquivalent: new FormControl(situationEquivalent ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
-      move: new FormControl(move ?? 1),
+      move: new FormControl(move ?? 4),
       //start: new FormControl(start ?? ''),
       //end: new FormControl(end ?? ''),
       between: new FormControl(between ?? 1),

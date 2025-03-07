@@ -124,7 +124,7 @@ export class MobilizationComponent {
   public pasoIntervencion!: PasoIntervencion;
   public pasoLlegada!: PasoLlegadaBase;
   public movilizacionSeleccionada?: Movilizacion;
-  public btnGuardar = "Nueva solicitud";
+  public btnGuardar = 'Nueva solicitud';
   public editar: boolean = false;
 
   async ngOnInit() {
@@ -299,8 +299,11 @@ export class MobilizationComponent {
   }
 
   async onSubmit(formDirective: FormGroupDirective): Promise<void> {
-    this.btnGuardar = "Nueva solicitud"
-    console.log("🚀 ~ MobilizationComponent ~ getOrCreateActuacion ~ this.movilizacionService.dataMovilizacion():", this.movilizacionService.dataMovilizacion())
+    this.btnGuardar = 'Nueva solicitud';
+    console.log(
+      '🚀 ~ MobilizationComponent ~ getOrCreateActuacion ~ this.movilizacionService.dataMovilizacion():',
+      this.movilizacionService.dataMovilizacion()
+    );
     const pasoActual = this.formData.get('idTipoNotificacion')?.value.id;
     if (pasoActual === undefined || pasoActual === null) {
       console.error('No se ha seleccionado un paso válido.');
@@ -309,16 +312,16 @@ export class MobilizationComponent {
 
     const actuaciones = this.getOrCreateActuacion();
     const movilizaciones = actuaciones[0].Movilizaciones;
-    console.log("🚀 ~ MobilizationComponent ~ onSubmit ~ movilizaciones:", movilizaciones)
+    console.log('🚀 ~ MobilizationComponent ~ onSubmit ~ movilizaciones:', movilizaciones);
     console.log('🚀 ~ MobilizationComponent ~ onSubmit ~ pasoActual:', pasoActual);
     switch (pasoActual) {
       case 1:
         if (!this.procesarPaso1()) return;
         if (this.editar) {
-          this.btnGuardar = "Guardar";
+          this.btnGuardar = 'Guardar';
           if (this.movilizacionSeleccionada) {
             // Buscamos el índice del paso 1 dentro de la movilización seleccionada
-            const index = this.movilizacionSeleccionada.Pasos.findIndex(p => p.TipoPaso === 1);
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 1);
             if (index !== -1) {
               // Actualizamos el paso existente
               this.movilizacionSeleccionada.Pasos[index] = this.pasoSolicitud;
@@ -329,7 +332,7 @@ export class MobilizationComponent {
           } else if (movilizaciones.length > 0) {
             // Si no hay movilizacionSeleccionada, actualizamos el primer registro
             const firstMov = movilizaciones[0];
-            const index = firstMov.Pasos.findIndex(p => p.TipoPaso === 1);
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 1);
             if (index !== -1) {
               firstMov.Pasos[index] = this.pasoSolicitud;
             } else {
@@ -343,7 +346,7 @@ export class MobilizationComponent {
           // Si no estamos en modo edición, agregamos una nueva movilización con el paso 1
           this.agregarNuevaMovilizacion(movilizaciones, this.pasoSolicitud);
         }
-        
+
         break;
       case 2:
         if (!this.procesarPaso2()) return;
@@ -408,13 +411,13 @@ export class MobilizationComponent {
 
     this.movilizacionService.dataMovilizacion.set([actuacionRelevante]);
     console.log('Datos actualizados:', this.movilizacionService.dataMovilizacion());
-     this.editar = false;
+    this.editar = false;
   }
 
   private getOrCreateActuacion(): ActuacionRelevante[] {
     let actuaciones = this.movilizacionService.dataMovilizacion();
- 
-    console.log("🚀 ~ MobilizationComponent ~ getOrCreateActuacion ~ actuaciones:", actuaciones)
+
+    console.log('🚀 ~ MobilizationComponent ~ getOrCreateActuacion ~ actuaciones:', actuaciones);
     if (!actuaciones.length) {
       actuaciones = [
         {
@@ -774,8 +777,8 @@ export class MobilizationComponent {
   }
 
   editarPaso(paso: any): void {
-    console.log("🚀 ~ MobilizationComponent ~ editarPaso ~ paso:", paso)
-    this.btnGuardar = "Guardar";
+    console.log('🚀 ~ MobilizationComponent ~ editarPaso ~ paso:', paso);
+    this.btnGuardar = 'Guardar';
     this.editar = true;
     if (paso.TipoPaso === 1) {
       const procedenciaSeleccionada = this.dataMaestros.procedencia.find((proc: any) => proc.id === paso.IdProcedenciaMedio);
@@ -789,11 +792,26 @@ export class MobilizationComponent {
         AutoridadSolicitante: paso.AutoridadSolicitante,
         FechaHoraSolicitud: new Date(paso.FechaHoraSolicitud),
         Descripcion: paso.Descripcion,
-        Observaciones: paso.Observaciones
+        Observaciones: paso.Observaciones,
       });
-      
-    } else {
-      console.error('El paso recibido no corresponde al Paso 1');
+    } else if (paso.TipoPaso === 2) {
+      if (paso.TipoPaso === 2) {
+        const destinoSeleccionado = this.dataMaestros.destinos.find((dest: any) => dest.id === paso.IdDestinoMedio);
+        if (!destinoSeleccionado) {
+          return;
+        }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 2 });
+        this.formData.get('paso2')?.patchValue({
+          IdDestinoMedio: destinoSeleccionado, // IdDestinoMedio
+          TitularMedio: paso.TitularMedio,
+          FechaHoraTramitacion: new Date(paso.FechaHoraTramitacion),
+          PublicadoCECIS: paso.PublicadoCECIS,
+          Descripcion2: paso.Descripcion,
+          Observaciones2: paso.Observaciones,
+        });
+
+      }
     }
   }
 }
