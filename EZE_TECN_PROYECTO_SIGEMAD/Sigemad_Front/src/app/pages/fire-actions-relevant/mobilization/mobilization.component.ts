@@ -320,17 +320,13 @@ export class MobilizationComponent {
         if (this.editar) {
           this.btnGuardar = 'Guardar';
           if (this.movilizacionSeleccionada) {
-            // Buscamos el índice del paso 1 dentro de la movilización seleccionada
             const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 1);
             if (index !== -1) {
-              // Actualizamos el paso existente
               this.movilizacionSeleccionada.Pasos[index] = this.pasoSolicitud;
             } else {
-              // Si no se encontró, lo agregamos (aunque en modo edición debería existir)
               this.movilizacionSeleccionada.Pasos.push(this.pasoSolicitud);
             }
           } else if (movilizaciones.length > 0) {
-            // Si no hay movilizacionSeleccionada, actualizamos el primer registro
             const firstMov = movilizaciones[0];
             const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 1);
             if (index !== -1) {
@@ -348,14 +344,37 @@ export class MobilizationComponent {
         }
 
         break;
-      case 2:
-        if (!this.procesarPaso2()) return;
-        if (!this.movilizacionSeleccionada) {
-          console.error('No se ha seleccionado una movilización para agregar el Paso 2.');
-          return;
-        }
-        this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
-        break;
+        case 2:
+          if (!this.procesarPaso2()) return;
+          if (this.editar) {
+            this.btnGuardar = 'Guardar';
+            if (this.movilizacionSeleccionada) {
+              const index = this.movilizacionSeleccionada.Pasos.findIndex(p => p.TipoPaso === 2);
+              if (index !== -1) {
+                this.movilizacionSeleccionada.Pasos[index] = this.pasoTramitacion;
+              } else {
+                this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
+              }
+            } else if (movilizaciones.length > 0) {
+              const firstMov = movilizaciones[0];
+              const index = firstMov.Pasos.findIndex(p => p.TipoPaso === 2);
+              if (index !== -1) {
+                firstMov.Pasos[index] = this.pasoTramitacion;
+              } else {
+                firstMov.Pasos.push(this.pasoTramitacion);
+              }
+            } else {
+              console.error('No se encontró una movilización para editar el Paso 2.');
+              return;
+            }
+          } else {
+            if (!this.movilizacionSeleccionada) {
+              console.error('No se ha seleccionado una movilización para agregar el Paso 2.');
+              return;
+            }
+            this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
+          }
+          break;
       case 3:
         if (!this.procesarPaso3()) return;
         if (!this.movilizacionSeleccionada) {
