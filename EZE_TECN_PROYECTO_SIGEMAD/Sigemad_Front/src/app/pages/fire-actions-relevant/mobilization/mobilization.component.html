@@ -83,9 +83,22 @@
               src="/assets/img/movilizaciones/m-despliegue.svg"
               *ngIf="paso.TipoPaso === 6"
               appTooltip="Despliegue iniciado"
+              (click)="editarPaso(paso)"
             />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-fin.svg" *ngIf="paso.TipoPaso === 7" appTooltip="Repliegue notificado" />
-            <img class="padding-icons" src="/assets/img/movilizaciones/m-llegada.svg" *ngIf="paso.TipoPaso === 8" appTooltip="Llegada a base" />
+            <img
+              class="padding-icons"
+              src="/assets/img/movilizaciones/m-fin.svg"
+              *ngIf="paso.TipoPaso === 7"
+              appTooltip="Repliegue notificado"
+              (click)="editarPaso(paso)"
+            />
+            <img
+              class="padding-icons"
+              src="/assets/img/movilizaciones/m-llegada.svg"
+              *ngIf="paso.TipoPaso === 8"
+              appTooltip="Llegada a base"
+              (click)="editarPaso(paso)"
+            />
           </ng-container>
         </td>
       </ng-container>

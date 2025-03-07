@@ -344,37 +344,37 @@ export class MobilizationComponent {
         }
 
         break;
-        case 2:
-          if (!this.procesarPaso2()) return;
-          if (this.editar) {
-            this.btnGuardar = 'Guardar';
-            if (this.movilizacionSeleccionada) {
-              const index = this.movilizacionSeleccionada.Pasos.findIndex(p => p.TipoPaso === 2);
-              if (index !== -1) {
-                this.movilizacionSeleccionada.Pasos[index] = this.pasoTramitacion;
-              } else {
-                this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
-              }
-            } else if (movilizaciones.length > 0) {
-              const firstMov = movilizaciones[0];
-              const index = firstMov.Pasos.findIndex(p => p.TipoPaso === 2);
-              if (index !== -1) {
-                firstMov.Pasos[index] = this.pasoTramitacion;
-              } else {
-                firstMov.Pasos.push(this.pasoTramitacion);
-              }
+      case 2:
+        if (!this.procesarPaso2()) return;
+        if (this.editar) {
+          this.btnGuardar = 'Guardar';
+          if (this.movilizacionSeleccionada) {
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 2);
+            if (index !== -1) {
+              this.movilizacionSeleccionada.Pasos[index] = this.pasoTramitacion;
             } else {
-              console.error('No se encontró una movilización para editar el Paso 2.');
-              return;
+              this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
+            }
+          } else if (movilizaciones.length > 0) {
+            const firstMov = movilizaciones[0];
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 2);
+            if (index !== -1) {
+              firstMov.Pasos[index] = this.pasoTramitacion;
+            } else {
+              firstMov.Pasos.push(this.pasoTramitacion);
             }
           } else {
-            if (!this.movilizacionSeleccionada) {
-              console.error('No se ha seleccionado una movilización para agregar el Paso 2.');
-              return;
-            }
-            this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
+            console.error('No se encontró una movilización para editar el Paso 2.');
+            return;
           }
-          break;
+        } else {
+          if (!this.movilizacionSeleccionada) {
+            console.error('No se ha seleccionado una movilización para agregar el Paso 2.');
+            return;
+          }
+          this.movilizacionSeleccionada.Pasos.push(this.pasoTramitacion);
+        }
+        break;
       case 3:
         if (!this.procesarPaso3()) return;
         if (!this.movilizacionSeleccionada) {
@@ -383,60 +383,129 @@ export class MobilizationComponent {
         }
         this.movilizacionSeleccionada.Pasos.push(this.pasoOfrecimiento);
         break;
-        case 5:
-          if (!this.procesarPaso5()) return;
-          if (this.editar) {
-            this.btnGuardar = 'Guardar';
-            if (this.movilizacionSeleccionada) {
-              const index = this.movilizacionSeleccionada.Pasos.findIndex(p => p.TipoPaso === 5);
-              if (index !== -1) {
-                this.movilizacionSeleccionada.Pasos[index] = this.pasoAportacion;
-              } else {
-                this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
-              }
-            } else if (movilizaciones.length > 0) {
-              const firstMov = movilizaciones[0];
-              const index = firstMov.Pasos.findIndex(p => p.TipoPaso === 5);
-              if (index !== -1) {
-                firstMov.Pasos[index] = this.pasoAportacion;
-              } else {
-                firstMov.Pasos.push(this.pasoAportacion);
-              }
+      case 5:
+        if (!this.procesarPaso5()) return;
+        if (this.editar) {
+          this.btnGuardar = 'Guardar';
+          if (this.movilizacionSeleccionada) {
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 5);
+            if (index !== -1) {
+              this.movilizacionSeleccionada.Pasos[index] = this.pasoAportacion;
             } else {
-              console.error('No se encontró una movilización para editar el Paso 5.');
-              return;
+              this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
+            }
+          } else if (movilizaciones.length > 0) {
+            const firstMov = movilizaciones[0];
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 5);
+            if (index !== -1) {
+              firstMov.Pasos[index] = this.pasoAportacion;
+            } else {
+              firstMov.Pasos.push(this.pasoAportacion);
             }
           } else {
-            if (!this.movilizacionSeleccionada) {
-              console.error('No se ha seleccionado una movilización para agregar el Paso 5.');
-              return;
-            }
-            this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
+            console.error('No se encontró una movilización para editar el Paso 5.');
+            return;
           }
-          break;
+        } else {
+          if (!this.movilizacionSeleccionada) {
+            console.error('No se ha seleccionado una movilización para agregar el Paso 5.');
+            return;
+          }
+          this.movilizacionSeleccionada.Pasos.push(this.pasoAportacion);
+        }
+        break;
       case 6:
         if (!this.procesarPaso6()) return;
-        if (!this.movilizacionSeleccionada) {
-          console.error('No se ha seleccionado una movilización para agregar el Paso 6.');
-          return;
+        if (this.editar) {
+          this.btnGuardar = 'Guardar';
+          if (this.movilizacionSeleccionada) {
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 6);
+            if (index !== -1) {
+              this.movilizacionSeleccionada.Pasos[index] = this.pasoDespliegue;
+            } else {
+              this.movilizacionSeleccionada.Pasos.push(this.pasoDespliegue);
+            }
+          } else if (movilizaciones.length > 0) {
+            const firstMov = movilizaciones[0];
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 6);
+            if (index !== -1) {
+              firstMov.Pasos[index] = this.pasoDespliegue;
+            } else {
+              firstMov.Pasos.push(this.pasoDespliegue);
+            }
+          } else {
+            console.error('No se encontró una movilización para editar el Paso 6.');
+            return;
+          }
+        } else {
+          if (!this.movilizacionSeleccionada) {
+            console.error('No se ha seleccionado una movilización para agregar el Paso 6.');
+            return;
+          }
+          this.movilizacionSeleccionada.Pasos.push(this.pasoDespliegue);
         }
-        this.movilizacionSeleccionada.Pasos.push(this.pasoDespliegue);
         break;
       case 7:
         if (!this.procesarPaso7()) return;
-        if (!this.movilizacionSeleccionada) {
-          console.error('No se ha seleccionado una movilización para agregar el Paso 7.');
-          return;
+        if (this.editar) {
+          this.btnGuardar = 'Guardar';
+          if (this.movilizacionSeleccionada) {
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 7);
+            if (index !== -1) {
+              this.movilizacionSeleccionada.Pasos[index] = this.pasoIntervencion;
+            } else {
+              this.movilizacionSeleccionada.Pasos.push(this.pasoIntervencion);
+            }
+          } else if (movilizaciones.length > 0) {
+            const firstMov = movilizaciones[0];
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 7);
+            if (index !== -1) {
+              firstMov.Pasos[index] = this.pasoIntervencion;
+            } else {
+              firstMov.Pasos.push(this.pasoIntervencion);
+            }
+          } else {
+            console.error('No se encontró una movilización para editar el Paso 7.');
+            return;
+          }
+        } else {
+          if (!this.movilizacionSeleccionada) {
+            console.error('No se ha seleccionado una movilización para agregar el Paso 7.');
+            return;
+          }
+          this.movilizacionSeleccionada.Pasos.push(this.pasoIntervencion);
         }
-        this.movilizacionSeleccionada.Pasos.push(this.pasoIntervencion);
         break;
       case 8:
         if (!this.procesarPaso8()) return;
-        if (!this.movilizacionSeleccionada) {
-          console.error('No se ha seleccionado una movilización para agregar el Paso 58');
-          return;
+        if (this.editar) {
+          this.btnGuardar = 'Guardar';
+          if (this.movilizacionSeleccionada) {
+            const index = this.movilizacionSeleccionada.Pasos.findIndex((p) => p.TipoPaso === 8);
+            if (index !== -1) {
+              this.movilizacionSeleccionada.Pasos[index] = this.pasoLlegada;
+            } else {
+              this.movilizacionSeleccionada.Pasos.push(this.pasoLlegada);
+            }
+          } else if (movilizaciones.length > 0) {
+            const firstMov = movilizaciones[0];
+            const index = firstMov.Pasos.findIndex((p) => p.TipoPaso === 8);
+            if (index !== -1) {
+              firstMov.Pasos[index] = this.pasoLlegada;
+            } else {
+              firstMov.Pasos.push(this.pasoLlegada);
+            }
+          } else {
+            console.error('No se encontró una movilización para editar el Paso 8.');
+            return;
+          }
+        } else {
+          if (!this.movilizacionSeleccionada) {
+            console.error('No se ha seleccionado una movilización para agregar el Paso 8.');
+            return;
+          }
+          this.movilizacionSeleccionada.Pasos.push(this.pasoLlegada);
         }
-        this.movilizacionSeleccionada.Pasos.push(this.pasoLlegada);
         break;
       default:
         console.error('Paso actual desconocido.');
@@ -592,7 +661,7 @@ export class MobilizationComponent {
 
     const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
     const capacidadId = capacidadValue?.id;
-    console.log("🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.formData.value:", this.formData.value)
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.formData.value:', this.formData.value);
     if (capacidadId === 92) {
       pasoValido = pasoValido && (this.formData.get('paso5.MedioNoCatalogado')?.valid ?? false);
     }
@@ -606,7 +675,7 @@ export class MobilizationComponent {
       Id: 0,
       TipoPaso: 5,
       IdCapacidad: this.formData.value.paso5.IdCapacidad?.id ?? 0,
-      
+
       MedioNoCatalogado: this.formData.value.paso5.MedioNoCatalogado || '',
       IdTipoAdministracion: 1,
       TitularMedio: this.formData.value.paso5.TitularMedio5 || '',
@@ -614,14 +683,14 @@ export class MobilizationComponent {
       Descripcion: this.formData.value.paso5.Descripcion5 || '',
     };
 
-    console.log("🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.pasoAportacion:", this.pasoAportacion)
-      
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.pasoAportacion:', this.pasoAportacion);
 
     return true;
   }
 
   private procesarPaso6(): boolean {
     const pasoValido = (this.formData.get('paso6.IdCapacidad')?.valid ?? false) && (this.formData.get('paso6.FechaHoraDespliegue')?.valid ?? false);
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~ pasoValido:', pasoValido);
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -632,12 +701,14 @@ export class MobilizationComponent {
       Id: 0,
       TipoPaso: 6,
       IdCapacidad: this.formData.value.paso6.IdCapacidad?.id ?? 0,
+
       MedioNoCatalogado: this.formData.value.paso6.MedioNoCatalogado || '',
       FechaHoraDespliegue: new Date(this.formData.value.paso6.FechaHoraDespliegue).toISOString(),
       FechaHoraInicioIntervencion: new Date(this.formData.value.paso6.FechaHoraInicioIntervencion).toISOString(),
       Descripcion: this.formData.value.paso5.Descripcion6 || '',
       Observaciones: this.formData.value.paso5.Observaciones6 || '',
     };
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~  this.pasoDespliegue:', this.pasoDespliegue);
     return true;
   }
 
@@ -856,9 +927,8 @@ export class MobilizationComponent {
           Descripcion2: paso.Descripcion,
           Observaciones2: paso.Observaciones,
         });
-
       }
-    }else if (paso.TipoPaso === 3) {
+    } else if (paso.TipoPaso === 3) {
       if (paso.TipoPaso === 3) {
         const destinoSeleccionado = this.dataMaestros.destinos.find((dest: any) => dest.id === paso.IdDestinoMedio);
         if (!destinoSeleccionado) {
@@ -867,38 +937,74 @@ export class MobilizationComponent {
 
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 3 });
         this.formData.get('paso3')?.patchValue({
-          TitularMedio3: paso.TitularMedio3, 
+          TitularMedio3: paso.TitularMedio3,
           GestionCECOD: paso.GestionCECOD,
           FechaHoraOfrecimiento: new Date(paso.FechaHoraOfrecimiento),
           Descripcion3: paso.Descripcion,
-          FechaHoraDisponibilidad:  new Date(paso.FechaHoraDisponibilidad),
+          FechaHoraDisponibilidad: new Date(paso.FechaHoraDisponibilidad),
           Observaciones3: paso.Observaciones,
         });
       }
-    }else if (paso.TipoPaso === 5) {
+    } else if (paso.TipoPaso === 5) {
       if (paso.TipoPaso === 5) {
         const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
         if (!capacidadCeleccionada) {
           return;
         }
-
-        // const tipoAdminId = event?.value?.entidad?.organismo?.administracion?.tipoAdministracion?.id;
-
-        // const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === tipoAdminId);
-        // const controlTipoAdmin = this.formGroup.get('IdTipoAdministracion');
-        // if (foundTipoAdmin) {
-        //   controlTipoAdmin?.setValue(foundTipoAdmin);
-        //   controlTipoAdmin?.disable();
-        // }
-
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 5 });
         this.formData.get('paso5')?.patchValue({
-          IdCapacidad: capacidadCeleccionada, 
+          IdCapacidad: capacidadCeleccionada,
           MedioNoCatalogado: paso.MedioNoCatalogado,
           IdTipoAdministracion: paso.IdTipoAdministracion,
           TitularMedio5: paso.TitularMedio,
-          FechaHoraAportacion:  new Date(paso.FechaHoraAportacion),
+          FechaHoraAportacion: new Date(paso.FechaHoraAportacion),
           Descripcion5: paso.Descripcion,
+        });
+      }
+    } else if (paso.TipoPaso === 6) {
+      if (paso.TipoPaso === 6) {
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        if (!capacidadCeleccionada) {
+          return;
+        }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 6 });
+        this.formData.get('paso5')?.patchValue({
+          IdCapacidad: capacidadCeleccionada,
+          MedioNoCatalogado: paso.MedioNoCatalogado,
+          FechaHoraDespliegue: new Date(paso.FechaHoraDespliegue),
+          Descripcion6: paso.Descripcion,
+          Observaciones6: paso.Observaciones,
+        });
+      }
+    } else if (paso.TipoPaso === 7) {
+      if (paso.TipoPaso === 7) {
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        if (!capacidadCeleccionada) {
+          return;
+        }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 7 });
+        this.formData.get('paso5')?.patchValue({
+          IdCapacidad: capacidadCeleccionada,
+          MedioNoCatalogado: paso.MedioNoCatalogado,
+          FechaHoraInicioIntervencion: new Date(paso.FechaHoraInicioIntervencion),
+          Observaciones7: paso.Observaciones,
+        });
+      }
+    } else if (paso.TipoPaso === 8) {
+      if (paso.TipoPaso === 8) {
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        if (!capacidadCeleccionada) {
+          return;
+        }
+
+        this.formData.get('idTipoNotificacion')?.patchValue({ id: 8 });
+        this.formData.get('paso5')?.patchValue({
+          IdCapacidad: capacidadCeleccionada,
+          MedioNoCatalogado: paso.MedioNoCatalogado,
+          FechaHoraLlegada: new Date(paso.FechaHoraLlegada),
+          Observaciones8: paso.Observaciones,
         });
       }
     }

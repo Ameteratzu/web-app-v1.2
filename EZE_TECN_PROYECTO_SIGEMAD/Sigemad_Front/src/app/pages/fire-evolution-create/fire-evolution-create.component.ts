@@ -78,15 +78,12 @@ export class FireCreateComponent implements OnInit {
   estado: number | undefined;
 
   async isToEditDocumentation() {
-    
+    try {
+      const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.idIncendio));
+      this.estado = dataCordinacion.parametro?.estadoIncendio.id;
+      this.editData = dataCordinacion;
+    } catch (error) {}
 
-        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.idIncendio));
-        this.estado = dataCordinacion.parametro?.estadoIncendio.id;
-      
-      this.isDataReady = true;
-
-
-    this.editData = dataCordinacion;
     this.isDataReady = true;
   }
 
