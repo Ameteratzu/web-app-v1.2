@@ -2,14 +2,14 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { ApiResponse } from '../../types/api-response.type';
-import { OpeFrontera } from '@type/ope/ope-frontera.type';
+import { ApiResponse } from '../../../types/api-response.type';
+import { OpeDatoFrontera } from '@type/ope/datos/ope-dato-frontera.type';
 
 @Injectable({ providedIn: 'root' })
-export class OpeFronterasService {
+export class OpeDatosFronterasService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  public endpoint = '/ope-fronteras';
+  public endpoint = '/ope-datos-fronteras';
 
   generateUrlWitchParams({ url, params }: any) {
     return Object.keys(params).reduce((prev: any, key: any, index: any) => {
@@ -21,13 +21,13 @@ export class OpeFronterasService {
   }
 
   get(query: any = '') {
-    const URLBASE = '/ope-fronteras?Sort=desc&PageSize=15';
+    const URLBASE = '/ope-datos-fronteras?Sort=desc&PageSize=15';
 
     const endpoint = this.generateUrlWitchParams({
       url: URLBASE,
       params: query,
     });
-    return firstValueFrom(this.http.get<ApiResponse<OpeFrontera[]>>(endpoint).pipe((response) => response));
+    return firstValueFrom(this.http.get<ApiResponse<OpeDatoFrontera[]>>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {
@@ -73,7 +73,7 @@ export class OpeFronterasService {
   }
 
   delete(id: number) {
-    const endpoint = `/ope-fronteras/${id}`;
+    const endpoint = `/ope-datos-fronteras/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }

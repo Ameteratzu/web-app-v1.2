@@ -21,8 +21,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
-import { LocalFiltrosOpePeriodos } from '@services/ope/local-filtro-ope-periodos.service';
-import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { LocalFiltrosOpePeriodos } from '@services/ope/administracion/local-filtro-ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/administracion/ope-periodos.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
 

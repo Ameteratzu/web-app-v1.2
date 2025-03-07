@@ -11,9 +11,9 @@ import { OpeFronteraCreateEdit } from '../ope-frontera-create-edit-form/ope-fron
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
+import { OpeFronterasService } from '@services/ope/administracion/ope-fronteras.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OpeFrontera } from '@type/ope/ope-frontera.type';
+import { OpeFrontera } from '@type/ope/administracion/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-fronteras-table',

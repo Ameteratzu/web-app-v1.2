@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpeLineaMaritima } from '../../../../../../types/ope/ope-linea-maritima.type';
+import { OpeLineaMaritima } from '../../../../../../types/ope/administracion/ope-linea-maritima.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { OpeLineaMaritimaCreateEdit } from '../ope-linea-maritima-create-edit-fo
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpeLineasMaritimasService } from '@services/ope/ope-lineas-maritimas.service';
+import { OpeLineasMaritimasService } from '@services/ope/administracion/ope-lineas-maritimas.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

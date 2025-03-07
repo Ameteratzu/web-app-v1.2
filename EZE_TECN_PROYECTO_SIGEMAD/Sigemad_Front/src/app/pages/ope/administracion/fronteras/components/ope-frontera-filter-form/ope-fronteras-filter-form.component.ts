@@ -18,14 +18,14 @@ import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '@type/api-response.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
-import { LocalFiltrosOpeFronteras } from '@services/ope/local-filtro-ope-fronteras.service';
+import { OpeFronterasService } from '@services/ope/administracion/ope-fronteras.service';
+import { LocalFiltrosOpeFronteras } from '@services/ope/administracion/local-filtro-ope-fronteras.service';
 import { OpeFronteraCreateEdit } from '../ope-frontera-create-edit-form/ope-frontera-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '@type/comparative-date.type';
 import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { OpeFrontera } from '@type/ope/ope-frontera.type';
+import { OpeFrontera } from '@type/ope/administracion/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-frontera-filter-form',

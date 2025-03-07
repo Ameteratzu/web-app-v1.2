@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpePuntoControlCarretera } from '../../../../../../types/ope/ope-punto-control-carretera.type';
+import { OpePuntoControlCarretera } from '../../../../../../types/ope/administracion/ope-punto-control-carretera.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { OpePuntoControlCarreteraCreateEdit } from '../ope-punto-control-carrete
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpePuntosControlCarreterasService } from '@services/ope/ope-puntos-control-carreteras.service';
+import { OpePuntosControlCarreterasService } from '@services/ope/administracion/ope-puntos-control-carreteras.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
