@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import Map from 'ol/Map';
@@ -35,7 +35,7 @@ const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
+export class DashboardComponent implements AfterViewInit {
   private map!: Map;
   private view!: View;
 
@@ -57,8 +57,6 @@ export class DashboardComponent {
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
-    this.configuremap();
-
     // Graph
     const data = {
       labels: ['Día 6', 'Día 5', 'Día 4', 'Día 3', 'Día 2', 'Día 1', 'Hoy'],
@@ -77,6 +75,10 @@ export class DashboardComponent {
         },
       ],
     };
+  }
+
+  ngAfterViewInit() {
+      this.configuremap();
   }
 
   configuremap() {
