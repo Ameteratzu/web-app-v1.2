@@ -122,7 +122,7 @@ export class EmergencyNationalComponent {
       const formValues = this.formData.value;
 
       const newRecord: EmergenciaNacional = {
-        idActuacionRelevante: null,
+        idRegistroActualizacion: null,
         idSuceso: this.data.idIncendio,
         emergenciaNacional: {
           autoridad: formValues.autoridad,

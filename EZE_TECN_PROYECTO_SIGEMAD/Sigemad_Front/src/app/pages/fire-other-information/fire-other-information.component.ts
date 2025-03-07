@@ -110,6 +110,7 @@ export class FireOtherInformationComponent implements OnInit {
   public dataSource = new MatTableDataSource<any>([]);
 
   public displayedColumns: string[] = ['fecha', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
+  public idRegistro = 0;
 
   async ngOnInit() {
     this.formData = this.fb.group({
@@ -117,8 +118,8 @@ export class FireOtherInformationComponent implements OnInit {
       hora: [moment().format('HH:mm'), Validators.required],
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
-      asunto: [''],
-      observaciones: [''],
+      asunto: ['', Validators.required],
+      observaciones: ['', Validators.required],
     });
 
     const procedenciasDestino = await this.masterData.getOriginDestination();
@@ -131,22 +132,26 @@ export class FireOtherInformationComponent implements OnInit {
   }
 
   async isToEditDocumentation() {
-    if (!this.dataProps?.fireDetail?.id) {
-      return;
+    console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ isToEditDocumentation:", "isToEditDocumentation")
+    try {
+      const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fire.idSuceso));
+      console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ dataOtraInformacion:", dataOtraInformacion)
+      this.idRegistro = dataOtraInformacion.id;
+      const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
+        id: otraInformacion.id,
+        asunto: otraInformacion.asunto,
+        fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
+        hora: moment(otraInformacion.fechaHora).format('HH:mm'),
+        medio: otraInformacion.medio,
+        observaciones: otraInformacion.observaciones,
+        procendenciaDestino: otraInformacion.procedenciasDestinos,
+      }));
+
+      this.dataOtherInformation.set(newData);
+    } catch (error) {
+      console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ error:", error)
+      
     }
-    const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fireDetail.id));
-
-    const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
-      id: otraInformacion.id,
-      asunto: otraInformacion.asunto,
-      fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
-      hora: moment(otraInformacion.fechaHora).format('HH:mm'),
-      medio: otraInformacion.medio,
-      observaciones: otraInformacion.observaciones,
-      procendenciaDestino: otraInformacion.procedenciasDestinos,
-    }));
-
-    this.dataOtherInformation.set(newData);
   }
 
   trackByFn(index: number, item: any): number {
@@ -207,7 +212,7 @@ export class FireOtherInformationComponent implements OnInit {
       };
     });
     const objToSave = {
-      idOtraInformacion: this.dataProps?.fireDetail?.id,
+      IdRegistroActualizacion: this.idRegistro,
       IdSuceso: this.dataProps?.fire?.id,
       lista: arrayToSave,
     };

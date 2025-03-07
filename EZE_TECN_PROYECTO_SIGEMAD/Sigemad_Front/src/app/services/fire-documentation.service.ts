@@ -7,10 +7,19 @@ export class FireDocumentationService {
   public http = inject(HttpClient);
 
   getById(id: Number) {
-    let endpoint = `/Documentaciones/${id}`;
+    //idRegistroActualizacion
+    let endpoint = `/Documentaciones/?idSuceso=${id}`;
 
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
+
+  getByIdEdit(id: Number, idRegistro: Number) {
+    //idRegistroActualizacion
+    let endpoint = `/Documentaciones/?idSuceso=${id}&idRegistroActualizacion=${idRegistro}`;
+
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
   post(data: any) {
     const endpoint = '/Documentaciones/lista';
   

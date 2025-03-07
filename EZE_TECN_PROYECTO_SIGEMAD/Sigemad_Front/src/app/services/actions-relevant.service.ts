@@ -130,7 +130,7 @@ export class ActionsRelevantService {
   }
 
   getById(id: Number) {
-    let endpoint = `/actuaciones-relevantes/${id}`;
+    let endpoint = `/actuaciones-relevantes/?idSuceso=${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

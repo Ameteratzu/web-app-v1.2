@@ -4,7 +4,10 @@ export type FireDetail = {
   origen: string;
   registro: string;
   tecnico: string;
-  tipoRegistro: string;
+  tipoRegistro: {
+    id: number | string;
+    nombre: string;
+  };
   esUltimoRegistro: boolean;
 };
 

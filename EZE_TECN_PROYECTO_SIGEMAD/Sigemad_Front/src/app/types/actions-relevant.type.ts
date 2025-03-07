@@ -1,6 +1,6 @@
 export interface EmergenciaNacional {
   idSuceso: number;
-  idActuacionRelevante: any;
+  idRegistroActualizacion: any;
   emergenciaNacional: Declaracion;
 }
 
@@ -43,7 +43,7 @@ export interface Notificaciones {
 }
 
 export interface Planes {
-  idActuacionRelevante: any;
+  idRegistroActualizacion: any;
   id: number;
   idTipoPlan: GenericMaster;
   nombrePlan: string;
