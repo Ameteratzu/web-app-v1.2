@@ -2,14 +2,14 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { ApiResponse } from '../../types/api-response.type';
-import { OpeAreaDescanso } from '../../types/ope/ope-area-descanso.type';
+import { ApiResponse } from '../../../types/api-response.type';
+import { OpePeriodo } from '../../../types/ope/administracion/ope-periodo.type';
 
 @Injectable({ providedIn: 'root' })
-export class OpeAreasDescansoService {
+export class OpePeriodosService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  public endpoint = '/ope-areas-descanso';
+  public endpoint = '/ope-periodos';
 
   generateUrlWitchParams({ url, params }: any) {
     return Object.keys(params).reduce((prev: any, key: any, index: any) => {
@@ -21,13 +21,13 @@ export class OpeAreasDescansoService {
   }
 
   get(query: any = '') {
-    const URLBASE = '/ope-areas-descanso?Sort=desc&PageSize=15';
+    const URLBASE = '/ope-periodos?Sort=desc&PageSize=15';
 
     const endpoint = this.generateUrlWitchParams({
       url: URLBASE,
       params: query,
     });
-    return firstValueFrom(this.http.get<ApiResponse<OpeAreaDescanso[]>>(endpoint).pipe((response) => response));
+    return firstValueFrom(this.http.get<ApiResponse<OpePeriodo[]>>(endpoint).pipe((response) => response));
   }
 
   post(data: any) {
@@ -73,7 +73,7 @@ export class OpeAreasDescansoService {
   }
 
   delete(id: number) {
-    const endpoint = `/ope-areas-descanso/${id}`;
+    const endpoint = `/ope-periodos/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }

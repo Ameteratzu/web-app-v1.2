@@ -2,8 +2,8 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
-import { ApiResponse } from '../../types/api-response.type';
-import { OpePuntoControlCarretera } from '../../types/ope/ope-punto-control-carretera.type';
+import { ApiResponse } from '../../../types/api-response.type';
+import { OpePuntoControlCarretera } from '../../../types/ope/administracion/ope-punto-control-carretera.type';
 
 @Injectable({ providedIn: 'root' })
 export class OpePuntosControlCarreterasService {

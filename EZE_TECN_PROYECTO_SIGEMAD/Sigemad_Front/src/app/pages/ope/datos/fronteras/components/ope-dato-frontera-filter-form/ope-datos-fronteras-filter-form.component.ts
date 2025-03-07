@@ -15,20 +15,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MenuItemActiveService } from '@services/menu-item-active.service';
-import { ApiResponse } from '../../../../../../types/api-response.type';
-import { OpePeriodo } from '../../../../../../types/ope/administracion/ope-periodo.type';
+import { ApiResponse } from '@type/api-response.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpePeriodosService } from '@services/ope/administracion/ope-periodos.service';
-import { LocalFiltrosOpePeriodos } from '@services/ope/administracion/local-filtro-ope-periodos.service';
-import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-periodo-create-edit-form.component';
+import { OpeDatosFronterasService } from '@services/ope/datos/ope-datos-fronteras.service';
+import { OpeDatoFronteraCreateEdit } from '../ope-dato-frontera-create-edit-form/ope-dato-frontera-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
-import { ComparativeDate } from '../../../../../../types/comparative-date.type';
-import { FORMATO_FECHA } from '../../../../../../types/date-formats';
+import { ComparativeDate } from '@type/comparative-date.type';
+import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { OpeDatoFrontera } from '@type/ope/datos/ope-dato-frontera.type';
+import { LocalFiltrosOpeDatosFronteras } from '@services/ope/datos/local-filtro-ope-datos-fronteras.service';
 
 @Component({
-  selector: 'app-ope-periodo-filter-form',
+  selector: 'app-ope-dato-frontera-filter-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -50,20 +50,20 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
   ],
-  templateUrl: './ope-periodos-filter-form.component.html',
-  styleUrl: './ope-periodos-filter-form.component.scss',
+  templateUrl: './ope-datos-fronteras-filter-form.component.html',
+  styleUrl: './ope-datos-fronteras-filter-form.component.scss',
 })
-export class OpePeriodoFilterFormComponent implements OnInit {
-  @Input() opePeriodos: ApiResponse<OpePeriodo[]> | undefined;
+export class OpeDatoFronteraFilterFormComponent implements OnInit {
+  @Input() opeDatosFronteras: ApiResponse<OpeDatoFrontera[]> | undefined;
   @Input() filtros: any;
   @Input() isLoading: boolean = true;
   @Input() refreshFilterForm: boolean = true;
-  @Output() opePeriodosChange = new EventEmitter<ApiResponse<OpePeriodo[]>>();
+  @Output() opeDatosFronterasChange = new EventEmitter<ApiResponse<OpeDatoFrontera[]>>();
   @Output() isLoadingChange = new EventEmitter<boolean>();
   @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
-  public filtrosOpePeriodosService = inject(LocalFiltrosOpePeriodos);
-  public opePeriodosService = inject(OpePeriodosService);
+  public filtrosOpeDatosFronterasService = inject(LocalFiltrosOpeDatosFronteras);
+  public opeDatosFronterasService = inject(OpeDatosFronterasService);
   public comparativeDateService = inject(ComparativeDateService);
 
   public comparativeDates = signal<ComparativeDate[]>([]);
@@ -98,7 +98,7 @@ export class OpePeriodoFilterFormComponent implements OnInit {
     });
 
     //this.clearFormFilter();
-    this.menuItemActiveService.set.emit('/ope-periodos');
+    this.menuItemActiveService.set.emit('/ope-fronteras');
 
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
@@ -117,7 +117,7 @@ export class OpePeriodoFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.opePeriodosChange.emit({
+    this.opeDatosFronterasChange.emit({
       count: 0,
       page: 1,
       pageSize: 10,
@@ -129,7 +129,7 @@ export class OpePeriodoFilterFormComponent implements OnInit {
 
     const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
 
-    const opePeriodos = await this.opePeriodosService.get({
+    const opeDatosFronteras = await this.opeDatosFronterasService.get({
       IdComparativoFecha: between,
       fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
       fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
@@ -137,9 +137,9 @@ export class OpePeriodoFilterFormComponent implements OnInit {
       fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
       nombre: nombre,
     });
-    this.filtrosOpePeriodosService.setFilters(this.formData.value);
-    this.opePeriodos = opePeriodos;
-    this.opePeriodosChange.emit(this.opePeriodos);
+    this.filtrosOpeDatosFronterasService.setFilters(this.formData.value);
+    this.opeDatosFronteras = opeDatosFronteras;
+    this.opeDatosFronterasChange.emit(this.opeDatosFronteras);
     this.isLoadingChange.emit(false);
     this.isLoading = false;
   }
@@ -161,11 +161,11 @@ export class OpePeriodoFilterFormComponent implements OnInit {
   }
 
   goModal() {
-    const dialogRef = this.dialog.open(OpePeriodoCreateEdit, {
+    const dialogRef = this.dialog.open(OpeDatoFronteraCreateEdit, {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos Periodo',
+        title: 'Nuevo - Datos Frontera',
         fire: {},
       },
     });

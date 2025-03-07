@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { OpeLineasMaritimasTableComponent } from './components/ope-linea-maritima-table/ope-lineas-maritimas-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpeLineaMaritimaFilterFormComponent } from './components/ope-linea-maritima-filter-form/ope-lineas-maritimas-filter-form.component';
-import { LocalFiltrosOpeLineasMaritimas } from '../../../../services/ope/local-filtro-ope-lineas-maritimas.service';
-import { OpeLineaMaritima } from '../../../../types/ope/ope-linea-maritima.type';
-import { OpeLineasMaritimasService } from '../../../../services/ope/ope-lineas-maritimas.service';
+import { LocalFiltrosOpeLineasMaritimas } from '../../../../services/ope/administracion/local-filtro-ope-lineas-maritimas.service';
+import { OpeLineaMaritima } from '../../../../types/ope/administracion/ope-linea-maritima.type';
+import { OpeLineasMaritimasService } from '../../../../services/ope/administracion/ope-lineas-maritimas.service';
 
 @Component({
   selector: 'app-ope-lineasMaritimas',

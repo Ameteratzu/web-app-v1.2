@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { OpePuertosTableComponent } from './components/ope-puerto-table/ope-puertos-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpePuertoFilterFormComponent } from './components/ope-puerto-filter-form/ope-puertos-filter-form.component';
-import { LocalFiltrosOpePuertos } from '../../../../services/ope/local-filtro-ope-puertos.service';
-import { OpePuerto } from '../../../../types/ope/ope-puerto.type';
-import { OpePuertosService } from '../../../../services/ope/ope-puertos.service';
+import { LocalFiltrosOpePuertos } from '../../../../services/ope/administracion/local-filtro-ope-puertos.service';
+import { OpePuerto } from '../../../../types/ope/administracion/ope-puerto.type';
+import { OpePuertosService } from '../../../../services/ope/administracion/ope-puertos.service';
 
 @Component({
   selector: 'app-ope-puertos',
