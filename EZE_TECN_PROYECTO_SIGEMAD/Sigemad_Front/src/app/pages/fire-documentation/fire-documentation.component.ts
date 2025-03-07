@@ -25,6 +25,7 @@ import { OriginDestination } from '../../types/origin-destination.type';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FechaValidator } from '../../shared/validators/fecha-validator';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -128,8 +129,11 @@ export class FireDocumentation implements OnInit {
   async ngOnInit() {
     this.spinner.show();
     this.formData = this.fb.group({
-      fecha: [moment().toDate(), Validators.required],
-      hora: [moment().format('HH:mm'), Validators.required],
+      //fecha: [moment().toDate(), Validators.required],
+      //hora: [moment().format('HH:mm'), Validators.required],
+      // PCD
+      fechaHora: [moment().format('YYYY-MM-DD HH:mm'), [Validators.required, FechaValidator.validarFecha]],
+      // FIN PCD
       fechaSolicitud: [''],
       horaSolicitud: [''],
       tipoDocumento: ['', Validators.required],

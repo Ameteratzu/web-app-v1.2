@@ -8,7 +8,7 @@ public class OpePeriodosSpecification : BaseSpecification<OpePeriodo>
 {
     public OpePeriodosSpecification(OpePeriodosSpecificationParams request)
         : base(opePeriodo =>
-        (string.IsNullOrEmpty(request.Denominacion) || opePeriodo.Denominacion.Contains(request.Denominacion )) &&
+        (string.IsNullOrEmpty(request.Nombre) || opePeriodo.Nombre.Contains(request.Nombre )) &&
         (!request.Id.HasValue || opePeriodo.Id == request.Id) &&
         (opePeriodo.Borrado != true)
         )
@@ -21,19 +21,19 @@ public class OpePeriodosSpecification : BaseSpecification<OpePeriodo>
             switch (request.Sort)
             {
                 case "fechainicioasc":
-                    AddOrderBy(i => i.FechaInicio);
+                    AddOrderBy(i => i.FechaInicioFaseSalida);
                     break;
                 case "fechaIniciodesc":
-                    AddOrderByDescending(i => i.FechaInicio);
+                    AddOrderByDescending(i => i.FechaInicioFaseSalida);
                     break;
                 case "denominacionasc":
-                    AddOrderBy(i => i.Denominacion);
+                    AddOrderBy(i => i.Nombre);
                     break;
                 case "denominaciondesc":
-                    AddOrderByDescending(i => i.Denominacion);
+                    AddOrderByDescending(i => i.Nombre);
                     break;
                 default:
-                    AddOrderBy(i => i.FechaInicio); // Orden por defecto
+                    AddOrderBy(i => i.FechaInicioFaseSalida); // Orden por defecto
                     break;
             }
         }

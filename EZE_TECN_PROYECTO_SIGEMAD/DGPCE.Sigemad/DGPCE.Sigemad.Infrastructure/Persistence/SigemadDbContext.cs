@@ -50,8 +50,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Alerta>().ToTable("Alerta");
-            modelBuilder.Entity<EstadoAlerta>().ToTable("EstadoAlerta");
             modelBuilder.Entity<TipoSuceso>().ToTable("TipoSuceso");
             modelBuilder.Entity<ClaseSuceso>().ToTable("ClaseSuceso");
             modelBuilder.Entity<Menu>().ToTable("Menu");
@@ -84,15 +82,13 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<SituacionEquivalente>().ToTable(nameof(SituacionEquivalente));
             modelBuilder.Entity<EstadoMovilizacion>().ToTable(nameof(EstadoMovilizacion));
             modelBuilder.Entity<TipoCapacidad>().ToTable(nameof(TipoCapacidad));
+            modelBuilder.Entity<GrupoMedio>().ToTable(nameof(GrupoMedio));
 
             // PCD
             modelBuilder.Entity<OpePeriodo>().ToTable(nameof(OpePeriodo));
             // FIN PCD
         }
 
-
-        public DbSet<Alerta>? Alertas { get; set; }
-        public DbSet<EstadoAlerta>? EstadosAlertas { get; set; }
         public DbSet<TipoSuceso> TiposSuceso { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Ccaa>? CCAA { get; set; }
@@ -119,6 +115,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<TipoRegistro> TiposRegistros { get; set; }
         public DbSet<Evolucion> Evoluciones { get; set; }
         public DbSet<AreaAfectada> AreaAfectadas { get; set; }
+        public DbSet<IntervencionMedio> IntervencionMedios { get; set; }
         public DbSet<RegistroProcedenciaDestino> RegistroProcedenciasDestinos { get; set; }
         public DbSet<CaracterMedio> CaracterMedios { get; set; }
         public DbSet<ClasificacionMedio> ClasificacionMedios { get; set; }
@@ -176,6 +173,15 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<NotificacionEmergencia> NotificacionesEmergencias { get; set; }
 
         public DbSet<TipoNotificacion> TiposNotificaciones { get; set; }
+        public DbSet<TipoRegistroActualizacion> TipoRegistroActualizaciones { get; set; }
+        public DbSet<ApartadoRegistro> ApartadosRegistro { get; set; }
+        public DbSet<RegistroActualizacion> RegistrosActualizacion { get; set; }
+        public DbSet<RegistroApartado> RegistrosApartados { get; set; }
+        public DbSet<DetalleRegistroActualizacion> DetallesRegistroActualizacion { get; set; }
+        public DbSet<HistorialCambios> HistorialCambios { get; set; }
+        public DbSet<MediosCapacidad> MediosCapacidads { get; set; }
+
+
 
         // PCD
         public DbSet<OpePeriodo> OpePeriodos { get; set; }

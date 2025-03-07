@@ -2,4 +2,5 @@
 public class CreateOrUpdateCoordinacionCecopiResponse
 {
     public int IdDireccionCoordinacionEmergencia { get; set; }
+    public int IdRegistroActualizacion { get; set; }
 }

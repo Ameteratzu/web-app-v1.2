@@ -1,10 +1,8 @@
 ﻿
 using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.DeleteAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.UpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaById;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Quereis.GetAreaAfectadaList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +23,7 @@ public class AreasAfectadasController : ControllerBase
         _mediator = mediator;
     }
 
+    /*
     [HttpPut(Name = "UpdateAreaAfectada")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -47,6 +46,7 @@ public class AreasAfectadasController : ControllerBase
         return NoContent();
     }
     
+
     [HttpGet("{id:int}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -59,4 +59,6 @@ public class AreasAfectadasController : ControllerBase
 
         return Ok(areaAfectada);
     }
+    */
+
 }

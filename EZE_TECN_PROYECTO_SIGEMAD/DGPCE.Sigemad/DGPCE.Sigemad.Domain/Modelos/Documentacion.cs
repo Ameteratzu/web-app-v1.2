@@ -6,5 +6,5 @@ public class Documentacion : BaseDomainModel<int>
     public int IdSuceso { get; set; }
 
     public Suceso Suceso { get; set; }
-    public List<DetalleDocumentacion> DetallesDocumentacion { get; set; } = new();
+    public List<DetalleDocumentacion>? DetallesDocumentacion { get; set; } = new();
 }

@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
-public class DocumentacionProcedenciaDestino : BaseDomainModel<int>
+public class DocumentacionProcedenciaDestino : BaseEntity
 {
     public int IdDetalleDocumentacion { get; set; }
     public int IdProcedenciaDestino { get; set; }

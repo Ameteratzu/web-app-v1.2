@@ -6,6 +6,8 @@ import { FireComponent } from './pages/fire/fire.component';
 import { Login } from './pages/login/login.component';
 import { LayoutBaseComponent } from './shared/layouts/layout-base.component';
 import { OpePeriodosComponent } from './pages/ope/administracion/periodos/ope-periodos.component';
+import { OpePuertosComponent } from './pages/ope/administracion/puertos/ope-puertos.component';
+import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-maritimas/ope-lineas-maritimas.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -36,10 +38,10 @@ export const routes: Routes = [
       // PCD
       // OPE - ADMINISTRACIÓN
       { path: 'ope-administracion-periodos', component: OpePeriodosComponent, data: { breadcrumb: 'Administración de periodos' } },
-      { path: 'ope-administracion-puertos', component: OpePeriodosComponent, data: { breadcrumb: 'Administración de puertos' } },
+      { path: 'ope-administracion-puertos', component: OpePuertosComponent, data: { breadcrumb: 'Administración de puertos' } },
       {
         path: 'ope-administracion-lineas-maritimas',
-        component: OpePeriodosComponent,
+        component: OpeLineasMaritimasComponent,
         data: { breadcrumb: 'Administración de líneas marítimas' },
       },
       { path: 'ope-administracion-fronteras', component: OpePeriodosComponent, data: { breadcrumb: 'Administración de fronteras' } },

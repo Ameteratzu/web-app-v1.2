@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Constracts;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+namespace DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateOrUpdateAreasAfectadas;
 public class CreateOrUpdateAreaAfectadaCommandValidator : AbstractValidator<CreateOrUpdateAreaAfectadaCommand>
 {
     public CreateOrUpdateAreaAfectadaCommandValidator(IStringLocalizer<ValidationMessages> localizer, IGeometryValidator geometryValidator)

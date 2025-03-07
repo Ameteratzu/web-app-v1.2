@@ -19,15 +19,18 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher';
 import TileWMS from 'ol/source/TileWMS';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
+import Stroke from 'ol/style/Stroke';
 import { Geometry, Polygon } from 'ol/geom';
 import WKT from 'ol/format/WKT';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
+import Overlay from 'ol/Overlay';
+import GeoJSON from 'ol/format/GeoJSON';
+
 import Bar from 'ol-ext/control/Bar';
 import Toggle from 'ol-ext/control/Toggle';
-import Overlay from 'ol/Overlay';
-
+import SearchNominatim from 'ol-ext/control/SearchNominatim';
 import proj4 from 'proj4';
 import { fromLonLat, toLonLat } from 'ol/proj';
 
@@ -37,6 +40,7 @@ import { Municipality } from '../../types/municipality.type';
 import 'ol/ol.css';
 import 'ol-ext/dist/ol-ext.css';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { format } from 'ol/coordinate';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -66,6 +70,16 @@ export class MapCreateComponent implements OnInit, OnChanges {
   public layerAreasAfectadas!: VectorLayer;
   public coords: any;
   public select!: Select;
+  public layerMunicipio!: VectorLayer<VectorSource<Feature<Point>>>;
+  public layerLimitesMunicipio: any;
+  public highLightMunicipio!: VectorLayer<VectorSource<Feature<Polygon>>>;
+  public length!: number;
+  public latitude!: number;
+  public section: string = '';
+  public popup!: Overlay;
+
+  public coordinates: string = '';
+  public cursorPosition = { x: 0, y: 0 };
 
   public data = inject(MAT_DIALOG_DATA);
   public matDialogRef = inject(MatDialogRef);
@@ -74,20 +88,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
   public municipalityService = inject(MunicipalityService);
 
   public municipalities = signal<Municipality[]>([]);
-
   public municipioSelected = signal(this.data?.municipio || {});
-
-  public length!: number;
-  public latitude!: number;
-
-  public section: string = '';
-
-  public coordinates: string = '';
-  public cursorPosition = { x: 0, y: 0 };
-
-  public popup!: Overlay;
-
-  layerMunicipio!: VectorLayer<VectorSource<Feature<Point>>, Feature<Point>>;
 
   async ngOnInit() {
     const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
@@ -105,6 +106,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (onlyView != null) this.onlyView = onlyView;
 
     this.configureMap(this.municipio, this.polygon, this.onlyView);
+    this.highlightSelectedMunicipio(this.municipio.descripcion);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -112,7 +114,8 @@ export class MapCreateComponent implements OnInit, OnChanges {
       this.updateMapWithPolygon(changes['polygon'].currentValue);
     }
     if (changes['municipio'] && changes['municipio'].currentValue && this.source) {
-      this.updateMapWithMunicipio(changes['municipio'].currentValue);
+      //this.updateMapWithMunicipio(changes['municipio'].currentValue);
+      this.highlightSelectedMunicipio(changes['municipio'].currentValue.descripcion);
     }
   }
 
@@ -134,9 +137,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     if (newMunicipio && newMunicipio.geoPosicion) {
       const coordinates = fromLonLat(newMunicipio.geoPosicion.coordinates);
       this.map.getView().setCenter(coordinates);
-      this.layerMunicipio.getSource()?.clear();
       const pointFeature = new Feature(new Point(coordinates));
-      this.layerMunicipio.getSource()?.addFeature(pointFeature);
     }
   }
 
@@ -184,6 +185,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
       mouseover: true,
       show_progress: true,
       trash: true,
+      extent: true,
     });
 
     layersSwitcher.tip = {
@@ -198,6 +200,15 @@ export class MapCreateComponent implements OnInit, OnChanges {
     this.map.addControl(layersSwitcher);
 
     this.map.addControl(new ScaleLine());
+
+    this.map.addControl(new SearchNominatim({
+      placeholder: 'Buscar ubicación...',
+      onselect: (event: any) => {
+        const coordenadas = event.coordinate;
+        this.map.getView().setCenter(coordenadas);
+        this.map.getView().setZoom(15);
+      }
+    }));
 
     if (!onlyView) {
       this.addInteractions();
@@ -275,9 +286,22 @@ export class MapCreateComponent implements OnInit, OnChanges {
   }
 
   getAdminLayers() {
+
+    this.layerLimitesMunicipio = new TileLayer({
+      source: new TileWMS({
+        url: environment.urlGeoserver + 'wms?version=1.1.0',
+        params: {
+          LAYERS: 'municipio_limites',
+          TILED: true,
+        },
+        serverType: 'geoserver',
+        transition: 0,
+      }),
+      properties: { title: 'Límites municipio' },
+    });
+
     const wmsLayersGroup = new LayerGroup({
       properties: { title: 'Límites administrativos', openInLayerSwitcher: true },
-
       layers: [
         new TileLayer({
           source: new TileWMS({
@@ -291,18 +315,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
           }),
           properties: { id: 'nucleos_poblacion', title: 'Núcleos de población' },
         }),
-        new TileLayer({
-          source: new TileWMS({
-            url: environment.urlGeoserver + 'wms?version=1.1.0',
-            params: {
-              LAYERS: 'municipio_limites',
-              TILED: true,
-            },
-            serverType: 'geoserver',
-            transition: 0,
-          }),
-          properties: { title: 'Límites municipio' },
-        }),
+        this.layerLimitesMunicipio,
       ],
     });
     return wmsLayersGroup;
@@ -356,9 +369,17 @@ export class MapCreateComponent implements OnInit, OnChanges {
       })
     );
 
+    this.highLightMunicipio = new VectorLayer({
+      source: new VectorSource({
+        format: new GeoJSON(),
+      }),
+      properties: { title: 'Límites municipio' },
+    });
+
     return new LayerGroup({
       properties: { title: 'Incendios', openInLayerSwitcher: true },
-      layers: [this.layerMunicipio, this.layerAreasAfectadas],
+      // layers: [this.layerMunicipio, this.layerAreasAfectadas, this.highLightMunicipio],
+      layers: [this.highLightMunicipio],
     });
   }
 
@@ -425,14 +446,11 @@ export class MapCreateComponent implements OnInit, OnChanges {
     });
 
     this.drawPoint.on('drawend', (e) => {
-      console.log('draw', e.feature);
-
       let format = new WKT();
       let wkt = format.writeFeature(e.feature, {
         dataProjection: 'EPSG:4326',
         featureProjection: 'EPSG:3857',
       });
-      console.log('json:', wkt);
     });
 
     //drawBar.addControl(tgPoint);
@@ -523,6 +541,88 @@ export class MapCreateComponent implements OnInit, OnChanges {
       const coordinate = fromLonLat([lon, lat]);
       this.view.setCenter(coordinate);
       this.view.setZoom(13);
+    }
+  }
+
+  private highlightSelectedMunicipio(municipio: string) {
+    this.highLightMunicipio.getSource()?.clear();
+
+    if (this.layerLimitesMunicipio) {
+      const source = this.layerLimitesMunicipio.getSource() as TileWMS;
+      const center = this.map.getView().getCenter();
+      const resolution = this.map.getView().getResolution();
+      if (center && resolution) {
+        const radius = 1000; // Radio en metros
+
+        const newExtent = [
+          center[0] - radius, center[1] - radius,
+          center[0] + radius, center[1] + radius
+        ];
+
+        const url = source.getFeatureInfoUrl(
+          newExtent,
+          resolution,
+          'EPSG:3857',
+          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 10 }
+        );
+        if (url) {
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              // Función para normalizar y limpiar el nombre del municipio
+              const normalizeString = (str: string) => {
+                return str
+                  .toLowerCase()
+                  .normalize('NFD') // Normaliza la cadena
+                  .replace(/[\u0300-\u036f]/g, '') // Elimina acentos
+                  .replace(/\b(el|la|los|las|as|os|de|del|y|a|o|l|els|les)\b/g, '') // Elimina artículos y preposiciones
+                  .replace(/\b(general)\b/g, '') // casos especiales
+                  .replace(/guipuzkoa/g, 'guipuzcoa') // casos especiales
+                  .replace(/araba/g, 'alava') // casos especiales
+                  .replace(/[^a-z0-9\s]/g, '') // Elimina caracteres especiales
+                  .replace(/\s+/g, ' ') // Elimina espacios en blanco duplicados
+                  .trim(); // Elimina espacios en blanco al inicio y al final
+              };
+
+              const normalizedMunicipio = normalizeString(municipio);
+
+              const feature = data.features.find((f: any) => {
+                // console.info('f.properties.NAMEUNIT normalizado: ', normalizeString(f.properties.NAMEUNIT));
+                // console.info('normalizedMunicipio: ', normalizedMunicipio);
+                return normalizeString(f.properties.NAMEUNIT).includes(normalizedMunicipio)
+              });
+
+              if (feature) {
+                const highlightStyle = new Style({
+                  stroke: new Stroke({
+                    color: 'rgb(255, 128, 0)',
+                    width: 5,
+                  }),
+                });
+
+                const coordinates = feature.geometry.coordinates;
+
+                coordinates.forEach((polygonCoords: any) => {
+                  const olFeature = new Feature({
+                    geometry: new Polygon(polygonCoords), // Crear un nuevo polígono para cada conjunto de coordenadas
+                  });
+
+                  olFeature.setStyle(new Style({
+                    stroke: new Stroke({
+                      color: 'rgb(255, 128, 0)', // Color del borde
+                      width: 5,
+                    }),
+                  }));
+
+                  this.highLightMunicipio.getSource()?.addFeature(olFeature);
+                });
+              } else {
+                console.warn('No se encontró el feature para el municipio:', municipio);
+              }
+            })
+            .catch(error => console.error('Error al obtener FeatureInfo:', error));
+        }
+      }
     }
   }
 }

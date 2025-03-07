@@ -1,15 +1,11 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Dtos.Registros;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
-using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
-using DGPCE.Sigemad.Application.Specifications.Incendios;
-using DGPCE.Sigemad.Application.Specifications.Sucesos;
+using DGPCE.Sigemad.Application.Specifications.RegistrosActualizaciones;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks.Dataflow;
 
 namespace DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
 public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPorSucesoQuery, PaginationVm<RegistroActualizacionDto>>
@@ -27,134 +23,72 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
 
     public async Task<PaginationVm<RegistroActualizacionDto>> Handle(GetRegistrosPorSucesoQuery request, CancellationToken cancellationToken)
     {
+        var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
 
-       var sucesoSpecifications=  new SucesoWithAllRegistrosSpecification(request); 
-
-        // Usar la especificación para obtener el suceso con todos los registros relacionados
-        var suceso = await _unitOfWork.Repository<Suceso>()
-            .GetByIdWithSpec(sucesoSpecifications);
-
-
-        if (suceso == null)
+        if (suceso == null || suceso.Borrado == true)
         {
             _logger.LogWarning($"No se encontro suceso con id: {request.IdSuceso}");
             throw new NotFoundException(nameof(Suceso), request.IdSuceso);
         }
 
-        // Obtener listado de usuarios
-        var guidsUsuarios = new HashSet<Guid?>();
+        var specCounting = new RegistroActualizacionWithDetailsForCountingSpecification(new RegistroActualizacionSpecificationParams
+        {
+            IdSuceso = request.IdSuceso,
+        });
 
-        guidsUsuarios.UnionWith(suceso.Evoluciones.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.DireccionCoordinacionEmergencias.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.OtraInformaciones.Select(o => o.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.Documentaciones.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.SucesoRelacionados.Select(d => d.CreadoPor));
-        guidsUsuarios.UnionWith(suceso.ActuacionesRelevantes.Select(d => d.CreadoPor));
+        var totalRegistros = await _unitOfWork.Repository<RegistroActualizacion>().CountAsync(specCounting);
+        if (totalRegistros == 0)
+        {
+            _logger.LogWarning($"No se encontraron registros para el suceso con id: {request.IdSuceso}");
+            return new PaginationVm<RegistroActualizacionDto>
+            {
+                Count = totalRegistros,
+                Data = new List<RegistroActualizacionDto>(),
+                PageCount = 0,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize
+            };
+        }
+
+        var spec = new RegistroActualizacionWithDetailsSpecification(new RegistroActualizacionSpecificationParams
+        {
+            IdSuceso = request.IdSuceso,
+            PageSize = request.PageSize,
+            PageIndex = request.PageIndex
+        });
+        
+        var registros = await _unitOfWork.Repository<RegistroActualizacion>().GetAllWithSpec(spec);
 
         // Obtener nombres de usuarios
+        var guidsUsuarios = new HashSet<Guid?>();
+        guidsUsuarios.UnionWith(registros.Select(r => r.CreadoPor));
         var nombresUsuarios = await ObtenerNombresUsuariosAsync(guidsUsuarios);
 
-        // Crear el listado consolidado
-        var registros = new List<RegistroActualizacionDto>();
-
-        // Procesar Datos de Evolución
-        registros.AddRange(suceso.Evoluciones.Select(d => new RegistroActualizacionDto
+        var registrosDto = registros.Select(r => new RegistroActualizacionDto
         {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Datos de evolución",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.Evoluciones.Max(e => e.FechaCreacion)
-        }));
-
-        // Procesar Otra Información
-        registros.AddRange(suceso.OtraInformaciones.Select(o => new RegistroActualizacionDto
-        {
-            Id = o.Id,
-            FechaHora = o.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Otra Información",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(o)),
-            Tecnico = nombresUsuarios.TryGetValue(o.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = o.FechaCreacion == suceso.OtraInformaciones.Max(e => e.FechaCreacion)
-        }));
-
-        // Procesar Direcciones y Coordinación
-        registros.AddRange(suceso.DireccionCoordinacionEmergencias.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Dirección y coordinación",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.DireccionCoordinacionEmergencias.Max(e => e.FechaCreacion)
-        }));
-
-        // Procesar Documentacion
-        registros.AddRange(suceso.Documentaciones.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Documentación",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.Documentaciones.Max(e => e.FechaCreacion)
-        }));
-
-        // Procesar Sucesos Relacionados
-        registros.AddRange(suceso.SucesoRelacionados.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Sucesos Relacionados",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.SucesoRelacionados.Max(e => e.FechaCreacion)
-        }));
-
-        // Procesar Actuaciones Relevantes
-        registros.AddRange(suceso.ActuacionesRelevantes.Select(d => new RegistroActualizacionDto
-        {
-            Id = d.Id,
-            FechaHora = d.FechaCreacion,
-            Registro = "",
-            Origen = "",
-            TipoRegistro = "Actuaciones Relevantes",
-            Apartados = string.Join(" / ", GetTitulosDeApartados(d)),
-            Tecnico = nombresUsuarios.TryGetValue(d.CreadoPor ?? Guid.Empty, out var nombre) ? nombre : "Desconocido",
-            EsUltimoRegistro = d.FechaCreacion == suceso.ActuacionesRelevantes.Max(e => e.FechaCreacion)
-        }));
-
-        var totalRegistros = registros.Count;
+            Id = r.Id,
+            FechaHora = r.FechaCreacion,
+            TipoRegistro = new TipoRegistroDto
+            {
+                Id = r.TipoRegistroActualizacion.Id,
+                Nombre = r.TipoRegistroActualizacion.Nombre
+            },
+            Apartados = string.Join(" / ", r.DetallesRegistro.Select(d => d.ApartadoRegistro.Nombre).Distinct().ToList()),
+            Tecnico = nombresUsuarios.GetValueOrDefault(r.CreadoPor ?? Guid.Empty, "Desconocido"),
+            EsUltimoRegistro = r.FechaCreacion == registros.Max(e => e.FechaCreacion)
+        }).ToList();
 
         var rounded = Math.Ceiling(Convert.ToDecimal(totalRegistros) / Convert.ToDecimal(request.PageSize));
         var totalPages = Convert.ToInt32(rounded);
 
-        var dataPaginada = registros
-           .OrderByDescending(r => r.FechaHora)
-           .Skip((request.Page - 1) * request.PageSize)
-           .Take(request.PageSize)
-           .ToList();
-
         var pagination = new PaginationVm<RegistroActualizacionDto>
         {
             Count = totalRegistros,
-            Data = dataPaginada,
+            Data = registrosDto,
             PageCount = totalPages,
-            Page = request.Page,
+            PageIndex = request.PageIndex,
             PageSize = request.PageSize
         };
-
 
         return pagination;
     }
@@ -182,141 +116,5 @@ public class GetRegistrosPorSucesoQueryHandler : IRequestHandler<GetRegistrosPor
             u => u.Nombre ?? "Desconocido" // Valor: Nombre del usuario
         );
     }
-
-    private static List<string> GetTitulosDeApartados(Evolucion evolucion)
-    {
-        var titulos = new List<string>();
-
-        // Verifica si "Registro" tiene datos
-        if (evolucion.Registro != null)
-        {
-            titulos.Add("Registro");
-        }
-
-        // Verifica si "DatoPrincipal" tiene datos
-        if (evolucion.DatoPrincipal != null)
-        {
-            titulos.Add("Datos principales");
-        }
-
-        // Verifica si "Parametro" tiene datos
-        if (evolucion.Parametro != null)
-        {
-            titulos.Add("Parámetros");
-        }
-
-        // Verifica si "AreaAfectadas" tiene al menos un elemento
-        if (evolucion.AreaAfectadas != null && evolucion.AreaAfectadas.Any())
-        {
-            titulos.Add("Area Afectadas");
-        }
-
-        // Verifica si "Impactos" tiene al menos un elemento
-        if (evolucion.Impactos != null && evolucion.Impactos.Any())
-        {
-            titulos.Add("Impactos");
-        }
-
-        return titulos;
-    }
-
-    private static List<string> GetTitulosDeApartados(DireccionCoordinacionEmergencia direccionCoordinacionEmergencia)
-    {
-        var titulos = new List<string>();
-
-        if (direccionCoordinacionEmergencia.Direcciones != null && direccionCoordinacionEmergencia.Direcciones.Any())
-        {
-            titulos.Add("Dirección");
-        }
-
-        if (direccionCoordinacionEmergencia.CoordinacionesCecopi != null && direccionCoordinacionEmergencia.CoordinacionesCecopi.Any())
-        {
-            titulos.Add("Coordinación CECOPI");
-        }
-
-        if (direccionCoordinacionEmergencia.CoordinacionesPMA != null && direccionCoordinacionEmergencia.CoordinacionesPMA.Any())
-        {
-            titulos.Add("Coordinación PMA");
-        }
-
-        return titulos;
-    }
-
-    private static List<string> GetTitulosDeApartados(Documentacion documentacion)
-    {
-        var titulos = new List<string>();
-
-        if (documentacion.DetallesDocumentacion != null && documentacion.DetallesDocumentacion.Any())
-        {
-            titulos.Add("Documentación");
-        }
-
-        return titulos;
-    }
-
-    private static List<string> GetTitulosDeApartados(OtraInformacion otraInformacion)
-    {
-        var titulos = new List<string>();
-
-        if (otraInformacion.DetallesOtraInformacion != null && otraInformacion.DetallesOtraInformacion.Any())
-        {
-            titulos.Add("Otra Información");
-        }
-
-        return titulos;
-    }
-
-    private static List<string> GetTitulosDeApartados(SucesoRelacionado sucesoRelacionado)
-    {
-        var titulos = new List<string>();
-
-        if (sucesoRelacionado.DetalleSucesoRelacionados != null && sucesoRelacionado.DetalleSucesoRelacionados.Any())
-        {
-            titulos.Add("Sucesos Relacionados");
-        }
-
-        return titulos;
-    }
-
-    private static List<string> GetTitulosDeApartados(ActuacionRelevanteDGPCE actuacionRelevante)
-    {
-        var titulos = new List<string>();
-
-        if (actuacionRelevante.EmergenciaNacional != null)
-        {
-            titulos.Add("Emergencia Nacional");
-        }
-
-        if (actuacionRelevante.ActivacionPlanEmergencias != null && actuacionRelevante.ActivacionPlanEmergencias.Any())
-        {
-            titulos.Add("Activacion Plan Emergencias");
-        }
-
-        if (actuacionRelevante.DeclaracionesZAGEP != null && actuacionRelevante.DeclaracionesZAGEP.Any())
-        {
-            titulos.Add("Declaración ZAGEP");
-        }
-
-        if (actuacionRelevante.ActivacionSistemas != null && actuacionRelevante.ActivacionSistemas.Any())
-        {
-            titulos.Add("Activacion Sistemas");
-        }
-
-        if (actuacionRelevante.ConvocatoriasCECOD != null && actuacionRelevante.ConvocatoriasCECOD.Any())
-        {
-            titulos.Add("Convocatoria CECOD");
-        }
-
-        if (actuacionRelevante.NotificacionesEmergencias != null && actuacionRelevante.NotificacionesEmergencias.Any())
-        {
-            titulos.Add("Notificaciones oficiales");
-        }
-      
-
-        return titulos;
-    }
-
-
-
 }
 

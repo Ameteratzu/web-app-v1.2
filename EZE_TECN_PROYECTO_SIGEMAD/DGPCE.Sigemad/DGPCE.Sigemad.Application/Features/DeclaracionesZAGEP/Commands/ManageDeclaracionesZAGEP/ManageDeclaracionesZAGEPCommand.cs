@@ -4,7 +4,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 public class ManageDeclaracionesZAGEPCommand : IRequest<ManageDeclaracionZAGEPResponse>
 {
-    public int? IdActuacionRelevante { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
     public List<ManageDeclaracionZAGEPDto>? Detalles { get; set; } = new();
 }

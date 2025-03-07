@@ -51,7 +51,11 @@ export class FireService {
       IdTerritorio: data.territory ? data.territory : 1,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd' + ' ' + data.startTime),
+      //fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd' + ' ' + data.startTime),
+      // PCD
+      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd  h:mm:ss'),
+      // FIN PCD
+
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,
@@ -80,7 +84,11 @@ export class FireService {
       IdTerritorio: data.territory,
       idClaseSuceso: data.classEvent,
       idEstadoSuceso: data.eventStatus,
-      fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
+      //fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
+      // PCD
+      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd h:mm:ss'),
+      // FIN PCD
+
       denominacion: data.denomination,
       notaGeneral: data.generalNote,
       IdProvincia: data.province,

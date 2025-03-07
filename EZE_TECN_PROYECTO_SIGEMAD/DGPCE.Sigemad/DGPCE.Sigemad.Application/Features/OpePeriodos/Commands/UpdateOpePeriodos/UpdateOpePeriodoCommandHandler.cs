@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Features.Alertas.Commands.UpdateAlertas;
 using DGPCE.Sigemad.Application.Specifications.OpePeriodos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -42,10 +41,8 @@ public class UpdateOpePeriodoCommandHandler : IRequestHandler<UpdateOpePeriodoCo
 
         _mapper.Map(request, opePeriodoToUpdate, typeof(UpdateOpePeriodoCommand), typeof(OpePeriodo));
 
-        Console.WriteLine("444444444444444");
-
         _unitOfWork.Repository<OpePeriodo>().UpdateEntity(opePeriodoToUpdate);
-        await _unitOfWork.Complete();        
+        await _unitOfWork.Complete();
 
         _logger.LogInformation($"Se actualizo correctamente el ope periodo con id: {request.Id}");
         _logger.LogInformation(nameof(UpdateOpePeriodoCommandHandler) + " - END");

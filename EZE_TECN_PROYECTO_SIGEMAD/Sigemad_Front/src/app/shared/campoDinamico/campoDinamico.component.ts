@@ -43,6 +43,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { UtilsService } from '../services/utils.service';
 
 const MY_DATE_FORMATS = {
   parse: {
@@ -91,6 +92,8 @@ export class CampoDinamico implements OnInit {
   public matDialogRef = inject(MatDialogRef);
   public matDialog = inject(MatDialog);
 
+  public utilsService = inject(UtilsService);
+
   formGroup: FormGroup = this.fb.group({});
 
   constructor(
@@ -102,6 +105,7 @@ export class CampoDinamico implements OnInit {
     await this.createForm();
   }
 
+  /*
   async createForm() {
     const group: { [key: string]: any } = {};
     this.fields.forEach((field) => {
@@ -115,6 +119,41 @@ export class CampoDinamico implements OnInit {
       this.formGroupChange.emit(this.formGroup);
     });
   }
+  */
+
+  // PCD
+  async createForm() {
+    const group: { [key: string]: any } = {};
+
+    this.fields.forEach((field) => {
+      const validators = [];
+
+      // Si el campo es obligatorio, agregamos Validators.required
+      if (field.esObligatorio) {
+        validators.push(Validators.required);
+      }
+
+      // Verificamos si es un campo numérico, si no tiene tipo lo tratamos como texto
+      if (field.tipoCampo === TipoCampo.Number) {
+        validators.push(Validators.min(0));
+      }
+
+      // Creamos el control con el valor inicial y las validaciones
+      group[field.campo] = [field.initValue || '', validators];
+    });
+
+    // Creamos el FormGroup con los controles generados
+    this.formGroup = this.fb.group(group);
+
+    // Emitimos el FormGroup recién creado
+    this.formGroupChange.emit(this.formGroup);
+
+    // Escuchamos cambios en el formulario y volvemos a emitirlos
+    this.formGroup.valueChanges.subscribe(() => {
+      this.formGroupChange.emit(this.formGroup);
+    });
+  }
+  // FIN PCD
 
   ngOnChanges(changes: any): void {
     if (changes['fields']) {

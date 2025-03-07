@@ -1,0 +1,45 @@
+meta {
+  name: Agregar
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/direcciones
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idRegistroActualizacion": null,
+    "idSuceso": 1,
+    "direcciones": [
+      {
+        "id": 1,
+        "idTipoDireccionEmergencia": 1,
+        "autoridadQueDirige": "Autoridad #1",
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-25"
+      },
+      {
+        "id": 2,
+        "idTipoDireccionEmergencia": 1,
+        "autoridadQueDirige": "Autoridad #2",
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-25"
+      },
+      {
+        "id": null,
+        "idTipoDireccionEmergencia": 1,
+        "autoridadQueDirige": "Autoridad #3",
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-25"
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}

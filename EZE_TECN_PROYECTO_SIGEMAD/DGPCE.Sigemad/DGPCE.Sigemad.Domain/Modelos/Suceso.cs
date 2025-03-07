@@ -7,12 +7,12 @@ public class Suceso: BaseDomainModel<int>
     public Suceso()
     {
         Incendios = new();
-        Evoluciones = new();
-        DireccionCoordinacionEmergencias = new();
         Documentaciones = new();
         OtraInformaciones = new();
         SucesoRelacionados = new();
         ActuacionesRelevantes = new();
+        Evoluciones = new();
+        RegistroActualizaciones = new();
     }
 
     public int IdTipo { get; set; }
@@ -24,9 +24,12 @@ public class Suceso: BaseDomainModel<int>
 
     // Datos del suceso
     public virtual List<Evolucion> Evoluciones { get; set; }
-    public virtual List<DireccionCoordinacionEmergencia> DireccionCoordinacionEmergencias { get; set; }
+    public virtual Evolucion Evolucion => Evoluciones.FirstOrDefault(e => e.EsFoto == false);
+    public virtual DireccionCoordinacionEmergencia DireccionCoordinacionEmergencia { get; set; }
     public virtual List<Documentacion> Documentaciones { get; set; }
     public virtual List<OtraInformacion> OtraInformaciones { get; set; }
     public virtual List<SucesoRelacionado> SucesoRelacionados { get; set; }
     public virtual List<ActuacionRelevanteDGPCE> ActuacionesRelevantes { get; set; }
+
+    public virtual List<RegistroActualizacion> RegistroActualizaciones { get; set; }
 }

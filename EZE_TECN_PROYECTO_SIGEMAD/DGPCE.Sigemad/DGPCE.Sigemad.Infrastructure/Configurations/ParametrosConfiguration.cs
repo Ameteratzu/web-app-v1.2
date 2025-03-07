@@ -36,10 +36,10 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
         .IsUnicode(false);
 
         // Relación uno a uno con Evolucion        
-        builder.HasOne(r => r.Evolucion)
-            .WithOne(e => e.Parametro)
-            .HasForeignKey<Parametro>(r => r.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(d => d.Evolucion)
+            .WithMany(e => e.Parametros)
+            .HasForeignKey(d => d.IdEvolucion)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(d => d.EstadoIncendio)
             .WithMany()

@@ -33,9 +33,6 @@ GO
 DROP TABLE IF EXISTS Capacidad
 GO
 
-DROP TABLE IF EXISTS TipoCapacidad
-GO
-
 DROP TABLE IF EXISTS Entidad
 GO
 
@@ -152,6 +149,9 @@ GO
 DROP TABLE IF EXISTS TipoDireccionEmergencia
 GO
 
+DROP TABLE IF EXISTS DetalleIntervencionMedio
+GO
+
 DROP TABLE IF EXISTS IntervencionMedio
 GO
 
@@ -168,6 +168,21 @@ DROP TABLE IF EXISTS TitularidadMedio
 GO
 
 DROP TABLE IF EXISTS CaracterMedio
+GO
+
+DROP TABLE IF EXISTS MediosCapacidad
+GO
+
+DROP TABLE IF EXISTS TipoMedio
+GO
+
+DROP TABLE IF EXISTS SubgrupoMedio
+GO
+
+DROP TABLE IF EXISTS GrupoMedio
+GO
+
+DROP TABLE IF EXISTS TipoCapacidad
 GO
 
 DROP TABLE IF EXISTS ImpactoEvolucion
@@ -195,12 +210,6 @@ DROP TABLE IF EXISTS RegistroEvolucion_ProcedenciaDestino
 GO
 
 DROP TABLE IF EXISTS Registro_ProcedenciaDestino
-GO
-
-DROP TABLE IF EXISTS Registro_ProcedenciaDestino
-GO
-
-DROP TABLE IF EXISTS Registro
 GO
 
 DROP TABLE IF EXISTS Datoprincipal
@@ -257,7 +266,7 @@ GO
 DROP TABLE IF EXISTS SituacionEquivalente
 GO
 
-DROP TABLE IF EXISTS TipoRegistro
+DROP TABLE IF EXISTS TipoRegistro_
 GO
 
 DROP TABLE IF EXISTS EstadoEvolucion
@@ -290,9 +299,6 @@ GO
 DROP TABLE IF EXISTS EstadoIncendio
 GO
 
-DROP TABLE IF EXISTS Suceso
-GO
-
 DROP TABLE IF EXISTS ClaseSuceso
 GO
 
@@ -303,6 +309,30 @@ DROP TABLE IF EXISTS EstadoSuceso
 GO
 
 DROP TABLE IF EXISTS TipoRiesgo
+GO
+
+DROP TABLE IF EXISTS HistorialCambios
+GO
+
+DROP TABLE IF EXISTS DetalleRegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS RegistroApartado
+GO
+
+DROP TABLE IF EXISTS RegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS EstadoRegistro
+GO
+
+DROP TABLE IF EXISTS ApartadoRegistro
+GO
+
+DROP TABLE IF EXISTS TipoRegistroActualizacion
+GO
+
+DROP TABLE IF EXISTS Suceso
 GO
 
 DROP TABLE IF EXISTS TipoSuceso

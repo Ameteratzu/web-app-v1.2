@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
+using DGPCE.Sigemad.Application.Specifications.EntidadesMenores;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -22,7 +23,7 @@ public class GetEntidadMenorListQueryHandler : IRequestHandler<GetEntidadMenorLi
     public async Task<IReadOnlyList<EntidadMenorVm>> Handle(GetEntidadMenorListQuery request, CancellationToken cancellationToken)
     {
 
-        var entidadesMenores = (await _unitOfWork.Repository<EntidadMenor>().GetAllAsync());
+        var entidadesMenores = (await _unitOfWork.Repository<EntidadMenor>().GetAllWithSpec(new EntidadesMenoresSpecification()));
 
         var entidadesMenoresVm = _mapper.Map<IReadOnlyList<EntidadMenor>, IReadOnlyList<EntidadMenorVm>>(entidadesMenores);
         return entidadesMenoresVm;

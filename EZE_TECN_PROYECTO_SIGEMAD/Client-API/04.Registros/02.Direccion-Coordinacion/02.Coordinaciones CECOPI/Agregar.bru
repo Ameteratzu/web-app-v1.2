@@ -1,0 +1,46 @@
+meta {
+  name: Agregar
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{Server}}/api/v1/direcciones-coordinaciones-emergencias/coordinaciones-cecopi
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "idRegistroActualizacion": null,
+    "idSuceso": 1,
+    "coordinaciones": [
+      {
+        "id": 4,
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-24",
+        "idProvincia": 1,
+        "idMunicipio": 1001,
+        "lugar": "string",
+        "observaciones": null
+      },
+      {
+        "id": 0,
+        "fechaInicio": "2024-11-24",
+        "fechaFin": "2024-11-24",
+        "idProvincia": 1,
+        "idMunicipio": 1001,
+        "lugar": "string 2",
+        "observaciones": null
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  IdDireccionCoordinacionEmergencia: res.body.idDireccionCoordinacionEmergencia
+}
+
+assert {
+  res.status: eq 200
+}

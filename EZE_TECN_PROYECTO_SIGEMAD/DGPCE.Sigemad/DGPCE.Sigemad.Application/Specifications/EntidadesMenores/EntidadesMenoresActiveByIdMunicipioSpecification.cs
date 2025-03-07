@@ -11,5 +11,6 @@ public class EntidadesMenoresActiveByIdMunicipioSpecification : BaseSpecificatio
     public EntidadesMenoresActiveByIdMunicipioSpecification(int idMunicipio)
         : base(i => i.IdMunicipio == idMunicipio && i.Borrado == false)
     {
+        AddOrderBy(i => i.Descripcion); // Ordenación por defecto
     }
 }

@@ -2,10 +2,8 @@
 using DGPCE.Sigemad.Domain.Common;
 
 namespace DGPCE.Sigemad.Domain.Modelos;
-public class RegistroProcedenciaDestino : BaseDomainModel<int>
+public class RegistroProcedenciaDestino : BaseEntity
 {
-
-    public int Id { get; set; }
     public int IdRegistro { get; set; }
     public int IdProcedenciaDestino { get; set; }
 

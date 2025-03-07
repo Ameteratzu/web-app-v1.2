@@ -5,26 +5,26 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/sucesos?Denominacion=Inc&IdTerritorio=1&IdPais=60&IdCcaa=4&IdProvincia=1&IdMunicipio=1001&IdMovimiento=1&IdComparativoFecha=2&FechaInicio=2024-11-06&FechaFin=2024-10-07&Sort=&Page=1&PageSize=10&IdSuceso=1
+  url: {{Server}}/api/v1/sucesos?Sort&PageIndex=1&PageSize=10
   body: none
   auth: inherit
 }
 
 params:query {
-  Denominacion: Inc
-  IdTerritorio: 1
-  IdPais: 60
-  IdCcaa: 4
-  IdProvincia: 1
-  IdMunicipio: 1001
-  IdMovimiento: 1
-  IdComparativoFecha: 2
-  FechaInicio: 2024-11-06
-  FechaFin: 2024-10-07
   Sort: 
-  Page: 1
+  PageIndex: 1
   PageSize: 10
-  IdSuceso: 1
+  ~Denominacion: Inc
+  ~IdTerritorio: 1
+  ~IdPais: 60
+  ~IdCcaa: 4
+  ~IdProvincia: 1
+  ~IdMunicipio: 1001
+  ~IdMovimiento: 1
+  ~IdComparativoFecha: 2
+  ~FechaInicio: 2024-11-06
+  ~FechaFin: 2024-10-07
+  ~IdSuceso: 1
 }
 
 assert {

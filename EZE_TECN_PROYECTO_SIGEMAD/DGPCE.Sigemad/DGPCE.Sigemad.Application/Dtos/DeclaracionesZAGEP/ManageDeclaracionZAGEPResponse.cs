@@ -2,6 +2,7 @@
 {
     public class ManageDeclaracionZAGEPResponse
     {
+        public int IdRegistroActualizacion { get; set; }
         public int IdActuacionRelevante { get; set; }
     }
 }
