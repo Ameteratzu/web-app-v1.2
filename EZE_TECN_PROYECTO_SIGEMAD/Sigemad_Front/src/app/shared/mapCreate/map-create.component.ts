@@ -186,7 +186,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
     });
 
     const layersSwitcher = new LayerSwitcher({
-      mouseover: true,
+      mouseover: false,
       show_progress: true,
       trash: true,
       extent: true,
@@ -203,17 +203,24 @@ export class MapCreateComponent implements OnInit, OnChanges {
 
     this.map.addControl(layersSwitcher);
 
+    const layerSwitcherElement = document.querySelector('.ol-layerswitcher');
+    if (layerSwitcherElement) {
+      layerSwitcherElement.setAttribute('title', 'Capas');
+    }
+
     this.map.addControl(new ScaleLine());
 
-    this.map.addControl(new SearchNominatim({
-      placeholder: 'Buscar ubicación...',
-      title: 'Buscar en el mapa',
-      onselect: (event: any) => {
-        const coordenadas = event.coordinate;
-        this.map.getView().setCenter(coordenadas);
-        this.map.getView().setZoom(15);
-      }
-    }));
+    this.map.addControl(
+      new SearchNominatim({
+        placeholder: 'Buscar ubicación...',
+        title: 'Buscar en el mapa',
+        onselect: (event: any) => {
+          const coordenadas = event.coordinate;
+          this.map.getView().setCenter(coordenadas);
+          this.map.getView().setZoom(15);
+        },
+      })
+    );
 
     if (!onlyView) {
       this.addInteractions();
@@ -291,7 +298,6 @@ export class MapCreateComponent implements OnInit, OnChanges {
   }
 
   getAdminLayers() {
-
     this.layerLimitesMunicipio = new TileLayer({
       source: new TileWMS({
         url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -308,7 +314,6 @@ export class MapCreateComponent implements OnInit, OnChanges {
     const wmsLayersGroup = new LayerGroup({
       properties: { title: 'Límites administrativos', openInLayerSwitcher: true },
       layers: [
-
         new TileLayer({
           source: new TileWMS({
             url: environment.urlGeoserver + 'wms?version=1.1.0',
@@ -584,21 +589,13 @@ export class MapCreateComponent implements OnInit, OnChanges {
       if (center && resolution) {
         const radius = 1000; // Radio en metros
 
-        const newExtent = [
-          center[0] - radius, center[1] - radius,
-          center[0] + radius, center[1] + radius
-        ];
+        const newExtent = [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius];
 
-        const url = source.getFeatureInfoUrl(
-          newExtent,
-          resolution,
-          'EPSG:3857',
-          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 10 }
-        );
+        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857', { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10 });
         if (url) {
           fetch(url)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
               // Función para normalizar y limpiar el nombre del municipio
               const normalizeString = (str: string) => {
                 return str
@@ -619,7 +616,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
               const feature = data.features.find((f: any) => {
                 // console.info('f.properties.NAMEUNIT normalizado: ', normalizeString(f.properties.NAMEUNIT));
                 // console.info('normalizedMunicipio: ', normalizedMunicipio);
-                return normalizeString(f.properties.NAMEUNIT).includes(normalizedMunicipio)
+                return normalizeString(f.properties.NAMEUNIT).includes(normalizedMunicipio);
               });
 
               if (feature) {
@@ -637,12 +634,14 @@ export class MapCreateComponent implements OnInit, OnChanges {
                     geometry: new Polygon(polygonCoords), // Crear un nuevo polígono para cada conjunto de coordenadas
                   });
 
-                  olFeature.setStyle(new Style({
-                    stroke: new Stroke({
-                      color: 'rgb(255, 128, 0)', // Color del borde
-                      width: 5,
-                    }),
-                  }));
+                  olFeature.setStyle(
+                    new Style({
+                      stroke: new Stroke({
+                        color: 'rgb(255, 128, 0)', // Color del borde
+                        width: 5,
+                      }),
+                    })
+                  );
 
                   this.highLightMunicipio.getSource()?.addFeature(olFeature);
                 });
@@ -656,7 +655,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
                 console.warn('No se encontró el feature para el municipio:', municipio);
               }
             })
-            .catch(error => console.error('Error al obtener FeatureInfo:', error));
+            .catch((error) => console.error('Error al obtener FeatureInfo:', error));
         }
       }
     }
@@ -691,9 +690,7 @@ export class MapCreateComponent implements OnInit, OnChanges {
             if (Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
               coords = coords[0];
             }
-            const coordsTrans = coords.map((coord: number[]) =>
-              toLonLat(coord)
-            );
+            const coordsTrans = coords.map((coord: number[]) => toLonLat(coord));
             //console.info('coordsTrans: ', coordsTrans);
             return coordsTrans;
           }

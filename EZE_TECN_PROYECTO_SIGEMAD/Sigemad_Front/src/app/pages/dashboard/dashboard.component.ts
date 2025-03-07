@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { environment } from '../../../environments/environment';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
-const utm30n = "+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs";
+const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,7 +52,7 @@ export class DashboardComponent {
   public selectedFeature: any = null;
   public popupPosition = { x: 0, y: 0 };
 
-  private isShowingPeninsula = true;  // Para cambiar zoom a Canarias o Península
+  private isShowingPeninsula = true; // Para cambiar zoom a Canarias o Península
 
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
@@ -77,11 +77,9 @@ export class DashboardComponent {
         },
       ],
     };
-
   }
 
   configuremap() {
-
     const baseLayers = this.getBaseLayers();
 
     const layersGroupAdmin = this.getAdminLayers();
@@ -89,27 +87,26 @@ export class DashboardComponent {
     const layersGroupIncendios = this.getIncendiosLayers();
 
     this.view = new View({
-      center: [-225030.611272, 4290257.523590],
+      center: [-225030.611272, 4290257.52359],
       zoom: 5.53,
-      extent: [-4000000, 2000000, 6000000, 20000000]
+      extent: [-4000000, 2000000, 6000000, 20000000],
     });
 
     this.map = new Map({
       controls: defaultControls({
-        zoom: true, zoomOptions: {
+        zoom: true,
+        zoomOptions: {
           zoomInTipLabel: 'Acercar',
-          zoomOutTipLabel: 'Alejar'
-        }
-      }).extend([
-        new FullScreen({ tipLabel: 'Pantalla completa' }),
-      ]),
+          zoomOutTipLabel: 'Alejar',
+        },
+      }).extend([new FullScreen({ tipLabel: 'Pantalla completa' })]),
       target: 'map',
       layers: [baseLayers, layersGroupAdmin, layersGroupIncendios],
       view: this.view,
     });
 
     const layersSwitcher = new LayerSwitcher({
-      mouseover: true,
+      mouseover: false,
       show_progress: true,
       trash: true,
     });
@@ -125,17 +122,24 @@ export class DashboardComponent {
 
     this.map.addControl(layersSwitcher);
 
+    const layerSwitcherElement = document.querySelector('.ol-layerswitcher');
+    if (layerSwitcherElement) {
+      layerSwitcherElement.setAttribute('title', 'Capas');
+    }
+
     this.map.addControl(new ScaleLine());
 
-    this.map.addControl(new SearchNominatim({
-      placeholder: 'Buscar ubicación...',
-      title: 'Buscar en el mapa',
-      onselect: (event: any) => {
-        const coordenadas = event.coordinate;
-        this.map.getView().setCenter(coordenadas);
-        this.map.getView().setZoom(14);
-      }
-    }));
+    this.map.addControl(
+      new SearchNominatim({
+        placeholder: 'Buscar ubicación...',
+        title: 'Buscar en el mapa',
+        onselect: (event: any) => {
+          const coordenadas = event.coordinate;
+          this.map.getView().setCenter(coordenadas);
+          this.map.getView().setZoom(14);
+        },
+      })
+    );
 
     this.addZoomCanariasPeninsula();
 
@@ -154,7 +158,7 @@ export class DashboardComponent {
 
   getBaseLayers() {
     const baseLayers = new LayerGroup({
-      properties: { 'title': 'Capas base', openInLayerSwitcher: true },
+      properties: { title: 'Capas base', openInLayerSwitcher: true },
       layers: [
         new TileLayer({
           source: new WMTS({
@@ -166,44 +170,41 @@ export class DashboardComponent {
             tileGrid: new WMTSTileGrid({
               origin: getTopLeft(getProjection('EPSG:3857')?.getExtent() || [0, 0, 0, 0]),
               resolutions: [
-                156543.03392804097, 78271.51696402048, 39135.75848201024,
-                19567.87924100512, 9783.93962050256, 4891.96981025128,
-                2445.98490512564, 1222.99245256282, 611.49622628141,
-                305.748113140705, 152.8740565703525, 76.43702828517625,
-                38.21851414258813, 19.109257071294063, 9.554628535647032,
-                4.777314267823516, 2.388657133911758, 1.194328566955879,
-                0.5971642834779395, 0.29858214173896974, 0.14929107086948487
+                156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564,
+                1222.99245256282, 611.49622628141, 305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813, 19.109257071294063,
+                9.554628535647032, 4.777314267823516, 2.388657133911758, 1.194328566955879, 0.5971642834779395, 0.29858214173896974,
+                0.14929107086948487,
               ],
-              matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+              matrixIds: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'],
             }),
-            attributions: '© Instituto Geográfico Nacional de España (IGN)'
+            attributions: '© Instituto Geográfico Nacional de España (IGN)',
           }),
-          properties: { 'title': 'IGN base', baseLayer: true, },
-          visible: true
+          properties: { title: 'IGN base', baseLayer: true },
+          visible: true,
         }),
         new TileLayer({
           source: new TileWMS({
             url: 'https://www.ign.es/wms-inspire/pnoa-ma?',
-            params: { 'LAYERS': 'OI.OrthoimageCoverage', 'FORMAT': 'image/jpeg' },
-            attributions: '© PNOA - IGN España'
+            params: { LAYERS: 'OI.OrthoimageCoverage', FORMAT: 'image/jpeg' },
+            attributions: '© PNOA - IGN España',
           }),
-          properties: { 'title': 'IGN satélite', baseLayer: true, },
-          visible: false
+          properties: { title: 'IGN satélite', baseLayer: true },
+          visible: false,
         }),
         new TileLayer({
           source: new XYZ({
             url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics'
+            attributions: 'Tiles © <a href="https://www.esri.com/">Esri</a> - Source: Esri, Maxar, Earthstar Geographics',
           }),
-          properties: { 'title': 'Satélite', baseLayer: true, },
-          visible: false
+          properties: { title: 'Satélite', baseLayer: true },
+          visible: false,
         }),
         new TileLayer({
           source: new OSM(),
-          properties: { 'title': 'OpenStreetMap', baseLayer: true },
-          visible: false
+          properties: { title: 'OpenStreetMap', baseLayer: true },
+          visible: false,
         }),
-      ]
+      ],
     });
     function preventGroupLayerToggle(event: any) {
       // Evitar que se oculten todas las capas base
@@ -267,7 +268,7 @@ export class DashboardComponent {
             transition: 0,
           }),
           properties: { id: 'nucleos_poblacion', title: 'Núcleos de población' },
-        })
+        }),
       ],
     });
     return wmsLayersGroup;
@@ -277,58 +278,58 @@ export class DashboardComponent {
     const wmsIncendiosActivos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'incendios_activos',
-        'TILED': true,
+        LAYERS: 'incendios_activos',
+        TILED: true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
     const layerIncenciosActivos = new TileLayer({
       source: wmsIncendiosActivos,
-      properties: { 'title': 'Activos' }
+      properties: { title: 'Activos' },
     });
 
     const wmsIncendiosControlados = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'incendios_controlados',
-        'TILED': true,
+        LAYERS: 'incendios_controlados',
+        TILED: true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
     const layerIncenciosControlados = new TileLayer({
       source: wmsIncendiosControlados,
-      properties: { 'title': 'Controlados' }
+      properties: { title: 'Controlados' },
     });
 
     const wmsIncendiosEstabilizados = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'incendios_estabilizados',
-        'TILED': true,
+        LAYERS: 'incendios_estabilizados',
+        TILED: true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
     const layerIncenciosEstabilizados = new TileLayer({
       source: wmsIncendiosEstabilizados,
-      properties: { 'title': 'Estabilizados' },
+      properties: { title: 'Estabilizados' },
     });
 
     const wmsIncendiosExtinguidos = new TileWMS({
       url: environment.urlGeoserver + 'wms?version=1.1.0',
       params: {
-        'LAYERS': 'incendios_extinguidos',
-        'TILED': true,
+        LAYERS: 'incendios_extinguidos',
+        TILED: true,
       },
       serverType: 'geoserver',
       transition: 0,
     });
     const layerIncenciosExtinguidos = new TileLayer({
       source: wmsIncendiosExtinguidos,
-      properties: { 'title': 'Extinguidos' },
-      visible: false
+      properties: { title: 'Extinguidos' },
+      visible: false,
     });
 
     // capas de riesgo de incendios
@@ -342,11 +343,11 @@ export class DashboardComponent {
       source: new ImageStatic({
         url: `https://www.aemet.es/es/api-eltiempo/incendios/imagen/riesgo/p_fc024_RIESGO_${lastDate}_1.png`,
         imageExtent: peninsulaExtent,
-        projection: 'EPSG:3857'
+        projection: 'EPSG:3857',
       }),
-      properties: { 'title': 'AEMET riesgo península' },
+      properties: { title: 'AEMET riesgo península' },
       opacity: 0.25,
-      visible: false
+      visible: false,
     });
 
     const canariasExtent = transformExtent(
@@ -358,11 +359,11 @@ export class DashboardComponent {
       source: new ImageStatic({
         url: `https://www.aemet.es/es/api-eltiempo/incendios/imagen/riesgo/c_fc024_RIESGO_${lastDate}_1.png`,
         imageExtent: canariasExtent,
-        projection: 'EPSG:3857'
+        projection: 'EPSG:3857',
       }),
-      properties: { 'title': 'AEMET riesgo Canarias' },
+      properties: { title: 'AEMET riesgo Canarias' },
       opacity: 0.25,
-      visible: false
+      visible: false,
     });
 
     // const wmsIncendiosLimitesMunicipios = new TileWMS({
@@ -377,12 +378,19 @@ export class DashboardComponent {
     // const layerIncenciosLimitesMunicipio = new TileLayer({
     //   source: wmsIncendiosLimitesMunicipios,
     //   properties: { 'title': 'Limites Municipios' }
-    // });    
+    // });
 
     return new LayerGroup({
-      properties: { 'title': 'Incendios', 'openInLayerSwitcher': true },
+      properties: { title: 'Incendios', openInLayerSwitcher: true },
       //layers: [layerIncendiosEvolutivo, layerIncendiosInicial, layerIncenciosCentroideMunicipio, layerIncenciosLimitesMunicipio]
-      layers: [layerRiesgoCanarias, layerRiesgoPeninsula, layerIncenciosExtinguidos, layerIncenciosEstabilizados, layerIncenciosControlados, layerIncenciosActivos]
+      layers: [
+        layerRiesgoCanarias,
+        layerRiesgoPeninsula,
+        layerIncenciosExtinguidos,
+        layerIncenciosEstabilizados,
+        layerIncenciosControlados,
+        layerIncenciosActivos,
+      ],
     });
   }
 
@@ -409,21 +417,19 @@ export class DashboardComponent {
       this.closePopup();
 
       // Obtener las capas del grupo de incendios
-      const layers = layersGroupIncendios.getLayers().getArray().map(layer => ({
-        source: (layer as TileLayer).getSource(),
-        type: 'Incendio ' + layer.get('title').slice(0, -1)
-      }));
+      const layers = layersGroupIncendios
+        .getLayers()
+        .getArray()
+        .map((layer) => ({
+          source: (layer as TileLayer).getSource(),
+          type: 'Incendio ' + layer.get('title').slice(0, -1),
+        }));
 
       for (const layer of layers) {
         if (!viewResolution) continue;
         if (!(layer.source instanceof TileWMS)) continue;
 
-        const url = layer.source.getFeatureInfoUrl(
-          coordinate,
-          viewResolution,
-          projection,
-          { 'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1 }
-        );
+        const url = layer.source.getFeatureInfoUrl(coordinate, viewResolution, projection, { INFO_FORMAT: 'application/json', FEATURE_COUNT: 1 });
 
         if (url) {
           try {
@@ -442,7 +448,7 @@ export class DashboardComponent {
               // Posicionar el popup
               this.popupPosition = {
                 x: pixel[0],
-                y: pixel[1] + 10 // Pequeño offset vertical
+                y: pixel[1] + 10, // Pequeño offset vertical
               };
 
               break; // Mostrar solo el primer feature encontrado
@@ -456,30 +462,35 @@ export class DashboardComponent {
   }
 
   addZoomCanariasPeninsula() {
-    const toggleViewControl = this.createCustomControl('Alternar vista', () => {
-      if (this.isShowingPeninsula) {
-        // Zoom a Canarias
-        this.map.getView().animate({
-          center: [-1741235, 3291683.5],
-          zoom: 8,
-          duration: 1000
-        });
-      } else {
-        // Zoom a Península
-        this.map.getView().animate({
-          center: [-319201, 4834489],
-          zoom: 6.5,
-          duration: 1000
-        });
-      }
-      this.isShowingPeninsula = !this.isShowingPeninsula;
+    const toggleViewControl = this.createCustomControl(
+      'Alternar vista',
+      () => {
+        if (this.isShowingPeninsula) {
+          // Zoom a Canarias
+          this.map.getView().animate({
+            center: [-1741235, 3291683.5],
+            zoom: 8,
+            duration: 1000,
+          });
+        } else {
+          // Zoom a Península
+          this.map.getView().animate({
+            center: [-319201, 4834489],
+            zoom: 6.5,
+            duration: 1000,
+          });
+        }
+        this.isShowingPeninsula = !this.isShowingPeninsula;
 
-      // Actualizar el título del botón
-      const button = document.querySelector('.ol-custom-control') as HTMLButtonElement;
-      if (button) {
-        button.title = this.isShowingPeninsula ? 'Ver Canarias' : 'Ver Península y Baleares';
-      }
-    }, 'sync', 2);
+        // Actualizar el título del botón
+        const button = document.querySelector('.ol-custom-control') as HTMLButtonElement;
+        if (button) {
+          button.title = this.isShowingPeninsula ? 'Ver Canarias' : 'Ver Península y Baleares';
+        }
+      },
+      'sync',
+      2
+    );
 
     this.map.addControl(toggleViewControl);
   }
