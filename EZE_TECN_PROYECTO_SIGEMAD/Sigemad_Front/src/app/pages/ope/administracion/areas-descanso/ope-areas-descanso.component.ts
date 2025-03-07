@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { OpeAreasDescansoTableComponent } from './components/ope-area-descanso-table/ope-areas-descanso-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpeAreaDescansoFilterFormComponent } from './components/ope-area-descanso-filter-form/ope-areas-descanso-filter-form.component';
-import { LocalFiltrosOpeAreasDescanso } from '../../../../services/ope/local-filtro-ope-areas-descanso.service';
-import { OpeAreaDescanso } from '../../../../types/ope/ope-area-descanso.type';
-import { OpeAreasDescansoService } from '@services/ope/ope-areas-descanso.service';
+import { LocalFiltrosOpeAreasDescanso } from '../../../../services/ope/administracion/local-filtro-ope-areas-descanso.service';
+import { OpeAreaDescanso } from '../../../../types/ope/administracion/ope-area-descanso.type';
+import { OpeAreasDescansoService } from '@services/ope/administracion/ope-areas-descanso.service';
 
 @Component({
   selector: 'app-ope-areas-descanso',

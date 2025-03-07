@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { OpePuntosControlCarreterasTableComponent } from './components/ope-punto-control-carretera-table/ope-puntos-control-carreteras-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpePuntoControlCarreteraFilterFormComponent } from './components/ope-punto-control-carretera-filter-form/ope-puntos-control-carreteras-filter-form.component';
-import { OpePuntoControlCarretera } from '../../../../types/ope/ope-punto-control-carretera.type';
-import { LocalFiltrosOpePuntosControlCarreteras } from '@services/ope/local-filtro-ope-puntos-control-carreteras.service';
-import { OpePuntosControlCarreterasService } from '@services/ope/ope-puntos-control-carreteras.service';
+import { OpePuntoControlCarretera } from '../../../../types/ope/administracion/ope-punto-control-carretera.type';
+import { LocalFiltrosOpePuntosControlCarreteras } from '@services/ope/administracion/local-filtro-ope-puntos-control-carreteras.service';
+import { OpePuntosControlCarreterasService } from '@services/ope/administracion/ope-puntos-control-carreteras.service';
 
 @Component({
   selector: 'app-ope-puntos-control-carreteras',

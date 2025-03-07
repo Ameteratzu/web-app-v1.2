@@ -11,6 +11,7 @@ import { OpeLineasMaritimasComponent } from './pages/ope/administracion/lineas-m
 import { OpeFronterasComponent } from './pages/ope/administracion/fronteras/ope-fronteras.component';
 import { OpeAreasDescansoComponent } from './pages/ope/administracion/areas-descanso/ope-areas-descanso.component';
 import { OpePuntosControlCarreterasComponent } from './pages/ope/administracion/puntos-control-carreteras/ope-puntos-control-carreteras.component';
+import { OpeDatosFronterasComponent } from './pages/ope/datos/fronteras/ope-datos-fronteras.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -93,9 +94,9 @@ export const routes: Routes = [
         data: { breadcrumb: 'Asistencias. Funcionalidades' },
       },
       {
-        path: 'ope-nuevo-fronteras',
-        component: OpePeriodosComponent,
-        data: { breadcrumb: 'Fronteras' },
+        path: 'ope-nuevo-datos-fronteras',
+        component: OpeDatosFronterasComponent,
+        data: { breadcrumb: 'Datos de fronteras' },
       },
       {
         path: 'ope-nuevo-fronteras-funcionalidades',

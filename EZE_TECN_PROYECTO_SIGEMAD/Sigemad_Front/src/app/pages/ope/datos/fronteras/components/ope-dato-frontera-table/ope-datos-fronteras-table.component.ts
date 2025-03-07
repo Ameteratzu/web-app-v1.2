@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpeAreaDescanso } from '../../../../../../types/ope/administracion/ope-area-descanso.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -8,28 +7,31 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { OpeAreaDescansoCreateEdit } from '../ope-area-descanso-create-edit-form/ope-area-descanso-create-edit-form.component';
+
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpeAreasDescansoService } from '@services/ope/administracion/ope-areas-descanso.service';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OpeDatoFrontera } from '@type/ope/datos/ope-dato-frontera.type';
+import { OpeDatosFronterasService } from '@services/ope/datos/ope-datos-fronteras.service';
+import { OpeDatoFronteraCreateEdit } from '../ope-dato-frontera-create-edit-form/ope-dato-frontera-create-edit-form.component';
 
 @Component({
-  selector: 'app-ope-areas-descanso-table',
+  selector: 'app-ope-datos-fronteras-table',
   standalone: true,
   imports: [MatProgressSpinnerModule, MatPaginatorModule, MatTableModule, CommonModule, TooltipDirective],
-  templateUrl: './ope-areas-descanso-table.component.html',
-  styleUrl: './ope-areas-descanso-table.component.scss',
+  templateUrl: './ope-datos-fronteras-table.component.html',
+  styleUrl: './ope-datos-fronteras-table.component.scss',
 })
-export class OpeAreasDescansoTableComponent implements OnChanges {
-  @Input() opeAreasDescanso: OpeAreaDescanso[] = [];
+export class OpeDatosFronterasTableComponent implements OnChanges {
+  @Input() opeDatosFronteras: OpeDatoFrontera[] = [];
   @Input() isLoading: boolean = true;
   @Input() refreshFilterForm: boolean = true;
 
   @Output() refreshFilterFormChange = new EventEmitter<boolean>();
 
-  public dataSource = new MatTableDataSource<OpeAreaDescanso>([]);
+  public dataSource = new MatTableDataSource<OpeDatoFrontera>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public router = inject(Router);
@@ -39,7 +41,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
   public renderer = inject(Renderer2);
   public alertService = inject(AlertService);
   public snackBar = inject(MatSnackBar);
-  public opeAreasDescansoService = inject(OpeAreasDescansoService);
+  public opeDatosFronterasService = inject(OpeDatosFronterasService);
   public routenav = inject(Router);
 
   public displayedColumns: string[] = [
@@ -52,8 +54,8 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['opeAreasDescanso'] && this.opeAreasDescanso) {
-      this.dataSource.data = this.opeAreasDescanso;
+    if (changes['opeDatosFronteras'] && this.opeDatosFronteras) {
+      this.dataSource.data = this.opeDatosFronteras;
     }
   }
 
@@ -62,19 +64,19 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  goToEdit(areaDescanso: OpeAreaDescanso) {
+  goToEdit(frontera: OpeDatoFrontera) {
     //this.router.navigate([`fire/fire-national-edit/1`]);
   }
 
-  goToEditAreaDescanso(opeAreaDescanso: OpeAreaDescanso) {}
+  goToEditDatoFrontera(opeDatoFrontera: OpeDatoFrontera) {}
 
   goModal() {
-    const dialogRef = this.dialog.open(OpeAreaDescansoCreateEdit, {
+    const dialogRef = this.dialog.open(OpeDatoFronteraCreateEdit, {
       width: '90vw',
       height: '90vh',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - AreaDescanso',
+        title: 'Nuevo - DatoFrontera',
       },
     });
 
@@ -89,13 +91,13 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
     return moment(fecha).format('DD/MM/yyyy HH:mm');
   }
 
-  goModalEdit(opeAreaDescanso: OpeAreaDescanso) {
-    const dialogRef = this.dialog.open(OpeAreaDescansoCreateEdit, {
+  goModalEdit(opeDatoFrontera: OpeDatoFrontera) {
+    const dialogRef = this.dialog.open(OpeDatoFronteraCreateEdit, {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Modificar - AreaDescanso.',
-        opeAreaDescanso: opeAreaDescanso,
+        title: 'Modificar - DatoFrontera.',
+        opeDatoFrontera: opeDatoFrontera,
       },
     });
 
@@ -107,7 +109,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
   }
 
   //
-  async deleteOpeAreaDescanso(idOpeAreaDescanso: number) {
+  async deleteOpeDatoFrontera(idOpeDatoFrontera: number) {
     this.alertService
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
@@ -126,7 +128,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
           const toolbar = document.querySelector('mat-toolbar');
           this.renderer.setStyle(toolbar, 'z-index', '1');
 
-          await this.opeAreasDescansoService.delete(idOpeAreaDescanso);
+          await this.opeDatosFronterasService.delete(idOpeDatoFrontera);
           setTimeout(() => {
             //PCD
             this.snackBar
@@ -138,8 +140,8 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
               })
               .afterDismissed()
               .subscribe(() => {
-                this.routenav.navigate(['/ope-administracion-areasDescanso']).then(() => {
-                  window.location.href = '/ope-administracion-areasDescanso';
+                this.routenav.navigate(['/ope-administracion-fronteras']).then(() => {
+                  window.location.href = '/ope-administracion-fronteras';
                 });
                 this.spinner.hide();
               });

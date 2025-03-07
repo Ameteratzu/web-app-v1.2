@@ -4,9 +4,9 @@ import { RouterOutlet } from '@angular/router';
 import { OpeFronterasTableComponent } from './components/ope-frontera-table/ope-fronteras-table.component';
 import { ApiResponse } from '../../../../types/api-response.type';
 import { OpeFronteraFilterFormComponent } from './components/ope-frontera-filter-form/ope-fronteras-filter-form.component';
-import { LocalFiltrosOpeFronteras } from '../../../../services/ope/local-filtro-ope-fronteras.service';
-import { OpeFronterasService } from '@services/ope/ope-fronteras.service';
-import { OpeFrontera } from '@type/ope/ope-frontera.type';
+import { LocalFiltrosOpeFronteras } from '../../../../services/ope/administracion/local-filtro-ope-fronteras.service';
+import { OpeFronterasService } from '@services/ope/administracion/ope-fronteras.service';
+import { OpeFrontera } from '@type/ope/administracion/ope-frontera.type';
 
 @Component({
   selector: 'app-ope-fronteras',

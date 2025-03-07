@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpePeriodo } from '../../../../../../types/ope/ope-periodo.type';
+import { OpePeriodo } from '../../../../../../types/ope/administracion/ope-periodo.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -12,7 +12,7 @@ import { OpePeriodoCreateEdit } from '../ope-periodo-create-edit-form/ope-period
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { OpePeriodosService } from '@services/ope/ope-periodos.service';
+import { OpePeriodosService } from '@services/ope/administracion/ope-periodos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

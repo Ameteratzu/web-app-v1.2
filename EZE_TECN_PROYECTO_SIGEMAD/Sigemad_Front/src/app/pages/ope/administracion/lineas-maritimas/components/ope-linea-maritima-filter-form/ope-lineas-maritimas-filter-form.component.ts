@@ -16,16 +16,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MenuItemActiveService } from '@services/menu-item-active.service';
 import { ApiResponse } from '../../../../../../types/api-response.type';
-import { OpeLineaMaritima } from '../../../../../../types/ope/ope-linea-maritima.type';
+import { OpeLineaMaritima } from '../../../../../../types/ope/administracion/ope-linea-maritima.type';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import moment from 'moment';
-import { OpeLineasMaritimasService } from '@services/ope/ope-lineas-maritimas.service';
+import { OpeLineasMaritimasService } from '@services/ope/administracion/ope-lineas-maritimas.service';
 import { OpeLineaMaritimaCreateEdit } from '../ope-linea-maritima-create-edit-form/ope-linea-maritima-create-edit-form.component';
 import { ComparativeDateService } from '@services/comparative-date.service';
 import { ComparativeDate } from '../../../../../../types/comparative-date.type';
 import { FORMATO_FECHA } from '../../../../../../types/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/local-filtro-ope-lineas-maritimas.service';
+import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/administracion/local-filtro-ope-lineas-maritimas.service';
 
 @Component({
   selector: 'app-ope-linea-maritima-filter-form',
