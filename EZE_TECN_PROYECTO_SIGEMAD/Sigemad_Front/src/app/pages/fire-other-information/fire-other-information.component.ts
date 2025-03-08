@@ -113,7 +113,6 @@ export class FireOtherInformationComponent implements OnInit {
       // PCD
       fechaHora: [moment().format('YYYY-MM-DD HH:mm'), [Validators.required, FechaValidator.validarFecha]],
       // FIN PCD
-
       procendenciaDestino: ['', Validators.required],
       medio: ['', Validators.required],
       asunto: ['', Validators.required],
@@ -132,7 +131,8 @@ export class FireOtherInformationComponent implements OnInit {
   async isToEditDocumentation() {
     console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ isToEditDocumentation:", "isToEditDocumentation")
     try {
-      const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fire.idSuceso));
+      const dataOtraInformacion: any = await this.otherInformationService.getByIdRegistro(Number(this.dataProps.fire.idSuceso), Number(this.dataProps.fireDetail?.id));
+       
       console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ dataOtraInformacion:", dataOtraInformacion)
       this.idRegistro = dataOtraInformacion.id;
       const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({

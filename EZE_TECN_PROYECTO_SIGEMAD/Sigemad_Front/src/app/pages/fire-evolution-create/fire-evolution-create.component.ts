@@ -78,17 +78,19 @@ export class FireCreateComponent implements OnInit {
   estado: number | undefined;
 
   async isToEditDocumentation() {
+    console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.data:", this.data.fireDetail?.id)
     try {
-      const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.data.idIncendio));
+      const dataCordinacion: any = await this.evolutionSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+
       this.estado = dataCordinacion.parametro?.estadoIncendio.id;
       this.editData = dataCordinacion;
+      console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.editData:", this.editData)
     } catch (error) {}
 
     this.isDataReady = true;
   }
 
   async ngOnInit() {
-    console.log('🚀 ~ FireCreateComponent ~ ngOnInit ~ this.data.fire:', this.data.fire);
     this.spinner.show();
     this.isToEditDocumentation();
   }

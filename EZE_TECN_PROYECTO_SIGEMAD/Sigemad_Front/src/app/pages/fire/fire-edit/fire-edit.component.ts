@@ -374,6 +374,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEvolution(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalEvolution ~ fireDetail:", fireDetail)
     const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
 
     const dialogRef = this.matDialog.open(FireCreateComponent, {
@@ -421,6 +422,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalOtherInformation(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalOtherInformation ~ fireDetail:", fireDetail)
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',

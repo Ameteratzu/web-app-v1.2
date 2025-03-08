@@ -124,6 +124,11 @@ export class EvolutionService {
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
+  getByIdRegistro(id: Number, registro: Number) {
+    let endpoint = `/evoluciones?idSuceso=${id}&idRegistroActualizacion=${registro}`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
   delete(id: number) {
     const endpoint = `/Evoluciones/${id}`;
 
