@@ -9,7 +9,9 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
          : base(Evolucion =>
         (!request.Id.HasValue || Evolucion.Id == request.Id) &&
         (!request.IdSuceso.HasValue || Evolucion.IdSuceso == request.IdSuceso) &&
-        (Evolucion.Borrado == false)
+        (Evolucion.Borrado == false) &&
+        (Evolucion.Registro == null || Evolucion.Registro.Borrado == false) &&  // Verifica que Registro no esté borrado
+        (Evolucion.DatoPrincipal == null || Evolucion.DatoPrincipal.Borrado == false)  // Verifica que DatoPrincipal no esté borrado
        )
         {
             AddInclude(i => i.Registro);
@@ -20,7 +22,7 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
 
             AddInclude(i => i.DatoPrincipal);
 
-            AddInclude(i => i.Parametros);
+            AddInclude(i => i.Parametros.Where(parametro => !parametro.Borrado));
             AddInclude("Parametros.PlanEmergencia");
             AddInclude("Parametros.FaseEmergencia");
             AddInclude("Parametros.PlanSituacion");
