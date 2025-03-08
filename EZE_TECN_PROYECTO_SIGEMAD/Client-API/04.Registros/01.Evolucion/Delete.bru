@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: {{Server}}/api/v1/evoluciones/{{IdEvolucion}}
+  url: {{Server}}/api/v1/evoluciones?IdRegistroActualizacion=6
   body: none
   auth: inherit
+}
+
+params:query {
+  IdRegistroActualizacion: 6
 }
 
 assert {
