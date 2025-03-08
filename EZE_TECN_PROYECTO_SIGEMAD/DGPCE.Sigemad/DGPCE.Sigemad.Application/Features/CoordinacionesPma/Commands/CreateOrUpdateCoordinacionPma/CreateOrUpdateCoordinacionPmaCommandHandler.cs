@@ -159,12 +159,16 @@ public class CreateOrUpdateCoordinacionPmaCommandHandler : IRequestHandler<Creat
                 }
                 else
                 {
-                    direccionCoordinacion.CoordinacionesPMA.Add(_mapper.Map<CoordinacionPMA>(coordinacionDto));
+                    CoordinacionPMA newCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionDto);
+                    newCoordinacion.Id = 0;
+                    direccionCoordinacion.CoordinacionesPMA.Add(newCoordinacion);
                 }
             }
             else
             {
-                direccionCoordinacion.CoordinacionesPMA.Add(_mapper.Map<CoordinacionPMA>(coordinacionDto));
+                CoordinacionPMA newCoordinacion = _mapper.Map<CoordinacionPMA>(coordinacionDto);
+                newCoordinacion.Id = 0;
+                direccionCoordinacion.CoordinacionesPMA.Add(newCoordinacion);
             }
         }
     }
