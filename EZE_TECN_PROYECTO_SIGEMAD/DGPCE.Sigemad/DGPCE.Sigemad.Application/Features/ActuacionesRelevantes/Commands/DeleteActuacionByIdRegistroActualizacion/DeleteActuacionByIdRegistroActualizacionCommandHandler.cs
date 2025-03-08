@@ -77,7 +77,7 @@ public class DeleteActuacionByIdRegistroActualizacionCommandHandler : IRequestHa
         if (actuacion is null || actuacion.Borrado)
         {
             _logger.LogWarning($"Actuacion Relevante no encontrada o inválida | IdSuceso: {idSuceso}");
-            throw new NotFoundException(nameof(Evolucion), idSuceso);
+            throw new NotFoundException(nameof(ActuacionRelevanteDGPCE), idSuceso);
         }
 
         return actuacion;

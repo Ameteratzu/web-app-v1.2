@@ -1,6 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Specifications.Documentos;
+using DGPCE.Sigemad.Application.Specifications.OtrasInformaciones;
 using DGPCE.Sigemad.Application.Specifications.RegistrosActualizaciones;
 using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Enums;
@@ -8,10 +8,10 @@ using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentacionByRegistro;
-public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<DeleteDocumentacionByIdRegistroCommand>
+namespace DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.DeleteOtraInformacionByRegistro;
+public class DeleteOtraInformacionByIdRegistroCommandHandler : IRequestHandler<DeleteOtraInformacionByIdRegistroCommand>
 {
-    private readonly ILogger<DeleteDocumentacionByIdRegistroCommandHandler> _logger;
+    private readonly ILogger<DeleteOtraInformacionByIdRegistroCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly List<int> _idsEstadosCreados = new()
     {
@@ -19,8 +19,8 @@ public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<Del
         (int)EstadoRegistroEnum.CreadoYModificado
     };
 
-    public DeleteDocumentacionByIdRegistroCommandHandler(
-        ILogger<DeleteDocumentacionByIdRegistroCommandHandler> logger,
+    public DeleteOtraInformacionByIdRegistroCommandHandler(
+        ILogger<DeleteOtraInformacionByIdRegistroCommandHandler> logger,
         IUnitOfWork unitOfWork
         )
     {
@@ -28,18 +28,18 @@ public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<Del
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Unit> Handle(DeleteDocumentacionByIdRegistroCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteOtraInformacionByIdRegistroCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"BEGIN - {nameof(DeleteDocumentacionByIdRegistroCommandHandler)}");
+        _logger.LogInformation($"BEGIN - {nameof(DeleteOtraInformacionByIdRegistroCommandHandler)}");
 
         RegistroActualizacion registro = await ObtenerRegistroActualizacion(request.IdRegistroActualizacion);
-        Documentacion direccionCoordinacion = await ObtenerDocumentacion(registro.IdSuceso);
+        OtraInformacion otraInformacion = await ObtenerOtraInformacion(registro.IdSuceso);
 
         await _unitOfWork.BeginTransactionAsync();
 
         try
         {
-            EliminarEntidadesRelacionadas(direccionCoordinacion, registro);
+            EliminarEntidadesRelacionadas(otraInformacion, registro);
             await EliminarRegistroActualizacion(registro);
 
             await _unitOfWork.CommitAsync();
@@ -47,11 +47,11 @@ public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<Del
         catch (Exception ex)
         {
             await _unitOfWork.RollbackAsync();
-            _logger.LogError(ex, "Error en la transacción de DeleteDocumentacionByIdRegistroCommandHandler");
+            _logger.LogError(ex, "Error en la transacción de DeleteOtraInformacionByIdRegistroCommandHandler");
             throw;
         }
 
-        _logger.LogInformation($"END - {nameof(DeleteDocumentacionByIdRegistroCommandHandler)}");
+        _logger.LogInformation($"END - {nameof(DeleteOtraInformacionByIdRegistroCommandHandler)}");
         return Unit.Value;
     }
 
@@ -60,27 +60,26 @@ public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<Del
         var spec = new RegistroActualizacionSpecification(new RegistroActualizacionSpecificationParams { Id = idRegistroActualizacion });
         var registro = await _unitOfWork.Repository<RegistroActualizacion>().GetByIdWithSpec(spec);
 
-        if (registro is null || registro.Borrado || registro.IdTipoRegistroActualizacion != (int)TipoRegistroActualizacionEnum.Documentacion)
+        if (registro is null || registro.Borrado || registro.IdTipoRegistroActualizacion != (int)TipoRegistroActualizacionEnum.OtraInformacion)
         {
             _logger.LogWarning($"RegistroActualizacion no encontrado o inválido | IdRegistroActualizacion: {idRegistroActualizacion}");
             throw new NotFoundException(nameof(RegistroActualizacion), idRegistroActualizacion);
         }
-
         return registro;
     }
 
-    private async Task<Documentacion> ObtenerDocumentacion(int idSuceso)
+    private async Task<OtraInformacion> ObtenerOtraInformacion(int idSuceso)
     {
-        var spec = new DetalleDocumentacionById(new DocumentacionParams { IdSuceso = idSuceso });
-        var documentacion = await _unitOfWork.Repository<Documentacion>().GetByIdWithSpec(spec);
+        var spec = new GetOtraInformacionWithParams(new OtraInformacionParams { IdSuceso = idSuceso });
+        var otraInformacion = await _unitOfWork.Repository<OtraInformacion>().GetByIdWithSpec(spec);
 
-        if (documentacion is null || documentacion.Borrado)
+        if (otraInformacion is null || otraInformacion.Borrado)
         {
-            _logger.LogWarning($"Documentacion no encontrada o inválida | IdSuceso: {idSuceso}");
-            throw new NotFoundException(nameof(Documentacion), idSuceso);
+            _logger.LogWarning($"Evolución no encontrada o inválida | IdSuceso: {idSuceso}");
+            throw new NotFoundException(nameof(OtraInformacion), idSuceso);
         }
 
-        return documentacion;
+        return otraInformacion;
     }
 
     private async Task EliminarRegistroActualizacion(RegistroActualizacion registro)
@@ -110,21 +109,21 @@ public class DeleteDocumentacionByIdRegistroCommandHandler : IRequestHandler<Del
 
         foreach (var elemento in elementosEliminar)
         {
-            if (eliminarDetalles && elemento is DetalleDocumentacion detalleDocumentacion)
+            if (eliminarDetalles && elemento is DetalleOtraInformacion detalleOtraInformacion)
             {
-                foreach (var detalle in detalleDocumentacion.DocumentacionProcedenciaDestinos)
+                foreach (var detalleProcedenciaDestino in detalleOtraInformacion.ProcedenciasDestinos)
                 {
-                    _unitOfWork.Repository<DocumentacionProcedenciaDestino>().DeleteEntity(detalle);
+                    _unitOfWork.Repository<DetalleOtraInformacion_ProcedenciaDestino>().DeleteEntity(detalleProcedenciaDestino);
                 }
             }
             _unitOfWork.Repository<T>().DeleteEntity(elemento);
         }
     }
 
-    private void EliminarEntidadesRelacionadas(Documentacion documentacion, RegistroActualizacion registro)
+    private void EliminarEntidadesRelacionadas(OtraInformacion otraInformacion, RegistroActualizacion registro)
     {
-        EliminarElementos(documentacion.DetallesDocumentacion, registro, ApartadoRegistroEnum.Documentacion, eliminarDetalles: true);
+        EliminarElementos(otraInformacion.DetallesOtraInformacion, registro, ApartadoRegistroEnum.OtraInformacion, true);
 
-        _unitOfWork.Repository<Documentacion>().UpdateEntity(documentacion);
+        _unitOfWork.Repository<OtraInformacion>().UpdateEntity(otraInformacion);
     }
 }
