@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.SucesoRelacionados;
+using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.DeleteSucesoRelacionadoPorRegistro;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.DeleteSucesosRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Commands.ManageSucesoRelacionados;
 using DGPCE.Sigemad.Application.Features.SucesosRelacionados.Queries.GetSucesoRelacionadoById;
@@ -44,14 +45,15 @@ public class SucesoRelacionadoController : ControllerBase
         return Ok(response);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{idRegistroActualizacion:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerOperation(Summary = "Eliminar un suceso relacionado por su id")]
-    public async Task<ActionResult> DeleteSucesoRelacionado(int id)
+    public async Task<ActionResult> DeleteSucesoRelacionado(int idRegistroActualizacion)
     {
-        var command = new DeleteSucesosRelacionadosCommand { Id = id };
+        //var command = new DeleteSucesosRelacionadosCommand { Id = id };
+        var command = new DeleteSucesoRelacionadoPorRegistroCommand { IdRegistroActualizacion = idRegistroActualizacion };
         await _mediator.Send(command);
         return NoContent();
     }

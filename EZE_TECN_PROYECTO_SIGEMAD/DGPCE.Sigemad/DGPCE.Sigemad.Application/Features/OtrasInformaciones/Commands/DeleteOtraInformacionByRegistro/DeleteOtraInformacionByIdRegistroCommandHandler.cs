@@ -75,7 +75,7 @@ public class DeleteOtraInformacionByIdRegistroCommandHandler : IRequestHandler<D
 
         if (otraInformacion is null || otraInformacion.Borrado)
         {
-            _logger.LogWarning($"Evolución no encontrada o inválida | IdSuceso: {idSuceso}");
+            _logger.LogWarning($"Otra información no encontrada o inválida | IdSuceso: {idSuceso}");
             throw new NotFoundException(nameof(OtraInformacion), idSuceso);
         }
 
