@@ -303,7 +303,7 @@ public class RegistroActualizacionService : IRegistroActualizacionService
 
             case DetalleDocumentacion documentacion:
                 ambito = "Documentación";
-                descripcion = $"Procedencia [{documentacion.Archivo.NombreOriginal}]";
+                descripcion = $"Procedencia [{documentacion.Archivo?.NombreOriginal ?? "Sin archivo"}]";
                 break;
 
             case DetalleOtraInformacion detalleOtraInformacion:
