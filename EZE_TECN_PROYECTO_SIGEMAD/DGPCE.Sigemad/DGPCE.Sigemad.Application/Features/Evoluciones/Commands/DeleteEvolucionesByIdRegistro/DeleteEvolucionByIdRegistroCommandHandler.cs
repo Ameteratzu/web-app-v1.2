@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
 using DGPCE.Sigemad.Application.Specifications.RegistrosActualizaciones;
+using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -38,105 +39,8 @@ public class DeleteEvolucionByIdRegistroCommandHandler : IRequestHandler<DeleteE
 
         try
         {
-            // Eliminar intervencion de medios
-            List<int> idsIntervencionAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.IntervencionMedios && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            var intervencionesEliminar = evolucion.IntervencionMedios.Where(item => idsIntervencionAEliminar.Contains(item.Id)).ToList();
-
-            foreach (IntervencionMedio intervencion in intervencionesEliminar)
-            {
-                foreach (DetalleIntervencionMedio detalle in intervencion.DetalleIntervencionMedios)
-                {
-                    _unitOfWork.Repository<DetalleIntervencionMedio>().DeleteEntity(detalle);
-                }
-                _unitOfWork.Repository<IntervencionMedio>().DeleteEntity(intervencion);
-            }
-
-            // Eliminar Consecuencia/Actuacion
-            List<int> idsConsecuenciaActuacionAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.ConsecuenciaActuacion && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            var consecuenciasEliminar = evolucion.Impactos.Where(item => idsConsecuenciaActuacionAEliminar.Contains(item.Id)).ToList();
-
-            foreach (ImpactoEvolucion consecuencia in consecuenciasEliminar)
-            {
-                _unitOfWork.Repository<ImpactoEvolucion>().DeleteEntity(consecuencia);
-            }
-
-
-            // Eliminar area afectada
-            List<int> idsAreaAfectadaAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.AreaAfectada && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            var areasEliminar = evolucion.AreaAfectadas.Where(item => idsAreaAfectadaAEliminar.Contains(item.Id)).ToList();
-
-            foreach (var area in areasEliminar)
-            {
-                _unitOfWork.Repository<AreaAfectada>().DeleteEntity(area);
-            }
-
-
-            // Eliminar parametro
-            List<int> idsParametroAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.Parametro && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            var parametrosEliminar = evolucion.Parametros.Where(item => idsParametroAEliminar.Contains(item.Id)).ToList();
-            foreach (var parametro in parametrosEliminar)
-            {
-                _unitOfWork.Repository<Parametro>().DeleteEntity(parametro);
-            }
-
-
-            // Eliminar dato principal
-            List<int> idsDatoPrincipalAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.DatoPrincipal && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            if (idsDatoPrincipalAEliminar.Contains(evolucion.DatoPrincipal.Id))
-            {
-                _unitOfWork.Repository<DatoPrincipal>().DeleteEntity(evolucion.DatoPrincipal);
-            }
-
-
-            // Eliminar registro
-            List<int> idsRegistroAEliminar = registro.DetallesRegistro
-                .Where(dr => dr.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
-                .Select(dr => dr.IdReferencia)
-                .ToList();
-
-            if (idsRegistroAEliminar.Contains(evolucion.Registro.Id))
-            {
-                _unitOfWork.Repository<Registro>().DeleteEntity(evolucion.Registro);
-            }
-
-
-            _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
-
-            if (await _unitOfWork.Complete() <= 0)
-                throw new Exception("No se pudo insertar/actualizar la Evolucion");
-
-
-            // -----------------------------------------------------------
-
-            // Eliminar detalles de actualización
-            foreach (var detalle in registro.DetallesRegistro)
-            {
-                await _unitOfWork.Repository<DetalleRegistroActualizacion>().DeleteAsync(detalle);
-            }
-
-            // Eliminar el registro de actualización
-            await _unitOfWork.Repository<RegistroActualizacion>().DeleteAsync(registro);
-
+            EliminarEntidadesRelacionadas(evolucion, registro);
+            await EliminarRegistroActualizacion(registro);
 
             await _unitOfWork.CommitAsync();
         }
@@ -147,12 +51,7 @@ public class DeleteEvolucionByIdRegistroCommandHandler : IRequestHandler<DeleteE
             throw;
         }
 
-
-
-
-
         _logger.LogInformation($"END - {nameof(DeleteEvolucionByIdRegistroCommandHandler)}");
-
         return Unit.Value;
     }
 
@@ -184,4 +83,57 @@ public class DeleteEvolucionByIdRegistroCommandHandler : IRequestHandler<DeleteE
         return evolucion;
     }
 
+    private async Task EliminarRegistroActualizacion(RegistroActualizacion registro)
+    {
+        foreach (var detalle in registro.DetallesRegistro)
+        {
+            await _unitOfWork.Repository<DetalleRegistroActualizacion>().DeleteAsync(detalle);
+        }
+        await _unitOfWork.Repository<RegistroActualizacion>().DeleteAsync(registro);
+    }
+
+    private bool DebeEliminar(RegistroActualizacion registro, ApartadoRegistroEnum apartado, int? idElemento)
+    {
+        return idElemento.HasValue && registro.DetallesRegistro
+            .Any(dr => dr.IdApartadoRegistro == (int)apartado && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro) && dr.IdReferencia == idElemento.Value);
+    }
+
+    private void EliminarElementos<T>(List<T> lista, RegistroActualizacion registro, ApartadoRegistroEnum apartado, bool eliminarDetalles = false)
+        where T : BaseDomainModel<int>
+    {
+        var idsAEliminar = registro.DetallesRegistro
+            .Where(dr => dr.IdApartadoRegistro == (int)apartado && _idsEstadosCreados.Contains((int)dr.IdEstadoRegistro))
+            .Select(dr => dr.IdReferencia)
+            .ToList();
+
+        var elementosEliminar = lista.Where(e => idsAEliminar.Contains(e.Id)).ToList();
+
+        foreach (var elemento in elementosEliminar)
+        {
+            if (eliminarDetalles && elemento is IntervencionMedio intervencion)
+            {
+                foreach (var detalle in intervencion.DetalleIntervencionMedios)
+                {
+                    _unitOfWork.Repository<DetalleIntervencionMedio>().DeleteEntity(detalle);
+                }
+            }
+            _unitOfWork.Repository<T>().DeleteEntity(elemento);
+        }
+    }
+
+    private void EliminarEntidadesRelacionadas(Evolucion evolucion, RegistroActualizacion registro)
+    {
+        EliminarElementos(evolucion.IntervencionMedios, registro, ApartadoRegistroEnum.IntervencionMedios, true);
+        EliminarElementos(evolucion.Impactos, registro, ApartadoRegistroEnum.ConsecuenciaActuacion);
+        EliminarElementos(evolucion.AreaAfectadas, registro, ApartadoRegistroEnum.AreaAfectada);
+        EliminarElementos(evolucion.Parametros, registro, ApartadoRegistroEnum.Parametro);
+
+        if (DebeEliminar(registro, ApartadoRegistroEnum.DatoPrincipal, evolucion.DatoPrincipal?.Id))
+            _unitOfWork.Repository<DatoPrincipal>().DeleteEntity(evolucion.DatoPrincipal);
+
+        if (DebeEliminar(registro, ApartadoRegistroEnum.Registro, evolucion.Registro?.Id))
+            _unitOfWork.Repository<Registro>().DeleteEntity(evolucion.Registro);
+
+        _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
+    }
 }
