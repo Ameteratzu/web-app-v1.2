@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges, OnChanges, OnInit, AfterViewInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
@@ -52,7 +52,7 @@ const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
   templateUrl: './map-create.component.html',
   styleUrl: './map-create.component.css',
 })
-export class MapCreateComponent implements OnInit, OnChanges {
+export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
@@ -120,6 +120,17 @@ export class MapCreateComponent implements OnInit, OnChanges {
     }
     if (changes['fileContent'] && changes['fileContent'].currentValue) {
       this.loadFileContent(changes['fileContent'].currentValue);
+    }
+  }
+
+  ngAfterViewInit() {
+    if (this.data.onlyView) {
+      setTimeout(() => {
+        const closeButton = document.getElementById('btnCerrar') as HTMLElement;
+        if (closeButton) {
+          closeButton.focus();
+        }
+      }, 500);
     }
   }
 
