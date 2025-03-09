@@ -71,7 +71,7 @@ export class FireActionsRelevantComponent {
 
   editData: any;
   isDataReady = false;
-  idReturn = null;
+  idReturn = 0;
   isEdit = false;
   estado: number | undefined;
 
@@ -104,8 +104,8 @@ export class FireActionsRelevantComponent {
     const destinos = await this.actionsRelevantSevice.getDestinos();
     const capacidades = await this.actionsRelevantSevice.getCapacidades();
     const tipoAdmin = await this.actionsRelevantSevice.getTipoAdministracion();
-    console.log("🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:", tipoAdmin)
-    
+    console.log('🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:', tipoAdmin);
+
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
@@ -115,22 +115,27 @@ export class FireActionsRelevantComponent {
       procedencia,
       destinos,
       capacidades,
-      tipoAdmin
+      tipoAdmin,
     };
 
     return this.dataMaestros;
   }
 
   async isToEdit() {
+    let dataCordinacion: any;
+
     try {
-      const dataCordinacion: any = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
-      this.editData = dataCordinacion;
+      console.log("🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ this.data.fireDetail:", this.data.fireDetail)
+      if (this.data.fireDetail?.id) {
+       
+        dataCordinacion = await this.actionsRelevantSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+      } else {
+        dataCordinacion = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
+      }
     } catch (error) {
-      console.log("🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ error:", error)
-      
+      console.log('🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ error:', error);
     }
-    
-    
+
     this.isDataReady = true;
   }
 
@@ -201,7 +206,7 @@ export class FireActionsRelevantComponent {
         .afterDismissed()
         .subscribe(async () => {
           this.isDataReady = false;
-          const dataActuaciones: any = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
+          const dataActuaciones: any = await this.actionsRelevantSevice.getByIdRegistro(this.data.idIncendio, Number(this.idReturn));
           this.editData = dataActuaciones;
           this.isDataReady = true;
           this.spinner.hide();
@@ -211,20 +216,13 @@ export class FireActionsRelevantComponent {
   }
 
   async processData(): Promise<void> {
-    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.actionsRelevantSevice.dataMovilizacion():",  this.actionsRelevantSevice.dataMovilizacion())
     if (this.actionsRelevantSevice.dataMovilizacion().length > 0) {
-      console.log('this.actionsRelevantSevice.dataMovilizacion():', this.actionsRelevantSevice.dataMovilizacion());
 
       const formData = new FormData();
       formData.append('data', JSON.stringify(this.actionsRelevantSevice.dataMovilizacion()[0]));
-      // formData.append('idSuceso', this.data.idIncendio.toString());
-
       const resp: { idRegistroActualizacion: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);
-      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
-
       this.idReturn = resp.idRegistroActualizacion;
     }
-     
 
     if (this.actionsRelevantSevice.dataEmergencia().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;

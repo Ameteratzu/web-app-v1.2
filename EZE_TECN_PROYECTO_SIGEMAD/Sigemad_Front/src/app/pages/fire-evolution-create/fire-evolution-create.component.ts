@@ -73,14 +73,20 @@ export class FireCreateComponent implements OnInit {
 
   editData: any;
   isDataReady = false;
-  idReturn = null;
+  idReturn = 0;
   isEdit = false;
   estado: number | undefined;
 
   async isToEditDocumentation() {
     console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.data:", this.data.fireDetail?.id)
     try {
-      const dataCordinacion: any = await this.evolutionSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+      let dataCordinacion: any;
+      if(this.data.fireDetail?.id){
+         dataCordinacion = await this.evolutionSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+      }else{
+          dataCordinacion = await this.evolutionSevice.getById(Number(this.data.idIncendio));
+      }
+     
 
       this.estado = dataCordinacion.parametro?.estadoIncendio.id;
       this.editData = dataCordinacion;
@@ -181,7 +187,7 @@ export class FireCreateComponent implements OnInit {
       .afterDismissed()
       .subscribe(async () => {
         this.isDataReady = false;
-        const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
+        const dataCordinacion: any = await this.evolutionSevice.getByIdRegistro(this.data.idIncendio ,Number(this.idReturn));
         this.editData = dataCordinacion;
         this.isDataReady = true;
         this.spinner.hide();
@@ -192,10 +198,13 @@ export class FireCreateComponent implements OnInit {
 
   async processData(): Promise<void> {
     if (this.evolutionSevice.dataRecords().length > 0) {
-      this.editData ? (this.idReturn = this.editData.id) : 0;
+      this.data?.fireDetail?.id ? (this.idReturn = Number(this.data?.fireDetail?.id)) : 0;
+      
       this.idReturn ? (this.evolutionSevice.dataRecords()[0].IdRegistroActualizacion = this.idReturn) : 0;
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
-      this.idReturn = result.id;
+      console.log("🚀 ~ FireCreateComponent ~ processData ~ result:", result)
+      console.log("🚀 ~ FireCreateComponent ~ processData ~ result:", result)
+      this.idReturn = result.idRegistroActualizacion;
     }
 
     if (this.evolutionSevice.dataAffectedArea().length > 0) {
@@ -217,16 +226,16 @@ export class FireCreateComponent implements OnInit {
 
     if (this.evolutionSevice.dataConse().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
-      this.idReturn ? (this.evolutionSevice.dataConse()[0].idEvolucion = this.idReturn) : 0;
+      this.idReturn ? (this.evolutionSevice.dataConse()[0].IdRegistroActualizacion = this.idReturn) : 0;
 
       const dataSave = {
         idSuceso: this.data.idIncendio,
-        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        IdRegistroActualizacion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         Impactos: this.evolutionSevice.dataConse(),
       };
       const result: any = await this.evolutionSevice.postConse(dataSave);
       console.info('result', result);
-      this.idReturn = result.idEvolucion;
+      this.idReturn = result.idRegistroActualizacion;
     }
   }
 
@@ -236,13 +245,13 @@ export class FireCreateComponent implements OnInit {
 
       const body = {
         idSuceso: this.data.idIncendio,
-        idEvolucion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        IdRegistroActualizacion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
 
       const result = await postService(body);
       console.log('🚀 ~ result:', result);
-      this.idReturn = result.idEvolucion;
+      this.idReturn = result.idRegistroActualizacion;
     }
   }
 
@@ -288,16 +297,6 @@ export class FireCreateComponent implements OnInit {
     this.spinner.show();
 
     this.alertService
-      /*
-      .showAlert({
-        title: '¿Estás seguro?',
-        text: '¡No podrás revertir esto!',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Sí, eliminar!',
-      })
-      */
       // PCD
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
@@ -316,26 +315,7 @@ export class FireCreateComponent implements OnInit {
             await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));
             this.evolutionSevice.clearData();
 
-            /*
-            setTimeout(() => {
-              this.renderer.setStyle(toolbar, 'z-index', '5');
-              this.spinner.hide();
-            }, 2000);
-            */
-
-            /*
-            this.alertService
-              .showAlert({
-                title: 'Eliminado!',
-                icon: 'success',
-              })
-              .then((result) => {
-                this.closeModal(true);
-              });
-             */
-
             // PCD
-
             this.snackBar
               .open('Registro eliminado correctamente!', '', {
                 duration: 3000,
