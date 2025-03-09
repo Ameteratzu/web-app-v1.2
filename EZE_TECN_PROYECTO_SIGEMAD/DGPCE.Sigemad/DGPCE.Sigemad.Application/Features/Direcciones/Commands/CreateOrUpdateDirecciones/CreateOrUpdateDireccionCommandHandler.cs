@@ -158,12 +158,16 @@ internal class CreateOrUpdateDireccionCommandHandler : IRequestHandler<CreateOrU
                 }
                 else
                 {
-                    direccionCoordinacion.Direcciones.Add(_mapper.Map<Direccion>(direccionDto));
+                    Direccion newDireccion = _mapper.Map<Direccion>(direccionDto);
+                    newDireccion.Id = 0;
+                    direccionCoordinacion.Direcciones.Add(newDireccion);
                 }
             }
             else
             {
-                direccionCoordinacion.Direcciones.Add(_mapper.Map<Direccion>(direccionDto));
+                Direccion newDireccion = _mapper.Map<Direccion>(direccionDto);
+                newDireccion.Id = 0;
+                direccionCoordinacion.Direcciones.Add(newDireccion);
             }
         }
     }

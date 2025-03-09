@@ -2,6 +2,7 @@
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DetallesDocumentaciones;
 using DGPCE.Sigemad.Application.Dtos.Documentaciones;
+using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentacionByRegistro;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.DeleteDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Commands.ManageDocumentaciones;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Queries.GetDocumentacion;
@@ -91,26 +92,14 @@ public class DocumentacionesController : ControllerBase
         return Ok(result);
     }
 
-    //[HttpGet("{id}")]
-    //[ProducesResponseType((int)HttpStatusCode.OK)]
-    //[ProducesResponseType((int)HttpStatusCode.NotFound)]
-    //[ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    //[SwaggerOperation(Summary = "Obtener los detalles de la documentacion por id")]
-    //public async Task<ActionResult<DocumentacionDto>> GetById(int id)
-    //{
-    //    var query = new GetDocumentacionesByIdQuery(id);
-    //    var documentacionVm = await _mediator.Send(query);
-
-    //    return Ok(documentacionVm);
-    //}
-
-    [HttpDelete("{id}")]
+    [HttpDelete("{idRegistroActualizacion:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerOperation(Summary = "Elimina la documentacion por id")]
-    public async Task<ActionResult> Delete(int id)
+    [SwaggerOperation(Summary = "Elimina la documentacion por IdRegistroActualizacion")]
+    public async Task<ActionResult> Delete(int idRegistroActualizacion)
     {
-        var command = new DeleteDocumentacionCommand { Id = id };
+        //var command = new DeleteDocumentacionCommand { Id = id };
+        var command = new DeleteDocumentacionByIdRegistroCommand{ IdRegistroActualizacion = idRegistroActualizacion };
         await _mediator.Send(command);
         return NoContent();
     }

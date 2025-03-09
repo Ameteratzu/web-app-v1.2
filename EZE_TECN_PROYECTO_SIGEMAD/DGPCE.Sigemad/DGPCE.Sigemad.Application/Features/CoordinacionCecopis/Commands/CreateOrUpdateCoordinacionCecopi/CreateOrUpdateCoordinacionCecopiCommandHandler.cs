@@ -156,12 +156,16 @@ public class CreateOrUpdateCoordinacionCecopiCommandHandler : IRequestHandler<Cr
                 }
                 else
                 {
-                    direccionCoordinacion.CoordinacionesCecopi.Add(_mapper.Map<CoordinacionCecopi>(coordinacionDto));
+                    CoordinacionCecopi newCoordinacion = _mapper.Map<CoordinacionCecopi>(coordinacionDto);
+                    newCoordinacion.Id = 0;
+                    direccionCoordinacion.CoordinacionesCecopi.Add(newCoordinacion);
                 }
             }
             else
             {
-                direccionCoordinacion.CoordinacionesCecopi.Add(_mapper.Map<CoordinacionCecopi>(coordinacionDto));
+                CoordinacionCecopi newCoordinacion = _mapper.Map<CoordinacionCecopi>(coordinacionDto);
+                newCoordinacion.Id = 0;
+                direccionCoordinacion.CoordinacionesCecopi.Add(newCoordinacion);
             }
         }
     }

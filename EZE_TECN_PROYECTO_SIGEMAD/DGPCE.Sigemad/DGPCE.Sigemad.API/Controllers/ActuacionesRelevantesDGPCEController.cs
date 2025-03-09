@@ -5,15 +5,13 @@ using DGPCE.Sigemad.Application.Dtos.ActuacionesRelevantes;
 using DGPCE.Sigemad.Application.Dtos.Common;
 using DGPCE.Sigemad.Application.Dtos.DeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Dtos.EmergenciasNacionales;
-using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
 using DGPCE.Sigemad.Application.Features.ActivacionesPlanesEmergencia.Commands.ManageActivacionPlanEmergencia;
 using DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
-using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Commands.DeleteActuacionRelevante;
+using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Commands.DeleteActuacionByIdRegistroActualizacion;
 using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Queries;
-using DGPCE.Sigemad.Application.Features.ActuacionesRelevantes.Queries.ActuacionesRelevantesById;
 using DGPCE.Sigemad.Application.Features.ConvocatoriasCECOD.Commands;
 using DGPCE.Sigemad.Application.Features.DeclaracionesZAGEP.Commands.ManageDeclaracionesZAGEP;
 using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
@@ -42,26 +40,14 @@ public class ActuacionesRelevantesDGPCEController : ControllerBase
 
     }
 
-    //[HttpGet("{id}")]
-    //[ProducesResponseType(StatusCodes.Status200OK)]
-    //[ProducesResponseType(StatusCodes.Status404NotFound)]
-    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    //[SwaggerOperation(Summary = "Obtener Actuacion Relevante mediante id")]
-    //public async Task<ActionResult<ActuacionRelevanteDGPCEDto>> GetActuacionRelevanteDGPCEById(int id)
-    //{
-    //    var query = new GetActuacionRelevanteDGPCEById(id);
-    //    var impacto = await _mediator.Send(query);
-    //    return Ok(impacto);
-    //}
-
-
-    [HttpDelete("{id}")]
+    [HttpDelete("{idRegistroActualizacion:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerOperation(Summary = "Eliminar actuación relevante por id")]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(int idRegistroActualizacion)
     {
-        var command = new DeleteActuacionRelevanteCommand { Id = id };
+        //var command = new DeleteActuacionRelevanteCommand { Id = id };
+        var command = new DeleteActuacionByIdRegistroActualizacionCommand { IdRegistroActualizacion = idRegistroActualizacion };
         await _mediator.Send(command);
         return NoContent();
     }

@@ -97,6 +97,7 @@ public class EvolucionesController : ControllerBase
     }
     */
 
+    /*
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,4 +108,17 @@ public class EvolucionesController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+    */
+
+    [HttpDelete("{idRegistroActualizacion}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Eliminar evolución por id Registro de actualizacion")]
+    public async Task<ActionResult> Delete(int idRegistroActualizacion)
+    {
+        var command = new DeleteEvolucionByIdRegistroCommand { IdRegistroActualizacion = idRegistroActualizacion };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
 }

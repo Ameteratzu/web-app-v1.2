@@ -3,7 +3,7 @@ using DGPCE.Sigemad.Application.Dtos.DireccionCoordinaciones;
 using DGPCE.Sigemad.Application.Dtos.Direcciones;
 using DGPCE.Sigemad.Application.Features.CoordinacionCecopis.Commands.CreateCoordinacionCecopi;
 using DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
-using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.Delete;
+using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Commands.DeleteByRegistroActualizacion;
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Quereis.GetDireccionEmergencia;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 using MediatR;
@@ -25,13 +25,14 @@ public class DireccionCoordinacionEmergenciasController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpDelete("{id:int}", Name = "DeleteDireccionCoordinacionEmergencia")]
+    [HttpDelete("{idRegistroActualizacion:int}", Name = "DeleteDireccionCoordinacionEmergencia")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> Delete(int id)
+    public async Task<ActionResult> Delete(int idRegistroActualizacion)
     {
-        var command = new DeleteDireccionCoordinacionEmergenciaCommand { Id = id };
+        //var command = new DeleteDireccionCoordinacionEmergenciaCommand { Id = id };
+        var command = new DeleteDireccionByIdRegistroActualizacionCommand { IdRegistroActualizacion = idRegistroActualizacion };
         await _mediator.Send(command);
         return NoContent();
     }
