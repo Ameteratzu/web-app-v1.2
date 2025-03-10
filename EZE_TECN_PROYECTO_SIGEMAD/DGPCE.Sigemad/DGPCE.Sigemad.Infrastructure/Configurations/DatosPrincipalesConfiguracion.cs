@@ -36,12 +36,12 @@ public class DatosPrincipalesConfiguracion :IEntityTypeConfiguration<DatoPrincip
 
         // 🔹 Relación con Evolucion
         builder.HasOne(dp => dp.Evolucion)
-            .WithOne(e => e.DatoPrincipal)
-            .HasForeignKey<DatoPrincipal>(dp => dp.IdEvolucion)
+            .WithMany(e => e.DatosPrincipales)
+            .HasForeignKey(dp => dp.IdEvolucion)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => e.IdEvolucion)
-            .IsUnique()
-            .HasFilter("[Borrado] = 0");
+        //builder.HasIndex(e => e.IdEvolucion)
+        //    .IsUnique()
+        //    .HasFilter("[Borrado] = 0");
     }
 }

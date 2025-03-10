@@ -9,10 +9,9 @@ public class EvolucionWithRegistroSpecification : BaseSpecification<Evolucion>
         (!@params.IdSuceso.HasValue || e.IdSuceso == @params.IdSuceso.Value) &&
         e.Borrado == false)
     {
-        AddInclude(e => e.Registro);
-        AddInclude(e => e.Registro.ProcedenciaDestinos);
-        AddInclude(e => e.DatoPrincipal);
+        AddInclude(e => e.Registros.Where(r => r.Borrado == false));
+        AddInclude("Registros.ProcedenciaDestinos");
+        AddInclude(e => e.DatosPrincipales.Where(d => d.Borrado == false));
         AddInclude(e => e.Parametros);
-        //AddInclude("IntervencionMedios.DetalleIntervencionMedios");
     }
 }
