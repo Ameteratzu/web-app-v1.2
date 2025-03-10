@@ -5,12 +5,14 @@ public class EvolucionWithFilteredDataSpecification : BaseSpecification<Evolucio
 {
     public EvolucionWithFilteredDataSpecification(
         int id,
+        List<int> idsRegistro,
+        List<int> idsDatoPrincipal,
         List<int> idsParametro,
         List<int> idsAreaAfectada,
         List<int> idsConsecuenciaActuacion,
         List<int> idsIntervencionMedio,
-        bool includeRegistro = false,
-        bool includeDatoPrincipal = false,
+        //bool includeRegistro = false,
+        //bool includeDatoPrincipal = false,
         bool esFoto = false)
         : base(e => e.Id == id && e.EsFoto == esFoto && e.Borrado == false)
     {
@@ -24,18 +26,32 @@ public class EvolucionWithFilteredDataSpecification : BaseSpecification<Evolucio
             AddInclude("Parametros.EstadoIncendio");
         }
 
-        if (includeRegistro)
+        //if (includeRegistro)
+        //{
+        //    AddInclude(i => i.Registro);
+        //    AddInclude(i => i.Registro.Medio);
+        //    AddInclude(i => i.Registro.EntradaSalida);
+        //    AddInclude(i => i.Registro.ProcedenciaDestinos);
+        //    AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
+        //}
+
+        if (idsRegistro.Any())
         {
-            AddInclude(i => i.Registro);
-            AddInclude(i => i.Registro.Medio);
-            AddInclude(i => i.Registro.EntradaSalida);
-            AddInclude(i => i.Registro.ProcedenciaDestinos);
-            AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
+            AddInclude(e => e.Registros.Where(r => idsRegistro.Contains(r.Id) && !r.Borrado));
+            AddInclude("Registros.Medio");
+            AddInclude("Registros.EntradaSalida");
+            AddInclude("Registros.ProcedenciaDestinos");
+            AddInclude("Registros.ProcedenciaDestinos.ProcedenciaDestino");
         }
 
-        if (includeDatoPrincipal)
+        //if (includeDatoPrincipal)
+        //{
+        //    AddInclude(e => e.DatoPrincipal);
+        //}
+
+        if(idsDatoPrincipal.Any())
         {
-            AddInclude(e => e.DatoPrincipal);
+            AddInclude(e => e.DatosPrincipales.Where(d => idsDatoPrincipal.Contains(d.Id) && !d.Borrado));
         }
 
         if (idsAreaAfectada.Any())

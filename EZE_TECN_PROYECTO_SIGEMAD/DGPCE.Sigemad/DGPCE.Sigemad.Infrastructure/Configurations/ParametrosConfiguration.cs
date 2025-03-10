@@ -36,7 +36,6 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
         .HasMaxLength(500)
         .IsUnicode(false);
 
-        // Relación uno a uno con Evolucion        
         builder.HasOne(d => d.Evolucion)
             .WithMany(e => e.Parametros)
             .HasForeignKey(d => d.IdEvolucion)

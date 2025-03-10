@@ -10,9 +10,9 @@ public class Evolucion : BaseDomainModel<int>
     public bool EsFoto { get; set; }
 
 
-    public virtual Registro Registro { get; set; }
-    
-    public virtual DatoPrincipal DatoPrincipal { get; set; }
+    public List<Registro> Registros { get; set; } = new();
+
+    public List<DatoPrincipal> DatosPrincipales { get; set; } = new();
     public List<Parametro> Parametros { get; set; } = new();
 
     public List<AreaAfectada> AreaAfectadas { get; set; } = new();

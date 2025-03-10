@@ -54,15 +54,32 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             var evolucion = await GetOrCreateEvolucion(request, registroActualizacion);
 
             var parametrosOriginales = evolucion.Parametros.ToDictionary(d => d.Id, d => _mapper.Map<CreateParametroCommand>(d));
-            var registroOriginal = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
-            var datoPrincipalOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
+            var registrosOriginales = evolucion.Registros.ToDictionary(d => d.Id, d => _mapper.Map<CreateRegistroCommand>(d));
+            var datosPrincipalesOriginales = evolucion.DatosPrincipales.ToDictionary(d => d.Id, d => _mapper.Map<CreateDatoPrincipalCommand>(d));
+            //var registroOriginal = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
+            //var datoPrincipalOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
 
-            MapAndSaveEvolucion(request, evolucion, registroActualizacion.Id);
+            MapAndSaveEvolucion(request, evolucion, registroActualizacion);
 
             //No hay listas para eliminar objeto
             await SaveEvolucion(evolucion);
 
-            MapAndSaveRegistroActualizacion(registroActualizacion, evolucion, registroOriginal, datoPrincipalOriginal);
+            //MapAndSaveRegistroActualizacion(registroActualizacion, evolucion, registroOriginal, datoPrincipalOriginal);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                Evolucion, Registro, CreateRegistroCommand>(
+                registroActualizacion,
+                evolucion,
+                ApartadoRegistroEnum.Registro,
+                new List<int>(), registrosOriginales);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                Evolucion, DatoPrincipal, CreateDatoPrincipalCommand>(
+                registroActualizacion,
+                evolucion,
+                ApartadoRegistroEnum.DatoPrincipal,
+                new List<int>(), datosPrincipalesOriginales);
+
 
             await _registroActualizacionService.SaveRegistroActualizacion<
                 Evolucion, Parametro, CreateParametroCommand>(
@@ -178,6 +195,8 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
     {
         if (registroActualizacion.IdReferencia > 0)
         {
+            List<int> idsRegistro = new List<int>();
+            List<int> idsDatoPrincipal = new List<int>();
             List<int> idsParametro = new List<int>();
             List<int> idsAreaAfectada = new List<int>();
             List<int> idsConsecuenciaActuacion = new List<int>();
@@ -190,10 +209,12 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             {
                 if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro)
                 {
+                    idsRegistro.Add(detalle.IdReferencia);
                     includeRegistro = true;
                 } 
                 else if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.DatoPrincipal)
                 {
+                    idsDatoPrincipal.Add(detalle.IdReferencia);
                     includeDatoPrincipal = true;
                 }
                 else if (detalle.IdApartadoRegistro == (int)ApartadoRegistroEnum.Parametro)
@@ -206,12 +227,14 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             var evolucion = await _unitOfWork.Repository<Evolucion>()
                 .GetByIdWithSpec(new EvolucionWithFilteredDataSpecification(
                     registroActualizacion.IdReferencia, 
+                    idsRegistro,
+                    idsDatoPrincipal,
                     idsParametro, 
                     idsAreaAfectada,
                     idsConsecuenciaActuacion, 
                     idsIntervencionMedio,
-                    includeRegistro,
-                    includeDatoPrincipal,
+                    //includeRegistro,
+                    //includeDatoPrincipal,
                     esFoto: false
                 ));
 
@@ -228,46 +251,159 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
         return evolucionExistente ?? new Evolucion { IdSuceso = request.IdSuceso, EsFoto = false };
     }
 
-    private void MapAndSaveEvolucion(ManageEvolucionCommand request, Evolucion evolucion, int? idRegistroActualizacion)
+    private void MapAndSaveEvolucion(ManageEvolucionCommand request, Evolucion evolucion, RegistroActualizacion registroActualizacion)
     {
         if (request.Registro != null)
         {
-            if (evolucion.Registro != null)
+            Registro newRegistro = _mapper.Map<Registro>(request.Registro);
+            newRegistro.Id = 0;
+
+            if (registroActualizacion.Id > 0)
             {
-                var copiaOriginal = _mapper.Map<CreateRegistroCommand>(evolucion.Registro);
-                var copiaNueva = _mapper.Map<CreateRegistroCommand>(request.Registro);
-                if (!copiaOriginal.Equals(copiaNueva))
+                int? idRegistro = registroActualizacion.DetallesRegistro
+                    .Where(d => d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Registro)
+                    .Select(d => d.IdReferencia)
+                    .FirstOrDefault();
+
+                if(idRegistro.HasValue && idRegistro.Value > 0)
                 {
-                    _mapper.Map(request.Registro, evolucion.Registro);
-                    evolucion.Borrado = false;
+                    //Actualizar el registro
+                    Registro? registroExistente = evolucion.Registros.FirstOrDefault(p => p.Id == idRegistro);
+                    if (registroExistente != null)
+                    {
+                        var copiaOriginal = _mapper.Map<CreateRegistroCommand>(registroExistente);
+                        var copiaNueva = _mapper.Map<CreateRegistroCommand>(request.Registro);
+                        if (!copiaOriginal.Equals(copiaNueva))
+                        {
+                            _mapper.Map(request.Registro, registroExistente);
+                            evolucion.Borrado = false;
+                        }
+                    }
+                    else
+                    {
+                        evolucion.Registros.Add(newRegistro);
+                    }
                 }
+                else
+                {
+                    evolucion.Registros.Add(newRegistro);
+                }
+
             }
             else
             {
-                evolucion.Registro = _mapper.Map<Registro>(request.Registro);
+                evolucion.Registros.Add(newRegistro);
             }
         }
+
+        //if (request.DatoPrincipal != null)
+        //{
+        //    if (evolucion.DatoPrincipal != null)
+        //    {
+        //        var copiaOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
+        //        var copiaNueva = _mapper.Map<CreateDatoPrincipalCommand>(request.DatoPrincipal);
+        //        if (!copiaOriginal.Equals(copiaNueva))
+        //        {
+        //            _mapper.Map(request.DatoPrincipal, evolucion.DatoPrincipal);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        evolucion.DatoPrincipal = _mapper.Map<DatoPrincipal>(request.DatoPrincipal);
+        //    }
+        //}
 
         if (request.DatoPrincipal != null)
         {
-            if (evolucion.DatoPrincipal != null)
+            DatoPrincipal newDato = _mapper.Map<DatoPrincipal>(request.DatoPrincipal);
+            newDato.Id = 0;
+
+            if (registroActualizacion.Id > 0)
             {
-                var copiaOriginal = _mapper.Map<CreateDatoPrincipalCommand>(evolucion.DatoPrincipal);
-                var copiaNueva = _mapper.Map<CreateDatoPrincipalCommand>(request.DatoPrincipal);
-                if (!copiaOriginal.Equals(copiaNueva))
+                int? idDato = registroActualizacion.DetallesRegistro
+                    .Where(d => d.IdApartadoRegistro == (int)ApartadoRegistroEnum.DatoPrincipal)
+                    .Select(d => d.IdReferencia)
+                    .FirstOrDefault();
+
+                if (idDato.HasValue && idDato.Value > 0)
                 {
-                    _mapper.Map(request.DatoPrincipal, evolucion.DatoPrincipal);
+                    //Actualizar el registro
+                    DatoPrincipal? datoExistente = evolucion.DatosPrincipales.FirstOrDefault(p => p.Id == idDato);
+                    if (datoExistente != null)
+                    {
+                        var copiaOriginal = _mapper.Map<CreateDatoPrincipalCommand>(datoExistente);
+                        var copiaNueva = _mapper.Map<CreateDatoPrincipalCommand>(request.DatoPrincipal);
+                        if (!copiaOriginal.Equals(copiaNueva))
+                        {
+                            _mapper.Map(request.DatoPrincipal, datoExistente);
+                            evolucion.Borrado = false;
+                        }
+                    }
+                    else
+                    {
+                        evolucion.DatosPrincipales.Add(newDato);
+                    }
+                }
+                else
+                {
+                    evolucion.DatosPrincipales.Add(newDato);
+                }
+
+            }
+            else
+            {
+                evolucion.DatosPrincipales.Add(newDato);
+            }
+        }
+
+        // ****************
+
+        if (request.Parametro != null)
+        {
+            Parametro newParametro = _mapper.Map<Parametro>(request.Parametro);
+            newParametro.Id = 0;
+
+            if (registroActualizacion.Id > 0)
+            {
+                int? idParametro = registroActualizacion.DetallesRegistro
+                    .Where(d => d.IdApartadoRegistro == (int)ApartadoRegistroEnum.Parametro)
+                    .Select(d => d.IdReferencia)
+                    .FirstOrDefault();
+
+                if (idParametro.HasValue && idParametro.Value > 0)
+                {
+                    //Actualizar el registro
+                    Parametro? parametroExistente = evolucion.Parametros.FirstOrDefault(p => p.Id == idParametro);
+                    if (parametroExistente != null)
+                    {
+                        var copiaOriginal = _mapper.Map<CreateParametroCommand>(parametroExistente);
+                        var copiaNueva = _mapper.Map<CreateParametroCommand>(request.Parametro);
+                        if (!copiaOriginal.Equals(copiaNueva))
+                        {
+                            _mapper.Map(request.Parametro, parametroExistente);
+                            evolucion.Borrado = false;
+                        }
+                    }
+                    else
+                    {
+                        evolucion.Parametros.Add(newParametro);
+                    }
+                }
+                else
+                {
+                    evolucion.Parametros.Add(newParametro);
                 }
             }
             else
             {
-                evolucion.DatoPrincipal = _mapper.Map<DatoPrincipal>(request.DatoPrincipal);
+                evolucion.Parametros.Add(newParametro);
             }
         }
-
+        
+        /*
         if (request.Parametro != null)
         {
-            if (idRegistroActualizacion.HasValue && idRegistroActualizacion.Value > 0)
+            if (registroActualizacion.Id > 0)
             {
                 //Actualizar el parametro
                 var parametroExistente = evolucion.Parametros.FirstOrDefault(p => p.Id == request.Parametro.Id);
@@ -292,6 +428,7 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
                 evolucion.Parametros.Add(newParametro);
             }
         }
+        */
     }
 
     private async Task SaveEvolucion(Evolucion evolucion)
@@ -309,6 +446,7 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             throw new Exception("No se pudo insertar/actualizar la Evolucion");
     }
 
+    /*
     private void MapAndSaveRegistroActualizacion(
         RegistroActualizacion registroActualizacion,
         Evolucion evolucion,
@@ -405,4 +543,5 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
             registroActualizacion.DetallesRegistro.Add(detalleRegistroDato);
         }
     }
+    */
 }

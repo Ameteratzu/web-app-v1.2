@@ -38,23 +38,21 @@ public class EvolucionConfiguration : IEntityTypeConfiguration<Evolucion>
         .IsUnicode(false);
 
         // Configurar relación uno a uno con Registro
-        builder.HasOne(e => e.Registro)
+        builder.HasMany(e => e.Registros)
             .WithOne(r => r.Evolucion)
-            .HasForeignKey<Registro>(r => r.IdEvolucion)
-            .OnDelete(DeleteBehavior.Restrict); // Configurar comportamiento de eliminación en cascada
+            .HasForeignKey(r => r.IdEvolucion)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(e => e.DatosPrincipales)
+            .WithOne(dp => dp.Evolucion)
+            .HasForeignKey(dp => dp.IdEvolucion)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Configurar relación uno a uno con Parametro
         builder.HasMany(e => e.Parametros)
             .WithOne(r => r.Evolucion)
             .HasForeignKey(r => r.IdEvolucion) // El Id de Registro es también la clave foránea
             .OnDelete(DeleteBehavior.Cascade); // Configurar comportamiento de eliminación en cascada
-
-        // Configurar relación uno a uno con Dato Principal
-        builder.HasOne(e => e.DatoPrincipal)
-            .WithOne(r => r.Evolucion)
-            .HasForeignKey<DatoPrincipal>(r => r.IdEvolucion)
-            .OnDelete(DeleteBehavior.Restrict);
-
 
         builder.HasMany(e => e.AreaAfectadas)
             .WithOne(r => r.Evolucion)

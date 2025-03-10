@@ -9,18 +9,27 @@ namespace DGPCE.Sigemad.Application.Specifications.Evoluciones
          : base(Evolucion =>
         (!request.Id.HasValue || Evolucion.Id == request.Id) &&
         (!request.IdSuceso.HasValue || Evolucion.IdSuceso == request.IdSuceso) &&
-        (Evolucion.Borrado == false) &&
-        (Evolucion.Registro == null || Evolucion.Registro.Borrado == false) &&  // Verifica que Registro no esté borrado
-        (Evolucion.DatoPrincipal == null || Evolucion.DatoPrincipal.Borrado == false)  // Verifica que DatoPrincipal no esté borrado
+        (Evolucion.Borrado == false)
+        //(Evolucion.Registro == null || Evolucion.Registro.Borrado == false) &&  // Verifica que Registro no esté borrado
+        //(Evolucion.DatoPrincipal == null || Evolucion.DatoPrincipal.Borrado == false)  // Verifica que DatoPrincipal no esté borrado
        )
         {
-            AddInclude(i => i.Registro);
-            AddInclude(i => i.Registro.Medio);
-            AddInclude(i => i.Registro.EntradaSalida);
-            AddInclude(i => i.Registro.ProcedenciaDestinos);
-            AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
+            //AddInclude(i => i.Registro);
+            //AddInclude(i => i.Registro.Medio);
+            //AddInclude(i => i.Registro.EntradaSalida);
+            //AddInclude(i => i.Registro.ProcedenciaDestinos);
+            //AddInclude("Registro.ProcedenciaDestinos.ProcedenciaDestino");
 
-            AddInclude(i => i.DatoPrincipal);
+
+            AddInclude(i => i.Registros.Where(r => !r.Borrado));
+            AddInclude("Registros.Medio");
+            AddInclude("Registros.EntradaSalida");
+            AddInclude("Registros.ProcedenciaDestinos");
+            AddInclude("Registros.ProcedenciaDestinos.ProcedenciaDestino");
+
+
+            //AddInclude(i => i.DatoPrincipal);
+            AddInclude(i => i.DatosPrincipales.Where(d => !d.Borrado));
 
             AddInclude(i => i.Parametros.Where(parametro => !parametro.Borrado));
             AddInclude("Parametros.PlanEmergencia");

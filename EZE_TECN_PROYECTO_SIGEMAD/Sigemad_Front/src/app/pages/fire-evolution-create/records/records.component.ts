@@ -174,6 +174,8 @@ export class RecordsComponent implements OnInit {
 
       this.updateEndDate(this.estadoIncendio);
     }
+
+    this.setupConditionalValidation();
     this.spinner.hide();
   }
 
@@ -225,9 +227,6 @@ export class RecordsComponent implements OnInit {
     if(json.parametro?.situacionEquivalente?.id){
       this.formData.get('operativa')?.enable();
     }
-
-    // Llamar a la función que configura la validación condicional
-    this.setupConditionalValidation();
   }
 
   updateEndDate(statusValue: number) {
