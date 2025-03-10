@@ -9,7 +9,7 @@ public class DireccionCoordinacionEmergenciaWithDirecciones : BaseSpecification<
         (!@params.IdSuceso.HasValue || d.IdSuceso == @params.IdSuceso) &&
          d.Borrado == false)
     {
-        AddInclude(d => d.Direcciones);
+        AddInclude(d => d.Direcciones.Where(d => d.Borrado == false));
         AddInclude("Direcciones.TipoDireccionEmergencia");
     }
 }

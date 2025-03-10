@@ -9,7 +9,7 @@ public class DireccionCoordinacionEmergenciaWithCoordinacionPma : BaseSpecificat
         (!@params.IdSuceso.HasValue || d.IdSuceso == @params.IdSuceso) &&
          d.Borrado == false)
     {
-        AddInclude(d => d.CoordinacionesPMA);
+        AddInclude(d => d.CoordinacionesPMA.Where(d => d.Borrado == false));
         AddInclude("CoordinacionesPMA.Provincia");
         AddInclude("CoordinacionesPMA.Municipio");
     }
