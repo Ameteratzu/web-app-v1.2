@@ -221,6 +221,13 @@ export class RecordsComponent implements OnInit {
     });
     this.loadPhases(null, json.parametro?.planEmergencia?.id);
     this.loadLevels();
+
+    if(json.parametro?.situacionEquivalente?.id){
+      this.formData.get('operativa')?.enable();
+    }
+
+    // Llamar a la función que configura la validación condicional
+    this.setupConditionalValidation();
   }
 
   updateEndDate(statusValue: number) {
@@ -284,6 +291,7 @@ export class RecordsComponent implements OnInit {
     const plan_id = this.editData.parametro?.planEmergencia?.id;
     let situationsPlans: any[] = [];
     if (plan_id) {
+      this.formData.get('nivel')?.enable();
       situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
     }
     this.niveles.set(situationsPlans);
@@ -371,4 +379,45 @@ export class RecordsComponent implements OnInit {
   delete() {
     this.save.emit({ save: false, delete: true, close: false, update: false });
   }
+
+  setupConditionalValidation() {
+    const emergencyPlanControl = this.formData.get('emergencyPlanActivated');
+    const phasesControl = this.formData.get('phases');
+    const nivelControl = this.formData.get('nivel');
+    const operativaControl = this.formData.get('operativa');
+
+    if (!emergencyPlanControl || !phasesControl || !nivelControl || !operativaControl) return;
+
+    // Ejecutar la validación al inicio si emergencyPlanActivated ya tiene valor
+    if (emergencyPlanControl.value) {
+      phasesControl.setValidators([Validators.required]);
+      nivelControl.setValidators([Validators.required]);
+      operativaControl.setValidators([Validators.required]);
+    } else {
+      phasesControl.clearValidators();
+      nivelControl.clearValidators();
+      operativaControl.clearValidators();
+    }
+
+    phasesControl.updateValueAndValidity();
+    nivelControl.updateValueAndValidity();
+    operativaControl.updateValueAndValidity();
+
+    // Suscribirse para detectar cambios en emergencyPlanActivated
+    emergencyPlanControl.valueChanges.subscribe((value) => {
+      if (value) {
+        phasesControl.setValidators([Validators.required]);
+        nivelControl.setValidators([Validators.required]);
+        operativaControl.setValidators([Validators.required]);
+      } else {
+        phasesControl.clearValidators();
+        nivelControl.clearValidators();
+        operativaControl.clearValidators();
+      }
+      phasesControl.updateValueAndValidity();
+      nivelControl.updateValueAndValidity();
+      operativaControl.updateValueAndValidity();
+    });
+
+  }  
 }
