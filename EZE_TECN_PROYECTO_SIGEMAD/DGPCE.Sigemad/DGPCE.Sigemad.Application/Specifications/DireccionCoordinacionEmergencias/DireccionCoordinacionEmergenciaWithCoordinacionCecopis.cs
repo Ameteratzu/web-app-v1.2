@@ -9,7 +9,7 @@ public class DireccionCoordinacionEmergenciaWithCoordinacionCecopis : BaseSpecif
         (!@params.IdSuceso.HasValue || d.IdSuceso == @params.IdSuceso) &&
          d.Borrado == false)
     {
-        AddInclude(d => d.CoordinacionesCecopi);
+        AddInclude(d => d.CoordinacionesCecopi.Where(d => d.Borrado == false));
         AddInclude("CoordinacionesCecopi.Provincia");
         AddInclude("CoordinacionesCecopi.Municipio");
     }
