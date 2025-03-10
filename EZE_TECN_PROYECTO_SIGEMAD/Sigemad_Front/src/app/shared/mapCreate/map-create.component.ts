@@ -602,7 +602,8 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
         const newExtent = [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius];
 
-        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857', { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10 });
+        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857',
+          { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10, BUFFER: 20 });
         if (url) {
           fetch(url)
             .then((response) => response.json())
