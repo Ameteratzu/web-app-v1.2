@@ -10,7 +10,14 @@
         <mat-error *ngIf="formData.get('fechaInicio')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
-      <mat-form-field class="input" fxFlex="80%">
+      <mat-form-field appearance="fill" fxFlex="20%">
+        <mat-label>Fecha final</mat-label>
+        <input matInput [matDatepicker]="picker3" [formControl]="getForm('fechaFin')" />
+        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+        <mat-datepicker #picker3></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="input" fxFlex="60%">
         <mat-label>Lugar</mat-label>
         <input matInput [formControl]="getForm('lugar')" placeholder="Ingresa texto" required />
       </mat-form-field>

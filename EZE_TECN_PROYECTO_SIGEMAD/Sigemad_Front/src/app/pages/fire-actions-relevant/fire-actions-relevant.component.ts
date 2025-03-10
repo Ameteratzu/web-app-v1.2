@@ -132,6 +132,7 @@ export class FireActionsRelevantComponent {
       } else {
         dataCordinacion = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
       }
+      this.editData = dataCordinacion;
     } catch (error) {
       console.log('🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ error:', error);
     }
