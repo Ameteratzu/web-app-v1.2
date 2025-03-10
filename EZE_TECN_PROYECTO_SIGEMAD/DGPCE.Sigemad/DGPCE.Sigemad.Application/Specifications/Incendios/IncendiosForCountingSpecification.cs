@@ -45,6 +45,8 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
         }
 
         AddInclude("Suceso.Evoluciones.Parametros.SituacionEquivalente");
+        AddInclude(i => i.Suceso.RegistroActualizaciones);
+        AddOrderByDescending(i => i.Suceso.RegistroActualizaciones.OrderByDescending(ra => ra.FechaCreacion).FirstOrDefault().FechaCreacion);
 
         if (request.busquedaSucesos != null && (bool)request.busquedaSucesos)
         {
