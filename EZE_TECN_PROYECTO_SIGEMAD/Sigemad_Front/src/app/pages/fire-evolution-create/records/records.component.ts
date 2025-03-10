@@ -221,6 +221,10 @@ export class RecordsComponent implements OnInit {
     });
     this.loadPhases(null, json.parametro?.planEmergencia?.id);
     this.loadLevels();
+
+    if(json.parametro?.situacionEquivalente?.id){
+      this.formData.get('operativa')?.enable();
+    }
   }
 
   updateEndDate(statusValue: number) {
@@ -284,6 +288,7 @@ export class RecordsComponent implements OnInit {
     const plan_id = this.editData.parametro?.planEmergencia?.id;
     let situationsPlans: any[] = [];
     if (plan_id) {
+      this.formData.get('nivel')?.enable();
       situationsPlans = await this.masterData.getSituationsPlans(plan_id, phases_id);
     }
     this.niveles.set(situationsPlans);
