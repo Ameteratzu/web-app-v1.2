@@ -154,34 +154,70 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
+    let dataDocumentacion: any;
+
     if (!this.dataProps?.fireDetail?.id) {
-      this.spinner.hide();
-      return;
+      try {
+        dataDocumentacion = await this.fireDocumentationService.getById(Number(this.dataProps.fire.idSuceso));
+  
+        const newData = dataDocumentacion?.detalles?.map((documento: any) => {
+          const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
+          const hora = moment(documento.fechaHora).format('HH:mm');
+          documento.archivo.name = documento.archivo.nombreOriginal;
+          return {
+            id: documento.id,
+            descripcion: documento.descripcion,
+            idSuceso: dataDocumentacion.idSuceso,
+            idDocumento: dataDocumentacion.id,
+            fecha,
+            hora,
+            fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
+            horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+            procendenciaDestino: documento.procedenciaDestinos,
+            tipoDocumento: documento.tipoDocumento,
+            archivo: documento.archivo,
+            file: documento.archivo,
+          };
+        });
+  
+        console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
+        this.dataOtherInformation.set(newData);
+      } catch (error) {
+        console.log('🚀 ~ FireDocumentation ~ isToEditDocumentation ~ error:', error);
+      }
+    }else{
+      try {
+        dataDocumentacion = await this.fireDocumentationService.getById(Number(this.dataProps.fire.idSuceso));
+  
+        const newData = dataDocumentacion?.detalles?.map((documento: any) => {
+          const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
+          const hora = moment(documento.fechaHora).format('HH:mm');
+          documento.archivo.name = documento.archivo.nombreOriginal;
+          return {
+            id: documento.id,
+            descripcion: documento.descripcion,
+            idSuceso: dataDocumentacion.idSuceso,
+            idDocumento: dataDocumentacion.id,
+            fecha,
+            hora,
+            fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
+            horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
+            procendenciaDestino: documento.procedenciaDestinos,
+            tipoDocumento: documento.tipoDocumento,
+            archivo: documento.archivo,
+            file: documento.archivo,
+          };
+        });
+  
+        console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
+        this.dataOtherInformation.set(newData);
+      } catch (error) {
+        console.log('🚀 ~ FireDocumentation ~ isToEditDocumentation ~ error:', error);
+      }
     }
-    const dataDocumentacion: any = await this.fireDocumentationService.getById(Number(this.dataProps.fireDetail.id));
 
-    const newData = dataDocumentacion?.detalles?.map((documento: any) => {
-      const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
-      const hora = moment(documento.fechaHora).format('HH:mm');
-      documento.archivo.name = documento.archivo.nombreOriginal;
-      return {
-        id: documento.id,
-        descripcion: documento.descripcion,
-        idSuceso: dataDocumentacion.idSuceso,
-        idDocumento: dataDocumentacion.id,
-        fecha,
-        hora,
-        fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
-        horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
-        procendenciaDestino: documento.procedenciaDestinos,
-        tipoDocumento: documento.tipoDocumento,
-        archivo: documento.archivo,
-        file: documento.archivo,
-      };
-    });
+    
 
-    console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
-    this.dataOtherInformation.set(newData);
     this.spinner.hide();
   }
 

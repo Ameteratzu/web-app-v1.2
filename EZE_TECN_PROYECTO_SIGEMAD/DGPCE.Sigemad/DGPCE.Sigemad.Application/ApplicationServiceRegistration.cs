@@ -1,10 +1,6 @@
 ﻿using DGPCE.Sigemad.Application.Behaviours;
-using DGPCE.Sigemad.Application.Dtos.Registros;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries.GetIncendiosList;
-using DGPCE.Sigemad.Application.Features.Incendios.Queries;
-using DGPCE.Sigemad.Application.Features.Shared;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Features.Sucesos.Queries.GetRegistrosPorIncendio;
-using DGPCE.Sigemad.Domain.Modelos;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +22,8 @@ public static class ApplicationServiceRegistration
 
         // Registrar GetRegistrosPorSucesoQueryHandler
         services.AddTransient<GetRegistrosPorSucesoQueryHandler>();
+
+        services.AddTransient<IRegistroActualizacionService, RegistroActualizacionService>();
 
 
 

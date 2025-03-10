@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Exceptions;
-using DGPCE.Sigemad.Application.Specifications.DetalleOtraInformaciones;
+using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
 using DGPCE.Sigemad.Application.Specifications.OtrasInformaciones;
+using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,130 +16,75 @@ public class ManageOtraInformacionCommandHandler : IRequestHandler<ManageOtraInf
     private readonly ILogger<ManageOtraInformacionCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IRegistroActualizacionService _registroActualizacionService;
 
     public ManageOtraInformacionCommandHandler(
         ILogger<ManageOtraInformacionCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IRegistroActualizacionService registroActualizacionService
     )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _registroActualizacionService = registroActualizacionService;
     }
 
     public async Task<ManageOtraInformacionResponse> Handle(ManageOtraInformacionCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(ManageOtraInformacionCommandHandler)} - BEGIN");
 
-        OtraInformacion otraInformacion;
+        await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
+        await ValidateIdsAsync(request);
 
-        // Verificar si se está actualizando un registro existente
-        if (request.IdOtraInformacion.HasValue && request.IdOtraInformacion.Value > 0)
-        {
-            var spec = new OtraInformacionWithDetailsAndProcedenciasSpecification(request.IdOtraInformacion.Value);
-            otraInformacion = await _unitOfWork.Repository<OtraInformacion>().GetByIdWithSpec(spec);
-            if (otraInformacion is null || otraInformacion.Borrado)
-            {
-                _logger.LogWarning($"IdOtraInformacion: {request.IdOtraInformacion}, no encontrado");
-                throw new NotFoundException(nameof(OtraInformacion), request.IdOtraInformacion);
-            }
-        }
-        else
-        {
-            // Validar si el IdSuceso es válido
-            var suceso = await _unitOfWork.Repository<Suceso>().GetByIdAsync(request.IdSuceso);
-            if (suceso is null || suceso.Borrado)
-            {
-                _logger.LogWarning($"request.IdSuceso: {request.IdSuceso}, no encontrado");
-                throw new NotFoundException(nameof(Suceso), request.IdSuceso);
-            }
+        await _unitOfWork.BeginTransactionAsync();
 
-            // Crear nueva instancia de OtraInformacion
-            otraInformacion = new OtraInformacion
+        try
+        {
+            RegistroActualizacion registroActualizacion = await _registroActualizacionService.GetOrCreateRegistroActualizacion<OtraInformacion>(
+                request.IdRegistroActualizacion, request.IdSuceso, TipoRegistroActualizacionEnum.OtraInformacion);
+
+            OtraInformacion otraInformacion = await GetOrCreateOtraInformacion(request, registroActualizacion);
+
+            var detalleOtraInformacionOriginales = otraInformacion.DetallesOtraInformacion.ToDictionary(d => d.Id, d => _mapper.Map<CreateDetalleOtraInformacionDto>(d));
+            MapAndSaveDirecciones(request, otraInformacion);
+
+            var direccionesParaEliminar = await DeleteLogicalDirecciones(request, otraInformacion, registroActualizacion.Id);
+
+            await SaveOtraInformacion(otraInformacion);
+
+            await _registroActualizacionService.SaveRegistroActualizacion<
+                OtraInformacion, DetalleOtraInformacion, CreateDetalleOtraInformacionDto>(
+                registroActualizacion,
+                otraInformacion,
+                ApartadoRegistroEnum.OtraInformacion,
+                direccionesParaEliminar, detalleOtraInformacionOriginales);
+
+            await _unitOfWork.CommitAsync();
+
+            _logger.LogInformation($"{nameof(CreateOrUpdateDireccionCommandHandler)} - END");
+
+            return new ManageOtraInformacionResponse
             {
-                IdSuceso = request.IdSuceso
+                IdOtrainformacion = otraInformacion.Id,
+                IdRegistroActualizacion = registroActualizacion.Id
             };
+
         }
-
-        // Validar los Id de Medio y Procedencia/Destino
-        var idsMedios = request.Lista.Select(c => c.IdMedio).Distinct();
-        var mediosExistentes = await _unitOfWork.Repository<Medio>().GetAsync(p => idsMedios.Contains(p.Id));
-
-        if (mediosExistentes.Count() != idsMedios.Count())
+        catch (Exception ex)
         {
-            var idsMediosExistentes = mediosExistentes.Select(p => p.Id).ToList();
-            var idsMediosInvalidas = idsMedios.Except(idsMediosExistentes).ToList();
-
-            if (idsMediosInvalidas.Any())
-            {
-                _logger.LogWarning($"Los siguientes Id's de Medio: {string.Join(", ", idsMediosInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(Medio), string.Join(", ", idsMediosInvalidas));
-            }
+            await _unitOfWork.RollbackAsync();
+            _logger.LogError(ex, "Error en la transacción de CreateOrUpdateDireccionCommandHandler");
+            throw;
         }
 
-        // Obtener todos los Ids de Procedencia/Destino desde la lista anidada dentro de los detalles
-        var idsProcedenciaDestino = request.Lista
-            .Where(c => c.IdsProcedenciasDestinos != null) // Asegurarse de que la lista no sea nula
-            .SelectMany(c => c.IdsProcedenciasDestinos)
-            .Distinct();
 
-        var procedenciasExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(p => idsProcedenciaDestino.Contains(p.Id));
+    }
 
-        // Validar los Ids de Procedencia/Destino
-        if (procedenciasExistentes.Count() != idsProcedenciaDestino.Count())
-        {
-            var idsProcedenciasExistentes = procedenciasExistentes.Select(p => p.Id).ToList();
-            var idsProcedenciasInvalidas = idsProcedenciaDestino.Except(idsProcedenciasExistentes).ToList();
-
-            if (idsProcedenciasInvalidas.Any())
-            {
-                _logger.LogWarning($"Los siguientes Id's de Procedencia/Destino: {string.Join(", ", idsProcedenciasInvalidas)}, no se encontraron");
-                throw new NotFoundException(nameof(ProcedenciaDestino), string.Join(", ", idsProcedenciasInvalidas));
-            }
-        }
-
-        // Procesar los Detalles de OtraInformacion: Crear - Actualizar
-        foreach (var detalleDto in request.Lista)
-        {
-            if (detalleDto.Id.HasValue && detalleDto.Id > 0) // Actualización o eliminación lógica
-            {
-                var detalleExistente = otraInformacion.DetallesOtraInformacion.FirstOrDefault(o => o.Id == detalleDto.Id.Value);
-                if (detalleExistente != null)
-                {
-                    _mapper.Map(detalleDto, detalleExistente);
-                    detalleExistente.Borrado = false;
-                    await UpdateProcedenciaDestinoAsync(detalleExistente, detalleDto.IdsProcedenciasDestinos);
-                    //detalleExistente.ProcedenciasDestinos.Add
-                }
-            }
-            else // Creación
-            {
-                var nuevoDetalle = _mapper.Map<DetalleOtraInformacion>(detalleDto);
-                nuevoDetalle.IdOtraInformacion = 0;
-                otraInformacion.DetallesOtraInformacion.Add(nuevoDetalle);
-            }
-        }
-
-        // Eliminar lógicamente las direcciones que no están presentes en el request solo si IdDireccionCoordinacionEmergencia es existente
-        if (request.IdOtraInformacion.HasValue)
-        {
-            // Solo las direcciones con Id existente (no nuevas)
-            var idsEnRequest = request.Lista
-                .Where(d => d.Id.HasValue && d.Id > 0)
-                .Select(d => d.Id)
-                .ToList();
-
-            var direccionesParaEliminar = otraInformacion.DetallesOtraInformacion
-                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id)) // Solo las direcciones que ya existen en la base de datos y no están en el request
-                .ToList();
-            foreach (var direccion in direccionesParaEliminar)
-            {
-                _unitOfWork.Repository<DetalleOtraInformacion>().DeleteEntity(direccion);
-            }
-        }
-
-        if (request.IdOtraInformacion.HasValue && request.IdOtraInformacion.Value > 0)
+    private async Task SaveOtraInformacion(OtraInformacion otraInformacion)
+    {
+        if (otraInformacion.Id > 0)
         {
             _unitOfWork.Repository<OtraInformacion>().UpdateEntity(otraInformacion);
         }
@@ -146,69 +93,161 @@ public class ManageOtraInformacionCommandHandler : IRequestHandler<ManageOtraInf
             _unitOfWork.Repository<OtraInformacion>().AddEntity(otraInformacion);
         }
 
-        var result = await _unitOfWork.Complete();
-        if (result <= 0)
-        {
-            throw new Exception("No se pudo insertar/actualizar/eliminar los datos de Otra Información");
-        }
-
-        _logger.LogInformation($"{nameof(ManageOtraInformacionCommandHandler)} - END");
-        return new ManageOtraInformacionResponse { IdOtraInformacion = otraInformacion.Id };
+        if (await _unitOfWork.Complete() <= 0)
+            throw new Exception("No se pudo insertar/actualizar la Otra Informacion");
     }
 
-    private async Task UpdateProcedenciaDestinoAsync(
-    DetalleOtraInformacion detalle,
-    List<int> procedenciasDestinos)
+    private async Task ValidateIdsAsync(ManageOtraInformacionCommand request)
     {
-        // 1. Asegúrate de que las relaciones actuales están cargadas
-        await _unitOfWork.Repository<DetalleOtraInformacion>()
-            .GetByIdWithSpec(new DetalleOtraInformacionWithProcedenciasSpecification(detalle.Id));
+        await ValidateMedio(request);
+        await ValidateProcedenciasDestinosAsync(request);
+    }
 
-        // 2. Obtener los IDs actuales en la base de datos
-        var procedenciasActuales = detalle.ProcedenciasDestinos
-            .Select(p => p.IdProcedenciaDestino)
-            .ToList();
-
-
-        // 3. Identificar relaciones a eliminar
-        var idsAEliminar = procedenciasActuales.Except(procedenciasDestinos).ToList();
-        var procedenciasAEliminar = detalle.ProcedenciasDestinos
-            .Where(p => idsAEliminar.Contains(p.IdProcedenciaDestino))
-            .ToList();
-
-        foreach (var procedencia in procedenciasAEliminar)
+    private void MapAndSaveDirecciones(ManageOtraInformacionCommand request, OtraInformacion direccionCoordinacion)
+    {
+        foreach (var direccionDto in request.Lista)
         {
-            detalle.ProcedenciasDestinos.Remove(procedencia);
-        }
-
-        // 3. Identifica relaciones a agregar o reactivar
-        foreach (var idProcedenciaDestino in procedenciasDestinos)
-        {
-            var procedenciaExistente = detalle.ProcedenciasDestinos
-                .FirstOrDefault(p => p.IdProcedenciaDestino == idProcedenciaDestino);
-
-            if (procedenciaExistente == null) // Nueva relación
+            if (direccionDto.Id.HasValue && direccionDto.Id > 0)
             {
-                detalle.ProcedenciasDestinos.Add(new DetalleOtraInformacion_ProcedenciaDestino
+                var direccionExistente = direccionCoordinacion.DetallesOtraInformacion.FirstOrDefault(d => d.Id == direccionDto.Id.Value);
+                if (direccionExistente != null)
                 {
-                    IdDetalleOtraInformacion = detalle.Id,
-                    IdProcedenciaDestino = idProcedenciaDestino,
-                });
+                    var copiaOriginal = _mapper.Map<CreateDetalleOtraInformacionDto>(direccionExistente);
+                    var copiaNueva = _mapper.Map<CreateDetalleOtraInformacionDto>(direccionDto);
+
+                    if (!copiaOriginal.Equals(copiaNueva))
+                    {
+                        _mapper.Map(direccionDto, direccionExistente);
+                        direccionExistente.Borrado = false;
+                    }
+                }
+                else
+                {
+                    direccionCoordinacion.DetallesOtraInformacion.Add(_mapper.Map<DetalleOtraInformacion>(direccionDto));
+                }
             }
-            else if (procedenciaExistente.Borrado) // Reactivar relación existente
+            else
             {
-                procedenciaExistente.Borrado = false;
+                direccionCoordinacion.DetallesOtraInformacion.Add(_mapper.Map<DetalleOtraInformacion>(direccionDto));
             }
         }
-
-        // 4. Actualizar el objeto principal (se reflejarán los cambios en las relaciones)
-        //_unitOfWork.Repository<DetalleOtraInformacion>().UpdateEntity(detalle);
     }
 
 
 
+    private async Task<List<int>> DeleteLogicalDirecciones(ManageOtraInformacionCommand request, OtraInformacion otraInformacion, int idRegistroActualizacion)
+    {
+        if (otraInformacion.Id > 0)
+        {
+            var idsEnRequest = request.Lista.Where(d => d.Id.HasValue && d.Id > 0).Select(d => d.Id).ToList();
+            var otrasDireccionesParaEliminar = otraInformacion.DetallesOtraInformacion
+                .Where(d => d.Id > 0 && !idsEnRequest.Contains(d.Id))
+                .ToList();
+
+            if (otrasDireccionesParaEliminar.Count == 0)
+            {
+                return new List<int>();
+            }
+
+            // Obtener el historial de creación de estas direcciones
+            var idsOtrasInformacionesParaEliminar = otrasDireccionesParaEliminar.Select(d => d.Id).ToList();
+            var historialOtrasInformaciones = await _unitOfWork.Repository<DetalleRegistroActualizacion>()
+                .GetAsync(d =>
+                idsOtrasInformacionesParaEliminar.Contains(d.IdReferencia) && d.IdApartadoRegistro == (int)ApartadoRegistroEnum.OtraInformacion);
+
+            foreach (var detalleOtraInformacion in otrasDireccionesParaEliminar)
+            {
+                var historial = historialOtrasInformaciones.FirstOrDefault(d =>
+                d.IdReferencia == detalleOtraInformacion.Id &&
+                (d.IdEstadoRegistro == EstadoRegistroEnum.Creado || d.IdEstadoRegistro == EstadoRegistroEnum.CreadoYModificado));
+
+                if (historial == null || historial.IdRegistroActualizacion != idRegistroActualizacion)
+                {
+                    throw new BadRequestException($"El detalleOtraInformacion con ID {detalleOtraInformacion.Id} solo puede eliminarse en el registro en que fue creada.");
+                }
+
+                _unitOfWork.Repository<DetalleOtraInformacion>().DeleteEntity(detalleOtraInformacion);
+            }
+
+            return idsOtrasInformacionesParaEliminar;
+        }
+
+        return new List<int>();
+    }
 
 
+    private async Task ValidateMedio(ManageOtraInformacionCommand request)
+    {
+        var idsMedio = request.Lista.Select(d => d.IdMedio).Distinct();
+        var tiposMedioExistentes = await _unitOfWork.Repository<Medio>().GetAsync(td => idsMedio.Contains(td.Id));
+
+        if (tiposMedioExistentes.Count() != idsMedio.Count())
+        {
+            var idsInvalidos = idsMedio.Except(tiposMedioExistentes.Select(td => td.Id)).ToList();
+            throw new NotFoundException(nameof(Medio), string.Join(", ", idsInvalidos));
+        }
+    }
+
+    private async Task ValidateProcedenciasDestinosAsync(ManageOtraInformacionCommand request)
+    {
+        if (request.Lista != null && request.Lista.Count > 0)
+        {
+            var idsOtraInformacionProcedenciaDestinos = request.Lista
+                .SelectMany(d => d.IdsProcedenciasDestinos ?? new List<int>())
+                .Distinct();
+            var otraInformacionProcedenciaDestinosExistentes = await _unitOfWork.Repository<ProcedenciaDestino>().GetAsync(ic => idsOtraInformacionProcedenciaDestinos.Contains(ic.Id));
+
+            if (otraInformacionProcedenciaDestinosExistentes.Count() != idsOtraInformacionProcedenciaDestinos.Count())
+            {
+                var idsOtraInformacionProcedenciaDestinosExistentes = otraInformacionProcedenciaDestinosExistentes.Select(ic => ic.Id).ToList();
+                var idsOtraInformacionProcedenciaDestinosInvalidos = idsOtraInformacionProcedenciaDestinos.Except(idsOtraInformacionProcedenciaDestinosExistentes).ToList();
+
+                if (idsOtraInformacionProcedenciaDestinosInvalidos.Any())
+                {
+                    _logger.LogWarning($"Los siguientes Id's de procedencia destino: {string.Join(", ", idsOtraInformacionProcedenciaDestinosInvalidos)}, no se encontraron");
+                    throw new NotFoundException(nameof(ProcedenciaDestino), string.Join(", ", idsOtraInformacionProcedenciaDestinosInvalidos));
+                }
+            }
+        }
+    }
+
+    private async Task<OtraInformacion> GetOrCreateOtraInformacion(ManageOtraInformacionCommand request, RegistroActualizacion registroActualizacion)
+    {
+        if (registroActualizacion.IdReferencia > 0)
+        {
+            List<int> idsReferencias = new List<int>();
+            List<int> idsOtrasInformaciones = new List<int>();
+
+            // Separar IdReferencia según su tipo
+            foreach (var detalle in registroActualizacion.DetallesRegistro)
+            {
+                switch (detalle.IdApartadoRegistro)
+                {
+                    case (int)ApartadoRegistroEnum.OtraInformacion:
+                        idsOtrasInformaciones.Add(detalle.IdReferencia);
+                        break;
+                    default:
+                        idsReferencias.Add(detalle.IdReferencia);
+                        break;
+                }
+            }
+
+            // Buscar la Dirección y Coordinación de Emergencia por IdReferencia
+            var otraInformacion = await _unitOfWork.Repository<OtraInformacion>()
+                .GetByIdWithSpec(new OtraInformacionWithDetailsAndProcedenciasSpecification(registroActualizacion.IdReferencia, idsOtrasInformaciones));
+
+            if (otraInformacion is null || otraInformacion.Borrado)
+                throw new BadRequestException($"El registro de actualización con Id [{registroActualizacion.Id}] no tiene registro de Otra Informacion");
+
+            return otraInformacion;
+        }
+
+        // Validar si ya existe un registro de Dirección y Coordinación de Emergencia para este suceso
+        var specSuceso = new OtraInformacionWithDetalle(new OtraInformacionParams { IdSuceso = request.IdSuceso });
+        var otraInformacionExistente = await _unitOfWork.Repository<OtraInformacion>().GetByIdWithSpec(specSuceso);
+
+        return otraInformacionExistente ?? new OtraInformacion { IdSuceso = request.IdSuceso };
+    }
 
 
 }

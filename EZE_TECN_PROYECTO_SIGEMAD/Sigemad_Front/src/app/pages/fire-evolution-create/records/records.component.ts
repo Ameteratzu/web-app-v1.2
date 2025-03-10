@@ -72,7 +72,7 @@ export class RecordsComponent implements OnInit {
     startDate: '',
     media: 1,
     originDestination: <OriginDestination[]>[],
-    datetimeUpdate: new Date(),
+    datetimeUpdate: '',
     observations_1: '',
     forecast: '',
     status: 1,
@@ -132,7 +132,7 @@ export class RecordsComponent implements OnInit {
       startDate: [this.formDataSignal().startDate, [Validators.required, FechaValidator.validarFecha]],
       media: [this.formDataSignal().media, Validators.required],
       originDestination: [this.formDataSignal().originDestination, Validators.required],
-      datetimeUpdate: [this.formDataSignal().datetimeUpdate, Validators.required],
+      datetimeUpdate: [this.formDataSignal().datetimeUpdate, [Validators.required, FechaValidator.validarFecha]],
       observations_1: [this.formDataSignal().observations_1],
       forecast: [this.formDataSignal().forecast],
       status: [this.formDataSignal().status, Validators.required],
@@ -164,9 +164,14 @@ export class RecordsComponent implements OnInit {
       this.formDataSignal.set({
         ...this.formDataSignal(),
         startDate: this.getCurrentDateTimeString(),
+        datetimeUpdate: this.getCurrentDateTimeString(),
       });
       const startDateControl = this.formData.get('startDate');
       startDateControl?.patchValue(this.getCurrentDateTimeString());
+
+      const startDateControl2 = this.formData.get('datetimeUpdate');
+      startDateControl2?.patchValue(this.getCurrentDateTimeString());
+
       this.updateEndDate(this.estadoIncendio);
     }
     this.spinner.hide();
@@ -184,14 +189,21 @@ export class RecordsComponent implements OnInit {
       dateValue = new Date(rawDate);
     }
 
+    const rawDate2: string = json.registro?.fechaHora || '';
+    let dateValue2: Date = new Date();
+    if (rawDate2) {
+      dateValue2 = new Date(rawDate2);
+    }
+
     const formattedDate = dateValue.toISOString().substring(0, 16);
+    const formattedDate2 = dateValue2.toISOString().substring(0, 16);
 
     this.formDataSignal.set({
       inputOutput: json.registro?.entradaSalida?.id || '',
       startDate: formattedDate,
       media: json.registro?.medio?.id || '',
       originDestination: procedenciasSelecteds(),
-      datetimeUpdate: json.datoPrincipal?.fechaHora ? new Date(json.datoPrincipal.fechaHora) : new Date(),
+      datetimeUpdate: formattedDate2,
       observations_1: json.datoPrincipal?.observaciones || '',
       forecast: json.datoPrincipal?.prevision || '',
       status: json.parametro?.estadoIncendio?.id || '',
@@ -234,7 +246,7 @@ export class RecordsComponent implements OnInit {
       const formValues = this.formData.value;
 
       const newRecord: EvolucionIncendio = {
-        idEvolucion: null,
+        IdRegistroActualizacion: null,
         idSuceso: this.data.idIncendio,
         registro: {
           fechaHoraEvolucion: new Date(formValues.startDate).toISOString(),
@@ -243,7 +255,7 @@ export class RecordsComponent implements OnInit {
           registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
         },
         datoPrincipal: {
-          fechaHora: formValues.datetimeUpdate.toISOString(),
+          fechaHora: new Date(formValues.datetimeUpdate).toISOString(),
           observaciones: formValues.observations_1,
           prevision: formValues.forecast,
         },

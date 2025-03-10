@@ -26,4 +26,5 @@ public class ImpactoEvolucionDto
     public ImpactoClasificado? ImpactoClasificado { get; set; }
 
     public TipoDanio? TipoDanio { get; set; }
+    public bool EsEliminable { get; set; }
 }

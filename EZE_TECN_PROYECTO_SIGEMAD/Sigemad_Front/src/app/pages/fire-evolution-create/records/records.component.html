@@ -59,11 +59,25 @@
       <h3 class="title">DATOS PRINCIPALES</h3>
 
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-        <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
+        <!-- <mat-form-field appearance="fill" fxFlex="25%" class="mb-3">
           <mat-label>Fecha y hora de actualización</mat-label>
           <input matInput [matDatepicker]="picker2" [formControl]="getForm('datetimeUpdate')" />
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field> -->
+
+        <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+          <mat-label>Fecha y Hora</mat-label>
+          <input
+            matInput
+            placeholder="Fecha y hora de actualización"
+            formControlName="datetimeUpdate"
+            type="datetime-local"
+            min="2000-01-01T00:00"
+            max="2099-12-31T23:59"
+          />
+          <mat-error *ngIf="formData.get('startDate')?.hasError('required')">Este campo es obligatorio.</mat-error>
+          <mat-error *ngIf="formData.get('startDate')?.hasError('fechaInvalida')">El valor de la fecha no es válido.</mat-error>
         </mat-form-field>
 
         <mat-form-field class="input spaced-input" fxFlex="75%">

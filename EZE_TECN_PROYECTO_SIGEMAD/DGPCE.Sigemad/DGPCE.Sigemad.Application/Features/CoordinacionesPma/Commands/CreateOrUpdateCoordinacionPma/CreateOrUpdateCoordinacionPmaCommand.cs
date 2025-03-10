@@ -5,7 +5,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.CoordinacionesPma.Commands.CreateOrUpdateCoordinacionPma;
 public class CreateOrUpdateCoordinacionPmaCommand: IRequest<CreateOrUpdateCoordinacionPmaResponse>
 {
-    public int? IdDireccionCoordinacionEmergencia { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
     public List<CreateOrUpdateCoordinacionPmaDto> Coordinaciones { get; set; } = new();
 }

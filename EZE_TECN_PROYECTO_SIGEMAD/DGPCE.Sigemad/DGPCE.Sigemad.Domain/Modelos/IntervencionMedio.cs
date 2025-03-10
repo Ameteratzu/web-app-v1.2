@@ -4,27 +4,36 @@ using NetTopologySuite.Geometries;
 namespace DGPCE.Sigemad.Domain.Modelos;
 public class IntervencionMedio : BaseDomainModel<int>
 {
-    public IntervencionMedio()
-    {
-        
-    }
-
     public int IdEvolucion { get; set; }
-    public int IdTipoIntervencionMedio { get; set; }
+    public Evolucion Evolucion { get; set; }
+
+    
     public int IdCaracterMedio { get; set; }
-    public int IdClasificacionMedio { get; set; }
+    public CaracterMedio CaracterMedio { get; set; }
+
+
+    public string? Descripcion { get; set; }
+    public string? MedioNoCatalogado { get; set; }
+    public int NumeroCapacidades { get; set; }
+
+
     public int IdTitularidadMedio { get; set; }
+    public TitularidadMedio TitularidadMedio { get; set; }
+
+
+    public string? Titular { get; set; }
+    public DateTime FechaHoraInicio { get; set; }
+    public DateTime? FechaHoraFin { get; set; }
+
+
+    public int IdProvincia { get; set; }
+    public Provincia Provincia { get; set; }
+
     public int IdMunicipio { get; set; }
-    public int Cantidad { get; set; }
-    public string Unidad { get; set; }
-    public string Titular { get; set; }
+    public Municipio Municipio { get; set; }
+    
     public Geometry? GeoPosicion { get; set; }
     public string? Observaciones { get; set; }
 
-    public virtual Evolucion Evolucion { get; set; }
-    public virtual TipoIntervencionMedio TipoIntervencionMedio { get; set; }
-    public virtual CaracterMedio CaracterMedio { get; set; }
-    public virtual ClasificacionMedio ClasificacionMedio { get; set; }
-    public virtual TitularidadMedio TitularidadMedio { get; set; }
-    public virtual Municipio Municipio { get; set; }
+    public List<DetalleIntervencionMedio> DetalleIntervencionMedios { get; set; } = new();
 }

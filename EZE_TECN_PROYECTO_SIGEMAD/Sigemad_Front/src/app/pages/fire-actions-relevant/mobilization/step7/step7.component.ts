@@ -9,7 +9,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { ActionsRelevantService } from '../../../../services/actions-relevant.service';
-import { PasoAportacion } from '../../../../types/mobilization.type';
+import { PasoAportacion, PasoIntervencion } from '../../../../types/mobilization.type';
 
 const FORMATO_FECHA = {
   parse: {
@@ -51,11 +51,11 @@ export class Step7Component {
 
   async ngOnInit() {
     this.capacidad.set(this.dataMaestros.capacidades);
-    const pasosTipo5 = this.movilizacionService
+    const pasosTipo7 = this.movilizacionService
       .dataMovilizacion()
-      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 5)));
+      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 7)));
 
-    const pasoAportacion = pasosTipo5[0] as PasoAportacion;
+    const pasoAportacion = pasosTipo7[0] as PasoIntervencion;
 
     const foundCapacidad = this.capacidad().find((item) => item.id === pasoAportacion.IdCapacidad);
     const capacidadForm = this.formGroup.get('IdCapacidad');

@@ -9,11 +9,15 @@ public class Registro : BaseDomainModel<int>
     }
 
     public DateTime? FechaHoraEvolucion { get; set; }
-    public int? IdEntradaSalida { get; set; }
-    public int? IdMedio { get; set; }
 
+    public int IdEvolucion { get; set; }
     public virtual Evolucion Evolucion { get; set; } = null!;
+
+
+    public int? IdMedio { get; set; }
     public virtual Medio Medio { get; set; } = null!;
+
+    public int? IdEntradaSalida { get; set; }
     public virtual EntradaSalida EntradaSalida { get; set; } = null!;
 
     public virtual List<RegistroProcedenciaDestino> ProcedenciaDestinos { get; set; } = new();

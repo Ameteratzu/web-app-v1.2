@@ -98,7 +98,12 @@ export class CoordinationAddressService {
   }
 
   getById(id: Number) {
-    let endpoint = `/direcciones-coordinaciones-emergencias/${id}`;
+    let endpoint = `/direcciones-coordinaciones-emergencias?idSuceso=${id}`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+
+  getByIdRegistro(id: Number, registro: Number) {
+    let endpoint = `/direcciones-coordinaciones-emergencias?idSuceso=${id}&idRegistroActualizacion=${registro}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

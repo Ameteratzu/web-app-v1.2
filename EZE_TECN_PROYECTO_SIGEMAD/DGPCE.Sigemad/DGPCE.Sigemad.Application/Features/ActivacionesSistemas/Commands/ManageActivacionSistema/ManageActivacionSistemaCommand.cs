@@ -4,7 +4,7 @@ using MediatR;
 namespace DGPCE.Sigemad.Application.Features.ActivacionesSistemas.Commands.ManageActivacionSistema;
 public class ManageActivacionSistemaCommand : IRequest<ManageActivacionSistemaResponse>
 {
-    public int? IdActuacionRelevante { get; set; }
+    public int? IdRegistroActualizacion { get; set; }
     public int IdSuceso { get; set; }
 
     public List<ManageActivacionSistemaDto>? Detalles { get; set; } = new();

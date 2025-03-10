@@ -71,7 +71,7 @@ export class FireActionsRelevantComponent {
 
   editData: any;
   isDataReady = false;
-  idReturn = null;
+  idReturn = 0;
   isEdit = false;
   estado: number | undefined;
 
@@ -104,8 +104,8 @@ export class FireActionsRelevantComponent {
     const destinos = await this.actionsRelevantSevice.getDestinos();
     const capacidades = await this.actionsRelevantSevice.getCapacidades();
     const tipoAdmin = await this.actionsRelevantSevice.getTipoAdministracion();
-    console.log("🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:", tipoAdmin)
-    
+    console.log('🚀 ~ FireActionsRelevantComponent ~ loadData ~ tipoAdmin:', tipoAdmin);
+
     this.dataMaestros = {
       tipoNotificaciones,
       tipoPlanes,
@@ -115,17 +115,27 @@ export class FireActionsRelevantComponent {
       procedencia,
       destinos,
       capacidades,
-      tipoAdmin
+      tipoAdmin,
     };
 
     return this.dataMaestros;
   }
 
   async isToEdit() {
-    if (this.data.fireDetail?.id) {
-      const dataCordinacion: any = await this.actionsRelevantSevice.getById(Number(this.data.fireDetail?.id));
-      this.editData = dataCordinacion;
+    let dataCordinacion: any;
+
+    try {
+      console.log("🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ this.data.fireDetail:", this.data.fireDetail)
+      if (this.data.fireDetail?.id) {
+       
+        dataCordinacion = await this.actionsRelevantSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+      } else {
+        dataCordinacion = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
+      }
+    } catch (error) {
+      console.log('🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ error:', error);
     }
+
     this.isDataReady = true;
   }
 
@@ -196,7 +206,7 @@ export class FireActionsRelevantComponent {
         .afterDismissed()
         .subscribe(async () => {
           this.isDataReady = false;
-          const dataActuaciones: any = await this.actionsRelevantSevice.getById(Number(this.idReturn));
+          const dataActuaciones: any = await this.actionsRelevantSevice.getByIdRegistro(this.data.idIncendio, Number(this.idReturn));
           this.editData = dataActuaciones;
           this.isDataReady = true;
           this.spinner.hide();
@@ -206,26 +216,19 @@ export class FireActionsRelevantComponent {
   }
 
   async processData(): Promise<void> {
-    console.log("🚀 ~ FireActionsRelevantComponent ~ processData ~  this.actionsRelevantSevice.dataMovilizacion():",  this.actionsRelevantSevice.dataMovilizacion())
     if (this.actionsRelevantSevice.dataMovilizacion().length > 0) {
-      console.log('this.actionsRelevantSevice.dataMovilizacion():', this.actionsRelevantSevice.dataMovilizacion());
 
       const formData = new FormData();
       formData.append('data', JSON.stringify(this.actionsRelevantSevice.dataMovilizacion()[0]));
-      // formData.append('idSuceso', this.data.idIncendio.toString());
-
-      const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);
-      console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
-
-      this.idReturn = resp.idActuacionRelevante;
+      const resp: { idRegistroActualizacion: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);
+      this.idReturn = resp.idRegistroActualizacion;
     }
-     
 
     if (this.actionsRelevantSevice.dataEmergencia().length > 0) {
       this.editData ? (this.idReturn = this.editData.id) : 0;
-      this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idActuacionRelevante = this.idReturn) : 0;
+      this.idReturn ? (this.actionsRelevantSevice.dataEmergencia()[0].idRegistroActualizacion = this.idReturn) : 0;
       const result: any = await this.actionsRelevantSevice.postData(this.actionsRelevantSevice.dataEmergencia()[0]);
-      this.idReturn = result.idActuacionRelevante;
+      this.idReturn = result.idRegistroActualizacion;
     }
 
     if (this.actionsRelevantSevice.dataPlanes().length > 0) {
@@ -253,7 +256,7 @@ export class FireActionsRelevantComponent {
       };
 
       const formData = new FormData();
-      formData.append('IdActuacionRelevante', this.actionsRelevantSevice.dataPlanes()[0].idActuacionRelevante ?? 0);
+      formData.append('idRegistroActualizacion', this.actionsRelevantSevice.dataPlanes()[0].idRegistroActualizacion ?? 0);
       formData.append('idSuceso', this.data.idIncendio.toString());
 
       objToSave.detallesDocumentaciones.forEach((detalle, index) => {
@@ -271,10 +274,10 @@ export class FireActionsRelevantComponent {
         }
       });
 
-      const resp: { idActuacionRelevante: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);
+      const resp: { idRegistroActualizacion: string | number } | any = await this.actionsRelevantSevice.postPlanes(formData);
       console.log('🚀 ~ FireActionsRelevantComponent ~ processData ~ resp:', resp);
 
-      this.idReturn = resp.idActuacionRelevante;
+      this.idReturn = resp.idRegistroActualizacion;
     }
 
     if (this.actionsRelevantSevice.dataCecod().length > 0) {
@@ -359,13 +362,13 @@ export class FireActionsRelevantComponent {
 
       const body = {
         idSuceso: this.data.idIncendio,
-        idActuacionRelevante: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        idRegistroActualizacion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
 
       const result = await postService(body);
       console.log('🚀 ~ result:', result);
-      this.idReturn = result.idActuacionRelevante;
+      this.idReturn = result.idRegistroActualizacion;
     }
   }
 

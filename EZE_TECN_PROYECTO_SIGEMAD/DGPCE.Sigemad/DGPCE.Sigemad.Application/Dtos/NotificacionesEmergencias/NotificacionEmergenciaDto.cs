@@ -16,4 +16,7 @@ public class NotificacionEmergenciaDto
     public string? OrganismoInternacional { get; set; }
     public string? OtrosPaises { get; set; }
     public string? Observaciones { get; set; }
+
+    public bool EsEliminable { get; set; }
+
 }

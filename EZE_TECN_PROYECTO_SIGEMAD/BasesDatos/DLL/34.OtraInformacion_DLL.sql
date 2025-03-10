@@ -19,6 +19,8 @@ CREATE TABLE dbo.OtraInformacion (
 	FechaEliminacion DATETIME2(7) NULL,
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
+
+	CONSTRAINT UQ_OtraInformacion_IdSuceso UNIQUE (IdSuceso)
 );
 
 CREATE TABLE dbo.DetalleOtraInformacion (
@@ -39,7 +41,6 @@ CREATE TABLE dbo.DetalleOtraInformacion (
 );
 
 CREATE TABLE dbo.DetalleOtraInformacion_ProcedenciaDestino (
-	Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	IdDetalleOtraInformacion int NOT NULL FOREIGN KEY REFERENCES DetalleOtraInformacion(Id),
 	IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
     ---
@@ -50,4 +51,6 @@ CREATE TABLE dbo.DetalleOtraInformacion_ProcedenciaDestino (
 	FechaEliminacion DATETIME2(7) NULL,
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
+
+	CONSTRAINT PK_DetalleOtraInformacion_ProcedenciaDestino PRIMARY KEY (IdDetalleOtraInformacion, IdProcedenciaDestino)
 );

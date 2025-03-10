@@ -14,6 +14,8 @@ CREATE TABLE Documentacion (
     FechaEliminacion DATETIME2(7) NULL,
     EliminadoPor UNIQUEIDENTIFIER NULL,
     Borrado BIT NOT NULL DEFAULT 0
+
+	CONSTRAINT UQ_Documentacion_IdSuceso UNIQUE (IdSuceso)
 );
  
  
@@ -23,7 +25,7 @@ CREATE TABLE DetalleDocumentacion (
     FechaHora DATETIME2(7) NOT NULL,
     FechaHoraSolicitud DATETIME2(7) NOT NULL,
     IdTipoDocumento INT NOT NULL FOREIGN KEY REFERENCES TipoDocumento(Id),
-    Descripcion NVARCHAR(255) NOT NULL,
+    Descripcion NVARCHAR(255) NULL,
     IdArchivo UNIQUEIDENTIFIER NULL FOREIGN KEY REFERENCES Archivo(Id),
     ---
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
@@ -37,7 +39,6 @@ CREATE TABLE DetalleDocumentacion (
  
  
 CREATE TABLE dbo.Documentacion_ProcedenciaDestino (
-    Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
     IdDetalleDocumentacion int NOT NULL FOREIGN KEY REFERENCES DetalleDocumentacion(Id),
     IdProcedenciaDestino int NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
     ---
@@ -48,4 +49,7 @@ CREATE TABLE dbo.Documentacion_ProcedenciaDestino (
     FechaEliminacion DATETIME2(7) NULL,
     EliminadoPor UNIQUEIDENTIFIER NULL,
     Borrado BIT NOT NULL DEFAULT 0
+
+		-- Composite Primary Key
+    CONSTRAINT PK_Documentacion_ProcedenciaDestino PRIMARY KEY (IdDetalleDocumentacion, IdProcedenciaDestino)
 );

@@ -204,7 +204,10 @@ export class FireEditComponent implements OnInit {
     const municipalities = await this.municipalityService.get(this.fire.idProvincia);
     this.municipalities.set(municipalities);
 
-    await this.cargarRegistros();
+    //await this.cargarRegistros();
+    const details = await this.fireService.details(Number(this.fire_id));
+    console.log('🚀 ~ FireEditComponent ~ cargarRegistros ~ details:', details);
+    this.dataSource.data = details.data;
 
     this.formData.patchValue({
       id: this.fire.id,
@@ -371,6 +374,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEvolution(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalEvolution ~ fireDetail:", fireDetail)
     const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
 
     const dialogRef = this.matDialog.open(FireCreateComponent, {
@@ -418,10 +422,11 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalOtherInformation(fireDetail?: FireDetail) {
+    console.log("🚀 ~ FireEditComponent ~ goModalOtherInformation ~ fireDetail:", fireDetail)
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '700px',
       disableClose: true,
       data: {
         title: fireDetail ? 'Editar - Otra Información' : 'Nuevo - Otra Información',
@@ -444,7 +449,7 @@ export class FireEditComponent implements OnInit {
     const dialogRef = this.matDialog.open(FireDocumentation, {
       width: '90vw',
       maxWidth: 'none',
-      //height: '90vh',
+      height: '700px',
       disableClose: true,
       data: {
         title: fireDetail ? 'Editar - Documentación' : 'Nuevo - Documentación',
@@ -464,6 +469,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
+  
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
       // PCD
       Incendio: this.goModalDocumentation.bind(this),
@@ -471,14 +477,16 @@ export class FireEditComponent implements OnInit {
 
       Documentación: this.goModalDocumentation.bind(this),
       'Otra Información': this.goModalOtherInformation.bind(this),
-      'Dirección y coordinación': this.goModalCoordination.bind(this),
+      'Dirección y Coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
       'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
       'Actuaciones Relevantes': this.goModalRelevantActions.bind(this),
     };
 
-    const action = modalActions[fireDetail.tipoRegistro];
+    const action = modalActions[fireDetail.tipoRegistro?.nombre];
+    console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ action:", action)
     if (action) {
+      console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ fireDetail:", fireDetail)
       action(fireDetail);
     }
   }

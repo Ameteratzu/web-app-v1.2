@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
+using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
@@ -19,11 +20,13 @@ public class ManageEvolucionCommandHandlerTests
     private readonly Mock<ILogger<ManageEvolucionCommandHandler>> _loggerMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly ManageEvolucionCommandHandler _handler;
+    private readonly Mock<IRegistroActualizacionService> _registroActualizacionServiceMock;
 
     public ManageEvolucionCommandHandlerTests()
     {
         _loggerMock = new Mock<ILogger<ManageEvolucionCommandHandler>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _registroActualizacionServiceMock = new Mock<IRegistroActualizacionService>();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -31,7 +34,11 @@ public class ManageEvolucionCommandHandlerTests
         });
         var mapper = config.CreateMapper();
 
-        _handler = new ManageEvolucionCommandHandler(_loggerMock.Object, _unitOfWorkMock.Object, mapper);
+        _handler = new ManageEvolucionCommandHandler(
+            _loggerMock.Object, 
+            _unitOfWorkMock.Object, 
+            mapper,
+            _registroActualizacionServiceMock.Object);
     }
 
     [Fact]
@@ -274,7 +281,7 @@ public class ManageEvolucionCommandHandlerTests
         // Arrange
         var command = new ManageEvolucionCommand
         {
-            IdEvolucion = 1,
+            //IdEvolucion = 1,
             IdSuceso = 1,
             Registro = new CreateRegistroCommand
             {

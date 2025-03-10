@@ -176,7 +176,7 @@ export class FireFilterFormComponent implements OnInit {
       episode: new FormControl(episode ?? ''),
       situationEquivalent: new FormControl(situationEquivalent ?? ''),
       affectedArea: new FormControl(affectedArea ?? ''),
-      move: new FormControl(move ?? 1),
+      move: new FormControl(move ?? 4),
       //start: new FormControl(start ?? ''),
       //end: new FormControl(end ?? ''),
       between: new FormControl(between ?? 1),
@@ -347,7 +347,7 @@ export class FireFilterFormComponent implements OnInit {
     this.formData.reset();
     this.formData.patchValue({
       between: 1,
-      move: 1,
+      move: 4,
       territory: 1,
       country: COUNTRIES_ID.SPAIN,
       fechaInicio: moment().subtract(4, 'days').toDate(),

@@ -1,11 +1,14 @@
 ﻿using DGPCE.Sigemad.Application.Dtos.AreasAfectadas;
 using DGPCE.Sigemad.Application.Dtos.Evoluciones;
 using DGPCE.Sigemad.Application.Dtos.Impactos;
-using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateAreasAfectadas;
+using DGPCE.Sigemad.Application.Dtos.IntervencionMedios;
+using DGPCE.Sigemad.Application.Features.AreasAfectadas.Commands.CreateOrUpdateAreasAfectadas;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvoluciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.DeleteEvolucionesByIdRegistro;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
-using DGPCE.Sigemad.Application.Features.Evoluciones.Queries.GetEvolucionById;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Queries.GetEvolucion;
 using DGPCE.Sigemad.Application.Features.ImpactosEvoluciones.Commands.CreateListaImpactoEvolucion;
+using DGPCE.Sigemad.Application.Features.IntervencionesMedios.Commands.ManageIntervencionMedios;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,19 +30,20 @@ public class EvolucionesController : ControllerBase
 
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-    [SwaggerOperation(Summary = "Obtener de evolución por id")]
-    public async Task<ActionResult<EvolucionDto>> GetById(int id)
+    [HttpGet]
+    public async Task<ActionResult<EvolucionDto>> GetEvolucion(
+        [FromQuery] int? idRegistroActualizacion,
+        [FromQuery] int idSuceso)
     {
-        var query = new GetEvolucionByIdQuery(id);
-        var EvolucionVm = await _mediator.Send(query);
-
-        return Ok(EvolucionVm);
+        var query = new GetEvolucionQuery
+        {
+            IdRegistroActualizacion = idRegistroActualizacion,
+            IdSuceso = idSuceso
+        };
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
-
+    
     [HttpPost("areas-afectadas")]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -57,7 +61,7 @@ public class EvolucionesController : ControllerBase
     public async Task<ActionResult<ManageEvolucionResponse>> Create([FromBody] ManageEvolucionCommand command)
     {
         var response = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+        return Ok(response);
     }
 
     [HttpPost("impactos")]
@@ -70,6 +74,17 @@ public class EvolucionesController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("intervenciones")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Crear lista de intervenciones de una evolucion")]
+    public async Task<ActionResult<ManageIntervencionMedioResponse>> CreateIntervenciones([FromBody] ManageIntervencionMedioCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return Ok(response);
+    }
+
+    /*
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,4 +95,30 @@ public class EvolucionesController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+    */
+
+    /*
+    [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Eliminar evolución por id")]
+    public async Task<ActionResult> Delete([FromQuery] DeleteEvolucionByIdRegistroCommand command)
+    {
+        //var command = new DeleteEvolucionCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+    */
+
+    [HttpDelete("{idRegistroActualizacion}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Eliminar evolución por id Registro de actualizacion")]
+    public async Task<ActionResult> Delete(int idRegistroActualizacion)
+    {
+        var command = new DeleteEvolucionByIdRegistroCommand { IdRegistroActualizacion = idRegistroActualizacion };
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
 }

@@ -5,6 +5,10 @@
 
         IAsyncRepository<TEntity> Repository<TEntity>() where TEntity : class;
 
+        Task BeginTransactionAsync();
+        Task CommitAsync();
+        Task RollbackAsync();
+
         Task<int> Complete();
     }
 }

@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/actuaciones-relevantes/6
+  url: {{Server}}/api/v1/actuaciones-relevantes?IdRegistroActualizacion=12&IdSuceso=12
   body: none
   auth: inherit
+}
+
+params:query {
+  IdRegistroActualizacion: 12
+  IdSuceso: 12
 }
 
 assert {

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuración de variables
-DB_SERVER=sqlserver.ns-sigemad.svc.cluster.local,1433
+DB_SERVER=sqlserver.ns-sigemad-release.svc.cluster.local,1433
 DB_USER=sa
 DB_PASSWORD='P@s$w0rd'
 DLL_FOLDER=/app/DLL

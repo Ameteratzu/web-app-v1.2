@@ -37,15 +37,6 @@ namespace DGPCE.Sigemad.Application.Features.Periodos.Queries.GetPeriodosList
 
             var specCount = new OpePeriodosForCountingSpecification(request);
             var totalOpePeriodos = await _unitOfWork.Repository<OpePeriodo>().CountAsync(specCount);
-
-            //var opePeriodoVmList = new List<OpePeriodoVm>();
-
-            /*
-            foreach (var item in opePeriodos)
-            {
-                var periodoVm = new OpePeriodoVm();
-                opePeriodoVmList.Add(periodoVm);
-            }*/
             var opePeriodoVmList = _mapper.Map<List<OpePeriodoVm>>(opePeriodos);
 
 
@@ -58,7 +49,7 @@ namespace DGPCE.Sigemad.Application.Features.Periodos.Queries.GetPeriodosList
                 Count = totalOpePeriodos,
                 Data = opePeriodoVmList,
                 PageCount = totalPages,
-                Page = request.Page,
+                PageIndex = request.PageIndex,
                 PageSize = request.PageSize
             };
 

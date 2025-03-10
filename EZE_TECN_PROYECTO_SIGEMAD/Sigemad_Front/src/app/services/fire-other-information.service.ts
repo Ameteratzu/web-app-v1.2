@@ -9,8 +9,12 @@ export class FireOtherInformationService {
   public datepipe = inject(DatePipe);
 
   getById(id: Number) {
-    let endpoint = `/otras-informaciones/${id}`;
+    let endpoint = `/otras-informaciones/?idSuceso=${id}`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
 
+  getByIdRegistro(id: Number, registro: Number) {
+    let endpoint = `/otras-informaciones/?idSuceso=${id}&idRegistroActualizacion=${registro}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

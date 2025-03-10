@@ -152,7 +152,7 @@ export class ActivationPlanComponent implements OnInit {
       if (this.planesService.dataPlanes().length === 0) {
         if (this.planesService.dataPlanes().length === 0) {
           const nuevosPlanes = this.editData.activacionPlanEmergencias.map((plan: any) => ({
-            idActuacionRelevante: this.editData.id,
+            idRegistroActualizacion: this.editData.id,
             idTipoPlan: {
               id: plan.tipoPlan?.id ?? 0,
               descripcion: plan.tipoPlan.descipcion ?? '',

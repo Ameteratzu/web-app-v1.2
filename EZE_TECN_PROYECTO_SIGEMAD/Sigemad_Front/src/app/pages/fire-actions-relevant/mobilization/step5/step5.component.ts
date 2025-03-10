@@ -66,6 +66,7 @@ export class Step5Component {
     const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === tipoAdminId);
     const controlTipoAdmin = this.formGroup.get('IdTipoAdministracion');
     if (foundTipoAdmin) {
+      console.log("🚀 ~ Step5Component ~ loadMedio ~ foundTipoAdmin:", foundTipoAdmin)
       controlTipoAdmin?.setValue(foundTipoAdmin);
       controlTipoAdmin?.disable();
     }

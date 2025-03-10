@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DGPCE.Sigemad.Infrastructure.Configurations;
-public class DatosPrincipalesConfiguracion : IEntityTypeConfiguration<DatoPrincipal>
+public class DatosPrincipalesConfiguracion :IEntityTypeConfiguration<DatoPrincipal>
 {
     public void Configure(EntityTypeBuilder<DatoPrincipal> builder)
     {
 
         builder.ToTable("DatoPrincipal");
+        builder.HasQueryFilter(r => r.Borrado == false);
 
         builder.HasKey(e => e.Id);
 
@@ -33,10 +34,14 @@ public class DatosPrincipalesConfiguracion : IEntityTypeConfiguration<DatoPrinci
         .HasMaxLength(500)
         .IsUnicode(false);
 
-        // Relación uno a uno con Evolucion        
-        builder.HasOne(r => r.Evolucion)
+        // 🔹 Relación con Evolucion
+        builder.HasOne(dp => dp.Evolucion)
             .WithOne(e => e.DatoPrincipal)
-            .HasForeignKey<DatoPrincipal>(r => r.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey<DatoPrincipal>(dp => dp.IdEvolucion)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(e => e.IdEvolucion)
+            .IsUnique()
+            .HasFilter("[Borrado] = 0");
     }
 }

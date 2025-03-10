@@ -19,7 +19,8 @@
     <input matInput [matDatepicker]="picker" [formControl]="getForm('FechaHoraTramitacion')" />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
-    <mat-error *ngIf="formGroup.get('FechaHoraTramitacion')?.hasError('required')">Este campo es obligatorio.</mat-error>
+    <mat-error *ngIf="formGroup.get('FechaHoraTramitacion')?.hasError('required')">Este campo es
+      obligatorio.</mat-error>
   </mat-form-field>
 </div>
 
@@ -29,7 +30,8 @@
     <input matInput [formControl]="getForm('Descripcion2')" placeholder="Ingresa texto" />
   </mat-form-field>
 
-  <mat-checkbox style="padding-bottom: 20px;" fxFlex="20%" [formControl]="getForm('PublicadoCECIS')">Publicación en CECIS</mat-checkbox>
+  <mat-checkbox style="padding-bottom: 20px;" fxFlex="20%" [formControl]="getForm('PublicadoCECIS')">Publicación en
+    CECIS</mat-checkbox>
 </div>
 
 <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">

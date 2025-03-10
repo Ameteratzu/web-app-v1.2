@@ -87,16 +87,19 @@ export class FireCoordinationData {
   dataMaestros: any = {};
 
   async isToEditDocumentation() {
-    if (!this.data?.fireDetail?.id) {
-      this.isDataReady = true;
-      return;
-    }
+    try {
+      let dataCordinacion: any;
+      if (this.data.fireDetail?.id) {
+        dataCordinacion = await this.coordinationServices.getByIdRegistro(Number(this.data.idIncendio), Number(this.data.fireDetail?.id));
+      } else {
+        dataCordinacion = await this.coordinationServices.getById(Number(this.data.idIncendio));
+      }
 
-    const dataCordinacion: any = await this.coordinationServices.getById(Number(this.data.fireDetail.id));
+      this.editDataDir = dataCordinacion.direcciones;
+      this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
+      this.editDataPma = dataCordinacion.coordinacionesPMA;
+    } catch (error) {}
 
-    this.editDataDir = dataCordinacion.direcciones;
-    this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
-    this.editDataPma = dataCordinacion.coordinacionesPMA;
     this.isDataReady = true;
   }
 
@@ -195,7 +198,10 @@ export class FireCoordinationData {
         .afterDismissed()
         .subscribe(async () => {
           this.isDataReady = false;
-          const dataCordinacion: any = await this.coordinationServices.getById(Number(this.idReturn));
+          const dataCordinacion: any = await this.coordinationServices.getByIdRegistro(
+            Number(this.data.idIncendio),
+            Number(this.idReturn)
+          );
 
           this.editDataDir = dataCordinacion.direcciones;
           this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
@@ -349,12 +355,12 @@ export class FireCoordinationData {
 
       const body = {
         IdSuceso: this.data.idIncendio,
-        idDireccionCoordinacionEmergencia: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
+        idRegistroActualizacion: this.data?.fireDetail?.id ? this.data?.fireDetail?.id : this.idReturn,
         [key]: formattedData,
       };
 
       const result = await postService(body);
-      this.idReturn = result.idDireccionCoordinacionEmergencia;
+      this.idReturn = result.idRegistroActualizacion;
     }
   }
 

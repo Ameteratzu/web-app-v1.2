@@ -2,4 +2,5 @@
 public class ManageSucesoRelacionadoResponse
 {
     public int IdSucesoRelacionado { get; set; }
+    public int IdRegistroActualizacion { get; set; }
 }

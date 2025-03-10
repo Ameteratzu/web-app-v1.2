@@ -130,9 +130,15 @@ export class ActionsRelevantService {
   }
 
   getById(id: Number) {
-    let endpoint = `/actuaciones-relevantes/${id}`;
+    let endpoint = `/actuaciones-relevantes/?idSuceso=${id}`;
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
+
+  getByIdRegistro(id: Number, registro: Number) {
+    let endpoint = `/actuaciones-relevantes/?idSuceso=${id}&idRegistroActualizacion=${registro}`;
+    return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
+  }
+  
 
   deleteActions(id: number) {
     const endpoint = `/actuaciones-relevantes/${id}`;
