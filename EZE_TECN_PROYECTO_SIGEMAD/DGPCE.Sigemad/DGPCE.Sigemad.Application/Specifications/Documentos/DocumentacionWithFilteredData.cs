@@ -17,6 +17,8 @@ public class DocumentacionWithFilteredData : BaseSpecification<Documentacion>
             AddInclude("DetallesDocumentacion.TipoDocumento");
             AddInclude("DetallesDocumentacion.Archivo");
             AddInclude("DetallesDocumentacion.DocumentacionProcedenciaDestinos");
+            AddInclude("DetallesDocumentacion.DocumentacionProcedenciaDestinos.ProcedenciaDestino");
+            
         }
     }
 }
