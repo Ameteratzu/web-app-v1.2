@@ -33,7 +33,8 @@ WHERE EsFoto = 0;
 
 
 CREATE TABLE dbo.Registro (
-    Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
+    Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
     FechaHoraEvolucion DATETIME2(7) NULL,
     IdEntradaSalida int NULL FOREIGN KEY REFERENCES EntradaSalida(Id),
     IdMedio int NULL FOREIGN KEY REFERENCES Medio(Id),
@@ -47,9 +48,14 @@ CREATE TABLE dbo.Registro (
 	Borrado BIT NOT NULL DEFAULT 0
 );
 
+-- Crear índice filtrado para permitir nuevas inserciones si el anterior está eliminado
+SET QUOTED_IDENTIFIER ON;
+CREATE UNIQUE INDEX UQ_Registro_Evolucion
+ON Registro (IdEvolucion)
+WHERE Borrado = 0;
+
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
-	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	IdRegistro INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
+	IdRegistro INT NOT NULL FOREIGN KEY REFERENCES Registro(Id),
 	IdProcedenciaDestino INT NOT NULL FOREIGN KEY REFERENCES ProcedenciaDestino(Id),
     -- Audit Fields
     FechaCreacion DATETIME2(7) NOT NULL DEFAULT SYSDATETIME(),
@@ -64,8 +70,8 @@ CREATE TABLE dbo.Registro_ProcedenciaDestino (
 );
 
 CREATE TABLE dbo.DatoPrincipal (
-	--Id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
+	Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
     FechaHora DATETIME2(7) NULL,
     Observaciones NVARCHAR(MAX) NULL,
     Prevision NVARCHAR(MAX) NULL,
@@ -79,9 +85,13 @@ CREATE TABLE dbo.DatoPrincipal (
 	Borrado BIT NOT NULL DEFAULT 0
 );
 
+-- Crear índice filtrado para permitir nuevas inserciones si el anterior está eliminado
+SET QUOTED_IDENTIFIER ON;
+CREATE UNIQUE INDEX UQ_DatoPrincipal_Evolucion
+ON DatoPrincipal (IdEvolucion)
+WHERE Borrado = 0;
 
 CREATE TABLE dbo.Parametro (
-	--Id int NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES Evolucion(Id),
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),
     IdEvolucion INT NOT NULL FOREIGN KEY REFERENCES Evolucion(Id),
     IdEstadoIncendio INT NULL FOREIGN KEY REFERENCES EstadoIncendio(Id),

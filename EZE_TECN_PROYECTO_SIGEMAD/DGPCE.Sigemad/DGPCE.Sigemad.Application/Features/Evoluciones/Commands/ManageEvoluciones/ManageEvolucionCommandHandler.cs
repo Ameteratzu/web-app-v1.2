@@ -278,14 +278,18 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
                 else
                 {
                     //Agregar el parametro
-                    evolucion.Parametros.Add(_mapper.Map<Parametro>(request.Parametro));
+                    Parametro newParametro = _mapper.Map<Parametro>(request.Parametro);
+                    newParametro.Id = 0;
+                    evolucion.Parametros.Add(newParametro);
                 }
 
             }
             else
             {
                 //Agregar el parametro
-                evolucion.Parametros.Add(_mapper.Map<Parametro>(request.Parametro));
+                Parametro newParametro = _mapper.Map<Parametro>(request.Parametro);
+                newParametro.Id = 0;
+                evolucion.Parametros.Add(newParametro);
             }
         }
     }

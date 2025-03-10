@@ -10,6 +10,7 @@ internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
         builder.ToTable("Registro");
 
         builder.HasKey(e => e.Id);
+        builder.HasQueryFilter(r => r.Borrado == false);
 
         builder.Property(e => e.FechaCreacion)
             .HasColumnType("datetime");
@@ -42,10 +43,15 @@ internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
             .HasForeignKey(d => d.IdEntradaSalida)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Configurar relación uno a uno con Evolucion
+        // 🔹 Relación con Evolucion
         builder.HasOne(r => r.Evolucion)
             .WithOne(e => e.Registro)
-            .HasForeignKey<Registro>(r => r.Id); // El Id de Registro es clave primaria y foránea
+            .HasForeignKey<Registro>(r => r.IdEvolucion)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(e => e.IdEvolucion)
+            .IsUnique()
+            .HasFilter("[Borrado] = 0");
 
         builder.HasMany(r => r.ProcedenciaDestinos)
             .WithOne(rpd => rpd.Registro)

@@ -11,6 +11,7 @@ public class ParametrosConfiguration : IEntityTypeConfiguration<Parametro>
     {
 
         builder.ToTable("Parametro");
+        builder.HasQueryFilter(r => r.Borrado == false);
 
         builder.HasKey(e => e.Id);
 

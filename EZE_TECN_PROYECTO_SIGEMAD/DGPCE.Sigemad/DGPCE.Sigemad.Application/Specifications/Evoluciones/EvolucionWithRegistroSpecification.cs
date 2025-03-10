@@ -12,7 +12,7 @@ public class EvolucionWithRegistroSpecification : BaseSpecification<Evolucion>
         AddInclude(e => e.Registro);
         AddInclude(e => e.Registro.ProcedenciaDestinos);
         AddInclude(e => e.DatoPrincipal);
-        //AddInclude(e => e.Parametro);
-        AddInclude("IntervencionMedios.DetalleIntervencionMedios");
+        AddInclude(e => e.Parametros);
+        //AddInclude("IntervencionMedios.DetalleIntervencionMedios");
     }
 }
