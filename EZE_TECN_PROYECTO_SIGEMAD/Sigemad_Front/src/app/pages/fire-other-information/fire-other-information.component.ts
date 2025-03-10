@@ -103,7 +103,7 @@ export class FireOtherInformationComponent implements OnInit {
 
   public dataSource = new MatTableDataSource<any>([]);
 
-  public displayedColumns: string[] = ['fecha', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
+  public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'medio', 'asunto', 'opciones'];
   public idRegistro = 0;
 
   async ngOnInit() {
@@ -129,12 +129,20 @@ export class FireOtherInformationComponent implements OnInit {
   }
 
   async isToEditDocumentation() {
-    console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ isToEditDocumentation:", "isToEditDocumentation")
+    console.log('🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ isToEditDocumentation:', 'isToEditDocumentation');
     try {
-      const dataOtraInformacion: any = await this.otherInformationService.getByIdRegistro(Number(this.dataProps.fire.idSuceso), Number(this.dataProps.fireDetail?.id));
-       
-      console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ dataOtraInformacion:", dataOtraInformacion)
-      this.idRegistro = dataOtraInformacion.id;
+      let dataOtraInformacion: any;
+      if (this.dataProps.fireDetail?.id) {
+        dataOtraInformacion = await this.otherInformationService.getByIdRegistro(
+          Number(this.dataProps.fire.idSuceso),
+          Number(this.dataProps.fireDetail?.id)
+        );
+      } else {
+        dataOtraInformacion = await this.otherInformationService.getById(Number(this.dataProps.fire.idSuceso));
+      }
+
+      console.log('🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ dataOtraInformacion:', dataOtraInformacion);
+      this.idRegistro = Number(this.dataProps.fireDetail?.id) ?? 0;
       const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
         id: otraInformacion.id,
         asunto: otraInformacion.asunto,
@@ -146,26 +154,12 @@ export class FireOtherInformationComponent implements OnInit {
       }));
 
       this.dataOtherInformation.set(newData);
-    } catch (error) {
-      console.log("🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ error:", error)
       
+    } catch (error) {
+      console.log('🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ error:', error);
     }
-    const dataOtraInformacion: any = await this.otherInformationService.getById(Number(this.dataProps.fireDetail.id));
 
-    const newData = dataOtraInformacion?.lista?.map((otraInformacion: any) => ({
-      id: otraInformacion.id,
-      asunto: otraInformacion.asunto,
-      //fecha: moment(otraInformacion.fechaHora).format('YYYY-MM-DD'),
-      //hora: moment(otraInformacion.fechaHora).format('HH:mm'),
-      // PCD
-      fechaHora: moment(otraInformacion.fechaHora).format('YYYY-MM-DD HH:mm'),
-      // FIN PCD
-      medio: otraInformacion.medio,
-      observaciones: otraInformacion.observaciones,
-      procendenciaDestino: otraInformacion.procedenciasDestinos,
-    }));
 
-    this.dataOtherInformation.set(newData);
   }
 
   trackByFn(index: number, item: any): number {
@@ -239,8 +233,9 @@ export class FireOtherInformationComponent implements OnInit {
 
     try {
       this.spinner.show();
+
       const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
-      if (resp!.idOtraInformacion > 0) {
+      if (resp!.idRegistroActualizacion > 0) {
         this.isSaving.set(false);
         //this.spinner.hide();
 

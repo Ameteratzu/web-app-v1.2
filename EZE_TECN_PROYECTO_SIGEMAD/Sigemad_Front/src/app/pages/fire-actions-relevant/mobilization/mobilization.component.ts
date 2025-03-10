@@ -113,9 +113,11 @@ export class MobilizationComponent {
     },
   ]);
   formData!: FormGroup;
+  editTipo = false;
 
   public isCreate = signal<number>(-1);
   public tiposGestion = signal<GenericMaster[]>([]);
+  public tipoAdmin = signal<GenericMaster[]>([]);
   public pasoSolicitud!: PasoSolicitud;
   public pasoTramitacion!: PasoTramitacion;
   public pasoOfrecimiento!: PasoOfrecimiento;
@@ -132,6 +134,7 @@ export class MobilizationComponent {
 
     this.formData = this.fb.group({
       idTipoNotificacion: [null, Validators.required],
+      idTipoNotificacionEdit: [null],
       paso1: this.fb.group({
         IdProcedenciaMedio: [null, Validators.required],
         AutoridadSolicitante: ['', Validators.required],
@@ -300,6 +303,7 @@ export class MobilizationComponent {
 
   async onSubmit(formDirective: FormGroupDirective): Promise<void> {
     this.btnGuardar = 'Nueva solicitud';
+    this.editTipo = false;
     console.log(
       '🚀 ~ MobilizationComponent ~ getOrCreateActuacion ~ this.movilizacionService.dataMovilizacion():',
       this.movilizacionService.dataMovilizacion()
@@ -767,6 +771,9 @@ export class MobilizationComponent {
 
   cargarPaso(movilizacion: Movilizacion) {
     this.btnGuardar = 'Guardar';
+    this.editTipo = false;
+    const controlTipoAdmin = this.formData.get('idTipoNotificacion');
+    controlTipoAdmin?.setValue({ id: null });
     this.movilizacionSeleccionada = movilizacion;
     const pasoActual = this.getMaxTipoPaso(movilizacion);
     this.loadTipo(pasoActual);
@@ -794,6 +801,8 @@ export class MobilizationComponent {
   }
 
   eliminarItem(index: number): void {
+    this.editTipo= false;
+    this.btnGuardar = 'Nueva solicitud';
     const actuaciones = this.movilizacionService.dataMovilizacion();
 
     if (actuaciones && actuaciones.length > 0) {
@@ -806,6 +815,9 @@ export class MobilizationComponent {
         movilizaciones.splice(index, 1);
         actuacion.Movilizaciones = movilizaciones;
         this.movilizacionService.dataMovilizacion.set([actuacion]);
+        this.loadTipo(0);
+        const controlTipoAdmin = this.formData.get('idTipoNotificacion');
+        controlTipoAdmin?.setValue({ id: null });
       } else {
         console.error('Índice fuera del rango de movilizaciones');
       }
@@ -851,6 +863,7 @@ export class MobilizationComponent {
     this.tiposGestion.set(tipos);
 
     this.spinner.hide();
+    return;
   }
 
   hasTipoPaso1OrLastStep8(actuaciones: ActuacionRelevante[]): boolean {
@@ -893,17 +906,29 @@ export class MobilizationComponent {
     return this.formData.get(controlName) as FormGroup;
   }
 
-  editarPaso(paso: any): void {
+  async editarPaso(paso: any): Promise<void> {
+    this.editTipo = true;
     console.log('🚀 ~ MobilizationComponent ~ editarPaso ~ paso:', paso);
     this.btnGuardar = 'Guardar';
     this.editar = true;
+    await this.loadTipo(paso.TipoPaso - 1);
+
+    const foundTipoAdmin = this.tiposGestion().find((item) => item.id === paso.TipoPaso);
+    const controlTipoAdmin = this.formData.get('idTipoNotificacionEdit');
+    if (foundTipoAdmin) {
+      console.log('🚀 ~ Step5Component ~ loadMedio ~ foundTipoAdmin:', foundTipoAdmin);
+      controlTipoAdmin?.setValue(foundTipoAdmin);
+      controlTipoAdmin?.disable();
+    }
+
     if (paso.TipoPaso === 1) {
       const procedenciaSeleccionada = this.dataMaestros.procedencia.find((proc: any) => proc.id === paso.IdProcedenciaMedio);
       if (!procedenciaSeleccionada) {
         return;
       }
+      const controlTipoAdmin = this.formData.get('idTipoNotificacion');
+      controlTipoAdmin?.setValue({ id: 1 });
 
-      this.formData.get('idTipoNotificacion')?.patchValue({ id: 1 });
       this.formData.get('paso1')?.patchValue({
         IdProcedenciaMedio: procedenciaSeleccionada,
         AutoridadSolicitante: paso.AutoridadSolicitante,
@@ -930,11 +955,6 @@ export class MobilizationComponent {
       }
     } else if (paso.TipoPaso === 3) {
       if (paso.TipoPaso === 3) {
-        const destinoSeleccionado = this.dataMaestros.destinos.find((dest: any) => dest.id === paso.IdDestinoMedio);
-        if (!destinoSeleccionado) {
-          return;
-        }
-
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 3 });
         this.formData.get('paso3')?.patchValue({
           TitularMedio3: paso.TitularMedio3,
@@ -951,11 +971,20 @@ export class MobilizationComponent {
         if (!capacidadCeleccionada) {
           return;
         }
+        this.tipoAdmin.set(this.dataMaestros.tipoAdmin);
+        const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === 1);
+        const controlTipoAdmin = this.formData.get('IdTipoAdministracion');
+        if (foundTipoAdmin) {
+          console.log("🚀 ~ Step5Component ~ loadMedio ~ foundTipoAdmin:", foundTipoAdmin)
+          controlTipoAdmin?.setValue(foundTipoAdmin);
+          controlTipoAdmin?.disable();
+        }
+
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 5 });
         this.formData.get('paso5')?.patchValue({
           IdCapacidad: capacidadCeleccionada,
           MedioNoCatalogado: paso.MedioNoCatalogado,
-          IdTipoAdministracion: paso.IdTipoAdministracion,
+          IdTipoAdministracion: foundTipoAdmin,
           TitularMedio5: paso.TitularMedio,
           FechaHoraAportacion: new Date(paso.FechaHoraAportacion),
           Descripcion5: paso.Descripcion,
@@ -1008,5 +1037,9 @@ export class MobilizationComponent {
         });
       }
     }
+  }
+
+  compareTipo(tipo1: any, tipo2: any): boolean {
+    return tipo1 && tipo2 ? tipo1.id === tipo2.id : tipo1 === tipo2;
   }
 }

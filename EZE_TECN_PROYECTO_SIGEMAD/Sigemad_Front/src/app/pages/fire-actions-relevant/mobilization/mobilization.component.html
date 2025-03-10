@@ -3,9 +3,9 @@
     <div>
       <h3 class="title"><b>MOVILIZACIÓN DE MEDIOS EXTRAORDINARIOS</b></h3>
       <div class="row" fxLayout="row" fxLayoutGap="30px" fxLayoutAlign="start center">
-        <mat-form-field appearance="fill" fxFlex="30%">
+        <mat-form-field appearance="fill" fxFlex="30%" *ngIf="!editTipo">
           <mat-label>Gestión</mat-label>
-          <mat-select [formControl]="getForm('idTipoNotificacion')">
+          <mat-select [formControl]="getForm('idTipoNotificacion')" >
             <mat-option *ngFor="let option of tiposGestion()" [value]="option">
               {{ option.descripcion }}
             </mat-option>
@@ -19,6 +19,16 @@
             Este campo es obligatorio.
           </mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="fill" fxFlex="30%" *ngIf="editTipo">
+          <mat-label>Gestión</mat-label>
+          <mat-select [formControl]="getForm('idTipoNotificacionEdit')" >
+            <mat-option *ngFor="let option of tiposGestion()" [value]="option">
+              {{ option.descripcion }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </div>
 
       <app-step1 *ngIf="getForm('idTipoNotificacion')?.value?.id === 1" [formGroup]="getFormGroup('paso1')" [dataMaestros]="dataMaestros"></app-step1>
@@ -124,10 +134,13 @@
   </div>
 
   <div class="modal-footer" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <div *ngIf="esUltimo && hasTipoPaso1OrLastStep8(movilizacionService.dataMovilizacion())" fxFlex="none">
+    <!-- <div *ngIf="esUltimo && hasTipoPaso1OrLastStep8(movilizacionService.dataMovilizacion())" fxFlex="none">
       <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">
         Eliminar {{ hasTipoPaso1OrLastStep8(movilizacionService.dataMovilizacion()) }}
       </button>
+    </div> -->
+    <div *ngIf="esUltimo" fxFlex="none">
+      <button (click)="delete()" mat-flat-button [style.background-color]="'var(--fire-color)'">Eliminar</button>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" fxFlex="auto">
       <button mat-flat-button color="accent" (click)="closeModal()">Volver</button>

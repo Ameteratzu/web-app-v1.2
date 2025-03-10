@@ -347,7 +347,7 @@ export class FireFilterFormComponent implements OnInit {
     this.formData.reset();
     this.formData.patchValue({
       between: 1,
-      move: 1,
+      move: 4,
       territory: 1,
       country: COUNTRIES_ID.SPAIN,
       fechaInicio: moment().subtract(4, 'days').toDate(),

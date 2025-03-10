@@ -114,6 +114,11 @@ export class AreaComponent {
   fileFlag: boolean = false;
   fileContent: string | null = null;
 
+  private getCurrentDateTimeString(): string {
+    const now = new Date();
+    return now.toISOString().substring(0, 16);
+  }
+
   async ngOnInit() {
     this.selectedMunicipio = null;
 
@@ -121,7 +126,7 @@ export class AreaComponent {
     this.provinces.set(provinces);
 
     this.formData = this.fb.group({
-      fechaHora: [new Date(), Validators.required],
+      fechaHora: [this.getCurrentDateTimeString(), Validators.required],
       provincia: [null, Validators.required],
       municipio: [null, Validators.required],
       entidadMenor: [null],

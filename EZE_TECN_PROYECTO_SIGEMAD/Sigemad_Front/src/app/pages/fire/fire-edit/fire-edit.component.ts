@@ -469,7 +469,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-    console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ fireDetail:", fireDetail)
+  
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
       // PCD
       Incendio: this.goModalDocumentation.bind(this),
@@ -477,14 +477,16 @@ export class FireEditComponent implements OnInit {
 
       Documentación: this.goModalDocumentation.bind(this),
       'Otra Información': this.goModalOtherInformation.bind(this),
-      'Dirección y coordinación': this.goModalCoordination.bind(this),
+      'Dirección y Coordinación': this.goModalCoordination.bind(this),
       'Datos de evolución': this.goModalEvolution.bind(this),
       'Sucesos Relacionados': this.goModalRelatedEvent.bind(this),
       'Actuaciones Relevantes': this.goModalRelevantActions.bind(this),
     };
 
     const action = modalActions[fireDetail.tipoRegistro?.nombre];
+    console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ action:", action)
     if (action) {
+      console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ fireDetail:", fireDetail)
       action(fireDetail);
     }
   }
