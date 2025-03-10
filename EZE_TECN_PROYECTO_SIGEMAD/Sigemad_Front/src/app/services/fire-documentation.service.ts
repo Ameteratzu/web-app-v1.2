@@ -13,10 +13,9 @@ export class FireDocumentationService {
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 
-  getByIdEdit(id: Number, idRegistro: Number) {
+  getByIdRegistro(id: Number, idRegistro: Number) {
     //idRegistroActualizacion
     let endpoint = `/Documentaciones/?idSuceso=${id}&idRegistroActualizacion=${idRegistro}`;
-
     return firstValueFrom(this.http.get<any[]>(endpoint).pipe((response) => response));
   }
 

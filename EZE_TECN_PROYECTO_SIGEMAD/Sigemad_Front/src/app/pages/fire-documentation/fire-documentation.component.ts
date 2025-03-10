@@ -27,7 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FechaValidator } from '../../shared/validators/fecha-validator';
 
-const FORMATO_FECHA = {
+const MY_DATE_FORMATS = {
   parse: {
     dateInput: 'LL', // Definir el formato de entrada
   },
@@ -75,7 +75,7 @@ interface FormType {
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: FORMATO_FECHA },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
 })
 export class FireDocumentation implements OnInit {
@@ -128,12 +128,23 @@ export class FireDocumentation implements OnInit {
 
   async ngOnInit() {
     this.spinner.show();
+    // this.formData = this.fb.group({
+    //   //fecha: [moment().toDate(), Validators.required],
+    //   //hora: [moment().format('HH:mm'), Validators.required],
+    //   // PCD
+    //   fechaHora: [moment().format('YYYY-MM-DD HH:mm'), [Validators.required, FechaValidator.validarFecha]],
+    //   // FIN PCD
+    //   fechaSolicitud: [''],
+    //   horaSolicitud: [''],
+    //   tipoDocumento: ['', Validators.required],
+    //   procendenciaDestino: ['', Validators.required],
+    //   descripcion: ['', Validators.required],
+    //   file: [null, Validators.required],
+    // });
+
     this.formData = this.fb.group({
-      //fecha: [moment().toDate(), Validators.required],
-      //hora: [moment().format('HH:mm'), Validators.required],
-      // PCD
-      fechaHora: [moment().format('YYYY-MM-DD HH:mm'), [Validators.required, FechaValidator.validarFecha]],
-      // FIN PCD
+      fecha: [moment().toDate(), Validators.required],
+      hora: [moment().format('HH:mm'), Validators.required],
       fechaSolicitud: [''],
       horaSolicitud: [''],
       tipoDocumento: ['', Validators.required],
@@ -154,12 +165,19 @@ export class FireDocumentation implements OnInit {
   }
 
   async isToEditDocumentation() {
-    let dataDocumentacion: any;
 
-    if (!this.dataProps?.fireDetail?.id) {
       try {
-        dataDocumentacion = await this.fireDocumentationService.getById(Number(this.dataProps.fire.idSuceso));
-  
+        let dataDocumentacion: any;
+        if (this.dataProps.fireDetail?.id) {
+          dataDocumentacion = await this.fireDocumentationService.getByIdRegistro(
+            Number(this.dataProps.fire.idSuceso),
+            Number(this.dataProps.fireDetail?.id)
+          );
+        } else {
+          dataDocumentacion = await this.fireDocumentationService.getById(Number(this.dataProps.fire.idSuceso));
+        }
+
+
         const newData = dataDocumentacion?.detalles?.map((documento: any) => {
           const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
           const hora = moment(documento.fechaHora).format('HH:mm');
@@ -179,43 +197,12 @@ export class FireDocumentation implements OnInit {
             file: documento.archivo,
           };
         });
-  
-        console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
-        this.dataOtherInformation.set(newData);
-      } catch (error) {
-        console.log('🚀 ~ FireDocumentation ~ isToEditDocumentation ~ error:', error);
-      }
-    }else{
-      try {
-        dataDocumentacion = await this.fireDocumentationService.getById(Number(this.dataProps.fire.idSuceso));
-  
-        const newData = dataDocumentacion?.detalles?.map((documento: any) => {
-          const fecha = moment(documento.fechaHora, 'YYYY-MM-DDTHH:mm:ss').toDate();
-          const hora = moment(documento.fechaHora).format('HH:mm');
-          documento.archivo.name = documento.archivo.nombreOriginal;
-          return {
-            id: documento.id,
-            descripcion: documento.descripcion,
-            idSuceso: dataDocumentacion.idSuceso,
-            idDocumento: dataDocumentacion.id,
-            fecha,
-            hora,
-            fechaSolicitud: moment(documento.fechaHoraSolicitud).format('YYYY-MM-DD'),
-            horaSolicitud: moment(documento.fechaHoraSolicitud).format('HH:mm'),
-            procendenciaDestino: documento.procedenciaDestinos,
-            tipoDocumento: documento.tipoDocumento,
-            archivo: documento.archivo,
-            file: documento.archivo,
-          };
-        });
-  
-        console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
-        this.dataOtherInformation.set(newData);
-      } catch (error) {
-        console.log('🚀 ~ FireDocumentation ~ isToEditDocumentation ~ error:', error);
-      }
-    }
 
+        console.log('🚀 ~ FireDocumentation ~ newData ~ newData:', newData);
+        this.dataOtherInformation.set(newData);
+      } catch (error) {
+        console.log('🚀 ~ FireDocumentation ~ isToEditDocumentation ~ error:', error);
+      }
     
 
     this.spinner.hide();
