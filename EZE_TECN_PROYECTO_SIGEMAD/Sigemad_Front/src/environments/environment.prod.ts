@@ -4,5 +4,5 @@ export const environment = {
   //urlGeoserver: 'https://geoserver.sigemad.duckdns.org/geoserver/sigemad/',
   
   //url GeoServer release
-  urlGeoserver: '',
+  urlGeoserver: 'https://geoserver.sigemad.duckdns.org/geoserver/sigemad/',
 };
