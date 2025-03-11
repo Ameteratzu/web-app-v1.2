@@ -33,6 +33,7 @@ export class OpePeriodosService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
+      idOpePeriodoTipo: data.opePeriodoTipo,
       fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
       fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
       fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
@@ -54,6 +55,7 @@ export class OpePeriodosService {
     const body = {
       id: data.id,
       nombre: data.nombre,
+      idOpePeriodoTipo: data.opePeriodoTipo,
       fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
       fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
       fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
