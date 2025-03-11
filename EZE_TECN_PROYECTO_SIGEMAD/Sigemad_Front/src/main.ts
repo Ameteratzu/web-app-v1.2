@@ -17,6 +17,7 @@ function loadRuntimeConfig(): Promise<any> {
       return response.json();
     })
     .then((config) => {
+      console.log('Loaded config:', config);
       (window as any)['runtimeConfig'] = config;
       return config;
     });
