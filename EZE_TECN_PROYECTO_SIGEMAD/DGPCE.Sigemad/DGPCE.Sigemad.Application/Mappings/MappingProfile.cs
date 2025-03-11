@@ -277,12 +277,14 @@ public class MappingProfile : Profile
              .ForMember(dest => dest.Detalles, opt => opt.MapFrom(src => src.DetallesDocumentacion));
 
 
+        CreateMap<DetalleDocumentacion, ItemDocumentacionDto>()
+                .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado == false).Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion })));
+
+
         CreateMap<DetalleDocumentacion, DetalleDocumentacionDto>()
-                .ForMember(dest => dest.IdsProcedenciasDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado!).Select(p => p.IdProcedenciaDestino).ToList()));
-                ;
-
-
-
+              .ForMember(dest => dest.IdsProcedenciasDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado!).Select(p => p.IdProcedenciaDestino).ToList()));
+               
+   
         CreateMap<Archivo, FileDto>()
             .ForMember(dest => dest.FileName, opt => opt.MapFrom(src => src.NombreOriginal))
              .ForMember(dest => dest.ContentType, opt => opt.MapFrom(src => src.Tipo))
@@ -328,9 +330,7 @@ public class MappingProfile : Profile
         CreateMap<DetalleDocumentacion, DetalleDocumentacionBusquedaDto>()
                 .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Select(p => p.ProcedenciaDestino)));
 
-        CreateMap<DetalleDocumentacion, ItemDocumentacionDto>()
-            .ForMember(dest => dest.ProcedenciaDestinos, opt => opt.MapFrom(src => src.DocumentacionProcedenciaDestinos.Where(p => p.Borrado == false).Select(p => new ProcedenciaDto { Id = p.ProcedenciaDestino.Id, Descripcion = p.ProcedenciaDestino.Descripcion })));
-
+   
         CreateMap<SucesosSpecificationParams, IncendiosSpecificationParams>()
              .ForMember(dest => dest.Search, opt => opt.MapFrom(src => src.Denominacion));
 
