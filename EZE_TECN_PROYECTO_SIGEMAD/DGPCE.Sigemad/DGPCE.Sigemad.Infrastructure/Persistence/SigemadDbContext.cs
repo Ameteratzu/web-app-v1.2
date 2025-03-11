@@ -1,6 +1,7 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Identity;
 using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
+using DGPCE.Sigemad.Domain.Modelos.Ope;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
@@ -85,8 +86,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<GrupoMedio>().ToTable(nameof(GrupoMedio));
 
             // PCD
-            //modelBuilder.Entity<OpePeriodo>().ToTable(nameof(OpePeriodo));
             modelBuilder.Entity<OpePeriodo>().ToTable("OPE_Periodo");
+            modelBuilder.Entity<OpePeriodoTipo>().ToTable("OPE_PeriodoTipo");
             // FIN PCD
         }
 
@@ -186,6 +187,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
         // PCD
         public DbSet<OpePeriodo> OpePeriodos { get; set; }
+        public DbSet<OpePeriodoTipo> OpePeriodosTipos { get; set; }
         // FIN PCD
     }
 }

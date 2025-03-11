@@ -29,6 +29,8 @@ import { FechaValidator } from '@shared/validators/fecha-validator';
 import { FORMATO_FECHA } from '@type/date-formats';
 import { FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { OpePeriodosTiposService } from '@services/ope/administracion/ope-periodos-tipos.service';
+import { OpePeriodoTipo } from '@type/ope/administracion/ope-periodo-tipo.type';
 // FIN PCD
 
 @Component({
@@ -65,6 +67,7 @@ export class OpePeriodoCreateEdit implements OnInit {
   constructor(
     private filtrosOpePeriodosService: LocalFiltrosOpePeriodos,
     private opePeriodosService: OpePeriodosService,
+    private opePeriodosTiposService: OpePeriodosTiposService,
     public dialogRef: MatDialogRef<OpePeriodoCreateEdit>,
     private matDialog: MatDialog,
     public alertService: AlertService,
@@ -74,6 +77,8 @@ export class OpePeriodoCreateEdit implements OnInit {
   ) {}
 
   //public filtrosIncendioService = inject(LocalFiltrosIncendio);
+
+  public opePeriodosTipos = signal<OpePeriodoTipo[]>([]);
 
   public formData!: FormGroup;
 
@@ -91,6 +96,7 @@ export class OpePeriodoCreateEdit implements OnInit {
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
+        opePeriodoTipo: new FormControl('', Validators.required),
         fechaInicioFaseSalida: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         fechaFinFaseSalida: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         fechaInicioFaseRetorno: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
@@ -108,12 +114,16 @@ export class OpePeriodoCreateEdit implements OnInit {
       this.formData.patchValue({
         id: this.data.opePeriodo.id,
         nombre: this.data.opePeriodo.nombre,
+        opePeriodoTipo: this.data.opePeriodo.idOpePeriodoTipo,
         fechaInicioFaseSalida: moment(this.data.opePeriodo.fechaInicioFaseSalida).format('YYYY-MM-DD'),
         fechaFinFaseSalida: moment(this.data.opePeriodo.fechaFinFaseSalida).format('YYYY-MM-DD'),
         fechaInicioFaseRetorno: moment(this.data.opePeriodo.fechaInicioFaseRetorno).format('YYYY-MM-DD'),
         fechaFinFaseRetorno: moment(this.data.opePeriodo.fechaFinFaseRetorno).format('YYYY-MM-DD'),
       });
     }
+
+    const opePeriodosTipos = await this.opePeriodosTiposService.get();
+    this.opePeriodosTipos.set(opePeriodosTipos);
   }
 
   async onSubmit() {

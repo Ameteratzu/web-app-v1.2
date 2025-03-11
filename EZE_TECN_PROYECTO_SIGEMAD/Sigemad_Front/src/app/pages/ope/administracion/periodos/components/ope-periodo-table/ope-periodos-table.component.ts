@@ -44,6 +44,7 @@ export class OpePeriodosTableComponent implements OnChanges {
 
   public displayedColumns: string[] = [
     'nombre',
+    'tipo',
     'fechaInicioFaseSalida',
     'fechaFinFaseSalida',
     'fechaInicioFaseRetorno',

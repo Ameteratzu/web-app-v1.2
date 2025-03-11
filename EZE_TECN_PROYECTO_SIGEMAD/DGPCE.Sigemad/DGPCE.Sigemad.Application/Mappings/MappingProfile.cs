@@ -56,12 +56,12 @@ using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
-using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.CreateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.OpePeriodos.Commands.UpdateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Commands.CreateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Commands.UpdateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
-using DGPCE.Sigemad.Application.Features.Periodos.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.PlanesSituaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Provincias.Vms;
@@ -76,6 +76,7 @@ using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
+using DGPCE.Sigemad.Domain.Modelos.Ope;
 
 namespace DGPCE.Sigemad.Application.Mappings;
 
