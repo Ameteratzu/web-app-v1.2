@@ -68,71 +68,102 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
             switch (request.IdComparativoFecha.Value)
             {
                 case ComparacionTipos.IgualA:
-                    AddCriteria(i => i.Suceso.Evoluciones
-                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                    .Select(e => e.Registro.FechaHoraEvolucion)
-                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
-                    .FirstOrDefault() != null &&
-                    DateOnly.FromDateTime(i.Suceso.Evoluciones
-                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                        .Select(e => e.Registro.FechaHoraEvolucion)
-                        .OrderByDescending(fecha => fecha)
-                        .FirstOrDefault().Value) == request.FechaInicio);
+                    //AddCriteria(i => i.Suceso.Evoluciones
+                    //.Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //.Select(e => e.Registro.FechaHoraEvolucion)
+                    //.OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    //.FirstOrDefault() != null &&
+                    //DateOnly.FromDateTime(i.Suceso.Evoluciones
+                    //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //    .Select(e => e.Registro.FechaHoraEvolucion)
+                    //    .OrderByDescending(fecha => fecha)
+                    //    .FirstOrDefault().Value) == request.FechaInicio);
 
-                    //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) == request.FechaInicio);
+                    AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false) // Filtrar evoluciones válidas
+                        .SelectMany(e => e.Registros) // Seleccionar todos los registros de esas evoluciones
+                        .Where(r => r.FechaHoraEvolucion != null && r.Borrado == false) // Excluir registros borrados lógicamente
+                        .OrderByDescending(r => r.FechaCreacion) // Ordenar por fecha más reciente
+                        .Take(1) // Solo tomar el más reciente
+                        .Any(r => DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) == request.FechaInicio));
+
                     break;
 
                 case ComparacionTipos.MayorQue:
-                    AddCriteria(i => i.Suceso.Evoluciones
-                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                    .Select(e => e.Registro.FechaHoraEvolucion)
-                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
-                    .FirstOrDefault() != null &&
-                    DateOnly.FromDateTime(i.Suceso.Evoluciones
-                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                        .Select(e => e.Registro.FechaHoraEvolucion)
-                        .OrderByDescending(fecha => fecha)
-                        .FirstOrDefault().Value) > request.FechaInicio);
+                    //AddCriteria(i => i.Suceso.Evoluciones
+                    //.Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //.Select(e => e.Registro.FechaHoraEvolucion)
+                    //.OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    //.FirstOrDefault() != null &&
+                    //DateOnly.FromDateTime(i.Suceso.Evoluciones
+                    //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //    .Select(e => e.Registro.FechaHoraEvolucion)
+                    //    .OrderByDescending(fecha => fecha)
+                    //    .FirstOrDefault().Value) > request.FechaInicio);
 
-                    //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaInicio);
+                    AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false) // Filtrar evoluciones válidas
+                        .SelectMany(e => e.Registros) // Seleccionar todos los registros de esas evoluciones
+                        .Where(r => r.FechaHoraEvolucion != null && r.Borrado == false) // Excluir registros borrados lógicamente
+                        .OrderByDescending(r => r.FechaCreacion) // Ordenar por fecha más reciente
+                        .Take(1) // Solo tomar el más reciente
+                        .Any(r => DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) > request.FechaInicio));
                     break;
 
                 case ComparacionTipos.MenorQue:
-                    AddCriteria(i => i.Suceso.Evoluciones
-                    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                    .Select(e => e.Registro.FechaHoraEvolucion)
-                    .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
-                    .FirstOrDefault() != null &&
-                    DateOnly.FromDateTime(i.Suceso.Evoluciones
-                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                        .Select(e => e.Registro.FechaHoraEvolucion)
-                        .OrderByDescending(fecha => fecha)
-                        .FirstOrDefault().Value) < request.FechaInicio);
+                    //AddCriteria(i => i.Suceso.Evoluciones
+                    //.Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //.Select(e => e.Registro.FechaHoraEvolucion)
+                    //.OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                    //.FirstOrDefault() != null &&
+                    //DateOnly.FromDateTime(i.Suceso.Evoluciones
+                    //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                    //    .Select(e => e.Registro.FechaHoraEvolucion)
+                    //    .OrderByDescending(fecha => fecha)
+                    //    .FirstOrDefault().Value) < request.FechaInicio);
 
-                    //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio);
+                    AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false) // Filtrar evoluciones válidas
+                        .SelectMany(e => e.Registros) // Seleccionar todos los registros de esas evoluciones
+                        .Where(r => r.FechaHoraEvolucion != null && r.Borrado == false) // Excluir registros borrados lógicamente
+                        .OrderByDescending(r => r.FechaCreacion) // Ordenar por fecha más reciente
+                        .Take(1) // Solo tomar el más reciente
+                        .Any(r => DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) < request.FechaInicio));
+
                     break;
                 case ComparacionTipos.Entre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
+                        //AddCriteria(i => i.Suceso.Evoluciones
+                        //.Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //.Select(e => e.Registro.FechaHoraEvolucion)
+                        //.OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                        //.FirstOrDefault() != null &&
+
+                        //    (
+                        //    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //    .Select(e => e.Registro.FechaHoraEvolucion)
+                        //    .OrderByDescending(fecha => fecha)
+                        //    .FirstOrDefault().Value) >= request.FechaInicio &&
+
+                        //    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //    .Select(e => e.Registro.FechaHoraEvolucion)
+                        //    .OrderByDescending(fecha => fecha)
+                        //    .FirstOrDefault().Value) <= request.FechaInicio
+                        //    )
+                        //);
+
                         AddCriteria(i => i.Suceso.Evoluciones
-                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                        .Select(e => e.Registro.FechaHoraEvolucion)
-                        .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
-                        .FirstOrDefault() != null &&
-
-                            (
-                            DateOnly.FromDateTime(i.Suceso.Evoluciones
-                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                            .Select(e => e.Registro.FechaHoraEvolucion)
-                            .OrderByDescending(fecha => fecha)
-                            .FirstOrDefault().Value) >= request.FechaInicio &&
-
-                            DateOnly.FromDateTime(i.Suceso.Evoluciones
-                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                            .Select(e => e.Registro.FechaHoraEvolucion)
-                            .OrderByDescending(fecha => fecha)
-                            .FirstOrDefault().Value) <= request.FechaInicio
-                            )
+                        .Where(e => e.EsFoto == false && e.Borrado == false) // Filtrar evoluciones válidas
+                        .SelectMany(e => e.Registros) // Seleccionar todos los registros de esas evoluciones
+                        .Where(r => r.FechaHoraEvolucion != null && r.Borrado == false) // Excluir registros borrados lógicamente
+                        .OrderByDescending(r => r.FechaCreacion) // Ordenar por fecha más reciente
+                        .Take(1) // Solo tomar el más reciente
+                        .Any(r => 
+                            DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) >= request.FechaInicio && 
+                            DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) <= request.FechaInicio)
                         );
 
                         //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) >= request.FechaInicio && DateOnly.FromDateTime(incendio.FechaCreacion) <= request.FechaFin);
@@ -145,28 +176,39 @@ public class IncendiosForCountingSpecification : BaseSpecification<Incendio>
                 case ComparacionTipos.NoEntre:
                     if (request.FechaInicio.HasValue && request.FechaFin.HasValue)
                     {
-                        AddCriteria(i => i.Suceso.Evoluciones
-                        .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                        .Select(e => e.Registro.FechaHoraEvolucion)
-                        .OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
-                        .FirstOrDefault() != null &&
+                        //AddCriteria(i => i.Suceso.Evoluciones
+                        //.Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //.Select(e => e.Registro.FechaHoraEvolucion)
+                        //.OrderByDescending(fecha => fecha) // Ordena para tomar la más reciente
+                        //.FirstOrDefault() != null &&
 
-                            (
-                            DateOnly.FromDateTime(i.Suceso.Evoluciones
-                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                            .Select(e => e.Registro.FechaHoraEvolucion)
-                            .OrderByDescending(fecha => fecha)
-                            .FirstOrDefault().Value) < request.FechaInicio ||
+                        //    (
+                        //    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //    .Select(e => e.Registro.FechaHoraEvolucion)
+                        //    .OrderByDescending(fecha => fecha)
+                        //    .FirstOrDefault().Value) < request.FechaInicio ||
 
-                            DateOnly.FromDateTime(i.Suceso.Evoluciones
-                            .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
-                            .Select(e => e.Registro.FechaHoraEvolucion)
-                            .OrderByDescending(fecha => fecha)
-                            .FirstOrDefault().Value) > request.FechaInicio
-                            )
-                        );
+                        //    DateOnly.FromDateTime(i.Suceso.Evoluciones
+                        //    .Where(e => e.EsFoto == false && e.Borrado == false && e.Registro.FechaHoraEvolucion != null)
+                        //    .Select(e => e.Registro.FechaHoraEvolucion)
+                        //    .OrderByDescending(fecha => fecha)
+                        //    .FirstOrDefault().Value) > request.FechaInicio
+                        //    )
+                        //);
 
                         //AddCriteria(incendio => DateOnly.FromDateTime(incendio.FechaCreacion) < request.FechaInicio || DateOnly.FromDateTime(incendio.FechaCreacion) > request.FechaFin);
+
+                        AddCriteria(i => i.Suceso.Evoluciones
+                        .Where(e => e.EsFoto == false && e.Borrado == false) // Filtrar evoluciones válidas
+                        .SelectMany(e => e.Registros) // Seleccionar todos los registros de esas evoluciones
+                        .Where(r => r.FechaHoraEvolucion != null && r.Borrado == false) // Excluir registros borrados lógicamente
+                        .OrderByDescending(r => r.FechaCreacion) // Ordenar por fecha más reciente
+                        .Take(1) // Solo tomar el más reciente
+                        .Any(r =>
+                            DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) < request.FechaInicio &&
+                            DateOnly.FromDateTime(r.FechaHoraEvolucion.Value) > request.FechaInicio)
+                        );
                     }
                     else
                     {

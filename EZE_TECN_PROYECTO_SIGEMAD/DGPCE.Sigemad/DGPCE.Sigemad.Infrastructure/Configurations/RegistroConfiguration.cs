@@ -45,13 +45,13 @@ internal class RegistroConfiguration : IEntityTypeConfiguration<Registro>
 
         // 🔹 Relación con Evolucion
         builder.HasOne(r => r.Evolucion)
-            .WithOne(e => e.Registro)
-            .HasForeignKey<Registro>(r => r.IdEvolucion)
+            .WithMany(e => e.Registros)
+            .HasForeignKey(r => r.IdEvolucion)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => e.IdEvolucion)
-            .IsUnique()
-            .HasFilter("[Borrado] = 0");
+        //builder.HasIndex(e => e.IdEvolucion)
+        //    .IsUnique()
+        //    .HasFilter("[Borrado] = 0");
 
         builder.HasMany(r => r.ProcedenciaDestinos)
             .WithOne(rpd => rpd.Registro)

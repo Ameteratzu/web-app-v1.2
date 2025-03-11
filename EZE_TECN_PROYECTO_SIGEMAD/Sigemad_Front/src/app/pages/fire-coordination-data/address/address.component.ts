@@ -100,6 +100,7 @@ export class AddressComponent {
       if (this.coordinationServices.dataCoordinationAddress().length === 0) {
         this.coordinationServices.dataCoordinationAddress.set(this.editData);
       }
+        console.log("🚀 ~ AddressComponent ~ ngOnInit ~   this.coordinationServices.dataCoordinationAddress:",   this.coordinationServices.dataCoordinationAddress())
     }
     this.spinner.hide();
   }
@@ -149,10 +150,19 @@ export class AddressComponent {
 
   seleccionarItem(index: number) {
     const selectedItem = this.coordinationServices.dataCoordinationAddress()[index];
+    console.log("🚀 ~ AddressComponent ~ seleccionarItem ~ selectedItem:", selectedItem);
     this.isCreate.set(index);
-
+  
+    let fechaLocal: Date;
+    if (selectedItem.fechaInicio) {
+       fechaLocal = moment(selectedItem.fechaInicio, "YYYY-MM-DD").toDate();
+    } else {
+      fechaLocal = new Date();
+    }
+  
     this.formData.patchValue({
       ...selectedItem,
+      fechaInicio: fechaLocal,
       tipoDireccionEmergencia: this.findOptionMatch(selectedItem.tipoDireccionEmergencia),
     });
   }

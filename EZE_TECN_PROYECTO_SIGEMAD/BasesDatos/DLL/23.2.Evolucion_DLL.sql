@@ -49,10 +49,10 @@ CREATE TABLE dbo.Registro (
 );
 
 -- Crear índice filtrado para permitir nuevas inserciones si el anterior está eliminado
-SET QUOTED_IDENTIFIER ON;
-CREATE UNIQUE INDEX UQ_Registro_Evolucion
-ON Registro (IdEvolucion)
-WHERE Borrado = 0;
+-- SET QUOTED_IDENTIFIER ON;
+-- CREATE UNIQUE INDEX UQ_Registro_Evolucion
+-- ON Registro (IdEvolucion)
+-- WHERE Borrado = 0;
 
 CREATE TABLE dbo.Registro_ProcedenciaDestino (
 	IdRegistro INT NOT NULL FOREIGN KEY REFERENCES Registro(Id),
@@ -86,10 +86,10 @@ CREATE TABLE dbo.DatoPrincipal (
 );
 
 -- Crear índice filtrado para permitir nuevas inserciones si el anterior está eliminado
-SET QUOTED_IDENTIFIER ON;
-CREATE UNIQUE INDEX UQ_DatoPrincipal_Evolucion
-ON DatoPrincipal (IdEvolucion)
-WHERE Borrado = 0;
+-- SET QUOTED_IDENTIFIER ON;
+-- CREATE UNIQUE INDEX UQ_DatoPrincipal_Evolucion
+-- ON DatoPrincipal (IdEvolucion)
+-- WHERE Borrado = 0;
 
 CREATE TABLE dbo.Parametro (
     Id INT NOT NULL PRIMARY KEY IDENTITY(1,1),

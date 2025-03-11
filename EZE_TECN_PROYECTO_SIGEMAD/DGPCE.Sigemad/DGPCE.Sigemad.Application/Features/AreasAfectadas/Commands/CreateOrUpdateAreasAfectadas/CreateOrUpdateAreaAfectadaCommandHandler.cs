@@ -92,6 +92,8 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
     {
         if (registroActualizacion.IdReferencia > 0)
         {
+            List<int> idsRegistro = new List<int>();
+            List<int> idsDatoPrincipal = new List<int>();
             List<int> idsParametro = new List<int>();
             List<int> idsAreaAfectada = new List<int>();
             List<int> idsConsecuenciaActuacion = new List<int>();
@@ -108,13 +110,15 @@ public class CreateOrUpdateAreaAfectadaCommandHandler : IRequestHandler<CreateOr
             // Buscar la Evolucion por IdReferencia
             var evolucion = await _unitOfWork.Repository<Evolucion>()
                 .GetByIdWithSpec(new EvolucionWithFilteredDataSpecification(
-                    registroActualizacion.IdReferencia, 
+                    registroActualizacion.IdReferencia,
+                    idsRegistro,
+                    idsDatoPrincipal,
                     idsParametro, 
                     idsAreaAfectada, 
                     idsConsecuenciaActuacion, 
                     idsIntervencionMedio,
-                    includeRegistro: false,
-                    includeDatoPrincipal: false,
+                    //includeRegistro: false,
+                    //includeDatoPrincipal: false,
                     esFoto: false
                 ));
 

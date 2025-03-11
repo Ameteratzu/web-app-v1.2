@@ -128,11 +128,15 @@ public class DeleteEvolucionByIdRegistroCommandHandler : IRequestHandler<DeleteE
         EliminarElementos(evolucion.AreaAfectadas, registro, ApartadoRegistroEnum.AreaAfectada);
         EliminarElementos(evolucion.Parametros, registro, ApartadoRegistroEnum.Parametro);
 
-        if (DebeEliminar(registro, ApartadoRegistroEnum.DatoPrincipal, evolucion.DatoPrincipal?.Id))
-            _unitOfWork.Repository<DatoPrincipal>().DeleteEntity(evolucion.DatoPrincipal);
+        EliminarElementos(evolucion.Registros, registro, ApartadoRegistroEnum.Registro);
 
-        if (DebeEliminar(registro, ApartadoRegistroEnum.Registro, evolucion.Registro?.Id))
-            _unitOfWork.Repository<Registro>().DeleteEntity(evolucion.Registro);
+        EliminarElementos(evolucion.DatosPrincipales, registro, ApartadoRegistroEnum.DatoPrincipal);
+
+        //if (DebeEliminar(registro, ApartadoRegistroEnum.DatoPrincipal, evolucion.DatoPrincipal?.Id))
+        //    _unitOfWork.Repository<DatoPrincipal>().DeleteEntity(evolucion.DatoPrincipal);
+
+        //if (DebeEliminar(registro, ApartadoRegistroEnum.Registro, evolucion.Registro?.Id))
+        //    _unitOfWork.Repository<Registro>().DeleteEntity(evolucion.Registro);
 
         _unitOfWork.Repository<Evolucion>().UpdateEntity(evolucion);
     }

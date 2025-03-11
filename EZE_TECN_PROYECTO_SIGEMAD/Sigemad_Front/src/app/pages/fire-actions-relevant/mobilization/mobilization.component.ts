@@ -683,7 +683,7 @@ export class MobilizationComponent {
       MedioNoCatalogado: this.formData.value.paso5.MedioNoCatalogado || '',
       IdTipoAdministracion: 1,
       TitularMedio: this.formData.value.paso5.TitularMedio5 || '',
-      FechaHoraAportacion: new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString(),
+      FechaHoraAportacion: this.formData.value.paso5.FechaHoraAportacion ? new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString(): "",
       Descripcion: this.formData.value.paso5.Descripcion5 || '',
     };
 
@@ -986,7 +986,7 @@ export class MobilizationComponent {
           MedioNoCatalogado: paso.MedioNoCatalogado,
           IdTipoAdministracion: foundTipoAdmin,
           TitularMedio5: paso.TitularMedio,
-          FechaHoraAportacion: new Date(paso.FechaHoraAportacion),
+          FechaHoraAportacion: paso.FechaHoraAportacion ? new Date(paso.FechaHoraAportacion):null ,
           Descripcion5: paso.Descripcion,
         });
       }
