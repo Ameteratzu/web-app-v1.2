@@ -197,18 +197,21 @@ export class RecordsComponent implements OnInit {
       dateValue2 = new Date(rawDate2);
     }
 
-    const formattedDate = dateValue.toISOString().substring(0, 16);
-    const formattedDate2 = dateValue2.toISOString().substring(0, 16);
+    // const formattedDate = dateValue.toString().substring(0, 16);
+    // const formattedDate2 = dateValue2.toString().substring(0, 16);
+
+    const formattedDate = moment(dateValue).format('YYYY-MM-DDTHH:mm');
+    const formattedDate2 = moment(dateValue).format('YYYY-MM-DDTHH:mm');
 
     this.formDataSignal.set({
-      inputOutput: json.registro?.entradaSalida?.id || '',
+      inputOutput: json.registro?.entradaSalida?.id || 1,
       startDate: formattedDate,
-      media: json.registro?.medio?.id || '',
+      media: json.registro?.medio?.id || 1,
       originDestination: procedenciasSelecteds(),
       datetimeUpdate: formattedDate2,
       observations_1: json.datoPrincipal?.observaciones || '',
       forecast: json.datoPrincipal?.prevision || '',
-      status: json.parametro?.estadoIncendio?.id || '',
+      status: json.parametro?.estadoIncendio?.id || 1,
       end_date: json.parametro?.fechaFinal ? new Date(json.parametro.fechaFinal) : null,
       emergencyPlanActivated: json.parametro?.planEmergencia?.id || '',
       phases: json.parametro?.faseEmergencia?.id || '',
@@ -255,19 +258,19 @@ export class RecordsComponent implements OnInit {
         IdRegistroActualizacion: null,
         idSuceso: this.data.idIncendio,
         registro: {
-          fechaHoraEvolucion: new Date(formValues.startDate).toISOString(),
+          fechaHoraEvolucion: moment(formValues.startDate).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
           idEntradaSalida: formValues.inputOutput,
           idMedio: formValues.media,
           registroProcedenciasDestinos: formValues.originDestination.map((procendenciaDestino: any) => procendenciaDestino.id),
         },
         datoPrincipal: {
-          fechaHora: new Date(formValues.datetimeUpdate).toISOString(),
+          fechaHora: moment(formValues.datetimeUpdate).format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
           observaciones: formValues.observations_1,
           prevision: formValues.forecast,
         },
         parametro: {
           idEstadoIncendio: formValues.status,
-          fechaFinal: formValues.end_date ? formValues.end_date.toISOString() : '',
+          fechaFinal: formValues.end_date ? moment(formValues.end_date).format('YYYY-MM-DDTHH:mm:ss.SSSZ') : '',
           superficieAfectadaHectarea: formValues.afectada,
           idPlanEmergencia: formValues.emergencyPlanActivated,
           idFaseEmergencia: formValues.phases,
@@ -355,8 +358,7 @@ export class RecordsComponent implements OnInit {
   }
 
   private getCurrentDateTimeString(): string {
-    const now = new Date();
-    return now.toISOString().substring(0, 16);
+    return moment().format('YYYY-MM-DDTHH:mm');
   }
 
   showToast() {
