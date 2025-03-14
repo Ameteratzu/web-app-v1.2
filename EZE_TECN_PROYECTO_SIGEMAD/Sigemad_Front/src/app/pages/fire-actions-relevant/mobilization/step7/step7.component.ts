@@ -51,13 +51,14 @@ export class Step7Component {
 
   async ngOnInit() {
     this.capacidad.set(this.dataMaestros.capacidades);
-    const pasosTipo7 = this.movilizacionService
+    const pasosTipo5 = this.movilizacionService
       .dataMovilizacion()
-      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 7)));
+      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 5)));
 
-    const pasoAportacion = pasosTipo7[0] as PasoIntervencion;
+    const pasoAportacion = pasosTipo5[0] as PasoAportacion;
 
     const foundCapacidad = this.capacidad().find((item) => item.id === pasoAportacion.IdCapacidad);
+    console.log('🚀 ~ Step7Component ~ ngOnInit ~ foundCapacidad:', foundCapacidad);
     const capacidadForm = this.formGroup.get('IdCapacidad');
     capacidadForm?.setValue(foundCapacidad);
     capacidadForm?.disable();
@@ -71,5 +72,9 @@ export class Step7Component {
 
   getForm(controlName: string): FormControl {
     return this.formGroup.get(controlName) as FormControl;
+  }
+
+  compareFn(option1: any, option2: any): boolean {
+    return option1 && option2 ? option1.id === option2.id : option1 === option2;
   }
 }
