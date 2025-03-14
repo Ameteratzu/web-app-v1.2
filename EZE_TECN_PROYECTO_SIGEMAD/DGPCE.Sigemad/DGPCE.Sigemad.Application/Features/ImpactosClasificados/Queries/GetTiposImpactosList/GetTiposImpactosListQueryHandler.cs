@@ -14,12 +14,11 @@ public class GetTiposImpactosListQueryHandler : IRequestHandler<GetTiposImpactos
 
     public async Task<IReadOnlyList<string>> Handle(GetTiposImpactosListQuery request, CancellationToken cancellationToken)
     {
-        IReadOnlyList<ImpactoClasificado> tiposImpactos = await _unitOfWork.Repository<ImpactoClasificado>().GetAllAsync() ?? new List<ImpactoClasificado>();
-        var tiposImpactosList = tiposImpactos
-            .Select(t => t.TipoImpacto)
-            .Distinct()
-            .ToList();
+        IReadOnlyList<string> tiposImpactosList =
+            await _unitOfWork.Repository<ImpactoClasificado>()
+            .GetAsync(selector: t => t.TipoImpacto,distinct: true, disableTracking: true);
 
-        return tiposImpactosList.AsReadOnly();
+
+        return tiposImpactosList;
     }
 }

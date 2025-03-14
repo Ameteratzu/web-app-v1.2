@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{Server}}/api/v1/Incendios?PageIndex=1&PageSize=3
+  url: {{Server}}/api/v1/Incendios?PageIndex=0&PageSize=3
   body: none
   auth: inherit
 }
 
 params:query {
-  PageIndex: 1
+  PageIndex: 0
   PageSize: 3
   ~IdPais: 60
   ~IdCcaa: 4

@@ -69,7 +69,8 @@ app.UseRequestLocalization();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+bool IsSwaggerEnabled = builder.Configuration.GetValue<bool>("Swagger:Enabled");
+if (app.Environment.IsDevelopment() || IsSwaggerEnabled)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
