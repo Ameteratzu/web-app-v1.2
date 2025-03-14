@@ -9,7 +9,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter }
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { ActionsRelevantService } from '@services/actions-relevant.service';
-import { PasoLlegadaBase } from '../../../../types/mobilization.type';
+import { PasoAportacion, PasoLlegadaBase } from '../../../../types/mobilization.type';
 
 const FORMATO_FECHA = {
   parse: {
@@ -44,32 +44,37 @@ const FORMATO_FECHA = {
 })
 export class Step8Component {
   @Input() formGroup!: FormGroup;
-    @Input() dataMaestros: any;
-    public capacidad = signal<Capacidad[]>([]);
-    public movilizacionService = inject(ActionsRelevantService);
-    showMedio: boolean = false;
+  @Input() dataMaestros: any;
+  public capacidad = signal<Capacidad[]>([]);
+  public movilizacionService = inject(ActionsRelevantService);
+  showMedio: boolean = false;
 
   async ngOnInit() {
-      this.capacidad.set(this.dataMaestros.capacidades);
-      const pasosTipo8 = this.movilizacionService
-        .dataMovilizacion()
-        .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 8)));
-  
-      const pasoAportacion = pasosTipo8[0] as PasoLlegadaBase;
-  
-      const foundCapacidad = this.capacidad().find((item) => item.id === pasoAportacion.IdCapacidad);
-      const capacidadForm = this.formGroup.get('IdCapacidad');
-      capacidadForm?.setValue(foundCapacidad);
-      capacidadForm?.disable();
-      if (pasoAportacion.IdCapacidad === 92) {
-        this.showMedio = true;
-        const medioForm = this.formGroup.get('MedioNoCatalogado');
-        medioForm?.setValue(pasoAportacion.MedioNoCatalogado);
-        medioForm?.disable();
-      }
+    this.capacidad.set(this.dataMaestros.capacidades);
+    const pasosTipo5 = this.movilizacionService
+      .dataMovilizacion()
+      .flatMap((actuacion) => actuacion.Movilizaciones.flatMap((movilizacion) => movilizacion.Pasos.filter((paso) => paso.TipoPaso === 5)));
+
+    const pasoAportacion = pasosTipo5[0] as PasoAportacion;
+
+    const foundCapacidad = this.capacidad().find((item) => item.id === pasoAportacion.IdCapacidad);
+    console.log('🚀 ~ Step8Component ~ ngOnInit ~ foundCapacidad:', foundCapacidad);
+    const capacidadForm = this.formGroup.get('IdCapacidad');
+    capacidadForm?.setValue(foundCapacidad);
+    capacidadForm?.disable();
+    if (pasoAportacion.IdCapacidad === 92) {
+      this.showMedio = true;
+      const medioForm = this.formGroup.get('MedioNoCatalogado');
+      medioForm?.setValue(pasoAportacion.MedioNoCatalogado);
+      medioForm?.disable();
     }
+  }
 
   getForm(controlName: string): FormControl {
     return this.formGroup.get(controlName) as FormControl;
+  }
+
+  compareFn(option1: any, option2: any): boolean {
+    return option1 && option2 ? option1.id === option2.id : option1 === option2;
   }
 }

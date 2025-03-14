@@ -125,9 +125,8 @@ export class FireActionsRelevantComponent {
     let dataCordinacion: any;
 
     try {
-      console.log("🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ this.data.fireDetail:", this.data.fireDetail)
+      console.log('🚀 ~ FireActionsRelevantComponent ~ isToEdit ~ this.data.fireDetail:', this.data.fireDetail);
       if (this.data.fireDetail?.id) {
-       
         dataCordinacion = await this.actionsRelevantSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
       } else {
         dataCordinacion = await this.actionsRelevantSevice.getById(Number(this.data.idIncendio));
@@ -218,7 +217,6 @@ export class FireActionsRelevantComponent {
 
   async processData(): Promise<void> {
     if (this.actionsRelevantSevice.dataMovilizacion().length > 0) {
-
       const formData = new FormData();
       formData.append('data', JSON.stringify(this.actionsRelevantSevice.dataMovilizacion()[0]));
       const resp: { idRegistroActualizacion: string | number } | any = await this.actionsRelevantSevice.postMovilizaciones(formData);

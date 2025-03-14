@@ -163,7 +163,7 @@ export class MobilizationComponent {
         MedioNoCatalogado: [{ value: '', disabled: true }],
         IdTipoAdministracion: [null, Validators.required],
         TitularMedio5: [''],
-        FechaHoraAportacion: [new Date(), null],
+        FechaHoraAportacion: [new Date(), Validators.required],
         Descripcion5: [''],
       }),
       paso6: this.fb.group({
@@ -683,7 +683,7 @@ export class MobilizationComponent {
       MedioNoCatalogado: this.formData.value.paso5.MedioNoCatalogado || '',
       IdTipoAdministracion: 1,
       TitularMedio: this.formData.value.paso5.TitularMedio5 || '',
-      FechaHoraAportacion: this.formData.value.paso5.FechaHoraAportacion ? new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString(): "",
+      FechaHoraAportacion: this.formData.value.paso5.FechaHoraAportacion ? new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString() : '',
       Descripcion: this.formData.value.paso5.Descripcion5 || '',
     };
 
@@ -693,7 +693,10 @@ export class MobilizationComponent {
   }
 
   private procesarPaso6(): boolean {
-    const pasoValido = (this.formData.get('paso6.IdCapacidad')?.valid ?? false) && (this.formData.get('paso6.FechaHoraDespliegue')?.valid ?? false);
+    const controlCapacidad = this.formData.get('paso6.IdCapacidad');
+    const controlCapacidadFecha = this.formData.get('paso6.FechaHoraDespliegue');
+
+    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
     console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~ pasoValido:', pasoValido);
 
     if (!pasoValido) {
@@ -704,22 +707,23 @@ export class MobilizationComponent {
     this.pasoDespliegue = {
       Id: 0,
       TipoPaso: 6,
-      IdCapacidad: this.formData.value.paso6.IdCapacidad?.id ?? 0,
-
+      IdCapacidad: controlCapacidad?.value.id ?? 0,
       MedioNoCatalogado: this.formData.value.paso6.MedioNoCatalogado || '',
       FechaHoraDespliegue: new Date(this.formData.value.paso6.FechaHoraDespliegue).toISOString(),
       FechaHoraInicioIntervencion: new Date(this.formData.value.paso6.FechaHoraInicioIntervencion).toISOString(),
-      Descripcion: this.formData.value.paso5.Descripcion6 || '',
-      Observaciones: this.formData.value.paso5.Observaciones6 || '',
+      Descripcion: this.formData.value.paso6.Descripcion6 || '',
+      Observaciones: this.formData.value.paso6.Observaciones6 || '',
     };
     console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~  this.pasoDespliegue:', this.pasoDespliegue);
     return true;
   }
 
   private procesarPaso7(): boolean {
-    const pasoValido =
-      (this.formData.get('paso7.IdCapacidad')?.valid ?? false) && (this.formData.get('paso7.FechaHoraInicioIntervencion')?.valid ?? false);
+    const controlCapacidad = this.formData.get('paso7.IdCapacidad');
+    const controlCapacidadFecha = this.formData.get('paso7.FechaHoraInicioIntervencion');
 
+    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso7 ~ pasoValido:', pasoValido);
     if (!pasoValido) {
       this.formData.markAllAsTouched();
       return false;
@@ -728,7 +732,7 @@ export class MobilizationComponent {
     this.pasoIntervencion = {
       Id: 0,
       TipoPaso: 7,
-      IdCapacidad: this.formData.value.paso7.IdCapacidad?.id ?? 0,
+      IdCapacidad: controlCapacidad?.value.id ?? 0,
       MedioNoCatalogado: this.formData.value.paso7.MedioNoCatalogado || '',
       FechaHoraInicioIntervencion: new Date(this.formData.value.paso7.FechaHoraInicioIntervencion).toISOString(),
       Observaciones: this.formData.value.paso7.Observaciones7 || '',
@@ -739,7 +743,9 @@ export class MobilizationComponent {
   }
 
   private procesarPaso8(): boolean {
-    const pasoValido = (this.formData.get('paso8.IdCapacidad')?.valid ?? false) && (this.formData.get('paso8.FechaHoraLlegada')?.valid ?? false);
+    const controlCapacidad = this.formData.get('paso8.IdCapacidad');
+    const controlCapacidadFecha = this.formData.get('paso8.FechaHoraLlegada');
+    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -749,10 +755,10 @@ export class MobilizationComponent {
     this.pasoLlegada = {
       Id: 0,
       TipoPaso: 8,
-      IdCapacidad: this.formData.value.paso8.IdCapacidad?.id ?? 0,
+      IdCapacidad: controlCapacidad?.value.id ?? 0,
       MedioNoCatalogado: this.formData.value.paso8.MedioNoCatalogado || '',
       FechaHoraLlegada: new Date(this.formData.value.paso8.FechaHoraLlegada).toISOString(),
-      Observaciones: this.formData.value.paso8.Observaciones7 || '',
+      Observaciones: this.formData.value.paso8.Observaciones8 || '',
       Descripcion: '',
     };
 
@@ -801,7 +807,7 @@ export class MobilizationComponent {
   }
 
   eliminarItem(index: number): void {
-    this.editTipo= false;
+    this.editTipo = false;
     this.btnGuardar = 'Nueva solicitud';
     const actuaciones = this.movilizacionService.dataMovilizacion();
 
@@ -957,7 +963,7 @@ export class MobilizationComponent {
       if (paso.TipoPaso === 3) {
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 3 });
         this.formData.get('paso3')?.patchValue({
-          TitularMedio3: paso.TitularMedio3,
+          TitularMedio3: paso.TitularMedio,
           GestionCECOD: paso.GestionCECOD,
           FechaHoraOfrecimiento: new Date(paso.FechaHoraOfrecimiento),
           Descripcion3: paso.Descripcion,
@@ -975,7 +981,7 @@ export class MobilizationComponent {
         const foundTipoAdmin = this.tipoAdmin().find((item) => item.id === 1);
         const controlTipoAdmin = this.formData.get('IdTipoAdministracion');
         if (foundTipoAdmin) {
-          console.log("🚀 ~ Step5Component ~ loadMedio ~ foundTipoAdmin:", foundTipoAdmin)
+          console.log('🚀 ~ Step5Component ~ loadMedio ~ foundTipoAdmin:', foundTipoAdmin);
           controlTipoAdmin?.setValue(foundTipoAdmin);
           controlTipoAdmin?.disable();
         }
@@ -986,7 +992,7 @@ export class MobilizationComponent {
           MedioNoCatalogado: paso.MedioNoCatalogado,
           IdTipoAdministracion: foundTipoAdmin,
           TitularMedio5: paso.TitularMedio,
-          FechaHoraAportacion: paso.FechaHoraAportacion ? new Date(paso.FechaHoraAportacion):null ,
+          FechaHoraAportacion: paso.FechaHoraAportacion ? new Date(paso.FechaHoraAportacion) : null,
           Descripcion5: paso.Descripcion,
         });
       }
@@ -998,10 +1004,11 @@ export class MobilizationComponent {
         }
 
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 6 });
-        this.formData.get('paso5')?.patchValue({
+        this.formData.get('paso6')?.patchValue({
           IdCapacidad: capacidadCeleccionada,
           MedioNoCatalogado: paso.MedioNoCatalogado,
           FechaHoraDespliegue: new Date(paso.FechaHoraDespliegue),
+          FechaHoraInicioIntervencion: new Date(paso.FechaHoraInicioIntervencion),
           Descripcion6: paso.Descripcion,
           Observaciones6: paso.Observaciones,
         });
@@ -1014,7 +1021,7 @@ export class MobilizationComponent {
         }
 
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 7 });
-        this.formData.get('paso5')?.patchValue({
+        this.formData.get('paso7')?.patchValue({
           IdCapacidad: capacidadCeleccionada,
           MedioNoCatalogado: paso.MedioNoCatalogado,
           FechaHoraInicioIntervencion: new Date(paso.FechaHoraInicioIntervencion),
@@ -1029,7 +1036,7 @@ export class MobilizationComponent {
         }
 
         this.formData.get('idTipoNotificacion')?.patchValue({ id: 8 });
-        this.formData.get('paso5')?.patchValue({
+        this.formData.get('paso8')?.patchValue({
           IdCapacidad: capacidadCeleccionada,
           MedioNoCatalogado: paso.MedioNoCatalogado,
           FechaHoraLlegada: new Date(paso.FechaHoraLlegada),
