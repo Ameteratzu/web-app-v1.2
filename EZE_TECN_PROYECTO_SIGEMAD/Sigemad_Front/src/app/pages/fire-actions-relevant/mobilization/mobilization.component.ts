@@ -1,9 +1,20 @@
 import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_FORMATS, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  NativeDateAdapter,
+} from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -217,7 +228,9 @@ export class MobilizationComponent {
                   TipoPaso: 2,
                   IdDestinoMedio: p.tramitacionMedio.destinoMedio?.id || 0,
                   TitularMedio: p.tramitacionMedio.titularMedio || '',
-                  FechaHoraTramitacion: new Date(p.tramitacionMedio.fechaHoraTramitacion).toISOString(),
+                  FechaHoraTramitacion: new Date(
+                    p.tramitacionMedio.fechaHoraTramitacion
+                  ).toISOString(),
                   PublicadoCECIS: p.tramitacionMedio.publicadoCECIS ?? false,
                   Descripcion: p.tramitacionMedio.descripcion || '',
                   Observaciones: p.tramitacionMedio.observaciones || '',
@@ -229,7 +242,9 @@ export class MobilizationComponent {
                   Id: p.id,
                   TipoPaso: 3,
                   TitularMedio: p.ofrecimientoMedio.titularMedio || '',
-                  FechaHoraOfrecimiento: new Date(p.ofrecimientoMedio.fechaHoraOfrecimiento).toISOString(),
+                  FechaHoraOfrecimiento: new Date(
+                    p.ofrecimientoMedio.fechaHoraOfrecimiento
+                  ).toISOString(),
                   FechaHoraDisponibilidad: p.ofrecimientoMedio.fechaHoraDisponibilidad
                     ? new Date(p.ofrecimientoMedio.fechaHoraDisponibilidad).toISOString()
                     : null,
@@ -247,7 +262,9 @@ export class MobilizationComponent {
                   MedioNoCatalogado: p.aportacionMedio.medioNoCatalogado || '',
                   IdTipoAdministracion: p.aportacionMedio.idTipoAdministracion || 0,
                   TitularMedio: p.aportacionMedio.titularMedio || '',
-                  FechaHoraAportacion: new Date(p.aportacionMedio.fechaHoraAportacion).toISOString(),
+                  FechaHoraAportacion: new Date(
+                    p.aportacionMedio.fechaHoraAportacion
+                  ).toISOString(),
                   Descripcion: p.aportacionMedio.descripcion || '',
                   Observaciones: p.aportacionMedio.observaciones || '',
                 });
@@ -259,19 +276,29 @@ export class MobilizationComponent {
                   TipoPaso: 6,
                   IdCapacidad: p.despliegueMedio.capacidad?.id || 0,
                   MedioNoCatalogado: p.despliegueMedio.medioNoCatalogado || '',
-                  FechaHoraDespliegue: new Date(p.despliegueMedio.fechaHoraDespliegue).toISOString(),
-                  FechaHoraInicioIntervencion: new Date(p.despliegueMedio.fechaHoraInicioIntervencion).toISOString(),
+                  FechaHoraDespliegue: new Date(
+                    p.despliegueMedio.fechaHoraDespliegue
+                  ).toISOString(),
+                  FechaHoraInicioIntervencion: new Date(
+                    p.despliegueMedio.fechaHoraInicioIntervencion
+                  ).toISOString(),
                   Observaciones: p.despliegueMedio.observaciones || '',
                 });
               }
               // Paso 7: Intervención (Fin de intervención)
-              else if (p.pasoMovilizacion && p.pasoMovilizacion.id === 7 && p.finIntervencionMedio) {
+              else if (
+                p.pasoMovilizacion &&
+                p.pasoMovilizacion.id === 7 &&
+                p.finIntervencionMedio
+              ) {
                 acc.push({
                   Id: p.id,
                   TipoPaso: 7,
                   IdCapacidad: p.finIntervencionMedio.capacidad?.id || 0,
                   MedioNoCatalogado: p.finIntervencionMedio.medioNoCatalogado || '',
-                  FechaHoraInicioIntervencion: new Date(p.finIntervencionMedio.fechaHoraInicioIntervencion).toISOString(),
+                  FechaHoraInicioIntervencion: new Date(
+                    p.finIntervencionMedio.fechaHoraInicioIntervencion
+                  ).toISOString(),
                   Observaciones: p.finIntervencionMedio.observaciones || '',
                 });
               }
@@ -517,7 +544,10 @@ export class MobilizationComponent {
     }
 
     this.onReset(formDirective);
-    console.log('🚀 ~ MobilizationComponent ~ onSubmit ~ actuacionRelevante: ActuacionRelevante.IdActuacionRelevante:', this.editData);
+    console.log(
+      '🚀 ~ MobilizationComponent ~ onSubmit ~ actuacionRelevante: ActuacionRelevante.IdActuacionRelevante:',
+      this.editData
+    );
     const actuacionRelevante: ActuacionRelevante = {
       IdActuacionRelevante: this.editData?.id ?? 0,
       IdSuceso: this.data.idIncendio,
@@ -614,7 +644,8 @@ export class MobilizationComponent {
 
   private procesarPaso2(): boolean {
     const pasoValido =
-      (this.formData.get('paso2.IdDestinoMedio')?.valid ?? false) && (this.formData.get('paso2.FechaHoraTramitacion')?.valid ?? false);
+      (this.formData.get('paso2.IdDestinoMedio')?.valid ?? false) &&
+      (this.formData.get('paso2.FechaHoraTramitacion')?.valid ?? false);
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -637,7 +668,8 @@ export class MobilizationComponent {
 
   private procesarPaso3(): boolean {
     const pasoValido =
-      (this.formData.get('paso3.TitularMedio3')?.valid ?? false) && (this.formData.get('paso3.FechaHoraOfrecimiento')?.valid ?? false);
+      (this.formData.get('paso3.TitularMedio3')?.valid ?? false) &&
+      (this.formData.get('paso3.FechaHoraOfrecimiento')?.valid ?? false);
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -648,7 +680,9 @@ export class MobilizationComponent {
       Id: 0,
       TipoPaso: 3,
       TitularMedio: this.formData.value.paso3.TitularMedio3 || '',
-      FechaHoraOfrecimiento: new Date(this.formData.value.paso3.FechaHoraOfrecimiento).toISOString(),
+      FechaHoraOfrecimiento: new Date(
+        this.formData.value.paso3.FechaHoraOfrecimiento
+      ).toISOString(),
       FechaHoraDisponibilidad: this.formData.value.paso3.FechaHoraDisponibilidad
         ? new Date(this.formData.value.paso3.FechaHoraDisponibilidad).toISOString()
         : '',
@@ -661,11 +695,16 @@ export class MobilizationComponent {
   }
 
   private procesarPaso5(): boolean {
-    let pasoValido = (this.formData.get('paso5.IdCapacidad')?.valid ?? false) && (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
+    let pasoValido =
+      (this.formData.get('paso5.IdCapacidad')?.valid ?? false) &&
+      (this.formData.get('paso5.FechaHoraAportacion')?.valid ?? false);
 
     const capacidadValue = this.formData.get('paso5.IdCapacidad')?.value;
     const capacidadId = capacidadValue?.id;
-    console.log('🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.formData.value:', this.formData.value);
+    console.log(
+      '🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.formData.value:',
+      this.formData.value
+    );
     if (capacidadId === 92) {
       pasoValido = pasoValido && (this.formData.get('paso5.MedioNoCatalogado')?.valid ?? false);
     }
@@ -683,38 +722,17 @@ export class MobilizationComponent {
       MedioNoCatalogado: this.formData.value.paso5.MedioNoCatalogado || '',
       IdTipoAdministracion: 1,
       TitularMedio: this.formData.value.paso5.TitularMedio5 || '',
-      FechaHoraAportacion: this.formData.value.paso5.FechaHoraAportacion ? new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString() : '',
+      FechaHoraAportacion: this.formData.value.paso5.FechaHoraAportacion
+        ? new Date(this.formData.value.paso5.FechaHoraAportacion).toISOString()
+        : '',
       Descripcion: this.formData.value.paso5.Descripcion5 || '',
     };
 
-    console.log('🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.pasoAportacion:', this.pasoAportacion);
+    console.log(
+      '🚀 ~ MobilizationComponent ~ procesarPaso5 ~ this.pasoAportacion:',
+      this.pasoAportacion
+    );
 
-    return true;
-  }
-
-  private procesarPaso6(): boolean {
-    const controlCapacidad = this.formData.get('paso6.IdCapacidad');
-    const controlCapacidadFecha = this.formData.get('paso6.FechaHoraDespliegue');
-
-    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
-    console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~ pasoValido:', pasoValido);
-
-    if (!pasoValido) {
-      this.formData.markAllAsTouched();
-      return false;
-    }
-
-    this.pasoDespliegue = {
-      Id: 0,
-      TipoPaso: 6,
-      IdCapacidad: controlCapacidad?.value.id ?? 0,
-      MedioNoCatalogado: this.formData.value.paso6.MedioNoCatalogado || '',
-      FechaHoraDespliegue: new Date(this.formData.value.paso6.FechaHoraDespliegue).toISOString(),
-      FechaHoraInicioIntervencion: new Date(this.formData.value.paso6.FechaHoraInicioIntervencion).toISOString(),
-      Descripcion: this.formData.value.paso6.Descripcion6 || '',
-      Observaciones: this.formData.value.paso6.Observaciones6 || '',
-    };
-    console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~  this.pasoDespliegue:', this.pasoDespliegue);
     return true;
   }
 
@@ -722,7 +740,8 @@ export class MobilizationComponent {
     const controlCapacidad = this.formData.get('paso7.IdCapacidad');
     const controlCapacidadFecha = this.formData.get('paso7.FechaHoraInicioIntervencion');
 
-    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
+    const pasoValido =
+      (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
     console.log('🚀 ~ MobilizationComponent ~ procesarPaso7 ~ pasoValido:', pasoValido);
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -734,7 +753,9 @@ export class MobilizationComponent {
       TipoPaso: 7,
       IdCapacidad: controlCapacidad?.value.id ?? 0,
       MedioNoCatalogado: this.formData.value.paso7.MedioNoCatalogado || '',
-      FechaHoraInicioIntervencion: new Date(this.formData.value.paso7.FechaHoraInicioIntervencion).toISOString(),
+      FechaHoraInicioIntervencion: new Date(
+        this.formData.value.paso7.FechaHoraInicioIntervencion
+      ).toISOString(),
       Observaciones: this.formData.value.paso7.Observaciones7 || '',
       Descripcion: '',
     };
@@ -745,7 +766,8 @@ export class MobilizationComponent {
   private procesarPaso8(): boolean {
     const controlCapacidad = this.formData.get('paso8.IdCapacidad');
     const controlCapacidadFecha = this.formData.get('paso8.FechaHoraLlegada');
-    const pasoValido = (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
+    const pasoValido =
+      (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
 
     if (!pasoValido) {
       this.formData.markAllAsTouched();
@@ -762,6 +784,42 @@ export class MobilizationComponent {
       Descripcion: '',
     };
 
+    return true;
+  }
+
+  private procesarPaso6(): boolean {
+    const controlCapacidad = this.formData.get('paso6.IdCapacidad');
+    const controlCapacidadFecha = this.formData.get('paso6.FechaHoraDespliegue');
+
+    const pasoValido =
+      (controlCapacidad?.value.id ?? false) && (controlCapacidadFecha?.valid ?? false);
+    console.log('🚀 ~ MobilizationComponent ~ procesarPaso6 ~ pasoValido:', pasoValido);
+
+    if (!pasoValido) {
+      this.formData.markAllAsTouched();
+      return false;
+    }
+    console.log(
+      '🚀 ~ MobilizationComponent ~ procesarPaso6 ~ this.formData.value:',
+      this.formData.value
+    );
+    this.pasoDespliegue = {
+      Id: 0,
+      TipoPaso: 6,
+      IdCapacidad: controlCapacidad?.value.id ?? 0,
+      MedioNoCatalogado: this.formData.value.paso6.MedioNoCatalogado || '',
+      FechaHoraDespliegue: new Date(this.formData.value.paso6.FechaHoraDespliegue).toISOString(),
+      FechaHoraInicioIntervencion: this.formData.value.paso6.FechaHoraInicioIntervencion
+        ? new Date(this.formData.value.paso6.FechaHoraInicioIntervencion).toISOString()
+        : '',
+      Descripcion: this.formData.value.paso6.Descripcion6 || '',
+      Observaciones: this.formData.value.paso6.Observaciones6 || '',
+    };
+
+    console.log(
+      '🚀 ~ MobilizationComponent ~ procesarPaso6 ~  this.pasoDespliegue:',
+      this.pasoDespliegue
+    );
     return true;
   }
 
@@ -793,7 +851,11 @@ export class MobilizationComponent {
   }
 
   getAllMovilizaciones(): Movilizacion[] {
-    return this.movilizacionService.dataMovilizacion()?.flatMap((actuacion) => actuacion.Movilizaciones) || [];
+    return (
+      this.movilizacionService
+        .dataMovilizacion()
+        ?.flatMap((actuacion) => actuacion.Movilizaciones) || []
+    );
   }
 
   editarItem(index: number) {
@@ -864,8 +926,12 @@ export class MobilizationComponent {
 
   async loadTipo(id?: any) {
     this.spinner.show();
-    id === 8 ? this.formData.get('idTipoNotificacion')?.disable() : this.formData.get('idTipoNotificacion')?.enable();
-    const tipos = await ((await id) ? this.movilizacionService.getTipoGestion(id) : this.movilizacionService.getTipoGestion());
+    id === 8
+      ? this.formData.get('idTipoNotificacion')?.disable()
+      : this.formData.get('idTipoNotificacion')?.enable();
+    const tipos = await ((await id)
+      ? this.movilizacionService.getTipoGestion(id)
+      : this.movilizacionService.getTipoGestion());
     this.tiposGestion.set(tipos);
 
     this.spinner.hide();
@@ -928,7 +994,9 @@ export class MobilizationComponent {
     }
 
     if (paso.TipoPaso === 1) {
-      const procedenciaSeleccionada = this.dataMaestros.procedencia.find((proc: any) => proc.id === paso.IdProcedenciaMedio);
+      const procedenciaSeleccionada = this.dataMaestros.procedencia.find(
+        (proc: any) => proc.id === paso.IdProcedenciaMedio
+      );
       if (!procedenciaSeleccionada) {
         return;
       }
@@ -944,7 +1012,9 @@ export class MobilizationComponent {
       });
     } else if (paso.TipoPaso === 2) {
       if (paso.TipoPaso === 2) {
-        const destinoSeleccionado = this.dataMaestros.destinos.find((dest: any) => dest.id === paso.IdDestinoMedio);
+        const destinoSeleccionado = this.dataMaestros.destinos.find(
+          (dest: any) => dest.id === paso.IdDestinoMedio
+        );
         if (!destinoSeleccionado) {
           return;
         }
@@ -973,7 +1043,9 @@ export class MobilizationComponent {
       }
     } else if (paso.TipoPaso === 5) {
       if (paso.TipoPaso === 5) {
-        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find(
+          (cap: any) => cap.id === paso.IdCapacidad
+        );
         if (!capacidadCeleccionada) {
           return;
         }
@@ -998,7 +1070,9 @@ export class MobilizationComponent {
       }
     } else if (paso.TipoPaso === 6) {
       if (paso.TipoPaso === 6) {
-        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find(
+          (cap: any) => cap.id === paso.IdCapacidad
+        );
         if (!capacidadCeleccionada) {
           return;
         }
@@ -1015,7 +1089,9 @@ export class MobilizationComponent {
       }
     } else if (paso.TipoPaso === 7) {
       if (paso.TipoPaso === 7) {
-        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find(
+          (cap: any) => cap.id === paso.IdCapacidad
+        );
         if (!capacidadCeleccionada) {
           return;
         }
@@ -1030,7 +1106,9 @@ export class MobilizationComponent {
       }
     } else if (paso.TipoPaso === 8) {
       if (paso.TipoPaso === 8) {
-        const capacidadCeleccionada = this.dataMaestros.capacidades.find((cap: any) => cap.id === paso.IdCapacidad);
+        const capacidadCeleccionada = this.dataMaestros.capacidades.find(
+          (cap: any) => cap.id === paso.IdCapacidad
+        );
         if (!capacidadCeleccionada) {
           return;
         }
@@ -1043,6 +1121,25 @@ export class MobilizationComponent {
           Observaciones8: paso.Observaciones,
         });
       }
+    }
+  }
+
+  obtenerAutoridadSolicitante(movilizacion: any): string | null {
+    const pasoEncontrado = movilizacion.Pasos.find((paso: any) => paso.TipoPaso === 5);
+    console.log(
+      '🚀 ~ MobilizationComponent ~ obtenerAutoridadSolicitante ~ pasoEncontrado:',
+      pasoEncontrado
+    );
+    if (!pasoEncontrado) {
+      return 'N/A';
+    }
+    if (pasoEncontrado.MedioNoCatalogado) {
+      return pasoEncontrado.MedioNoCatalogado;
+    } else {
+      const capacidadEncontrada = this.dataMaestros.capacidades.find(
+        (capacidad: any) => capacidad.id === pasoEncontrado.IdCapacidad
+      );
+      return capacidadEncontrada ? capacidadEncontrada.nombre : 'N/A';
     }
   }
 

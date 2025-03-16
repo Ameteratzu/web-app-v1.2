@@ -319,6 +319,7 @@ export class FireRelatedEventForm implements OnInit {
     this.isSaving.set(true);
 
     const idsSucesosAsociados = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
+    console.log("🚀 ~ FireRelatedEventForm ~ guardarAgregar ~ idsSucesosAsociados:", idsSucesosAsociados)
 
     if (idsSucesosAsociados?.length === 0) {
       //this.spinner.hide();
