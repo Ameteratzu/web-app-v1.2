@@ -117,6 +117,10 @@ export class OpeFronteraFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.opeFronterasChange.emit({
       count: 0,
       page: 1,

@@ -106,8 +106,8 @@ export class OpeFronteraCreateEdit implements OnInit {
     this.formData = new FormGroup({
       nombre: new FormControl('', Validators.required),
       autonomousCommunity: new FormControl(''),
-      CCAA: new FormControl(''),
-      province: new FormControl(''),
+      //CCAA: new FormControl(''),
+      //province: new FormControl(''),
       provincia: new FormControl(''),
       municipality: new FormControl('', Validators.required),
       carreteraPK: new FormControl('', Validators.required),
@@ -124,11 +124,13 @@ export class OpeFronteraCreateEdit implements OnInit {
 
     if (this.data.opeFrontera?.id) {
       //this.loadMunicipalities({ value: this.data.opeFrontera.idProvincia });
+      this.loadProvinces({ value: this.data.opeFrontera.idCcaa });
+      this.loadMunicipios({ value: this.data.opeFrontera.idProvincia });
       this.formData.patchValue({
         id: this.data.opeFrontera.id,
         nombre: this.data.opeFrontera.nombre,
         autonomousCommunity: this.data.opeFrontera.idCcaa,
-        province: this.data.opeFrontera.idProvincia,
+        provincia: this.data.opeFrontera.idProvincia,
         municipality: this.data.opeFrontera.idMunicipio,
         carreteraPK: this.data.opeFrontera.carreteraPK,
         coordenadaUTM_X: this.data.opeFrontera.coordenadaUTM_X,

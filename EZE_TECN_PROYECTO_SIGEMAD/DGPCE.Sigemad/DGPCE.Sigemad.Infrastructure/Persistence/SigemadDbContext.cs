@@ -1,7 +1,8 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Identity;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
 using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
-using DGPCE.Sigemad.Domain.Modelos.Ope;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
@@ -88,6 +89,15 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             // PCD
             modelBuilder.Entity<OpePeriodo>().ToTable("OPE_Periodo");
             modelBuilder.Entity<OpePeriodoTipo>().ToTable("OPE_PeriodoTipo");
+            modelBuilder.Entity<OpePuerto>().ToTable("OPE_Puerto");
+            modelBuilder.Entity<OpeFase>().ToTable("OPE_Fase");
+            modelBuilder.Entity<OpeLineaMaritima>().ToTable("OPE_LineaMaritima");
+            modelBuilder.Entity<OpeFrontera>().ToTable("OPE_Frontera");
+            modelBuilder.Entity<OpeAreaDescanso>().ToTable("OPE_AreaDescanso");
+            modelBuilder.Entity<OpeAreaDescansoTipo>().ToTable("OPE_AreaDescansoTipo");
+            modelBuilder.Entity<OpeEstadoOcupacion>().ToTable("OPE_EstadoOcupacion");
+            modelBuilder.Entity<OpePuntoControlCarretera>().ToTable("OPE_PuntoControlCarretera");
+            //modelBuilder.Entity<Auditoria>().ToTable(nameof(Auditoria));
             // FIN PCD
         }
 
@@ -188,6 +198,15 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         // PCD
         public DbSet<OpePeriodo> OpePeriodos { get; set; }
         public DbSet<OpePeriodoTipo> OpePeriodosTipos { get; set; }
+        public DbSet<OpePuerto> OpePuertos { get; set; }
+        public DbSet<OpeFase> OpeFases { get; set; }
+        public DbSet<OpeLineaMaritima> OpeLineasMaritimas { get; set; }
+        public DbSet<OpeFrontera> OpeFronteras { get; set; }
+        public DbSet<OpeAreaDescanso> OpeAreasDescanso { get; set; }
+        public DbSet<OpeAreaDescansoTipo> OpeAreasDescansoTipos { get; set; }
+        public DbSet<OpeEstadoOcupacion> OpeEstadosOcupacion { get; set; }
+        public DbSet<OpePuntoControlCarretera> OpePuntosControlCarreteras { get; set; }
+        //public DbSet<Auditoria> Auditorias { get; set; }
         // FIN PCD
     }
 }

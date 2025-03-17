@@ -37,6 +37,8 @@ import { AutonomousCommunity } from '@type/autonomous-community.type';
 import { COUNTRIES_ID, FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FORMATO_FECHA } from '@type/date-formats';
+import { OpeFase } from '@type/ope/administracion/ope-fase.type';
+import { OpeFasesService } from '@services/ope/administracion/ope-fases.service';
 
 @Component({
   selector: 'ope-puerto-create-edit',
@@ -70,6 +72,7 @@ export class OpePuertoCreateEdit implements OnInit {
   constructor(
     private filtrosOpePuertosService: LocalFiltrosOpePuertos,
     private opePuertosService: OpePuertosService,
+    private opeFasesService: OpeFasesService,
     public dialogRef: MatDialogRef<OpePuertoCreateEdit>,
     private matDialog: MatDialog,
     public alertService: AlertService,
@@ -94,6 +97,8 @@ export class OpePuertoCreateEdit implements OnInit {
   public listaPaisesExtranjeros = signal<Countries[]>([]);
   public listaPaisesNacionales = signal<Countries[]>([]);
 
+  public opeFases = signal<OpeFase[]>([]);
+
   public formData!: FormGroup;
 
   public today: string = new Date().toISOString().split('T')[0];
@@ -111,12 +116,12 @@ export class OpePuertoCreateEdit implements OnInit {
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
-        fase: new FormControl('', Validators.required),
+        opeFase: new FormControl('', Validators.required),
         territory: new FormControl(1),
         country: new FormControl(COUNTRIES_ID.SPAIN),
         autonomousCommunity: new FormControl(''),
         CCAA: new FormControl(''),
-        province: new FormControl(''),
+        //province: new FormControl(''),
         provincia: new FormControl(''),
         municipality: new FormControl('', Validators.required),
         coordenadaUTM_X: new FormControl('', Validators.required),
@@ -137,19 +142,25 @@ export class OpePuertoCreateEdit implements OnInit {
 
     if (this.data.opePuerto?.id) {
       //this.loadMunicipalities({ value: this.data.opePuerto.idProvincia });
+      this.loadProvinces({ value: this.data.opePuerto.idCcaa });
+      this.loadMunicipios({ value: this.data.opePuerto.idProvincia });
       this.formData.patchValue({
         id: this.data.opePuerto.id,
         nombre: this.data.opePuerto.nombre,
-        fase: this.data.opePuerto.nombre,
-        province: this.data.opePuerto.idProvincia,
+        opeFase: this.data.opePuerto.idOpeFase,
+        autonomousCommunity: this.data.opePuerto.idCcaa,
+        provincia: this.data.opePuerto.idProvincia,
         municipality: this.data.opePuerto.idMunicipio,
         coordenadaUTM_X: this.data.opePuerto.coordenadaUTM_X,
         coordenadaUTM_Y: this.data.opePuerto.coordenadaUTM_Y,
-        fechaValidezDesde: moment(this.data.opePuerto.fechaInicioFaseSalida).format('YYYY-MM-DD'),
-        fechaValidezHasta: moment(this.data.opePuerto.fechaFinFaseSalida).format('YYYY-MM-DD'),
+        fechaValidezDesde: moment(this.data.opePuerto.fechaValidezDesde).format('YYYY-MM-DD'),
+        fechaValidezHasta: moment(this.data.opePuerto.fechaValidezHasta).format('YYYY-MM-DD'),
         capacidad: this.data.opePuerto.capacidad,
       });
     }
+
+    const opeFases = await this.opeFasesService.get();
+    this.opeFases.set(opeFases);
 
     const countriesExtranjeros = await this.countryService.getExtranjeros();
     this.listaPaisesExtranjeros.set(countriesExtranjeros);
@@ -162,24 +173,24 @@ export class OpePuertoCreateEdit implements OnInit {
     this.territories.set(territories);
 
     await this.loadCommunities();
-
-    //this.onSubmit();
   }
 
+  /*
   ngOnChanges(changes: SimpleChanges): void {
     if ('refreshFilterForm' in changes) {
       //this.onSubmit();
       alert('aa');
     }
   }
+  */
 
   async onSubmit() {
+    alert(this.formData);
     if (this.formData.valid) {
       this.spinner.show();
       const data = this.formData.value;
 
       //const municipio = this.municipalities().find((item) => item.id === data.municipality);
-
       if (this.data.opePuerto?.id) {
         data.id = this.data.opePuerto.id;
         await this.opePuertosService
@@ -242,7 +253,7 @@ export class OpePuertoCreateEdit implements OnInit {
     this.formData.patchValue({
       country: event.value == 1 ? COUNTRIES_ID.SPAIN : '',
       autonomousCommunity: '',
-      province: '',
+      provincia: '',
       municipality: '',
     });
     this.loadCommunities(event.value == 1 ? COUNTRIES_ID.SPAIN : '9999');

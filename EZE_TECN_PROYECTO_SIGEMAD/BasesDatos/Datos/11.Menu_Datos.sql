@@ -40,7 +40,7 @@ INSERT INTO dbo.Menu (Id, Nombre, Tipo, IdGrupo, NumOrden, Ruta, Icono, ColorRgb
 (37, 'Embarques. Funcionalidades', 'item', 35, 2, '/ope-nuevo-embarques-funcionalidades', '', ''),
 (38, 'Asistencias', 'item', 35, 3, '/ope-nuevo-asistencias', '', ''),
 (39, 'Asistencias. Funcionalidades', 'item', 35, 4, '/ope-nuevo-asistencias-funcionalidades', '', ''),
-(40, 'Fronteras', 'item', 35, 5, '/ope-nuevo-fronteras', '', ''),
+(40, 'Fronteras', 'item', 35, 5, '/ope-nuevo-datos-fronteras', '', ''),
 (41, 'Fronteras. Funcionalidades', 'item', 35, 6, '/ope-nuevo-fronteras-funcionalidades', '', ''),
 (42, 'Afluencia a puntos de control en carreteras', 'item', 35, 7, '/ope-nuevo-afluencia-puntos-control-carreteras', '', ''),
 (43, 'Afluencia a puntos de control en carreteras. Funcionalidades', 'item', 35, 8, '/ope-nuevo-afluencia-puntos-control-carreteras-funcionalidades', '', ''),

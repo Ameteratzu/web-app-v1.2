@@ -6,39 +6,61 @@
       <td mat-cell *matCellDef="let opeAreaDescanso">{{ opeAreaDescanso.nombre }}</td>
     </ng-container>
 
-    <!-- Fecha inicio fase salida Column -->
-    <ng-container matColumnDef="fechaInicioFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase salida</th>
-      <td mat-cell *matCellDef="let opeAreaDescanso">{{ getFechaFormateada(opeAreaDescanso.fechaInicioFaseSalida) }}</td>
+    <!-- Tipo de área de descanso -->
+    <ng-container matColumnDef="opeAreaDescansoTipo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de área de descanso</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">
+        {{ opeAreaDescanso.opeAreaDescansoTipo.nombre }}
+      </td>
     </ng-container>
 
-    <!-- Fecha fin fase salida Column -->
-    <ng-container matColumnDef="fechaFinFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase salida</th>
-      <td mat-cell *matCellDef="let opeAreaDescanso">{{ getFechaFormateada(opeAreaDescanso.fechaFinFaseSalida) }}</td>
+    <!-- CCAA -->
+    <ng-container matColumnDef="CCAA">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>CCAA</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">
+        {{ opeAreaDescanso.ccaa.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Fecha inicio fase retorno Column -->
-    <ng-container matColumnDef="fechaInicioFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase retorno</th>
-      <td mat-cell *matCellDef="let opeAreaDescanso">{{ getFechaFormateada(opeAreaDescanso.fechaInicioFaseRetorno) }}</td>
+    <!-- Provincia -->
+    <ng-container matColumnDef="provincia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">
+        {{ opeAreaDescanso.provincia.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Fecha fin fase retorno Column -->
-    <ng-container matColumnDef="fechaFinFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase retorno</th>
-      <td mat-cell *matCellDef="let opeAreaDescanso">{{ getFechaFormateada(opeAreaDescanso.fechaFinFaseRetorno) }}</td>
+    <!-- Municipio -->
+    <ng-container matColumnDef="municipio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipio</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">
+        {{ opeAreaDescanso.municipio.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Opciones Column -->
+    <!-- Capacidad -->
+    <ng-container matColumnDef="capacidad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Capacidad</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">{{ opeAreaDescanso.capacidad }}</td>
+    </ng-container>
+
+    <!-- Estado de ocupación -->
+    <ng-container matColumnDef="opeEstadoOcupacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado de ocupación</th>
+      <td mat-cell *matCellDef="let opeAreaDescanso">
+        {{ opeAreaDescanso.opeEstadoOcupacion.nombre }}
+      </td>
+    </ng-container>
+
+    <!-- Opciones -->
     <ng-container matColumnDef="opciones">
       <th mat-header-cell *matHeaderCellDef>Opciones</th>
       <td mat-cell *matCellDef="let opeAreaDescanso" class="text-center">
         <a (click)="goModalEdit(opeAreaDescanso)">
-          <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de areaDescanso" />
+          <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de área de descanso" />
         </a>
         <a (click)="deleteOpeAreaDescanso(opeAreaDescanso.id)">
-          <img src="/assets/img/delete-btn.svg" alt="Borrar" appTooltip="Borrar areaDescanso" />
+          <img src="/assets/img/delete-btn.svg" alt="Borrar" appTooltip="Borrar área de descanso" />
         </a>
       </td>
     </ng-container>

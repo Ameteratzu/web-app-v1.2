@@ -20,8 +20,7 @@
             {{ option.nombre }}
           </mat-option>
         </mat-select>
-
-        <mat-error *ngIf="formData.get('municipality')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('opePeriodoTipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">

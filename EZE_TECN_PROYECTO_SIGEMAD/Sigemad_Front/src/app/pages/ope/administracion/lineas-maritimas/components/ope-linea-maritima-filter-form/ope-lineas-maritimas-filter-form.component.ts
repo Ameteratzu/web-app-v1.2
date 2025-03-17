@@ -117,6 +117,10 @@ export class OpeLineaMaritimaFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.opeLineasMaritimasChange.emit({
       count: 0,
       page: 1,

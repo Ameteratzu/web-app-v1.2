@@ -34,6 +34,10 @@ import { AutonomousCommunityService } from '@services/autonomous-community.servi
 import { Territory } from '@type/territory.type';
 import { AutonomousCommunity } from '@type/autonomous-community.type';
 import { COUNTRIES_ID } from '@type/constants';
+import { OpeAreaDescansoTipo } from '@type/ope/administracion/ope-area-descanso-tipo';
+import { OpeAreasDescansoTiposService } from '@services/ope/administracion/ope-areas-descanso-tipos.service';
+import { OpeEstadoOcupacion } from '@type/ope/administracion/ope-estado-ocupacion.type';
+import { OpeEstadosOcupacionService } from '@services/ope/administracion/ope-estados-ocupacion.service';
 
 @Component({
   selector: 'ope-area-descanso-create-edit',
@@ -78,6 +82,9 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
     private provinceService: ProvinceService,
     private municipioService: MunicipalityService,
 
+    private opeAreasDescansoTiposService: OpeAreasDescansoTiposService,
+    private opeEstadosOcupacionService: OpeEstadosOcupacionService,
+
     @Inject(MAT_DIALOG_DATA) public data: { opeAreaDescanso: any }
   ) {}
 
@@ -90,6 +97,9 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
 
   public listaPaisesExtranjeros = signal<Countries[]>([]);
   public listaPaisesNacionales = signal<Countries[]>([]);
+
+  public opeAreasDescansoTipos = signal<OpeAreaDescansoTipo[]>([]);
+  public opeEstadosOcupacion = signal<OpeEstadoOcupacion[]>([]);
 
   public formData!: FormGroup;
 
@@ -104,10 +114,10 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
 
   async ngOnInit() {
     this.formData = new FormGroup({
-      tipo: new FormControl('', Validators.required),
       nombre: new FormControl('', Validators.required),
+      opeAreaDescansoTipo: new FormControl('', Validators.required),
       autonomousCommunity: new FormControl(''),
-      CCAA: new FormControl(''),
+      //CCAA: new FormControl(''),
       province: new FormControl(''),
       provincia: new FormControl(''),
       municipality: new FormControl('', Validators.required),
@@ -115,7 +125,7 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
       coordenadaUTM_X: new FormControl('', Validators.required),
       coordenadaUTM_Y: new FormControl('', Validators.required),
       capacidad: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
-      estadoOcupacion: new FormControl('', Validators.required),
+      opeEstadoOcupacion: new FormControl('', Validators.required),
     });
 
     if (!this.data.opeAreaDescanso?.id) {
@@ -125,43 +135,32 @@ export class OpeAreaDescansoCreateEdit implements OnInit {
 
     if (this.data.opeAreaDescanso?.id) {
       //this.loadMunicipalities({ value: this.data.opeAreaDescanso.idProvincia });
+      this.loadProvinces({ value: this.data.opeAreaDescanso.idCcaa });
+      this.loadMunicipios({ value: this.data.opeAreaDescanso.idProvincia });
       this.formData.patchValue({
         id: this.data.opeAreaDescanso.id,
-        tipo: this.data.opeAreaDescanso.nombre,
         nombre: this.data.opeAreaDescanso.nombre,
+        opeAreaDescansoTipo: this.data.opeAreaDescanso.idOpeAreaDescansoTipo,
         autonomousCommunity: this.data.opeAreaDescanso.idCcaa,
-        province: this.data.opeAreaDescanso.idProvincia,
+        provincia: this.data.opeAreaDescanso.idProvincia,
         municipality: this.data.opeAreaDescanso.idMunicipio,
         carreteraPK: this.data.opeAreaDescanso.carreteraPK,
         coordenadaUTM_X: this.data.opeAreaDescanso.coordenadaUTM_X,
         coordenadaUTM_Y: this.data.opeAreaDescanso.coordenadaUTM_Y,
         capacidad: this.data.opeAreaDescanso.capacidad,
-        estadoOcupacion: this.data.opeAreaDescanso.estadoOcupacion,
+        opeEstadoOcupacion: this.data.opeAreaDescanso.idOpeEstadoOcupacion,
       });
     }
 
-    /*
-    const countriesExtranjeros = await this.countryService.getExtranjeros();
-    this.listaPaisesExtranjeros.set(countriesExtranjeros);
-    const countriesNacionales = await this.countryService.getNacionales();
-    this.listaPaisesNacionales.set(countriesNacionales);
+    const opeAreasDescansoTipos = await this.opeAreasDescansoTiposService.get();
+    this.opeAreasDescansoTipos.set(opeAreasDescansoTipos);
 
-    this.filteredCountries.set(countriesNacionales);
-
-    const territories = await this.territoryService.get();
-    this.territories.set(territories);
-    */
+    const opeEstadosOcupacion = await this.opeEstadosOcupacionService.get();
+    this.opeEstadosOcupacion.set(opeEstadosOcupacion);
 
     await this.loadCommunities();
 
     //this.onSubmit();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('refreshFilterForm' in changes) {
-      //this.onSubmit();
-      alert('aa');
-    }
   }
 
   async onSubmit() {

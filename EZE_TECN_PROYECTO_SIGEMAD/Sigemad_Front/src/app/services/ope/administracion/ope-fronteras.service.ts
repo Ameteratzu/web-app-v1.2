@@ -33,10 +33,14 @@ export class OpeFronterasService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      carreteraPK: data.carreteraPK,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      transitoMedioVehiculos: data.transitoMedioVehiculos,
+      transitoAltoVehiculos: data.transitoAltoVehiculos,
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,10 +58,14 @@ export class OpeFronterasService {
     const body = {
       id: data.id,
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      carreteraPK: data.carreteraPK,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      transitoMedioVehiculos: data.transitoMedioVehiculos,
+      transitoAltoVehiculos: data.transitoAltoVehiculos,
     };
 
     return firstValueFrom(
