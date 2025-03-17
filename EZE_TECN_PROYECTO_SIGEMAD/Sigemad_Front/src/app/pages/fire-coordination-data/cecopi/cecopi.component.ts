@@ -74,7 +74,7 @@ export class CecopiComponent {
 
   data = inject(MAT_DIALOG_DATA) as { title: string; idIncendio: number };
 
-  public polygon = signal<any>([]);
+  public geometry = signal<any>([]);
 
   public direcionesServices = inject(DireccionesService);
   public coordinationServices = inject(CoordinationAddressService);
@@ -121,7 +121,7 @@ export class CecopiComponent {
       console.log('Información recibida en el hijo:', this.editData);
       if (this.coordinationServices.dataCecopi().length === 0) {
         this.coordinationServices.dataCecopi.set(this.editData);
-        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
+        this.geometry.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
@@ -132,8 +132,8 @@ export class CecopiComponent {
       const data = this.formDataCecopi.value;
       if (this.isCreate() == -1) {
         data.geoPosicion = {
-          type: 'Polygon',
-          coordinates: [this.polygon()],
+          type: 'Geometry',
+          coordinates: [this.geometry()],
         };
         this.coordinationServices.dataCecopi.set([data, ...this.coordinationServices.dataCecopi()]);
       } else {
@@ -169,7 +169,7 @@ export class CecopiComponent {
   }
 
   onChangeMunicipio(event: any) {
-    this.polygon.set([]);
+    this.geometry.set([]);
   }
 
   openModalMap() {
@@ -190,12 +190,12 @@ export class CecopiComponent {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultPolygon: this.polygon(),
+        defaultGeometry: this.geometry(),
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      this.polygon.set(features);
+      this.geometry.set(features);
     });
   }
 
@@ -233,7 +233,7 @@ export class CecopiComponent {
       municipio: municipioSeleccionado(),
     });
 
-    this.polygon.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
+    this.geometry.set(this.coordinationServices.dataCecopi()[index]?.geoPosicion?.coordinates[0]);
 
     const selectedItem = this.coordinationServices.dataCecopi()[index];
 

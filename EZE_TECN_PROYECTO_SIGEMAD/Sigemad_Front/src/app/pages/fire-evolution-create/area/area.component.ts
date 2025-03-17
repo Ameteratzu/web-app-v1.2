@@ -90,7 +90,7 @@ export class AreaComponent {
   private municipalityService = inject(MunicipalityService);
   private minorService = inject(MinorEntityService);
   private cdr = inject(ChangeDetectorRef);
-  public polygon = signal<any>([]);
+  public geometry = signal<any>([]);
 
   public displayedColumns: string[] = ['fechaHora', 'procendenciaDestino', 'descripcion', 'fichero', 'opciones'];
 
@@ -106,7 +106,7 @@ export class AreaComponent {
   selectedMunicipio: any;
   listaMunicipios: any;
   onlyView: any = null;
-  defaultPolygon: any;
+  defaultGeometry: any;
   index = 0;
 
   file: File | null = null;
@@ -148,7 +148,7 @@ export class AreaComponent {
       if (this.evolutionService.dataAffectedArea().length === 0) {
         this.evolutionService.dataAffectedArea.set(this.editData.areaAfectadas);
         if (this.editData.areaAfectadas.length > 0) {
-          this.polygon.set(this.editData.areaAfectadas[0].geoPosicion?.coordinates[0]);
+          this.geometry.set(this.editData.areaAfectadas[0].geoPosicion?.coordinates[0]);
         }
       }
     }
@@ -156,7 +156,7 @@ export class AreaComponent {
     this.selectedMunicipio = this.municipalities().find((item) => item.id == this.formData.value.municipio);
     this.listaMunicipios = this.municipalities();
     this.onlyView = true;
-    (this.defaultPolygon = this.polygon()), this.spinner.hide();
+    (this.defaultGeometry = this.geometry()), this.spinner.hide();
   }
 
   async loadMunicipalities(event: any) {
@@ -182,8 +182,8 @@ export class AreaComponent {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
         data.geoPosicion = {
-          type: 'Polygon',
-          coordinates: [this.polygon()],
+          type: 'Geometry',
+          coordinates: [this.geometry()],
         };
         this.evolutionService.dataAffectedArea.set([data, ...this.evolutionService.dataAffectedArea()]);
       } else {
@@ -252,8 +252,8 @@ export class AreaComponent {
     }
     this.formData.get('fechaHora')?.setValue(data.fechaHora);
     this.formData.get('observaciones')?.setValue(data.observaciones);
-    this.polygon.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
-    this.defaultPolygon = this.polygon();
+    this.geometry.set(this.evolutionService.dataAffectedArea()[index]?.geoPosicion?.coordinates[0]);
+    this.defaultGeometry = this.geometry();
 
     if (data.id) {
       this.formData.get('provincia')?.setValue(data.provincia.id);
@@ -313,7 +313,7 @@ export class AreaComponent {
 
   onChangeMunicipio(event: any) {
     this.selectedMunicipio = this.listaMunicipios.find((item: any) => item.id == event.value);
-    this.polygon.set([]);
+    this.geometry.set([]);
   }
 
   isInteger(value: any): boolean {
@@ -321,11 +321,11 @@ export class AreaComponent {
   }
 
   onSave(features: Feature<Geometry>[]) {
-    this.polygon.set(features);
+    this.geometry.set(features);
     if (this.index != -1) {
       const geoPosicion = {
-        type: 'Polygon',
-        coordinates: [this.polygon()],
+        type: 'Geometry',
+        coordinates: [this.geometry()],
       };
       this.editData.areaAfectadas[this.index].geoPosicion = geoPosicion;
     }

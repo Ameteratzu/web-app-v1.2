@@ -348,7 +348,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-  
+
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
       // PCD
       Incendio: this.goModalDocumentation.bind(this),
@@ -470,7 +470,7 @@ export class FireEditComponent implements OnInit {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultPolygon: this.fire.geoPosicion.coordinates[0],
+        defaultGeometry: this.fire.geoPosicion.coordinates[0],
         onlyView: true,
       },
     });

@@ -21,7 +21,6 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import { Geometry, Polygon } from 'ol/geom';
-import WKT from 'ol/format/WKT';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
@@ -56,7 +55,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
-  @Input() polygon: any;
+  @Input() geometry: any;
   @Input() close: boolean = true;
   @Input() fileContent: string | null = null;
 
@@ -68,10 +67,10 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   public drawPoint!: Draw;
   public drawPolygon!: Draw;
   public snap!: Snap;
-  public layerAreasAfectadas!: VectorLayer;
+  public layerEdition!: VectorLayer;
   public coords: any;
   public select!: Select;
-  public layerMunicipio!: VectorLayer<VectorSource<Feature<Point>>>;
+  //public layerCentroideMunicipio!: VectorLayer<VectorSource<Feature<Point>>>;
   public layerLimitesMunicipio: any;
   public highLightMunicipio!: VectorLayer<VectorSource<Feature<Polygon>>>;
   public length!: number;
@@ -91,22 +90,36 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   public municipalities = signal<Municipality[]>([]);
   public municipioSelected = signal(this.data?.municipio || {});
 
+  private styleEdicion = new Style({
+    // Estilo para puntos
+    image: new Icon({
+      anchor: [1, 1],
+      src: '/assets/img/centroide.png',
+      scale: 0.07,
+    }),
+    // Estilo para polígonos
+    stroke: new Stroke({
+      color: 'rgb(255, 128, 0)',
+      width: 5,
+    })
+  });
+
   async ngOnInit() {
-    const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
+    const { municipio, listaMunicipios, defaultGeometry, onlyView } = this.data;
 
     if (municipio != null) this.municipio = municipio;
 
-    if (defaultPolygon == null && this.polygon == null) {
-      this.polygon = [];
+    if (defaultGeometry == null && this.geometry == null) {
+      this.geometry = [];
     }
 
-    if (defaultPolygon != null) {
-      this.polygon = defaultPolygon;
+    if (defaultGeometry != null) {
+      this.geometry = defaultGeometry;
     }
 
     if (onlyView != null) this.onlyView = onlyView;
 
-    this.configureMap(this.municipio, this.polygon, this.onlyView);
+    this.configureMap(this.municipio, this.geometry, this.onlyView);
     this.highlightSelectedMunicipio(this.municipio.descripcion);
   }
 
@@ -136,14 +149,14 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
   private updateMapWithPolygon(newPolygon: any) {
     if (newPolygon) {
-      this.layerAreasAfectadas.getSource()?.clear();
+      this.layerEdition.getSource()?.clear();
 
       if (newPolygon) {
-        const defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
+        const defaultGeometryMercator = newPolygon.map((coord: any) => fromLonLat(coord));
         const polygonFeature = new Feature({
-          geometry: new Polygon([defaultPolygonMercator]),
+          geometry: new Polygon([defaultGeometryMercator]),
         });
-        this.layerAreasAfectadas.getSource()?.addFeature(polygonFeature);
+        this.layerEdition.getSource()?.addFeature(polygonFeature);
       }
     }
   }
@@ -156,7 +169,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
+  configureMap(municipio: any, defaultGeometry: any = null, onlyView: any = null) {
     if (!municipio) {
       return;
     }
@@ -165,7 +178,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     const layersGroupAdmin = this.getAdminLayers();
 
-    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon);
+    const layersGroupIncendio = this.getFireLayers(municipio, defaultGeometry);
 
     // Crear el popup
     const container = document.getElementById('popup');
@@ -367,45 +380,45 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     return wmsLayersGroup;
   }
 
-  getFireLayers(municipio: any, defaultPolygon: any) {
-    let defaultPolygonMercator;
+  getFireLayers(municipio: any, defaultGeometry: any) {
+    let defaultGeometryMercator;
 
-    if (defaultPolygon) {
-      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
+    if (defaultGeometry) {
+      defaultGeometryMercator = defaultGeometry.map((coord: any) => fromLonLat(coord));
     }
     this.source = new VectorSource();
 
-    this.layerAreasAfectadas = new VectorLayer({
+    this.layerEdition = new VectorLayer({
       source: this.source,
-      style: {
-        'stroke-color': 'rgb(255, 128, 0)',
-        'stroke-width': 5,
-      },
-      properties: { title: 'Área afectada' },
+      style: this.styleEdicion,
+      properties: { title: 'Areas afectadas' },
     });
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
-
     const pointFeature = new Feature({
       geometry: point,
     });
 
-    if (defaultPolygon) {
+    if (defaultGeometry) {
       const polygonFeature = new Feature({
-        geometry: new Polygon([defaultPolygonMercator]),
+        geometry: new Polygon([defaultGeometryMercator]),
       });
-
       this.source.addFeature(polygonFeature);
     }
 
-    this.layerMunicipio = new VectorLayer({
+    if (this.source.getFeatures().length > 0) {
+      this.source.addFeature(pointFeature);
+    }
+
+    /*
+    this.layerCentroideMunicipio = new VectorLayer({
       source: new VectorSource({
         features: [pointFeature],
       }),
       properties: { title: 'Municipio' },
     });
 
-    this.layerMunicipio.setStyle(
+    this.layerCentroideMunicipio.setStyle(
       new Style({
         image: new Icon({
           anchor: [1, 1],
@@ -414,6 +427,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
         }),
       })
     );
+    */
 
     this.highLightMunicipio = new VectorLayer({
       source: new VectorSource({
@@ -424,8 +438,8 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     return new LayerGroup({
       properties: { title: 'Incendios', openInLayerSwitcher: true },
-      // layers: [this.layerMunicipio, this.layerAreasAfectadas, this.highLightMunicipio],
-      layers: [this.highLightMunicipio, this.layerAreasAfectadas],
+      // layers: [this.layerCentroideMunicipio, this.layerEdicion, this.highLightMunicipio],
+      layers: [this.highLightMunicipio, this.layerEdition],
     });
   }
 
@@ -490,19 +504,26 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       html: '<img src="/assets/img/location-dot-solid.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       interaction: this.drawPoint,
     });
+    tgPoint.setActive(true);
 
-    this.drawPoint.on('drawend', (e) => {
-      let format = new WKT();
-      let wkt = format.writeFeature(e.feature, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857',
-      });
+    this.drawPoint.on('drawstart', () => {
+      this.source.clear();
     });
 
-    //drawBar.addControl(tgPoint);
+    this.drawPoint.on('drawend', (drawEvent: DrawEvent) => {
+      const geometry = drawEvent.feature.getGeometry();
+      if (geometry instanceof Point) {
+        const coord = geometry.getCoordinates();
+        this.coords = toLonLat(coord);
+        this.save.emit(this.coords);
+      }
+    });
 
+    drawBar.addControl(tgPoint);
+
+    /*
     this.drawPolygon = new Draw({
-      type: 'Polygon',
+      type: 'Geometry',
       source: this.source,
     });
 
@@ -534,6 +555,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     });
 
     drawBar.addControl(tgPolygon);
+    */
 
     const tgSelect = new Toggle({
       html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
@@ -559,10 +581,6 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     this.select = new Select();
     this.map.addInteraction(this.select);
-
-    // this.map.addInteraction(this.drawPolygon);
-    // this.snap = new Snap({ source: this.source });
-    // this.map.addInteraction(this.snap);
   }
 
   savePolygon() {
