@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Specifications.Impactos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -15,15 +14,16 @@ public class GetGruposImpactosListQueryHandler : IRequestHandler<GetGruposImpact
 
     public async Task<IReadOnlyList<string>> Handle(GetGruposImpactosListQuery request, CancellationToken cancellationToken)
     {
-        var spec = new GruposImpactosSpecification(request.Tipo);
-        IReadOnlyList<ImpactoClasificado> gruposImpactos = await _unitOfWork.Repository<ImpactoClasificado>()
-            .GetAllWithSpec(spec) ?? new List<ImpactoClasificado>();
 
-        var gruposImpactosList = gruposImpactos
-            .Select(t => t.GrupoImpacto)
-            .Distinct()
-            .ToList();
 
-        return gruposImpactosList.AsReadOnly();
+        if (string.IsNullOrEmpty(request.Tipo))
+        {
+            return new List<string>();
+        }
+
+        IReadOnlyList<string> grupos = await _unitOfWork.Repository<ImpactoClasificado>()
+            .GetAsync(selector: t => t.GrupoImpacto, distinct: true, disableTracking: true);
+
+        return grupos;
     }
 }
