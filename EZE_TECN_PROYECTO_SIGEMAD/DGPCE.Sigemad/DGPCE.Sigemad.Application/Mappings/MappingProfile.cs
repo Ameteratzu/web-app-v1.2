@@ -56,9 +56,24 @@ using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
-using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Commands.CreateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Commands.UpdateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.OpePeriodos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.CreateOpeAreasDescanso;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.CreateOpeFronteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.UpdateOpeFronteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.CreateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.UpdateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.CreateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.UpdateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
@@ -76,7 +91,7 @@ using DGPCE.Sigemad.Application.Specifications.Incendios;
 using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
-using DGPCE.Sigemad.Domain.Modelos.Ope;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
 namespace DGPCE.Sigemad.Application.Mappings;
 
@@ -484,6 +499,26 @@ public class MappingProfile : Profile
         CreateMap<OpePeriodo, OpePeriodoVm>();
         CreateMap<CreateOpePeriodoCommand, OpePeriodo>();
         CreateMap<UpdateOpePeriodoCommand, OpePeriodo>();
+
+        CreateMap<OpePuerto, OpePuertoVm>();
+        CreateMap<CreateOpePuertoCommand, OpePuerto>();
+        CreateMap<UpdateOpePuertoCommand, OpePuerto>();
+
+        CreateMap<OpeLineaMaritima, OpeLineaMaritimaVm>();
+        CreateMap<CreateOpeLineaMaritimaCommand, OpeLineaMaritima>();
+        CreateMap<UpdateOpeLineaMaritimaCommand, OpeLineaMaritima>();
+
+        CreateMap<OpeFrontera, OpeFronteraVm>();
+        CreateMap<CreateOpeFronteraCommand, OpeFrontera>();
+        CreateMap<UpdateOpeFronteraCommand, OpeFrontera>();
+
+        CreateMap<OpeAreaDescanso, OpeAreaDescansoVm>();
+        CreateMap<CreateOpeAreaDescansoCommand, OpeAreaDescanso>();
+        CreateMap<UpdateOpeAreaDescansoCommand, OpeAreaDescanso>();
+
+        CreateMap<OpePuntoControlCarretera, OpePuntoControlCarreteraVm>();
+        CreateMap<CreateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
+        CreateMap<UpdateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
         // FIN PCD
 
     }

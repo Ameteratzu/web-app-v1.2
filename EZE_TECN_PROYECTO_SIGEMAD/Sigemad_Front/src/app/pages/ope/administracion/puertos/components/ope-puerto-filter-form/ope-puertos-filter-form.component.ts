@@ -117,6 +117,10 @@ export class OpePuertoFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.opePuertosChange.emit({
       count: 0,
       page: 1,

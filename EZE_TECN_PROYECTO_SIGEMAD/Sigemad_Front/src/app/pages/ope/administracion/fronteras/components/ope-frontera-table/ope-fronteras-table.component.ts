@@ -42,14 +42,7 @@ export class OpeFronterasTableComponent implements OnChanges {
   public opeFronterasService = inject(OpeFronterasService);
   public routenav = inject(Router);
 
-  public displayedColumns: string[] = [
-    'nombre',
-    'fechaInicioFaseSalida',
-    'fechaFinFaseSalida',
-    'fechaInicioFaseRetorno',
-    'fechaFinFaseRetorno',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['nombre', 'CCAA', 'provincia', 'municipio', 'transitoMedioVehiculos', 'transitoAltoVehiculos', 'opciones'];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['opeFronteras'] && this.opeFronteras) {

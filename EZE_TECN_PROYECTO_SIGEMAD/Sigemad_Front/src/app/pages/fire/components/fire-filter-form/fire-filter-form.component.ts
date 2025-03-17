@@ -290,6 +290,10 @@ export class FireFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.firesChange.emit({
       count: 0,
       page: 1,

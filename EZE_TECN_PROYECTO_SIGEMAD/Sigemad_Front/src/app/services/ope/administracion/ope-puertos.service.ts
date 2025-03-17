@@ -33,10 +33,16 @@ export class OpePuertosService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpeFase: data.opeFase,
+      idPais: data.country,
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      fechaValidezDesde: this.datepipe.transform(data.fechaValidezDesde, 'yyyy-MM-dd HH:mm:ss'),
+      fechaValidezHasta: this.datepipe.transform(data.fechaValidezHasta, 'yyyy-MM-dd HH:mm:ss'),
+      capacidad: data.capacidad,
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,10 +60,16 @@ export class OpePuertosService {
     const body = {
       id: data.id,
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpeFase: data.opeFase,
+      idPais: data.country,
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      fechaValidezDesde: this.datepipe.transform(data.fechaValidezDesde, 'yyyy-MM-dd HH:mm:ss'),
+      fechaValidezHasta: this.datepipe.transform(data.fechaValidezHasta, 'yyyy-MM-dd HH:mm:ss'),
+      capacidad: data.capacidad,
     };
 
     return firstValueFrom(

@@ -117,6 +117,10 @@ export class OpePeriodoFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.opePeriodosChange.emit({
       count: 0,
       page: 1,
