@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpePuntoControlCarretera } from '../../../../../../types/ope/administracion/ope-punto-control-carretera.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -14,6 +13,7 @@ import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { OpePuntosControlCarreterasService } from '@services/ope/administracion/ope-puntos-control-carreteras.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OpePuntoControlCarretera } from '@type/ope/administracion/ope-punto-control-carretera.type';
 
 @Component({
   selector: 'app-ope-puntos-control-carreteras-table',
@@ -42,14 +42,7 @@ export class OpePuntosControlCarreterasTableComponent implements OnChanges {
   public opePuntosControlCarreterasService = inject(OpePuntosControlCarreterasService);
   public routenav = inject(Router);
 
-  public displayedColumns: string[] = [
-    'nombre',
-    'fechaInicioFaseSalida',
-    'fechaFinFaseSalida',
-    'fechaInicioFaseRetorno',
-    'fechaFinFaseRetorno',
-    'opciones',
-  ];
+  public displayedColumns: string[] = ['nombre', 'CCAA', 'provincia', 'municipio', 'transitoMedioVehiculos', 'transitoAltoVehiculos', 'opciones'];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['opePuntosControlCarreteras'] && this.opePuntosControlCarreteras) {
@@ -138,8 +131,8 @@ export class OpePuntosControlCarreterasTableComponent implements OnChanges {
               })
               .afterDismissed()
               .subscribe(() => {
-                this.routenav.navigate(['/ope-administracion-puntosControlCarreteras']).then(() => {
-                  window.location.href = '/ope-administracion-puntosControlCarreteras';
+                this.routenav.navigate(['/ope-administracion-puntoControlCarreteras']).then(() => {
+                  window.location.href = '/ope-administracion-puntoControlCarreteras';
                 });
                 this.spinner.hide();
               });

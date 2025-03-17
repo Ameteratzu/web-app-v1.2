@@ -44,10 +44,11 @@ export class OpeLineasMaritimasTableComponent implements OnChanges {
 
   public displayedColumns: string[] = [
     'nombre',
-    'fechaInicioFaseSalida',
-    'fechaFinFaseSalida',
-    'fechaInicioFaseRetorno',
-    'fechaFinFaseRetorno',
+    'opePuertoOrigen',
+    'opePuertoDestino',
+    'opeFase',
+    'fechaValidezDesde',
+    'fechaValidezHasta',
     'opciones',
   ];
 
@@ -74,7 +75,7 @@ export class OpeLineasMaritimasTableComponent implements OnChanges {
       height: '90vh',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - LineaMaritima',
+        title: 'Nuevo - Linea Maritima',
       },
     });
 
@@ -94,7 +95,7 @@ export class OpeLineasMaritimasTableComponent implements OnChanges {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Modificar - LineaMaritima.',
+        title: 'Modificar - Linea Maritima.',
         opeLineaMaritima: opeLineaMaritima,
       },
     });

@@ -9,7 +9,7 @@ import { OpeLineaMaritima } from '../../../types/ope/administracion/ope-linea-ma
 export class OpeLineasMaritimasService {
   public http = inject(HttpClient);
   public datepipe = inject(DatePipe);
-  public endpoint = '/ope-lineasMaritimas';
+  public endpoint = '/ope-lineas-maritimas';
 
   generateUrlWitchParams({ url, params }: any) {
     return Object.keys(params).reduce((prev: any, key: any, index: any) => {
@@ -21,7 +21,7 @@ export class OpeLineasMaritimasService {
   }
 
   get(query: any = '') {
-    const URLBASE = '/ope-lineasMaritimas?Sort=desc&PageSize=15';
+    const URLBASE = '/ope-lineas-maritimas?Sort=desc&PageSize=15';
 
     const endpoint = this.generateUrlWitchParams({
       url: URLBASE,
@@ -33,10 +33,17 @@ export class OpeLineasMaritimasService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpePuertoOrigen: data.opePuertoOrigen,
+      idOpePuertoDestino: data.opePuertoDestino,
+      idOpeFase: data.opeFase,
+      fechaValidezDesde: this.datepipe.transform(data.fechaValidezDesde, 'yyyy-MM-dd HH:mm:ss'),
+      fechaValidezHasta: this.datepipe.transform(data.fechaValidezHasta, 'yyyy-MM-dd HH:mm:ss'),
+      numeroRotaciones: data.numeroRotaciones,
+      numeroPasajeros: data.numeroPasajeros,
+      numeroTurismos: data.numeroTurismos,
+      numeroAutocares: data.numeroAutocares,
+      numeroCamiones: data.numeroCamiones,
+      numeroTotalVehiculos: data.numeroTotalVehiculos,
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,10 +61,17 @@ export class OpeLineasMaritimasService {
     const body = {
       id: data.id,
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpePuertoOrigen: data.opePuertoOrigen,
+      idOpePuertoDestino: data.opePuertoDestino,
+      idOpeFase: data.opeFase,
+      fechaValidezDesde: this.datepipe.transform(data.fechaValidezDesde, 'yyyy-MM-dd HH:mm:ss'),
+      fechaValidezHasta: this.datepipe.transform(data.fechaValidezHasta, 'yyyy-MM-dd HH:mm:ss'),
+      numeroRotaciones: data.numeroRotaciones,
+      numeroPasajeros: data.numeroPasajeros,
+      numeroTurismos: data.numeroTurismos,
+      numeroAutocares: data.numeroAutocares,
+      numeroCamiones: data.numeroCamiones,
+      numeroTotalVehiculos: data.numeroTotalVehiculos,
     };
 
     return firstValueFrom(
@@ -73,7 +87,7 @@ export class OpeLineasMaritimasService {
   }
 
   delete(id: number) {
-    const endpoint = `/ope-lineasMaritimas/${id}`;
+    const endpoint = `/ope-lineas-maritimas/${id}`;
 
     return firstValueFrom(this.http.delete(endpoint).pipe((response) => response));
   }

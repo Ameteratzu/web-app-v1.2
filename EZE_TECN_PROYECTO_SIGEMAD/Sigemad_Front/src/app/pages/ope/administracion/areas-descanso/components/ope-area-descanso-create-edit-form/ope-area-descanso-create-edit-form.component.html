@@ -5,21 +5,22 @@
 <form [formGroup]="formData" (ngSubmit)="onSubmit()">
   <mat-dialog-content>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
-      <!-- Tipo -->
-      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
-        <mat-label>Tipo</mat-label>
-        <mat-select [formControl]="getForm('tipo')">
-          <mat-option [value]="'Área de descanso'">Área de descanso</mat-option>
-          <mat-option [value]="'Punto de información'">Punto de información</mat-option>
-        </mat-select>
-        <mat-error *ngIf="formData.get('tipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
-      </mat-form-field>
-
       <!-- Nombre -->
       <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre del area de descanso" formControlName="nombre" />
         <mat-error *ngIf="formData.get('nombre')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
+      <!-- Tipo de área de descanso -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
+        <mat-label>Tipo de área de descanso</mat-label>
+        <mat-select [formControl]="getForm('opeAreaDescansoTipo')">
+          <mat-option *ngFor="let option of opeAreasDescansoTipos()" [value]="option.id">
+            {{ option.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('opeAreaDescansoTipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
@@ -78,16 +79,22 @@
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
+      <!-- Capacidad -->
+      <mat-form-field class="input" fxFlex="50" class="mb-3">
+        <mat-label>Capacidad</mat-label>
+        <input matInput [formControl]="getForm('capacidad')" type="number" required (keypress)="utilsService.allowOnlyNumbers($event)" min="0" />
+        <mat-error *ngIf="formData.get('capacidad')?.hasError('required')">Este campo es obligatorio.</mat-error>
+      </mat-form-field>
+
       <!-- Estado de ocupación -->
-      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Estado de ocupación</mat-label>
-        <mat-select [formControl]="getForm('estadoOcupacion')">
-          <mat-option [value]="'Baja'">Baja</mat-option>
-          <mat-option [value]="'Media'">Media</mat-option>
-          <mat-option [value]="'Alta'">Alta</mat-option>
-          <mat-option [value]="'Muy Alta'">Muy Alta</mat-option>
+        <mat-select [formControl]="getForm('opeEstadoOcupacion')">
+          <mat-option *ngFor="let option of opeEstadosOcupacion()" [value]="option.id">
+            {{ option.nombre }}
+          </mat-option>
         </mat-select>
-        <mat-error *ngIf="formData.get('tipo')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('opeEstadoOcupacion')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
   </mat-dialog-content>

@@ -12,30 +12,39 @@
         <mat-error *ngIf="formData.get('nombre')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
-      <!-- Origen -->
-      <mat-form-field appearance="fill" fxFlex="30" class="mb-3">
+      <!-- Puerto Origen -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Origen</mat-label>
-        <input matInput placeholder="Origen de la línea marítima" formControlName="origen" />
-        <mat-error *ngIf="formData.get('origen')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-select [formControl]="getForm('opePuertoOrigen')">
+          <mat-option *ngFor="let option of opePuertosOrigen()" [value]="option.id">
+            {{ option.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('opePuertoOrigen')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
-      <!-- Destino -->
-      <mat-form-field appearance="fill" fxFlex="30" class="mb-3">
+      <!-- Puerto Destino -->
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Destino</mat-label>
-        <input matInput placeholder="Destino de la línea marítima" formControlName="destino" />
-        <mat-error *ngIf="formData.get('destino')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-select [formControl]="getForm('opePuertoDestino')">
+          <mat-option *ngFor="let option of opePuertosDestino()" [value]="option.id">
+            {{ option.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formData.get('opePuertoDestino')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
     </div>
 
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start stretch" class="filter-container">
       <!-- Fase -->
-      <mat-form-field appearance="fill" fxFlex="33" class="mb-3">
+      <mat-form-field appearance="fill" fxFlex="50" class="mb-3">
         <mat-label>Fase</mat-label>
-        <mat-select [formControl]="getForm('fase')">
-          <mat-option [value]="'Salida'">Salida</mat-option>
-          <mat-option [value]="'Retorno'">Retorno</mat-option>
+        <mat-select [formControl]="getForm('opeFase')">
+          <mat-option *ngFor="let option of opeFases()" [value]="option.id">
+            {{ option.nombre }}
+          </mat-option>
         </mat-select>
-        <mat-error *ngIf="formData.get('fase')?.hasError('required')">Este campo es obligatorio.</mat-error>
+        <mat-error *ngIf="formData.get('opeFase')?.hasError('required')">Este campo es obligatorio.</mat-error>
       </mat-form-field>
 
       <!-- Fecha validez desde -->

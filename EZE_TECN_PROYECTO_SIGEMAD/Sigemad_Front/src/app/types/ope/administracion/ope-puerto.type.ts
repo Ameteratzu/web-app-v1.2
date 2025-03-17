@@ -1,9 +1,11 @@
 import { GeoPosition } from '@type/geo-position.type';
+import { OpeFase } from './ope-fase.type';
 
 export type OpePuerto = {
   id: number;
   nombre: string;
-  fase: string;
+  idOpeFase: number;
+  opeFase: OpeFase;
   idPais: number;
   idCcaa: number;
   idProvincia: number;

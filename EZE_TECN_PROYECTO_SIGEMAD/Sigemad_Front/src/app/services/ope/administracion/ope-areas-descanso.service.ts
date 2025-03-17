@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, firstValueFrom, map, throwError } from 'rxjs';
 import { ApiResponse } from '../../../types/api-response.type';
-import { OpeAreaDescanso } from '../../../types/ope/administracion/ope-area-descanso.type';
+import { OpeAreaDescanso } from '@type/ope/administracion/ope-area-descanso.type';
 
 @Injectable({ providedIn: 'root' })
 export class OpeAreasDescansoService {
@@ -33,10 +33,15 @@ export class OpeAreasDescansoService {
   post(data: any) {
     const body = {
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpeAreaDescansoTipo: data.opeAreaDescansoTipo,
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      carreteraPK: data.carreteraPK,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      capacidad: data.capacidad,
+      idOpeEstadoOcupacion: data.opeEstadoOcupacion,
     };
     return firstValueFrom(
       this.http.post(this.endpoint, body).pipe(
@@ -54,10 +59,15 @@ export class OpeAreasDescansoService {
     const body = {
       id: data.id,
       nombre: data.nombre,
-      fechaInicioFaseSalida: this.datepipe.transform(data.fechaInicioFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseSalida: this.datepipe.transform(data.fechaFinFaseSalida, 'yyyy-MM-dd HH:mm:ss'),
-      fechaInicioFaseRetorno: this.datepipe.transform(data.fechaInicioFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
-      fechaFinFaseRetorno: this.datepipe.transform(data.fechaFinFaseRetorno, 'yyyy-MM-dd HH:mm:ss'),
+      idOpeAreaDescansoTipo: data.opeAreaDescansoTipo,
+      idCcaa: data.autonomousCommunity,
+      idProvincia: data.provincia,
+      idMunicipio: data.municipality,
+      carreteraPK: data.carreteraPK,
+      coordenadaUTM_X: data.coordenadaUTM_X,
+      coordenadaUTM_Y: data.coordenadaUTM_Y,
+      capacidad: data.capacidad,
+      idOpeEstadoOcupacion: data.opeEstadoOcupacion,
     };
 
     return firstValueFrom(

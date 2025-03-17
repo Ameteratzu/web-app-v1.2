@@ -6,39 +6,51 @@
       <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ opePuntoControlCarretera.nombre }}</td>
     </ng-container>
 
-    <!-- Fecha inicio fase salida Column -->
-    <ng-container matColumnDef="fechaInicioFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase salida</th>
-      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ getFechaFormateada(opePuntoControlCarretera.fechaInicioFaseSalida) }}</td>
+    <!-- CCAA -->
+    <ng-container matColumnDef="CCAA">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>CCAA</th>
+      <td mat-cell *matCellDef="let opePuntoControlCarretera">
+        {{ opePuntoControlCarretera.ccaa.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Fecha fin fase salida Column -->
-    <ng-container matColumnDef="fechaFinFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase salida</th>
-      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ getFechaFormateada(opePuntoControlCarretera.fechaFinFaseSalida) }}</td>
+    <!-- Provincia -->
+    <ng-container matColumnDef="provincia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Provincia</th>
+      <td mat-cell *matCellDef="let opePuntoControlCarretera">
+        {{ opePuntoControlCarretera.provincia.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Fecha inicio fase retorno Column -->
-    <ng-container matColumnDef="fechaInicioFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase retorno</th>
-      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ getFechaFormateada(opePuntoControlCarretera.fechaInicioFaseRetorno) }}</td>
+    <!-- Municipio -->
+    <ng-container matColumnDef="municipio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Municipio</th>
+      <td mat-cell *matCellDef="let opePuntoControlCarretera">
+        {{ opePuntoControlCarretera.municipio.descripcion }}
+      </td>
     </ng-container>
 
-    <!-- Fecha fin fase retorno Column -->
-    <ng-container matColumnDef="fechaFinFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase retorno</th>
-      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ getFechaFormateada(opePuntoControlCarretera.fechaFinFaseRetorno) }}</td>
+    <!-- Transito Medio Vehiculos -->
+    <ng-container matColumnDef="transitoMedioVehiculos">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Transito Medio Vehiculos</th>
+      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ opePuntoControlCarretera.transitoMedioVehiculos }}</td>
     </ng-container>
 
-    <!-- Opciones Column -->
+    <!-- Transito Alto Vehiculos -->
+    <ng-container matColumnDef="transitoAltoVehiculos">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Transito Alto Vehiculos</th>
+      <td mat-cell *matCellDef="let opePuntoControlCarretera">{{ opePuntoControlCarretera.transitoAltoVehiculos }}</td>
+    </ng-container>
+
+    <!-- Opciones -->
     <ng-container matColumnDef="opciones">
       <th mat-header-cell *matHeaderCellDef>Opciones</th>
       <td mat-cell *matCellDef="let opePuntoControlCarretera" class="text-center">
         <a (click)="goModalEdit(opePuntoControlCarretera)">
-          <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de punto de control de carretera" />
+          <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de frontera" />
         </a>
         <a (click)="deleteOpePuntoControlCarretera(opePuntoControlCarretera.id)">
-          <img src="/assets/img/delete-btn.svg" alt="Borrar" appTooltip="Borrar punto de control de carretera" />
+          <img src="/assets/img/delete-btn.svg" alt="Borrar" appTooltip="Borrar frontera" />
         </a>
       </td>
     </ng-container>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, inject, OnInit, signal, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -15,31 +15,41 @@ import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-// PCD
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormFieldComponent } from '@shared/Inputs/field.component';
 import { TooltipDirective } from '@shared/directive/tooltip/tooltip.directive';
 import { AlertService } from '@shared/alert/alert.service';
+import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/administracion/local-filtro-ope-lineas-maritimas.service';
 import { OpeLineasMaritimasService } from '@services/ope/administracion/ope-lineas-maritimas.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
-import { LocalFiltrosOpeLineasMaritimas } from '@services/ope/administracion/local-filtro-ope-lineas-maritimas.service';
 import { UtilsService } from '@shared/services/utils.service';
+import { ProvinceService } from '@services/province.service';
+import { MunicipalityService } from '@services/municipality.service';
+import { CountryService } from '@services/country.service';
+import { Province } from '@type/province.type';
+import { Municipality } from '@type/municipality.type';
+import { Countries } from '@type/country.type';
+import { TerritoryService } from '@services/territory.service';
+import { AutonomousCommunityService } from '@services/autonomous-community.service';
+import { Territory } from '@type/territory.type';
+import { AutonomousCommunity } from '@type/autonomous-community.type';
+import { COUNTRIES_ID, FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { FECHA_MAXIMA_DATEPICKER, FECHA_MINIMA_DATEPICKER } from '@type/constants';
 import { FORMATO_FECHA } from '@type/date-formats';
-// FIN PCD
+import { OpeFase } from '@type/ope/administracion/ope-fase.type';
+import { OpeFasesService } from '@services/ope/administracion/ope-fases.service';
+import { OpePuerto } from '@type/ope/administracion/ope-puerto.type';
+import { OpePuertosService } from '@services/ope/administracion/ope-puertos.service';
 
 @Component({
-  selector: 'ope-lineaMaritima-create-edit',
+  selector: 'ope-linea-maritima-create-edit',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
-    FormFieldComponent,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -51,7 +61,6 @@ import { FORMATO_FECHA } from '@type/date-formats';
     MatDatepickerModule,
     MatNativeDateModule,
     NgxSpinnerModule,
-    TooltipDirective,
     DragDropModule,
   ],
   providers: [
@@ -65,6 +74,8 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
   constructor(
     private filtrosOpeLineasMaritimasService: LocalFiltrosOpeLineasMaritimas,
     private opeLineasMaritimasService: OpeLineasMaritimasService,
+    private opePuertosService: OpePuertosService,
+    private opeFasesService: OpeFasesService,
     public dialogRef: MatDialogRef<OpeLineaMaritimaCreateEdit>,
     private matDialog: MatDialog,
     public alertService: AlertService,
@@ -73,7 +84,9 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { opeLineaMaritima: any }
   ) {}
 
-  //public filtrosIncendioService = inject(LocalFiltrosIncendio);
+  public opePuertosOrigen = signal<OpePuerto[]>([]);
+  public opePuertosDestino = signal<OpePuerto[]>([]);
+  public opeFases = signal<OpeFase[]>([]);
 
   public formData!: FormGroup;
 
@@ -92,8 +105,9 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
     this.formData = new FormGroup(
       {
         nombre: new FormControl('', Validators.required),
-        origen: new FormControl('', Validators.required),
-        destino: new FormControl('', Validators.required),
+        opePuertoOrigen: new FormControl('', Validators.required),
+        opePuertoDestino: new FormControl('', Validators.required),
+        opeFase: new FormControl('', Validators.required),
         fechaValidezDesde: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         fechaValidezHasta: new FormControl(new Date(), [Validators.required, FechaValidator.validarFecha]),
         numeroRotaciones: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
@@ -109,13 +123,17 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
     );
 
     if (this.data.opeLineaMaritima?.id) {
+      //this.loadMunicipalities({ value: this.data.opeLineaMaritima.idProvincia });
+      //this.loadProvinces({ value: this.data.opeLineaMaritima.idCcaa });
+      //this.loadMunicipios({ value: this.data.opeLineaMaritima.idProvincia });
       this.formData.patchValue({
         id: this.data.opeLineaMaritima.id,
         nombre: this.data.opeLineaMaritima.nombre,
-        origen: this.data.opeLineaMaritima.nombre,
-        destino: this.data.opeLineaMaritima.nombre,
-        fechaValidezDesde: moment(this.data.opeLineaMaritima.fechaInicioFaseSalida).format('YYYY-MM-DD'),
-        fechaValidezHasta: moment(this.data.opeLineaMaritima.fechaFinFaseSalida).format('YYYY-MM-DD'),
+        opePuertoOrigen: this.data.opeLineaMaritima.idOpePuertoOrigen,
+        opePuertoDestino: this.data.opeLineaMaritima.idOpePuertoDestino,
+        opeFase: this.data.opeLineaMaritima.idOpeFase,
+        fechaValidezDesde: moment(this.data.opeLineaMaritima.fechaValidezDesde).format('YYYY-MM-DD'),
+        fechaValidezHasta: moment(this.data.opeLineaMaritima.fechaValidezHasta).format('YYYY-MM-DD'),
         numeroRotaciones: this.data.opeLineaMaritima.numeroRotaciones,
         numeroPasajeros: this.data.opeLineaMaritima.numeroPasajeros,
         numeroTurismos: this.data.opeLineaMaritima.numeroTurismos,
@@ -124,6 +142,13 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
         numeroTotalVehiculos: this.data.opeLineaMaritima.numeroTotalVehiculos,
       });
     }
+
+    const opePuertos = await this.opePuertosService.get();
+    this.opePuertosOrigen.set(opePuertos.data);
+    this.opePuertosDestino.set(opePuertos.data);
+
+    const opeFases = await this.opeFasesService.get();
+    this.opeFases.set(opeFases);
   }
 
   async onSubmit() {
@@ -131,6 +156,7 @@ export class OpeLineaMaritimaCreateEdit implements OnInit {
       this.spinner.show();
       const data = this.formData.value;
 
+      //const municipio = this.municipalities().find((item) => item.id === data.municipality);
       if (this.data.opeLineaMaritima?.id) {
         data.id = this.data.opeLineaMaritima.id;
         await this.opeLineasMaritimasService

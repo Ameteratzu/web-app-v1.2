@@ -86,15 +86,17 @@ export class OpeAreaDescansoFilterFormComponent implements OnInit {
       inputField2: ['', Validators.required],
     });
 
-    const { nombre, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, between } = this.filtros();
+    const { nombre } = this.filtros();
 
     this.formData = new FormGroup({
       nombre: new FormControl(nombre ?? ''),
+      /*
       between: new FormControl(between ?? 1),
       fechaInicioFaseSalida: new FormControl(fechaInicioFaseSalida ?? moment().subtract(4, 'days').toDate()),
       fechaFinFaseSalida: new FormControl(fechaFinFaseSalida ?? moment().toDate()),
       fechaInicioFaseRetorno: new FormControl(fechaInicioFaseRetorno ?? moment().subtract(4, 'days').toDate()),
       fechaFinFaseRetorno: new FormControl(fechaFinFaseRetorno ?? moment().toDate()),
+      */
     });
 
     //this.clearFormFilter();
@@ -117,6 +119,10 @@ export class OpeAreaDescansoFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (!this.formData) {
+      return;
+    }
+
     this.opeAreasDescansoChange.emit({
       count: 0,
       page: 1,
@@ -127,14 +133,16 @@ export class OpeAreaDescansoFilterFormComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingChange.emit(true);
 
-    const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
+    const { nombre } = this.formData.value;
 
     const opeAreasDescanso = await this.opeAreasDescansoService.get({
+      /*
       IdComparativoFecha: between,
       fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
       fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
       fechaInicioFaseRetorno: moment(fechaInicioFaseRetorno).format('YYYY-MM-DD'),
       fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
+      */
       nombre: nombre,
     });
     this.filtrosOpeAreasDescansoService.setFilters(this.formData.value);
@@ -147,11 +155,13 @@ export class OpeAreaDescansoFilterFormComponent implements OnInit {
   clearFormFilter() {
     this.formData.reset();
     this.formData.patchValue({
+      /*
       between: 1,
       fechaInicioFaseSalida: moment().subtract(4, 'days').toDate(),
       fechaFinFaseSalida: moment().toDate(),
       fechaInicioFaseRetorno: moment().subtract(4, 'days').toDate(),
       fechaFinFaseRetorno: moment().toDate(),
+      */
       nombre: '',
     });
   }
@@ -165,7 +175,7 @@ export class OpeAreaDescansoFilterFormComponent implements OnInit {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos AreaDescanso',
+        title: 'Nuevo - Datos Área Descanso',
         fire: {},
       },
     });

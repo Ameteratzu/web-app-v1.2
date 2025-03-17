@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
-import { OpeAreaDescanso } from '../../../../../../types/ope/administracion/ope-area-descanso.type';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import moment from 'moment';
@@ -14,6 +13,7 @@ import { AlertService } from '@shared/alert/alert.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { OpeAreasDescansoService } from '@services/ope/administracion/ope-areas-descanso.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { OpeAreaDescanso } from '@type/ope/administracion/ope-area-descanso.type';
 
 @Component({
   selector: 'app-ope-areas-descanso-table',
@@ -44,10 +44,12 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
 
   public displayedColumns: string[] = [
     'nombre',
-    'fechaInicioFaseSalida',
-    'fechaFinFaseSalida',
-    'fechaInicioFaseRetorno',
-    'fechaFinFaseRetorno',
+    'opeAreaDescansoTipo',
+    'CCAA',
+    'provincia',
+    'municipio',
+    'capacidad',
+    'opeEstadoOcupacion',
     'opciones',
   ];
 
@@ -62,7 +64,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  goToEdit(areaDescanso: OpeAreaDescanso) {
+  goToEdit(frontera: OpeAreaDescanso) {
     //this.router.navigate([`fire/fire-national-edit/1`]);
   }
 
@@ -74,7 +76,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
       height: '90vh',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - AreaDescanso',
+        title: 'Nuevo - Área Descanso',
       },
     });
 
@@ -94,7 +96,7 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Modificar - AreaDescanso.',
+        title: 'Modificar - Área Descanso.',
         opeAreaDescanso: opeAreaDescanso,
       },
     });
@@ -138,8 +140,8 @@ export class OpeAreasDescansoTableComponent implements OnChanges {
               })
               .afterDismissed()
               .subscribe(() => {
-                this.routenav.navigate(['/ope-administracion-areasDescanso']).then(() => {
-                  window.location.href = '/ope-administracion-areasDescanso';
+                this.routenav.navigate(['/ope-administracion-fronteras']).then(() => {
+                  window.location.href = '/ope-administracion-fronteras';
                 });
                 this.spinner.hide();
               });
