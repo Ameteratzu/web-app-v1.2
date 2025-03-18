@@ -20,17 +20,19 @@ public class GetCamposImpactosByIdQueryHandler : IRequestHandler<GetCamposImpact
 
     public async Task<IReadOnlyList<ValidacionImpactoClasificadoVm>> Handle(GetCamposImpactosByIdQuery request, CancellationToken cancellationToken)
     {
-        IReadOnlyList<ValidacionImpactoClasificado> camposImpactos = (await _unitOfWork.Repository<ValidacionImpactoClasificado>().GetAsync(m => m.IdImpactoClasificado == request.Id))
-            .OrderBy(m => m.Id)
-            .ToList()
-            .AsReadOnly();
+        IReadOnlyList<ValidacionImpactoClasificado> campos = await _unitOfWork.Repository<ValidacionImpactoClasificado>().GetAsync(
+            predicate: m => m.IdImpactoClasificado == request.Id,
+            orderBy: q => q.OrderBy(m => m.Id),
+            includeString: null,
+            disableTracking: true
+        );
 
-        var camposImpactosVm = _mapper.Map<IReadOnlyList<ValidacionImpactoClasificado>, IReadOnlyList<ValidacionImpactoClasificadoVm>>(camposImpactos);
+        var camposImpactosVm = _mapper.Map<IReadOnlyList<ValidacionImpactoClasificado>, IReadOnlyList<ValidacionImpactoClasificadoVm>>(campos);
 
         var campo = camposImpactosVm.FirstOrDefault(c => c.TipoCampo == TipoSelect && c.Campo == Campo);
         if (campo != null)
         {
-            var opciones = await _unitOfWork.Repository<TipoDanio>().GetAllAsync();
+            var opciones = await _unitOfWork.Repository<TipoDanio>().GetAllNoTrackingAsync();
             campo.Options = opciones.Select(o => new OptionVm
             {
                 Id = o.Id.ToString(),

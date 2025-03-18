@@ -1,5 +1,4 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Specifications.Impactos;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -15,8 +14,13 @@ public class GetAllImpactosListQueryHandler : IRequestHandler<GetAllImpactosList
 
     public async Task<IReadOnlyList<ImpactoEvolucion>> Handle(GetAllImpactosListQuery request, CancellationToken cancellationToken)
     {
-        var impactoSpec = new ImpactoEvolucionActiveSpecification();
-        var lista = await _unitOfWork.Repository<ImpactoEvolucion>().GetAllWithSpec(impactoSpec);
+        IReadOnlyList<ImpactoEvolucion> lista = await _unitOfWork.Repository<ImpactoEvolucion>().GetAsync
+            (
+                predicate: i => i.Borrado == false,
+                orderBy: null,
+                includeString: null,
+                disableTracking: true
+            );
 
         return lista;
     }

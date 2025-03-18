@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Features.TipoMovimientos.Quereis.GetTipoMovi
 
         public async Task<IReadOnlyList<TipoMovimiento>> Handle(GetTipoMovimientosLisQuery request, CancellationToken cancellationToken)
         {
-            var tipoMovimientos = await _unitOfWork.Repository<TipoMovimiento>().GetAllAsync();
+            var tipoMovimientos = await _unitOfWork.Repository<TipoMovimiento>().GetAllNoTrackingAsync();
             return tipoMovimientos;
         }
     }

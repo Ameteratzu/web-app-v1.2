@@ -21,7 +21,7 @@ public class GetProcedenciasMediosListQueryHandler : IRequestHandler<GetProceden
 
     public async Task<IReadOnlyList<ProcedenciaMedioDto>> Handle(GetProcedenciasMediosListQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<ProcedenciaMedio>().GetAllAsync();
+        var lista = await _unitOfWork.Repository<ProcedenciaMedio>().GetAllNoTrackingAsync();
         return _mapper.Map<IReadOnlyList<ProcedenciaMedioDto>>(lista);
     }
 }

@@ -21,13 +21,25 @@ namespace DGPCE.Sigemad.Application.Features.Provincias.Queries.GetProvinciasLis
 
         public async Task<IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm>> Handle(GetProvinciasListQuery request, CancellationToken cancellationToken)
         {
-            var provincias = (await _unitOfWork.Repository<Provincia>().GetAllAsync())
-             .OrderBy(m => m.Descripcion)
-             .ToList()
-             .AsReadOnly(); ;
 
-            var provinciasSinMunicipios = _mapper.Map<IReadOnlyList<Provincia>, IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm>>(provincias);
-            return provinciasSinMunicipios;
+            IReadOnlyList<ProvinciaSinMunicipiosConIdComunidadVm> provinces = await _unitOfWork.Repository<Provincia>().GetAsync(
+                predicate: null,
+                selector: p => new ProvinciaSinMunicipiosConIdComunidadVm
+                {
+                    Id = p.Id,
+                    Descripcion = p.Descripcion,
+                    Huso = p.Huso,
+                    IdCcaa = p.IdCcaa,
+                    GeoPosicion = p.GeoPosicion,
+                    UtmX = p.UtmX,
+                    UtmY = p.UtmY,
+                },
+                orderBy: q => q.OrderBy(p => p.Descripcion),
+                disableTracking: true
+                );
+
+
+            return provinces;
 
         }
     }

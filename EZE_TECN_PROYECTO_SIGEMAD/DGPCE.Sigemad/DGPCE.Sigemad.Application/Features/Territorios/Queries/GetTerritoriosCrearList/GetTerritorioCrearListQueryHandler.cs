@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.Territorios.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -8,21 +7,26 @@ namespace DGPCE.Sigemad.Application.Features.Territorios.Queries.GetTerritoriosC
 public class GetTerritorioCrearListQueryHandler : IRequestHandler<GetTerritorioCrearListQuery, IReadOnlyList<TerritorioVm>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public GetTerritorioCrearListQueryHandler(
-        IUnitOfWork unitOfWork,
-        IMapper mapper)
+        IUnitOfWork unitOfWork
+        )
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<IReadOnlyList<TerritorioVm>> Handle(GetTerritorioCrearListQuery request, CancellationToken cancellationToken)
     {
-        var territorios = await _unitOfWork.Repository<Territorio>().GetAllAsync();
-        territorios = territorios.Where(t => t.Comun == true).ToList();
+        IReadOnlyList<TerritorioVm> territorios = await _unitOfWork.Repository<Territorio>().GetAsync(
+            predicate: t => t.Comun == true,
+            selector: t => new TerritorioVm
+            {
+                Id = t.Id,
+                Descripcion = t.Descripcion,
+            },
+            disableTracking: true
+            );
 
-        return _mapper.Map<IReadOnlyList<TerritorioVm>>(territorios);
+        return territorios;
     }
 }

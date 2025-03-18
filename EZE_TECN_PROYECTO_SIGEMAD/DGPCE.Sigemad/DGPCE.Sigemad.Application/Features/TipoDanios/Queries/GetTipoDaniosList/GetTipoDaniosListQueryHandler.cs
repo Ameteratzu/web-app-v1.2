@@ -17,7 +17,7 @@ public class GetTipoDaniosListQueryHandler : IRequestHandler<GetTipoDaniosListQu
 
     public async Task<IReadOnlyList<TipoDanio>> Handle(GetTipoDaniosListQuery request, CancellationToken cancellationToken)
     {
-        var tipoDanios = await _unitOfWork.Repository<TipoDanio>().GetAllAsync();
+        var tipoDanios = await _unitOfWork.Repository<TipoDanio>().GetAllNoTrackingAsync();
         return tipoDanios;
     }
 }

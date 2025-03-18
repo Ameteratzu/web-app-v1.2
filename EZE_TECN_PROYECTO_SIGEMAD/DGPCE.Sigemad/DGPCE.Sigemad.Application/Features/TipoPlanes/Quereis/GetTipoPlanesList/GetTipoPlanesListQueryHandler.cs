@@ -14,7 +14,7 @@ public class GetTipoPlanesListQueryHandler : IRequestHandler<GetTipoPlanesListQu
 
     public async Task<IReadOnlyList<TipoPlan>> Handle(GetTipoPlanesListQuery request, CancellationToken cancellationToken)
     {
-        var tipoPlanes = await _unitOfWork.Repository<TipoPlan>().GetAllAsync();
+        var tipoPlanes = await _unitOfWork.Repository<TipoPlan>().GetAllNoTrackingAsync();
         return tipoPlanes;
     }
 }
