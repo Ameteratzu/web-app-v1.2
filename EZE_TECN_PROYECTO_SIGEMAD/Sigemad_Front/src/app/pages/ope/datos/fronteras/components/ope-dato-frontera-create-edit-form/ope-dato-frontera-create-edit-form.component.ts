@@ -38,8 +38,11 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 interface FormType {
   id?: string;
+  opeFrontera: { id: string; nombre: string };
   fechaHoraInicioIntervalo: Date;
   fechaHoraFinIntervalo: Date;
+  numeroVehiculos: number;
+  afluencia: string;
 }
 
 @Component({
@@ -106,7 +109,7 @@ export class OpeDatoFronteraCreateEdit implements OnInit {
   public isCreate = signal<number>(-1);
   public isSaving = signal<boolean>(false);
 
-  public displayedColumns: string[] = ['fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo', 'opciones'];
+  public displayedColumns: string[] = ['numeroVehiculos', 'fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo', 'afluencia', 'opciones'];
 
   public today: string = new Date().toISOString().split('T')[0];
 
@@ -259,6 +262,67 @@ export class OpeDatoFronteraCreateEdit implements OnInit {
 
   //Función para guardar en base de datos
   async saveList() {
-    alert('guardando!');
+    if (this.isSaving()) {
+      return;
+    }
+    this.isSaving.set(true);
+    if (this.dataOpeDatosFronteras().length <= 0) {
+      this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['snackbar-rojo'],
+      });
+      this.isSaving.set(false);
+      return;
+    }
+
+    const arrayToSave = this.dataOpeDatosFronteras().map((item) => {
+      return {
+        id: item.id ?? null,
+        //fechaHora: this.getFechaHora(item.fecha, item.hora),
+        // PCD
+
+        // FIN PCD
+        idOpeFrontera: item.opeFrontera?.id ?? null,
+        fechaHoraInicioIntervalo: moment(item.fechaHoraInicioIntervalo).format('MM/DD/YY HH:mm'),
+        fechaHoraFinIntervalo: moment(item.fechaHoraFinIntervalo).format('MM/DD/YY HH:mm'),
+        numeroVehiculos: item.numeroVehiculos,
+        afluencia: item.afluencia,
+      };
+    });
+    const objToSave = {
+      //IdSuceso: this.dataProps?.fire?.id,
+      IdOpeFrontera: 1,
+      lista: arrayToSave,
+    };
+
+    try {
+      this.spinner.show();
+
+      const resp: { idOpeDatoFrontera: string | number } | any = await this.opeDatosFronterasService.post(objToSave);
+      if (resp!.idRegistroActualizacion > 0) {
+        this.isSaving.set(false);
+        this.snackBar
+          .open('Datos guardados correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-verde'],
+          })
+          .afterDismissed()
+          .subscribe(() => {
+            this.closeModal({ refresh: true });
+            this.spinner.hide();
+          });
+        // FIN PCD
+      } else {
+        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
+        this.spinner.hide();
+      }
+    } catch (error) {
+      console.info({ error });
+      this.spinner.hide();
+    }
   }
 }

@@ -23,6 +23,8 @@ using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
+using DGPCE.Sigemad.Application.Dtos.Ope.Datos;
+using DGPCE.Sigemad.Application.Dtos.Ope.Datos.OpeDatosFronteras;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
@@ -74,6 +76,7 @@ using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Commands.CreateOpeDatosFronteras;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
@@ -92,6 +95,7 @@ using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
 
 namespace DGPCE.Sigemad.Application.Mappings;
 
@@ -519,6 +523,31 @@ public class MappingProfile : Profile
         CreateMap<OpePuntoControlCarretera, OpePuntoControlCarreteraVm>();
         CreateMap<CreateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
         CreateMap<UpdateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
+
+        // Nuevo Dato Frontera
+        //CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>();
+        //CreateMap<ManageOpeDatoFronteraCommand, OpeDatoFrontera>();
+        //CreateMap<UpdateOpeDatoFronteraCommand, OpeDatoFrontera>();
+
+        CreateMap<CreateOpeDatoFronteraCommand, OpeDatoFrontera>();
+        CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>()
+            .ForMember(dest => dest.IdOpeDatoFrontera, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.IdOpeFrontera, opt => opt.MapFrom(src => src.IdOpeFrontera));
+
+        CreateMap<OpeFronteraConListaDatosFrontera, OpeFronteraConListaDatosFronteraDto>()
+         .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.Lista));
+
+        CreateMap<OpeDatoFrontera, OpeDatoFronteraDto>();
+
+        CreateMap<OpeDatoFrontera, CreateOpeDatoFronteraDto>();
+
+        CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>()
+        .ForMember(dest => dest.FechaHoraInicioIntervalo, opt => opt.MapFrom(src => src.FechaHoraInicioIntervalo))
+        .ForMember(dest => dest.FechaHoraFinIntervalo, opt => opt.MapFrom(src => src.FechaHoraFinIntervalo))
+        .ForMember(dest => dest.NumeroVehiculos, opt => opt.MapFrom(src => src.NumeroVehiculos))
+        .ForMember(dest => dest.Afluencia, opt => opt.MapFrom(src => src.Afluencia));
+
+        CreateMap<CreateOpeDatoFronteraDto, OpeDatoFrontera>();
         // FIN PCD
 
     }

@@ -101,6 +101,20 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="numeroVehiculos">
+        <th mat-header-cell *matHeaderCellDef>Nº vehículos</th>
+        <td mat-cell *matCellDef="let opeDatoFrontera">
+          {{ opeDatoFrontera.numeroVehiculos }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="afluencia">
+        <th mat-header-cell *matHeaderCellDef>Afluencia</th>
+        <td mat-cell *matCellDef="let opeDatoFrontera">
+          {{ opeDatoFrontera.afluencia }}
+        </td>
+      </ng-container>
+
       <!-- Opciones Column -->
       <ng-container matColumnDef="opciones">
         <th mat-header-cell *matHeaderCellDef>Opciones</th>
