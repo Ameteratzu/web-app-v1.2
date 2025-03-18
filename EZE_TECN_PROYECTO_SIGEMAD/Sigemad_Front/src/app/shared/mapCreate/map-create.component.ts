@@ -55,6 +55,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
+  @Input() centroideMunicipio: boolean = false;
   @Input() polygon: any;
   @Input() close: boolean = true;
   @Input() fileContent: string | null = null;
@@ -93,7 +94,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   private styleEdicion = new Style({
     // Estilo para puntos
     image: new Icon({
-      anchor: [1, 1],
+      anchor: [0.5, 0.5],
       src: '/assets/img/centroide.png',
       scale: 0.07,
     }),
@@ -105,7 +106,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   });
 
   async ngOnInit() {
-    const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
+    const { municipio, listaMunicipios, defaultPolygon, onlyView, centroideMunicipio } = this.data;
 
     if (municipio != null) this.municipio = municipio;
 
@@ -119,7 +120,9 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     if (onlyView != null) this.onlyView = onlyView;
 
-    this.configureMap(this.municipio, this.polygon, this.onlyView);
+    if (centroideMunicipio != null) this.centroideMunicipio = centroideMunicipio;
+
+    this.configureMap(this.municipio, this.polygon, this.onlyView, this.centroideMunicipio);
     this.highlightSelectedMunicipio(this.municipio.descripcion);
   }
 
@@ -169,7 +172,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
+  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null, centroideMunicipio: boolean) {
     if (!municipio) {
       return;
     }
@@ -178,7 +181,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     const layersGroupAdmin = this.getAdminLayers();
 
-    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon);
+    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon, centroideMunicipio);
 
     // Crear el popup
     const container = document.getElementById('popup');
@@ -380,8 +383,13 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     return wmsLayersGroup;
   }
 
-  getFireLayers(municipio: any, defaultPolygon: any) {
+  getFireLayers(municipio: any, defaultPolygon: any, centroideMunicipio: boolean) {
     let defaultPolygonMercator;
+
+    //si defaultPolygon es un array de una dimension, se convierte en un array de dos dimensiones
+    if (defaultPolygon && defaultPolygon.length > 0 && !Array.isArray(defaultPolygon[0])) {
+      defaultPolygon = [defaultPolygon];
+    }
 
     if (defaultPolygon && defaultPolygon.length > 0) {
       defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
@@ -413,7 +421,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       this.source.addFeature(geometryFeature);
     }
 
-    if (this.source.getFeatures().length == 0) {
+    if (this.source.getFeatures().length == 0 && centroideMunicipio) {
       this.source.addFeature(pointFeature);
     }
 
@@ -561,7 +569,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       this.save.emit(this.coords);
     });
 
-    drawBar.addControl(tgPolygon);
+    //drawBar.addControl(tgPolygon);
 
     const tgSelect = new Toggle({
       html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',

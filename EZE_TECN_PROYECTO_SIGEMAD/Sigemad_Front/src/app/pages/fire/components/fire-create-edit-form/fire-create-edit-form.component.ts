@@ -184,7 +184,7 @@ export class FireCreateEdit implements OnInit {
         eventStatus: this.data.fire.idEstadoSuceso,
       });
 
-      this.geometry.set(this.data?.fire?.geoPosicion?.coordinates[0]);
+      this.geometry.set(this.data?.fire?.geoPosicion?.coordinates);
     }
 
     const territories = await this.territoryService.getForCreate();
@@ -233,7 +233,7 @@ export class FireCreateEdit implements OnInit {
 
       data.geoposition = {
         type: 'Point',
-        coordinates: [this.geometry() ?? ''],
+        coordinates: this.geometry()[0] ?? '',
       };
       console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.geometry());
 
@@ -340,6 +340,7 @@ export class FireCreateEdit implements OnInit {
       maxHeight: '780px',
       data: {
         municipio: municipioSelected,
+        centroideMunicipio: true,
         onlyView: false,
         listaMunicipios: this.municipalities(),
         defaultPolygon: this.geometry(),
