@@ -117,6 +117,7 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
+    /*
     this.opeDatosFronterasChange.emit({
       count: 0,
       page: 1,
@@ -129,6 +130,7 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
 
     const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
 
+    /*
     const opeDatosFronteras = await this.opeDatosFronterasService.get({
       IdComparativoFecha: between,
       fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
@@ -142,6 +144,7 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
     this.opeDatosFronterasChange.emit(this.opeDatosFronteras);
     this.isLoadingChange.emit(false);
     this.isLoading = false;
+    */
   }
 
   clearFormFilter() {

@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
+﻿using DGPCE.Sigemad.Application.Dtos.Ope.Datos;
+using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using MediatR;
 
 namespace DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.ManageOtraInformaciones;
