@@ -55,7 +55,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
-  @Input() geometry: any;
+  @Input() polygon: any;
   @Input() close: boolean = true;
   @Input() fileContent: string | null = null;
 
@@ -101,25 +101,25 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     stroke: new Stroke({
       color: 'rgb(255, 128, 0)',
       width: 5,
-    })
+    }),
   });
 
   async ngOnInit() {
-    const { municipio, listaMunicipios, defaultGeometry, onlyView } = this.data;
+    const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
 
     if (municipio != null) this.municipio = municipio;
 
-    if (defaultGeometry == null && this.geometry == null) {
-      this.geometry = [];
+    if (defaultPolygon == null && this.polygon == null) {
+      this.polygon = [];
     }
 
-    if (defaultGeometry != null) {
-      this.geometry = defaultGeometry;
+    if (defaultPolygon != null) {
+      this.polygon = defaultPolygon;
     }
 
     if (onlyView != null) this.onlyView = onlyView;
 
-    this.configureMap(this.municipio, this.geometry, this.onlyView);
+    this.configureMap(this.municipio, this.polygon, this.onlyView);
     this.highlightSelectedMunicipio(this.municipio.descripcion);
   }
 
@@ -152,9 +152,9 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       this.layerEdition.getSource()?.clear();
 
       if (newPolygon) {
-        const defaultGeometryMercator = newPolygon.map((coord: any) => fromLonLat(coord));
+        const defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
         const polygonFeature = new Feature({
-          geometry: new Polygon([defaultGeometryMercator]),
+          geometry: new Polygon([defaultPolygonMercator]),
         });
         this.layerEdition.getSource()?.addFeature(polygonFeature);
       }
@@ -169,7 +169,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  configureMap(municipio: any, defaultGeometry: any = null, onlyView: any = null) {
+  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
     if (!municipio) {
       return;
     }
@@ -178,7 +178,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     const layersGroupAdmin = this.getAdminLayers();
 
-    const layersGroupIncendio = this.getFireLayers(municipio, defaultGeometry);
+    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon);
 
     // Crear el popup
     const container = document.getElementById('popup');
@@ -380,18 +380,18 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     return wmsLayersGroup;
   }
 
-  getFireLayers(municipio: any, defaultGeometry: any) {
-    let defaultGeometryMercator;
+  getFireLayers(municipio: any, defaultPolygon: any) {
+    let defaultPolygonMercator;
 
-    if (defaultGeometry) {
-      defaultGeometryMercator = defaultGeometry.map((coord: any) => fromLonLat(coord));
+    if (defaultPolygon && defaultPolygon.length > 0) {
+      defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
     this.source = new VectorSource();
 
     this.layerEdition = new VectorLayer({
       source: this.source,
       style: this.styleEdicion,
-      properties: { title: 'Areas afectadas' },
+      properties: { title: 'Área afectada' },
     });
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
@@ -399,14 +399,21 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       geometry: point,
     });
 
-    if (defaultGeometry) {
-      const polygonFeature = new Feature({
-        geometry: new Polygon([defaultGeometryMercator]),
-      });
-      this.source.addFeature(polygonFeature);
+    if (defaultPolygonMercator) {
+      let geometryFeature;
+      if (defaultPolygonMercator.length > 1) {
+        geometryFeature = new Feature({
+          geometry: new Polygon([defaultPolygonMercator]),
+        });
+      } else {
+        geometryFeature = new Feature({
+          geometry: new Point(defaultPolygonMercator[0]),
+        });
+      }
+      this.source.addFeature(geometryFeature);
     }
 
-    if (this.source.getFeatures().length > 0) {
+    if (this.source.getFeatures().length == 0) {
       this.source.addFeature(pointFeature);
     }
 
@@ -513,17 +520,17 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     this.drawPoint.on('drawend', (drawEvent: DrawEvent) => {
       const geometry = drawEvent.feature.getGeometry();
       if (geometry instanceof Point) {
-        const coord = geometry.getCoordinates();
-        this.coords = toLonLat(coord);
+        const coords = [];
+        coords.push(toLonLat(geometry.getCoordinates()));
+        this.coords = coords;
         this.save.emit(this.coords);
       }
     });
 
     drawBar.addControl(tgPoint);
 
-    /*
     this.drawPolygon = new Draw({
-      type: 'Geometry',
+      type: 'Polygon',
       source: this.source,
     });
 
@@ -555,7 +562,6 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     });
 
     drawBar.addControl(tgPolygon);
-    */
 
     const tgSelect = new Toggle({
       html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
@@ -581,6 +587,10 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     this.select = new Select();
     this.map.addInteraction(this.select);
+
+    // this.map.addInteraction(this.drawPolygon);
+    // this.snap = new Snap({ source: this.source });
+    // this.map.addInteraction(this.snap);
   }
 
   savePolygon() {
@@ -620,8 +630,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
         const newExtent = [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius];
 
-        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857',
-          { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10, BUFFER: 20 });
+        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857', { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10, BUFFER: 20 });
         if (url) {
           fetch(url)
             .then((response) => response.json())

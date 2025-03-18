@@ -470,7 +470,7 @@ export class FireEditComponent implements OnInit {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultGeometry: this.fire.geoPosicion.coordinates[0],
+        defaultPolygon: this.fire.geoPosicion.coordinates[0],
         onlyView: true,
       },
     });

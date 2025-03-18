@@ -73,7 +73,7 @@ export class PmaComponent {
   @Input() dataMaestros: any;
   @Input() fire: any;
 
-  public geometry = signal<any>([]);
+  public polygon = signal<any>([]);
   public coordinationServices = inject(CoordinationAddressService);
   public toast = inject(MatSnackBar);
   private fb = inject(FormBuilder);
@@ -118,7 +118,7 @@ export class PmaComponent {
       console.log('Información recibida en el hijo:', this.editData);
       if (this.coordinationServices.dataPma().length === 0) {
         this.coordinationServices.dataPma.set(this.editData);
-        this.geometry.set(this.editData.geoPosicion?.coordinates[0]);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
@@ -129,8 +129,8 @@ export class PmaComponent {
       const data = this.formData.value;
       if (this.isCreate() == -1) {
         data.geoPosicion = {
-          type: 'Geometry',
-          coordinates: [this.geometry()],
+          type: 'Polygon',
+          coordinates: [this.polygon()],
         };
         this.coordinationServices.dataPma.set([data, ...this.coordinationServices.dataPma()]);
       } else {
@@ -173,7 +173,7 @@ export class PmaComponent {
     this.formData.get('municipio')?.enable();
   }
   onChangeMunicipio(event: any) {
-    this.geometry.set([]);
+    this.polygon.set([]);
   }
 
   openModalMap() {
@@ -194,12 +194,12 @@ export class PmaComponent {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultGeometry: this.geometry(),
+        defaultPolygon: this.polygon(),
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      this.geometry.set(features);
+      this.polygon.set(features);
     });
   }
 
@@ -237,7 +237,7 @@ export class PmaComponent {
       provincia: provinciaSeleccionada(),
       municipio: municipioSeleccionado(),
     });
-    this.geometry.set(this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]);
+    this.polygon.set(this.coordinationServices.dataPma()[index]?.geoPosicion?.coordinates[0]);
 
     if (selectedItem.municipio) {
       this.formData.get('municipio')?.enable();

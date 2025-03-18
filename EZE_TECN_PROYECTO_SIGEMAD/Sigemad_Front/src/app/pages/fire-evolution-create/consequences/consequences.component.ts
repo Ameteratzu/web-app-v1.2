@@ -94,7 +94,7 @@ export class ConsequencesComponent {
 
   public utilsService = inject(UtilsService);
 
-  public geometry = signal<any>([]);
+  public polygon = signal<any>([]);
 
   public displayedColumns: string[] = ['tipo', 'denominacion', 'numero', 'opciones'];
 
@@ -153,7 +153,7 @@ export class ConsequencesComponent {
           observacion: item.observaciones,
         }));
         this.evolutionService.dataConse.set(newData);
-        this.geometry.set(this.editData.geoPosicion?.coordinates[0]);
+        this.polygon.set(this.editData.geoPosicion?.coordinates[0]);
       }
     }
     this.spinner.hide();
@@ -209,12 +209,12 @@ export class ConsequencesComponent {
       data: {
         municipio: municipioSelected,
         listaMunicipios: this.municipalities(),
-        defaultGeometry: this.geometry(),
+        defaultPolygon: this.polygon(),
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
-      this.geometry.set(features);
+      this.polygon.set(features);
     });
   }
   onSubmit() {
@@ -225,10 +225,10 @@ export class ConsequencesComponent {
         ...this.formData.value,
         ...this.formDataComplementarios.value,
         zonaPlanificacion:
-          this.geometry() && Array.isArray(this.geometry()) && this.geometry().length > 0
+          this.polygon() && Array.isArray(this.polygon()) && this.polygon().length > 0
             ? {
-                type: 'Geometry',
-                coordinates: [this.geometry()],
+                type: 'Polygon',
+                coordinates: [this.polygon()],
               }
             : null,
       };
@@ -251,7 +251,7 @@ export class ConsequencesComponent {
         localizacion: [fire?.municipio?.descripcion, Validators.required], //MUNICIPIO DEL INCENDIO
         observacion: [''],
       });
-      this.geometry.set([]);
+      this.polygon.set([]);
     } else {
       this.formData.markAllAsTouched();
     }
@@ -320,7 +320,7 @@ export class ConsequencesComponent {
 
         this.formData.patchValue({ ...data, denominacion });
 
-        this.geometry.set(data.zonaPlanificacion?.coordinates[0]);
+        this.polygon.set(data.zonaPlanificacion?.coordinates[0]);
         this.spinner.hide();
       });
     });

@@ -146,7 +146,7 @@
 
   <div class="map-container">
     <app-map-create [municipio]="selectedMunicipio" [listaMunicipios]="listaMunicipios" [onlyView]="onlyView"
-      [geometry]="defaultGeometry" [close]="false" [fileContent]="fileContent" (save)="onSave($event)"
+      [polygon]="defaultPolygon" [close]="false" [fileContent]="fileContent" (save)="onSave($event)"
       *ngIf="selectedMunicipio"></app-map-create>
   </div>
 </div>

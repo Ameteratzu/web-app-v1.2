@@ -232,7 +232,7 @@ export class FireCreateEdit implements OnInit {
       const municipio = this.municipalities().find((item) => item.id === data.municipality);
 
       data.geoposition = {
-        type: 'Geometry',
+        type: 'Point',
         coordinates: [this.geometry() ?? ''],
       };
       console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.geometry());
@@ -342,7 +342,7 @@ export class FireCreateEdit implements OnInit {
         municipio: municipioSelected,
         onlyView: false,
         listaMunicipios: this.municipalities(),
-        defaultGeometry: this.geometry(),
+        defaultPolygon: this.geometry(),
         close: true,
       },
     });
