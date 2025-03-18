@@ -14,7 +14,7 @@ public class GetEntradaSalidaListQueryHandler : IRequestHandler<GetEntradaSalida
 
     public async Task<IReadOnlyList<EntradaSalida>> Handle(GetEntradaSalidaListQuery request, CancellationToken cancellationToken)
     {
-        var entradasSalidas = await _unitOfWork.Repository<EntradaSalida>().GetAllAsync();
+        var entradasSalidas = await _unitOfWork.Repository<EntradaSalida>().GetAllNoTrackingAsync();
         return entradasSalidas;
     }
 }

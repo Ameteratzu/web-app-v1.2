@@ -15,7 +15,7 @@ public class GetTipoDireccionEmergenciasListQueryHandler : IRequestHandler<GetTi
 
     public async Task<IReadOnlyList<TipoDireccionEmergencia>> Handle(GetTipoDireccionEmergenciasListQuery request, CancellationToken cancellationToken)
     {
-        var tipoDireccionEmergencias = await _unitOfWork.Repository<TipoDireccionEmergencia>().GetAllAsync();
+        var tipoDireccionEmergencias = await _unitOfWork.Repository<TipoDireccionEmergencia>().GetAllNoTrackingAsync();
         return tipoDireccionEmergencias;
     }
 }

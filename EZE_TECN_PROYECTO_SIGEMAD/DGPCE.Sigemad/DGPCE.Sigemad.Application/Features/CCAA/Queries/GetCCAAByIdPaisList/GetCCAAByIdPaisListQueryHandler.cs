@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Exceptions;
+﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
-using DGPCE.Sigemad.Application.Specifications.ComunidadesAutonomas;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -12,35 +9,35 @@ public class GetCCAAByIdPaisListQueryHandler : IRequestHandler<GetCCAAByIdPaisLi
 {
     private readonly ILogger<GetCCAAByIdPaisListQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
     public GetCCAAByIdPaisListQueryHandler(
         ILogger<GetCCAAByIdPaisListQueryHandler> logger,
-        IUnitOfWork unitOfWork,
-        IMapper mapper
+        IUnitOfWork unitOfWork
         )
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<IReadOnlyList<ComunidadesAutonomasSinProvinciasVm>> Handle(GetCCAAByIdPaisListQuery request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(GetCCAAByIdPaisListQueryHandler)} - BEGIN");
 
-        var pais = await _unitOfWork.Repository<Pais>().GetByIdAsync(request.IdPais);
-        if (pais is null)
-        {
-            _logger.LogWarning($"request.IdPais: {request.IdPais}, no encontrado");
-            throw new NotFoundException(nameof(Pais), request.IdPais);
-        }
-
-        var lista = await _unitOfWork.Repository<Ccaa>().GetAllWithSpec(new CCAAByIdPaisSpecification(request.IdPais));
+        IReadOnlyList<ComunidadesAutonomasSinProvinciasVm> result = await _unitOfWork.Repository<Ccaa>().GetAsync
+            (
+                predicate: c => c.IdPais == request.IdPais,
+                selector: c => new ComunidadesAutonomasSinProvinciasVm
+                {
+                    Id = c.Id,
+                    Descripcion = c.Descripcion,
+                },
+                orderBy: q => q.OrderBy(c => c.Descripcion),
+                disableTracking: true
+            );
 
         _logger.LogInformation($"{nameof(GetCCAAByIdPaisListQueryHandler)} - BEGIN");
 
-        return _mapper.Map<IReadOnlyList<ComunidadesAutonomasSinProvinciasVm>>(lista);
+        return result;
 
     }
 }

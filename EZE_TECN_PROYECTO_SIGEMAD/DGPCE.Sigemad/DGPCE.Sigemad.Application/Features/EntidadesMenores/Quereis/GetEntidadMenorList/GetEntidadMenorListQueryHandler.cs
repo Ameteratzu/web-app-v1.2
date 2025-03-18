@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
-using DGPCE.Sigemad.Application.Specifications.EntidadesMenores;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
@@ -12,21 +10,34 @@ public class GetEntidadMenorListQueryHandler : IRequestHandler<GetEntidadMenorLi
 {
 
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public GetEntidadMenorListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public GetEntidadMenorListQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
-
     }
+
     public async Task<IReadOnlyList<EntidadMenorVm>> Handle(GetEntidadMenorListQuery request, CancellationToken cancellationToken)
     {
 
-        var entidadesMenores = (await _unitOfWork.Repository<EntidadMenor>().GetAllWithSpec(new EntidadesMenoresSpecification()));
+        IReadOnlyList<EntidadMenorVm> entidadMenorVms = await _unitOfWork.Repository<EntidadMenor>().GetAsync
+            (
+                predicate: e => e.Borrado == false,
+                selector: e => new EntidadMenorVm
+                {
+                    Id = e.Id,
+                    Descripcion = e.Descripcion,
+                    IdMunicipio = e.Municipio.Id,
+                    Huso = e.Huso,
+                    GeoPosicion = e.GeoPosicion,
+                    UtmX = e.UtmX,
+                    UtmY = e.UtmY,
+                },
+                orderBy: e => e.OrderBy(e => e.Descripcion),
+                disableTracking: true
+            );
 
-        var entidadesMenoresVm = _mapper.Map<IReadOnlyList<EntidadMenor>, IReadOnlyList<EntidadMenorVm>>(entidadesMenores);
-        return entidadesMenoresVm;
+
+        return entidadMenorVms;
 
     }
 }

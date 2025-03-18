@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS MunicipioExtranjero
-GO
-
 CREATE TABLE MunicipioExtranjero (
 	Id INT NOT NULL PRIMARY KEY,
 	IdDistrito INT NOT NULL FOREIGN KEY REFERENCES Distrito(Id),

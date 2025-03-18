@@ -1,46 +1,49 @@
-﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.CCAA.Vms;
+using DGPCE.Sigemad.Application.Features.Provincias.Vms;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using System.Linq.Expressions;
 
-namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList
+namespace DGPCE.Sigemad.Application.Features.CCAA.Queries.GetComunidadesAutonomasList;
+
+public class GetComunidadesAutonomasListQueryHandler : IRequestHandler<GetComunidadesAutonomasListQuery, IReadOnlyList<ComunidadesAutonomasVm>>
 {
-    public class GetComunidadesAutonomasListQueryHandler : IRequestHandler<GetComunidadesAutonomasListQuery, IReadOnlyList<ComunidadesAutonomasVm>>
+
+    private readonly IUnitOfWork _unitOfWork;
+
+    public GetComunidadesAutonomasListQueryHandler(IUnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
 
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+    }
+    public async Task<IReadOnlyList<ComunidadesAutonomasVm>> Handle(GetComunidadesAutonomasListQuery request, CancellationToken cancellationToken)
+    {
+        var includes = new List<Expression<Func<Ccaa, object>>>();
+        includes.Add(c => c.Provincia);
 
-        public GetComunidadesAutonomasListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-
-        }
-        public async Task<IReadOnlyList<ComunidadesAutonomasVm>> Handle(GetComunidadesAutonomasListQuery request, CancellationToken cancellationToken)
-        {
-            var includes = new List<Expression<Func<Ccaa, object>>>();
-            includes.Add(c => c.Provincia);
-
-            var ComunidadesAutonomas = (await _unitOfWork.Repository<Ccaa>().GetAsync(null, null, includes))
-                .OrderBy(c => c.Descripcion)
-                .Select(c => new Ccaa
+        IReadOnlyList<ComunidadesAutonomasVm> comunidadesAutonomasVm = await _unitOfWork.Repository<Ccaa>().GetAsync(
+            predicate: null,
+            includes: includes,
+            selector: c => new ComunidadesAutonomasVm
+            {
+                Id = c.Id,
+                Descripcion = c.Descripcion,
+                Provincia = c.Provincia.OrderBy(p => p.Descripcion).Select(Provincia => new ProvinciaSinMunicipiosVm
                 {
+                    Id = Provincia.Id,
+                    Descripcion = Provincia.Descripcion,
+                    Huso = Provincia.Huso,
+                    GeoPosicion = Provincia.GeoPosicion,
+                    UtmX = Provincia.UtmX,
+                    UtmY = Provincia.UtmY
+                }).ToList()
+            },
+            orderBy: q => q.OrderBy(c => c.Descripcion),
+            disableTracking: true
+            );
 
-                    Id = c.Id,
-                    Descripcion = c.Descripcion,
-                    Provincia = c.Provincia.OrderBy(p => p.Descripcion).ToList()
-                }
-               )
+        return comunidadesAutonomasVm;
 
-                .ToList()
-                .AsReadOnly();
-
-            var comunidadesAutonomasVm = _mapper.Map<IReadOnlyList<Ccaa>, IReadOnlyList<ComunidadesAutonomasVm>>(ComunidadesAutonomas);
-            return comunidadesAutonomasVm;
-
-        }
     }
 }

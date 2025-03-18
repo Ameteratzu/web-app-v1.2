@@ -20,7 +20,7 @@ public class GetTerritoriosListQueryHandler : IRequestHandler<GetTerritoriosList
 
     public async Task<IReadOnlyList<TerritorioVm>> Handle(GetTerritoriosListQuery request, CancellationToken cancellationToken)
     {
-        var territorios = await _unitOfWork.Repository<Territorio>().GetAllAsync();
+        var territorios = await _unitOfWork.Repository<Territorio>().GetAllNoTrackingAsync();
         return _mapper.Map<IReadOnlyList<TerritorioVm>>(territorios);
     }
 }

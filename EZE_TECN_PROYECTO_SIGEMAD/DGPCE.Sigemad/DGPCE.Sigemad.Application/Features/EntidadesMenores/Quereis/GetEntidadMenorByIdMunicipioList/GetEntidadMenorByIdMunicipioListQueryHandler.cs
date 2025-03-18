@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Exceptions;
+﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
-using DGPCE.Sigemad.Application.Specifications.EntidadesMenores;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,34 +12,33 @@ public class GetEntidadMenorByIdMunicipioListQueryHandler : IRequestHandler<GetE
 {
     private readonly ILogger<GetEntidadMenorByIdMunicipioListQueryHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public GetEntidadMenorByIdMunicipioListQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ILogger<GetEntidadMenorByIdMunicipioListQueryHandler> logger)
+    public GetEntidadMenorByIdMunicipioListQueryHandler(IUnitOfWork unitOfWork, ILogger<GetEntidadMenorByIdMunicipioListQueryHandler> logger)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _logger = logger;
     }
 
     public async Task<IReadOnlyList<EntidadMenorVm>> Handle(GetEntidadMenorByIdMunicipioListQuery request, CancellationToken cancellationToken)
     {
+        IReadOnlyList<EntidadMenorVm> entidadMenorVms = await _unitOfWork.Repository<EntidadMenor>().GetAsync
+            (
+                predicate: e => e.IdMunicipio == request.IdMunicipio && e.Borrado == false,
+                selector: e => new EntidadMenorVm
+                {
+                    Id = e.Id,
+                    Descripcion = e.Descripcion,
+                    IdMunicipio = e.Municipio.Id,
+                    Huso = e.Huso,
+                    GeoPosicion = e.GeoPosicion,
+                    UtmX = e.UtmX,
+                    UtmY = e.UtmY,
+                },
+                orderBy: e => e.OrderBy(e => e.Descripcion),
+                disableTracking: true
+            );
 
-        var municipio = await _unitOfWork.Repository<Municipio>().GetByIdAsync(request.IdMunicipio);
-
-
-        if (municipio == null)
-        {
-            _logger.LogWarning($"No se encontro municipio con id: {request.IdMunicipio}");
-            throw new NotFoundException(nameof(Municipio), request.IdMunicipio);
-        }
-
-
-        var spec = new EntidadesMenoresActiveByIdMunicipioSpecification(request.IdMunicipio);
-        var entidadesMenores = await _unitOfWork.Repository<EntidadMenor>()
-        .GetAllWithSpec(spec);
-
-        var entidadesmenoresVm = _mapper.Map<IReadOnlyList<EntidadMenor>, IReadOnlyList<EntidadMenorVm>>(entidadesMenores);
-        return entidadesmenoresVm;
+        return entidadMenorVms;
 
     }
 }

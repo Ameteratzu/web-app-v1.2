@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Features.EstadosEvolucion.Queries.GetEstados
 
         public async Task<IReadOnlyList<EstadoSuceso>> Handle(GetEstadosSucesosListQuery request, CancellationToken cancellationToken)
         {
-            var estadosSucesos = await _unitOfWork.Repository<EstadoSuceso>().GetAllAsync();
+            var estadosSucesos = await _unitOfWork.Repository<EstadoSuceso>().GetAllNoTrackingAsync();
             return estadosSucesos;
         }
     }

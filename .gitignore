@@ -2,6 +2,6 @@
 # Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
 ################################################################################
 
-/EZE_TECN_PROYECTO_SIGEMAD/DGPCE.Sigemad/DGPCE.Sigemad.API/appsettings.json
+/EZE_TECN_PROYECTO_SIGEMAD/DGPCE.Sigemad/DGPCE.Sigemad.API/appsettings.Development.json
 /EZE_TECN_PROYECTO_SIGEMAD/BasesDatos/Execute_scripts/config.ini
 /.vs/GIT/v17

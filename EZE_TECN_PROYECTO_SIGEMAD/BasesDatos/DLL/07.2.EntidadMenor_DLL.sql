@@ -1,7 +1,3 @@
-
-DROP TABLE IF EXISTS dbo.EntidadMenor;
-GO
-
 CREATE TABLE dbo.EntidadMenor (
 	Id int NOT NULL PRIMARY KEY,
 	IdMunicipio int NOT NULL FOREIGN KEY REFERENCES Municipio(Id),
@@ -19,3 +15,9 @@ CREATE TABLE dbo.EntidadMenor (
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0	
 );
+
+CREATE INDEX IX_EntidadMenor_IdMunicipio 
+ON EntidadMenor(IdMunicipio);
+
+CREATE INDEX IX_EntidadMenor_Descripcion
+ON EntidadMenor(Descripcion);

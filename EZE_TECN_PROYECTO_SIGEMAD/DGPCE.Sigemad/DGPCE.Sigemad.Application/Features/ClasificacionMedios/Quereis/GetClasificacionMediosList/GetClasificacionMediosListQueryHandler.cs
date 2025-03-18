@@ -16,7 +16,7 @@ public class GetClasificacionMediosListQueryHandler : IRequestHandler<GetClasifi
 
     public async Task<IReadOnlyList<ClasificacionMedio>> Handle(GetClasificacionMediosListQuery request, CancellationToken cancellationToken)
     {
-        var clasificacionMedios = await _unitOfWork.Repository<ClasificacionMedio>().GetAllAsync();
+        var clasificacionMedios = await _unitOfWork.Repository<ClasificacionMedio>().GetAllNoTrackingAsync();
         return clasificacionMedios;
     }
 }

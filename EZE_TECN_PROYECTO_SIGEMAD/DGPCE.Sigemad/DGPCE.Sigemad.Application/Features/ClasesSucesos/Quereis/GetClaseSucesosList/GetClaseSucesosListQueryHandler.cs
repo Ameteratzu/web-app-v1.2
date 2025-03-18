@@ -17,7 +17,7 @@ namespace DGPCE.Sigemad.Application.Features.ClasesSucesos.Quereis.GetClaseSuces
 
             public async Task<IReadOnlyList<ClaseSuceso>> Handle(GetClaseSucesosListQuery request, CancellationToken cancellationToken)
             {
-                var claseSucesos = await _unitOfWork.Repository<ClaseSuceso>().GetAllAsync();
+                var claseSucesos = await _unitOfWork.Repository<ClaseSuceso>().GetAllNoTrackingAsync();
                 return claseSucesos;
             }
         }

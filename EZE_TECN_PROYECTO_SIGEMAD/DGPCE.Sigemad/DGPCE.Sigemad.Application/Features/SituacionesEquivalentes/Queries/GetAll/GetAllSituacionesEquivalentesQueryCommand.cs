@@ -25,8 +25,18 @@ public class GetAllSituacionesEquivalentesQueryCommand : IRequestHandler<GetAllS
 
     public async Task<IReadOnlyList<SituacionEquivalenteDto>> Handle(GetAllSituacionesEquivalentesQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<SituacionEquivalente>().GetAsync(s => s.Obsoleto == false);
+        var lista = await _unitOfWork.Repository<SituacionEquivalente>().GetAsync
+            (
+                predicate: s => s.Obsoleto == false,
+                selector: s => new SituacionEquivalenteDto
+                {
+                    Id = s.Id,
+                    Descripcion = s.Descripcion,
+                },
+                orderBy: null,
+                disableTracking: true
+            );
 
-        return _mapper.Map<IReadOnlyList<SituacionEquivalenteDto>>(lista);
+        return lista;
     }
 }

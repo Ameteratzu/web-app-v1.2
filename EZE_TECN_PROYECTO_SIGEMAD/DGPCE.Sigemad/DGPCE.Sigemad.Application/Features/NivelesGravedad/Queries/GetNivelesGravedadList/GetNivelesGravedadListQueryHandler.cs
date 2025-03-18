@@ -15,7 +15,7 @@ namespace DGPCE.Sigemad.Application.Features.NivelesGravedad.Queries.GetNivelesG
 
         public async Task<IReadOnlyList<NivelGravedad>> Handle(GetNivelesGravedadListQuery request, CancellationToken cancellationToken)
         {
-            var nivelesGravedad = await _unitOfWork.Repository<NivelGravedad>().GetAllAsync();
+            var nivelesGravedad = await _unitOfWork.Repository<NivelGravedad>().GetAllNoTrackingAsync();
             return nivelesGravedad;
         }
     }

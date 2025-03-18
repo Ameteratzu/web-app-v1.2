@@ -17,7 +17,7 @@ public class GetTiposSistemasEmergenciasListQueryHandler : IRequestHandler<GetTi
 
     public async Task<IReadOnlyList<TipoSistemaEmergencia>> Handle(GetTiposSistemasEmergenciasListQuery request, CancellationToken cancellationToken)
     {
-        var tiposFasesEmergencias = await _unitOfWork.Repository<TipoSistemaEmergencia>().GetAllAsync();
+        var tiposFasesEmergencias = await _unitOfWork.Repository<TipoSistemaEmergencia>().GetAllNoTrackingAsync();
         return tiposFasesEmergencias;
     }
 }

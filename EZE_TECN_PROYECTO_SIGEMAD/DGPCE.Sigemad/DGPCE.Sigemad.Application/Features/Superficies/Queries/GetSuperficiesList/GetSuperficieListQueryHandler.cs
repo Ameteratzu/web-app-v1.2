@@ -14,7 +14,7 @@ public class GetSuperficieListQueryHandler : IRequestHandler<GetSuperficieListQu
 
     public async Task<IReadOnlyList<SuperficieFiltro>> Handle(GetSuperficieListQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<SuperficieFiltro>().GetAllAsync();
+        var lista = await _unitOfWork.Repository<SuperficieFiltro>().GetAllNoTrackingAsync();
         return lista;
     }
 }

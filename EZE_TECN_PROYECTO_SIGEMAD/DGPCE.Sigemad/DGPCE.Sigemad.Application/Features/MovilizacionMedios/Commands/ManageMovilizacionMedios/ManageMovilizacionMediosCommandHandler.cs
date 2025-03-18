@@ -421,7 +421,7 @@ public class ManageMovilizacionMediosCommandHandler : IRequestHandler<ManageMovi
     private async Task ValidarFlujoPasos(ManageMovilizacionMediosCommand request)
     {
         // Obtener todo el flujo de la base de datos
-        var flujoPasos = await _unitOfWork.Repository<FlujoPasoMovilizacion>().GetAllAsync();
+        var flujoPasos = await _unitOfWork.Repository<FlujoPasoMovilizacion>().GetAllNoTrackingAsync();
 
         // Obtener el primer paso configurado (IdPasoActual = NULL)
         var primerPasoPermitido = flujoPasos.FirstOrDefault(f => f.IdPasoActual == null);

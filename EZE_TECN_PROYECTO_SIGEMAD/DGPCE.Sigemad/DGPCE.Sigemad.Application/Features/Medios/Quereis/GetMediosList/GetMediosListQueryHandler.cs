@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList
 
         public async Task<IReadOnlyList<Medio>> Handle(GetMediosListQuery request, CancellationToken cancellationToken)
         {
-            var medios = await _unitOfWork.Repository<Medio>().GetAllAsync();
+            var medios = await _unitOfWork.Repository<Medio>().GetAllNoTrackingAsync();
             return medios;
         }
     }

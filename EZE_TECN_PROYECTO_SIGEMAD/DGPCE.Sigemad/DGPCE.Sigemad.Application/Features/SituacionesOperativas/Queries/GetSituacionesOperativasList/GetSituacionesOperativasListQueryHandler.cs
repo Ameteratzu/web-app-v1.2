@@ -14,7 +14,7 @@ public class GetSituacionesOperativasListQueryHandler : IRequestHandler<GetSitua
 
     public async Task<IReadOnlyList<SituacionOperativa>> Handle(GetSituacionesOperativasListQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<SituacionOperativa>().GetAllAsync();
+        var lista = await _unitOfWork.Repository<SituacionOperativa>().GetAllNoTrackingAsync();
         return lista;
     }
 }
