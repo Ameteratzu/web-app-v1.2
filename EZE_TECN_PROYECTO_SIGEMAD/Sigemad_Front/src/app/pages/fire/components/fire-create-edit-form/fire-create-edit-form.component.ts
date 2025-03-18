@@ -233,7 +233,7 @@ export class FireCreateEdit implements OnInit {
 
       data.geoposition = {
         type: 'Point',
-        coordinates: this.geometry()[0] ?? '',
+        coordinates: this.geometry()[0] ?? [],
       };
       console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.geometry());
 
