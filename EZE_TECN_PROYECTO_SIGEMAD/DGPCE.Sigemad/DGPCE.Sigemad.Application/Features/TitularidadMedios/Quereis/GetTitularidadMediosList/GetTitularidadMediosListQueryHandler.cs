@@ -16,7 +16,7 @@ internal class GetTitularidadMediosListQueryHandler : IRequestHandler<GetTitular
 
     public async Task<IReadOnlyList<TitularidadMedio>> Handle(GetTitularidadMediosListQuery request, CancellationToken cancellationToken)
     {
-        var titularidadMedios = await _unitOfWork.Repository<TitularidadMedio>().GetAllAsync();
+        var titularidadMedios = await _unitOfWork.Repository<TitularidadMedio>().GetAllNoTrackingAsync();
         return titularidadMedios;
     }
 }

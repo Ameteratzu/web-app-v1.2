@@ -21,7 +21,7 @@ public class GetTiposAdministracionListQueryHandler : IRequestHandler<GetTiposAd
 
     public async Task<IReadOnlyList<TipoAdministracionDto>> Handle(GetTiposAdministracionListQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<TipoAdministracion>().GetAllAsync();
+        var lista = await _unitOfWork.Repository<TipoAdministracion>().GetAllNoTrackingAsync();
         return _mapper.Map<IReadOnlyList<TipoAdministracionDto>>(lista);
     }
 }

@@ -15,7 +15,7 @@ namespace DGPCE.Sigemad.Application.Features.ModosActivacion.Queries.GetModosAct
 
         public async Task<IReadOnlyList<ModoActivacion>> Handle(GetModosActivacionListQuery request, CancellationToken cancellationToken)
         {
-            var modosActivacion = await _unitOfWork.Repository<ModoActivacion>().GetAllAsync();
+            var modosActivacion = await _unitOfWork.Repository<ModoActivacion>().GetAllNoTrackingAsync();
             return modosActivacion;
         }
     }

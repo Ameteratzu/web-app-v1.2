@@ -15,7 +15,7 @@ namespace DGPCE.Sigemad.Application.Features.TipoSucesos.Queries.GetTipoSucesosL
 
         public async Task<IReadOnlyList<TipoSuceso>> Handle(GetTipoSucesosListQuery request, CancellationToken cancellationToken)
         {
-            var tipoSucesos = await _unitOfWork.Repository<TipoSuceso>().GetAllAsync();
+            var tipoSucesos = await _unitOfWork.Repository<TipoSuceso>().GetAllNoTrackingAsync();
             return tipoSucesos;
         }
     }

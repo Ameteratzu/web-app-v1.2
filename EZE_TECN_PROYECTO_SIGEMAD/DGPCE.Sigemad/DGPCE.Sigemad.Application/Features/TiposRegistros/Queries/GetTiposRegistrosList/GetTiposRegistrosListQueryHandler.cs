@@ -14,7 +14,7 @@ public class GetTiposRegistrosListQueryHandler : IRequestHandler<GetTiposRegistr
 
     public async Task<IReadOnlyList<TipoRegistro>> Handle(GetTiposRegistrosListQuery request, CancellationToken cancellationToken)
     {
-        var tiposRegistros = await _unitOfWork.Repository<TipoRegistro>().GetAllAsync();
+        var tiposRegistros = await _unitOfWork.Repository<TipoRegistro>().GetAllNoTrackingAsync();
 
         return tiposRegistros;
     }

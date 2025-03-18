@@ -20,7 +20,7 @@ public class GetMenusListQueryHandler : IRequestHandler<GetMenusListQuery, IRead
 
     public async Task<IReadOnlyList<MenuItemVm>> Handle(GetMenusListQuery request, CancellationToken cancellationToken)
     {
-        var menus = await _unitOfWork.Repository<Menu>().GetAllAsync();
+        var menus = await _unitOfWork.Repository<Menu>().GetAllNoTrackingAsync();
         IReadOnlyList<MenuItemVm> groupedMenus = menus
             .Where(m => m.Tipo.Equals(Grupo, StringComparison.CurrentCultureIgnoreCase))
             .OrderBy(m => m.NumOrden)

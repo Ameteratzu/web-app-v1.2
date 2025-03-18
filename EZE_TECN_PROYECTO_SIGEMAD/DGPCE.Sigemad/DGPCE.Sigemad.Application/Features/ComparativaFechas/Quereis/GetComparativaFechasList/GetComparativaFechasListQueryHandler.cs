@@ -16,7 +16,7 @@ namespace DGPCE.Sigemad.Application.Features.ComparativaFechas.Quereis.GetCompar
 
             public async Task<IReadOnlyList<ComparativaFecha>> Handle(GetComparativaFechasListQuery request, CancellationToken cancellationToken)
             {
-                var comparativaFechas = await _unitOfWork.Repository<ComparativaFecha>().GetAllAsync();
+                var comparativaFechas = await _unitOfWork.Repository<ComparativaFecha>().GetAllNoTrackingAsync();
                 return comparativaFechas;
             }
         }

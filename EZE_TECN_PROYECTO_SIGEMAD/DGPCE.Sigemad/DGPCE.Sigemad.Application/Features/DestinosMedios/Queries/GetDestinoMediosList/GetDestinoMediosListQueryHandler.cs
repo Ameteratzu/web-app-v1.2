@@ -21,7 +21,7 @@ public class GetDestinoMediosListQueryHandler : IRequestHandler<GetDestinoMedios
 
     public async Task<IReadOnlyList<DestinoMedioDto>> Handle(GetDestinoMediosListQuery request, CancellationToken cancellationToken)
     {
-        var lista = await _unitOfWork.Repository<DestinoMedio>().GetAllAsync();
+        var lista = await _unitOfWork.Repository<DestinoMedio>().GetAllNoTrackingAsync();
         return _mapper.Map<IReadOnlyList<DestinoMedioDto>>(lista);
     }
 }

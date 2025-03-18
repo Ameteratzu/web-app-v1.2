@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS dbo.Municipio;
-GO
-
 CREATE TABLE dbo.Municipio (
 	Id int NOT NULL PRIMARY KEY,
 	IdProvincia int NOT NULL FOREIGN KEY REFERENCES Provincia(Id),
@@ -18,4 +15,9 @@ CREATE TABLE dbo.Municipio (
 	EliminadoPor UNIQUEIDENTIFIER NULL,
 	Borrado BIT NOT NULL DEFAULT 0
 );
+
 CREATE INDEX IX_Municipio ON dbo.Municipio (IdProvincia);
+
+
+CREATE INDEX IX_Municipio_Descripcion
+ON dbo.Municipio(Descripcion);

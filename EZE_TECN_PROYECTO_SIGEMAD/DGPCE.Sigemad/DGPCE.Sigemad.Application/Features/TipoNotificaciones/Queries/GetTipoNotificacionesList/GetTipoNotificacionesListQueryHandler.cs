@@ -20,7 +20,7 @@ public class GetTipoNotificacionesListQueryHandler : IRequestHandler<GetTipoNoti
 
     public async Task<IReadOnlyList<TipoNotificacion>> Handle(GetTipoNotificacionesListQuery request, CancellationToken cancellationToken)
     {
-        var tipoNotificacion = await _unitOfWork.Repository<TipoNotificacion>().GetAllAsync();
+        var tipoNotificacion = await _unitOfWork.Repository<TipoNotificacion>().GetAllNoTrackingAsync();
         return tipoNotificacion;
     }
 }

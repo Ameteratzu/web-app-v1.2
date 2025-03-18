@@ -15,7 +15,7 @@ namespace DGPCE.Sigemad.Application.Features.TipoDocumentos;
 
         public async Task<IReadOnlyList<TipoDocumento>> Handle(GetTipoDocumentosListQuery request, CancellationToken cancellationToken)
         {
-            var tipoDocumentos = await _unitOfWork.Repository<TipoDocumento>().GetAllAsync();
+            var tipoDocumentos = await _unitOfWork.Repository<TipoDocumento>().GetAllNoTrackingAsync();
             return tipoDocumentos;
         }
     }

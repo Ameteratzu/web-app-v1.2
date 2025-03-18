@@ -20,7 +20,7 @@ namespace DGPCE.Sigemad.Application.Features.EstadosIncendio.Queries.GetEstadosI
 
         public async Task<IReadOnlyList<EstadoIncendio>> Handle(GetEstadosIncendioListQuery request, CancellationToken cancellationToken)
         {
-            var estadosIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetAllAsync();
+            var estadosIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetAllNoTrackingAsync();
             return estadosIncendio;
         }
     }
