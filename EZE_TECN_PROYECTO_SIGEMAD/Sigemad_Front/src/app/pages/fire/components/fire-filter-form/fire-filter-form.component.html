@@ -67,7 +67,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="25">
-          <mat-label>Estado del suceso</mat-label>
+          <mat-label>Seguimiento</mat-label>
           <mat-select [formControl]="getForm('eventStatus')">
             <mat-option *ngFor="let option of eventStatus()" [value]="option.id">
               {{ option.descripcion }}
