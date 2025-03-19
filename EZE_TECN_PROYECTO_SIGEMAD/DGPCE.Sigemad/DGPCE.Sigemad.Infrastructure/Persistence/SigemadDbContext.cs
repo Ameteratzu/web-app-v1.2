@@ -50,6 +50,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            // Automatically apply HasTrigger to all entities
+            modelBuilder.ApplyHasTrigger();
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<TipoSuceso>().ToTable("TipoSuceso");
@@ -209,4 +212,6 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         //public DbSet<Auditoria> Auditorias { get; set; }
         // FIN PCD
     }
+
+
 }
