@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
+using DGPCE.Sigemad.Application.Dtos.Ope.Datos;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
