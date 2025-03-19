@@ -1,4 +1,5 @@
-﻿using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
+﻿using DGPCE.Sigemad.Application.Dtos.Ope.Datos;
+using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;

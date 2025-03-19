@@ -3,6 +3,7 @@ using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarr
 using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
@@ -49,6 +50,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            // Automatically apply HasTrigger to all entities
+            modelBuilder.ApplyHasTrigger();
 
             base.OnModelCreating(modelBuilder);
 
@@ -97,6 +101,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
             modelBuilder.Entity<OpeAreaDescansoTipo>().ToTable("OPE_AreaDescansoTipo");
             modelBuilder.Entity<OpeEstadoOcupacion>().ToTable("OPE_EstadoOcupacion");
             modelBuilder.Entity<OpePuntoControlCarretera>().ToTable("OPE_PuntoControlCarretera");
+            modelBuilder.Entity<OpeDatoFrontera>().ToTable("OPE_DatoFrontera");
             //modelBuilder.Entity<Auditoria>().ToTable(nameof(Auditoria));
             // FIN PCD
         }
@@ -206,7 +211,9 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<OpeAreaDescansoTipo> OpeAreasDescansoTipos { get; set; }
         public DbSet<OpeEstadoOcupacion> OpeEstadosOcupacion { get; set; }
         public DbSet<OpePuntoControlCarretera> OpePuntosControlCarreteras { get; set; }
-        //public DbSet<Auditoria> Auditorias { get; set; }
+        public DbSet<OpeDatoFrontera> OpeDatosFronteras { get; set; }
         // FIN PCD
     }
+
+
 }
