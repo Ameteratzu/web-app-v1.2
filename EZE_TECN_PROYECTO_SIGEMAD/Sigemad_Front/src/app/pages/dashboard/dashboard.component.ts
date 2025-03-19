@@ -24,6 +24,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -54,6 +55,8 @@ export class DashboardComponent implements AfterViewInit {
 
   private isShowingPeninsula = true; // Para cambiar zoom a Canarias o Península
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     this.menuItemActiveService.set.emit('/dashboard');
 
@@ -78,7 +81,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-      this.configuremap();
+    this.configuremap();
   }
 
   configuremap() {
@@ -415,7 +418,6 @@ export class DashboardComponent implements AfterViewInit {
       const viewResolution = this.view.getResolution();
       const projection = this.view.getProjection();
 
-      // Cerrar popup existente
       this.closePopup();
 
       // Obtener las capas del grupo de incendios
@@ -445,9 +447,9 @@ export class DashboardComponent implements AfterViewInit {
                 date: feature.properties.fechaInicio,
                 location: feature.properties.municipio,
                 status: feature.properties.estado,
+                seguimiento: `fire/fire-national-edit/${feature.properties.id}`,
               };
 
-              // Posicionar el popup
               this.popupPosition = {
                 x: pixel[0],
                 y: pixel[1] + 10, // Pequeño offset vertical
@@ -461,6 +463,12 @@ export class DashboardComponent implements AfterViewInit {
         }
       }
     });
+  }
+
+  navigateToFeature(): void {
+    if (this.selectedFeature?.seguimiento) {
+      this.router.navigate([this.selectedFeature.seguimiento]);
+    }
   }
 
   addZoomCanariasPeninsula() {

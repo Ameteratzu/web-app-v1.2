@@ -36,7 +36,7 @@
         <div class="popup-content">
           <div class="info-row">
             <span class="label">Fecha:</span>
-            <span class="value">{{ selectedFeature.date | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="value">{{ selectedFeature.date | date: 'dd/MM/yyyy HH:mm' }}</span>
           </div>
           <div class="info-row">
             <span class="label">Ubicación:</span>
@@ -53,6 +53,9 @@
           <div class="info-row" *ngIf="selectedFeature.description">
             <span class="label">Descripción:</span>
             <span class="value">{{ selectedFeature.description }}</span>
+          </div>
+          <div class="info-row" *ngIf="selectedFeature.seguimiento">
+            <button mat-button color="primary" (click)="navigateToFeature()">Ir al seguimiento</button>
           </div>
         </div>
       </div>
