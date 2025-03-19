@@ -53,7 +53,7 @@ export class FireService {
       idEstadoSuceso: data.eventStatus,
       //fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd' + ' ' + data.startTime),
       // PCD
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd  h:mm:ss'),
+      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd  HH:mm:ss'),
       // FIN PCD
 
       denominacion: data.denomination,
@@ -79,6 +79,7 @@ export class FireService {
   }
 
   update(data: any) {
+    
     const body = {
       id: data.id,
       IdTerritorio: data.territory,
@@ -86,7 +87,7 @@ export class FireService {
       idEstadoSuceso: data.eventStatus,
       //fechaInicio: this.datepipe.transform(data.startDate, 'yyyy-MM-dd h:mm:ss'),
       // PCD
-      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd h:mm:ss'),
+      fechaInicio: this.datepipe.transform(data.startDateTime, 'yyyy-MM-dd HH:mm:ss'),
       // FIN PCD
 
       denominacion: data.denomination,
