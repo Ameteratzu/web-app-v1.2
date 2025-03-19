@@ -348,7 +348,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-  
+
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
       // PCD
       Incendio: this.goModalDocumentation.bind(this),

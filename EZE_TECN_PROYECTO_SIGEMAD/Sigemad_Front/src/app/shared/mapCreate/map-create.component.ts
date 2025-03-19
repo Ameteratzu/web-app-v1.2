@@ -21,7 +21,6 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import { Geometry, Polygon } from 'ol/geom';
-import WKT from 'ol/format/WKT';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import { get as getProjection } from 'ol/proj';
 import { getTopLeft } from 'ol/extent';
@@ -56,6 +55,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() municipio: any;
   @Input() listaMunicipios: any;
   @Input() onlyView: any = null;
+  @Input() centroideMunicipio: boolean = false;
   @Input() polygon: any;
   @Input() close: boolean = true;
   @Input() fileContent: string | null = null;
@@ -68,10 +68,10 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   public drawPoint!: Draw;
   public drawPolygon!: Draw;
   public snap!: Snap;
-  public layerAreasAfectadas!: VectorLayer;
+  public layerEdition!: VectorLayer;
   public coords: any;
   public select!: Select;
-  public layerMunicipio!: VectorLayer<VectorSource<Feature<Point>>>;
+  //public layerCentroideMunicipio!: VectorLayer<VectorSource<Feature<Point>>>;
   public layerLimitesMunicipio: any;
   public highLightMunicipio!: VectorLayer<VectorSource<Feature<Polygon>>>;
   public length!: number;
@@ -91,8 +91,22 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
   public municipalities = signal<Municipality[]>([]);
   public municipioSelected = signal(this.data?.municipio || {});
 
+  private styleEdicion = new Style({
+    // Estilo para puntos
+    image: new Icon({
+      anchor: [0.5, 0.5],
+      src: '/assets/img/centroide.png',
+      scale: 0.07,
+    }),
+    // Estilo para polígonos
+    stroke: new Stroke({
+      color: 'rgb(255, 128, 0)',
+      width: 5,
+    }),
+  });
+
   async ngOnInit() {
-    const { municipio, listaMunicipios, defaultPolygon, onlyView } = this.data;
+    const { municipio, listaMunicipios, defaultPolygon, onlyView, centroideMunicipio } = this.data;
 
     if (municipio != null) this.municipio = municipio;
 
@@ -106,7 +120,9 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     if (onlyView != null) this.onlyView = onlyView;
 
-    this.configureMap(this.municipio, this.polygon, this.onlyView);
+    if (centroideMunicipio != null) this.centroideMunicipio = centroideMunicipio;
+
+    this.configureMap(this.municipio, this.polygon, this.onlyView, this.centroideMunicipio);
     this.highlightSelectedMunicipio(this.municipio.descripcion);
   }
 
@@ -136,14 +152,14 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
   private updateMapWithPolygon(newPolygon: any) {
     if (newPolygon) {
-      this.layerAreasAfectadas.getSource()?.clear();
+      this.layerEdition.getSource()?.clear();
 
       if (newPolygon) {
         const defaultPolygonMercator = newPolygon.map((coord: any) => fromLonLat(coord));
         const polygonFeature = new Feature({
           geometry: new Polygon([defaultPolygonMercator]),
         });
-        this.layerAreasAfectadas.getSource()?.addFeature(polygonFeature);
+        this.layerEdition.getSource()?.addFeature(polygonFeature);
       }
     }
   }
@@ -156,7 +172,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null) {
+  configureMap(municipio: any, defaultPolygon: any = null, onlyView: any = null, centroideMunicipio: boolean) {
     if (!municipio) {
       return;
     }
@@ -165,7 +181,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     const layersGroupAdmin = this.getAdminLayers();
 
-    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon);
+    const layersGroupIncendio = this.getFireLayers(municipio, defaultPolygon, centroideMunicipio);
 
     // Crear el popup
     const container = document.getElementById('popup');
@@ -367,45 +383,57 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     return wmsLayersGroup;
   }
 
-  getFireLayers(municipio: any, defaultPolygon: any) {
+  getFireLayers(municipio: any, defaultPolygon: any, centroideMunicipio: boolean) {
     let defaultPolygonMercator;
 
-    if (defaultPolygon) {
+    //si defaultPolygon es un array de una dimension, se convierte en un array de dos dimensiones
+    if (defaultPolygon && defaultPolygon.length > 0 && !Array.isArray(defaultPolygon[0])) {
+      defaultPolygon = [defaultPolygon];
+    }
+
+    if (defaultPolygon && defaultPolygon.length > 0) {
       defaultPolygonMercator = defaultPolygon.map((coord: any) => fromLonLat(coord));
     }
     this.source = new VectorSource();
 
-    this.layerAreasAfectadas = new VectorLayer({
+    this.layerEdition = new VectorLayer({
       source: this.source,
-      style: {
-        'stroke-color': 'rgb(255, 128, 0)',
-        'stroke-width': 5,
-      },
+      style: this.styleEdicion,
       properties: { title: 'Área afectada' },
     });
 
     const point = new Point(fromLonLat(municipio.geoPosicion.coordinates));
-
     const pointFeature = new Feature({
       geometry: point,
     });
 
-    if (defaultPolygon) {
-      const polygonFeature = new Feature({
-        geometry: new Polygon([defaultPolygonMercator]),
-      });
-
-      this.source.addFeature(polygonFeature);
+    if (defaultPolygonMercator) {
+      let geometryFeature;
+      if (defaultPolygonMercator.length > 1) {
+        geometryFeature = new Feature({
+          geometry: new Polygon([defaultPolygonMercator]),
+        });
+      } else {
+        geometryFeature = new Feature({
+          geometry: new Point(defaultPolygonMercator[0]),
+        });
+      }
+      this.source.addFeature(geometryFeature);
     }
 
-    this.layerMunicipio = new VectorLayer({
+    if (this.source.getFeatures().length == 0 && centroideMunicipio) {
+      this.source.addFeature(pointFeature);
+    }
+
+    /*
+    this.layerCentroideMunicipio = new VectorLayer({
       source: new VectorSource({
         features: [pointFeature],
       }),
       properties: { title: 'Municipio' },
     });
 
-    this.layerMunicipio.setStyle(
+    this.layerCentroideMunicipio.setStyle(
       new Style({
         image: new Icon({
           anchor: [1, 1],
@@ -414,6 +442,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
         }),
       })
     );
+    */
 
     this.highLightMunicipio = new VectorLayer({
       source: new VectorSource({
@@ -424,8 +453,8 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     return new LayerGroup({
       properties: { title: 'Incendios', openInLayerSwitcher: true },
-      // layers: [this.layerMunicipio, this.layerAreasAfectadas, this.highLightMunicipio],
-      layers: [this.highLightMunicipio, this.layerAreasAfectadas],
+      // layers: [this.layerCentroideMunicipio, this.layerEdicion, this.highLightMunicipio],
+      layers: [this.highLightMunicipio, this.layerEdition],
     });
   }
 
@@ -490,16 +519,23 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       html: '<img src="/assets/img/location-dot-solid.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
       interaction: this.drawPoint,
     });
+    tgPoint.setActive(true);
 
-    this.drawPoint.on('drawend', (e) => {
-      let format = new WKT();
-      let wkt = format.writeFeature(e.feature, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857',
-      });
+    this.drawPoint.on('drawstart', () => {
+      this.source.clear();
     });
 
-    //drawBar.addControl(tgPoint);
+    this.drawPoint.on('drawend', (drawEvent: DrawEvent) => {
+      const geometry = drawEvent.feature.getGeometry();
+      if (geometry instanceof Point) {
+        const coords = [];
+        coords.push(toLonLat(geometry.getCoordinates()));
+        this.coords = coords;
+        this.save.emit(this.coords);
+      }
+    });
+
+    drawBar.addControl(tgPoint);
 
     this.drawPolygon = new Draw({
       type: 'Polygon',
@@ -533,7 +569,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       this.save.emit(this.coords);
     });
 
-    drawBar.addControl(tgPolygon);
+    //drawBar.addControl(tgPolygon);
 
     const tgSelect = new Toggle({
       html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
@@ -602,8 +638,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
         const newExtent = [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius];
 
-        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857',
-          { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10, BUFFER: 20 });
+        const url = source.getFeatureInfoUrl(newExtent, resolution, 'EPSG:3857', { INFO_FORMAT: 'application/json', FEATURE_COUNT: 10, BUFFER: 20 });
         if (url) {
           fetch(url)
             .then((response) => response.json())

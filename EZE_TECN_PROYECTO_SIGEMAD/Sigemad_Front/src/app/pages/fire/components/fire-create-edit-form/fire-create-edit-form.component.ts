@@ -124,7 +124,7 @@ export class FireCreateEdit implements OnInit {
 
   //MAP
   public coordinates = signal<any>({});
-  public polygon = signal<any>([]);
+  public geometry = signal<any>([]);
   private spinner = inject(NgxSpinnerService);
 
   //PCD
@@ -184,7 +184,7 @@ export class FireCreateEdit implements OnInit {
         eventStatus: this.data.fire.idEstadoSuceso,
       });
 
-      this.polygon.set(this.data?.fire?.geoPosicion?.coordinates[0]);
+      this.geometry.set(this.data?.fire?.geoPosicion?.coordinates);
     }
 
     const territories = await this.territoryService.getForCreate();
@@ -232,10 +232,10 @@ export class FireCreateEdit implements OnInit {
       const municipio = this.municipalities().find((item) => item.id === data.municipality);
 
       data.geoposition = {
-        type: 'Polygon',
-        coordinates: [this.polygon() ?? ''],
+        type: 'Point',
+        coordinates: this.geometry()[0] ?? [],
       };
-      console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.polygon());
+      console.log('🚀 ~ FireCreateEdit ~ onSubmit ~ this.polygon():', this.geometry());
 
       if (this.data.fire?.id) {
         data.id = this.data.fire.id;
@@ -320,7 +320,7 @@ export class FireCreateEdit implements OnInit {
     this.formData.patchValue({
       denomination: selectedItem.descripcion,
     });
-    this.polygon.set([]);
+    this.geometry.set([]);
   }
 
   openModalMap() {
@@ -340,16 +340,17 @@ export class FireCreateEdit implements OnInit {
       maxHeight: '780px',
       data: {
         municipio: municipioSelected,
-        onlyView: true,
+        centroideMunicipio: true,
+        onlyView: false,
         listaMunicipios: this.municipalities(),
-        defaultPolygon: this.polygon(),
+        defaultPolygon: this.geometry(),
         close: true,
       },
     });
 
     dialogRef.componentInstance.save.subscribe((features: Feature<Geometry>[]) => {
       //this.featuresCoords = features;
-      this.polygon.set(features);
+      this.geometry.set(features);
     });
   }
 
