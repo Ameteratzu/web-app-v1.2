@@ -1,4 +1,4 @@
-import { Component, inject, AfterViewInit } from '@angular/core';
+import { Component, inject, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import Map from 'ol/Map';
@@ -25,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { Overlay } from 'ol';
 
 // Define the projection for UTM zone 30N (EPSG:25830)
 const utm30n = '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs';
@@ -49,11 +50,15 @@ export class DashboardComponent implements AfterViewInit {
     { date: '10/06/2024 15:45', type: 'Terremoto', description: 'S TETUAN.MAC. Magnitud: 3.6 mblg' },
   ];
 
-  // Añadir nuevas propiedades para el popup
+  // Propiedades para mostrar información del suceso
   public selectedFeature: any = null;
-  public popupPosition = { x: 0, y: 0 };
+  public infoPosition = { x: 0, y: 0 };
+  @ViewChild('tooltip') tooltipElement!: ElementRef;
+  private tooltip!: Overlay;
+  private moveTimeout: any;
 
-  private isShowingPeninsula = true; // Para cambiar zoom a Canarias o Península
+  // Propiedad ara cambiar zoom a Canarias o Península
+  private isShowingPeninsula = true;
 
   constructor(private router: Router) {}
 
@@ -148,17 +153,9 @@ export class DashboardComponent implements AfterViewInit {
 
     this.addZoomCanariasPeninsula();
 
-    this.map.on('pointermove', (event) => {
-      const coordinate = event.coordinate;
-      const [lon, lat] = toLonLat(coordinate);
-      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
-      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
-      if (cursorCoordinatesElement) {
-        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
-      }
-    });
+    this.showCoordinates();
 
-    this.addPopup(layersGroupIncendios);
+    this.addToolTip(layersGroupIncendios);
   }
 
   getBaseLayers() {
@@ -409,68 +406,6 @@ export class DashboardComponent implements AfterViewInit {
     return `${day}${month}${year}`;
   }
 
-  addPopup(layersGroupIncendios: LayerGroup) {
-    this.map.on('click', async (evt) => {
-      const coordinate = evt.coordinate;
-      const pixel = this.map.getEventPixel(evt.originalEvent);
-
-      // Obtener información de las capas WMS
-      const viewResolution = this.view.getResolution();
-      const projection = this.view.getProjection();
-
-      this.closePopup();
-
-      // Obtener las capas del grupo de incendios
-      const layers = layersGroupIncendios
-        .getLayers()
-        .getArray()
-        .map((layer) => ({
-          source: (layer as TileLayer).getSource(),
-          type: 'Incendio ' + layer.get('title').slice(0, -1),
-        }));
-
-      for (const layer of layers) {
-        if (!viewResolution) continue;
-        if (!(layer.source instanceof TileWMS)) continue;
-
-        const url = layer.source.getFeatureInfoUrl(coordinate, viewResolution, projection, { INFO_FORMAT: 'application/json', FEATURE_COUNT: 1 });
-
-        if (url) {
-          try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.features && data.features.length > 0) {
-              const feature = data.features[0];
-              this.selectedFeature = {
-                type: layer.type,
-                date: feature.properties.fechaInicio,
-                location: feature.properties.municipio,
-                status: feature.properties.estado,
-                seguimiento: `fire/fire-national-edit/${feature.properties.id}`,
-              };
-
-              this.popupPosition = {
-                x: pixel[0],
-                y: pixel[1] + 10, // Pequeño offset vertical
-              };
-
-              break; // Mostrar solo el primer feature encontrado
-            }
-          } catch (error) {
-            console.error('Error al obtener información del feature:', error);
-          }
-        }
-      }
-    });
-  }
-
-  navigateToFeature(): void {
-    if (this.selectedFeature?.seguimiento) {
-      this.router.navigate([this.selectedFeature.seguimiento]);
-    }
-  }
-
   addZoomCanariasPeninsula() {
     const toggleViewControl = this.createCustomControl(
       'Alternar vista',
@@ -522,6 +457,18 @@ export class DashboardComponent implements AfterViewInit {
     return new Control({ element });
   }
 
+  showCoordinates() {
+    this.map.on('pointermove', (event) => {
+      const coordinate = event.coordinate;
+      const [lon, lat] = toLonLat(coordinate);
+      const [x, y] = proj4('EPSG:4326', utm30n, [lon, lat]);
+      const cursorCoordinatesElement = document.getElementById('cursor-coordinates');
+      if (cursorCoordinatesElement) {
+        cursorCoordinatesElement.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
+      }
+    });
+  }
+
   searchCoordinates() {
     const utmX = (document.getElementById('utm-x') as HTMLInputElement).value;
     const utmY = (document.getElementById('utm-y') as HTMLInputElement).value;
@@ -534,7 +481,83 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-  closePopup(): void {
+  closeInfo(): void {
     this.selectedFeature = null;
+  }
+
+  navigateToFeature(): void {
+    if (this.selectedFeature?.seguimiento) {
+      this.router.navigate([this.selectedFeature.seguimiento]);
+    }
+  }
+
+  addToolTip(layersGroupIncendios: LayerGroup) {
+    this.tooltip = new Overlay({
+      element: this.tooltipElement.nativeElement,
+      offset: [10, 0],
+      positioning: 'bottom-left',
+    });
+    this.map.addOverlay(this.tooltip);
+
+    const viewResolution = this.view.getResolution();
+    const projection = this.view.getProjection();
+
+    this.map.on('pointermove', (evt) => {
+      if (evt.dragging) {
+        return;
+      }
+
+      const coordinate = evt.coordinate;
+      const pixel = this.map.getEventPixel(evt.originalEvent);
+
+      if (this.moveTimeout) {
+        clearTimeout(this.moveTimeout);
+      }
+
+      this.moveTimeout = setTimeout(() => {
+        const layers = layersGroupIncendios
+          .getLayers()
+          .getArray()
+          .map((layer) => ({
+            source: (layer as TileLayer).getSource(),
+            type: 'Incendio ' + layer.get('title').slice(0, -1),
+          }));
+
+        for (const layer of layers) {
+          if (!viewResolution) continue;
+          if (!(layer.source instanceof TileWMS)) continue;
+
+          const url = layer.source.getFeatureInfoUrl(coordinate, viewResolution, projection, { INFO_FORMAT: 'application/json', FEATURE_COUNT: 1 });
+
+          if (url) {
+            fetch(url)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.features && data.features.length > 0) {
+                  const feature = data.features[0];
+                  this.selectedFeature = {
+                    type: layer.type,
+                    denomination: feature.properties.denominacion,
+                    date: feature.properties.fechaInicio,
+                    location: feature.properties.municipio,
+                    status: feature.properties.estadoSuceso,
+                    seguimiento: `fire/fire-national-edit/${feature.properties.id}`,
+                  };
+
+                  this.infoPosition = {
+                    x: pixel[0],
+                    y: pixel[1] + 10, // Pequeño offset vertical
+                  };
+                } else {
+                  this.tooltipElement.nativeElement.style.display = 'none';
+                }
+              })
+              .catch(() => {
+                this.tooltipElement.nativeElement.style.display = 'none';
+              });
+          }
+        }
+      }, 200);
+    });
   }
 }
