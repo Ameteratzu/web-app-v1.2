@@ -27,10 +27,23 @@ namespace DGPCE.Sigemad.API.Controllers
             return Ok(await _authService.Register(request));
         }
 
-        [HttpPost("RefreshToken")]
+        [HttpPost("refresh-token")]
         public async Task<ActionResult<AuthResponse>> RefreshToken([FromBody] TokenRequest request)
         {
-            return Ok(await _authService.RefreshToken(request));
+
+            AuthResponse response = await _authService.RefreshToken(request);
+
+            if (response == null)
+            {
+                return BadRequest(new { message = "Invalid token" });
+            }
+
+            if (response.Success == false)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
 

@@ -74,129 +74,90 @@ namespace DGPCE.Sigemad.Identity.Services
         public async Task<AuthResponse> RefreshToken(TokenRequest request)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var tokenValidationParamsClone = _tokenValidationParameters.Clone();
-            tokenValidationParamsClone.ValidateLifetime = false;
 
             try
             {
-                // validation: El formato del Token es correcto
-                var tokenVerification = jwtTokenHandler.ValidateToken(
-                    request.Token,
-                    tokenValidationParamsClone,
-                    out var validatedToken);
-
-                // validation: Verifica encriptacion
-                if (validatedToken is JwtSecurityToken jwtSecurityToken)
-                {
-                    var result = jwtSecurityToken.Header.Alg.Equals(
-                        SecurityAlgorithms.HmacSha256,
-                        StringComparison.InvariantCultureIgnoreCase);
-
-                    if (result == false)
-                    {
-                        return new AuthResponse
-                        {
-                            Success = false,
-                            Errors = new List<string>
-                            {
-                                "El Token tiene errores de encriptacion"
-                            }
-                        };
-                    }
-                }
-
-                // validation: Verificar fecha de expiracion
-                var utcExpiryDate = long.Parse(
-                    tokenVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value
-                    );
-
-                var expiryDate = UnixTimeStampToDateTime(utcExpiryDate);
-
-                if (expiryDate > DateTime.UtcNow)
-                {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                        {
-                            "El Token ha expirado"
-                        }
-                    };
-                }
-
-                //validation: El refresh token exista en la base de datos
+                // 1️⃣ Primero, verifica si el Refresh Token existe en la base de datos
                 var storedToken = await _context.RefreshTokens!.FirstOrDefaultAsync(x => x.Token == request.RefreshToken);
                 if (storedToken is null)
                 {
                     return new AuthResponse
                     {
                         Success = false,
-                        Errors = new List<string>
-                        {
-                            "El Token no existe"
-                        }
+                        Errors = new List<string> { "El Refresh Token no existe" }
                     };
                 }
 
-                // validation para verificar si el token ya fue usado
-
-                if (storedToken.IsUsed)
-                {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                        {
-                            "El Token ya fue usado"
-                        }
-                    };
-                }
-
-                //validation el token fue revocado??
-                if (storedToken.IsRevoked)
-                {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                        {
-                            "El Token ha sido revocado"
-                        }
-                    };
-                }
-
-                //validar el id del token
-                var jti = tokenVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
-
-                if (storedToken.JwtId != jti)
-                {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                        {
-                            "El token no concuerda con el valor inicial"
-                        }
-                    };
-                }
-
-                // segunda validacion para fecha de expiracion
+                // 2️⃣ Verificar si el Refresh Token ya expiró
                 if (storedToken.ExpireDate < DateTime.UtcNow)
                 {
                     return new AuthResponse
                     {
                         Success = false,
-                        Errors = new List<string>
-                        {
-                            "El refresh token ha expirado"
-                        }
+                        Errors = new List<string> { "El Refresh Token ha expirado" }
                     };
                 }
 
+                // 3️⃣ Validar que el Refresh Token no haya sido revocado o ya usado
+                if (storedToken.IsUsed)
+                {
+                    return new AuthResponse
+                    {
+                        Success = false,
+                        Errors = new List<string> { "El Refresh Token ya fue usado" }
+                    };
+                }
+
+                if (storedToken.IsRevoked)
+                {
+                    return new AuthResponse
+                    {
+                        Success = false,
+                        Errors = new List<string> { "El Refresh Token ha sido revocado" }
+                    };
+                }
+
+                // 4️⃣ Intentar validar el Access Token SIN verificar expiración
+                var tokenValidationParamsClone = _tokenValidationParameters.Clone();
+                tokenValidationParamsClone.ValidateLifetime = false; // No validar expiración aquí
+
+                var tokenVerification = jwtTokenHandler.ValidateToken(
+                    request.Token, tokenValidationParamsClone, out var validatedToken);
+
+                // 5️⃣ Verificar si el token es de tipo JWT
+                if (validatedToken is JwtSecurityToken jwtSecurityToken)
+                {
+                    var result = jwtSecurityToken.Header.Alg.Equals(
+                        SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase);
+
+                    if (!result)
+                    {
+                        return new AuthResponse
+                        {
+                            Success = false,
+                            Errors = new List<string> { "El Access Token tiene errores de encriptación" }
+                        };
+                    }
+                }
+
+                // 6️⃣ Verificar que el ID del Access Token coincida con el Refresh Token almacenado
+                var jti = tokenVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
+                if (storedToken.JwtId != jti)
+                {
+                    return new AuthResponse
+                    {
+                        Success = false,
+                        Errors = new List<string> { "El Token no concuerda con el valor inicial" }
+                    };
+                }
+
+                // 7️⃣ Marcar el Refresh Token como usado y guardar cambios
                 storedToken.IsUsed = true;
                 _context.RefreshTokens!.Update(storedToken);
                 await _context.SaveChangesAsync();
 
+                // 8️⃣ Generar nuevo Access Token y Refresh Token
                 var user = await _userManager.FindByIdAsync(storedToken.UserId);
                 var token = await GenerateToken(user);
 
@@ -209,32 +170,14 @@ namespace DGPCE.Sigemad.Identity.Services
                     RefreshToken = token.Item2,
                     Success = true,
                 };
-
             }
             catch (Exception ex)
             {
-                if (ex.Message.Contains("Lifetime validation failed. The token is expired"))
+                return new AuthResponse
                 {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                        {
-                            "El Token ha expirado por favor tienes que volver a realizar el login"
-                        }
-                    };
-                }
-                else
-                {
-                    return new AuthResponse
-                    {
-                        Success = false,
-                        Errors = new List<string>
-                            {
-                                "El Token tiene errores, tienes que volver a hacer el login"
-                            }
-                    };
-                }
+                    Success = false,
+                    Errors = new List<string> { "Error procesando el refresh token: " + ex.Message }
+                };
             }
         }
 
@@ -326,7 +269,7 @@ namespace DGPCE.Sigemad.Identity.Services
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }.Union(userClaims).Union(roleClaims)),
-                Expires = DateTime.UtcNow.Add(_jwtSettings.ExpireTime),
+                Expires = DateTime.UtcNow.Add(_jwtSettings.TokenExpireTime),
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -340,7 +283,7 @@ namespace DGPCE.Sigemad.Identity.Services
                 IsRevoked = false,
                 UserId = user.Id,
                 CreatedDate = DateTime.UtcNow,
-                ExpireDate = DateTime.UtcNow.AddMinutes(1),
+                ExpireDate = DateTime.UtcNow.Add(_jwtSettings.RefreshTokenExpireTime),
                 Token = $"{GenerateRandomTokenCharacters(35)}{Guid.NewGuid()}"
             };
 
