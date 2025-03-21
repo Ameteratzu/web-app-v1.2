@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Vms
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Vms
 {
     public class OpePeriodoVm : BaseDomainModel<int>
     {

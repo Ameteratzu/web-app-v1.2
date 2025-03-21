@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_AreaDescansoTipo;
-GO
-
-
 CREATE TABLE [dbo].[OPE_AreaDescansoTipo](
 	[Id] [int] NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,

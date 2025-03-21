@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_PeriodoTipo;
-GO
-
-
 CREATE TABLE [dbo].[OPE_PeriodoTipo](
 	[Id] [int] NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,

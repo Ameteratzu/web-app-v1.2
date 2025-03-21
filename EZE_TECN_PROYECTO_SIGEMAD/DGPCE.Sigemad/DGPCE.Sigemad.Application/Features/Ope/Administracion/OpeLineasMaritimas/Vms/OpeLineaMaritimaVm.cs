@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Vms
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Vms
 {
     public class OpeLineaMaritimaVm : BaseDomainModel<int>
     {

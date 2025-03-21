@@ -1,16 +1,16 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.DeleteOpePuertos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Queries.GetOpePuertoById;
+﻿using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.DeleteOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Queries.GetOpePuertoById;
 using DGPCE.Sigemad.Application.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.CreateOpePuertos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.UpdateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.CreateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.UpdateOpePuertos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
-using GetOpePuertosListQuery = DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Queries.GetOpePuertosList.GetOpePuertosListQuery;
+using GetOpePuertosListQuery = DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Queries.GetOpePuertosList.GetOpePuertosListQuery;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;
 

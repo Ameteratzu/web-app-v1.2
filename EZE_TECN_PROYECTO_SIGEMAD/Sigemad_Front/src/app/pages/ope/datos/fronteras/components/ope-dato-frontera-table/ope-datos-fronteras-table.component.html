@@ -1,33 +1,34 @@
 <div class="mat-elevation-z8 table-container">
   <table mat-table [dataSource]="opeDatosFronteras" matSort class="mat-table">
-    <!-- Nombre Column -->
-    <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ opeDatoFrontera.nombre }}</td>
+    <ng-container matColumnDef="opeFrontera">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Frontera</th>
+      <td mat-cell *matCellDef="let opeDatoFrontera">
+        {{ opeDatoFrontera.opeFrontera.nombre }}
+      </td>
     </ng-container>
 
-    <!-- Fecha inicio fase salida Column -->
-    <ng-container matColumnDef="fechaInicioFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase salida</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaInicioFaseSalida) }}</td>
+    <!-- Fecha hora inicio intervalo -->
+    <ng-container matColumnDef="fechaHoraInicioIntervalo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha hora inicio intervalo</th>
+      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaHoraInicioIntervalo) }}</td>
     </ng-container>
 
-    <!-- Fecha fin fase salida Column -->
-    <ng-container matColumnDef="fechaFinFaseSalida">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase salida</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaFinFaseSalida) }}</td>
+    <!-- Fecha hora fin intervalo -->
+    <ng-container matColumnDef="fechaHoraFinIntervalo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha hora fin intervalo</th>
+      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaHoraFinIntervalo) }}</td>
     </ng-container>
 
-    <!-- Fecha inicio fase retorno Column -->
-    <ng-container matColumnDef="fechaInicioFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha inicio fase retorno</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaInicioFaseRetorno) }}</td>
+    <!-- Nº Vehiculos -->
+    <ng-container matColumnDef="numeroVehiculos">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nº vehículos</th>
+      <td mat-cell *matCellDef="let opeDatoFrontera">{{ opeDatoFrontera.numeroVehiculos }}</td>
     </ng-container>
 
-    <!-- Fecha fin fase retorno Column -->
-    <ng-container matColumnDef="fechaFinFaseRetorno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha fin fase retorno</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaFinFaseRetorno) }}</td>
+    <!-- Afluencia -->
+    <ng-container matColumnDef="afluencia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Afluencia</th>
+      <td mat-cell *matCellDef="let opeDatoFrontera">{{ opeDatoFrontera.afluencia }}</td>
     </ng-container>
 
     <!-- Opciones Column -->

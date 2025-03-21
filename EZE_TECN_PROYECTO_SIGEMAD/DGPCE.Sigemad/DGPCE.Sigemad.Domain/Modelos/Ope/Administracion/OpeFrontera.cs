@@ -1,4 +1,5 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
 
 namespace DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 

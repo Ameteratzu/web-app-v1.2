@@ -6,7 +6,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
 
 public class UpdateOpeLineaMaritimaCommandHandler : IRequestHandler<UpdateOpeLineaMaritimaCommand>
 {

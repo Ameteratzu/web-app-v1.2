@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpePuertos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Queries.GetOpePuertosList
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Queries.GetOpePuertosList
 {
     public class GetOpePuertosListQueryHandler : IRequestHandler<GetOpePuertosListQuery, PaginationVm<OpePuertoVm>>
     {

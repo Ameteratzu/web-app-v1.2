@@ -2,7 +2,7 @@
 using MediatR;
 using NetTopologySuite.Geometries;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.UpdateOpePeriodos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.UpdateOpePeriodos;
 
 public class UpdateOpePeriodoCommand : IRequest
 {

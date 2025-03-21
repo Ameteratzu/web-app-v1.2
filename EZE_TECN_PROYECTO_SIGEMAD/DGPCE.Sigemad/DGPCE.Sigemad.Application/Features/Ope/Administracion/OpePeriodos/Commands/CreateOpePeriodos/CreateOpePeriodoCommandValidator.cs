@@ -2,7 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.CreateOpePeriodos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.CreateOpePeriodos;
 
 public class CreateOpePeriodoCommandValidator : AbstractValidator<CreateOpePeriodoCommand>
 {

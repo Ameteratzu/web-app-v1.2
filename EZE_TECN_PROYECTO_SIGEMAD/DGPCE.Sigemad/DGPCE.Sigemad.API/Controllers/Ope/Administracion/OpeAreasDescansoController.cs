@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeAreasDescanso.Vms;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.CreateOpeAreasDescanso;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
-using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Queries.GetOpeAreasDescansoList;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;

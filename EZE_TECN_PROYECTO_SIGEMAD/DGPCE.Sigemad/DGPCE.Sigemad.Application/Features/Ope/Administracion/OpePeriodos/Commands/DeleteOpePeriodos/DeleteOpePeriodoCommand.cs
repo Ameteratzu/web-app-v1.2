@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.DeleteOpePeriodos
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.DeleteOpePeriodos
 {
     public class DeleteOpePeriodoCommand : IRequest
     {

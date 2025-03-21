@@ -1,4 +1,4 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Vms;
+﻿using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpePeriodos;
 using MediatR;

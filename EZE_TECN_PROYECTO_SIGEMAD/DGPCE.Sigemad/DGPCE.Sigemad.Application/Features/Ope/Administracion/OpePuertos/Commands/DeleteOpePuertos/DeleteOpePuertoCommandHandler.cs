@@ -5,7 +5,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.DeleteOpePuertos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.DeleteOpePuertos;
 
 public class DeleteOpePuertoCommandHandler : IRequestHandler<DeleteOpePuertoCommand>
 {

@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.API.Constants;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodosTipos.Queries.GetOpePeriodosTiposList;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodosTipos.Queries.GetOpePeriodosTiposList;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

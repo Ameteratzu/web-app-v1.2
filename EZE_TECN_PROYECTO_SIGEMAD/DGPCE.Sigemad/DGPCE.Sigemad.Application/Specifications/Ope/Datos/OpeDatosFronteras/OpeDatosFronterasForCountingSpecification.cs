@@ -1,7 +1,6 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
-using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
+﻿using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
 
-namespace DGPCE.Sigemad.Application.Specifications.Ope.Datos.OpeDatosFronteras;
+namespace DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpeDatosFronteras;
 
 public class OpeDatosFronterasForCountingSpecification : BaseSpecification<OpeDatoFrontera>
 {

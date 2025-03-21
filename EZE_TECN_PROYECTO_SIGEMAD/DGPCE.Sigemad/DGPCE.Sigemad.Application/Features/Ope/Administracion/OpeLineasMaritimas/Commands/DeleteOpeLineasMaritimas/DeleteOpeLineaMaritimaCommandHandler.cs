@@ -5,7 +5,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.DeleteOpeLineasMaritimas;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.DeleteOpeLineasMaritimas;
 
 public class DeleteOpeLineaMaritimaCommandHandler : IRequestHandler<DeleteOpeLineaMaritimaCommand>
 {

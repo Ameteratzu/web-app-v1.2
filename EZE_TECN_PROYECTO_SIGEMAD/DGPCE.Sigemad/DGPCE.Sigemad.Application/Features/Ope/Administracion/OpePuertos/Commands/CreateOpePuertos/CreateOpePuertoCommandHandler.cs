@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.CreateOpePuertos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.CreateOpePuertos;
 
 public class CreateOpePuertoCommandHandler : IRequestHandler<CreateOpePuertoCommand, CreateOpePuertoResponse>
 {

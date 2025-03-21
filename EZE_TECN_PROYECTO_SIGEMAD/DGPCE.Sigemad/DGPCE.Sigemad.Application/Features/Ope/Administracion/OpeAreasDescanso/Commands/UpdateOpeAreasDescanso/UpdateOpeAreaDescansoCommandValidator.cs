@@ -1,9 +1,8 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
-using DGPCE.Sigemad.Application.Resources;
+﻿using DGPCE.Sigemad.Application.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreaDescansos.Commands.UpdateOpeAreaDescansos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
 
 public class UpdateOpeAreaDescansoCommandValidator : AbstractValidator<UpdateOpeAreaDescansoCommand>
 {

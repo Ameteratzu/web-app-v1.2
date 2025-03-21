@@ -1,15 +1,15 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.DeleteOpeLineasMaritimas;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Queries.GetOpeLineaMaritimaById;
+﻿using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.DeleteOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Queries.GetOpeLineaMaritimaById;
 using DGPCE.Sigemad.Application.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Queries.GetOpeLineasMaritimasList;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Queries.GetOpeLineasMaritimasList;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;

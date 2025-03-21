@@ -1,16 +1,16 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.DeleteOpePuntosControlCarreteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById;
+﻿using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.DeleteOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById;
 using DGPCE.Sigemad.Application.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;
 

@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
 
 public class CreateOpeLineaMaritimaCommandHandler : IRequestHandler<CreateOpeLineaMaritimaCommand, CreateOpeLineaMaritimaResponse>
 {

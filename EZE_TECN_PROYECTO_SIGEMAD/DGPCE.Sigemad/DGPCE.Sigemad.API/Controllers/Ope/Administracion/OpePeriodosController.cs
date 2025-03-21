@@ -1,16 +1,16 @@
-﻿using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.DeleteOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Queries.GetOpePeriodoById;
+﻿using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.DeleteOpePeriodos;
 using DGPCE.Sigemad.Application.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.CreateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.UpdateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Queries.GetOpePeriodosList;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.CreateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.UpdateOpePeriodos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Queries.GetOpePeriodosList;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Queries.GetOpePeriodoById;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;
 

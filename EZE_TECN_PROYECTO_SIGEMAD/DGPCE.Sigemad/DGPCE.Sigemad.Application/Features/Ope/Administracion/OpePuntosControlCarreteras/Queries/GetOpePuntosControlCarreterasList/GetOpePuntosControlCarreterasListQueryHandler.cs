@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpePuntosControlCarreteras;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntosControlCarreterasList
 {
     public class GetOpePuntosControlCarreterasListQueryHandler : IRequestHandler<GetOpePuntosControlCarreterasListQuery, PaginationVm<OpePuntoControlCarreteraVm>>
     {

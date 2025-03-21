@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_DatoFrontera;
-GO
-
-
 CREATE TABLE [dbo].[OPE_DatoFrontera](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[IdOpeFrontera] int NOT NULL FOREIGN KEY REFERENCES dbo.OPE_Frontera(Id),

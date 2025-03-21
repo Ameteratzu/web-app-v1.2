@@ -30,7 +30,6 @@
   <ItemGroup>
     <Folder Include="Features\ActivacionesPlanesEmergencia\Queries\" />
     <Folder Include="Features\Distritos\Quereis\" />
-    <Folder Include="Features\Ope\Datos\OpeDatosFronteras\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

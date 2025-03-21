@@ -6,7 +6,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.UpdateOpePuertos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.UpdateOpePuertos;
 
 public class UpdateOpePuertoCommandHandler : IRequestHandler<UpdateOpePuertoCommand>
 {

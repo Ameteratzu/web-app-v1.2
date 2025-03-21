@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_EstadoOcupacion;
-GO
-
-
 CREATE TABLE [dbo].[OPE_EstadoOcupacion](
 	[Id] [int] NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,

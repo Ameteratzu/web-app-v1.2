@@ -6,7 +6,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
 
 public class UpdateOpePuntoControlCarreteraCommandHandler : IRequestHandler<UpdateOpePuntoControlCarreteraCommand>
 {

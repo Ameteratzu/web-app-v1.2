@@ -1,4 +1,4 @@
-﻿namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.CreateOpePuertos
+﻿namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.CreateOpePuertos
 {
     public class CreateOpePuertoResponse
     {

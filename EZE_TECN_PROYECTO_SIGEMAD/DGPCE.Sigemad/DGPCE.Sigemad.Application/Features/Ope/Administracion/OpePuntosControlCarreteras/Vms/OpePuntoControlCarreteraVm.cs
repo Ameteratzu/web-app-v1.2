@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Vms
 {
     public class OpePuntoControlCarreteraVm : BaseDomainModel<int>
     {

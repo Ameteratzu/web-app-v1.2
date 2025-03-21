@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.DeleteOpePuertos
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.DeleteOpePuertos
 {
     public class DeleteOpePuertoCommand : IRequest
     {

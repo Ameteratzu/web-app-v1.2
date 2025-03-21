@@ -6,7 +6,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.UpdateOpePeriodos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.UpdateOpePeriodos;
 
 public class UpdateOpePeriodoCommandHandler : IRequestHandler<UpdateOpePeriodoCommand>
 {
