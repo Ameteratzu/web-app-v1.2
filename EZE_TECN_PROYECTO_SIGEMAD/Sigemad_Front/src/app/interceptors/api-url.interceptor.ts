@@ -107,9 +107,10 @@ const logoutUser = (router: Router, snackBar: MatSnackBar, error: any = null): O
   sessionStorage.removeItem('refreshToken');
 
   snackBar.open('⚠️ Sesión finalizada. Inicia sesión nuevamente.', '', {
-    duration: 1000,
+    duration: 5000,
     verticalPosition: 'top',
     horizontalPosition: 'center',
+    panelClass: ['snackbar-error'],
   });
 
   router.navigate(['/login']);

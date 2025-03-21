@@ -185,3 +185,44 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 // FIN PCD
+
+
+// ✅ Éxito (Verde)
+.snackbar-success {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #388e3c, // Verde fuerte
+      supporting-text-color: white,
+    )
+  );
+}
+
+// ❌ Error (Rojo)
+.snackbar-error {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #d32f2f, // Rojo fuerte
+      supporting-text-color: white,
+    )
+  );
+}
+
+// ⚠️ Advertencia (Amarillo)
+.snackbar-warning {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #fbc02d, // Amarillo
+      supporting-text-color: black,
+    )
+  );
+}
+
+// ℹ️ Información (Azul)
+.snackbar-info {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #1976d2, // Azul Material Design
+      supporting-text-color: white,
+    )
+  );
+}
