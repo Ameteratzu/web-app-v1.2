@@ -2,7 +2,7 @@
 using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Vms
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeAreasDescanso.Vms
 {
     public class OpeAreaDescansoVm : BaseDomainModel<int>
     {

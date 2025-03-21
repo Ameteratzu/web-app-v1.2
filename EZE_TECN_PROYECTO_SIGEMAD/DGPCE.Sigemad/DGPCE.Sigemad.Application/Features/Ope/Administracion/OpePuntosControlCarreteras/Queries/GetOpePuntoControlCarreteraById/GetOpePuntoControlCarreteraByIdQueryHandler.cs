@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById
 {
     public class GetOpePuntoControlCarreteraByIdQueryHandler : IRequestHandler<GetOpePuntoControlCarreteraByIdQuery, OpePuntoControlCarretera>
     {

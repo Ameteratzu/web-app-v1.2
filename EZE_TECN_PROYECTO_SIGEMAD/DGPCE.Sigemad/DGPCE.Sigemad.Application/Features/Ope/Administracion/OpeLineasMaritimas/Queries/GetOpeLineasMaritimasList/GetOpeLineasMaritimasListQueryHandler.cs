@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpeLineasMaritimas;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Queries.GetOpeLineasMaritimasList
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Queries.GetOpeLineasMaritimasList
 {
     public class GetOpeLineasMaritimasListQueryHandler : IRequestHandler<GetOpeLineasMaritimasListQuery, PaginationVm<OpeLineaMaritimaVm>>
     {

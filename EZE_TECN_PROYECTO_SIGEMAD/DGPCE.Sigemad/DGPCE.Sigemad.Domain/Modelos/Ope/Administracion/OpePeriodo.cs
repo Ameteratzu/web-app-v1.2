@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using DGPCE.Sigemad.Domain.Common;
+﻿using DGPCE.Sigemad.Domain.Common;
 
 namespace DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
@@ -13,12 +12,4 @@ public class OpePeriodo : BaseDomainModel<int>
     public DateTime FechaFinFaseRetorno { get; set; }
 
     public virtual OpePeriodoTipo OpePeriodoTipo { get; set; } = null!;
-
-    // Método para generar un objeto Auditoria
-    /*
-    public String ToAuditoria()
-    {
-        return JsonSerializer.Serialize(this);
-    }
-    */
 }

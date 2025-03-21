@@ -23,8 +23,6 @@ using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios;
 using DGPCE.Sigemad.Application.Dtos.MovilizacionesMedios.Pasos;
 using DGPCE.Sigemad.Application.Dtos.Municipios;
 using DGPCE.Sigemad.Application.Dtos.NotificacionesEmergencias;
-using DGPCE.Sigemad.Application.Dtos.Ope.Datos;
-using DGPCE.Sigemad.Application.Dtos.Ope.Datos.OpeDatosFronteras;
 using DGPCE.Sigemad.Application.Dtos.OtraInformaciones;
 using DGPCE.Sigemad.Application.Dtos.ProcedenciasDestinos;
 using DGPCE.Sigemad.Application.Dtos.Provincias;
@@ -43,7 +41,6 @@ using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Comman
 using DGPCE.Sigemad.Application.Features.DireccionCoordinacionEmergencias.Vms;
 using DGPCE.Sigemad.Application.Features.Distritos.Vms;
 using DGPCE.Sigemad.Application.Features.Documentaciones.Vms;
-using DGPCE.Sigemad.Application.Features.EmergenciasNacionales.Commands.ManageEmergenciasNacionales;
 using DGPCE.Sigemad.Application.Features.EntidadesMenores.Vms;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Commands.ManageEvoluciones;
 using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
@@ -58,24 +55,19 @@ using DGPCE.Sigemad.Application.Features.Incendios.Vms;
 using DGPCE.Sigemad.Application.Features.Menus.Vms;
 using DGPCE.Sigemad.Application.Features.Municipios.Vms;
 using DGPCE.Sigemad.Application.Features.NotificacionesEmergencias.Commands.ManageNotificacionEmergencia;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.CreateOpeAreasDescanso;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.CreateOpeFronteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.UpdateOpeFronteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.CreateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.UpdateOpePeriodos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.CreateOpePuertos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.UpdateOpePuertos;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeAreasDescanso.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.CreateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.CreateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.UpdateOpePeriodos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.CreateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.UpdateOpePuertos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Vms;
 using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Commands.CreateOpeDatosFronteras;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Commands.CreateOtrasInformaciones;
 using DGPCE.Sigemad.Application.Features.OtrasInformaciones.Vms;
@@ -96,6 +88,13 @@ using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Commands.UpdateOpeDatosFronteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.CreateOpeAreasDescanso;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeAreasDescanso.Commands.UpdateOpeAreasDescanso;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.CreateOpeFronteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.UpdateOpeFronteras;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
 
 namespace DGPCE.Sigemad.Application.Mappings;
 
@@ -500,6 +499,7 @@ public class MappingProfile : Profile
         CreateMap<Capacidad, CapacidadDto>();
 
         // PCD
+        // ADMINISTRACIÓN OPE
         CreateMap<OpePeriodo, OpePeriodoVm>();
         CreateMap<CreateOpePeriodoCommand, OpePeriodo>();
         CreateMap<UpdateOpePeriodoCommand, OpePeriodo>();
@@ -524,30 +524,11 @@ public class MappingProfile : Profile
         CreateMap<CreateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
         CreateMap<UpdateOpePuntoControlCarreteraCommand, OpePuntoControlCarretera>();
 
+        // NUEVO - OPE
         // Nuevo Dato Frontera
-        //CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>();
-        //CreateMap<ManageOpeDatoFronteraCommand, OpeDatoFrontera>();
-        //CreateMap<UpdateOpeDatoFronteraCommand, OpeDatoFrontera>();
-
+        CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>();
         CreateMap<CreateOpeDatoFronteraCommand, OpeDatoFrontera>();
-        CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>()
-            .ForMember(dest => dest.IdOpeDatoFrontera, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.IdOpeFrontera, opt => opt.MapFrom(src => src.IdOpeFrontera));
-
-        CreateMap<OpeFronteraConListaDatosFrontera, OpeFronteraConListaDatosFronteraDto>()
-         .ForMember(dest => dest.Lista, opt => opt.MapFrom(src => src.Lista));
-
-        CreateMap<OpeDatoFrontera, OpeDatoFronteraDto>();
-
-        CreateMap<OpeDatoFrontera, CreateOpeDatoFronteraDto>();
-
-        CreateMap<OpeDatoFrontera, OpeDatoFronteraVm>()
-        .ForMember(dest => dest.FechaHoraInicioIntervalo, opt => opt.MapFrom(src => src.FechaHoraInicioIntervalo))
-        .ForMember(dest => dest.FechaHoraFinIntervalo, opt => opt.MapFrom(src => src.FechaHoraFinIntervalo))
-        .ForMember(dest => dest.NumeroVehiculos, opt => opt.MapFrom(src => src.NumeroVehiculos))
-        .ForMember(dest => dest.Afluencia, opt => opt.MapFrom(src => src.Afluencia));
-
-        CreateMap<CreateOpeDatoFronteraDto, OpeDatoFrontera>();
+        CreateMap<UpdateOpeDatoFronteraCommand, OpeDatoFrontera>();
         // FIN PCD
 
     }

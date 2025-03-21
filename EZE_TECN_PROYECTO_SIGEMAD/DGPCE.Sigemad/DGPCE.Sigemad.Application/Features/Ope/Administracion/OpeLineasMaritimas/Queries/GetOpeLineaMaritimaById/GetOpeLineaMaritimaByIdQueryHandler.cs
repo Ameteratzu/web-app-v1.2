@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Queries.GetOpeLineaMaritimaById
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Queries.GetOpeLineaMaritimaById
 {
     public class GetOpeLineaMaritimaByIdQueryHandler : IRequestHandler<GetOpeLineaMaritimaByIdQuery, OpeLineaMaritima>
     {

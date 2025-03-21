@@ -1,4 +1,4 @@
-﻿namespace DGPCE.Sigemad.Application.Specifications.Ope.Datos.OpeDatosFronteras;
+﻿namespace DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpeDatosFronteras;
 
 public class OpeDatosFronterasSpecificationParams : SpecificationParams
 {

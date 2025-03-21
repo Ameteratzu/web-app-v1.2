@@ -67,3 +67,15 @@ mat-icon {
 .mat-mdc-row:nth-child(odd) {
   background: #e7e7e7;
 }
+
+//
+.fronteras-relacionadas {
+  display: inline-block; /* Hace que el h2 se comporte como un bloque en línea */
+  background-color: #3f51b5; /* Color de fondo de la pestaña */
+  color: white; /* Color del texto */
+  padding: 10px 20px; /* Espaciado interno para darle altura y ancho a la pestaña */
+  border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
+  font-size: 12px; /* Ajuste el tamaño de la fuente */
+  font-weight: bold; /* Pone la fuente en negrita */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para darle profundidad */
+}

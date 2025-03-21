@@ -23,22 +23,14 @@ import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
 import { FORMATO_FECHA } from '../../../../../../types/date-formats';
 import { UtilsService } from '@shared/services/utils.service';
-import { ProvinceService } from '@services/province.service';
-import { MunicipalityService } from '@services/municipality.service';
-import { CountryService } from '@services/country.service';
-import { Province } from '@type/province.type';
-import { Municipality } from '@type/municipality.type';
-import { Countries } from '@type/country.type';
-import { TerritoryService } from '@services/territory.service';
-import { AutonomousCommunityService } from '@services/autonomous-community.service';
-import { Territory } from '@type/territory.type';
-import { AutonomousCommunity } from '@type/autonomous-community.type';
-import { COUNTRIES_ID } from '@type/constants';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { OpeFrontera } from '@type/ope/administracion/ope-frontera.type';
+import { OpeDatoFrontera } from '@type/ope/datos/ope-dato-frontera.type';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 interface FormType {
   id?: string;
-  opeFrontera: { id: string; nombre: string };
+  //opeFrontera: { id: string; nombre: string };
   fechaHoraInicioIntervalo: Date;
   fechaHoraFinIntervalo: Date;
   numeroVehiculos: number;
@@ -66,6 +58,7 @@ interface FormType {
     NgxSpinnerModule,
     DragDropModule,
     MatTableModule,
+    MatToolbarModule,
   ],
   providers: [
     { provide: DateAdapter, useClass: NativeDateAdapter },
@@ -76,119 +69,114 @@ interface FormType {
 })
 export class OpeDatoFronteraCreateEdit implements OnInit {
   constructor(
-    private filtrosOpeDatosFronterasService: LocalFiltrosOpeDatosFronteras,
+    //private filtrosOpeDatosFronterasService: LocalFiltrosOpeDatosFronteras,
     private opeDatosFronterasService: OpeDatosFronterasService,
     public dialogRef: MatDialogRef<OpeDatoFronteraCreateEdit>,
     private matDialog: MatDialog,
     public alertService: AlertService,
-    private router: Router,
 
-    private territoryService: TerritoryService,
-    private countryService: CountryService,
-    private autonomousCommunityService: AutonomousCommunityService,
-    private provinceService: ProvinceService,
-    private municipioService: MunicipalityService,
-
-    @Inject(MAT_DIALOG_DATA) public data: { opeDatoFrontera: any }
+    //@Inject(MAT_DIALOG_DATA) public data: { opeDatoFrontera: any }
+    @Inject(MAT_DIALOG_DATA) public data: { opeFrontera: OpeFrontera; opeDatoFrontera: OpeDatoFrontera }
   ) {}
-
-  public filteredCountries = signal<Countries[]>([]);
-
-  public territories = signal<Territory[]>([]);
-  public autonomousCommunities = signal<AutonomousCommunity[]>([]);
-  public provinces = signal<Province[]>([]);
-  public municipalities = signal<Municipality[]>([]);
-
-  public listaPaisesExtranjeros = signal<Countries[]>([]);
-  public listaPaisesNacionales = signal<Countries[]>([]);
 
   public formData!: FormGroup;
 
   public dataSource = new MatTableDataSource<any>([]);
-  public dataOpeDatosFronteras = signal<FormType[]>([]);
-  public isCreate = signal<number>(-1);
-  public isSaving = signal<boolean>(false);
-
-  public displayedColumns: string[] = ['numeroVehiculos', 'fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo', 'afluencia', 'opciones'];
-
-  public today: string = new Date().toISOString().split('T')[0];
+  public opeDatosFronterasRelacionados = signal<OpeDatoFrontera[]>([]);
 
   private spinner = inject(NgxSpinnerService);
 
-  //PCD
   public snackBar = inject(MatSnackBar);
   public utilsService = inject(UtilsService);
-  // FIN PCD
+
+  public displayedColumns: string[] = ['fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo', 'numeroVehiculos', 'afluencia', 'opciones'];
 
   async ngOnInit() {
-    this.formData = new FormGroup({
-      frontera: new FormControl('', Validators.required),
-      fechaHoraInicioIntervalo: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-      fechaHoraFinIntervalo: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
-      numeroVehiculos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
-      afluencia: new FormControl('', Validators.required),
-    });
-
-    if (!this.data.opeDatoFrontera?.id) {
-      this.formData.get('municipality')?.disable();
-      this.formData.get('provincia')?.disable();
-    }
+    this.formData = new FormGroup(
+      {
+        //opeFrontera: new FormControl('', Validators.required),
+        fechaHoraInicioIntervalo: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        fechaHoraFinIntervalo: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+        numeroVehiculos: new FormControl(null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]),
+        afluencia: new FormControl('', Validators.required),
+      },
+      {
+        validators: [FechaValidator.validarFechaFinPosteriorFechaInicio('fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo')],
+      }
+    );
 
     if (this.data.opeDatoFrontera?.id) {
-      //this.loadMunicipalities({ value: this.data.opeDatoFrontera.idProvincia });
       this.formData.patchValue({
         id: this.data.opeDatoFrontera.id,
-
-        frontera: this.data.opeDatoFrontera.idFrontera,
-        fechaHoraInicioIntervalo: moment(this.data.opeDatoFrontera.fechaHoraInicioIntervalo).format('YYYY-MM-DD HH:mm'),
-        fechaHoraFinIntervalo: moment(this.data.opeDatoFrontera.fechaHoraFinIntervalo).format('YYYY-MM-DD HH:mm'),
+        fechaHoraInicioIntervalo: moment(this.data.opeDatoFrontera.fechaHoraInicioIntervalo).format('YYYY-MM-DDTHH:mm'),
+        fechaHoraFinIntervalo: moment(this.data.opeDatoFrontera.fechaHoraFinIntervalo).format('YYYY-MM-DDTHH:mm'),
         numeroVehiculos: this.data.opeDatoFrontera.numeroVehiculos,
-        afluencia: this.data.opeDatoFrontera.numeroVehiculos,
+        afluencia: this.data.opeDatoFrontera.afluencia,
       });
     }
 
-    /*
-    const countriesExtranjeros = await this.countryService.getExtranjeros();
-    this.listaPaisesExtranjeros.set(countriesExtranjeros);
-    const countriesNacionales = await this.countryService.getNacionales();
-    this.listaPaisesNacionales.set(countriesNacionales);
-
-    this.filteredCountries.set(countriesNacionales);
-
-    const territories = await this.territoryService.get();
-    this.territories.set(territories);
-    */
-
-    await this.loadCommunities();
-
-    //this.onSubmit();
+    const { between, fechaHoraInicioIntervalo, fechaHoraFinIntervalo } = this.formData.value;
+    const opeDatosFronterasRelacionados = await this.opeDatosFronterasService.get({
+      IdComparativoFecha: between,
+      fechaHoraInicioIntervalo: moment(fechaHoraInicioIntervalo).format('YYYY-MM-DD'),
+      fechaHoraFinIntervalo: moment(fechaHoraFinIntervalo).format('YYYY-MM-DD'),
+    });
+    this.opeDatosFronterasRelacionados.set(opeDatosFronterasRelacionados.data);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('refreshFilterForm' in changes) {
-      //this.onSubmit();
-      alert('aa');
-    }
-  }
-
-  onSubmit(formDirective: FormGroupDirective): void {
+  async onSubmit() {
     if (this.formData.valid) {
+      this.spinner.show();
       const data = this.formData.value;
-      if (this.isCreate() == -1) {
-        this.dataOpeDatosFronteras.set([data, ...this.dataOpeDatosFronteras()]);
-      } else {
-        this.editarItem(this.isCreate());
-      }
 
-      formDirective.resetForm();
-      this.formData.reset({
-        //fecha: moment().toDate(),
-        //hora: moment().format('HH:mm'),
-        // PCD
-        fechaHoraInicioIntervalo: moment().format('YYYY-MM-DD HH:mm'),
-        fechaHoraFinIntervalo: moment().format('YYYY-MM-DD HH:mm'),
-        // FIN PCD
-      });
+      //
+      data.opeFrontera = this.data.opeFrontera?.id;
+      //
+
+      if (this.data.opeDatoFrontera?.id) {
+        data.id = this.data.opeDatoFrontera.id;
+        await this.opeDatosFronterasService
+          .update(data)
+          .then((response) => {
+            // PCD
+            this.snackBar
+              .open('Datos modificados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal({ refresh: true });
+                this.spinner.hide();
+              });
+            // FIN PCD
+          })
+          .catch((error) => {
+            console.error('Error', error);
+          });
+      } else {
+        await this.opeDatosFronterasService
+          .post(data)
+          .then((response) => {
+            this.snackBar
+              .open('Datos creados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.closeModal({ refresh: true });
+                this.spinner.hide();
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     } else {
       this.formData.markAllAsTouched();
     }
@@ -202,127 +190,20 @@ export class OpeDatoFronteraCreateEdit implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  async loadCommunities(country?: any) {
-    /*
-    if (country === '9999') {
-      alert('aa');
-      this.autonomousCommunities.set([]);
-      return;
-    }
-    */
-    const autonomousCommunities = await this.autonomousCommunityService.getByCountry(COUNTRIES_ID.SPAIN.toString());
-    this.autonomousCommunities.set(autonomousCommunities);
-  }
-
-  async loadProvinces(event: any) {
-    const ac_id = event.value;
-    const provinces = await this.provinceService.get(ac_id);
-    this.provinces.set(provinces);
-    this.formData.get('provincia')?.enable();
-  }
-
-  async loadMunicipios(event: any) {
-    const provinciaId = event.value;
-    const municipios = await this.municipioService.get(provinciaId);
-    this.municipalities.set(municipios);
-    this.formData.get('municipality')?.enable();
-  }
-
   getFechaFormateada(date: any) {
     return moment(date).format('DD/MM/YY HH:mm');
   }
 
-  seleccionarItem(index: number) {
-    this.isCreate.set(index);
+  async onFechaHoraChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const selectedDateTime = input.value;
 
-    this.formData.patchValue({
-      ...this.dataOpeDatosFronteras()[index],
-      //fechaHoraInicioIntervalo: fechaHoraInicioIntervaloSelected(),
+    const { between, fechaHoraInicioIntervalo, fechaHoraFinIntervalo } = this.formData.value;
+    const opeDatosFronterasRelacionados = await this.opeDatosFronterasService.get({
+      IdComparativoFecha: between,
+      fechaHoraInicioIntervalo: moment(fechaHoraInicioIntervalo).format('YYYY-MM-DD'),
+      fechaHoraFinIntervalo: moment(fechaHoraFinIntervalo).format('YYYY-MM-DD'),
     });
-
-    //this.formData.patchValue(this.dataOtherInformation()[index]);
-  }
-
-  editarItem(index: number) {
-    const dataEditada = this.formData.value;
-    this.dataOpeDatosFronteras.update((data) => {
-      data[index] = { ...data[index], ...dataEditada };
-      return [...data];
-    });
-    this.isCreate.set(-1);
-    this.formData.reset();
-  }
-
-  eliminarItem(index: number) {
-    this.dataOpeDatosFronteras.update((data) => {
-      data.splice(index, 1);
-      return [...data];
-    });
-  }
-
-  //Función para guardar en base de datos
-  async saveList() {
-    if (this.isSaving()) {
-      return;
-    }
-    this.isSaving.set(true);
-    if (this.dataOpeDatosFronteras().length <= 0) {
-      this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['snackbar-rojo'],
-      });
-      this.isSaving.set(false);
-      return;
-    }
-
-    const arrayToSave = this.dataOpeDatosFronteras().map((item) => {
-      return {
-        id: item.id ?? null,
-        //fechaHora: this.getFechaHora(item.fecha, item.hora),
-        // PCD
-
-        // FIN PCD
-        idOpeFrontera: item.opeFrontera?.id ?? null,
-        fechaHoraInicioIntervalo: moment(item.fechaHoraInicioIntervalo).format('MM/DD/YY HH:mm'),
-        fechaHoraFinIntervalo: moment(item.fechaHoraFinIntervalo).format('MM/DD/YY HH:mm'),
-        numeroVehiculos: item.numeroVehiculos,
-        afluencia: item.afluencia,
-      };
-    });
-    const objToSave = {
-      //IdSuceso: this.dataProps?.fire?.id,
-      IdOpeFrontera: 1,
-      lista: arrayToSave,
-    };
-
-    try {
-      this.spinner.show();
-
-      const resp: { idOpeDatoFrontera: string | number } | any = await this.opeDatosFronterasService.post(objToSave);
-      if (resp!.idRegistroActualizacion > 0) {
-        this.isSaving.set(false);
-        this.snackBar
-          .open('Datos guardados correctamente!', '', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['snackbar-verde'],
-          })
-          .afterDismissed()
-          .subscribe(() => {
-            this.closeModal({ refresh: true });
-            this.spinner.hide();
-          });
-        // FIN PCD
-      } else {
-        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
-        this.spinner.hide();
-      }
-    } catch (error) {
-      console.info({ error });
-      this.spinner.hide();
-    }
+    this.opeDatosFronterasRelacionados.set(opeDatosFronterasRelacionados.data);
   }
 }

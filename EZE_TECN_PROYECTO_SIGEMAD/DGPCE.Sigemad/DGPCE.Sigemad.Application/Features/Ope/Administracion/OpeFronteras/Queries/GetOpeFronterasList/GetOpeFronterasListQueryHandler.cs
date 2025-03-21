@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Queries.GetOpeFronterasList;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
 using DGPCE.Sigemad.Application.Features.Shared;
 using DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpeFronteras;

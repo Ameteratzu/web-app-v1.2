@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_Frontera;
-GO
-
-
 CREATE TABLE [dbo].[OPE_Frontera](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,

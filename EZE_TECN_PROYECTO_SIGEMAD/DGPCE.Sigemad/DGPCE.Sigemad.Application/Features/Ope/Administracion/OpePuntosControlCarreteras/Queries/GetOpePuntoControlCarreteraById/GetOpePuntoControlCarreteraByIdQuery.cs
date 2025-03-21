@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Queries.GetOpePuntoControlCarreteraById
 {
     public class GetOpePuntoControlCarreteraByIdQuery : IRequest<OpePuntoControlCarretera>
     {

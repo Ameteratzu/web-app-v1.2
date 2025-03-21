@@ -45,11 +45,11 @@ export class OpeDatosFronterasTableComponent implements OnChanges {
   public routenav = inject(Router);
 
   public displayedColumns: string[] = [
-    'nombre',
-    'fechaInicioFaseSalida',
-    'fechaFinFaseSalida',
-    'fechaInicioFaseRetorno',
-    'fechaFinFaseRetorno',
+    'opeFrontera',
+    'fechaHoraInicioIntervalo',
+    'fechaHoraFinIntervalo',
+    'numeroVehiculos',
+    'afluencia',
     'opciones',
   ];
 
@@ -96,7 +96,8 @@ export class OpeDatosFronterasTableComponent implements OnChanges {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Modificar - DatoFrontera.',
+        //title: 'Modificar - DatoFrontera.',
+        opeFrontera: opeDatoFrontera.opeFrontera,
         opeDatoFrontera: opeDatoFrontera,
       },
     });
@@ -140,8 +141,8 @@ export class OpeDatosFronterasTableComponent implements OnChanges {
               })
               .afterDismissed()
               .subscribe(() => {
-                this.routenav.navigate(['/ope-administracion-fronteras']).then(() => {
-                  window.location.href = '/ope-administracion-fronteras';
+                this.routenav.navigate(['/ope-nuevo-datos-fronteras']).then(() => {
+                  window.location.href = '/ope-nuevo-datos-fronteras';
                 });
                 this.spinner.hide();
               });

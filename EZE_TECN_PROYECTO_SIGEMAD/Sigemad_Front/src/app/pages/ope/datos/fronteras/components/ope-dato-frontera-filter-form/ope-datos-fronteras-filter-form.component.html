@@ -18,10 +18,21 @@
 
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px" style="width: 100%" class="button-container">
     <!-- Botón Crear (a la izquierda) -->
+    <!--
     <button mat-flat-button color="accent" aria-label="Crear" class="custom-button" type="button" (click)="goModal()">
       <mat-icon>add</mat-icon>
-      Añadir
+      Añadir dato
     </button>
+  -->
+
+    <!-- PCD-->
+    <ng-container *ngFor="let opeFrontera of opeFronteras()">
+      <button mat-flat-button color="accent" aria-label="Crear" class="custom-button" type="button" (click)="goModal(opeFrontera)">
+        <mat-icon>add</mat-icon>
+        Añadir dato {{ opeFrontera.nombre }}
+      </button>
+    </ng-container>
+    <!-- FIN PCD-->
 
     <!-- Botones a la derecha -->
     <div fxLayout="row" fxLayoutGap="16px">

@@ -5,7 +5,7 @@ using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePeriodos.Commands.DeleteOpePeriodos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePeriodos.Commands.DeleteOpePeriodos;
 
 public class DeleteOpePeriodoCommandHandler : IRequestHandler<DeleteOpePeriodoCommand>
 {

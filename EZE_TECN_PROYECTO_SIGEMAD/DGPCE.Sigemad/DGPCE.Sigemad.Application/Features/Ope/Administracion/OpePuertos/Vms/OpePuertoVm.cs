@@ -1,7 +1,7 @@
 ﻿using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Vms
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Vms
 {
     public class OpePuertoVm : BaseDomainModel<int>
     {

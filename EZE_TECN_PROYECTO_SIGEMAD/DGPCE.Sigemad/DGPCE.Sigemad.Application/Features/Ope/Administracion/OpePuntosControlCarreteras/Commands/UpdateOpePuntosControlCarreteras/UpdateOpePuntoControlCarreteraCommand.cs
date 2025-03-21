@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.UpdateOpePuntosControlCarreteras;
 
 public class UpdateOpePuntoControlCarreteraCommand : IRequest
 {

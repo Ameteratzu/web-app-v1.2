@@ -1,15 +1,20 @@
-﻿using DGPCE.Sigemad.Domain.Modelos;
+﻿using System;
+using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Datos;
 
-namespace DGPCE.Sigemad.Application.Specifications.Ope.Datos.OpeDatosFronteras;
+namespace DGPCE.Sigemad.Application.Specifications.Ope.Administracion.OpeDatosFronteras;
 
 public class OpeDatosFronterasSpecification : BaseSpecification<OpeDatoFrontera>
 {
     public OpeDatosFronterasSpecification(OpeDatosFronterasSpecificationParams request)
-        : base(opeDatoFrontera => opeDatoFrontera.Borrado != true
+        : base(opeDatoFrontera =>
+        (!request.Id.HasValue || opeDatoFrontera.Id == request.Id) &&
+       (!request.FechaHoraInicioIntervalo.HasValue || DateOnly.FromDateTime(opeDatoFrontera.FechaHoraFinIntervalo) >= request.FechaHoraInicioIntervalo) &&
+            (!request.FechaHoraFinIntervalo.HasValue || DateOnly.FromDateTime(opeDatoFrontera.FechaHoraFinIntervalo) <= request.FechaHoraFinIntervalo) &&
+        opeDatoFrontera.Borrado != true
         )
     {
-        AddInclude(i => i.OpeFronteraConListaDatosFrontera);
+        AddInclude(i => i.OpeFrontera);
 
         ApplyPaging(request);
 

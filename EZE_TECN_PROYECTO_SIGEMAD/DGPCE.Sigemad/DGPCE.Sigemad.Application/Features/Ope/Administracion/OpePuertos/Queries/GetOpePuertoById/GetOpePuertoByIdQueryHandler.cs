@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Queries.GetOpePuertoById
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Queries.GetOpePuertoById
 {
     public class GetOpePuertoByIdQueryHandler : IRequestHandler<GetOpePuertoByIdQuery, OpePuerto>
     {

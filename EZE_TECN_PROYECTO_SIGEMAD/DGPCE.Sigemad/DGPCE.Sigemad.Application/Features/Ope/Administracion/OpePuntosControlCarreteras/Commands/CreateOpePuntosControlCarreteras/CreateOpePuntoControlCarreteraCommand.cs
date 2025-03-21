@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Commands.CreateOpePuntosControlCarreteras;
 
 public class CreateOpePuntoControlCarreteraCommand : IRequest<CreateOpePuntoControlCarreteraResponse>
 {

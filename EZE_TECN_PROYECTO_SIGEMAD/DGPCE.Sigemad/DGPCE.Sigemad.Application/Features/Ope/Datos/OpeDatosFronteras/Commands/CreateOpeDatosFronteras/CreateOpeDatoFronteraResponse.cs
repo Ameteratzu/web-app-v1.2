@@ -1,5 +1,7 @@
-﻿namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Commands.CreateOpeDatosFronteras;
-public class CreateOpeDatoFronteraResponse
+﻿namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeDatosFronteras.Commands.CreateOpeDatosFronteras
 {
-    public int Id { get; set; }
+    public class CreateOpeDatoFronteraResponse
+    {
+        public int Id { get; set; }
+    }
 }

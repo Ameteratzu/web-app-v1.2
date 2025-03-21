@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpeLineasMaritimas.Commands.UpdateOpeLineasMaritimas;
 
 public class UpdateOpeLineaMaritimaCommand : IRequest
 {

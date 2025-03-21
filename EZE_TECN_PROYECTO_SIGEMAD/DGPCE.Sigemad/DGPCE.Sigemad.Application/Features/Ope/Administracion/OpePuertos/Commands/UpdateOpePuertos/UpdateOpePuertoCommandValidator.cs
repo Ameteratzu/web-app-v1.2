@@ -4,7 +4,7 @@ using DGPCE.Sigemad.Domain.Enums;
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Commands.UpdateOpePuertos;
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Commands.UpdateOpePuertos;
 
 public class UpdateOpePuertoCommandValidator : AbstractValidator<UpdateOpePuertoCommand>
 {

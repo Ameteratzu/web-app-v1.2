@@ -2,7 +2,7 @@
 using MediatR;
 
 
-namespace DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuertos.Queries.GetOpePuertoById
+namespace DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuertos.Queries.GetOpePuertoById
 {
     public class GetOpePuertoByIdQuery : IRequest<OpePuerto>
     {

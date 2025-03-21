@@ -26,6 +26,8 @@ import { FORMATO_FECHA } from '@type/date-formats';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { OpeDatoFrontera } from '@type/ope/datos/ope-dato-frontera.type';
 import { LocalFiltrosOpeDatosFronteras } from '@services/ope/datos/local-filtro-ope-datos-fronteras.service';
+import { OpeFrontera } from '@type/ope/administracion/ope-frontera.type';
+import { OpeFronterasService } from '@services/ope/administracion/ope-fronteras.service';
 
 @Component({
   selector: 'app-ope-dato-frontera-filter-form',
@@ -72,6 +74,9 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
   private dialog = inject(MatDialog);
   public formData!: FormGroup;
 
+  public opeFronterasService = inject(OpeFronterasService);
+  public opeFronteras = signal<OpeFrontera[]>([]);
+
   myForm!: FormGroup;
 
   showFilters = false;
@@ -103,6 +108,9 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
     const comparativeDates = await this.comparativeDateService.get();
     this.comparativeDates.set(comparativeDates);
 
+    const opeFronteras = await this.opeFronterasService.get();
+    this.opeFronteras.set(opeFronteras.data);
+
     this.onSubmit();
   }
 
@@ -117,7 +125,10 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
   }
 
   async onSubmit() {
-    /*
+    if (!this.formData) {
+      return;
+    }
+
     this.opeDatosFronterasChange.emit({
       count: 0,
       page: 1,
@@ -128,34 +139,30 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingChange.emit(true);
 
-    const { between, fechaInicioFaseSalida, fechaFinFaseSalida, fechaInicioFaseRetorno, fechaFinFaseRetorno, nombre } = this.formData.value;
+    //const { nombre } = this.formData.value;
 
-    /*
     const opeDatosFronteras = await this.opeDatosFronterasService.get({
-      IdComparativoFecha: between,
-      fechaInicioFaseSalida: moment(fechaInicioFaseSalida).format('YYYY-MM-DD'),
-      fechaFinFaseSalida: moment(fechaFinFaseSalida).format('YYYY-MM-DD'),
-      fechaInicioFaseRetorno: moment(fechaInicioFaseRetorno).format('YYYY-MM-DD'),
-      fechaFinFaseRetorno: moment(fechaFinFaseRetorno).format('YYYY-MM-DD'),
-      nombre: nombre,
+      //idOpeFrontera: nombre,
     });
+
     this.filtrosOpeDatosFronterasService.setFilters(this.formData.value);
     this.opeDatosFronteras = opeDatosFronteras;
     this.opeDatosFronterasChange.emit(this.opeDatosFronteras);
     this.isLoadingChange.emit(false);
     this.isLoading = false;
-    */
   }
 
   clearFormFilter() {
     this.formData.reset();
     this.formData.patchValue({
+      /*
       between: 1,
       fechaInicioFaseSalida: moment().subtract(4, 'days').toDate(),
       fechaFinFaseSalida: moment().toDate(),
       fechaInicioFaseRetorno: moment().subtract(4, 'days').toDate(),
       fechaFinFaseRetorno: moment().toDate(),
       nombre: '',
+      */
     });
   }
 
@@ -163,13 +170,13 @@ export class OpeDatoFronteraFilterFormComponent implements OnInit {
     return this.formData.controls[atributo];
   }
 
-  goModal() {
+  goModal(opeFrontera: OpeFrontera) {
     const dialogRef = this.dialog.open(OpeDatoFronteraCreateEdit, {
       width: '75vw',
       maxWidth: 'none',
       data: {
-        title: 'Nuevo - Datos Frontera',
-        fire: {},
+        //title: 'Nuevo - Datos Frontera' + opeFrontera.nombre,
+        opeFrontera: opeFrontera,
       },
     });
 

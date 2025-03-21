@@ -1,5 +1,5 @@
 ﻿using DGPCE.Sigemad.Application.Contracts.Identity;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpePuntosControlCarreteras.Vms;
+using DGPCE.Sigemad.Application.Features.Ope.Datos.OpePuntosControlCarreteras.Vms;
 using DGPCE.Sigemad.Domain.Common;
 using DGPCE.Sigemad.Domain.Modelos;
 using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
@@ -198,6 +198,7 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
 
 
         // PCD
+        // OPE - ADMINISTRACIÓN
         public DbSet<OpePeriodo> OpePeriodos { get; set; }
         public DbSet<OpePeriodoTipo> OpePeriodosTipos { get; set; }
         public DbSet<OpePuerto> OpePuertos { get; set; }
@@ -208,6 +209,8 @@ namespace DGPCE.Sigemad.Infrastructure.Persistence
         public DbSet<OpeAreaDescansoTipo> OpeAreasDescansoTipos { get; set; }
         public DbSet<OpeEstadoOcupacion> OpeEstadosOcupacion { get; set; }
         public DbSet<OpePuntoControlCarretera> OpePuntosControlCarreteras { get; set; }
+
+        // OPE - NUEVO
         public DbSet<OpeDatoFrontera> OpeDatosFronteras { get; set; }
         // FIN PCD
     }

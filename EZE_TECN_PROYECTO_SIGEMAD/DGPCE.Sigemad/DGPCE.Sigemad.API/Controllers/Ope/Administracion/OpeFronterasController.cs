@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
-using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
+using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.CreateOpeFronteras;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Commands.UpdateOpeFronteras;
-using DGPCE.Sigemad.Domain.Modelos.Ope.Administracion;
 using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Queries.GetOpeFronterasList;
+using DGPCE.Sigemad.Application.Features.Ope.Administracion.OpeFronteras.Vms;
 
 namespace DGPCE.Sigemad.API.Controllers.Ope.Administracion;
 

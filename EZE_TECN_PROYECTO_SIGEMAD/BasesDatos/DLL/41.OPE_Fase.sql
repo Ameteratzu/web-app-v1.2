@@ -1,7 +1,3 @@
-DROP TABLE IF EXISTS dbo.OPE_Fase;
-GO
-
-
 CREATE TABLE [dbo].[OPE_Fase](
 	[Id] [int] NOT NULL,
 	[Nombre] [nvarchar](255) NOT NULL,
