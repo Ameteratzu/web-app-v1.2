@@ -17,6 +17,9 @@ RUN dotnet restore
 # Copiar el resto del código fuente
 COPY . .
 
+# Copiar los archivos de configuración de appsettings
+COPY DGPCE.Sigemad.API/appsettings*.json /app/
+
 # Publicar la aplicación en modo Release
 RUN dotnet publish DGPCE.Sigemad.API/DGPCE.Sigemad.API.csproj -c Release -o out
 

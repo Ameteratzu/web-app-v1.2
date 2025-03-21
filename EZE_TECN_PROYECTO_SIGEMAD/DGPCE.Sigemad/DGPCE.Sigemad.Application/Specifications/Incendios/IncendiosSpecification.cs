@@ -16,6 +16,7 @@ public class IncendiosSpecification : BaseSpecification<Incendio>
         (!request.IdMunicipio.HasValue || incendio.IdMunicipio == request.IdMunicipio) &&
         (!request.IdClaseSuceso.HasValue || incendio.IdClaseSuceso == request.IdClaseSuceso) &&
         (!request.IdEstadoSuceso.HasValue || incendio.IdEstadoSuceso == request.IdEstadoSuceso) &&
+        (!request.IdSuceso.HasValue || incendio.IdSuceso == request.IdSuceso) &&
         (incendio.Borrado != true)
         )
     {

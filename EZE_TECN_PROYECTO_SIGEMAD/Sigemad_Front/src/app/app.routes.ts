@@ -28,7 +28,7 @@ export const routes: Routes = [
       {
         path: 'fire',
         component: FireComponent,
-        data: { breadcrumb: 'Incendios forestales' },
+        data: { breadcrumb: 'Incendio forestal' },
         children: [{ path: 'fire-national-edit/:id', component: FireEditComponent, data: { breadcrumb: 'Panel de seguimiento' } }],
       },
       { path: 'earthquakes', component: CommentsComponent, data: { breadcrumb: 'earthquakes' } },

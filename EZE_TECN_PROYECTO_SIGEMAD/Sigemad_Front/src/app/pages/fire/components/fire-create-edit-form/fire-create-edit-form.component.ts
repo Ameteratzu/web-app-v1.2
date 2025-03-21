@@ -142,7 +142,7 @@ export class FireCreateEdit implements OnInit {
       //startTime: new FormControl(null, Validators.required),
       // PCD
       //startDateTime: new FormControl(new Date(), Validators.required),
-      startDateTime: new FormControl(moment().format('YYYY-MM-DDTHH:mm'), [Validators.required, FechaValidator.validarFecha]),
+      startDateTime: new FormControl(moment().format('YYYY-MM-DDT00:00'), [Validators.required, FechaValidator.validarFecha]),
       // FIN PCD
 
       eventStatus: new FormControl('', Validators.required),

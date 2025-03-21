@@ -94,7 +94,7 @@ export class FireTableComponent implements OnChanges {
         ? moment(fechaUltimoRegistro).format('DD/MM/yyyy HH:mm')
         : moment(fire.fechaUltimoRegistro).format('DD/MM/yyyy HH:mm');
     } else {
-      return 'Sin fecha registrada.';
+      return 'Sin datos';
     }
   }
 

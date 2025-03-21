@@ -4,9 +4,12 @@ using DGPCE.Sigemad.Application.Contracts.RegistrosActualizacion;
 using DGPCE.Sigemad.Application.Exceptions;
 using DGPCE.Sigemad.Application.Features.DatosPrincipales.Commands;
 using DGPCE.Sigemad.Application.Features.Direcciones.Commands.CreateDirecciones;
+using DGPCE.Sigemad.Application.Features.Evoluciones.Vms;
 using DGPCE.Sigemad.Application.Features.Parametros.Commands;
 using DGPCE.Sigemad.Application.Features.Registros.Command.CreateRegistros;
 using DGPCE.Sigemad.Application.Specifications.Evoluciones;
+using DGPCE.Sigemad.Application.Specifications.Incendios;
+using DGPCE.Sigemad.Application.Specifications.Sucesos;
 using DGPCE.Sigemad.Domain.Enums;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
@@ -42,7 +45,7 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
         await _registroActualizacionService.ValidarSuceso(request.IdSuceso);
         await ComprobarRegistro(request.Registro);
         await ValidarProcedenciasDestinos(request.Registro.RegistroProcedenciasDestinos);
-        await ComprobarParametros(request.Parametro);
+        await ComprobarParametros(request);
 
         await _unitOfWork.BeginTransactionAsync();
 
@@ -131,46 +134,71 @@ public class ManageEvolucionCommandHandler : IRequestHandler<ManageEvolucionComm
         }
     }
 
-    private async Task ComprobarParametros(CreateParametroCommand request)
-    {
 
-        var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.IdEstadoIncendio);
+    private async Task ActualizarEstadoSuceso(ManageEvolucionCommand requestEvolucion)
+    {
+        var incendioParams = new IncendiosSpecificationParams
+        {
+            IdSuceso = requestEvolucion.IdSuceso
+        };
+
+        var spec = new IncendiosSpecification(incendioParams);
+        var incendio = await _unitOfWork.Repository<Incendio>().GetByIdWithSpec(spec);
+
+        if (incendio != null && incendio.IdEstadoSuceso != (int)TipoEstadoSucesoEnum.Cerrado)
+        {
+            incendio.IdEstadoSuceso = (int)TipoEstadoSucesoEnum.Cerrado;
+            _unitOfWork.Repository<Incendio>().UpdateEntity(incendio);
+        }
+    
+    }
+    
+    private async Task ComprobarParametros(ManageEvolucionCommand request)
+    {
+      if (request.Parametro != null)
+       {
+        var estadoIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetByIdAsync(request.Parametro.IdEstadoIncendio);
         if (estadoIncendio is null || estadoIncendio.Obsoleto)
         {
-            _logger.LogWarning($"request.IdEstadoIncendio: {request.IdEstadoIncendio}, no encontrado");
-            throw new NotFoundException(nameof(EstadoIncendio), request.IdEstadoIncendio);
+            _logger.LogWarning($"request.IdEstadoIncendio: {request.Parametro.IdEstadoIncendio}, no encontrado");
+            throw new NotFoundException(nameof(EstadoIncendio), request.Parametro.IdEstadoIncendio);
+        }
+        else if (estadoIncendio.Id == (int)TipoEstadoIncendioEnum.Extinguido)
+        {
+                await ActualizarEstadoSuceso(request);
         }
 
-        if (request.IdFaseEmergencia.HasValue)
+        if (request.Parametro.IdFaseEmergencia.HasValue)
         {
-            var fase = await _unitOfWork.Repository<FaseEmergencia>().GetByIdAsync(request.IdFaseEmergencia.Value);
+            var fase = await _unitOfWork.Repository<FaseEmergencia>().GetByIdAsync(request.Parametro.IdFaseEmergencia.Value);
             if (fase is null)
             {
-                _logger.LogWarning($"request.IdFase: {request.IdFaseEmergencia}, no encontrado");
-                throw new NotFoundException(nameof(FaseEmergencia), request.IdFaseEmergencia);
+                _logger.LogWarning($"request.IdFase: {request.Parametro.IdFaseEmergencia}, no encontrado");
+                throw new NotFoundException(nameof(FaseEmergencia), request.Parametro.IdFaseEmergencia);
             }
         }
 
 
-        if (request.IdPlanSituacion.HasValue)
+        if (request.Parametro.IdPlanSituacion.HasValue)
         {
-            var situacionOperativa = await _unitOfWork.Repository<PlanSituacion>().GetByIdAsync(request.IdPlanSituacion.Value);
+            var situacionOperativa = await _unitOfWork.Repository<PlanSituacion>().GetByIdAsync(request.Parametro.IdPlanSituacion.Value);
             if (situacionOperativa is null)
             {
-                _logger.LogWarning($"request.IdPlanSituacion: {request.IdPlanSituacion}, no encontrado");
-                throw new NotFoundException(nameof(PlanSituacion), request.IdPlanSituacion);
+                _logger.LogWarning($"request.IdPlanSituacion: {request.Parametro.IdPlanSituacion}, no encontrado");
+                throw new NotFoundException(nameof(PlanSituacion), request.Parametro.IdPlanSituacion);
             }
         }
 
-        if (request.IdSituacionEquivalente.HasValue)
+        if (request.Parametro.IdSituacionEquivalente.HasValue)
         {
-            var situacionEquivalente = await _unitOfWork.Repository<SituacionEquivalente>().GetByIdAsync(request.IdSituacionEquivalente.Value);
+            var situacionEquivalente = await _unitOfWork.Repository<SituacionEquivalente>().GetByIdAsync(request.Parametro.IdSituacionEquivalente.Value);
             if (situacionEquivalente is null || situacionEquivalente.Obsoleto)
             {
-                _logger.LogWarning($"request.IdSituacionEquivalente: {request.IdSituacionEquivalente}, no encontrado");
-                throw new NotFoundException(nameof(SituacionEquivalente), request.IdSituacionEquivalente);
+                _logger.LogWarning($"request.IdSituacionEquivalente: {request.Parametro.IdSituacionEquivalente}, no encontrado");
+                throw new NotFoundException(nameof(SituacionEquivalente), request.Parametro.IdSituacionEquivalente);
             }
         }
+      }
     }
 
     private async Task ValidarProcedenciasDestinos(List<int> registroProcedenciasDestinos)

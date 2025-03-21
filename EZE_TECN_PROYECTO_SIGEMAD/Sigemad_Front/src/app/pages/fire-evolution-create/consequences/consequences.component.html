@@ -33,7 +33,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="fill" fxFlex="30%">
-          <mat-label>Denominación</mat-label>
+          <mat-label>Consecuencia/Actuación</mat-label>
           <mat-select [formControl]="getForm('denominacion')" (selectionChange)="loadCamposImpacto($event)">
             <mat-option *ngFor="let option of listadoDenominaciones()" [value]="option">
               {{ option?.descripcion || option }}
