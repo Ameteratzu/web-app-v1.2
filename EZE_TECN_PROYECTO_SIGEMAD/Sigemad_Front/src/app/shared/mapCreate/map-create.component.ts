@@ -96,7 +96,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
     image: new Icon({
       anchor: [0.5, 0.5],
       src: '/assets/img/centroide.png',
-      scale: 0.07,
+      scale: 0.1,
     }),
     // Estilo para polígonos
     stroke: new Stroke({
@@ -571,27 +571,27 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     //drawBar.addControl(tgPolygon);
 
-    const tgSelect = new Toggle({
-      html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      title: 'Seleccionar',
-      interaction: new Select({ hitTolerance: 2 }),
-    });
-    drawBar.addControl(tgSelect);
+    // const tgSelect = new Toggle({
+    //   html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
+    //   title: 'Seleccionar',
+    //   interaction: new Select({ hitTolerance: 2 }),
+    // });
+    // drawBar.addControl(tgSelect);
 
-    const tgDelete = new Toggle({
-      html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-      title: 'Borrar',
-      onToggle: () => {
-        if (this.select) {
-          const selectedFeatures = this.select.getFeatures();
-          selectedFeatures.forEach((feature) => {
-            this.source.removeFeature(feature);
-          });
-          selectedFeatures.clear();
-        }
-      },
-    });
-    drawBar.addControl(tgDelete);
+    // const tgDelete = new Toggle({
+    //   html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
+    //   title: 'Borrar',
+    //   onToggle: () => {
+    //     if (this.select) {
+    //       const selectedFeatures = this.select.getFeatures();
+    //       selectedFeatures.forEach((feature) => {
+    //         this.source.removeFeature(feature);
+    //       });
+    //       selectedFeatures.clear();
+    //     }
+    //   },
+    // });
+    // drawBar.addControl(tgDelete);
 
     this.select = new Select();
     this.map.addInteraction(this.select);
