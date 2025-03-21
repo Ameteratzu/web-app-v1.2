@@ -65,10 +65,14 @@ export class Login implements OnInit {
           sessionStorage.setItem('jwtToken', response.token);
           sessionStorage.setItem('refreshToken', response.refreshToken);
           sessionStorage.setItem('username', response.username);
-          new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-            this.spinner.hide();
-            this.router.navigate([`/dashboard`]);
-          });
+          
+          // new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
+          //   this.spinner.hide();
+          //   this.router.navigate([`/dashboard`]);
+          // });
+
+          this.spinner.hide();
+           this.router.navigate([`/dashboard`]);
         })
         .catch((error) => {
           this.formData.reset();

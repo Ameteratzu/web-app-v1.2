@@ -2,7 +2,6 @@ using DGPCE.Sigemad.API.Middleware;
 using DGPCE.Sigemad.Application;
 using DGPCE.Sigemad.Identity;
 using DGPCE.Sigemad.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
 using NetTopologySuite.IO.Converters;
 using Serilog;
 
@@ -80,12 +79,10 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
-
+app.UseCors("CorsPolicy"); //1. Siempre primero va uso de CORS
+app.UseAuthorization(); // 2. Se hace uso de reglas de authorization
 app.UseMiddleware<AuthenticatedUserMiddleware>();
-
-app.UseCors("CorsPolicy");
 
 app.UseSerilogRequestLogging();
 

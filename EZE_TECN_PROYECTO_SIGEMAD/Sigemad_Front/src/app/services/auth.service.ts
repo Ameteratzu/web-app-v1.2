@@ -25,9 +25,9 @@ export class AuthService {
     );
   }
 
-  refreshToken(refreshToken: string): Observable<any> {
+  refreshToken(token: string, refreshToken: string): Observable<any> {
     const endpointRefresh = `/Account/refresh-token`;
-    return this.http.post(endpointRefresh, { refreshToken });
+    return this.http.post(endpointRefresh, { token, refreshToken });
   }
 
   logout() {

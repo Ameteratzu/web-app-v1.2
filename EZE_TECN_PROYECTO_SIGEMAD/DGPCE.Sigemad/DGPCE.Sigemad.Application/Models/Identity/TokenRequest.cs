@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace DGPCE.Sigemad.Application.Models.Identity
+namespace DGPCE.Sigemad.Application.Models.Identity;
+
+public class TokenRequest
 {
-    public class TokenRequest
-    {
-        public string? Token { get; set; }
-        public string? RefreshToken { get; set; }
-    }
+    [Required]
+    public string Token { get; set; }
+
+    [Required]
+    public string RefreshToken { get; set; }
 }
