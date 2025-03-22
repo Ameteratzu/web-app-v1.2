@@ -1,0 +1,23 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: docker-build-frontend-template
+spec:
+  params:
+    - name: gitrevision
+    - name: gitrepositoryurl
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: docker-build-frontend-run-
+      spec:
+        serviceAccountName: pipeline-account
+        pipelineRef:
+          name: docker-build-frontend-pipeline
+        params:
+          - name: IMAGE
+            value: docker.io/Ameteratzu/webapp-frontend:latest
+        workspaces:
+          - name: shared-workspace
+            claimName: docker-build-pvc

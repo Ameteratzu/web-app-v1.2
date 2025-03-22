@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: docker-build-frontend
+spec:
+  params:
+    - name: IMAGE
+      type: string
+  workspaces:
+    - name: source
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:latest
+      env:
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
+      script: |
+        #!/busybox/sh
+        /kaniko/executor \
+          --dockerfile=$(workspaces.source.path)/WebAppFront/Dockerfile \
+          --context=$(workspaces.source.path)/WebAppFront \
+          --destination=$(params.IMAGE)

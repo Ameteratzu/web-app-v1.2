@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: docker-build-pipeline
+spec:
+  params:
+    - name: IMAGE
+      type: string
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: build-image
+      taskRef:
+        name: docker-build
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
