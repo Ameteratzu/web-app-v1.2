@@ -282,6 +282,7 @@ export class DashboardComponent implements AfterViewInit {
       params: {
         LAYERS: 'incendios_activos',
         TILED: true,
+        _: new Date().getTime(),
       },
       serverType: 'geoserver',
       transition: 0,
@@ -296,6 +297,7 @@ export class DashboardComponent implements AfterViewInit {
       params: {
         LAYERS: 'incendios_controlados',
         TILED: true,
+        _: new Date().getTime(),
       },
       serverType: 'geoserver',
       transition: 0,
@@ -310,6 +312,7 @@ export class DashboardComponent implements AfterViewInit {
       params: {
         LAYERS: 'incendios_estabilizados',
         TILED: true,
+        _: new Date().getTime(),
       },
       serverType: 'geoserver',
       transition: 0,
@@ -324,6 +327,7 @@ export class DashboardComponent implements AfterViewInit {
       params: {
         LAYERS: 'incendios_extinguidos',
         TILED: true,
+        _: new Date().getTime(),
       },
       serverType: 'geoserver',
       transition: 0,

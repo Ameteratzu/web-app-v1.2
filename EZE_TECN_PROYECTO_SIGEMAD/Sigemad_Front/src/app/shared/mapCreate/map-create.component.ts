@@ -537,6 +537,7 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
 
     drawBar.addControl(tgPoint);
 
+    /*    
     this.drawPolygon = new Draw({
       type: 'Polygon',
       source: this.source,
@@ -569,33 +570,33 @@ export class MapCreateComponent implements OnInit, OnChanges, AfterViewInit {
       this.save.emit(this.coords);
     });
 
-    //drawBar.addControl(tgPolygon);
+    drawBar.addControl(tgPolygon);
 
-    // const tgSelect = new Toggle({
-    //   html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-    //   title: 'Seleccionar',
-    //   interaction: new Select({ hitTolerance: 2 }),
-    // });
-    // drawBar.addControl(tgSelect);
+    const tgSelect = new Toggle({
+      html: '<img src="/assets/img/hand-pointer.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
+      title: 'Seleccionar',
+      interaction: new Select({ hitTolerance: 2 }),
+    });
+    drawBar.addControl(tgSelect);
 
-    // const tgDelete = new Toggle({
-    //   html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
-    //   title: 'Borrar',
-    //   onToggle: () => {
-    //     if (this.select) {
-    //       const selectedFeatures = this.select.getFeatures();
-    //       selectedFeatures.forEach((feature) => {
-    //         this.source.removeFeature(feature);
-    //       });
-    //       selectedFeatures.clear();
-    //     }
-    //   },
-    // });
-    // drawBar.addControl(tgDelete);
+    const tgDelete = new Toggle({
+      html: '<img src="/assets/img/trash.svg" alt="Toggle Icon" style="width: 24px; height: 24px;">',
+      title: 'Borrar',
+      onToggle: () => {
+        if (this.select) {
+          const selectedFeatures = this.select.getFeatures();
+          selectedFeatures.forEach((feature) => {
+            this.source.removeFeature(feature);
+          });
+          selectedFeatures.clear();
+        }
+      },
+    });
+    drawBar.addControl(tgDelete);
 
     this.select = new Select();
     this.map.addInteraction(this.select);
-
+*/
     // this.map.addInteraction(this.drawPolygon);
     // this.snap = new Snap({ source: this.source });
     // this.map.addInteraction(this.snap);
