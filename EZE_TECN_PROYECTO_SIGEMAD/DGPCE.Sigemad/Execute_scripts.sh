@@ -13,7 +13,7 @@ echo "DB_SERVER: $DB_SERVER"
 echo "Base de datos a actualizar: $DB_NAME"
 
 # Esperar a que el servidor de base de datos esté disponible
-max_retries=10
+max_retries=1
 attempt=1
 until /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -Q "SELECT 1" -C; do
     if [ $attempt -ge $max_retries ]; then
