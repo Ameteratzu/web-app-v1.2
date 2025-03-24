@@ -17,7 +17,7 @@ spec:
       - name: webapp-backend
         image: eduardsolibros1/webapp-backend:latest
         ports:
-        - containerPort: 5231
+        - containerPort: 8080
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Production"
@@ -33,4 +33,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5231
+      targetPort: 8080

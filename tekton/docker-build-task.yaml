@@ -9,14 +9,19 @@ spec:
   workspaces:
     - name: source
   steps:
+    - name: git-clone
+      image: alpine/git
+      script: |
+        #!/bin/sh
+        git clone https://github.com/Ameteratzu/web-app-v1.2.git /workspace/source
     - name: build-and-push
       image: gcr.io/kaniko-project/executor:latest
       env:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
-      script: |
-        #!/busybox/sh
-        /kaniko/executor \
-          --dockerfile=$(workspaces.source.path)/Dockerfile \
-          --context=$(workspaces.source.path) \
-          --destination=$(params.IMAGE)
+      command:
+        - /kaniko/executor
+      args:
+        - "--dockerfile=/workspace/source/WebApp/Dockerfile"
+        - "--context=/workspace/source/WebApp"
+        - "--destination=$(params.IMAGE)"

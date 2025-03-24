@@ -7,7 +7,8 @@ spec:
     - name: IMAGE
       type: string
   workspaces:
-    - name: shared-workspace
+  workspaces:
+  - name: shared-workspace
   tasks:
     - name: build-image
       taskRef:
