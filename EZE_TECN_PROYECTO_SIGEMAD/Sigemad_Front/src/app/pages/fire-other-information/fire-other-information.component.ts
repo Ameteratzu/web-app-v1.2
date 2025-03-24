@@ -154,12 +154,9 @@ export class FireOtherInformationComponent implements OnInit {
       }));
 
       this.dataOtherInformation.set(newData);
-      
     } catch (error) {
       console.log('🚀 ~ FireOtherInformationComponent ~ isToEditDocumentation ~ error:', error);
     }
-
-
   }
 
   trackByFn(index: number, item: any): number {
@@ -195,12 +192,6 @@ export class FireOtherInformationComponent implements OnInit {
     }
     this.isSaving.set(true);
     if (this.dataOtherInformation().length <= 0) {
-      //this.showToast({ title: 'Debe meter data en la lista' });
-      //this.isSaving.set(false);
-      //return;
-
-      // PCD
-
       this.snackBar.open('Debe introducir algún elemento en la lista!', '', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -209,7 +200,6 @@ export class FireOtherInformationComponent implements OnInit {
       });
       this.isSaving.set(false);
       return;
-      // FIN PCD
     }
 
     const arrayToSave = this.dataOtherInformation().map((item) => {
@@ -237,36 +227,16 @@ export class FireOtherInformationComponent implements OnInit {
       const resp: { idOtraInformacion: string | number } | any = await this.otherInformationService.post(objToSave);
       if (resp!.idRegistroActualizacion > 0) {
         this.isSaving.set(false);
-        //this.spinner.hide();
+        this.closeModal({ refresh: true });
+        this.spinner.hide();
 
-        /*
-        this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro subido correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal({ refresh: true });
-          });
-         */
-
-        // PCD
-        this.snackBar
-          .open('Datos guardados correctamente!', '', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['snackbar-verde'],
-          })
-          .afterDismissed()
-          .subscribe(() => {
-            this.closeModal({ refresh: true });
-            this.spinner.hide();
-          });
-        // FIN PCD
+        this.snackBar.open('Datos guardados correctamente!', '', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-verde'],
+        });
       } else {
-        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
       }
     } catch (error) {
@@ -308,37 +278,15 @@ export class FireOtherInformationComponent implements OnInit {
       .then(async (result) => {
         if (result.isConfirmed) {
           await this.otherInformationService.delete(Number(this.dataProps?.fireDetail?.id));
-          //this.coordinationServices.clearData();
-          //setTimeout(() => {
-          //this.renderer.setStyle(toolbar, 'z-index', '5');
-          //this.spinner.hide();
-          //}, 2000);
+          this.closeModal({ refresh: true });
+          this.spinner.hide();
 
-          /*
-          this.alertService
-            .showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            })
-            .then((result) => {
-              this.closeModal({ refresh: true });
-            });
-            */
-
-          // PCD
-          this.snackBar
-            .open('Datos eliminados correctamente!', '', {
-              duration: 3000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              panelClass: ['snackbar-verde'],
-            })
-            .afterDismissed()
-            .subscribe(() => {
-              this.closeModal({ refresh: true });
-              this.spinner.hide();
-            });
-          // FIN PCD
+          this.snackBar.open('Datos eliminados correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-verde'],
+          });
         } else {
           this.spinner.hide();
         }

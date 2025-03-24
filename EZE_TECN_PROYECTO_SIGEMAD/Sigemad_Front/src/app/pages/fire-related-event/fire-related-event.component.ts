@@ -162,35 +162,17 @@ export class FireRelatedEventComponent implements OnInit {
       // FIN PCD
       .then(async (result) => {
         if (result.isConfirmed) {
-          //this.closeModal();
           await this.sucesosRelacionadosService.delete(this.dataProps.fireDetail.id);
-          //this.spinner.hide();
+          this.closeModal({ refresh: true });
+          this.spinner.hide();
 
-          /*
-          this.alertService
-            .showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            })
-            .then((result) => {
-              this.closeModal({ refresh: true });
-            });
-            */
-
-          // PCD
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
-            })
-            .afterDismissed()
-            .subscribe(() => {
-              this.closeModal({ refresh: true });
-              this.spinner.hide();
             });
-          // FIN PCD
         } else {
           this.spinner.hide();
         }

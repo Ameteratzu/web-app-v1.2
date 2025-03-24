@@ -50,6 +50,7 @@ import { Event } from '../../../../types/event.type';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { FORMATO_FECHA } from '../../../../types/date-formats';
 import { COUNTRIES_ID } from '@type/constants';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-fire-filter-form',
@@ -69,6 +70,7 @@ import { COUNTRIES_ID } from '@type/constants';
     MatExpansionModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatSnackBarModule
   ],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter },
@@ -107,6 +109,7 @@ export class FireFilterFormComponent implements OnInit {
   public moveService = inject(MoveService);
   private dialog = inject(MatDialog);
   public masterData = inject(MasterDataEvolutionsService);
+  private snackBar = inject(MatSnackBar);
 
   public superficiesFiltro = signal<any[]>([]);
   public territories = signal<Territory[]>([]);
@@ -385,6 +388,13 @@ export class FireFilterFormComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Modal result:', result);
+        this.snackBar
+        .open('Datos ingresados correctamente!', '', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-verde'],
+        });
         this.onSubmit();
       }
     });

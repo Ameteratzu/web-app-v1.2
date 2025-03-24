@@ -169,7 +169,6 @@ export class FireActionsRelevantComponent {
   }
 
   async save() {
-    console.log('🚀 ~ FireActionsRelevantComponent ~ save ~ save:', 'save');
     this.spinner.show();
     const toolbar = document.querySelector('mat-toolbar');
     this.renderer.setStyle(toolbar, 'z-index', '1');
@@ -177,42 +176,19 @@ export class FireActionsRelevantComponent {
 
     this.actionsRelevantSevice.clearData();
 
-    setTimeout(() => {
-      this.renderer.setStyle(toolbar, 'z-index', '5');
-      /*
-      this.alertService
-        .showAlert({
-          title: 'Buen trabajo!',
-          text: 'Registro subido correctamente!',
-          icon: 'success',
-        })
-        .then(async (result) => {
-          this.isDataReady = false;
-          const dataActuaciones: any = await this.actionsRelevantSevice.getById(Number(this.idReturn));
-          this.editData = dataActuaciones;
-          this.isDataReady = true;
-          this.spinner.hide();
-        });
-        */
+    this.renderer.setStyle(toolbar, 'z-index', '5');
+    this.isDataReady = false;
+    const dataActuaciones: any = await this.actionsRelevantSevice.getByIdRegistro(this.data.idIncendio, Number(this.idReturn));
+    this.editData = dataActuaciones;
+    this.isDataReady = true;
+    this.spinner.hide();
 
-      //PCD
-      this.snackBar
-        .open('Datos guardados correctamente!', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-verde'],
-        })
-        .afterDismissed()
-        .subscribe(async () => {
-          this.isDataReady = false;
-          const dataActuaciones: any = await this.actionsRelevantSevice.getByIdRegistro(this.data.idIncendio, Number(this.idReturn));
-          this.editData = dataActuaciones;
-          this.isDataReady = true;
-          this.spinner.hide();
-        });
-      // FIN PCD
-    }, 2000);
+    this.snackBar.open('Datos guardados correctamente!', '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['snackbar-verde'],
+    });
   }
 
   async processData(): Promise<void> {
@@ -405,18 +381,6 @@ export class FireActionsRelevantComponent {
     this.spinner.show();
 
     this.alertService
-      /*
-      .showAlert({
-        title: '¿Estás seguro?',
-        text: '¡No podrás revertir esto!',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Sí, eliminar!',
-      })
-      */
-
-      // PCD
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
         showCancelButton: true,
@@ -427,71 +391,32 @@ export class FireActionsRelevantComponent {
           title: 'sweetAlert-fsize20',
         },
       })
-      // FIN PCD
 
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
             await this.actionsRelevantSevice.deleteActions(Number(this.data?.fireDetail?.id));
             this.actionsRelevantSevice.clearData();
-            /*
-            setTimeout(() => {
-              this.renderer.setStyle(toolbar, 'z-index', '5');
-              this.spinner.hide();
-            }, 2000);
-            */
+            this.closeModal(true);
+            this.spinner.hide();
 
-            /*
-            this.alertService
-              .showAlert({
-                title: 'Eliminado!',
-                icon: 'success',
-              })
-              .then((result) => {
-                this.closeModal(true);
-              });
-              */
-
-            //PCD
             this.snackBar
               .open('Datos eliminados correctamente!', '', {
                 duration: 3000,
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
                 panelClass: ['snackbar-verde'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.closeModal(true);
-                this.spinner.hide();
               });
-            // FIN PCD
           } catch (error) {
-            /*
-            this.alertService
-              .showAlert({
-                title: 'No hemos podido eliminar la evolución',
-                icon: 'error',
-              })
-              .then((result) => {
-                this.closeModal();
-              });
-              */
-
-            //PCD
+            this.closeModal();
+            this.spinner.hide();
             this.snackBar
               .open('No hemos podido eliminar la evolución!', '', {
                 duration: 3000,
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
                 panelClass: ['snackbar-rojo'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.closeModal();
-                this.spinner.hide();
               });
-            // FIN PCD
           }
         } else {
           this.spinner.hide();

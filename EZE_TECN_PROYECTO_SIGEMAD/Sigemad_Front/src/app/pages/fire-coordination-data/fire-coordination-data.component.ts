@@ -165,52 +165,23 @@ export class FireCoordinationData {
     await this.processData();
 
     this.coordinationServices.clearData();
+    this.renderer.setStyle(toolbar, 'z-index', '5');
+    this.isDataReady = false;
+    const dataCordinacion: any = await this.coordinationServices.getByIdRegistro(Number(this.data.idIncendio), Number(this.idReturn));
 
-    setTimeout(() => {
-      this.renderer.setStyle(toolbar, 'z-index', '5');
-      /*
-      this.alertService
-        .showAlert({
-          title: 'Buen trabajo!',
-          text: 'Registro subido correctamente!',
-          icon: 'success',
-        })
-        .then(async (result) => {
-          this.isDataReady = false;
-          const dataCordinacion: any = await this.coordinationServices.getById(Number(this.idReturn));
+    this.editDataDir = dataCordinacion.direcciones;
+    this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
+    this.editDataPma = dataCordinacion.coordinacionesPMA;
+    this.isDataReady = true;
+    this.spinner.hide();
 
-          this.editDataDir = dataCordinacion.direcciones;
-          this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
-          this.editDataPma = dataCordinacion.coordinacionesPMA;
-          this.isDataReady = true;
-          this.spinner.hide();
-        });
-       */
-
-      // PCD
-      this.snackBar
-        .open('Datos guardados correctamente!', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-verde'],
-        })
-        .afterDismissed()
-        .subscribe(async () => {
-          this.isDataReady = false;
-          const dataCordinacion: any = await this.coordinationServices.getByIdRegistro(
-            Number(this.data.idIncendio),
-            Number(this.idReturn)
-          );
-
-          this.editDataDir = dataCordinacion.direcciones;
-          this.editDataCecopi = dataCordinacion.coordinacionesCecopi;
-          this.editDataPma = dataCordinacion.coordinacionesPMA;
-          this.isDataReady = true;
-          this.spinner.hide();
-        });
-      // FIN PCD
-    }, 2000);
+    this.snackBar
+      .open('Datos guardados correctamente!', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['snackbar-verde'],
+      });
   }
 
   async delete() {
@@ -245,41 +216,18 @@ export class FireCoordinationData {
 
       .then(async (result) => {
         if (result.isConfirmed) {
-          console.log('🚀 ~ FireCoordinationData ~ .then ~ this.data?.fireDetail?.id:', this.data?.fireDetail?.id);
           await this.coordinationServices.delete(Number(this.data?.fireDetail?.id));
           this.coordinationServices.clearData();
-          /*
-          setTimeout(() => {
-            this.renderer.setStyle(toolbar, 'z-index', '5');
-            this.spinner.hide();
-          }, 2000);
-          */
+          this.closeModal(true);
+          this.spinner.hide();
 
-          /*
-          this.alertService
-            .showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            })
-            .then((result) => {
-              this.closeModal(true);
-            });
-            */
-
-          // PCD
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
-            })
-            .afterDismissed()
-            .subscribe(() => {
-              this.closeModal(true);
-              this.spinner.hide();
             });
-          // FIN PCD
         } else {
           this.spinner.hide();
         }

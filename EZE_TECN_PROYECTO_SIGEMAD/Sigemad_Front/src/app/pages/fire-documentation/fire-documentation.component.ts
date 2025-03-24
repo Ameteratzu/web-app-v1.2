@@ -300,36 +300,18 @@ export class FireDocumentation implements OnInit {
 
       if (resp!.idDocumentacion > 0) {
         this.isSaving.set(false);
-        //this.spinner.hide();
+        this.closeModal({ refresh: true });
+        this.spinner.hide();
 
-        /*
-        this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro subido correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal({ refresh: true });
-          });
-          */
-
-        // PCD
         this.snackBar
           .open('Datos modificados correctamente!', '', {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
             panelClass: ['snackbar-verde'],
-          })
-          .afterDismissed()
-          .subscribe(() => {
-            this.closeModal({ refresh: true });
-            this.spinner.hide();
           });
-        // FIN PCD
+
       } else {
-        //this.showToast({ title: 'Ha ocurrido un error al guardar la lista' });
         this.spinner.hide();
       }
     } catch (error) {
@@ -342,18 +324,6 @@ export class FireDocumentation implements OnInit {
     this.spinner.show();
 
     this.alertService
-      /*
-      .showAlert({
-        title: '¿Estás seguro?',
-        text: '¡No podrás revertir esto!',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Sí, eliminar!',
-      })
-        */
-
-      // PCD
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
         showCancelButton: true,
@@ -369,33 +339,16 @@ export class FireDocumentation implements OnInit {
       .then(async (result) => {
         if (result.isConfirmed) {
           await this.fireDocumentationService.delete(Number(this.dataProps?.fireDetail?.id));
-          //this.spinner.hide();
+          this.closeModal({ refresh: true });
+          this.spinner.hide();
 
-          /*
-          this.alertService
-            .showAlert({
-              title: 'Eliminado!',
-              icon: 'success',
-            })
-            .then((result) => {
-              this.closeModal({ refresh: true });
-            });
-            */
-
-          // PCD
           this.snackBar
             .open('Datos eliminados correctamente!', '', {
               duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom',
               panelClass: ['snackbar-verde'],
-            })
-            .afterDismissed()
-            .subscribe(() => {
-              this.closeModal({ refresh: true });
-              this.spinner.hide();
             });
-          // FIN PCD
         } else {
           this.spinner.hide();
         }

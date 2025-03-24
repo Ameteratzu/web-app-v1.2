@@ -319,38 +319,18 @@ export class FireRelatedEventForm implements OnInit {
     this.isSaving.set(true);
 
     const idsSucesosAsociados = this.listaSucesosRelacionados()?.data?.sucesosAsociados?.map((item: any) => item.id);
-    console.log("🚀 ~ FireRelatedEventForm ~ guardarAgregar ~ idsSucesosAsociados:", idsSucesosAsociados)
+    console.log('🚀 ~ FireRelatedEventForm ~ guardarAgregar ~ idsSucesosAsociados:', idsSucesosAsociados);
 
     if (idsSucesosAsociados?.length === 0) {
-      //this.spinner.hide();
-      /*
-      this.alertService
-        .showAlert({
-          title: 'Advertencia!',
-          text: 'Debe meter almenos un Suceso Relacionado',
-          icon: 'error',
-        })
-        .then((result) => {
-          this.isSaving.set(false);
-          return;
-        });
-        */
-
-      // PCD
-      this.snackBar
-        .open('Debe introducir al menos un suceso!', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-rojo'],
-        })
-        .afterDismissed()
-        .subscribe(() => {
-          this.isSaving.set(false);
-          this.spinner.hide();
-          return;
-        });
-      // FIN PCD
+      this.snackBar.open('Debe introducir al menos un suceso!', '', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['snackbar-rojo'],
+      });
+      this.isSaving.set(false);
+      this.spinner.hide();
+      return;
     } else {
       try {
         const respSucesosRelacionados: any = await this.sucesosRelacionadosService.post({
@@ -362,36 +342,18 @@ export class FireRelatedEventForm implements OnInit {
         const listadoSucesosRelacionados = await this.sucesosRelacionadosService.get(respSucesosRelacionados.idSucesoRelacionado);
 
         this.listaSucesosRelacionados.set({ data: listadoSucesosRelacionados });
-        //this.spinner.hide();
+
         await this.onSubmit();
+        this.closeModal.emit();
+        this.isSaving.set(false);
+        this.spinner.hide();
 
-        /*
-        this.alertService
-          .showAlert({
-            title: 'Buen trabajo!',
-            text: 'Registro actualizado correctamente!',
-            icon: 'success',
-          })
-          .then((result) => {
-            this.closeModal.emit();
-            this.isSaving.set(false);
-          });
-          */
-
-        this.snackBar
-          .open('Registro guardado correctamente!', '', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['snackbar-verde'],
-          })
-          .afterDismissed()
-          .subscribe(() => {
-            this.closeModal.emit();
-            this.isSaving.set(false);
-            this.spinner.hide();
-          });
-        // FIN PCD
+        this.snackBar.open('Registro guardado correctamente!', '', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-verde'],
+        });
       } catch (error) {
         console.error('error', error);
         this.alertService
@@ -402,7 +364,6 @@ export class FireRelatedEventForm implements OnInit {
           })
           .then((result) => {
             this.closeModal.emit();
-
             this.isSaving.set(false);
           });
       }

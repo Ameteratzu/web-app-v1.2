@@ -78,19 +78,18 @@ export class FireCreateComponent implements OnInit {
   estado: number | undefined;
 
   async isToEditDocumentation() {
-    console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.data:", this.data.fireDetail?.id)
+    console.log('🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.data:', this.data.fireDetail?.id);
     try {
       let dataCordinacion: any;
-      if(this.data.fireDetail?.id){
-         dataCordinacion = await this.evolutionSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
-      }else{
-          dataCordinacion = await this.evolutionSevice.getById(Number(this.data.idIncendio));
+      if (this.data.fireDetail?.id) {
+        dataCordinacion = await this.evolutionSevice.getByIdRegistro(Number(this.data.idIncendio), Number(this.data?.fireDetail?.id));
+      } else {
+        dataCordinacion = await this.evolutionSevice.getById(Number(this.data.idIncendio));
       }
-     
 
       this.estado = dataCordinacion.parametro?.estadoIncendio.id;
       this.editData = dataCordinacion;
-      console.log("🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.editData:", this.editData)
+      console.log('🚀 ~ FireCreateComponent ~ isToEditDocumentation ~ this.editData:', this.editData);
     } catch (error) {}
 
     this.isDataReady = true;
@@ -156,54 +155,28 @@ export class FireCreateComponent implements OnInit {
     }
 
     this.evolutionSevice.clearData();
+    this.isDataReady = false;
+    const dataCordinacion: any = await this.evolutionSevice.getByIdRegistro(this.data.idIncendio, Number(this.idReturn));
+    this.editData = dataCordinacion;
+    this.isDataReady = true;
+    this.spinner.hide();
 
-    /*
-    setTimeout(() => {
-      this.renderer.setStyle(toolbar, 'z-index', '5');
-      this.alertService
-        .showAlert({
-          title: 'Buen trabajo!',
-          text: 'Registro subido correctamente!',
-          icon: 'success',
-        })
-        .then(async (result) => {
-          this.isDataReady = false;
-          const dataCordinacion: any = await this.evolutionSevice.getById(Number(this.idReturn));
-          this.editData = dataCordinacion;
-          this.isDataReady = true;
-          this.spinner.hide();
-        });
-    }, 2000);
-    */
-
-    // PCD
-    this.snackBar
-      .open('Registro guardado correctamente!', '', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['snackbar-verde'],
-      })
-      .afterDismissed()
-      .subscribe(async () => {
-        this.isDataReady = false;
-        const dataCordinacion: any = await this.evolutionSevice.getByIdRegistro(this.data.idIncendio ,Number(this.idReturn));
-        this.editData = dataCordinacion;
-        this.isDataReady = true;
-        this.spinner.hide();
-      });
-
-    // FIN PCD
+    this.snackBar.open('Registro guardado correctamente!', '', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['snackbar-verde'],
+    });
   }
 
   async processData(): Promise<void> {
     if (this.evolutionSevice.dataRecords().length > 0) {
       this.data?.fireDetail?.id ? (this.idReturn = Number(this.data?.fireDetail?.id)) : 0;
-      
+
       this.idReturn ? (this.evolutionSevice.dataRecords()[0].IdRegistroActualizacion = this.idReturn) : 0;
       const result: any = await this.evolutionSevice.postData(this.evolutionSevice.dataRecords()[0]);
-      console.log("🚀 ~ FireCreateComponent ~ processData ~ result:", result)
-      console.log("🚀 ~ FireCreateComponent ~ processData ~ result:", result)
+      console.log('🚀 ~ FireCreateComponent ~ processData ~ result:', result);
+      console.log('🚀 ~ FireCreateComponent ~ processData ~ result:', result);
       this.idReturn = result.idRegistroActualizacion;
     }
 
@@ -314,22 +287,15 @@ export class FireCreateComponent implements OnInit {
           try {
             await this.evolutionSevice.deleteConse(Number(this.data?.fireDetail?.id));
             this.evolutionSevice.clearData();
+            this.closeModal(true);
+            this.spinner.hide();
 
-            // PCD
-            this.snackBar
-              .open('Registro eliminado correctamente!', '', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-                panelClass: ['snackbar-verde'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.closeModal(true);
-                this.spinner.hide();
-              });
-
-            // FIN PCD
+            this.snackBar.open('Registro eliminado correctamente!', '', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              panelClass: ['snackbar-verde'],
+            });
           } catch (error) {
             this.alertService
               .showAlert({

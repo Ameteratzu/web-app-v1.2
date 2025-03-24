@@ -242,33 +242,8 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .update(data)
           .then((response) => {
-            //this.spinner.hide();
-            /*
-            this.alertService
-              .showAlert({
-                title: 'Buen trabajo!',
-                text: 'Registro actualizado correctamente!',
-                icon: 'success',
-              })
-              .then((result) => {
-                this.closeModal({ refresh: true });
-              });
-             */
-
-            // PCD
-            this.snackBar
-              .open('Datos modificados correctamente!', '', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-                panelClass: ['snackbar-verde'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.closeModal({ refresh: true });
-                this.spinner.hide();
-              });
-            // FIN PCD
+            this.spinner.hide();
+            this.closeModal({ refresh: true });
           })
           .catch((error) => {
             console.error('Error', error);
@@ -277,33 +252,8 @@ export class FireCreateEdit implements OnInit {
         await this.fireService
           .post(data)
           .then((response) => {
-            //this.spinner.hide();
-            /*
-            this.alertService
-              .showAlert({
-                title: 'Buen trabajo!',
-                text: 'Registro subido correctamente!',
-                icon: 'success',
-              })
-              .then((result) => {
-                this.closeModal({ refresh: true });
-              });
-              */
-
-            // PCD
-            this.snackBar
-              .open('Datos creados correctamente!', '', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-                panelClass: ['snackbar-verde'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.closeModal({ refresh: true });
-                this.spinner.hide();
-              });
-            // FIN PCD
+            this.spinner.hide();
+            this.closeModal({ refresh: true });
           })
           .catch((error) => {
             console.log(error);
