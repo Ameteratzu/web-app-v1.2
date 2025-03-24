@@ -12,8 +12,8 @@ DB_NAME="Sigemad"
 echo "DB_SERVER: $DB_SERVER"
 echo "Base de datos a actualizar: $DB_NAME"
 
-# Esperar a que el servidor de base de datos esté disponible
-max_retries=1
+# Esperar a que el servidor de base de datos esté disponible (se aumentan los reintentos)
+max_retries=10
 attempt=1
 until /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -Q "SELECT 1" -C; do
     if [ $attempt -ge $max_retries ]; then
@@ -51,11 +51,23 @@ execute_scripts_in_folder() {
     done
 }
 
-# Ejecutar scripts en la carpeta DLL para la base de datos
+# Ejecutar scripts en las carpetas DLL y Datos
 execute_scripts_in_folder "$DLL_FOLDER"
-
-# Ejecutar scripts en la carpeta Datos para la base de datos
 execute_scripts_in_folder "$DATOS_FOLDER"
 
+# Esperar a que la base de datos esté lista para aceptar conexiones
+echo "Esperando a que la base de datos $DB_NAME esté lista para conexiones..."
+max_wait=30
+i=0
+until /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -d "$DB_NAME" -Q "SELECT 1" -C; do
+    sleep 1
+    i=$((i+1))
+    if [ $i -ge $max_wait ]; then
+       echo "La base de datos no está lista tras $max_wait segundos."
+       exit 1
+    fi
+done
+
+echo "La base de datos $DB_NAME está lista para conexiones."
 echo "Todos los scripts se ejecutaron correctamente para la base de datos $DB_NAME."
 echo "Proceso completado con éxito."
