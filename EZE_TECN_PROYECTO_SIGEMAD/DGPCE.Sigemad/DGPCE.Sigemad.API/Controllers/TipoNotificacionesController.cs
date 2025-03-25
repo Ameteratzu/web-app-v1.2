@@ -7,29 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
-namespace DGPCE.Sigemad.API.Controllers
+namespace DGPCE.Sigemad.API.Controllers;
+
+[Authorize]
+[Route("api/v1/tipo-notificaciones")]
+[ApiController]
+public class TipoNotificacionesController : ControllerBase
 {
+    private readonly IMediator _mediator;
 
-    [Route("api/v1/tipo-notificaciones")]
-    [ApiController]
-    public class TipoNotificacionesController : ControllerBase
+    public TipoNotificacionesController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public TipoNotificacionesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
-        [HttpGet]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los tipos de notificacion")]
-        public async Task<ActionResult<IReadOnlyList<TipoNotificacion>>> GetAll()
-        {
-            var query = new GetTipoNotificacionesListQuery();
-            var listado = await _mediator.Send(query);
-            return Ok(listado);
-        }
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [SwaggerOperation(Tags = new[] { SwaggerTags.Maestros }, Summary = "Obtiene todos los tipos de notificacion")]
+    public async Task<ActionResult<IReadOnlyList<TipoNotificacion>>> GetAll()
+    {
+        var query = new GetTipoNotificacionesListQuery();
+        var listado = await _mediator.Send(query);
+        return Ok(listado);
     }
 }

@@ -1,6 +1,21 @@
 #!/bin/bash
 set -e
 
+# Contador de ejecuciones
+EXECUTION_COUNT_FILE="/app/execution_count.txt"
+
+# Inicializar o incrementar el contador de ejecuciones
+if [ ! -f "$EXECUTION_COUNT_FILE" ]; then
+    echo "1" > "$EXECUTION_COUNT_FILE"
+else
+    current_count=$(cat "$EXECUTION_COUNT_FILE")
+    new_count=$((current_count + 1))
+    echo "$new_count" > "$EXECUTION_COUNT_FILE"
+fi
+
+# Mostrar el número de ejecuciones
+echo "Número de ejecuciones del script: $(cat "$EXECUTION_COUNT_FILE")"
+
 # Configuración de variables
 DB_SERVER="sqlserver.ns-sigemad.svc.cluster.local,1433"
 DB_USER="sa"
@@ -9,44 +24,19 @@ DLL_FOLDER="/app/DLL"
 DATOS_FOLDER="/app/Datos"
 DB_NAME="Sigemad"
 
-echo "DB_SERVER: $DB_SERVER"
-echo "Base de datos a actualizar: $DB_NAME"
-
-# Esperar a que el servidor de base de datos esté disponible (se aumentan los reintentos)
-max_retries=10
-attempt=1
-until /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -Q "SELECT 1" -C; do
-    if [ $attempt -ge $max_retries ]; then
-        echo "No se pudo conectar al servidor de base de datos después de $max_retries intentos."
-        exit 1
-    fi
-    echo "Intento $attempt: Servidor no disponible, esperando 5 segundos..."
-    sleep 5
-    attempt=$((attempt+1))
-done
-echo "Conexión al servidor de base de datos verificada correctamente."
-
-# Eliminar la base de datos si existe (forzando cierre de conexiones)
-echo "Eliminando la base de datos $DB_NAME si existe..."
+echo "Eliminando base de datos $DB_NAME"
 /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -Q "IF EXISTS (SELECT name FROM sys.databases WHERE name = '$DB_NAME') BEGIN ALTER DATABASE [$DB_NAME] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [$DB_NAME]; END" -C
-echo "Base de datos eliminada (si existía)."
 
-# Crear la base de datos
-echo "Creando la base de datos $DB_NAME..."
+echo "Creando base de datos $DB_NAME"
 /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -Q "CREATE DATABASE [$DB_NAME]" -C
-echo "Base de datos creada."
 
-# Función para ejecutar scripts en una carpeta para la base de datos específica
+# Función para ejecutar scripts en una carpeta
 execute_scripts_in_folder() {
     local folder=$1
-    echo "Ejecutando scripts en la carpeta: $folder para la base de datos: $DB_NAME"
     for file in "$folder"/*.sql; do
         if [ -f "$file" ]; then
-            echo "Ejecutando $file en la base de datos $DB_NAME..."
+            echo "Ejecutando $file"
             /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -d "$DB_NAME" -i "$file" -C
-            echo "Script $file ejecutado correctamente."
-        else
-            echo "No se encontraron archivos SQL en $folder."
         fi
     done
 }
@@ -55,19 +45,4 @@ execute_scripts_in_folder() {
 execute_scripts_in_folder "$DLL_FOLDER"
 execute_scripts_in_folder "$DATOS_FOLDER"
 
-# Esperar a que la base de datos esté lista para aceptar conexiones
-echo "Esperando a que la base de datos $DB_NAME esté lista para conexiones..."
-max_wait=30
-i=0
-until /opt/mssql-tools18/bin/sqlcmd -S "$DB_SERVER" -U "$DB_USER" -P "$DB_PASSWORD" -d "$DB_NAME" -Q "SELECT 1" -C; do
-    sleep 1
-    i=$((i+1))
-    if [ $i -ge $max_wait ]; then
-       echo "La base de datos no está lista tras $max_wait segundos."
-       exit 1
-    fi
-done
-
-echo "La base de datos $DB_NAME está lista para conexiones."
-echo "Todos los scripts se ejecutaron correctamente para la base de datos $DB_NAME."
-echo "Proceso completado con éxito."
+echo "Proceso de inicialización de base de datos completado"

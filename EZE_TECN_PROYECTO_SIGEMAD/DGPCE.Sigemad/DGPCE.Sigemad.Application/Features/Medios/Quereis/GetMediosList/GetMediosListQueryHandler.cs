@@ -1,24 +1,36 @@
 ﻿
+using DGPCE.Sigemad.Application.Contracts.Caching;
 using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
 
-namespace DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList
+namespace DGPCE.Sigemad.Application.Features.Medios.Quereis.GetMediosList;
+
+public class GetMediosListQueryHandler : IRequestHandler<GetMediosListQuery, IReadOnlyList<Medio>>
 {
-    public class GetMediosListQueryHandler : IRequestHandler<GetMediosListQuery, IReadOnlyList<Medio>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ISIGEMemoryCache _cache;
+
+    public GetMediosListQueryHandler(IUnitOfWork unitOfWork, ISIGEMemoryCache cache)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _cache = cache;
+    }
 
-        public GetMediosListQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public async Task<IReadOnlyList<Medio>> Handle(GetMediosListQuery request, CancellationToken cancellationToken)
+    {
+        string cacheKey = "Medios";
+        var medios = await _cache.SetCacheIfEmptyAsync
+            (
+            cacheKey,
+            async () =>
+            {
+                return await _unitOfWork.Repository<Medio>().GetAllNoTrackingAsync();
+            },
+            cancellationToken
+            );
 
-        public async Task<IReadOnlyList<Medio>> Handle(GetMediosListQuery request, CancellationToken cancellationToken)
-        {
-            var medios = await _unitOfWork.Repository<Medio>().GetAllNoTrackingAsync();
-            return medios;
-        }
+        return medios == null ? new List<Medio>() : medios;
     }
 }
 
