@@ -253,7 +253,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEvolution(fireDetail?: FireDetail) {
-    console.log("🚀 ~ FireEditComponent ~ goModalEvolution ~ fireDetail:", fireDetail)
+    console.log('🚀 ~ FireEditComponent ~ goModalEvolution ~ fireDetail:', fireDetail);
     const resultado = this.dataSource.data.find((item) => item.esUltimoRegistro && item.tipoRegistro === 'Datos de evolución');
 
     const dialogRef = this.matDialog.open(FireCreateComponent, {
@@ -301,7 +301,7 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalOtherInformation(fireDetail?: FireDetail) {
-    console.log("🚀 ~ FireEditComponent ~ goModalOtherInformation ~ fireDetail:", fireDetail)
+    console.log('🚀 ~ FireEditComponent ~ goModalOtherInformation ~ fireDetail:', fireDetail);
     const dialogRef = this.matDialog.open(FireOtherInformationComponent, {
       width: '90vw',
       maxWidth: 'none',
@@ -348,7 +348,6 @@ export class FireEditComponent implements OnInit {
   }
 
   goModalEdit(fireDetail: FireDetail) {
-
     const modalActions: { [key: string]: (detail: FireDetail) => void } = {
       // PCD
       Incendio: this.goModalDocumentation.bind(this),
@@ -363,9 +362,9 @@ export class FireEditComponent implements OnInit {
     };
 
     const action = modalActions[fireDetail.tipoRegistro?.nombre];
-    console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ action:", action)
+    console.log('🚀 ~ FireEditComponent ~ goModalEdit ~ action:', action);
     if (action) {
-      console.log("🚀 ~ FireEditComponent ~ goModalEdit ~ fireDetail:", fireDetail)
+      console.log('🚀 ~ FireEditComponent ~ goModalEdit ~ fireDetail:', fireDetail);
       action(fireDetail);
     }
   }
@@ -380,18 +379,7 @@ export class FireEditComponent implements OnInit {
 
   async deleteFire() {
     this.alertService
-      /*
-      .showAlert({
-        title: '¿Estás seguro?',
-        text: '¡No podrás revertir esto!',
-        icon: 'warning',
-        showCancelButton: true,
-        cancelButtonColor: '#d33',
-        confirmButtonText: '¡Sí, eliminar!',
-      })
-      */
 
-      // PCD
       .showAlert({
         title: '¿Estás seguro de eliminar el registro?',
         showCancelButton: true,
@@ -402,49 +390,23 @@ export class FireEditComponent implements OnInit {
           title: 'sweetAlert-fsize20',
         },
       })
-      // FIN PCD
-
       .then(async (result) => {
         if (result.isConfirmed) {
           this.spinner.show();
           const toolbar = document.querySelector('mat-toolbar');
           this.renderer.setStyle(toolbar, 'z-index', '1');
-
+          this.spinner.hide();
           await this.fireService.delete(this.fire_id);
-          setTimeout(() => {
-            //this.renderer.setStyle(toolbar, 'z-index', '5');
-            //this.spinner.hide();
+          this.routenav.navigate(['/fire']).then(() => {
+            window.location.href = '/fire';
+          });
 
-            /*
-            this.alertService
-              .showAlert({
-                title: 'Eliminado!',
-                icon: 'success',
-              })
-              .then((result) => {
-                this.routenav.navigate(['/fire']).then(() => {
-                  window.location.href = '/fire';
-                });
-              });
-              */
-
-            //PCD
-            this.snackBar
-              .open('Datos eliminados correctamente!', '', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-                panelClass: ['snackbar-verde'],
-              })
-              .afterDismissed()
-              .subscribe(() => {
-                this.routenav.navigate(['/fire']).then(() => {
-                  window.location.href = '/fire';
-                });
-                this.spinner.hide();
-              });
-            // FIN PCD
-          }, 2000);
+          this.snackBar.open('Datos eliminados correctamente!', '', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-verde'],
+          });
         } else {
           this.spinner.hide();
         }
