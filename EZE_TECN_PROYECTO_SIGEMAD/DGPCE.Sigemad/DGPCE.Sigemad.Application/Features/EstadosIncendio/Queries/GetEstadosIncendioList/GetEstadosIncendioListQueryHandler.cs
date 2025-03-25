@@ -1,27 +1,34 @@
-﻿using DGPCE.Sigemad.Application.Contracts.Persistence;
+﻿using DGPCE.Sigemad.Application.Contracts.Caching;
+using DGPCE.Sigemad.Application.Contracts.Persistence;
 using DGPCE.Sigemad.Domain.Modelos;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DGPCE.Sigemad.Application.Features.EstadosIncendio.Queries.GetEstadosIncendioList
+namespace DGPCE.Sigemad.Application.Features.EstadosIncendio.Queries.GetEstadosIncendioList;
+
+public class GetEstadosIncendioListQueryHandler : IRequestHandler<GetEstadosIncendioListQuery, IReadOnlyList<EstadoIncendio>>
 {
-    public class GetEstadosIncendioListQueryHandler : IRequestHandler<GetEstadosIncendioListQuery, IReadOnlyList<EstadoIncendio>>
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ISIGEMemoryCache _cache;
+
+    public GetEstadosIncendioListQueryHandler(IUnitOfWork unitOfWork, ISIGEMemoryCache cache)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _cache = cache;
+    }
 
-        public GetEstadosIncendioListQueryHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public async Task<IReadOnlyList<EstadoIncendio>> Handle(GetEstadosIncendioListQuery request, CancellationToken cancellationToken)
+    {
+        string cacheKey = $"Estados_Incendios";
 
-        public async Task<IReadOnlyList<EstadoIncendio>> Handle(GetEstadosIncendioListQuery request, CancellationToken cancellationToken)
-        {
-            var estadosIncendio = await _unitOfWork.Repository<EstadoIncendio>().GetAllNoTrackingAsync();
-            return estadosIncendio;
-        }
+        var estadosIncendio = await _cache.SetCacheIfEmptyAsync
+            (
+            cacheKey,
+            async () =>
+            {
+                return await _unitOfWork.Repository<EstadoIncendio>().GetAllNoTrackingAsync();
+            },
+            cancellationToken
+            );
+        return estadosIncendio == null ? new List<EstadoIncendio>() : estadosIncendio;
     }
 }
