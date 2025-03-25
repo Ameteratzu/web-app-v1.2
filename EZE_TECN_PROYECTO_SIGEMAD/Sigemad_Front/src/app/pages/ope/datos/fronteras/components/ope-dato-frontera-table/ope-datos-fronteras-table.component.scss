@@ -12,3 +12,19 @@
 .spinner {
   margin-left: 50%;
 }
+
+// PCD
+::ng-deep .estiloDatosTabla {
+  width: 100% !important;
+  table-layout: fixed;
+  text-align: center !important;
+}
+
+::ng-deep .estiloDatosTD {
+  width: 33.33%;
+}
+
+::ng-deep .estiloEnlacesEdicion {
+  text-align: center;
+  white-space: nowrap !important;
+}
