@@ -31,11 +31,12 @@ namespace DGPCE.Sigemad.Identity
 
             services.AddTransient<IAuthService, AuthService>();
 
+            string key = "5e6cfe49-8a33-440e-8215-365b70bb183d";
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JwtSettings:Key"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateLifetime = true,
