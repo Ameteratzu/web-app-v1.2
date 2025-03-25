@@ -1,5 +1,5 @@
 <h2 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle class="title">
-  {{ data.opeDatoFrontera?.id ? 'Modificar' : 'Crear' }} Dato de Frontera {{ data.opeFrontera.nombre }}
+  {{ data.opeDatoFrontera.id ? 'Modificar' : 'Crear' }} Dato de Frontera {{ data.opeFrontera.nombre }}
 </h2>
 
 <form [formGroup]="formData" (ngSubmit)="onSubmit()">
@@ -91,19 +91,23 @@
     <!-- Fecha hora inicio intervalo -->
     <ng-container matColumnDef="fechaHoraInicioIntervalo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha hora inicio intervalo</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaHoraInicioIntervalo) }}</td>
+      <td mat-cell *matCellDef="let opeDatoFrontera" [ngClass]="{ datoFronteraActivo: opeDatoFrontera.id === data.opeDatoFrontera.id }">
+        {{ getFechaFormateada(opeDatoFrontera.fechaHoraInicioIntervalo) }}
+      </td>
     </ng-container>
 
     <!-- Fecha hora fin intervalo -->
     <ng-container matColumnDef="fechaHoraFinIntervalo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha hora fin intervalo</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">{{ getFechaFormateada(opeDatoFrontera.fechaHoraFinIntervalo) }}</td>
+      <td mat-cell *matCellDef="let opeDatoFrontera" [ngClass]="{ datoFronteraActivo: opeDatoFrontera.id === data.opeDatoFrontera.id }">
+        {{ getFechaFormateada(opeDatoFrontera.fechaHoraFinIntervalo) }}
+      </td>
     </ng-container>
 
     <!-- Nº vehículos -->
     <ng-container matColumnDef="numeroVehiculos">
       <th mat-header-cell *matHeaderCellDef>Nº vehículos</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">
+      <td mat-cell *matCellDef="let opeDatoFrontera" [ngClass]="{ datoFronteraActivo: opeDatoFrontera.id === data.opeDatoFrontera.id }">
         {{ opeDatoFrontera.numeroVehiculos }}
       </td>
     </ng-container>
@@ -111,7 +115,7 @@
     <!-- Afluencia -->
     <ng-container matColumnDef="afluencia">
       <th mat-header-cell *matHeaderCellDef>Afluencia</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera">
+      <td mat-cell *matCellDef="let opeDatoFrontera" [ngClass]="{ datoFronteraActivo: opeDatoFrontera.id === data.opeDatoFrontera.id }">
         {{ opeDatoFrontera.afluencia }}
       </td>
     </ng-container>
@@ -119,10 +123,18 @@
     <!-- Opciones -->
     <ng-container matColumnDef="opciones">
       <th mat-header-cell *matHeaderCellDef>Opciones</th>
-      <td mat-cell *matCellDef="let opeDatoFrontera; let i = index">
-        <img src="/assets/img/edit-btn.svg" alt="edit-btn" />
-
-        <img src="/assets/img/close.svg" alt="doc-btn" />
+      <td
+        mat-cell
+        *matCellDef="let opeDatoFrontera"
+        class="text-center"
+        [ngClass]="{ datoFronteraActivo: opeDatoFrontera.id === data.opeDatoFrontera.id }"
+      >
+        <a (click)="editarDatoFronteraRelacionado(opeDatoFrontera)">
+          <img src="/assets/img/edit.svg" alt="Editar" appTooltip="Datos de frontera" />
+        </a>
+        <a (click)="deleteOpeDatoFrontera(opeDatoFrontera.id)">
+          <img src="/assets/img/delete-btn.svg" alt="Borrar" appTooltip="Borrar dato de frontera" />
+        </a>
       </td>
     </ng-container>
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, inject, OnInit, signal, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, inject, OnInit, Renderer2, signal, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -17,7 +17,6 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AlertService } from '@shared/alert/alert.service';
-import { LocalFiltrosOpeDatosFronteras } from '@services/ope/datos/local-filtro-ope-datos-fronteras.service';
 import { OpeDatosFronterasService } from '@services/ope/datos/ope-datos-fronteras.service';
 import moment from 'moment';
 import { FechaValidator } from '@shared/validators/fecha-validator';
@@ -85,9 +84,11 @@ export class OpeDatoFronteraCreateEdit implements OnInit {
   public opeDatosFronterasRelacionados = signal<OpeDatoFrontera[]>([]);
 
   private spinner = inject(NgxSpinnerService);
+  public renderer = inject(Renderer2);
 
   public snackBar = inject(MatSnackBar);
   public utilsService = inject(UtilsService);
+  public routenav = inject(Router);
 
   public displayedColumns: string[] = ['fechaHoraInicioIntervalo', 'fechaHoraFinIntervalo', 'numeroVehiculos', 'afluencia', 'opciones'];
 
@@ -205,5 +206,66 @@ export class OpeDatoFronteraCreateEdit implements OnInit {
       fechaHoraFinIntervalo: moment(fechaHoraFinIntervalo).format('YYYY-MM-DD'),
     });
     this.opeDatosFronterasRelacionados.set(opeDatosFronterasRelacionados.data);
+  }
+
+  editarDatoFronteraRelacionado(opeDatoFrontera: OpeDatoFrontera) {
+    if (opeDatoFrontera.id) {
+      // Actualizamos `this.data` solo si es necesario
+      this.data = this.data || {}; // Si `this.data` está vacío, lo inicializamos como un objeto vacío
+      this.data.opeDatoFrontera = { ...opeDatoFrontera }; // Asignamos el objeto directamente a `opeDatoFrontera`
+
+      // Actualizamos los valores en el formulario
+      this.formData.patchValue({
+        id: opeDatoFrontera.id,
+        fechaHoraInicioIntervalo: moment(opeDatoFrontera.fechaHoraInicioIntervalo).format('YYYY-MM-DDTHH:mm'),
+        fechaHoraFinIntervalo: moment(opeDatoFrontera.fechaHoraFinIntervalo).format('YYYY-MM-DDTHH:mm'),
+        numeroVehiculos: opeDatoFrontera.numeroVehiculos,
+        afluencia: opeDatoFrontera.afluencia,
+      });
+    }
+  }
+
+  async deleteOpeDatoFrontera(idOpeDatoFrontera: number) {
+    this.alertService
+      .showAlert({
+        title: '¿Estás seguro de eliminar el registro?',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        confirmButtonText: '¡Sí, eliminar!',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          title: 'sweetAlert-fsize20',
+        },
+      })
+
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          this.spinner.show();
+          const toolbar = document.querySelector('mat-toolbar');
+          this.renderer.setStyle(toolbar, 'z-index', '1');
+
+          await this.opeDatosFronterasService.delete(idOpeDatoFrontera);
+          setTimeout(() => {
+            //PCD
+            this.snackBar
+              .open('Datos eliminados correctamente!', '', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass: ['snackbar-verde'],
+              })
+              .afterDismissed()
+              .subscribe(() => {
+                this.routenav.navigate(['/ope-nuevo-datos-fronteras']).then(() => {
+                  window.location.href = '/ope-nuevo-datos-fronteras';
+                });
+                this.spinner.hide();
+              });
+            // FIN PCD
+          }, 2000);
+        } else {
+          this.spinner.hide();
+        }
+      });
   }
 }
