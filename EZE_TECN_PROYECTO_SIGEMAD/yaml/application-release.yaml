@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-sigemad-release
+  namespace: argocd
+spec:
+  destination:
+    namespace: ns-sigemad-release
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: 'https://github.com/EduardSolOpenshift/sigemad-manifests'
+    targetRevision: release
+    path: .
+    directory:
+      recurse: true  # Recorrer todas las subcarpetas
+  syncPolicy:
+    automated:
+      prune: true     # Eliminar recursos que ya no estén en el repositorio
+      selfHeal: true  # Reparar diferencias automáticamente
