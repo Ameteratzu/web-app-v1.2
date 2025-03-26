@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: ns-sigemad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: localhost:32001/sigemad-backend:main-9e1f2a3ad01bfb543b59f6f578761f60bd28e585
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__ConnectionString
+              value: "Data Source=sqlserver.ns-sigemad.svc.cluster.local,1433;Initial Catalog=Sigemad;user id=sa;password=P@s$w0rd;TrustServerCertificate=true;MultipleActiveResultSets=true;"
+            - name: ConnectionStrings__IdentityConnectionString
+              value: "Data Source=sqlserver.ns-sigemad.svc.cluster.local,1433;Initial Catalog=SigemadSecurity;user id=sa;password=P@s$w0rd;TrustServerCertificate=true;MultipleActiveResultSets=true;"
